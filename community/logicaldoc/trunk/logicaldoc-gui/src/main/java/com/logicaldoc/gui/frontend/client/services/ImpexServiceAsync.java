@@ -4,7 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
 
-public interface ArchiveServiceAsync {
+public interface ImpexServiceAsync {
 
 	void delete(String sid, long archiveId, AsyncCallback<Void> callback);
 

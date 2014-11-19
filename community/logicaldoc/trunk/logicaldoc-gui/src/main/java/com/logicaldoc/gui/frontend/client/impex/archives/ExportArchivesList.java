@@ -13,8 +13,8 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
-import com.logicaldoc.gui.frontend.client.services.ArchiveService;
-import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ImpexService;
+import com.logicaldoc.gui.frontend.client.services.ImpexServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -46,7 +46,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 6.0
  */
 public class ExportArchivesList extends VLayout {
-	protected ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
+	protected ImpexServiceAsync service = (ImpexServiceAsync) GWT.create(ImpexService.class);
 
 	protected Layout listing;
 

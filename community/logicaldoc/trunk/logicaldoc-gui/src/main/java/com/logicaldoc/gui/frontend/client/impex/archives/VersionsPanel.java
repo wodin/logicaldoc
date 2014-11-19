@@ -13,8 +13,8 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.frontend.client.services.ArchiveService;
-import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ImpexService;
+import com.logicaldoc.gui.frontend.client.services.ImpexServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.BooleanCallback;
@@ -43,7 +43,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  */
 public class VersionsPanel extends VLayout {
 
-	private ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
+	private ImpexServiceAsync service = (ImpexServiceAsync) GWT.create(ImpexService.class);
 
 	private VersionsDS dataSource;
 
