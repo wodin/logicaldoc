@@ -277,6 +277,10 @@
         <servlet-name>ContactsData</servlet-name>
         <servlet-class>com.logicaldoc.web.data.ContactsDataServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>StatChart</servlet-name>
+        <servlet-class>com.logicaldoc.web.StatChartServlet</servlet-class>
+    </servlet>        
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
         <url-pattern>*.gupld</url-pattern>
@@ -484,6 +488,10 @@
     <servlet-mapping>
         <servlet-name>Log</servlet-name>
         <url-pattern>/log</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>StatChart</servlet-name>
+        <url-pattern>/stat</url-pattern>
     </servlet-mapping>
     <!-- Welcome files -->
     <welcome-file-list>

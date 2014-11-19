@@ -3,7 +3,6 @@
 <module rename-to="frontend">
   <inherits name="com.logicaldoc.gui.common.Common" />
   
-  <inherits name="com.rednels.ofcgwt.OFCGWT" />
   <inherits name='com.orange.links.Links' />
   <inherits name='com.google.gwt.widgetideas.GWTCanvas'/>
   <inherits name='com.google.gwt.widgetideas.WidgetIdeas' />   

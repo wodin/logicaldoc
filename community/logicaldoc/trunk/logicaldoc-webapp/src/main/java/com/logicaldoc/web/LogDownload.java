@@ -80,7 +80,7 @@ public class LogDownload extends HttpServlet {
 
 			is.close();
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error(ex.getMessage(), ex);
 		} finally {
 			if ("all".equals(appender) && file != null)
 				FileUtils.deleteQuietly(file);
