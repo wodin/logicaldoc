@@ -70,10 +70,6 @@ public class GUIArchive implements Serializable {
 
 	private int importCustomId = 0;
 
-	private Long aosManagerId;
-
-	private String aosManagerName = "";
-
 	public GUIArchive() {
 
 	}
@@ -240,21 +236,5 @@ public class GUIArchive implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public Long getAosManagerId() {
-		return aosManagerId;
-	}
-
-	public void setAosManagerId(Long aosManagerId) {
-		this.aosManagerId = aosManagerId;
-	}
-
-	public String getAosManagerName() {
-		return aosManagerName;
-	}
-
-	public void setAosManagerName(String aosManagerName) {
-		this.aosManagerName = aosManagerName;
 	}
 }

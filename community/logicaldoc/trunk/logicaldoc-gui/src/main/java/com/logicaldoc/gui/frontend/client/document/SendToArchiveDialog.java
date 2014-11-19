@@ -7,8 +7,8 @@ import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.services.ArchiveService;
-import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ImpexService;
+import com.logicaldoc.gui.frontend.client.services.ImpexServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -26,7 +26,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class SendToArchiveDialog extends Window {
 
-	private ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
+	private ImpexServiceAsync service = (ImpexServiceAsync) GWT.create(ImpexService.class);
 
 	private DynamicForm form = new DynamicForm();
 

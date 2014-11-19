@@ -7,8 +7,8 @@ import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.services.ArchiveService;
-import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ImpexService;
+import com.logicaldoc.gui.frontend.client.services.ImpexServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.Overflow;
@@ -34,7 +34,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @since 6.0
  */
 public class ImportDetailsPanel extends VLayout {
-	private ArchiveServiceAsync service = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
+	private ImpexServiceAsync service = (ImpexServiceAsync) GWT.create(ImpexService.class);
 
 	private Layout settingsTabPanel;
 

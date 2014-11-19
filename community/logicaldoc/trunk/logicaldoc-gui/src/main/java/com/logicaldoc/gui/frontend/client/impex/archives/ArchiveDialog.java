@@ -7,8 +7,8 @@ import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.services.ArchiveService;
-import com.logicaldoc.gui.frontend.client.services.ArchiveServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ImpexService;
+import com.logicaldoc.gui.frontend.client.services.ImpexServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Window;
@@ -29,7 +29,7 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
  * @since 6.0
  */
 public class ArchiveDialog extends Window {
-	private ArchiveServiceAsync archiveService = (ArchiveServiceAsync) GWT.create(ArchiveService.class);
+	private ImpexServiceAsync archiveService = (ImpexServiceAsync) GWT.create(ImpexService.class);
 
 	private ValuesManager vm = new ValuesManager();
 

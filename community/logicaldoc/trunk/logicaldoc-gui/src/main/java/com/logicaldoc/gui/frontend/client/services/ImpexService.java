@@ -5,7 +5,6 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
-import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
 /**
  * The client side stub for the Archive Service. This service allows r/w
@@ -14,8 +13,8 @@ import com.logicaldoc.gui.common.client.beans.GUIVersion;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-@RemoteServiceRelativePath("archive")
-public interface ArchiveService extends RemoteService {
+@RemoteServiceRelativePath("impex")
+public interface ImpexService extends RemoteService {
 	/**
 	 * Deletes a specific archive by its ID
 	 */
