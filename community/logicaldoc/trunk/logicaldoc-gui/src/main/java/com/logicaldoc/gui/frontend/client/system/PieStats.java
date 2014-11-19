@@ -1,6 +1,8 @@
 package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.i18n.client.NumberFormat;
+import com.google.gwt.user.client.ui.Image;
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -49,10 +51,15 @@ public class PieStats extends HLayout {
 				long val = Long.parseLong(parameters[0][i].getValue()) / 1024 / 1024;
 				params[i].setValue(Long.toString(val));
 			}
-			repository.addMember(createPie(I18N.message("repository"), params));
 		} catch (Throwable t) {
-		}
-
+		}	
+			
+		repository.addMember(new Image(Util.contextPath()+"stat?sid="+Session.get().getSid()+"&chart=repository"));
+		
+		HLayout spacer = new HLayout();
+		spacer.setHeight(15);
+		repository.addMember(spacer);
+		
 		try {
 			repository.addMember(prepareLegend(parameters[0], STATS_REPOSITORY));
 			addMember(repository);
@@ -60,12 +67,13 @@ public class PieStats extends HLayout {
 		}
 
 		VLayout documents = new VLayout();
-		try {
-			documents.addMember(createPie(I18N.message("documents"), parameters[1]));
-		} catch (Throwable t) {
-
-		}
-
+		documents.addMember(new Image(Util.contextPath()+"stat?sid="+Session.get().getSid()+"&chart=documents"));
+	
+		spacer = new HLayout();
+		spacer.setHeight(15);
+		documents.addMember(spacer);
+		
+		
 		try {
 			documents.addMember(prepareLegend(parameters[1], STATS_DOCUMENTS));
 			addMember(documents);
@@ -74,65 +82,17 @@ public class PieStats extends HLayout {
 		}
 
 		VLayout folders = new VLayout();
-		try {
-			folders.addMember(createPie(I18N.message("folders"), parameters[2]));
-		} catch (Throwable t) {
+		folders.addMember(new Image(Util.contextPath()+"stat?sid="+Session.get().getSid()+"&chart=folders"));
 
-		}
-
+		spacer = new HLayout();
+		spacer.setHeight(15);
+		folders.addMember(spacer);
+		
 		try {
 			folders.addMember(prepareLegend(parameters[2], STATS_FOLDERS));
 			addMember(folders);
 		} catch (Throwable t) {
 
-		}
-	}
-
-	private ChartWidget createPie(String title, GUIParameter[] parameters) {
-		try {
-			ChartWidget chart = new ChartWidget();
-			ChartData cd = new ChartData(title, "font-size: 12px; font-family: Verdana; text-align: center;");
-			cd.setBackgroundColour("#ffffff");
-			PieChart pie = new PieChart();
-			pie.setAlpha(0.5f);
-			pie.setNoLabels(true);
-			pie.setTooltip("#label# <br>#percent#");
-			pie.setAnimate(false);
-			pie.setGradientFill(true);
-			pie.setRadius(60);
-
-			pie.setColours("#ff0000", "#00ff00", "#0000ff", "#ff9900", "#E6E600", "#669900", "#CC6699", "#999966");
-
-			boolean showEmptyChart = true;
-			for (GUIParameter param : parameters) {
-				if (param == null)
-					break;
-				if (Long.parseLong(param.getValue()) > 0)
-					showEmptyChart = false;
-				Integer val = new Integer(0);
-				try {
-					val = new Integer(param.getValue());
-				} catch (Throwable t) {
-
-				}
-				pie.addSlices(new PieChart.Slice(val, param.toString()));
-			}
-
-			// Maybe all parameters have value = 0, so is visualized a full
-			// chart
-			if (showEmptyChart)
-				pie.addSlices(new PieChart.Slice(100, ""));
-
-			cd.addElements(pie);
-
-			chart.setSize("180", "180");
-			chart.setJsonData(cd.toString());
-			chart.setHeight("190");
-
-			return chart;
-		} catch (Throwable t) {
-			SC.warn(t.getMessage());
-			return null;
 		}
 	}
 

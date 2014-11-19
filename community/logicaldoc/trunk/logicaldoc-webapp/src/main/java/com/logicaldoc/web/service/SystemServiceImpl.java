@@ -197,7 +197,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			parameters[0][7] = logsDirSize;
 
 			/*
-			 * Document statistics
+			 * Documents statistics
 			 */
 			gen = genDao.findByAlternateKey(StatsCollector.STAT, "notindexeddocs", null, session.getTenantId());
 			GUIParameter notIndexed = new GUIParameter();
