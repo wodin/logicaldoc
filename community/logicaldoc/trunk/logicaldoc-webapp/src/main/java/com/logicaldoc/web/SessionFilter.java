@@ -31,6 +31,14 @@ public class SessionFilter implements Filter {
 
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain next) throws IOException,
 			ServletException {
+		if (request instanceof HttpServletRequest) {
+			HttpServletRequest http = (HttpServletRequest) request;
+			if (!http.getMethod().equals("GET")) {
+				next.doFilter(request, response);
+				return;
+			}
+		}
+
 		String sid = request.getParameter("sid");
 		String kill = request.getParameter("kill");
 		HttpSession servletSession = ((HttpServletRequest) request).getSession(false);
@@ -40,7 +48,7 @@ public class SessionFilter implements Filter {
 				SessionManager.getInstance().kill(sid);
 				servletSessionMapping.remove(sid);
 			} catch (Throwable e) {
-				
+
 			}
 		} else if (StringUtils.isNotEmpty(sid)) {
 			try {

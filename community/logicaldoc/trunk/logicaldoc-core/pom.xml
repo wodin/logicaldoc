@@ -185,7 +185,6 @@
 			<artifactId>spring-context-support</artifactId>
 			<scope>provided</scope>
 		</dependency>
-
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
@@ -285,7 +284,7 @@
 		<dependency>
 			<groupId>org.apache.solr</groupId>
 			<artifactId>solr-velocity</artifactId>
-		</dependency> 
+		</dependency>
 		<dependency>
 			<groupId>jmimemagic</groupId>
 			<artifactId>jmimemagic</artifactId>
