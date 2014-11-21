@@ -1,12 +1,9 @@
 package com.logicaldoc.gui.frontend.client.reports;
 
-import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
-import com.logicaldoc.gui.frontend.client.services.SettingService;
-import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -19,8 +16,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.1
  */
 public class ReportsMenu extends VLayout {
-	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
-
 	public ReportsMenu() {
 		setMargin(10);
 		setMembersMargin(5);
@@ -28,16 +23,28 @@ public class ReportsMenu extends VLayout {
 		Button lastChanges = new Button(I18N.message("lastchanges"));
 		lastChanges.setWidth100();
 		lastChanges.setHeight(25);
-		if (Menu.enabled(Menu.LAST_CHANGES))
-			addMember(lastChanges);
 		lastChanges.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new LastChangesPanel());
 			}
 		});
+		if (Menu.enabled(Menu.LAST_CHANGES))
+			addMember(lastChanges);
 
-		Button duplicates = new Button(I18N.message("searchduplicates"));
+		Button lockedDocs = new Button(I18N.message("lockeddocs"));
+		lockedDocs.setWidth100();
+		lockedDocs.setHeight(25);
+		lockedDocs.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new LockedDocsPanel());
+			}
+		});
+		if (Menu.enabled(Menu.LOCKED_DOCS))
+			addMember(lockedDocs);
+
+		Button duplicates = new Button(I18N.message("duplicates"));
 		duplicates.setWidth100();
 		duplicates.setHeight(25);
 		duplicates.addClickHandler(new ClickHandler() {

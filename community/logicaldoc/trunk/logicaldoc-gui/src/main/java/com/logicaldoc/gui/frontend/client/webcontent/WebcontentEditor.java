@@ -58,13 +58,6 @@ public class WebcontentEditor extends Window {
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setMargin(2);
-
-		layout = new VLayout(5);
-		layout.setTop(20);
-		layout.setMargin(5);
-		layout.setWidth100();
-		layout.setHeight(getHeight() - 30);
 
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
@@ -73,9 +66,12 @@ public class WebcontentEditor extends Window {
 			}
 		});
 
-		addChild(layout);
+		layout = new VLayout();
+		layout.setWidth100();
 
 		prepareBody();
+		
+		addItem(layout);
 	}
 
 	/**
@@ -84,13 +80,12 @@ public class WebcontentEditor extends Window {
 	private void prepareBody() {
 		editorPanel = new HTMLPane();
 		editorPanel.setShowEdges(false);
-		editorPanel.setContentsURL(Util.webEditorUrl(document.getId(), document.getFileName(), getHeight() - 250));
+		editorPanel.setContentsURL(Util.webEditorUrl(document.getId(), document.getFileName(), getHeight() - 230));
 		editorPanel.setContentsType(ContentsType.PAGE);
 
 		layout.addMember(editorPanel);
 
 		ToolStrip toolStrip = new ToolStrip();
-		toolStrip.setHeight(20);
 		toolStrip.setWidth100();
 		toolStrip.setAlign(Alignment.RIGHT);
 		toolStrip.addFill();

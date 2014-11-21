@@ -40,7 +40,7 @@ public class StatsPanel extends VLayout {
 				lastUpdateLabel.setHeight(30);
 				lastUpdateLabel.setAlign(Alignment.RIGHT);
 				
-				PieStats charts = new PieStats(parameters);
+				StatsPie charts = new StatsPie(parameters);
 				
 				setMembers(lastUpdateLabel, charts);
 			}

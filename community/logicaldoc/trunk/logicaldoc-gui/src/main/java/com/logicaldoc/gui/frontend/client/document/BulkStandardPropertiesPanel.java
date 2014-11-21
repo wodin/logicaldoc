@@ -89,7 +89,7 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 
 		language.setValue(document.getLanguage());
 		items.add(language);
-
+		
 		if (Feature.enabled(Feature.TAGS)) {
 			String mode = Session.get().getConfig("tag.mode");
 			final DataSource ds = new TagsDS(null);
@@ -103,27 +103,8 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 			tagItem.setValueField("word");
 			tagItem.setDisplayField("word");
 			tagItem.setAutoFetchData(true);
+			tagItem.setValues((Object[]) document.getTags());
 			tagItem.setDisabled(!updateEnabled);
-			tagItem.addChangedHandler(new ChangedHandler() {
-
-				@Override
-				public void onChanged(ChangedEvent event) {
-					/*
-					 * At initialization time this method is invoked several
-					 * times until when it contains all the tags of the document
-					 */
-					if (tagsInitialized)
-						changedHandler.onChanged(null);
-					else {
-						if ((tagItem.getValues().length == 0 && document.getTags() == null)
-								|| tagItem.getValues().length == document.getTags().length)
-							// The item contains all the tags of the document,
-							// so consider it as initialized
-							tagsInitialized = true;
-					}
-
-				}
-			});
 
 			final TextItem newTagItem = ItemFactory.newTextItem("newtag", "newtag", null);
 			newTagItem.setRequired(false);

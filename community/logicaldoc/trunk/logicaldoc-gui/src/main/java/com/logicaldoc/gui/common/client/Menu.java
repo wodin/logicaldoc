@@ -12,6 +12,8 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
  * @since 6.0
  */
 public class Menu {
+	public static final long LOCKED_DOCS = -3;
+	
 	public static final long LAST_CHANGES = -2;
 
 	public static final long ADMINISTRATION = 2;

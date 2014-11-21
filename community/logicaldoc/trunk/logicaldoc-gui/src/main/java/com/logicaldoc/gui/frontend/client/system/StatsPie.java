@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.system;
 
+import java.util.Date;
+
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.Session;
@@ -22,7 +24,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class PieStats extends HLayout {
+public class StatsPie extends HLayout {
 
 	private static final int STATS_REPOSITORY = 0;
 
@@ -30,7 +32,7 @@ public class PieStats extends HLayout {
 
 	private static final int STATS_FOLDERS = 2;
 
-	public PieStats(GUIParameter[][] parameters) {
+	public StatsPie(GUIParameter[][] parameters) {
 		super();
 		setWidth100();
 		setHeight100();
@@ -48,14 +50,18 @@ public class PieStats extends HLayout {
 				params[i].setValue(Long.toString(val));
 			}
 		} catch (Throwable t) {
-		}	
-			
-		repository.addMember(new Image(Util.contextPath()+"stat?sid="+Session.get().getSid()+"&chart=repository"));
-		
+		}
+
+		Image pieImage = new Image(Util.contextPath() + "stat?sid=" + Session.get().getSid()
+				+ "&chart=repository&random=" + new Date().getTime());
+		pieImage.setWidth("250px");
+		pieImage.setHeight("250px");
+		repository.addMember(pieImage);
+
 		HLayout spacer = new HLayout();
 		spacer.setHeight(15);
 		repository.addMember(spacer);
-		
+
 		try {
 			repository.addMember(prepareLegend(parameters[0], STATS_REPOSITORY));
 			addMember(repository);
@@ -63,13 +69,16 @@ public class PieStats extends HLayout {
 		}
 
 		VLayout documents = new VLayout();
-		documents.addMember(new Image(Util.contextPath()+"stat?sid="+Session.get().getSid()+"&chart=documents"));
-	
+		pieImage = new Image(Util.contextPath() + "stat?sid=" + Session.get().getSid()
+				+ "&chart=documents&random=" + new Date().getTime());
+		pieImage.setWidth("250px");
+		pieImage.setHeight("250px");
+		documents.addMember(pieImage);
+
 		spacer = new HLayout();
 		spacer.setHeight(15);
 		documents.addMember(spacer);
-		
-		
+
 		try {
 			documents.addMember(prepareLegend(parameters[1], STATS_DOCUMENTS));
 			addMember(documents);
@@ -78,12 +87,16 @@ public class PieStats extends HLayout {
 		}
 
 		VLayout folders = new VLayout();
-		folders.addMember(new Image(Util.contextPath()+"stat?sid="+Session.get().getSid()+"&chart=folders"));
+		pieImage = new Image(Util.contextPath() + "stat?sid=" + Session.get().getSid() + "&chart=folders&random="
+				+ new Date().getTime());
+		pieImage.setWidth("250px");
+		pieImage.setHeight("250px");
+		folders.addMember(pieImage);
 
 		spacer = new HLayout();
 		spacer.setHeight(15);
 		folders.addMember(spacer);
-		
+
 		try {
 			folders.addMember(prepareLegend(parameters[2], STATS_FOLDERS));
 			addMember(folders);

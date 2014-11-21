@@ -188,9 +188,8 @@ public class StatsCollector extends Task {
 		long empty = fldStats[1];
 		long deletedfolders = fldStats[2];
 
-		if (tenants.size() > 1)
-			for (Tenant tenant : tenants)
-				extractFldStats(tenant.getId());
+		for (Tenant tenant : tenants)
+			extractFldStats(tenant.getId());
 
 		log.debug("Saved folder statistics");
 

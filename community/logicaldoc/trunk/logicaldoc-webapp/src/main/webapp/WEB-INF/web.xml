@@ -222,6 +222,10 @@
         <servlet-class>com.logicaldoc.web.data.ExtendedAttributeOptionsDataServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>LockedDocsData</servlet-name>
+        <servlet-class>com.logicaldoc.web.data.LockedDocsDataServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Preview</servlet-name>
         <servlet-class>com.logicaldoc.web.DocumentPreview</servlet-class>
     </servlet>
@@ -280,7 +284,7 @@
     <servlet>
         <servlet-name>StatChart</servlet-name>
         <servlet-class>com.logicaldoc.web.StatChartServlet</servlet-class>
-    </servlet>        
+    </servlet>
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
         <url-pattern>*.gupld</url-pattern>
@@ -460,6 +464,10 @@
     <servlet-mapping>
         <servlet-name>ExtendedAttributeOptionsData</servlet-name>
         <url-pattern>/data/extoptions.xml</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LockedDocsData</servlet-name>
+        <url-pattern>/data/lockeddocs.xml</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Preview</servlet-name>
