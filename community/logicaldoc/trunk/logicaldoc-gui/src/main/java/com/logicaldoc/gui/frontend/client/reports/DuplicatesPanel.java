@@ -18,7 +18,6 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
-import com.logicaldoc.gui.frontend.client.document.TrashPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -291,7 +290,7 @@ public class DuplicatesPanel extends VLayout {
 
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
-		final ListGridRecord[] selection = list.getSelection();
+		final ListGridRecord[] selection = list.getSelectedRecords();
 
 		MenuItem delete = new MenuItem();
 		delete.setTitle(I18N.message("ddelete"));
@@ -360,7 +359,7 @@ public class DuplicatesPanel extends VLayout {
 			}
 		});
 
-		if (!(list.getSelection() != null && list.getSelection().length == 1)) {
+		if (!(list.getSelectedRecords() != null && list.getSelectedRecords().length == 1)) {
 			download.setEnabled(false);
 			preview.setEnabled(false);
 			openInFolder.setEnabled(false);
