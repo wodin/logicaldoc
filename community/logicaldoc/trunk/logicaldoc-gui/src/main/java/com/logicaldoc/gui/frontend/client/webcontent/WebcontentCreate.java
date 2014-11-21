@@ -43,7 +43,7 @@ public class WebcontentCreate extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("createwebcontent"));
 		setWidth(270);
-		setHeight(145);
+		setHeight(155);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
