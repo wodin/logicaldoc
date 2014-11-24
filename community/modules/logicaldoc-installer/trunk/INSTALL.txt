@@ -1,0 +1,42 @@
+    __                _            __   ____  __      _           __
+   / /   ____  ____ _(_)________ _/ /  / __ \/ /_    (_)__  _____/ /______
+  / /   / __ \/ __ `/ / ___/ __ `/ /  / / / / __ \  / / _ \/ ___/ __/ ___/
+ / /___/ /_/ / /_/ / / /__/ /_/ / /  / /_/ / /_/ / / /  __/ /__/ /_(__  )
+/_____/\____/\__, /_/\___/\__,_/_/   \____/_.___/_/ /\___/\___/\__/____/
+            /____/                             /___/
+
+                    http://www.logicalobjects.com
+                      http://www.logicaldoc.com                    
+
+                LogicalDOC Document Management System
+
+For a complete installation quide, please go here: http://docs.logicaldoc.com
+
+
+Prerequisites:
+Java SE 7 (Java JDK 1.7)
+A database engine up and running (recommended choice is MySQL 5.6)
+
+________________________________________________________________________________
+Installation procedure:
+
+1) Open a console
+
+2) Type the command: java -jar logicaldoc-installer.jar
+
+3) Follow the installation steps
+
+________________________________________________________________________________
+Start/Stop procedure on Linux and Mac OSX:
+
+1) Open a privileged console in the installation directory
+
+2) To start type the command: ./bin/logicaldoc.sh start
+
+3) To stop type the command: ./bin/logicaldoc.sh stop
+
+________________________________________________________________________________
+Please report any bugs you can find using the dedicated Bug tracking system: 
+http://bugs.logicaldoc.com
+
+The LogicalDOC Development Team
