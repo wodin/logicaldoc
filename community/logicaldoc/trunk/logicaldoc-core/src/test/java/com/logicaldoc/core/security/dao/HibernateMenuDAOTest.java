@@ -123,11 +123,11 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 	public void testFindByUserNameString() {
 		List<Menu> menus = dao.findByUserId(1);
 		Assert.assertNotNull(menus);
-		Assert.assertEquals(27, menus.size());
+		Assert.assertEquals(28, menus.size());
 
 		menus = dao.findByUserId(3);
 		Assert.assertNotNull(menus);
-		Assert.assertEquals(27, menus.size());
+		Assert.assertEquals(28, menus.size());
 
 		// Try with unexisting user
 		menus = dao.findByUserId(99);
@@ -139,7 +139,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 	public void testFindByUserId() {
 		List<Menu> menus = dao.findByUserId(1, 2);
 		Assert.assertNotNull(menus);
-		Assert.assertEquals(13, menus.size());
+		Assert.assertEquals(14, menus.size());
 
 		// Try with unexisting user and menus
 		menus = dao.findByUserId(1, 70);
@@ -152,7 +152,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 
 		menus = dao.findByUserId(1, 2);
 		Assert.assertNotNull(menus);
-		Assert.assertEquals(13, menus.size());
+		Assert.assertEquals(14, menus.size());
 
 		menus = dao.findByUserId(4, 2);
 		Assert.assertNotNull(menus);
@@ -163,7 +163,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 	public void testFindByParentId() {
 		List<Menu> menus = dao.findByParentId(2);
 		Assert.assertNotNull(menus);
-		Assert.assertEquals(21, menus.size());
+		Assert.assertEquals(22, menus.size());
 
 		// Try with unexisting parent
 		menus = dao.findByParentId(999);
@@ -243,7 +243,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindByGroupId() {
 		Collection<Menu> menus = dao.findByGroupId(1);
-		Assert.assertEquals(27, menus.size());
+		Assert.assertEquals(28, menus.size());
 		menus = dao.findByGroupId(10);
 		Assert.assertEquals(0, menus.size());
 		menus = dao.findByGroupId(2);
@@ -294,7 +294,7 @@ public class HibernateMenuDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(ids.contains(1200L));
 		ids = dao.findMenuIdByUserIdAndPermission(1, Permission.WRITE);
 		Assert.assertNotNull(ids);
-		Assert.assertEquals(27, ids.size());
+		Assert.assertEquals(28, ids.size());
 		ids = dao.findMenuIdByUserIdAndPermission(4, Permission.WRITE);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(3, ids.size());
