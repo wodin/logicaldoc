@@ -1,0 +1,13 @@
+<launch4jConfig>
+  <headerType>gui</headerType>
+  <jar>../target/logicaldoc-installer.jar</jar>
+  <dontWrapJar>false</dontWrapJar>  
+  <outfile>../target/logicaldoc-installer.exe</outfile>
+  <errTitle>LogicalDOC Community</errTitle>
+  <chdir>.</chdir>
+  <icon>../src/dist/bin/App32.ico</icon>
+  <restartOnCrash>false</restartOnCrash>
+  <jre>
+    <minVersion>1.7.0</minVersion>
+  </jre>
+</launch4jConfig>
