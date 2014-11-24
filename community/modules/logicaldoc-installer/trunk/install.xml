@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<izpack:installation version="5.0"
+    xmlns:izpack="http://izpack.org/schema/installation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-i18n-7.1.2.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-util-7.1.2.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/slf4j-api-1.7.7.jar" /> 
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/commons-io-1.4.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/mysql-connector-java-5.1.31.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/ojdbc6-11.2.0.2.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/jtds-1.2.5.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/hsqldb-2.2.8.jar" />
+    <jar src="lib/logicaldoc-community-installer.jar" stage="both"/>
+
+    <info>
+        <appname>LogicalDOC Community</appname>
+        <appversion>7.1.2</appversion>
+        <authors>
+            <author name="LogicalDOC" email="support@logicaldoc.com" />
+        </authors>
+        <url>http://www.logicaldoc.com</url>
+        <javaversion>1.7</javaversion>
+        <requiresjdk>no</requiresjdk>
+        <!-- pack200 /-->
+        <run-privileged />
+        <uninstaller write="yes" />
+    </info>
+    
+    <!-- The gui preferences indication. Sets the installer window to 700x480. It 
+        will not be able to change the size. -->
+        <guiprefs width="700" height="480" resizable="yes">
+        <modifier key="useButtonIcons" value="yes" />
+        <modifier key="useLabelIcons" value="yes" />
+        <modifier key="labelGap" value="2" />
+        <!-- modifier key="layoutAnchor" value="NORTHWEST" / -->
+        <modifier key="useHeadingPanel" value="yes" />
+        <modifier key="headingImageOnLeft" value="yes" />
+        <modifier key="headingLineCount" value="1" />
+        <modifier key="headingFontSize" value="1.5" />
+        <modifier key="headingBackgroundColor" value="0x00ffffff" />
+        <modifier key="headingPanelCounter" value="text" />
+        <modifier key="headingPanelCounterPos" value="inHeading" />
+    </guiprefs>
+    
+    <!-- The locale section. Asks here to include the English and French langpacks. -->
+    <locale>
+        <langpack iso3="eng" />
+        <langpack iso3="ita" />
+        <langpack iso3="spa" />
+        <langpack iso3="fra" />
+        <langpack iso3="deu" />
+    </locale>
+    
+    <variables>
+       <variable name="TargetPanel.dir" value="/LogicalDOC-Community" />
+    </variables>
+    
+    <!-- The resources section. The ids must be these ones if you want to use the 
+        LicencePanel and/or the InfoPanel. -->
+    <resources>
+        <res id="Heading.image" src="install/banner.png" />
+        <res id="LicencePanel.licence" src="LICENSE.txt" />
+        <res id="box-out-32.png" src="bin/App32.png" />
+        <res id="JFrameIcon.png" src="bin/App32.png" />
+        <res id="userInputSpec.xml" src="install/input.xml" />
+        <res id="userInputLang.xml_eng" src="install/inputlang.eng.xml" />
+        <res id="userInputLang.xml_ita" src="install/inputlang.ita.xml" />
+        <res id="userInputLang.xml_spa" src="install/inputlang.spa.xml" />
+        <res id="CustomLangPack.xml_eng" src="install/custom.eng.xml" />
+        <res id="CustomLangPack.xml_ita" src="install/custom.ita.xml" />
+        <res id="CustomLangPack.xml_spa" src="install/custom.spa.xml" />
+        <res id="ProcessPanel.Spec.xml" src="install/process.xml" />
+        <res id="RegistrySpec.xml" src="install/registry.xml" />
+        <res id="shortcutSpec.xml" src="install/shortcuts.xml"/>
+    </resources>
+    
+    <conditions>
+        <condition type="variable" id="isEmbeddedDb">
+            <name>dbengine</name>
+            <value>embedded</value>
+        </condition>
+        <condition type="not" id="isNotEmbeddedDb">
+            <condition type="ref" refid="isEmbeddedDb"/>
+        </condition>
+        <condition type="variable" id="isDbManualUrl">
+            <name>dbmanualurl</name>
+            <value>true</value>
+        </condition>    
+    </conditions>    
+
+    <!-- The panels section. We indicate here which panels we want to use. The order 
+        will be respected. -->
+    <panels>
+        <panel classname="HelloPanel" />
+        <panel classname="com.logicaldoc.installer.TargetPanel" />
+        <panel classname="PacksPanel"/>
+        <panel classname="InstallPanel" />
+        <panel classname="UserInputPanel" id="panel_registration" />
+        <panel classname="UserInputPanel" id="panel_database1">
+            <validator classname="com.logicaldoc.installer.DatabaseEngineValidator" />
+        </panel>    
+        <panel classname="UserInputPanel" id="panel_database2" condition="isNotEmbeddedDb">
+            <validator classname="com.logicaldoc.installer.DatabaseValidator" />
+        </panel>
+        <panel classname="UserInputPanel" id="panel_database3" condition="isDbManualUrl">
+            <validator classname="com.logicaldoc.installer.DatabaseValidator" />
+        </panel>
+        <panel classname="UserInputPanel" id="panel_application" />
+        <panel classname="UserInputPanel" id="panel_extapps" />
+        <panel classname="ProcessPanel" id="panel_process" />
+        <panel classname="ShortcutPanel">
+             <os family="windows"/>
+        </panel>
+        <panel classname="FinishPanel" />
+    </panels>
+    <!-- The packs section. We specify here our packs. -->
+    <packs>
+        <pack name="Base" required="yes">
+            <description>Base</description>
+            <fileset dir="bin" targetdir="$INSTALL_PATH/bin" />
+            <fileset dir="ant" targetdir="$INSTALL_PATH/ant" />
+            <fileset dir="conf" targetdir="$INSTALL_PATH/conf" />
+            <fileset dir="repository" targetdir="$INSTALL_PATH/repository" />
+            <fileset dir="tmp" targetdir="$INSTALL_PATH/tmp" />
+            <fileset dir="tomcat" targetdir="$INSTALL_PATH/tomcat" />
+            <fileset dir="loader" targetdir="$INSTALL_PATH/loader" />
+            <file src="LICENSE.txt" targetdir="$INSTALL_PATH" />
+            
+            <parsable targetfile="$INSTALL_PATH/bin/logicaldoc" type="shell" />
+            <parsable targetfile="$INSTALL_PATH/bin/logicaldoc.sh" type="shell" />
+            <parsable targetfile="$INSTALL_PATH/bin/logicaldoc.plist" type="shell" />
+            <parsable targetfile="$INSTALL_PATH/bin/logicaldoc.bat" type="shell" />
+            
+            <executable targetfile="$INSTALL_PATH/bin/logicaldoc"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/bin/logicaldoc.sh"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/bin/logicaldoc.bat"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/bin/logicaldoc.plist"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/tomcat/bin/catalina.sh"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/tomcat/bin/configtest.sh"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/tomcat/bin/daemon.sh"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/tomcat/bin/digest.sh"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/tomcat/bin/setclasspath.sh"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/tomcat/bin/shutdown.sh"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/tomcat/bin/startup.sh"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/tomcat/bin/tool-wrapper.sh"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/tomcat/bin/version.sh"
+                stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/ant/bin/ant"
+                stage="never" keep="true" />
+        </pack>
+    </packs>
+    <natives>
+        <native type="3rdparty" name="COIOSHelper.dll" stage="both">
+            <os family="windows" />
+        </native>
+        <native type="3rdparty" name="COIOSHelper_x64.dll" stage="both">
+            <os family="windows" />
+        </native>
+        <native type="izpack" name="ShellLink.dll" stage="both">
+            <os family="windows" />
+        </native>
+        <native type="izpack" name="ShellLink_x64.dll" stage="both">
+            <os family="windows" />
+        </native>
+        <!-- native type="izpack" name="WinSetupAPI.dll" stage="both">
+            <os family="windows" />
+        </native>
+        <native type="izpack" name="WinSetupAPI_x64.dll" stage="both">
+            <os family="windows" />
+        </native-->
+    </natives>
+    <listeners>
+        <listener classname="RegistryInstallerListener" stage="install">
+            <os family="windows" />
+        </listener>
+        <listener classname="RegistryUninstallerListener" stage="uninstall">
+            <os family="windows" />
+        </listener>
+        <listener classname="com.logicaldoc.installer.Uninstall" stage="uninstall">
+            <os family="windows" />
+        </listener>
+    </listeners>
+</izpack:installation>
