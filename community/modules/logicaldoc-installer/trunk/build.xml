@@ -94,22 +94,27 @@
     </target>
     <target name="prepare-exe" depends="init-all" description="Prepares the executable artifact">
         <artifact:pom file="pom.xml" id="pom" />
+        <copy file="launcher/launcher.xml" tofile="target/launcher.xml" />
+        <replace dir="target/" value="${pom.version}">
+            <include name="launcher.xml" />
+            <replacetoken>VERSION</replacetoken>
+        </replace>
         <java classname="net.sf.launch4j.Main">
-            <arg value="launcher/launcher.xml" />
+            <arg value="target/launcher.xml" />
             <classpath>
                 <fileset dir="launcher">
                     <include name="*.jar" />
                 </fileset>
             </classpath>
         </java>
-
+        
         <echo>Signing the setup.exe file</echo>
         <property name="keystore.path"
             value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesigncert.p12" />
-        <property name="keystore.alias" value="codesigncert" />
         <property name="exe.location" value="target/setup.exe" />
         <exec executable="launcher/sign4j/sign4j.exe">
-           <arg line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a ${keystore.alias} --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll ${exe.location}" />
+            <arg
+                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll ${exe.location}" />
         </exec>
     </target>
     <target name="all" depends="init-all,dist,installer,prepare-exe,package"
@@ -118,8 +123,14 @@
     <target name="prepare-exe-single" depends="init-all"
         description="Prepares the executable artifact">
         <artifact:pom file="pom.xml" id="pom" />
+        <copy file="launcher/launcher-single.xml" tofile="target/launcher.xml" />
+        <replace dir="target/" value="${pom.version}">
+            <include name="launcher.xml" />
+            <replacetoken>VERSION</replacetoken>
+        </replace>
+        
         <java classname="net.sf.launch4j.Main">
-            <arg value="launcher/launcher-single.xml" />
+            <arg value="target/launcher.xml" />
             <classpath>
                 <fileset dir="launcher">
                     <include name="*.jar" />
@@ -130,12 +141,11 @@
         <echo>Signing the logicaldoc-installer.exe file</echo>
         <property name="keystore.path"
             value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesigncert.p12" />
-        <property name="keystore.alias" value="codesigncert" />
         <property name="exe.location" value="target/logicaldoc-installer.exe" />
         <exec executable="launcher/sign4j/sign4j.exe">
-           <arg line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a ${keystore.alias} --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll ${exe.location}" />
+            <arg
+                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll ${exe.location}" />
         </exec>
-        
         <move file="target/logicaldoc-installer.exe" tofile="target/${pom.artifactId}-${pom.version}.exe" />
     </target>
 </project>
