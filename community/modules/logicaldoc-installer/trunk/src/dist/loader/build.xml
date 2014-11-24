@@ -1,0 +1,118 @@
+<project name="logicaldoc_install" default="update" basedir=".">
+	<property environment="env" />
+	<property file="build.properties" />
+	<property file="../conf/context.properties" />
+	<property file="../language.txt" />
+	<property name="webapp.dir" value="${tomcat.home}/webapps/ROOT" />
+
+	<path id="class.path">
+		<pathelement path="${classpath}" />
+		<fileset dir="${lib.dir}">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${lib.dir}" />
+		<fileset dir="${webapp.dir}/WEB-INF/lib">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+    
+    <scriptdef name="getjdbcadminurl" language="javascript">
+     <attribute name="text" />
+     <attribute name="property" />
+     <![CDATA[
+       var text = attributes.get("text");
+       project.setProperty(attributes.get("property"), text.substring(0, text.lastIndexOf("/")));
+     ]]>
+    </scriptdef>
+
+	<target name="dbinit" description="Initializes the database">
+       <if>
+         <or>
+            <equals arg1="${jdbc.dbms}" arg2="oracle" />
+            <equals arg1="${jdbc.dbms}" arg2="hsqldb"/>
+         </or>
+         <then/>
+         <else>
+           <trycatch property="error" reference="exception">
+              <try>
+                <getjdbcadminurl text="${jdbc.url}" property="jdbcadminurl" />
+                <sql  driver="${jdbc.driver}" url="${jdbcadminurl}"  userid="${jdbc.username}" password="${jdbc.password}" 
+                      print="yes" classpathref="class.path">
+                      create database logicaldoc;
+                </sql>
+                <echo>Database created</echo> 
+              </try>
+              <catch>
+                <echo>Database schema not created, perhaps it already exists</echo>
+              </catch>
+           </trycatch>
+         </else>
+        </if>
+        
+        
+		<trycatch property="error" reference="exception">
+			<try>
+				<!--Iterate over each file and execute it in a connection-->
+				<for list="${dbinit.sql.files}" param="file">
+					<sequential>
+						<var name="sqlFile" unset="true" />
+						<if>
+							<available file="${dbinit.sql.dir}/@{file}.sql.${jdbc.dbms}" property="dbms.present" />
+							<then>
+								<property name="sqlFile" value="${dbinit.sql.dir}/@{file}.sql.${jdbc.dbms}" />
+							</then>
+							<else>
+								<property name="sqlFile" value="${dbinit.sql.dir}/@{file}.sql" />
+							</else>
+						</if>
+						<echo>Executing sql file ${sqlFile}</echo>
+						<sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}" password="${jdbc.password}" autocommit="true" print="yes" output="${log.dir}/output.txt" append="true" src="${sqlFile}" onerror="${dbinit.onerror}">
+							<classpath refid="class.path" />
+						</sql>
+					</sequential>
+				</for>
+			</try>
+			<catch>
+				<echo>Unable to import data</echo>
+				<echo>${error}</echo>
+			</catch>
+		</trycatch>
+	</target>
+
+	<target name="langinit" description="Initializes the language">
+		<trycatch property="error" reference="exception">
+			<try>
+				<echo>Setting default language</echo>
+				<sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}" password="${jdbc.password}" autocommit="true" print="yes" output="${log.dir}/output.txt" append="true" onerror="${dbinit.onerror}">
+					<classpath refid="class.path" />
+					<transaction>update ld_user set ld_language='${lang.default}' where ld_username='admin'</transaction>
+				</sql>
+			</try>
+			<catch>
+				<echo>Unable to set default language</echo>
+				<echo>${error}</echo>
+			</catch>
+		</trycatch>
+	</target>
+	
+	<target name="update">
+		<!-- Fix the carriage returns for UNIX -->
+		<fixcrlf srcdir="../bin" includes="*.sh,logicaldoc" eol="unix" eof="remove" />
+		<fixcrlf srcdir="../tomcat/bin" includes="**/*.sh" eol="unix" eof="remove" />
+		<fixcrlf srcdir="../ant/bin" includes="ant" eol="unix" eof="remove" />
+
+		<antcall target="dbinit" />
+		<antcall target="langinit" />
+			
+		<if>
+			<equals arg1="${jdbc.dbms}" arg2="hsqldb" />
+			<then>
+				<sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}" password="${jdbc.password}" autocommit="true" print="yes" output="${log.dir}/output.txt" append="true" onerror="${dbinit.onerror}">
+					<classpath refid="class.path" />
+					<transaction>shutdown compact;</transaction>
+				</sql>
+			</then>
+		</if>
+	</target>
+</project>
