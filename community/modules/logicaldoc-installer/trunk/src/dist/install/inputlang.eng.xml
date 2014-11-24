@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<langpack>
+  <str id="registration" txt="Registration"/>
+  <str id="activationcode" txt="Activation Code"/>
+  <str id="name" txt="Name"/>
+  <str id="organization" txt="Organization"/>
+  <str id="invalidemail" txt="Invalid email address"/>
+  <str id="email" txt="Email"/>
+  <str id="website" txt="Web site"/>
+  <str id="database" txt="Database"/>
+  <str id="invaliddb" txt="Invalid Database" />
+  <str id="httpport" txt="HTTP Port"/>
+  <str id="httpsport" txt="HTTPS Port"/>
+  <str id="shutdownport" txt="Shutdown Port"/>
+  <str id="invalidhttpport" txt="Invalid HTTP port or already in use"/>
+  <str id="invalidhttspport" txt="Invalid HTTPS port or already in use"/>
+  <str id="invalidshutdownport" txt="Invalid Shutdown port or already in use"/>
+  <str id="applicationserver" txt="Application Server"/>
+  <str id="maxmemory" txt="Max. memory(MB)"/>
+  <str id="architecture" txt="Architecture"/>
+  <str id="pathofexternalapps" txt="Paths of External Applications"/>
+  <str id="imagemagickconvert" txt="Imagemagick convert"/>
+  <str id="dbmanualurl" txt="Manual specification of the database connection URL"/>
+  <str id="setuppasswordreq" txt="Please enter a password composed by at least 6 characters" />
+  <str id="setuppassword" txt="Setup password" />
+</langpack>
