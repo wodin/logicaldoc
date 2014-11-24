@@ -85,15 +85,15 @@
         <echo message="Prepare the distribution package" />
         <property name="distPackage" value="target/${pom.artifactId}-${pom.version}.zip" />
         <copy file="INSTALL.txt" todir="target" />
+        <copy file="CHANGELOG.txt" todir="target" />
         <copy file="src/dist/LICENSE.txt" todir="target" />
         <zip destfile="${distPackage}" basedir="target"
-            includes="logicaldoc-installer.jar,INSTALL.txt,LICENSE.txt,setup.exe" update="false"
-            level="9" />
+            includes="logicaldoc-installer.jar,INSTALL.txt,LICENSE.txt,CHANGELOG.txt,setup.exe"
+            update="false" level="9" />
         <echo message="Distribution package built succesfully" />
     </target>
     <target name="prepare-exe" depends="init-all" description="Prepares the executable artifact">
         <artifact:pom file="pom.xml" id="pom" />
-        
         <java classname="net.sf.launch4j.Main">
             <arg value="launcher/launcher.xml" />
             <classpath>
@@ -102,18 +102,22 @@
                 </fileset>
             </classpath>
         </java>
-        
-        <property name="certs" value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates" />
-        <move file="target/setup.exe" tofile="${certs}/dotnet/tosign/setup.exe" />
-        <exec executable="${certs}/dotnet/sign.bat" />
-        <move file="${certs}/dotnet/tosign/setup.exe" tofile="target/setup.exe" />
+
+        <echo>Signing the setup.exe file</echo>
+        <property name="keystore.path"
+            value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesigncert.p12" />
+        <property name="keystore.alias" value="codesigncert" />
+        <property name="exe.location" value="target/setup.exe" />
+        <exec executable="launcher/sign4j/sign4j.exe">
+           <arg line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a ${keystore.alias} --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll ${exe.location}" />
+        </exec>
     </target>
     <target name="all" depends="init-all,dist,installer,prepare-exe,package"
         description="Makes the dist and creates the installer">
     </target>
-    <target name="prepare-exe-single" depends="init-all" description="Prepares the executable artifact">
+    <target name="prepare-exe-single" depends="init-all"
+        description="Prepares the executable artifact">
         <artifact:pom file="pom.xml" id="pom" />
-        
         <java classname="net.sf.launch4j.Main">
             <arg value="launcher/launcher-single.xml" />
             <classpath>
@@ -122,6 +126,15 @@
                 </fileset>
             </classpath>
         </java>
+        
+        <echo>Signing the logicaldoc-installer.exe file</echo>
+        <property name="keystore.path"
+            value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesigncert.p12" />
+        <property name="keystore.alias" value="codesigncert" />
+        <property name="exe.location" value="target/logicaldoc-installer.exe" />
+        <exec executable="launcher/sign4j/sign4j.exe">
+           <arg line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a ${keystore.alias} --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll ${exe.location}" />
+        </exec>
         
         <move file="target/logicaldoc-installer.exe" tofile="target/${pom.artifactId}-${pom.version}.exe" />
     </target>
