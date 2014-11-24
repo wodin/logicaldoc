@@ -96,8 +96,8 @@ public class DocumentsListPanel extends VLayout {
 				if (Session.get().getCurrentFolder().isDownload()
 						&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
 					try {
-						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-								+ "&docId=" + id + "&open=true");
+						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+								+ id);
 					} catch (Throwable t) {
 
 					}
