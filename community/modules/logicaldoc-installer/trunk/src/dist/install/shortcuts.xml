@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<shortcuts>
+    <skipIfNotSupported />
+    <programGroup defaultName="LogicalDOC Community" location="applications" />
+    <shortcut name="LogicalDOC Community" target="$INSTALL_PATH\bin\open.bat"
+        workingDirectory="$INSTALL_PATH" iconFile="$INSTALL_PATH\bin\App32.ico"
+        commandLine = ""
+        iconIndex="0" programGroup="no" desktop="yes" applications="yes"
+        startMenu="yes" startup="no">
+        <os family="windows" />
+    </shortcut>
+</shortcuts>

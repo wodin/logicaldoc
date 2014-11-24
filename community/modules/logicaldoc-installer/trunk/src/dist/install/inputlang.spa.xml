@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<langpack>
+  <str id="registration" txt="Registration"/>
+  <str id="activationcode" txt="Código de Activación"/>
+  <str id="name" txt="Nombre"/>
+  <str id="organization" txt="Organización"/>
+  <str id="database" txt="Base de datos"/>
+  <str id="invalidport" txt="Puerto invalido o ya usado"/>
+</langpack>
