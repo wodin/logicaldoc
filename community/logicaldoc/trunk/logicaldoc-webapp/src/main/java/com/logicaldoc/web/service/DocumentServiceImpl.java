@@ -496,7 +496,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	public static GUIDocument fromDocument(Document doc, GUIFolder folder) {
 		GUIDocument document = new GUIDocument();
 		document.setId(doc.getId());
-		document.setDocRef(doc.getDocRef());
+		if (doc.getDocRef() != null && doc.getDocRef().longValue() != 0)
+			document.setDocRef(doc.getDocRef());
 		document.setTitle(doc.getTitle());
 		document.setCustomId(doc.getCustomId());
 		if (doc.getTags().size() > 0)
