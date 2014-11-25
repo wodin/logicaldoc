@@ -70,7 +70,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		setAutoFetchData(true);
 		setFilterOnKeypress(true);
 
-		ListGridField id = new ListGridField("id");
+		ListGridField id = new ListGridField("id", I18N.message("id"), 50);
 		id.setHidden(true);
 
 		ListGridField title = new ListGridField("title", I18N.message("title"), 200);
@@ -280,6 +280,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 
 			setDataSource(ds);
 
+			fields.add(id);
 			fields.add(indexed);
 			fields.add(locked);
 			fields.add(immutable);
@@ -344,6 +345,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			type.setHidden(true);
 			customId.setHidden(true);
 
+			fields.add(id);
 			fields.add(indexed);
 			fields.add(locked);
 			fields.add(immutable);

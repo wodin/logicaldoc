@@ -154,7 +154,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 									if (folder.isDownload()
 											&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
 										Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-												+ "&docId=" + doc.getId() + "&open=true", "_blank", "");
+												+ "&docId=" + doc.getId(), "_blank", "");
 									else {
 										String filename = doc.getFileName();
 										String version = doc.getVersion();
