@@ -5,10 +5,15 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.util.Offline;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.fields.SpinnerItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 
 /**
@@ -54,19 +59,23 @@ public class Cursor extends ToolStrip {
 		maxItem.setValue(Integer.parseInt(mx));
 		maxItem.setWidth(70);
 		maxItem.setStep(20);
+		maxItem.setSaveOnEnter(true);
+		maxItem.setImplicitSave(true);
 		maxItem.setHint(I18N.message("elements"));
 		maxItem.addChangedHandler(new ChangedHandler() {
-
+			
 			@Override
 			public void onChanged(ChangedEvent event) {
 				onMaxChange();
 			}
 		});
-
+		
 		addFormItem(maxItem);
 		if (enabledPagination) {
 			pageItem = ItemFactory.newSpinnerItem("page", "page", currentPage, 1, 1);
 			pageItem.setHint("");
+			pageItem.setSaveOnEnter(true);
+			pageItem.setImplicitSave(true);
 
 			addSeparator();
 			addFormItem(pageItem);
