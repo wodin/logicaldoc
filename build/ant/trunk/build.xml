@@ -43,11 +43,21 @@
     <zip destfile="${logicaldoc.devroot}/logicaldoc-sql.zip" basedir="${logicaldoc.devroot}/logicaldoc-sql"   />
     <delete dir="${logicaldoc.devroot}/logicaldoc-sql"/>
   </target>
+  <target name="prepare-community-sql">
+    <copy todir="${logicaldoc.devroot}/logicaldoc-community-sql" flatten="true">
+      <fileset dir="${logicaldoc.devroot}/community">
+        <include name="**/src/main/resources/**/*.sql*" />
+      </fileset>
+    </copy>
+    <zip destfile="${logicaldoc.devroot}/logicaldoc-community-sql.zip" basedir="${logicaldoc.devroot}/logicaldoc-community-sql"   />
+    <delete dir="${logicaldoc.devroot}/logicaldoc-community-sql"/>
+  </target>
   <target name="prepare-src">
     <copy todir="${logicaldoc.devroot}/logicaldoc-src">
       <fileset dir="${logicaldoc.devroot}">
         <include name="build/**" />
         <include name="community/**" />
+        <exclude name="community/modules/**" />
         <exclude name="**/target/**" />
         <exclude name="**/null/**" />
         <exclude name="**/war/WEB-INF/classes/**" />
@@ -60,7 +70,6 @@
         <exclude name="**/.*/**" />
         <exclude name="**/checkout.bat" />
         <exclude name="**/checkout.sh" />
-        <!--include name="enterprise/**" /-->
       </fileset>
     </copy>
     <copy todir="${logicaldoc.devroot}/logicaldoc-src" file="${logicaldoc.devroot}/build/ant/README.txt" />
