@@ -94,7 +94,7 @@
     </target>
     <target name="prepare-exe" depends="init-all" description="Prepares the executable artifact">
         <artifact:pom file="pom.xml" id="pom" />
-        <copy file="launcher/launcher.xml" tofile="target/launcher.xml" />
+        <copy file="launcher/launcher.xml" tofile="target/launcher.xml" overwrite="true"/>
         <replace dir="target/" value="${pom.version}">
             <include name="launcher.xml" />
             <replacetoken>VERSION</replacetoken>
@@ -123,7 +123,7 @@
     <target name="prepare-exe-single" depends="init-all"
         description="Prepares the executable artifact">
         <artifact:pom file="pom.xml" id="pom" />
-        <copy file="launcher/launcher-single.xml" tofile="target/launcher.xml" />
+        <copy file="launcher/launcher-single.xml" tofile="target/launcher.xml" overwrite="true"/>
         <replace dir="target/" value="${pom.version}">
             <include name="launcher.xml" />
             <replacetoken>VERSION</replacetoken>
