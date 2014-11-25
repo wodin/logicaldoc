@@ -1,0 +1,517 @@
+<project name="logicaldoc" default="update" basedir=".">
+	<path id="class.path">
+		<pathelement path="${classpath}" />
+		<fileset dir="lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="lib" />
+	</path>
+	<taskdef resource="net/sf/antcontrib/antlib.xml" />
+	<property environment="env" />
+	<property name="root" location=".." />
+	<property file="${root}/conf/build.properties" />
+	<property file="${root}/conf/context.properties" />
+    <property name="webapp" location="${root}/tomcat/webapps/ROOT" />
+	
+	<path id="webapp.classpath">
+		<pathelement path="${classpath}" />
+		<fileset dir="${webapp}/WEB-INF/lib">
+			<include name="**/*.jar" />
+		</fileset>
+		<pathelement location="${webapp}/WEB-INF/classes" />
+	</path>
+	
+	<!-- start/stop a service on windows -->
+	<macrodef name="service">
+		<attribute name="service" />
+		<attribute name="action" />
+		<sequential>
+			<exec executable="cmd.exe">
+				<arg line="/c net @{action} '@{service}'" />
+			</exec>
+		</sequential>
+	</macrodef>
+
+	<target name="init">
+		<condition property="isWindows">
+			<os family="windows" />
+		</condition>
+		<condition property="isLinux">
+			<os family="unix" />
+		</condition>
+	</target>
+
+	<target name="tomcat-start" depends="init">
+		<if>
+			<equals arg1="${isWindows}" arg2="true" />
+			<then>
+				<service action="start" service="${tomcat.service}" />
+			</then>
+			<else>
+				<exec executable="./logicaldoc.sh">
+					<arg line="start" />
+				</exec>
+			</else>
+		</if>
+		<echo>${tomcat.service} started</echo>
+	</target>
+	<target name="tomcat-stop" depends="init">
+		<if>
+			<equals arg1="${isWindows}" arg2="true" />
+			<then>
+				<service action="stop" service="${tomcat.service}" />
+			</then>
+			<else>
+				<exec executable="./logicaldoc.sh">
+					<arg line="stop" />
+				</exec>
+			</else>
+		</if>
+		<echo>${tomcat.service} stopped</echo>
+	</target>
+
+	<target name="backup_db">
+		<echo>Database backup</echo>
+		<trycatch property="error" reference="exception">
+			<try>
+				<exec executable="${backup.dump.command}" output="${backup.workdir}/database" error="${backup.workdir}/database.error">
+					<arg line="${backup.dump.arguments}" />
+				</exec>
+				<tar destfile="${backup.workdir}/database.tar.gz" compression="gzip">
+					<fileset dir="${backup.workdir}">
+						<include name="database" />
+					</fileset>
+				</tar>
+				<delete file="${backup.workdir}/database" failonerror="false" />
+                <delete file="${backup.workdir}/database.error" failonerror="false" />
+				<chmod file="${backup.workdir}/database.tar.gz" perm="ugo+rw" />
+				<echo>Database dumped</echo>
+			</try>
+			<catch>
+				<echo>${error}</echo>
+				<throw refid="exception" />
+			</catch>
+		</trycatch>
+	</target>
+
+	<target name="delete_old_backups">
+		<timestampselector outputsetid="youngest.backups" count="${backup.files}" pathsep=";">
+			<path>
+				<fileset dir="${backup.dir}">
+					<include name="${backup.prefix}-*" />
+				</fileset>
+			</path>
+		</timestampselector>
+
+		<condition property="delete.required">
+			<resourcecount refid="youngest.backups" when="equal" count="${backup.files}" />
+		</condition>
+
+		<if>
+			<equals arg1="${delete.required}" arg2="true" />
+			<then>
+				<echo message="Deleting old backups" />
+
+
+				<timestampselector property="youngest.backups.files" count="${backup.files}" pathsep=";">
+					<path>
+						<fileset dir="${backup.dir}">
+							<include name="${backup.prefix}-*" />
+						</fileset>
+					</path>
+				</timestampselector>
+
+				<for list="${youngest.backups.files}" param="file" delimiter=";">
+					<sequential>
+						<move todir="${backup.workdir}">
+							<fileset file="@{file}" />
+						</move>
+					</sequential>
+				</for>
+
+				<delete>
+					<fileset dir="${backup.dir}">
+						<include name="${backup.prefix}-*" />
+					</fileset>
+				</delete>
+				<move todir="${backup.dir}">
+					<fileset dir="${backup.workdir}">
+						<include name="${backup.prefix}-*" />
+					</fileset>
+				</move>
+			</then>
+			<else>
+				<echo message="No old backups to delete" />
+			</else>
+		</if>
+	</target>
+
+	<target name="backup" depends="init">
+		<echo>Backup started</echo>
+
+		<delete dir="${backup.workdir}" />
+		<mkdir dir="${backup.workdir}" />
+		<antcall target="backup_db" />
+
+		<echo>Prepare configurations</echo>
+		<mkdir dir="${backup.workdir}/conf" />
+		<copy todir="${backup.workdir}/conf">
+          <fileset dir="${logicaldoc.home}/conf">
+            <exclude name="license*"/>
+            <include name="**/*"/>
+          </fileset>
+        </copy>
+		<tar destfile="${backup.workdir}/conf.tar.gz" compression="gzip" basedir="${backup.workdir}/conf" />
+		<chmod file="${backup.workdir}/conf.tar.gz" perm="ugo+rw" />
+		<delete dir="${backup.workdir}/conf" />
+
+		<echo>Prepare plugin configurations</echo>
+		<tar destfile="${backup.workdir}/plugin.tar.gz" compression="gzip" basedir="${conf.plugindir}" />
+		<chmod file="${backup.workdir}/plugin.tar.gz" perm="ugo+rw" />
+
+		<echo>Prepare user settings</echo>
+		<tar destfile="${backup.workdir}/user.tar.gz" compression="gzip" basedir="${backup.workdir}" />
+		<chmod file="${backup.workdir}/user.tar.gz" perm="ugo+rw" />
+
+		<if>
+			<equals arg1="${backup.indexes}" arg2="true" />
+			<then>
+				<echo>Prepare full-text indexes</echo>
+				<tar destfile="${backup.workdir}/index.tar.gz" compression="gzip" basedir="${index.dir}" />
+				<chmod file="${backup.workdir}/index.tar.gz" perm="ugo+rw" />
+			</then>
+		</if>
+
+		<echo>Prepare documents</echo>
+		<for list="${backup.stores}" param="storeid">
+			<sequential>
+				<trycatch property="error" reference="exception">
+					<try>
+						<tar destfile="${backup.workdir}/store.@{storeid}.tar.gz" compression="gzip" basedir="${store.@{storeid}.dir}" />
+						<echo>Backed up store @{storeid}</echo>
+					</try>
+					<catch />
+				</trycatch>
+			</sequential>
+		</for>
+
+		<echo>Compress backup archive</echo>
+		<tstamp>
+			<format pattern="yyyyMMdd_HHmmss" property="timestamp" />
+		</tstamp>
+		<tar destfile="${backup.dir}/${backup.prefix}-${timestamp}.tar.gz" compression="gzip">
+			<fileset dir="${backup.workdir}" />
+		</tar>
+
+		<chmod file="${backup.dir}/${backup.prefix}-${timestamp}.tar.gz" perm="ugo+rw" />
+
+		<delete dir="${backup.workdir}" />
+		<mkdir dir="${backup.workdir}" />
+
+		<antcall target="delete_old_backups" />
+		<echo>Backup finished</echo>
+	</target>
+
+	<target name="update">
+		<echo>Update started</echo>
+		<antcall target="tomcat-stop" />
+
+		<!-- Sort by filename asc -->
+		<sort>
+			<fileset id="fileset.update" dir="${update.dir}" includes="${update.prefix}-*.zip" />
+		</sort>
+
+		<delete dir="${update.workdir}" failonerror="false" />
+		<mkdir dir="${update.workdir}" />
+
+		<for param="file">
+			<path>
+				<fileset refid="fileset.update" />
+			</path>
+			<sequential>
+				<echo>Process update package @{file}</echo>
+				<trycatch property="error" reference="exception">
+					<try>
+						<unzip dest="${update.workdir}" overwrite="true" src="@{file}" />
+						<var name="update.applyto" unset="true" />
+						<var name="product.release" unset="true" />
+						<loadproperties srcFile="${update.workdir}/build.properties" />
+						<loadproperties srcFile="../conf/context.properties" />
+						<condition property="build-is-present">
+							<available file="${update.workdir}/build.xml" type="file" />
+						</condition>
+						<if>
+							<equals arg1="${build-is-present}" arg2="true" />
+							<then>
+								<property file="${update.workdir}/build.properties" />
+
+								<!--Check if the update applies to this release-->
+								<for list="${update.applyto}" param="release">
+									<sequential>
+										<trycatch property="error" reference="exception">
+											<try>
+												<if>
+													<equals arg1="@{release}" arg2="${product.release}" />
+													<then>
+														<property name="match.found" value="true" />
+														<throw />
+													</then>
+													<else>
+													</else>
+												</if>
+											</try>
+											<catch>
+											</catch>
+										</trycatch>
+									</sequential>
+								</for>
+
+								<if>
+									<equals arg1="${match.found}" arg2="true" />
+									<then>
+										<echo>Execute update package @{file}</echo>
+										<ant antfile="build.xml" dir="${update.workdir}" />
+										<move file="@{file}" tofile="@{file}.processed" />
+									</then>
+									<else>
+										<echo>Update package @{file} does not apply to current release ${product.release}</echo>
+										<move file="@{file}" tofile="@{file}.skipped" />
+									</else>
+								</if>
+							</then>
+							<else>
+								<echo>@{file} is not an update package</echo>
+							</else>
+						</if>
+					</try>
+					<catch>
+						<echo>Error processing @{file}</echo>
+						<echo>${error}</echo>
+						<throw refid="exception" />
+					</catch>
+				</trycatch>
+			</sequential>
+		</for>
+		<delete dir="${update.workdir}" failonerror="false" />
+
+		<antcall target="tomcat-start" />
+		<echo>Update finished</echo>
+	</target>
+
+
+	<target name="patch">
+		<echo>Patch started</echo>
+		<antcall target="tomcat-stop" />
+
+		<!-- Sort by filename asc -->
+		<sort>
+			<fileset id="fileset.patch" dir="${patch.dir}" includes="${patch.prefix}-*.zip" />
+		</sort>
+
+		<delete dir="${patch.workdir}" failonerror="false" />
+		<mkdir dir="${patch.workdir}" />
+
+		<for param="file">
+			<path>
+				<fileset refid="fileset.patch" />
+			</path>
+			<sequential>
+				<echo>Process update package @{file}</echo>
+				<trycatch property="error" reference="exception">
+					<try>
+						<unzip dest="${patch.workdir}" overwrite="true" src="@{file}" />
+						<var name="update.applyto" unset="true" />
+						<var name="product.release" unset="true" />
+						<loadproperties srcFile="${patch.workdir}/build.properties" />
+						<loadproperties srcFile="../conf/context.properties" />
+						<condition property="build-is-present">
+							<available file="${patch.workdir}/build.xml" type="file" />
+						</condition>
+						<if>
+							<equals arg1="${build-is-present}" arg2="true" />
+							<then>
+								<property file="${patch.workdir}/build.properties" />
+
+								<!--Check if the update applies to this release-->
+								<for list="${update.applyto}" param="release">
+									<sequential>
+										<trycatch property="error" reference="exception">
+											<try>
+												<if>
+													<equals arg1="@{release}" arg2="${product.release}" />
+													<then>
+														<property name="match.found" value="true" />
+														<throw />
+													</then>
+													<else>
+													</else>
+												</if>
+											</try>
+											<catch>
+											</catch>
+										</trycatch>
+									</sequential>
+								</for>
+
+								<if>
+									<equals arg1="${match.found}" arg2="true" />
+									<then>
+										<echo>Execute patch package @{file}</echo>
+										<ant antfile="build.xml" dir="${patch.workdir}" />
+										<move file="@{file}" tofile="@{file}.processed" />
+									</then>
+									<else>
+										<echo>Patch package @{file} does not apply to current release ${product.release}</echo>
+										<move file="@{file}" tofile="@{file}.skipped" />
+									</else>
+								</if>
+							</then>
+							<else>
+								<echo>@{file} is not an update package</echo>
+							</else>
+						</if>
+					</try>
+					<catch>
+						<echo>Error processing @{file}</echo>
+						<echo>${error}</echo>
+						<throw refid="exception" />
+					</catch>
+				</trycatch>
+			</sequential>
+		</for>
+		<delete dir="${patch.workdir}" failonerror="false" />
+
+		<antcall target="tomcat-start" />
+		<echo>Patch finished</echo>
+	</target>
+
+
+	<target name="restore_db">
+		<echo>Database restore</echo>
+		<gunzip src="${backup.restore.dir}/database.tar.gz" />
+		<untar src="${backup.restore.dir}/database.tar" dest="${backup.restore.dir}" overwrite="true" />
+		<delete file="${backup.restore.dir}/database.tar" />
+
+		<trycatch property="error" reference="exception">
+		    <try>
+		        <sql  driver="${jdbc.driver}" url="${jdbc.url}"  userid="${jdbc.username}" password="${jdbc.password}" 
+		              print="yes" classpathref="webapp.classpath">
+                	  drop database ${backup.restore.database};
+                	  create database ${backup.restore.database};
+                </sql>
+                <echo>Database recreated</echo>	
+            </try>
+			<catch>
+				<echo>${error}</echo>
+				<throw refid="exception" />
+			</catch>
+		</trycatch>
+		 
+		<trycatch property="error" reference="exception">
+			<try>
+				<exec executable="${backup.restore.command}" input="${backup.restore.dir}/database" output="${logicaldoc.home}/tmp/restore_db.out" error="${logicaldoc.home}/tmp/restore_db.err">
+					<arg line="${backup.restore.arguments}" />
+				</exec>
+				<delete file="${backup.restore.dir}/database" />
+				<echo>Database restored</echo>
+			</try>
+			<catch>
+				<echo>${error}</echo>
+				<throw refid="exception" />
+			</catch>
+		</trycatch>
+	</target>
+
+	<target name="restore">
+		<echo>Restoring</echo>
+        <antcall target="tomcat-stop" />
+		
+		<property file="${logicaldoc.home}/conf/build.properties" />
+		<property file="${logicaldoc.home}/conf/context.properties" />
+
+		<echo>Restoring plugin configs</echo>
+		<trycatch property="error" reference="exception">
+		  <try>
+		    <delete dir="${conf.plugindir}" failonerror="false" />
+		    <mkdir dir="${conf.plugindir}"/>
+		    <gunzip src="${backup.restore.dir}/plugin.tar.gz" />
+		    <untar src="${backup.restore.dir}/plugin.tar" dest="${conf.plugindir}" overwrite="true" />
+		    <delete file="${backup.restore.dir}/plugin.tar" />
+		  </try>
+		  <catch>
+			<echo>${error}</echo>
+		  </catch>
+		</trycatch>
+
+		<echo>Restoring user configs</echo>
+		<trycatch property="error" reference="exception">
+		  <try>
+		    <delete dir="${conf.userdir}" failonerror="false" />
+		    <mkdir dir="${conf.userdir}"/>
+		    <gunzip src="${backup.restore.dir}/user.tar.gz" />
+		    <untar src="${backup.restore.dir}/user.tar" dest="${conf.userdir}" overwrite="true" />
+		    <delete file="${backup.restore.dir}/user.tar" />
+		  </try>
+		  <catch>
+			<echo>${error}</echo>
+		  </catch>
+		</trycatch>
+		
+		<echo>Restoring documents</echo>
+		<for list="${backup.stores}" param="storeid">
+			<sequential>
+				<trycatch property="error" reference="exception">
+					<try>
+					    <delete dir="${store.@{storeid}.dir}" failonerror="false" />
+					    <mkdir dir="${store.@{storeid}.dir}"/>
+						<echo>${backup.restore.dir}/store.@{storeid}.tar.gz</echo>
+						<gunzip src="${backup.restore.dir}/store.@{storeid}.tar.gz" />
+						<echo>${backup.restore.dir}/store.@{storeid}.tar</echo>
+						<untar src="${backup.restore.dir}/store.@{storeid}.tar" dest="${store.@{storeid}.dir}" overwrite="true" />
+						<delete file="${backup.restore.dir}/store.@{storeid}.tar" />
+						<echo>Unpacked store @{storeid}</echo>
+					</try>
+					<catch>
+						<echo>${error}</echo>
+					</catch>
+				</trycatch>
+			</sequential>
+		</for>
+
+		<echo>Restoring indexes</echo>
+		<trycatch property="error" reference="exception">
+		  <try>
+		    <delete dir="${index.dir}" failonerror="false" />
+		    <mkdir dir="${index.dir}"/>
+		    <gunzip src="${backup.restore.dir}/index.tar.gz" />
+		    <untar src="${backup.restore.dir}/index.tar" dest="${index.dir}" overwrite="true" />
+		    <delete file="${backup.restore.dir}/index.tar" />
+		  </try>
+		  <catch>
+		     <echo>${error}</echo>
+		  </catch>
+		</trycatch>
+		
+		<if>
+		    <equals arg1="${backup.restore.conf}" arg2="true" />
+		    <then>
+        	   <echo>Restoring configs</echo>
+		       <trycatch property="error" reference="exception">
+		       <try>
+		         <gunzip src="${backup.restore.dir}/conf.tar.gz" />
+		         <untar src="${backup.restore.dir}/conf.tar" dest="${root}/conf" overwrite="true" />
+		         <delete file="${backup.restore.dir}/conf.tar" />
+		       </try>
+		       <catch>
+			     <echo>${error}</echo>
+		       </catch>
+		       </trycatch>
+		    </then>
+		</if>
+		
+		<antcall target="restore_db" />
+		
+		<antcall target="tomcat-start" />
+		<echo>Restore finished</echo>
+	</target>
+</project>

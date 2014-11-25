@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<langpack>
+    <str id="installer.madewith" txt="http://www.logicaldoc.com"/>
+    <str id="installer.reversetitle" txt="$APP_NAME $APP_VER"/>
+    <str id="installer.title" txt="$APP_NAME $APP_VER"/>
+    <str id="data.validation.warning.title" txt="Atencion"/>
+</langpack>

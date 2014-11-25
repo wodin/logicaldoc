@@ -1,0 +1,72 @@
+<processing>
+  <logfiledir>$INSTALL_PATH</logfiledir>
+  <job name="Apply Configuration">
+    <executeclass name="com.logicaldoc.installer.ApplyConfiguration">
+        <arg>${INSTALL_PATH}</arg>
+        
+        <arg>${userno}</arg>
+        <arg>${name}</arg>
+        <arg>${organization}</arg>
+        <arg>${email}</arg>
+        <arg>${website}</arg>
+        
+        <arg>${dbengine}</arg>
+        <arg>${dbdriver}</arg>
+        <arg>${dburl}</arg>
+        <arg>${dbusername}</arg>
+        <arg>${dbpassword}</arg>
+        <arg>${dbquery}</arg>
+        <arg>${dbdialect}</arg>
+        <arg>${dbhost}</arg>
+        <arg>${dbport}</arg>
+        <arg>${dbdatabase}</arg>
+        
+        <arg>${httpport}</arg>
+        <arg>${httpsport}</arg>
+        <arg>${shutdownport}</arg>
+        <arg>${architecture}</arg>
+        <arg>${maxmemory}</arg>
+        <arg>${servicename}</arg>
+        
+        <arg>${openoffice}</arg>
+        <arg>${convert}</arg>
+        <arg>${ghostscript}</arg>
+        <arg>${swftools}</arg>
+        <arg>${tesseract}</arg>
+        <arg>${clamscan}</arg>
+        <arg>${openssl}</arg>
+        
+        <arg>${ISO2_LANG}</arg>
+        
+        <arg>${setuppassword}</arg>
+    </executeclass>
+  </job>
+  <job name="Database Loader">
+    <os family="windows" />
+    <executefile name="$INSTALL_PATH\ant\bin\ant.bat" workingDir="$INSTALL_PATH/loader">
+        <env>ANT_HOME=$INSTALL_PATH\ant</env>
+    </executefile>
+  </job>
+  <job name="Database Loader">
+    <os family="unix" />
+    <executefile name="$INSTALL_PATH/ant/bin/ant" workingDir="$INSTALL_PATH/loader">
+        <env>ANT_HOME=$INSTALL_PATH\ant</env>
+    </executefile>
+  </job>
+  <job name="Service Installation">
+    <os family="windows" />
+    <executefile name="$INSTALL_PATH\tomcat\bin\service.bat" workingDir="$INSTALL_PATH/tomcat">
+      <arg>install</arg>
+    </executefile>
+  </job>
+  <job name="Start Application">
+    <executeclass name="com.logicaldoc.installer.StartApplication">
+        <arg>${INSTALL_PATH}</arg>
+        <arg>${httpport}</arg>
+        <arg>${servicename}</arg>
+        <arg>${ISO2_LANG}</arg>
+    </executeclass>
+  </job>
+  <onFail previous="false" next="true" />
+  <onSuccess previous="false" next="true" />
+</processing>
