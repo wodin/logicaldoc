@@ -283,7 +283,6 @@ public class ParametricForm extends VLayout {
 
 		List<GUICriterion> list = new ArrayList<GUICriterion>();
 		for (RowCriteria row : criteriaRows) {
-
 			String fieldName = row.getCriteriaFieldsItem().getValueAsString();
 			fieldName = fieldName.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
 			if (fieldName.startsWith("_"))
