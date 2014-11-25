@@ -1,0 +1,151 @@
+<project name="logicaldoc-community-installer" default="all" basedir="."
+    xmlns:artifact="urn:maven-artifact-ant">
+    <property name="targetDist" value="target/dist" />
+    <property name="installerFile" value="target/logicaldoc-installer.jar" />
+    <property file="${user.home}/logicaldoc-dev.properties" />
+    <import file="${logicaldoc.devroot}/build/ant/build.xml" />
+    <path id="build.classpath">
+        <fileset dir="${izpack.dir}">
+            <include name="lib/*.jar" />
+        </fileset>
+    </path>
+    <taskdef name="izpack" classpathref="build.classpath"
+        classname="com.izforge.izpack.ant.IzPackTask" />
+    <target name="dist" depends="init-all" description="Prepare distribution files">
+        <echo message="Recompile the main artifact" />
+        <exec executable="mvn.bat" resolveexecutable="true" searchpath="true">
+            <arg line="-o -Dmaven.test.skip=true clean install" />
+        </exec>
+        <echo message="Prepare distribution into target/dist" />
+        <artifact:pom file="pom.xml" id="pom" />
+        <copy todir="${targetDist}">
+            <fileset dir="src/dist">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+        <artifact:dependencies filesetId="dependency.fileset">
+            <dependency groupId="com.logicaldoc" artifactId="logicaldoc-webapp"
+                version="${pom.version}" type="war" />
+        </artifact:dependencies>
+        <delete>
+            <fileset dir="${targetDist}/tomcat/webapps" includes="**"
+                excludes="**/logicaldoc/**" />
+        </delete>
+        <copy todir="${targetDist}/tomcat/webapps">
+            <fileset refid="dependency.fileset" />
+            <mapper type="flatten" />
+        </copy>
+        <unzip
+            src="${targetDist}/tomcat/webapps/logicaldoc-webapp-${pom.version}.war"
+            dest="${targetDist}/tomcat/webapps/ROOT" />
+        <delete
+            file="${targetDist}/tomcat/webapps/logicaldoc-webapp-${pom.version}.war" />
+        <move todir="${targetDist}/conf">
+            <fileset dir="${targetDist}/tomcat/webapps/ROOT/WEB-INF/classes">
+                <include name="context.properties" />
+                <include name="log*" />
+            </fileset>
+        </move>
+        <!-- Always set 'default' as runlevel -->
+        <propertyfile file="${targetDist}/conf/context.properties"
+            comment="Runlevel default">
+            <entry key="runlevel" value="default" />
+        </propertyfile>
+        <!-- Fix the carriage returns for UNIX -->
+        <fixcrlf srcdir="${targetDist}" includes="*.sh" eol="unix" eof="remove" />
+        <copy file="target/${pom.artifactId}-${pom.version}.jar" tofile="${targetDist}/lib/${pom.artifactId}.jar" />
+        <!-- Prepare all the sql scripts -->
+        <echo message="Prepare SQL scripts" />
+        <antcall target="prepare-community-sql" />
+        <unzip dest="${targetDist}/loader/sql" src="${logicaldoc.devroot}/logicaldoc-community-sql.zip" />
+        <echo message="Distribution prepared" />
+    </target>
+    <target name="installer" description="Creates the installer">
+        <echo message="Build the installer" />
+        <izpack input="install.xml" output="${installerFile}"
+            installerType="standard" basedir="target/dist" izPackDir="${izpack.dir}"
+            compression="raw" compressionlevel="9" />
+        <unzip src="${installerFile}" dest="target/tmp" />
+        <delete dir="target/tmp/resources/langpacks" />
+        <copy todir="target/tmp">
+            <fileset dir="src/main/resources/">
+                <include name="**/*.xml" />
+                <include name="**/*.png" />
+                <exclude name="context.xml" />
+            </fileset>
+        </copy>
+        <delete file="${installerFile}" />
+        <zip destfile="${installerFile}" basedir="target/tmp" includes="**"
+            level="9" />
+        <delete dir="target/tmp" quiet="true" />
+        <echo message="Installer file created succesfully" />
+    </target>
+    <target name="package" depends="init-all" description="Creates the distribution package">
+        <artifact:pom file="pom.xml" id="pom" />
+        <echo message="Prepare the distribution package" />
+        <property name="distPackage" value="target/${pom.artifactId}-${pom.version}.zip" />
+        <copy file="INSTALL.txt" todir="target" />
+        <copy file="CHANGELOG.txt" todir="target" />
+        <copy file="src/dist/LICENSE.txt" todir="target" />
+        <zip destfile="${distPackage}" basedir="target"
+            includes="logicaldoc-installer.jar,INSTALL.txt,LICENSE.txt,CHANGELOG.txt,setup.exe"
+            update="false" level="9" />
+        <echo message="Distribution package built succesfully" />
+    </target>
+    <target name="prepare-exe" depends="init-all" description="Prepares the executable artifact">
+        <artifact:pom file="pom.xml" id="pom" />
+        <copy file="launcher/launcher.xml" tofile="target/launcher.xml" overwrite="true"/>
+        <replace dir="target/" value="${pom.version}">
+            <include name="launcher.xml" />
+            <replacetoken>VERSION</replacetoken>
+        </replace>
+        <java classname="net.sf.launch4j.Main">
+            <arg value="target/launcher.xml" />
+            <classpath>
+                <fileset dir="launcher">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </java>
+        
+        <echo>Signing the setup.exe file</echo>
+        <property name="keystore.path"
+            value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesigncert.p12" />
+        <property name="exe.location" value="target/setup.exe" />
+        <exec executable="launcher/sign4j/sign4j.exe">
+            <arg
+                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll ${exe.location}" />
+        </exec>
+    </target>
+    <target name="all" depends="init-all,dist,installer,prepare-exe,package"
+        description="Makes the dist and creates the installer">
+    </target>
+    <target name="prepare-exe-single" depends="init-all"
+        description="Prepares the executable artifact">
+        <artifact:pom file="pom.xml" id="pom" />
+        <copy file="launcher/launcher-single.xml" tofile="target/launcher.xml" overwrite="true"/>
+        <replace dir="target/" value="${pom.version}">
+            <include name="launcher.xml" />
+            <replacetoken>VERSION</replacetoken>
+        </replace>
+        
+        <java classname="net.sf.launch4j.Main">
+            <arg value="target/launcher.xml" />
+            <classpath>
+                <fileset dir="launcher">
+                    <include name="*.jar" />
+                </fileset>
+            </classpath>
+        </java>
+        
+        <echo>Signing the logicaldoc-installer.exe file</echo>
+        <property name="keystore.path"
+            value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesigncert.p12" />
+        <property name="exe.location" value="target/logicaldoc-installer.exe" />
+        <exec executable="launcher/sign4j/sign4j.exe">
+            <arg
+                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll ${exe.location}" />
+        </exec>
+        <move file="target/logicaldoc-installer.exe" tofile="target/${pom.artifactId}-${pom.version}.exe" />
+    </target>
+</project>

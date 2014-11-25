@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+<userInput>
+    <panel id="panel_registration">
+        <field type="title" align="left" bold="true" txt=""
+            id="registration">
+        </field>
+        <field type="text" variable="name">
+            <spec txt="Name" id="name" size="40" set="" />
+        </field>
+        <field type="space" />
+        <field type="text" variable="organization">
+            <spec txt="Organization" id="organization" size="40" set="" />
+        </field>
+        <field type="space" />
+        <field type="text" variable="email">
+            <spec txt="Email" id="email" size="40" set=""/>
+            <validator  class="com.izforge.izpack.panels.userinput.validator.RegularExpressionValidator"
+                            txt="Invalid email address!" id="invalidemail">
+                     <param name="pattern"
+                            value="[a-zA-Z0-9._-]{1,}@[a-zA-Z0-9._-]+([.][a-zA-Z0-9_-]+)*[.][a-zA-Z0-9._-]{2,4}"/>
+            </validator>
+        </field>  
+        <field type="space" />
+        <field type="text" variable="website">
+            <spec txt="Web site" id="website" size="40" set=""/>
+        </field>  
+    </panel>
+
+    <panel id="panel_database1">
+        <field type="title" align="left" bold="true" txt="Database"
+            id="database">
+        </field>
+        
+        <field type="space" />
+        <field type="combo" variable="dbengine">
+            <description align="left" txt="Engine" id="dbengine"/>
+            <spec>
+                <choice txt="Embedded (for a small repository)" id="embedded" value="embedded" set="true"/>
+                <choice txt="MySQL (suggested choice for production)" id="mysql" value="mysql" />
+                <choice txt="Oracle" id="oracle" value="oracle" />
+                <choice txt="SQL Server" id="mssql" value="mssql" />
+            </spec>
+        </field>
+    </panel>
+    
+    <panel id="panel_database2">
+        <field type="title" align="left" bold="true" txt="Database"
+            id="database">
+        </field>
+        
+        <field type="text" variable="dbusername">
+           <spec txt="Username" id="username" size="20" set="" />
+        </field>
+        
+        <field type="space" />
+        <field type="password" variable="dbpassword">
+            <spec>
+                <pwd txt="Password" id="password" size="20" set="" />
+            </spec>
+        </field>
+        
+        <field type="space" />
+        <field type="text" variable="dbhost">
+            <spec txt="Server name/IP" id="servernameip" size="30" set="localhost" />
+        </field>
+        
+        <field type="space" />
+        <field type="text" variable="dbport">
+            <spec txt="Server port" id="serverport" size="10" set="${dbport}" />
+        </field>
+        
+        <field type="space" />
+        <field type="text" variable="dbdatabase">
+            <spec txt="Database" id="database" size="20" set="logicaldoc" />
+            <validator class="com.izforge.izpack.panels.userinput.validator.NotEmptyValidator" 
+                txt="Invalid database" id="invaliddb" />
+        </field>
+
+        <field type="space" />
+        <field type="text" variable="dbinstance">
+            <spec txt="Instance" id="instance" size="20" set="" />
+        </field>
+        
+        <field type="space" />
+        <field type="check" variable="dbmanualurl">
+            <spec txt="Manual specification of the database connection URL" id="dbmanualurl" true="true" false="false" set="false"/>
+        </field>
+    </panel>
+    
+    <panel id="panel_database3">
+        <field type="title" align="left" bold="true" txt="Database"
+            id="database">
+        </field>
+        
+        <field type="text" variable="dburl">
+           <spec txt="JDBC URL" id="jdbcurl" size="55" set="${dburl}" />
+        </field>
+        
+        <field type="space" />
+        <field type="text" variable="dbusername">
+           <spec txt="Username" id="username" size="20" set="${dbusername}" />
+        </field>
+        
+        <field type="space" />
+        <field type="password" variable="dbpassword">
+           <spec>
+              <pwd txt="Password" id="password" size="20" set="${dbpassword}" />
+           </spec>
+        </field>                
+    </panel>
+    
+    <panel id="panel_application">
+        <field type="title" align="left" bold="true" txt="Application Server"
+            id="applicationserver">
+        </field>
+
+        <field type="text" variable="setuppassword">
+            <spec txt="Setup password" id="setuppassword" size="10" set="" />
+            <validator class="com.logicaldoc.installer.PasswordWeeknessValidator" txt="Please enter a password composed by at least 6 characters" id="setuppasswordreq" />
+        </field>
+        
+        <field type="space" />
+        <field type="text" variable="httpport">
+            <spec txt="HTTP Port" id="httpport" size="10" set="8080" />
+            <validator class="com.logicaldoc.installer.PortValidator"
+                id="invalidhttpport" txt="Invalid HTTP port" >
+                <spec txt="" id="invalidhttpport" />
+            </validator>
+        </field>
+        
+        <field type="space" />
+        <field type="text" variable="httpsport">
+            <spec txt="HTTPS Port" id="httpsport" size="10" set="8443" />
+            <validator class="com.logicaldoc.installer.PortValidator"
+                id="invalidhttpsport" txt="Invalid HTTPS port">
+                <spec txt="" id="invalidhttpsport" />
+            </validator>
+        </field>
+        
+        <field type="space" />
+        <field type="text" variable="shutdownport">
+            <spec txt="Shutdown Port" id="shutdownport" size="10" set="9005" />
+            <validator class="com.logicaldoc.installer.PortValidator"
+                id="invalidshutdownport" txt="Invalid Shutdown port">
+                <spec txt="" id="invalidshutdownport" />
+            </validator>
+        </field>
+        
+        <field type="space" />
+        <field type="radio" variable="architecture">
+            <description align="left" txt="Architecture" id="architecture"/>
+            <spec>
+                <choice txt="32bit" id="32bit" value="32bit" />
+                <choice txt="64bit" id="64bit" value="64bit" set="true" />
+            </spec>
+        </field>
+        
+        <field type="space" />
+        <field type="text" variable="maxmemory">
+            <spec txt="Max. memory(MB)" id="maxmemory" layout="N" size="10" set="1300" />
+        </field>
+    </panel>
+    
+    <panel id="panel_extapps">
+        <field type="title" align="left" bold="true" txt="Paths of External Applications"
+            id="pathtofexternalapps">
+        </field>
+        <field type="text" variable="openoffice">
+            <spec txt="OpenOffice" id="openoffice" size="50" set="${openoffice}" />
+        </field>
+        <field type="space" />
+        <field type="text" variable="convert">
+            <spec txt="Imagemagick convert" id="imagemagickconvert" size="50" set="${convert}" />
+        </field>
+        <field type="space" />
+        <field type="text" variable="ghostscript">
+            <spec txt="Ghostscripy" id="ghostscript" size="50" set="${ghostscript}" />
+        </field>
+        <field type="space" />
+        <field type="text" variable="swftools">
+            <spec txt="SWF Tools" id="swftools" size="50" set="${swftools}" />
+        </field>
+        <field type="space" />
+        <field type="text" variable="tesseract">
+            <spec txt="Tesseract" id="tesseract" size="50" set="${tesseract}" />
+        </field>
+        <field type="space" />
+        <field type="text" variable="clamscan">
+            <spec txt="Clamscan" id="clamscan" size="50" set="${clamscan}" />
+        </field>
+        <field type="space" />
+        <field type="text" variable="openssl">
+            <spec txt="OpenSSL" id="openssl" size="50" set="${openssl}" />
+        </field>
+    </panel>
+</userInput>

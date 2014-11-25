@@ -1,0 +1,25 @@
+<launch4jConfig>
+  <headerType>gui</headerType>
+  <jar>logicaldoc-installer.jar</jar>
+  <dontWrapJar>false</dontWrapJar>  
+  <outfile>logicaldoc-installer.exe</outfile>
+  <errTitle>LogicalDOC Community</errTitle>
+  <chdir>.</chdir>
+  <icon>../src/dist/bin/App32.ico</icon>
+  <restartOnCrash>false</restartOnCrash>
+  <jre>
+    <minVersion>1.7.0</minVersion>
+  </jre>
+  <versionInfo>
+        <fileVersion>VERSION.0</fileVersion>
+        <txtFileVersion>VERSION</txtFileVersion>
+        <fileDescription>LogicalDOC Community Installer</fileDescription>
+        <copyright>Copyright &#169; 2006-2014 Logical Objects</copyright>
+        <productVersion>VERSION.0</productVersion>
+        <txtProductVersion>VERSION</txtProductVersion>
+        <productName>LogicalDOC Community</productName>
+        <companyName>Logical Objects</companyName>
+        <internalName>setup</internalName>
+        <originalFilename>setup.exe</originalFilename>
+  </versionInfo>  
+</launch4jConfig>
