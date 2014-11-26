@@ -87,6 +87,8 @@ public class CalendarDashboard extends VLayout {
 			calendar.setChosenDate(new Date());
 		if (choosenView != null)
 			calendar.setCurrentViewName(choosenView);
+		else
+			calendar.setCurrentViewName(ViewName.WEEK);
 		
 		//This setting prevents the Calendar from being corrupted by high event frequency
 		calendar.setShowDayView(false);
