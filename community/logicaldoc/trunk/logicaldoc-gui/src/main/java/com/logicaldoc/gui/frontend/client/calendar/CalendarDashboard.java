@@ -56,6 +56,7 @@ public class CalendarDashboard extends VLayout {
 		calendar = new Calendar();
 		calendar.setDataSource(new CalendarEventsDS(null));
 		calendar.setAutoFetchData(true);
+		calendar.setScrollToWorkday(true);
 		calendar.setDayViewTitle(I18N.message("day"));
 		calendar.setWeekViewTitle(I18N.message("week"));
 		calendar.setMonthViewTitle(I18N.message("month"));
@@ -68,7 +69,6 @@ public class CalendarDashboard extends VLayout {
 		else
 			calendar.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		calendar.setTimeFormatter(TimeDisplayFormat.TOSHORT24HOURTIME);
-		calendar.setScrollToWorkday(true);
 		calendar.setCanCreateEvents(false);
 		calendar.setCanResizeTimelineEvents(false);
 		calendar.setCanDragEvents(false);
@@ -87,7 +87,10 @@ public class CalendarDashboard extends VLayout {
 			calendar.setChosenDate(new Date());
 		if (choosenView != null)
 			calendar.setCurrentViewName(choosenView);
-
+		
+		//This setting prevents the Calendar from being corrupted by high event frequency
+		calendar.setShowDayView(false);
+		
 		calendar.addEventClickHandler(new EventClickHandler() {
 
 			@Override
