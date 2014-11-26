@@ -111,10 +111,9 @@
         <echo>Signing the setup.exe file</echo>
         <property name="keystore.path"
             value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesigncert.p12" />
-        <property name="exe.location" value="target/setup.exe" />
         <exec executable="launcher/sign4j/sign4j.exe">
             <arg
-                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll ${exe.location}" />
+                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll target/logicaldoc-installer.exe" />
         </exec>
     </target>
     <target name="all" depends="init-all,dist,installer,prepare-exe,package"
@@ -141,10 +140,9 @@
         <echo>Signing the logicaldoc-installer.exe file</echo>
         <property name="keystore.path"
             value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesigncert.p12" />
-        <property name="exe.location" value="target/logicaldoc-installer.exe" />
         <exec executable="launcher/sign4j/sign4j.exe">
             <arg
-                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll ${exe.location}" />
+                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll target/logicaldoc-installer.exe" />
         </exec>
         <move file="target/logicaldoc-installer.exe" tofile="target/${pom.artifactId}-${pom.version}.exe" />
     </target>
