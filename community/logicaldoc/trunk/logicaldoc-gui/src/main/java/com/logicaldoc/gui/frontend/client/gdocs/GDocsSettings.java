@@ -49,7 +49,8 @@ public class GDocsSettings extends Window {
 		vm = new ValuesManager();
 		form.setValuesManager(vm);
 
-		TextItem username = ItemFactory.newTextItem("use" + "rname", "username", settings[0]);
+		TextItem username = ItemFactory.newEmailItem("username", "username", false);
+		username.setValue(settings[0]);
 		username.setRequired(true);
 		username.setWidth(200);
 
