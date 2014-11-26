@@ -57,7 +57,10 @@ public class DocumentCalendarPanel extends DocumentDetailTab {
 		calendar.setNextButtonHoverText(I18N.message("next"));
 		calendar.setCancelButtonTitle(I18N.message("cancel"));
 		calendar.setDatePickerHoverText(I18N.message("choosedate"));
-		calendar.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATETIME);
+		if (I18N.message("format_dateshort").startsWith("MM/dd"))
+			calendar.setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
+		else
+			calendar.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		calendar.setTimeFormatter(TimeDisplayFormat.TOSHORT24HOURTIME);
 
 		calendar.setShowDayView(false);
@@ -69,6 +72,7 @@ public class DocumentCalendarPanel extends DocumentDetailTab {
 		calendar.setDisableWeekends(false);
 		calendar.setShowDateChooser(false);
 		calendar.setCanCreateEvents(false);
+		calendar.setCanRemoveEvents(false);
 
 		calendar.setWidth(490);
 		calendar.setHeight(180);
