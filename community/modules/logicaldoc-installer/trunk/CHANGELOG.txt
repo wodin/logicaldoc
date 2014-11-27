@@ -9,8 +9,18 @@
                       http://www.logicaldoc.com                    
 
                      LogicalDOC Community Edition
-
-LogicalDOC 7.1.1 (2014-10-24; logicaldoc-7.1.1)
+                     
+LogicalDOC 7.1.2 (2014-11-25; logicaldoc-7.1.2)
+==============================================================
+Fixed a problem with the calculation of statistics on folders
+Replaced the flash which displayed graphic statistics in administration
+New graphical installer
+Improved performance when displaying documents in grid format
+#480 - Option to ignore case of username on login
+#468 - Documents grid pagination
+#489 - Double click to download documents in IE does not work
+                     
+LogicalDOC 7.1.1 (2014-10-27; logicaldoc-7.1.1)
 ==============================================================
 449 - Webservice method to create links between documents - New Feature - Core
 463 - Complete turkish localization - Improvement - User Interface
@@ -18,9 +28,10 @@ LogicalDOC 7.1.1 (2014-10-24; logicaldoc-7.1.1)
 466 - Show thumbnail in the properties tab - Improvement - User Interface
 457 - More file icons - Improvement - User Interface
 465 - Simpler TagCloud 2D - Improvement - User Interface
+New preview system for media files (audio/video)                     
 
 LogicalDOC 7.1 (2014-09-01; logicaldoc-7.1)
-==============================================================  
+===============================================  
 157 - Option to copy folders - Improvement - User Interface
 222 - Lookup table for extended attribute options - Improvement - Core
 286 - Notify users on adding note - Improvement - Core 	
@@ -32,32 +43,32 @@ LogicalDOC 7.1 (2014-09-01; logicaldoc-7.1)
 438 - TagCloud computation - Bug - Core
 
 LogicalDOC 7.0.1 (2014-07-21; logicaldoc-7.0.1)
-==============================================================                
+===============================================                
 392 - Import contacts from csv file - Improvement - Core
 434 - Thumbnail always generated at 150px - Bug - Core
 432 - Simplified look&feel - Improvement - Core
 433 - Erroneus stats calculation after database cleaning - Bug - Core   
 
 LogicalDOC 7.0 (2014-06-23; logicaldoc-7.0)
-==============================================================                
+===============================================                
 428 - Documents gallery - New Feature - User Interface  
 429 - Dropbox integration - New Feature - Core 
                      
 LogicalDOC 6.8.4 (2014-05-05; logicaldoc-6.8.4)
-==============================================================                
+===============================================                
 416 - GUI localized in Vietnamese - Improvement - User Interface
 417 - The "zip export" event is recorded - New Feature - Core
 426 - Ticket Download, file names encoded IE 11 - Improvement - Core
 425 - FolderId Barcode Generator - New Feature - Core   
                      
 LogicalDOC 6.8.3 (2014-03-03; logicaldoc-6.8.3)
-==============================================================
+===============================================
 407 - Ability to move documents into folders without write access - Bug - Core
 411 - Preview shows the first page only - Bug - User Interface
 413 - Folder Search should be case insentive - Improvement - User Interface
 
 LogicalDOC 6.8.2 (2014-01-27; logicaldoc-6.8.2)
-==============================================================                    
+===============================================                    
 382 - Register the preview visualization as an event in the history - Improvement - Core
 388 - Redesigned login page - Improvement - User Interface
 396 - Disallow the upload of specific file extensions - Improvement - User Interface
@@ -67,12 +78,12 @@ LogicalDOC 6.8.2 (2014-01-27; logicaldoc-6.8.2)
 401 - Implementation of CMIS method getObjectByPath - New Feature - CMIS
 
 LogicalDOC 6.8.1 (2013-12-02; logicaldoc-6.8.1)
-==============================================================                                                     
+================                                                     
 371 - Tag flow widget to define document's tags - Improvement - User Interface
 373 - Tomcat Application fails to stop - Bug - Core
 
 LogicalDOC 6.8 (2013-11-01; logicaldoc-6.8)
-==============================================================
+================
 319 - Email contacts address book - New Feature - Core
 318 - Restore of deleted folders - New Feature - Core
 327 - Folder specification not used when searching for aliases - Bug - Core
@@ -82,13 +93,13 @@ LogicalDOC 6.8 (2013-11-01; logicaldoc-6.8)
 342 - US date format support in date editing widget - Improvement - User Interface
 
 LogicalDOC 6.7.3 (2013-08-30; logicaldoc-6.7.3)
-==============================================================
+================
 328 - Folder specification not used when searching for aliases - Bug - Core
 329 - Feedback for uploading files for LogicalDOC - Improvement - User Interface
 331 - Allow input of '-' char in tag widget - Bug - User Interfac
 
 LogicalDOC 6.7.2 (2013-07-19; logicaldoc-6.7.2)
-==============================================================
+================
 313 - Blank metadata for aliases during search - Bug - Core
 312 - Error uploading multiple files 	car031 - Bug - Core
 315 - Anonymous login - New Feature - Core
@@ -98,7 +109,7 @@ LogicalDOC 6.7.2 (2013-07-19; logicaldoc-6.7.2)
 314 - Log Download utility - New Feature - Core 
 
 LogicalDOC 6.7.1 (2013-06-10; logicaldoc-6.7.1)
-===============================================
+===============
 306 - Metadata editing at checkin time - Improvement - Core
 303 - Croatian language localization - New Feature - Core
 307 - Ability to delete specific versions - New Feature - Core
@@ -106,18 +117,18 @@ LogicalDOC 6.7.1 (2013-06-10; logicaldoc-6.7.1)
 311 - MySQL 5.6 compliance - Bug - Core 
 
 LogicalDOC 6.7 (2013-04-10; logicaldoc-6.7)
-===============================================
+===============
 271 -	Decouple core API from WebServices API - Task -	Core
 268 -	Decouple WebServices from the Core API - Task -	Web Services
 294 -	Search in folder broken for admin account - Bug - Core
 
 LogicalDOC 6.6.2 (2013-02-15; logicaldoc-6.6.2)
-===============================================              
+===============               
 269 -	Fulltext search broken in WebService -	Bug -	Web Services
 281 -	Avoid inconsistencies between day-of-week and day-of-month -	Improvement -	Core
 
 LogicalDOC 6.6.1 (2013-01-10; logicaldoc-6.6.1)
-===============================================                   
+===============                    
 270 -	Print a selection of documents into a single PDF - New Feature - Core
 267 -	Upgrade to the latest User Interface technologies -	Improvement - User Interface
 274 -	New extended attribute type: Boolean - Improvement - Core
@@ -128,7 +139,7 @@ LogicalDOC 6.6.1 (2013-01-10; logicaldoc-6.6.1)
 
 
 LogicalDOC 6.6 (2012-11-15; logicaldoc-6.6)
-===============================================
+===============
 255 -	Customizable User Dashboard -	New Feature -	User Interface
 257 -	User data type for extended attribute -	Improvement -	Core
 229 -	Upgrade POI to the latest version -	Task -	Core
@@ -139,7 +150,7 @@ LogicalDOC 6.6 (2012-11-15; logicaldoc-6.6)
 
 
 LogicalDOC 6.5.2 (2012-10-15; logicaldoc-6.5.2)
-===============================================
+===============
 237 -	Implementation of the CMIS 1.0 AtomPub protocol - New Feature - CMIS
 250 - Export to zip issue - Bug - Import / Export
 262 - Non-admin users have problems accessing to webdav - Bug - Core
@@ -150,7 +161,7 @@ LogicalDOC 6.5.2 (2012-10-15; logicaldoc-6.5.2)
 
 
 LogicalDOC 6.5.1 (2012-08-31; logicaldoc-6.5.1)
-===============================================
+===============
 230 - Web setup broken at the final step - Bug - Setup
 233 - Barcode processor exits with errors - Bug - Barcode
 235 - Connection through WebDAV shows empty folder - Bug - WebDAV
@@ -161,7 +172,7 @@ LogicalDOC 6.5.1 (2012-08-31; logicaldoc-6.5.1)
 
 
 LogicalDOC 6.5.0 (2012-08-01; logicaldoc-6.5)
-===============================================
+=============== 
 75  - Extended properties to display in search result - Improvement - User Interface
 224 - Subscriptions and Notifications support - New Feature - Android App
 188 - Black/White lists of IPs - New Feature - Core 	
@@ -176,14 +187,14 @@ LogicalDOC 6.5.0 (2012-08-01; logicaldoc-6.5)
 
 
 LogicalDOC 6.4.2 (2012-06-25; logicaldoc-6.4.2)
-===============================================
+=============== 
 218 Configurable action on document's double click - Improvement - User Interface
 221 Option to select a folder with code completion - Improvement - User Interface
 220 Default document's detail tab - Improvement - User Interface
 
 
 LogicalDOC 6.4.1 (2012-05-11; logicaldoc-6.4.1)
-===============================================
+=============== 
 000 New GUI translations: Slovenian and Korean - Improvement -	User Interface 
 198 File Types in Version Pane - Improvement - User Interface
 205 Retrieve version file using webservices - Improvement - Web Services
@@ -195,7 +206,7 @@ LogicalDOC 6.4.1 (2012-05-11; logicaldoc-6.4.1)
 
 
 LogicalDOC 6.4 (2012-03-26; logicaldoc-6.4)
-===============================================
+===============   
 3	Ability to perform searches against folders - Improvement -	User Interface
 120	Configurable document preview (viewer size) - Improvement -	User Interface
 136	Sometimes the upload doesn't work (documents do not appear) - Bug -	User Interface
@@ -213,7 +224,7 @@ Download of document on Safari produces files with '%' character in place of spa
 
 
 LogicalDOC 6.3.5 (2012-02-15; logicaldoc-6.3.5)
-===============================================   
+===============      
 180 	Move folder name to beginning of tab/window title - Improvement - User Interface
 184 	Additional characters for usernames - Improvement - User Interface
 190 	Indicate effective search depth - Improvement - User Interface
@@ -223,7 +234,7 @@ Fixed - Export to Zip does not generate a zip
 
 
 LogicalDOC 6.3.4 (2012-01-27; logicaldoc-6.3.4)
-===============================================
+===============
 164 - Ability to download multiple files at once - Improvement - User Interface
 165 - Have tab/page title show folder selected - Improvement - User Interface
 168 - Tag entry issue - Bug - User Interface
@@ -233,7 +244,7 @@ LogicalDOC 6.3.4 (2012-01-27; logicaldoc-6.3.4)
 
 
 LogicalDOC 6.3.3 (2012-01-07; logicaldoc-6.3.3)
-===============================================
+===============
 138 - Tags are taken over too soon during type in - Bug - User Interface
 143 - Remember view in folder pane - Improvement - User Interface
 148 - Events timestamp not correctly shown in Last Changes - Bug - User Interface
