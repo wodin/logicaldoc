@@ -22,6 +22,7 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -93,6 +94,11 @@ public class GUISettingsPanel extends VLayout {
 		previewZoom.setHint("%");
 		previewZoom.setRequired(true);
 
+		IntegerItem previewTimeout = ItemFactory.newIntegerItem("previewtimeout", "previewtimeout", null);
+		previewTimeout.setHint(I18N.message("seconds"));
+		previewTimeout.setWrapTitle(false);
+		previewTimeout.setRequired(true);
+
 		TextItem thumbSize = ItemFactory.newIntegerItem("thumbsize", I18N.message("thumbsize"), null);
 		thumbSize.setHint("pixels");
 		thumbSize.setRequired(true);
@@ -152,9 +158,9 @@ public class GUISettingsPanel extends VLayout {
 		sessionheartbeat.setRequired(true);
 		sessionheartbeat.setWrapTitle(false);
 
-		parametersForm.setItems(welcome, previewPages, previewSize, previewZoom, thumbSize, thumbQuality, tileSize,
-				tileQuality, uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders,
-				savelogin, sessiontimeout, sessionheartbeat);
+		parametersForm.setItems(welcome, previewPages, previewSize, previewZoom, previewTimeout, thumbSize,
+				thumbQuality, tileSize, tileQuality, uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr,
+				webcontentfolders, savelogin, sessiontimeout, sessionheartbeat);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().endsWith("gui.welcome"))
@@ -167,6 +173,8 @@ public class GUISettingsPanel extends VLayout {
 				previewSize.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("gui.preview.zoom"))
 				previewZoom.setValue(Integer.parseInt(p.getValue().trim()));
+			if (p.getName().endsWith("gui.preview.timeout"))
+				previewTimeout.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("gui.thumbnail.size"))
 				thumbSize.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("gui.thumbnail.quality"))
@@ -214,6 +222,8 @@ public class GUISettingsPanel extends VLayout {
 							"previewsize").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.zoom", values.get(
 							"previewzoom").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.timeout", values.get(
+							"previewtimeout").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.thumbnail.size", values.get(
 							"thumbsize").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.thumbnail.quality", values.get(

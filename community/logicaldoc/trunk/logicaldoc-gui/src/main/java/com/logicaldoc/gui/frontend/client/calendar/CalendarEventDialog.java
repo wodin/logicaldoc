@@ -71,6 +71,7 @@ public class CalendarEventDialog extends Window {
 	private GUICalendarEvent calendarEvent;
 
 	private TabSet tabs = new TabSet();
+
 	private DynamicForm detailsForm = new DynamicForm();
 
 	private boolean readOnly = false;
@@ -479,7 +480,7 @@ public class CalendarEventDialog extends Window {
 		remindTimeUnit.setColSpan(3);
 		remindTimeUnit.setAlign(Alignment.LEFT);
 		remindTimeUnit.setCanEdit(!readOnly);
-		
+
 		final DateItem completionDate = ItemFactory.newDateItem("completionDate", "completedon");
 		completionDate.setRequired(false);
 		completionDate.setShowTitle(false);
@@ -526,12 +527,11 @@ public class CalendarEventDialog extends Window {
 	 */
 	private void onSave() {
 		if (vm.validate()) {
-			if(calendarEvent.getDocuments()==null || calendarEvent.getDocuments().length==0){
+			if (calendarEvent.getDocuments() == null || calendarEvent.getDocuments().length == 0) {
 				SC.warn("nodocsincalevent");
 				return;
 			}
-			
-			
+
 			calendarEvent.setTitle(vm.getValueAsString("title"));
 			calendarEvent.setType(vm.getValueAsString("type"));
 			calendarEvent.setSubType(vm.getValueAsString("subType"));
@@ -577,7 +577,7 @@ public class CalendarEventDialog extends Window {
 				calendarEvent.setCompletionDate(null);
 
 			calendarEvent.setStatus(Integer.parseInt(vm.getValue("status").toString()));
-			
+
 			if (vm.getValue("deadline") != null)
 				calendarEvent.setDeadline((Date) vm.getValue("deadline"));
 			else
