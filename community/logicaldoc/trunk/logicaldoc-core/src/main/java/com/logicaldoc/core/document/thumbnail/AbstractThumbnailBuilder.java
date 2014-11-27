@@ -53,9 +53,15 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 		File tmp = src;
 		File tmp2 = null;
 		try {
+			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			int timeout = 40;
+			try {
+				timeout = Integer.parseInt(conf.getProperty(tenant + ".gui.preview.timeout"));
+			} catch (Throwable t) {
+			}
+			
 			boolean isWin = SystemUtils.IS_OS_WINDOWS;
 
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 			String command = conf.getProperty(SWFTOOLSPATH);
 			if (extension.equalsIgnoreCase("pdf"))
 				command += File.separatorChar + "pdf2swf";
@@ -69,7 +75,7 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 				String jpegCommand = (isWin ? "\"" : "") + new File(conf.getProperty(CONVERT)).getPath()
 						+ (isWin ? "\"" : "") + " " + (isWin ? "\"" : "") + tmp.getPath() + (isWin ? "\"" : "") + " "
 						+ (isWin ? "\"" : "") + tmp2.getPath() + (isWin ? "\"" : "");
-				Exec.exec(jpegCommand, null, null, 10);
+				Exec.exec(jpegCommand, null, null, timeout);
 
 				tmp = tmp2;
 				out = tmp;
@@ -81,7 +87,7 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 				String pdfCommand = (isWin ? "\"" : "") + new File(conf.getProperty(CONVERT)).getPath()
 						+ (isWin ? "\"" : "") + " " + (isWin ? "\"" : "") + tmp.getPath() + (isWin ? "\"" : "") + " "
 						+ (isWin ? "\"" : "") + tmp2.getPath() + (isWin ? "\"" : "");
-				Exec.exec(pdfCommand, null, null, 10);
+				Exec.exec(pdfCommand, null, null, timeout);
 
 				tmp = tmp2;
 				out = tmp;
@@ -126,12 +132,6 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 			}
 
 			log.debug("Executing command: " + commandLine.toString());
-
-			int timeout = 40;
-			try {
-				timeout = Integer.parseInt(conf.getProperty(tenant + ".gui.preview.timeout"));
-			} catch (Throwable t) {
-			}
 
 			if (command.contains("pdf2swf")) {
 				Exec.exec(commandLine, null, null, timeout);
