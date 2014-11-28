@@ -51,30 +51,35 @@ public class DocumentServiceImpl extends com.logicaldoc.webservice.document.Docu
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response checkin(MultipartBody multipartBody) throws Exception {
-		String sid = null;
-		long docId = 0L;
-		String comment = null;
-		boolean release = false;
-		String filename = null;
+		try {
+			String sid = null;
+			long docId = 0L;
+			String comment = null;
+			boolean release = false;
+			String filename = null;
 
-		List<Attachment> attachments = multipartBody.getAllAttachments();
-		for (Attachment attachment : attachments) {
-			Map<String, String> params = attachment.getContentDisposition().getParameters();
-			if ("sid".equals(params.get("name"))) {
-				sid = getContentAsString(attachment.getDataHandler());
-			} else if ("docId".equals(params.get("name"))) {
-				docId = Long.parseLong(getContentAsString(attachment.getDataHandler()));
-			} else if ("comment".equals(params.get("name"))) {
-				comment = getContentAsString(attachment.getDataHandler());
-			} else if ("release".equals(params.get("name"))) {
-				release = Boolean.parseBoolean(getContentAsString(attachment.getDataHandler()));
-			} else if ("filename".equals(params.get("name"))) {
-				filename = getContentAsString(attachment.getDataHandler());
+			List<Attachment> attachments = multipartBody.getAllAttachments();
+			for (Attachment attachment : attachments) {
+				Map<String, String> params = attachment.getContentDisposition().getParameters();
+				if ("sid".equals(params.get("name"))) {
+					sid = getContentAsString(attachment.getDataHandler());
+				} else if ("docId".equals(params.get("name"))) {
+					docId = Long.parseLong(getContentAsString(attachment.getDataHandler()));
+				} else if ("comment".equals(params.get("name"))) {
+					comment = getContentAsString(attachment.getDataHandler());
+				} else if ("release".equals(params.get("name"))) {
+					release = Boolean.parseBoolean(getContentAsString(attachment.getDataHandler()));
+				} else if ("filename".equals(params.get("name"))) {
+					filename = getContentAsString(attachment.getDataHandler());
+				}
 			}
-		}
 
-		super.checkin(sid, docId, comment, filename, release, attachments.get(0).getDataHandler());
-		return Response.ok("file checked-in").build();
+			super.checkin(sid, docId, comment, filename, release, attachments.get(0).getDataHandler());
+			return Response.ok("file checked-in").build();
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			return Response.serverError().build();
+		}
 	}
 
 	@POST
@@ -82,30 +87,36 @@ public class DocumentServiceImpl extends com.logicaldoc.webservice.document.Docu
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response upload(MultipartBody multipartBody) throws Exception {
-		String sid = null;
-		Long docId = null;
-		Long folderId = null;
-		boolean release = false;
-		String filename = null;
+		try {
+			String sid = null;
+			Long docId = null;
+			Long folderId = null;
+			boolean release = false;
+			String filename = null;
 
-		List<Attachment> attachments = multipartBody.getAllAttachments();
-		for (Attachment attachment : attachments) {
-			Map<String, String> params = attachment.getContentDisposition().getParameters();
-			if ("sid".equals(params.get("name"))) {
-				sid = getContentAsString(attachment.getDataHandler());
-			} else if ("docId".equals(params.get("name"))) {
-				docId = Long.parseLong(getContentAsString(attachment.getDataHandler()));
-			} else if ("folderId".equals(params.get("name"))) {
-				folderId = Long.parseLong(getContentAsString(attachment.getDataHandler()));
-			} else if ("release".equals(params.get("name"))) {
-				release = Boolean.parseBoolean(getContentAsString(attachment.getDataHandler()));
-			} else if ("filename".equals(params.get("name"))) {
-				filename = getContentAsString(attachment.getDataHandler());
+			List<Attachment> attachments = multipartBody.getAllAttachments();
+			for (Attachment attachment : attachments) {
+				Map<String, String> params = attachment.getContentDisposition().getParameters();
+				if ("sid".equals(params.get("name"))) {
+					sid = getContentAsString(attachment.getDataHandler());
+				} else if ("docId".equals(params.get("name"))) {
+					docId = Long.parseLong(getContentAsString(attachment.getDataHandler()));
+				} else if ("folderId".equals(params.get("name"))) {
+					folderId = Long.parseLong(getContentAsString(attachment.getDataHandler()));
+				} else if ("release".equals(params.get("name"))) {
+					release = Boolean.parseBoolean(getContentAsString(attachment.getDataHandler()));
+				} else if ("filename".equals(params.get("name"))) {
+					filename = getContentAsString(attachment.getDataHandler());
+				}
 			}
-		}
 
-		long documentId = super.upload(sid, docId, folderId, release, filename, attachments.get(0).getDataHandler());
-		return Response.ok("" + documentId).build();
+			long documentId = super
+					.upload(sid, docId, folderId, release, filename, attachments.get(0).getDataHandler());
+			return Response.ok("" + documentId).build();
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			return Response.serverError().build();
+		}
 	}
 
 	private String getContentAsString(DataHandler handler) throws IOException {
