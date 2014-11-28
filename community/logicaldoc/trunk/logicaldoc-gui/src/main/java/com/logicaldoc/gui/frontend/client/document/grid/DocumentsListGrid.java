@@ -415,7 +415,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 							final String id = getSelectedRecord().getAttribute("id");
 							final String fileName = getSelectedRecord().getAttribute("filename") + ".p7m";
 							String fileVersion = getSelectedRecord().getAttribute("fileVersion");
-
+							
 							ContactingServer.get().show();
 							signService.extractSubjectSignatures(Session.get().getSid(), Long.parseLong(id),
 									fileVersion, new AsyncCallback<String[]>() {

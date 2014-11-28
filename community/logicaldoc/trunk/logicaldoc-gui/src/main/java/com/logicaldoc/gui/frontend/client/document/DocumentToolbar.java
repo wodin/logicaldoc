@@ -447,6 +447,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
+		if (!writeEnabled) {
+			add.setDisabled(true);
+			dropSpot.setDisabled(true);
+			bulkCheckout.setDisabled(true);
+			bulkUpdate.setDisabled(true);
+			scan.setDisabled(true);
+			office.setDisabled(true);
+		}
+
 		addSeparator();
 		ToolStripButton filter = new ToolStripButton();
 		filter.setIcon(ItemFactory.newImgIcon("filter.png").getSrc());
@@ -551,6 +560,10 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
 				dropSpot.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
 						|| !Feature.enabled(Feature.DROP_SPOT));
+				bulkUpdate.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
+						|| !Feature.enabled(Feature.BULK_UPDATE));
+				bulkCheckout.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
+						|| !Feature.enabled(Feature.BULK_CHECKOUT));
 				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
 				archive.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
 						|| !Feature.enabled(Feature.ARCHIVES));
