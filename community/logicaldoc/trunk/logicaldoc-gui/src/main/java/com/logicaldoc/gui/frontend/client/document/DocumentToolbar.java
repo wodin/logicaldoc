@@ -447,15 +447,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
-		if (!writeEnabled) {
-			add.setDisabled(true);
-			dropSpot.setDisabled(true);
-			bulkCheckout.setDisabled(true);
-			bulkUpdate.setDisabled(true);
-			scan.setDisabled(true);
-			office.setDisabled(true);
-		}
-
 		addSeparator();
 		ToolStripButton filter = new ToolStripButton();
 		filter.setIcon(ItemFactory.newImgIcon("filter.png").getSrc());
@@ -511,6 +502,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		try {
 			GUIFolder folder = Session.get().getCurrentFolder();
 			boolean downloadEnabled = folder != null && folder.isDownload();
+			boolean writeEnabled = folder != null && folder.isWrite();
 
 			this.document = document;
 
@@ -522,8 +514,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (!pdf.isDisabled())
 					pdf.setTooltip(I18N.message("exportpdf"));
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
-				bulkUpdate.setDisabled(!Feature.enabled(Feature.BULK_UPDATE));
-				bulkCheckout.setDisabled(!Feature.enabled(Feature.BULK_CHECKOUT));
+				bulkUpdate.setDisabled(!Feature.enabled(Feature.BULK_UPDATE) || !writeEnabled);
+				bulkCheckout.setDisabled(!Feature.enabled(Feature.BULK_CHECKOUT) || !downloadEnabled || !writeEnabled);
 				addCalendarEvent.setDisabled(!Feature.enabled(Feature.CALENDAR));
 
 				boolean isOfficeFile = false;
@@ -560,10 +552,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
 				dropSpot.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
 						|| !Feature.enabled(Feature.DROP_SPOT));
-				bulkUpdate.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
-						|| !Feature.enabled(Feature.BULK_UPDATE));
-				bulkCheckout.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
-						|| !Feature.enabled(Feature.BULK_CHECKOUT));
 				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
 				archive.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
 						|| !Feature.enabled(Feature.ARCHIVES));
