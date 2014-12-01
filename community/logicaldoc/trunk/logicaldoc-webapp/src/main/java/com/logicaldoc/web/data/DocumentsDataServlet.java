@@ -79,7 +79,7 @@ public class DocumentsDataServlet extends HttpServlet {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-			int max = 0;
+			int max = 100;
 			if (StringUtils.isNotEmpty(request.getParameter("max")))
 				max = Integer.parseInt(request.getParameter("max"));
 
