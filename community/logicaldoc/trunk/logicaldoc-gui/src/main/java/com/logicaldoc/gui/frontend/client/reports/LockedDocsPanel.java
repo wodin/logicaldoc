@@ -262,7 +262,10 @@ public class LockedDocsPanel extends VLayout {
 
 					@Override
 					public void onSuccess(Void result) {
-						refresh(Long.parseLong(userSelector.getValueAsString()));
+						if (userSelector.getValue() != null)
+							refresh(Long.parseLong(userSelector.getValueAsString()));
+						else
+							refresh(null);
 					}
 				});
 			}
