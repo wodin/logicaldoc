@@ -7,8 +7,8 @@ import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
 
 /**
- * The client side stub for the Archive Service. This service allows r/w
- * operations on archives.
+ * The client side stub for the Impex Service. This service allows r/w
+ * operations on export archives.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
