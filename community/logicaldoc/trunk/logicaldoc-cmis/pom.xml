@@ -15,6 +15,30 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.logicaldoc</groupId>
+            <artifactId>logicaldoc-core</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.logicaldoc</groupId>
+            <artifactId>logicaldoc-util</artifactId>
+            <version>${project.version}</version>
+            <scope>compile</scope>
+        </dependency>
+            
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context-support</artifactId>
+            <scope>provided</scope>
+        </dependency>        
+                    
+        <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-commons-api</artifactId>
             <version>0.10.0</version>
@@ -65,20 +89,6 @@
         <dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.logicaldoc</groupId>
-			<artifactId>logicaldoc-util</artifactId>
-			<version>${project.version}</version>
-			<type>jar</type>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.logicaldoc</groupId>
-			<artifactId>logicaldoc-core</artifactId>
-			<version>${project.version}</version>
-			<type>jar</type>
 			<scope>provided</scope>
 		</dependency>
     </dependencies>
