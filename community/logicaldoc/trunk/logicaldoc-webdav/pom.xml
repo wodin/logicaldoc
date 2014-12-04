@@ -50,13 +50,13 @@
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-core</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
 			<artifactId>logicaldoc-util</artifactId>
 			<version>${project.version}</version>
-			<scope>provided</scope>
+			<scope>compile</scope>
 		</dependency>
 		<dependency>
 			<groupId>net.sf.jpf</groupId>
