@@ -6,10 +6,11 @@ import com.logicaldoc.webservice.document.WSLink;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.security.SecurityClient;
+import com.logicaldoc.webservice.security.WSUser;
 import com.logicaldoc.webservice.system.SystemClient;
 
 public class SoapWorgkbench {
-	final static String BASE = "http://localhost:1000/services";
+	final static String BASE = "http://localhost:9080/services";
 
 	public static void main(String[] args) throws Exception {
 
@@ -26,115 +27,9 @@ public class SoapWorgkbench {
 		System.out.println("Sid: " + sid);
 
 		try {
-			documentStuff(sid);
-			
-			// WSUser wsUserTest = new WSUser();
-			// wsUserTest.setName("marco");
-			// wsUserTest.setEmail("marco@acme.com");
-			// wsUserTest.setUserName("marco");
-			// wsUserTest.setFirstName("alle");
-			// long[] ids = { 2, 3 };
-			// wsUserTest.setGroupIds(ids);
-			//
-			// Long userId = securityClient.storeUser(sid, wsUserTest);
-			// System.out.println("user id: " + userId);
-			//
-			// securityClient.changePassword(sid, userId, null, "marco1982");
+			securityStuff(sid);
 
-			// securityClient.deleteUser(sid, 4);
-
-			// WSUser user = securityClient.getUser(sid, 2L);
-			// user.setCity("Modena");
-			// user.setPostalcode("41125");
-			// long[] ids = { 4 };
-			// user.setGroupIds(ids);
-			// securityClient.storeUser(sid, user);
-
-			// newUser.setId(0);
-			// newUser.setName("pippo");
-			// newUser.setEmail("ciccio@acme.com");
-			// newUser.setUserName("pippo");
-			// newUser.setFirstName("ciccio");
-			// securityClient.storeUser(sid, newUser);
-
-			// WSUser[] users = securityClient.listUsers(sid);
-			// WSUser editingUser = null;
-			// for (WSUser wsUser : users) {
-			// if (wsUser.getId() == 3) {
-			// editingUser = wsUser;
-			// break;
-			// }
-			// }
-			//
-			// if (editingUser != null) {
-			// editingUser.setGroupIds(new long[] { 3 });
-			// securityClient.storeUser(sid, editingUser);
-			// }
-			//
-			// WSUser[] users = securityClient.listUsers(sid);
-			// for (WSUser wsUser : users) {
-			// System.out.println("--- " + wsUser.getId());
-			// System.out.println("--- " + wsUser.getUserName());
-			// System.out.println("--- " + wsUser.getEmail());
-			// System.out.println("--- " + wsUser.getStreet());
-			// System.out.println("--- " + wsUser.getGroupIds()[0]);
-			// System.out.println("------------------------------------");
-			// }
-
-			// WSGroup newGroup = new WSGroup();
-			// newGroup.setName("gruppo3");
-			// newGroup.setDescription("gruppo3 desc");
-			// newGroup.setInheritGroupId(2L);
-			// newGroup.setUserIds(new long[] { 4, 6 });
-			// Long grpId = securityClient.storeGroup(sid, newGroup);
-			// System.out.println("group id: " + grpId);
-
-			// WSGroup editGroup = new WSGroup();
-			// editGroup.setId(5);
-			// editGroup.setName("ciccio");
-			// editGroup.setDescription("ciccio desc");
-			// securityClient.storeGroup(sid, editGroup);
-			//
-			// securityClient.deleteGroup(sid, 14);
-			// securityClient.deleteGroup(sid, 15);
-
-			// WSGroup group = securityClient.getGroup(sid, 16L);
-			// group.setName("pippo");
-			// group.setDescription("pippoc desc");
-			// securityClient.storeGroup(sid, group);
-			//
-			// WSGroup[] groups = securityClient.listGroups(sid);
-			// WSGroup editingGroup = null;
-			// for (WSGroup wsGroup : groups) {
-			// if (wsGroup.getId() == 2) {
-			// editingGroup = wsGroup;
-			// break;
-			// }
-			// }
-			// if (editingGroup != null) {
-			// editingGroup.setUserIds(new long[] { 2, 3 });
-			// securityClient.storeGroup(sid, editingGroup);
-			// }
-
-			// for (WSGroup wsGroup : groups) {
-			// System.out.println("--- " + wsGroup.getId());
-			// System.out.println("--- " + wsGroup.getName());
-			// System.out.println("--- " + wsGroup.getDescription());
-			// System.out.println("--- " + wsGroup.getUserIds());
-			// System.out.println("+++++++++++++++++++++++++++++++++++++");
-			// }
-
-			// WSFolder[] path = folderClient.getPath(sid, 20L);
-			// System.out.println("\n");
-			// for (WSFolder wsFolder : path) {
-			// System.out.print(wsFolder.getName() + "/");
-			// }
-			//
-			// path = folderClient.getPath(sid, Folder.ROOTID);
-			// System.out.println("\n");
-			// for (WSFolder wsFolder : path) {
-			// System.out.print(wsFolder.getName() + "/");
-			// }
+			// documentStuff(sid);
 
 			// WSFolder newFolder = new WSFolder();
 			// newFolder.setName("ddddd");
@@ -286,21 +181,132 @@ public class SoapWorgkbench {
 		}
 	}
 
+	private static void securityStuff(String sid) throws Exception {
+		SecurityClient securityClient = new SecurityClient(BASE + "/Security");
+
+		WSUser wsUserTest = new WSUser();
+		wsUserTest.setName("marco2");
+		wsUserTest.setEmail("marco@acme.com");
+		wsUserTest.setUserName("marco2");
+		wsUserTest.setFirstName("alle2");
+		long[] ids = { 2, 3 };
+		wsUserTest.setGroupIds(ids);
+
+		Long userId = securityClient.storeUser(sid, wsUserTest);
+		System.out.println("user id: " + userId);
+		securityClient.changePassword(sid, userId, null, "marco1982");
+
+		securityClient.deleteUser(sid, 4);
+
+		// WSUser user = securityClient.getUser(sid, 2L);
+		// user.setCity("Modena");
+		// user.setPostalcode("41125");
+		// long[] ids = { 4 };
+		// user.setGroupIds(ids);
+		// securityClient.storeUser(sid, user);
+
+		// newUser.setId(0);
+		// newUser.setName("pippo");
+		// newUser.setEmail("ciccio@acme.com");
+		// newUser.setUserName("pippo");
+		// newUser.setFirstName("ciccio");
+		// securityClient.storeUser(sid, newUser);
+
+		// WSUser[] users = securityClient.listUsers(sid);
+		// WSUser editingUser = null;
+		// for (WSUser wsUser : users) {
+		// if (wsUser.getId() == 3) {
+		// editingUser = wsUser;
+		// break;
+		// }
+		// }
+		//
+		// if (editingUser != null) {
+		// editingUser.setGroupIds(new long[] { 3 });
+		// securityClient.storeUser(sid, editingUser);
+		// }
+		//
+		// WSUser[] users = securityClient.listUsers(sid);
+		// for (WSUser wsUser : users) {
+		// System.out.println("--- " + wsUser.getId());
+		// System.out.println("--- " + wsUser.getUserName());
+		// System.out.println("--- " + wsUser.getEmail());
+		// System.out.println("--- " + wsUser.getStreet());
+		// System.out.println("--- " + wsUser.getGroupIds()[0]);
+		// System.out.println("------------------------------------");
+		// }
+
+		// WSGroup newGroup = new WSGroup();
+		// newGroup.setName("gruppo3");
+		// newGroup.setDescription("gruppo3 desc");
+		// newGroup.setInheritGroupId(2L);
+		// newGroup.setUserIds(new long[] { 4, 6 });
+		// Long grpId = securityClient.storeGroup(sid, newGroup);
+		// System.out.println("group id: " + grpId);
+
+		// WSGroup editGroup = new WSGroup();
+		// editGroup.setId(5);
+		// editGroup.setName("ciccio");
+		// editGroup.setDescription("ciccio desc");
+		// securityClient.storeGroup(sid, editGroup);
+		//
+		// securityClient.deleteGroup(sid, 14);
+		// securityClient.deleteGroup(sid, 15);
+
+		// WSGroup group = securityClient.getGroup(sid, 16L);
+		// group.setName("pippo");
+		// group.setDescription("pippoc desc");
+		// securityClient.storeGroup(sid, group);
+		//
+		// WSGroup[] groups = securityClient.listGroups(sid);
+		// WSGroup editingGroup = null;
+		// for (WSGroup wsGroup : groups) {
+		// if (wsGroup.getId() == 2) {
+		// editingGroup = wsGroup;
+		// break;
+		// }
+		// }
+		// if (editingGroup != null) {
+		// editingGroup.setUserIds(new long[] { 2, 3 });
+		// securityClient.storeGroup(sid, editingGroup);
+		// }
+
+		// for (WSGroup wsGroup : groups) {
+		// System.out.println("--- " + wsGroup.getId());
+		// System.out.println("--- " + wsGroup.getName());
+		// System.out.println("--- " + wsGroup.getDescription());
+		// System.out.println("--- " + wsGroup.getUserIds());
+		// System.out.println("+++++++++++++++++++++++++++++++++++++");
+		// }
+
+		// WSFolder[] path = folderClient.getPath(sid, 20L);
+		// System.out.println("\n");
+		// for (WSFolder wsFolder : path) {
+		// System.out.print(wsFolder.getName() + "/");
+		// }
+		//
+		// path = folderClient.getPath(sid, Folder.ROOTID);
+		// System.out.println("\n");
+		// for (WSFolder wsFolder : path) {
+		// System.out.print(wsFolder.getName() + "/");
+		// }
+	}
+
 	private static void documentStuff(String sid) throws Exception {
 		DocumentClient documentClient = new DocumentClient(BASE + "/Document");
 
-		//30081024
-		
-//		WSLink link = documentClient.link(sid, 3621L, 3176L, "testws");
-//		System.out.println("Created link "+link.getId());
-		
+		// 30081024
+
+		// WSLink link = documentClient.link(sid, 3621L, 3176L, "testws");
+		// System.out.println("Created link "+link.getId());
+
 		documentClient.deleteLink(sid, 30081024L);
-		
+
 		WSLink[] links = documentClient.getLinks(sid, 3176L);
 		for (WSLink lnk : links) {
-			System.out.println("Link "+lnk.getType()+" - > "+lnk.getDoc2() +" ("+lnk.getId()+")");
+			System.out.println("Link " + lnk.getType() + " - > " + lnk.getDoc2() + " (" + lnk.getId() + ")");
 		}
-		
+
 		// WSDocument wsDoc = documentClient.getDocument(sid, 1);
 		// wsDoc.setId(0);
 		// wsDoc.setTitle("document test");
