@@ -8,6 +8,7 @@ import org.springframework.util.StringUtils;
 
 import com.logicaldoc.core.ExtendedAttributeOption;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.PersistentObject;
 
 /**
  * Hibernate implementation of <code>ExtendedAttributeOptionDAO</code>
@@ -30,7 +31,7 @@ public class HibernateExtendedAttributeOptionDAO extends HibernatePersistentObje
 		try {
 			List<ExtendedAttributeOption> options = findByTemplateAndAttribute(templateId, attribute);
 			for (ExtendedAttributeOption option : options)
-				del(option);
+				del(option, PersistentObject.DELETED_CODE_DEFAULT);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			result = false;
@@ -57,16 +58,16 @@ public class HibernateExtendedAttributeOptionDAO extends HibernatePersistentObje
 	}
 
 	@Override
-	public boolean delete(long id) {
+	public boolean delete(long id, int code) {
 		ExtendedAttributeOption option = findById(id);
-		del(option);
+		del(option, code);
 
 		return true;
 	}
 
-	private void del(ExtendedAttributeOption option) {
+	private void del(ExtendedAttributeOption option, int code) {
 		if (option != null) {
-			option.setDeleted(1);
+			option.setDeleted(code);
 			option.setValue(option.getValue() + "." + option.getId());
 		}
 	}

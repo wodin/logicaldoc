@@ -13,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Group;
@@ -53,7 +54,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 	/**
 	 * @see com.logicaldoc.core.security.dao.UserDAO#delete(long)
 	 */
-	public boolean delete(long userId) {
+	public boolean delete(long userId, int code) {
 		return delete(userId, null);
 	}
 
@@ -314,7 +315,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 			Group userGroup = user.getUserGroup();
 
 			if (user != null) {
-				user.setDeleted(1);
+				user.setDeleted(PersistentObject.DELETED_CODE_DEFAULT);
 				user.setUserName(user.getUserName() + "." + user.getId());
 				saveOrUpdate(user);
 			}

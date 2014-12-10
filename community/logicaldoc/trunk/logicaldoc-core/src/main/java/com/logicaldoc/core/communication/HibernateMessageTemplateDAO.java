@@ -48,10 +48,11 @@ public class HibernateMessageTemplateDAO extends HibernatePersistentObjectDAO<Me
 	}
 
 	@Override
-	public boolean delete(long id) {
+	public boolean delete(long id, int code) {
+		assert (code != 0);
 		MessageTemplate template = (MessageTemplate) findById(id);
 		if (template != null) {
-			template.setDeleted(1);
+			template.setDeleted(code);
 			template.setName(template.getName() + "." + template.getId());
 			saveOrUpdate(template);
 		}

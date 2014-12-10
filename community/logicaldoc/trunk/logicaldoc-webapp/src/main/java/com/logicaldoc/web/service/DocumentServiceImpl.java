@@ -1504,4 +1504,34 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		}
 		return null;
 	}
+
+	@Override
+	public void deleteFromTrash(String sid, Long[] ids) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+		if (ids == null || ids.length < 1)
+			return;
+
+		try {
+			String idsStr = Arrays.asList(ids).toString().replace('[', '(').replace(']', ')');
+			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			dao.bulkUpdate("set ld_deleted=2 where ld_id in " + idsStr, null);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void emptyTrash(String sid) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+
+		try {
+			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			dao.bulkUpdate("set ld_deleted=2 where ld_deleted=1 and  ld_deleteuserid=" + session.getUserId(), null);
+
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			fdao.bulkUpdate("set ld_deleted=2 where ld_deleted=1 and  ld_deleteuserid=" + session.getUserId(), null);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
 }

@@ -2,6 +2,7 @@ package com.logicaldoc.web.service;
 
 import java.security.AccessControlException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.ExtendedAttribute;
+import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
@@ -94,7 +96,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				history.setSessionId(sid);
 
 				fdao.applyRithtToTree(folder.getId(), history);
-			}else{
+			} else {
 				saveRules(sid, f, session.getUserId(), folder.getRights());
 			}
 		} catch (Throwable t) {
@@ -130,7 +132,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			transaction.setUser(ServiceUtil.getSessionUser(sid));
 			transaction.setEvent(FolderEvent.DELETED.toString());
 			transaction.setSessionId(sid);
-			dao.deleteTree(folderId, transaction);
+			dao.deleteTree(folderId, PersistentObject.DELETED_CODE_DEFAULT, transaction);
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
@@ -722,7 +724,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			folder.setTemplateLocked(f.getTemplateLocked());
 			folder.getAttributes().clear();
 
-			if (f.getAttributes()!=null && f.getAttributes().length > 0) {
+			if (f.getAttributes() != null && f.getAttributes().length > 0) {
 				for (GUIExtendedAttribute attr : f.getAttributes()) {
 					ExtendedAttribute templateAttribute = template.getAttributes().get(attr.getName());
 					// This control is necessary because, changing
@@ -862,14 +864,33 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void restore(String sid, long folderId, long parentId) throws ServerException {
-		ServiceUtil.validateSession(sid);
+		UserSession session = ServiceUtil.validateSession(sid);
 
-		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		try {
+			FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
-		FolderHistory transaction = new FolderHistory();
-		transaction.setSessionId(sid);
-		transaction.setUser(ServiceUtil.getSessionUser(sid));
+			FolderHistory transaction = new FolderHistory();
+			transaction.setSessionId(sid);
+			transaction.setUser(ServiceUtil.getSessionUser(sid));
 
-		dao.restore(folderId, parentId, transaction);
+			dao.restore(folderId, parentId, transaction);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void deleteFromTrash(String sid, Long[] ids) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+		if (ids == null || ids.length < 1)
+			return;
+
+		try {
+			String idsStr = Arrays.asList(ids).toString().replace('[', '(').replace(']', ')');
+			FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			dao.bulkUpdate("set ld_deleted=2 where ld_id in " + idsStr, null);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
 	}
 }

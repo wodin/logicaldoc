@@ -79,6 +79,16 @@ public interface DocumentService extends RemoteService {
 	public void delete(String sid, long[] ids) throws ServerException;
 
 	/**
+	 * Deletes a selection of documents from trash
+	 */
+	public void deleteFromTrash(String sid, Long[] ids) throws ServerException;
+	
+	/**
+	 * Clear the user's trash
+	 */
+	public void emptyTrash(String sid) throws ServerException;
+	
+	/**
 	 * Makes immutable a set of documents
 	 */
 	public void makeImmutable(String sid, long[] docIds, String comment) throws ServerException;

@@ -23,14 +23,15 @@ public class HibernateGenericDAO extends HibernatePersistentObjectDAO<Generic> i
 	}
 
 	@Override
-	public boolean delete(long genericId) {
+	public boolean delete(long genericId, int code) {
+		assert (code != 0);
 		boolean result = true;
 		try {
 			Generic generic = findById(genericId);
 			if (generic != null) {
 				generic.setType(generic.getType() + "." + generic.getId());
 				generic.setSubtype(generic.getSubtype() + "." + generic.getId());
-				generic.setDeleted(1);
+				generic.setDeleted(code);
 				saveOrUpdate(generic);
 				flush();
 			}

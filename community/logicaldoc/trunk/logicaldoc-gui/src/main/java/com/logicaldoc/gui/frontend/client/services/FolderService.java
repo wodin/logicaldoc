@@ -82,6 +82,11 @@ public interface FolderService extends RemoteService {
 	public void delete(String sid, long folderId) throws ServerException;
 
 	/**
+	 * Deletes a selection of folders from trash
+	 */
+	public void deleteFromTrash(String sid, Long[] ids) throws ServerException;
+	
+	/**
 	 * Restores a given folder
 	 */
 	public void restore(String sid, long folderId, long parentId) throws ServerException;

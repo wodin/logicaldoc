@@ -50,7 +50,6 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 */
 	public List<Document> findByFolder(long folderId, Integer max);
 
-
 	/**
 	 * Finds all document of the specified status and locked by the specified
 	 * user
@@ -159,7 +158,8 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 *         is null, the searched document can belong to any folder in the
 	 *         repository.
 	 */
-	public List<Document> findByFileNameAndParentFolderId(Long folderId, String fileName, Long excludeId, Long tenantId, Integer max);
+	public List<Document> findByFileNameAndParentFolderId(Long folderId, String fileName, Long excludeId,
+			Long tenantId, Integer max);
 
 	/**
 	 * Finds that document that lies under a specific folder (given by the id)
@@ -240,14 +240,21 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 */
 	public void makeImmutable(long docId, History transaction);
 
+	
+	/**
+	 * Shortcut for deleteAll(documents, 1, transaction
+	 */
+	public void deleteAll(Collection<Document> documents, History transaction);
+	
 	/**
 	 * Deletes all documents form the database and modifies the custom ids of
 	 * all documents
 	 * 
 	 * @param documents The documents to be deleted
+	 * @param delCode The deletion code
 	 * @param transaction entry to log the event
 	 */
-	public void deleteAll(Collection<Document> documents, History transaction);
+	public void deleteAll(Collection<Document> documents, int delCode, History transaction);
 
 	/**
 	 * This method persists the document object and insert a new document
@@ -264,11 +271,17 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * entry.
 	 * 
 	 * @param docId The id of the document to delete
+	 * @param delCode The deletion code
 	 * @param transaction entry to log the event
 	 * @return True if successfully deleted from the database.
 	 */
-	public boolean delete(long docId, History transaction);
+	public boolean delete(long docId, int delCode, History transaction);
 
+	/**
+	 * Shortcut for delete(docId, 1, transaction)
+	 */
+	public boolean delete(long docId, History transaction);
+	
 	/**
 	 * Gets the ids of all shortcuts associated to the document with the given
 	 * docId
@@ -316,8 +329,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * to null.
 	 */
 	public void cleanExpiredTransactions();
-	
-	
+
 	/**
 	 * Saves a document's history
 	 */

@@ -9,6 +9,10 @@ import java.util.Date;
  * @since 4.0
  */
 public abstract class PersistentObject {
+	public final static int DELETED_CODE_DEFAULT = 1;
+
+	public final static int DELETED_CODE_STRONG = 2;
+
 	private long id = 0;
 
 	private long tenantId = 1L;

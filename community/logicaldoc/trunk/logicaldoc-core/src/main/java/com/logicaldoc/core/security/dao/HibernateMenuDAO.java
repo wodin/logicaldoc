@@ -672,11 +672,11 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 	}
 
 	@Override
-	public boolean delete(long menuId) {
+	public boolean delete(long menuId, int code) {
 		boolean result = true;
 		try {
 			Menu menu = (Menu) findById(menuId);
-			menu.setDeleted(1);
+			menu.setDeleted(code);
 			store(menu);
 		} catch (Throwable e) {
 			if (log.isErrorEnabled())

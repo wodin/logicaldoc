@@ -22,12 +22,21 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	public boolean store(T entity);
 
 	/**
-	 * This method deletes an entity.
+	 * This method deletes an entity. Same as delete(id, 1)
 	 * 
 	 * @param id ID of the entity which should be deleted.
 	 */
 	public boolean delete(long id);
 
+	
+	/**
+	 * This method deletes an entity and you can give a deletion code
+	 * 
+	 * @param id ID of the entity which should be deleted.
+	 * @param code Deletion code.
+	 */
+	public boolean delete(long id, int code);
+	
 	/**
 	 * This method finds an entity by ID.
 	 * 
@@ -232,6 +241,15 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param entities The entities to be deleted
 	 */
 	public void deleteAll(Collection<T> entities);
+	
+	/**
+	 * Deletes all entries form the database giving a specific deletion code
+	 * 
+	 * @param entities The entities to be deleted
+	 * @param delete The deletion code
+	 */
+	public void deleteAll(Collection<T> entities, int code);
+
 
 	/**
 	 * Executes a bulk update as specified by the given expression
