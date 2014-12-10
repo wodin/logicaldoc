@@ -48,13 +48,13 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 	}
 
 	@Override
-	public boolean delete(long id) {
+	public boolean delete(long id, int code) {
 		boolean result = true;
 
 		try {
 			DocumentTemplate template = (DocumentTemplate) findById(id);
 			if (template != null) {
-				template.setDeleted(1);
+				template.setDeleted(code);
 				template.setName(template.getName() + "." + template.getId());
 				saveOrUpdate(template);
 			}

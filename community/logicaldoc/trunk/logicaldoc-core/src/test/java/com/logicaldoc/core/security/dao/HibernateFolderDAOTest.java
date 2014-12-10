@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
@@ -103,7 +104,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		user.setId(1);
 		FolderHistory history = new FolderHistory();
 		history.setUser(user);
-		dao.deleteTree(1200L, history);
+		dao.deleteTree(1200L, PersistentObject.DELETED_CODE_DEFAULT, history);
 		Assert.assertNull(dao.findById(1200));
 	}
 

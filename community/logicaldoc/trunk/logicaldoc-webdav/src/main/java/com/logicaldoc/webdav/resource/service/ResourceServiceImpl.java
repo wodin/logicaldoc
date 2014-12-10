@@ -14,6 +14,7 @@ import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
@@ -550,7 +551,8 @@ public class ResourceServiceImpl implements ResourceService {
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
 				transaction.setEvent(FolderEvent.DELETED.toString());
-				List<Folder> notDeletableFolders = folderDAO.deleteTree(folder, transaction);
+				List<Folder> notDeletableFolders = folderDAO.deleteTree(folder, PersistentObject.DELETED_CODE_DEFAULT,
+						transaction);
 
 				if (notDeletableFolders.size() > 0) {
 					throw new RuntimeException("Unable to delete some subfolders.");

@@ -37,4 +37,6 @@ public interface FolderServiceAsync {
 	void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly, AsyncCallback<Void> callback);
 
 	void inheritRights(String sid, long folderId, long rightsFolderId, AsyncCallback<GUIFolder> callback);
+
+	void deleteFromTrash(String sid, Long[] ids, AsyncCallback<Void> callback);
 }

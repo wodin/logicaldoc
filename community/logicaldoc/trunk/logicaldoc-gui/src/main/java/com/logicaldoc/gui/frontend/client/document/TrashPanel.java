@@ -1,5 +1,8 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
@@ -7,6 +10,7 @@ import com.logicaldoc.gui.common.client.data.GarbageDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.folder.Navigator;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -16,6 +20,7 @@ import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -90,7 +95,7 @@ public class TrashPanel extends VLayout {
 		list.setHeight100();
 		list.setAutoFetchData(true);
 		list.setFields(icon, title, customId, lastModified);
-		list.setSelectionType(SelectionStyle.SINGLE);
+		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setDataSource(new GarbageDS());
 		list.setShowFilterEditor(true);
 		list.setFilterOnKeypress(true);
@@ -149,21 +154,102 @@ public class TrashPanel extends VLayout {
 	}
 
 	private void showContextMenu() {
+		final ListGridRecord[] records = list.getSelectedRecords();
+
 		Menu contextMenu = new Menu();
 
-		MenuItem execute = new MenuItem();
-		execute.setTitle(I18N.message("restore"));
-		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem restore = new MenuItem();
+		restore.setTitle(I18N.message("restore"));
+		restore.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord record = list.getSelectedRecord();
-				if ("document".equals(record.getAttribute("type")))
-					restoreDocument(Long.parseLong(record.getAttribute("id")));
+
+				if ("document".equals(records[0].getAttribute("type")))
+					restoreDocument(Long.parseLong(records[0].getAttribute("id")));
 				else
-					restoreFolder(Long.parseLong(record.getAttribute("id")));
+					restoreFolder(Long.parseLong(records[0].getAttribute("id")));
 			}
 		});
 
-		contextMenu.setItems(execute);
+		MenuItem remove = new MenuItem();
+		remove.setTitle(I18N.message("remove"));
+		remove.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				final List<Long> docIds = new ArrayList<Long>();
+				final List<Long> folderIds = new ArrayList<Long>();
+				for (ListGridRecord record : records) {
+					if ("document".equals(record.getAttribute("type")))
+						docIds.add(Long.parseLong(record.getAttribute("id")));
+					else
+						folderIds.add(Long.parseLong(record.getAttribute("id")));
+				}
+
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							if (!docIds.isEmpty())
+								documentService.deleteFromTrash(Session.get().getSid(), docIds.toArray(new Long[0]),
+										new AsyncCallback<Void>() {
+
+											@Override
+											public void onFailure(Throwable caught) {
+												Log.serverError(caught);
+											}
+
+											@Override
+											public void onSuccess(Void arg) {
+												refresh();
+											}
+										});
+							if (!folderIds.isEmpty())
+								folderService.deleteFromTrash(Session.get().getSid(), folderIds.toArray(new Long[0]),
+										new AsyncCallback<Void>() {
+
+											@Override
+											public void onFailure(Throwable caught) {
+												Log.serverError(caught);
+											}
+
+											@Override
+											public void onSuccess(Void arg) {
+												refresh();
+											}
+										});
+						}
+					}
+				});
+			}
+		});
+
+		MenuItem emptyTrash = new MenuItem();
+		emptyTrash.setTitle(I18N.message("emptytrash"));
+		emptyTrash.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				LD.ask(I18N.message("question"), I18N.message("confirmemptytrash"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							documentService.emptyTrash(Session.get().getSid(), new AsyncCallback<Void>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void arg) {
+									refresh();
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+
+		restore.setEnabled(records.length == 1);
+
+		contextMenu.setItems(restore, remove, emptyTrash);
 		contextMenu.showContextMenu();
 	}
 }

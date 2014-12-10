@@ -214,23 +214,35 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public boolean store(Folder folder, FolderHistory transaction);
 
 	/**
+	 * Shortcut for deleteAll(folders, 1, transaction)
+	 */
+	public void deleteAll(List<Folder> folders, FolderHistory transaction);
+
+	/**
 	 * For each folder, save the folder delete history entry for each folder and
 	 * delete the folder
 	 * 
 	 * @param folder List of folder to be delete
+	 * @param delCode The deletion code
 	 * @param transaction entry to log the event on each folder
 	 */
-	public void deleteAll(List<Folder> folders, FolderHistory transaction);
+	public void deleteAll(List<Folder> folders, int delCode, FolderHistory transaction);
+
+	/**
+	 * Shortcut for delete(id, 1, transaction)
+	 */
+	public boolean delete(long id, FolderHistory transaction);
 
 	/**
 	 * This method deletes the folder object and insert a new folder history
 	 * entry.
 	 * 
 	 * @param id The id of the folder to delete
+	 * @param delCode The deletion code
 	 * @param transaction entry to log the event
 	 * @return True if successfully deleted from the database.
 	 */
-	public boolean delete(long id, FolderHistory transaction);
+	public boolean delete(long id, int delCode, FolderHistory transaction);
 
 	/**
 	 * Creates a new folder in the parent Folder
@@ -306,12 +318,13 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * <b>Important:</b> Remember to delete orphaned documents.
 	 * 
 	 * @param folder Folder to delete
+	 * @param delCode The deletion code
 	 * @param transaction entry to log the event (set the user)
 	 * @return List of folders that the user cannot delete(permissions, o
 	 *         immutable documents presents)
 	 * @throws Exception
 	 */
-	public List<Folder> deleteTree(Folder folder, FolderHistory transaction) throws Exception;
+	public List<Folder> deleteTree(Folder folder, int delCode, FolderHistory transaction) throws Exception;
 
 	/**
 	 * Delete a folder and all its sub-folders that a user can delete. After
@@ -323,10 +336,16 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * <b>Important:</b> All the contained documents will be deleted
 	 * 
 	 * @param folderId Folder to delete
+	 * @param delCode The deletion code
 	 * @param transaction entry to log the event (set the user)
 	 * @return List of folders that the user cannot delete(permissions, o
 	 *         immutable documents presents)
 	 * @throws Exception
+	 */
+	public List<Folder> deleteTree(long folderId, int delCode, FolderHistory transaction) throws Exception;
+
+	/**
+	 * Shortcut for deleteTree(folderId, 1, transaction)
 	 */
 	public List<Folder> deleteTree(long folderId, FolderHistory transaction) throws Exception;
 

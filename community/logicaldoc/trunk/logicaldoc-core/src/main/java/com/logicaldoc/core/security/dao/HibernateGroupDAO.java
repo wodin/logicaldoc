@@ -32,7 +32,8 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 		this.menuDAO = menuDAO;
 	}
 
-	public boolean delete(long groupId) {
+	public boolean delete(long groupId, int code) {
+		assert(code!=0);
 		boolean result = true;
 
 		try {
@@ -40,7 +41,7 @@ public class HibernateGroupDAO extends HibernatePersistentObjectDAO<Group> imple
 			refresh(group);
 			if (group != null) {
 				group.setName(group.getName() + "." + group.getId());
-				group.setDeleted(1);
+				group.setDeleted(code);
 				saveOrUpdate(group);
 			}
 		} catch (Exception e) {

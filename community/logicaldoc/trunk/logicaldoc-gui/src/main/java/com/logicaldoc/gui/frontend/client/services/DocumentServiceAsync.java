@@ -76,4 +76,8 @@ public interface DocumentServiceAsync {
 	void createEmpty(String sid, GUIDocument vo, AsyncCallback<GUIDocument> callback);
 
 	void indexDocuments(String sid, Long[] docIds, AsyncCallback<Void> callback);
+
+	void deleteFromTrash(String sid, Long[] ids, AsyncCallback<Void> callback);
+
+	void emptyTrash(String sid, AsyncCallback<Void> callback);
 }

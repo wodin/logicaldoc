@@ -23,6 +23,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
@@ -871,13 +872,18 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public void deleteAll(List<Folder> folders, FolderHistory transaction) {
+		deleteAll(folders, PersistentObject.DELETED_CODE_DEFAULT, transaction);
+	}
+
+	@Override
+	public void deleteAll(List<Folder> folders, int code, FolderHistory transaction) {
 		for (Folder folder : folders) {
 			try {
 				FolderHistory deleteHistory = (FolderHistory) transaction.clone();
 				deleteHistory.setEvent(FolderEvent.DELETED.toString());
 				deleteHistory.setFolderId(folder.getId());
 				deleteHistory.setPath(computePathExtended(folder.getId()));
-				delete(folder.getId(), deleteHistory);
+				delete(folder.getId(), code, deleteHistory);
 			} catch (CloneNotSupportedException e) {
 				log.error(e.getMessage(), e);
 			}
@@ -895,13 +901,18 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			throw new RuntimeException("You cannot delete folder " + folder.getName() + " - " + folderId);
 	}
 
-	public boolean delete(long folderId) {
+	public boolean delete(long folderId, int code) {
 		checkIfCanDelete(folderId);
-		return super.delete(folderId);
+		return super.delete(folderId, code);
 	}
 
 	@Override
 	public boolean delete(long folderId, FolderHistory transaction) {
+		return delete(folderId, PersistentObject.DELETED_CODE_DEFAULT, transaction);
+	}
+
+	@Override
+	public boolean delete(long folderId, int delCode, FolderHistory transaction) {
 		checkIfCanDelete(folderId);
 		assert (transaction.getUser() != null);
 
@@ -913,7 +924,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			transaction.setFolderId(folderId);
 			transaction.setTenantId(folder.getTenantId());
 
-			folder.setDeleted(1);
+			folder.setDeleted(delCode);
 			folder.setDeleteUserId(transaction.getUserId());
 
 			store(folder, transaction);
@@ -1250,12 +1261,18 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public List<Folder> deleteTree(long folderId, FolderHistory transaction) throws Exception {
-		List<Folder> notDeleted = deleteTree(findById(folderId), transaction);
+		return deleteTree(folderId, PersistentObject.DELETED_CODE_DEFAULT, transaction);
+	}
+
+	@Override
+	public List<Folder> deleteTree(long folderId, int delCode, FolderHistory transaction) throws Exception {
+		List<Folder> notDeleted = deleteTree(findById(folderId), delCode, transaction);
 		return notDeleted;
 	}
 
 	@Override
-	public List<Folder> deleteTree(Folder folder, FolderHistory transaction) throws Exception {
+	public List<Folder> deleteTree(Folder folder, int delCode, FolderHistory transaction) throws Exception {
+		assert (delCode != 0);
 		assert (folder != null);
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
@@ -1278,18 +1295,18 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			return notDeletableFolders;
 		}
 
-		delete(folder.getId(), transaction);
+		delete(folder.getId(), delCode, transaction);
 
 		/*
 		 * Mark as deleted all the folders
 		 */
-		int records = jdbcUpdate("update ld_folder set ld_deleted=1 where not ld_id=" + folder.getId()
+		int records = jdbcUpdate("update ld_folder set ld_deleted=" + delCode + " where not ld_id=" + folder.getId()
 				+ " and ld_id in " + treeIdsString);
 
 		/*
 		 * Delete the documents as well
 		 */
-		jdbcUpdate("update ld_document set ld_deleted=1 where ld_folderid in " + treeIdsString);
+		jdbcUpdate("update ld_document set ld_deleted=" + delCode + " where ld_folderid in " + treeIdsString);
 
 		if (getSessionFactory().getCache() != null)
 			getSessionFactory().getCache().evictEntityRegions();

@@ -20,6 +20,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
+import com.sun.source.tree.AssertTree;
 
 /**
  * Hibernate implementation of <code>PersistentObjectDAO</code>
@@ -43,19 +44,25 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 		this.entityClass = entityClass;
 	}
 
-	public boolean delete(long id) {
+	public boolean delete(long id, int code) {
+		assert(code!=0);
+		
 		boolean result = true;
 		try {
 			T entity = findById(id);
 			if (entity == null)
 				return false;
-			entity.setDeleted(1);
+			entity.setDeleted(code);
 			store(entity);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			result = false;
 		}
 		return result;
+	}
+
+	public boolean delete(long id) {
+		return delete(id, PersistentObject.DELETED_CODE_DEFAULT);
 	}
 
 	public List<T> findAll() {
@@ -335,7 +342,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 	}
 
 	@Override
-	public void deleteAll(Collection<T> entities) {
+	public void deleteAll(Collection<T> entities, int code) {
 		if (entities == null || entities.isEmpty())
 			return;
 		StringBuffer ids = new StringBuffer();
@@ -346,8 +353,14 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 		}
 
 		Query queryObject = sessionFactory.getCurrentSession().createQuery(
-				"update " + entityClass.getCanonicalName() + " set deleted=1 where id in(" + ids.toString() + ")");
+				"update " + entityClass.getCanonicalName() + " set deleted=" + code + " where id in(" + ids.toString()
+						+ ")");
 		queryObject.executeUpdate();
+	}
+
+	@Override
+	public void deleteAll(Collection<T> entities) {
+		deleteAll(entities, PersistentObject.DELETED_CODE_DEFAULT);
 	}
 
 	@Override

@@ -62,7 +62,7 @@ public class HibernateDocumentLinkDAO extends HibernatePersistentObjectDAO<Docum
 	}
 
 	@Override
-	public boolean delete(long id) {
+	public boolean delete(long id, int code) {
 		DocumentLink link = findById(id);
 		if (link != null)
 			getCurrentSession().delete(link);

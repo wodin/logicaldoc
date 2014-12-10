@@ -23,6 +23,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.ibm.icu.util.Calendar;
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentLink;
@@ -97,7 +98,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		this.historyDAO = historyDAO;
 	}
 
+	@Override
 	public boolean delete(long docId, History transaction) {
+		return delete(docId, PersistentObject.DELETED_CODE_DEFAULT, transaction);
+	}
+
+	@Override
+	public boolean delete(long docId, int delCode, History transaction) {
+		assert (delCode != 0);
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 		boolean result = true;
@@ -123,7 +131,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					saveOrUpdate(link);
 				}
 
-				doc.setDeleted(1);
+				doc.setDeleted(delCode);
 				doc.setDeleteUserId(transaction.getUserId());
 				if (doc.getCustomId() != null)
 					doc.setCustomId(doc.getCustomId() + "." + doc.getId());
@@ -740,13 +748,17 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	}
 
-	@Override
 	public void deleteAll(Collection<Document> documents, History transaction) {
+		deleteAll(documents, PersistentObject.DELETED_CODE_DEFAULT, transaction);
+	}
+
+	@Override
+	public void deleteAll(Collection<Document> documents, int delCode, History transaction) {
 		for (Document document : documents) {
 			try {
 				History deleteHistory = (History) transaction.clone();
 				deleteHistory.setEvent(DocumentEvent.DELETED.toString());
-				delete(document.getId(), deleteHistory);
+				delete(document.getId(), delCode, deleteHistory);
 			} catch (CloneNotSupportedException e) {
 				if (log.isErrorEnabled())
 					log.error(e.getMessage(), e);
@@ -865,7 +877,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			jdbcUpdate("update ld_document set ld_deleted=1,ld_customid=" + concat + ", ld_deleteuserid="
 					+ deleteUserId
-					+ " where ld_deleted=0 and ld_folderid in (select ld_id from ld_folder where ld_deleted = 1)");
+					+ " where ld_deleted=0 and ld_folderid in (select ld_id from ld_folder where ld_deleted  > 0)");
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
