@@ -145,6 +145,15 @@ public class LockedDocsPanel extends VLayout {
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 		icon.setCanGroupBy(false);
+		
+		ListGridField immutable = new ListGridField("immutable", " ", 24);
+		immutable.setType(ListGridFieldType.IMAGE);
+		immutable.setCanSort(false);
+		immutable.setAlign(Alignment.CENTER);
+		immutable.setShowDefaultContextMenu(false);
+		immutable.setImageURLPrefix(Util.imagePrefix());
+		immutable.setImageURLSuffix(".png");
+		immutable.setCanFilter(false);
 
 		ListGridField version = new ListGridField("version", I18N.message("version"), 55);
 		version.setAlign(Alignment.CENTER);
@@ -209,7 +218,7 @@ public class LockedDocsPanel extends VLayout {
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setDataSource(new LockedDocsDS(userId));
 
-		list.setFields(locked, icon, filename, version, size, title, lastModified, user, customId, type);
+		list.setFields(locked, immutable, icon, filename, version, size, title, lastModified, user, customId, type);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override

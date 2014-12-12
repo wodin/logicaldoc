@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
+import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
@@ -40,7 +41,7 @@ public class WorkflowDialog extends Window {
 
 		setTitle(I18N.message("startworkflow"));
 		setWidth(420);
-		setHeight(110);
+		setHeight(120);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -54,7 +55,6 @@ public class WorkflowDialog extends Window {
 		workflow.setRequired(true);
 
 		ButtonItem start = new ButtonItem();
-		start.setStartRow(false);
 		start.setTitle(I18N.message("startworkflow"));
 		start.setAutoFit(true);
 		start.addClickHandler(new ClickHandler() {
@@ -64,6 +64,7 @@ public class WorkflowDialog extends Window {
 			}
 		});
 
+		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setFields(workflow, start);
 		addItem(layout);
 	}
