@@ -161,6 +161,8 @@ public class SystemMenu extends VLayout {
 				+ Session.get().getInfo().getVendor());
 		vendor.setShouldSaveValue(false);
 
+		String userno = Session.get().getInfo().getConfig("userno");
+
 		DynamicForm supportForm = new DynamicForm();
 		supportForm.setAlign(Alignment.LEFT);
 		supportForm.setTitleOrientation(TitleOrientation.TOP);
@@ -172,22 +174,38 @@ public class SystemMenu extends VLayout {
 		LinkItem support = new LinkItem();
 		support.setName(I18N.message("support"));
 		support.setLinkTitle(Session.get().getInfo().getSupport());
-		support.setValue("mailto:" + Session.get().getInfo().getSupport() + "?subject="
-				+ Session.get().getInfo().getProductName() + " Support - ID("
-				+ Session.get().getInfo().getInstallationId() + ")");
+
+		String mailTo = "mailto:" + Session.get().getInfo().getSupport() + "?subject="
+				+ Session.get().getInfo().getProductName() + " Support - ";
+		if (userno != null)
+			mailTo += "UserNo(" + userno + ")";
+		else
+			mailTo += "ID(" + Session.get().getInfo().getInstallationId() + ")";
+		support.setValue(mailTo);
 		support.setRequired(true);
 		support.setShouldSaveValue(false);
 
-		StaticTextItem installationID = ItemFactory.newStaticTextItem("", "installid", Session.get().getInfo()
+		StaticTextItem installationID = ItemFactory.newStaticTextItem("installid", "installid", Session.get().getInfo()
 				.getInstallationId());
+		installationID.setWidth(250);
 		installationID.setRequired(true);
 		installationID.setShouldSaveValue(false);
-		installationID.setWrap(false);
+		installationID.setWrap(true);
 		installationID.setWrapTitle(false);
+
+		StaticTextItem usernoItem = ItemFactory.newStaticTextItem("userno", "userno", userno);
+		usernoItem.setWidth(250);
+		usernoItem.setRequired(true);
+		usernoItem.setShouldSaveValue(false);
+		usernoItem.setWrap(true);
+		usernoItem.setWrapTitle(false);
 
 		systemForm.setItems(productName, version, vendor);
 
-		supportForm.setItems(support, installationID);
+		if (userno != null)
+			supportForm.setItems(support, usernoItem);
+		else
+			supportForm.setItems(support, installationID);
 
 		addMember(systemForm);
 		addMember(supportForm);

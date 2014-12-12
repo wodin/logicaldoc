@@ -44,7 +44,7 @@ public class LockedDocsDS extends DataSource {
 		setFields(id, userIdItem, username, title, size, version, lastModified, customId, icon, filename, digest,
 				immutable, folderId, type, locked);
 		setClientOnly(true);
-		
+
 		String url = "data/lockeddocs.xml?sid=" + Session.get().getSid();
 		if (userId != null)
 			url += "&userId=" + userId;

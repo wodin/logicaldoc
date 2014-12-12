@@ -73,7 +73,9 @@ public class LockedDocsDataServlet extends HttpServlet {
 			query.append(" left outer join ld_user B on A.ld_lockuserid=B.ld_id ");
 			query.append(" where A.ld_deleted = 0 and A.ld_tenantid=");
 			query.append(Long.toString(session.getTenantId()));
-			query.append(" and A.ld_docref is null and not A.ld_status=0 ");
+			query.append(" and A.ld_docref is null ");
+			query.append(" and (not A.ld_status=0 or not A.ld_immutable=0) ");
+
 			if (userId != null) {
 				query.append(" and A.ld_lockuserid=");
 				query.append(Long.toString(userId));

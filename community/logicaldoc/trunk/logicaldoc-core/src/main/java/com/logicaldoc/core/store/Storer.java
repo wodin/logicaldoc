@@ -13,6 +13,7 @@ import com.logicaldoc.core.document.Document;
  * @author Michael Scholz, Marco Meschieri
  */
 public interface Storer {
+		
 	/**
 	 * This method has to store a resource in the document's container. The
 	 * location where (DBMS, Filesystem, other) the document should be stored is
