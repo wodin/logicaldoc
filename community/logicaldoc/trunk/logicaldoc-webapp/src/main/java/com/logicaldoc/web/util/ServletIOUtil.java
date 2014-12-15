@@ -59,8 +59,6 @@ import com.logicaldoc.util.plugin.PluginRegistry;
 public class ServletIOUtil {
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // ..bytes = 10KB.
 
-	private static final long DEFAULT_EXPIRE_TIME = 604800L;
-
 	private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 
 	/**
@@ -188,7 +186,6 @@ public class ServletIOUtil {
 		String contentType = MimeType.getByFilename(filename);
 		long lastModified = doc.getDate().getTime();
 		String eTag = doc.getId() + "_" + doc.getVersion() + "_" + lastModified;
-		long expires = System.currentTimeMillis() + DEFAULT_EXPIRE_TIME;
 		boolean acceptsGzip = false;
 
 		String acceptEncoding = request.getHeader("Accept-Encoding");
@@ -280,7 +277,11 @@ public class ServletIOUtil {
 		response.setHeader("Accept-Ranges", "bytes");
 		response.setHeader("ETag", eTag);
 		response.setDateHeader("Last-Modified", lastModified);
-		response.setDateHeader("Expires", expires);
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+		response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+		response.setDateHeader("Expires", 0); // Proxies.
+//		long expires = System.currentTimeMillis() + 604800L;
+//		response.setDateHeader("Expires", expires);
 
 		// Send requested file (part(s)) to client
 		// ------------------------------------------------
