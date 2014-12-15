@@ -1,10 +1,7 @@
 package com.logicaldoc.util.exec;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -23,7 +20,13 @@ import org.slf4j.LoggerFactory;
  * @since 6.3
  */
 public class Exec {
+
 	protected static Logger log = LoggerFactory.getLogger(Exec.class);
+
+	public static boolean isWindows() {
+		boolean windows = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0;
+		return windows;
+	}
 
 	/**
 	 * Executes the command by using the process builder.
@@ -57,7 +60,7 @@ public class Exec {
 			process.destroy();
 		}
 	}
-	
+
 	/**
 	 * Execute the command by using the Runtime.getRuntime().exec()
 	 */
