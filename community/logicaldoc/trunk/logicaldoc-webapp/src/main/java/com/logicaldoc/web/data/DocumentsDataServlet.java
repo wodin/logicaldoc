@@ -321,6 +321,7 @@ public class DocumentsDataServlet extends HttpServlet {
 					if (doc.getLockUserId() != null)
 						writer.print("<lockUserId>" + doc.getLockUserId() + "</lockUserId>");
 					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
+					writer.print("<type><![CDATA[" + doc.getType() + "]]></type>");
 					writer.print("<status>" + doc.getStatus() + "</status>");
 					if (doc.getSigned() == 0)
 						writer.print("<signed>blank</signed>");
