@@ -257,8 +257,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					if (list.isEmpty())
 						return null;
 
-					if (parent.getId() == Folder.ROOTID) {
-						GUIFolder f = new GUIFolder(Folder.ROOTID);
+					if (parent.getId() == Folder.ROOTID || parent.getId() == parent.getId()) {
+						GUIFolder f = new GUIFolder(parent.getId());
 						f.setName("/");
 						path[j] = f;
 					} else
