@@ -149,7 +149,8 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 		this.path = path;
 		this.pathExtended = "";
 		for (GUIFolder folder : path) {
-			if (folder.getId() != Constants.DOCUMENTS_FOLDERID)
+			if (folder != null && folder.getId() != folder.getParentId()
+					&& folder.getId() != Constants.DOCUMENTS_FOLDERID)
 				pathExtended += "/" + folder.getName();
 		}
 		pathExtended += "/" + getName();

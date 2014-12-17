@@ -75,7 +75,7 @@ public class FoldersDataServlet extends HttpServlet {
 				String idsStr = accessibleIds.toString().replace('[', '(').replace(']', ')');
 				query.append(" and ld_id in " + idsStr);
 			}
-			query.append(" order by ld_name");
+			query.append(" order by ld_name asc");
 
 			SqlRowSet rs = dao.queryForRowSet(query.toString(), new Long[] { parent, tenantId }, null);
 			if (rs != null)
