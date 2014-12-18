@@ -21,6 +21,7 @@ import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.frontend.client.annnotation.AnnotationsDialog;
 import com.logicaldoc.gui.frontend.client.folder.Navigator;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
@@ -102,6 +103,7 @@ public class Frontend implements EntryPoint {
 		declareGetCurrentFolderId(this);
 		declareCheckPermission(this);
 		declareShowForgotDialog(this);
+		declareShowAnnotation(this);
 
 		infoService.getInfo(I18N.getLocale(), tenant, new AsyncCallback<GUIInfo>() {
 			@Override
@@ -261,6 +263,10 @@ public class Frontend implements EntryPoint {
 	public void showForgotDialog(String productName) {
 		LoginPanel.onForgottenPwd(productName);
 	}
+	
+	public void showAnnotation(String annotationId) {
+		AnnotationsDialog.showAnnotation(Long.parseLong(annotationId));
+	}
 
 	/**
 	 * Declares the javascript function used to check a permission in the
@@ -308,6 +314,15 @@ public class Frontend implements EntryPoint {
 	public static native void declareShowForgotDialog(Frontend frontend) /*-{
 		$wnd.showForgotDialog = function(productName) {
 			return frontend.@com.logicaldoc.gui.frontend.client.Frontend::showForgotDialog(Ljava/lang/String;)(productName);
+		};
+	}-*/;
+	
+	/**
+	 * Declares the javascript function used to retrieve the current folder ID.
+	 */
+	public static native void declareShowAnnotation(Frontend frontend) /*-{
+		$wnd.showAnnotation = function(annotationId) {
+			return frontend.@com.logicaldoc.gui.frontend.client.Frontend::showAnnotation(Ljava/lang/String;)(annotationId);
 		};
 	}-*/;
 }

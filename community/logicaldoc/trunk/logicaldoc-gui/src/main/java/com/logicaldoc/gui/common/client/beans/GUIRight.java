@@ -41,6 +41,8 @@ public class GUIRight implements Serializable {
 	private boolean download = true;
 
 	private boolean calendar = false;
+	
+	private boolean subscription = false;
 
 	private String name;
 
@@ -180,5 +182,13 @@ public class GUIRight implements Serializable {
 
 	public void setCalendar(boolean calendar) {
 		this.calendar = calendar;
+	}
+
+	public boolean isSubscription() {
+		return subscription;
+	}
+
+	public void setSubscription(boolean subscription) {
+		this.subscription = subscription;
 	}
 }

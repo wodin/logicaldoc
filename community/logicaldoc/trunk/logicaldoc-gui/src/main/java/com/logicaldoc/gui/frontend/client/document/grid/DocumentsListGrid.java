@@ -230,6 +230,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		ListGridField wfStatus = new ListGridField("workflowStatus", I18N.message("workflowstatus"), 100);
 		wfStatus.setHidden(true);
 		wfStatus.setCanFilter(true);
+		wfStatus.setAlign(Alignment.LEFT);
 
 		ListGridField startPublishing = new ListGridField("startPublishing", I18N.message("startpublishing"), 110);
 		startPublishing.setAlign(Alignment.CENTER);
