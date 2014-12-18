@@ -37,6 +37,8 @@ public class FolderGroup {
 
 	private int calendar = 0;
 
+	private int subscription = 0;
+
 	private long groupId;
 
 	public FolderGroup(long groupId) {
@@ -63,6 +65,7 @@ public class FolderGroup {
 		mg.setWorkflow(workflow);
 		mg.setDownload(download);
 		mg.setCalendar(calendar);
+		mg.setSubscription(subscription);
 		return mg;
 	}
 
@@ -90,6 +93,7 @@ public class FolderGroup {
 		 * the same mask order.
 		 */
 		StringBuffer sb = new StringBuffer();
+		sb.append(getSubscription() == 1 ? "1" : "0");
 		sb.append(getCalendar() == 1 ? "1" : "0");
 		sb.append(getDownload() == 1 ? "1" : "0");
 		sb.append(getWorkflow() == 1 ? "1" : "0");
@@ -129,6 +133,7 @@ public class FolderGroup {
 		setWorkflow(Permission.WORKFLOW.match(permissions) ? 1 : 0);
 		setDownload(Permission.DOWNLOAD.match(permissions) ? 1 : 0);
 		setCalendar(Permission.CALENDAR.match(permissions) ? 1 : 0);
+		setSubscription(Permission.SUBSCRIPTION.match(permissions) ? 1 : 0);
 	}
 
 	public int getRead() {
@@ -249,5 +254,13 @@ public class FolderGroup {
 
 	public void setCalendar(int calendar) {
 		this.calendar = calendar;
+	}
+
+	public int getSubscription() {
+		return subscription;
+	}
+
+	public void setSubscription(int subscription) {
+		this.subscription = subscription;
 	}
 }

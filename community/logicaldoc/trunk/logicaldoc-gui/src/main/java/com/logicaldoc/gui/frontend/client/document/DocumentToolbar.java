@@ -14,6 +14,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.frontend.client.annnotation.AnnotationsDialog;
 import com.logicaldoc.gui.frontend.client.calendar.CalendarEventDialog;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.folder.Navigator;
@@ -493,6 +494,19 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addSeparator();
 		addButton(list);
 		addButton(gallery);
+		
+		
+//		ToolStripButton annotations=new ToolStripButton();
+//		annotations.setIcon(ItemFactory.newImgIcon("image_add.png").getSrc());
+//		annotations.setTooltip(I18N.message("annotations"));
+//		annotations.addClickHandler(new ClickHandler() {
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				AnnotationsDialog dialog=new AnnotationsDialog(50L, "Pippo");
+//				dialog.show();
+//			}
+//		});
+//		addButton(annotations);
 	}
 
 	/**

@@ -30,6 +30,7 @@ import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
+import com.smartgwt.client.widgets.form.fields.ColorPickerItem;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
@@ -606,6 +607,17 @@ public class ItemFactory {
 		IsIntegerValidator iv = new IsIntegerValidator();
 		iv.setErrorMessage(I18N.message("wholenumber"));
 		item.setValidators(iv);
+		return item;
+	}
+
+	public static ColorPickerItem newColorItem(String name, String title, String value) {
+		ColorPickerItem item = new ColorPickerItem();
+		item.setName(filterItemName(name));
+		item.setTitle(I18N.message(title));
+		if (value != null)
+			item.setValue(value);
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setHintStyle("hint");
 		return item;
 	}
 

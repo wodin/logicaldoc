@@ -39,6 +39,7 @@
         <property name="workflow" type="int" column="ld_workflow" not-null="true" />
         <property name="download" type="int" column="ld_download" not-null="true" />
         <property name="calendar" type="int" column="ld_calendar" not-null="true" />
+        <property name="subscription" type="int" column="ld_subscription" not-null="true" />
       </composite-element>
     </set>
 

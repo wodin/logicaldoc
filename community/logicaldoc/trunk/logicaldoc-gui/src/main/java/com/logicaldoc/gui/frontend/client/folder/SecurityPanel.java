@@ -123,7 +123,7 @@ public class SecurityPanel extends FolderDetailTab {
 		entityId.setCanEdit(false);
 		entityId.setHidden(true);
 
-		ListGridField entity = new ListGridField("entity", I18N.message("entity"), 200);
+		ListGridField entity = new ListGridField("entity", I18N.message("entity"), 180);
 		entity.setCanEdit(false);
 
 		ListGridField read = new ListGridField("read", I18N.message("read"), 60);
@@ -182,6 +182,10 @@ public class SecurityPanel extends FolderDetailTab {
 		calendar.setType(ListGridFieldType.BOOLEAN);
 		calendar.setCanEdit(true);
 
+		ListGridField subscription = new ListGridField("subscription", I18N.message("subscription"), 60);
+		subscription.setType(ListGridFieldType.BOOLEAN);
+		subscription.setCanEdit(true);
+		
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
@@ -211,6 +215,8 @@ public class SecurityPanel extends FolderDetailTab {
 			fields.add(workflow);
 		if (Feature.enabled(Feature.CALENDAR))
 			fields.add(calendar);
+		if (Feature.enabled(Feature.AUDIT))
+			fields.add(subscription);
 
 		list.setFields(fields.toArray(new ListGridField[0]));
 
@@ -364,6 +370,7 @@ public class SecurityPanel extends FolderDetailTab {
 			right.setArchive("true".equals(record.getAttributeAsString("archive")));
 			right.setDownload("true".equals(record.getAttributeAsString("download")));
 			right.setCalendar("true".equals(record.getAttributeAsString("calendar")));
+			right.setSubscription("true".equals(record.getAttributeAsString("subscription")));
 
 			tmp.add(right);
 		}
