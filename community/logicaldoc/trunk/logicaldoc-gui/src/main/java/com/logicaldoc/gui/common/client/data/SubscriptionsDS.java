@@ -14,7 +14,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class SubscriptionsDS extends DataSource {
 
-	public SubscriptionsDS() {
+	public SubscriptionsDS(Long folderId, Long docId) {
 		setTitleField("name");
 		setRecordXPath("/list/subscription");
 		DataSourceTextField id = new DataSourceTextField("id");
@@ -27,9 +27,17 @@ public class SubscriptionsDS extends DataSource {
 		DataSourceTextField type = new DataSourceTextField("type");
 		DataSourceTextField objectId = new DataSourceTextField("objectid");
 		DataSourceTextField events = new DataSourceTextField("events");
+		DataSourceTextField userName = new DataSourceTextField("userName");
+		DataSourceTextField userId = new DataSourceTextField("userId");
+		DataSourceTextField folderOption = new DataSourceTextField("folderOption");
 
-		setFields(id, icon, name, created, type, objectId, events);
+		setFields(id, icon, name, created, type, objectId, events, userName, userId, folderOption);
 		setClientOnly(true);
-		setDataURL("data/subscriptions.xml?sid=" + Session.get().getSid());
+		String dataUrl = "data/subscriptions.xml?sid=" + Session.get().getSid();
+		if (folderId != null)
+			dataUrl += "&folderId=" + folderId;
+		if (docId != null)
+			dataUrl += "&docId=" + docId;
+		setDataURL(dataUrl);
 	}
 }

@@ -45,15 +45,17 @@ public class FolderDetailsPanel extends VLayout {
 	private Layout propertiesTabPanel;
 
 	private Layout extendedPropertiesTabPanel;
-	
+
 	private Layout securityTabPanel;
 
 	private Layout historyTabPanel;
 
 	private Layout workflowsTabPanel;
 
+	private Layout subscriptionsTabPanel;
+
 	private PropertiesPanel propertiesPanel;
-	
+
 	private ExtendedPropertiesPanel extendedPropertiesPanel;
 
 	private SecurityPanel securityPanel;
@@ -62,6 +64,8 @@ public class FolderDetailsPanel extends VLayout {
 
 	private WorkflowTriggersPanel workflowsPanel;
 
+	private SubscriptionsPanel subscriptionsPanel;
+
 	private HLayout savePanel;
 
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
@@ -69,6 +73,8 @@ public class FolderDetailsPanel extends VLayout {
 	private TabSet tabSet = new TabSet();
 
 	private Tab workflowTab = null;
+
+	private Tab subscriptionsTab = null;
 
 	private FolderObserver listener = null;
 
@@ -146,13 +152,12 @@ public class FolderDetailsPanel extends VLayout {
 		propertiesTab.setPane(propertiesTabPanel);
 		tabSet.addTab(propertiesTab);
 
-		Tab extendedPropertiesTab  = new Tab(I18N.message("propertiesext"));
+		Tab extendedPropertiesTab = new Tab(I18N.message("propertiesext"));
 		extendedPropertiesTabPanel = new HLayout();
 		extendedPropertiesTabPanel.setHeight100();
 		extendedPropertiesTab.setPane(extendedPropertiesTabPanel);
 		tabSet.addTab(extendedPropertiesTab);
 
-		
 		Tab securityTab = new Tab(I18N.message("security"));
 		securityTabPanel = new HLayout();
 		securityTabPanel.setWidth100();
@@ -182,6 +187,20 @@ public class FolderDetailsPanel extends VLayout {
 				tabSet.addTab(workflowTab);
 			}
 
+		subscriptionsTab = new Tab(I18N.message("subscriptions"));
+		if (folder.hasPermission(Constants.PERMISSION_SUBSCRIPTION))
+			if (Feature.visible(Feature.AUDIT)) {
+				if (Feature.enabled(Feature.AUDIT)) {
+					subscriptionsTabPanel = new HLayout();
+					subscriptionsTabPanel.setWidth100();
+					subscriptionsTabPanel.setHeight100();
+				} else {
+					subscriptionsTabPanel = new FeatureDisabled();
+				}
+				subscriptionsTab.setPane(subscriptionsTabPanel);
+				tabSet.addTab(subscriptionsTab);
+			}
+
 		addMember(tabSet);
 		refresh();
 	}
@@ -208,7 +227,6 @@ public class FolderDetailsPanel extends VLayout {
 			propertiesPanel = new PropertiesPanel(folder, changeHandler);
 			propertiesTabPanel.addMember(propertiesPanel);
 
-			
 			/*
 			 * Prepare the extended properties tab
 			 */
@@ -217,10 +235,10 @@ public class FolderDetailsPanel extends VLayout {
 				extendedPropertiesTabPanel.removeMember(extendedPropertiesPanel);
 			}
 			extendedPropertiesPanel = new ExtendedPropertiesPanel(folder, changeHandler);
-			if (Feature.enabled(Feature.TEMPLATE)){
-			  extendedPropertiesTabPanel.addMember(extendedPropertiesPanel);
+			if (Feature.enabled(Feature.TEMPLATE)) {
+				extendedPropertiesTabPanel.addMember(extendedPropertiesPanel);
 			}
-			
+
 			/*
 			 * Prepare the security properties tab
 			 */
@@ -253,6 +271,19 @@ public class FolderDetailsPanel extends VLayout {
 				workflowsPanel = new WorkflowTriggersPanel(folder);
 				workflowsTabPanel.addMember(workflowsPanel);
 			}
+
+			if (Feature.enabled(Feature.AUDIT) && folder.hasPermission(Constants.PERMISSION_SUBSCRIPTION)) {
+				/*
+				 * Prepare the subscriptions tab
+				 */
+				if (subscriptionsPanel != null) {
+					subscriptionsPanel.destroy();
+					subscriptionsTabPanel.removeMember(subscriptionsPanel);
+				}
+
+				subscriptionsPanel = new SubscriptionsPanel(folder);
+				subscriptionsTabPanel.addMember(subscriptionsPanel);
+			}
 		} catch (Throwable r) {
 			SC.warn(r.getMessage());
 		}
@@ -275,7 +306,7 @@ public class FolderDetailsPanel extends VLayout {
 		boolean propValid = propertiesPanel.validate();
 		if (!propValid)
 			tabSet.selectTab(0);
-		if (propValid && Feature.enabled(Feature.TEMPLATE)){
+		if (propValid && Feature.enabled(Feature.TEMPLATE)) {
 			propValid = extendedPropertiesPanel.validate();
 			if (!propValid)
 				tabSet.selectTab(1);
@@ -295,22 +326,22 @@ public class FolderDetailsPanel extends VLayout {
 
 				@Override
 				public void onSuccess(GUIFolder folder) {
-					if(listener!=null)
+					if (listener != null)
 						listener.onFolderSaved(folder);
-					
-					//Adjust the path
-					String p=folder.getPathExtended();
-					p=p.substring(0,p.lastIndexOf('/'));
-					p+="/"+folder.getName().trim();
+
+					// Adjust the path
+					String p = folder.getPathExtended();
+					p = p.substring(0, p.lastIndexOf('/'));
+					p += "/" + folder.getName().trim();
 					folder.setPathExtended(p);
 					setFolder(folder);
-	
+
 					savePanel.setVisible(false);
-					
-					GUIFolder current=Session.get().getCurrentFolder();
+
+					GUIFolder current = Session.get().getCurrentFolder();
 					current.setTemplate(folder.getTemplate());
 					current.setTemplateId(folder.getTemplateId());
-					current.setAttributes(folder.getAttributes());					
+					current.setAttributes(folder.getAttributes());
 				}
 			});
 		}

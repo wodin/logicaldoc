@@ -20,6 +20,7 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 /**
@@ -31,23 +32,32 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
 public class SubscriptionDialog extends Window {
 	private AuditServiceAsync service = (AuditServiceAsync) GWT.create(AuditService.class);
 
-	public SubscriptionDialog(final ListGridRecord selection) {
+	public SubscriptionDialog(final ListGrid grid) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
+
+		final ListGridRecord selection = grid.getSelectedRecord();
 
 		setTitle(I18N.message("subscription") + " - " + selection.getAttributeAsString("name"));
 
 		final String[] events;
+
 		String buf = selection.getAttributeAsString("events");
 		if (buf == null || buf.isEmpty())
 			events = null;
+		else if (!buf.contains(","))
+			events = new String[] { buf.trim() };
 		else {
-			events = buf.substring(1, buf.length()).split(",");
+			events = buf.split(",");
 		}
 
 		final long subscriptionId = Long.parseLong(selection.getAttributeAsString("id"));
+		boolean isFolderSubscription = "folder".equals(selection.getAttributeAsString("type"));
 
 		setWidth(290);
-		setHeight(300);
+		if (isFolderSubscription)
+			setHeight(360);
+		else
+			setHeight(300);
 		setMembersMargin(6);
 		setCanDragResize(true);
 		setIsModal(true);
@@ -60,6 +70,14 @@ public class SubscriptionDialog extends Window {
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
 
+		SelectItem option = new SelectItem("option", I18N.message("subscriptionoption"));
+		option.setWidth(280);
+		LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
+		options.put("current", I18N.message("subscribecurrent"));
+		options.put("subfolders", I18N.message("subscribesubfolders"));
+		option.setValueMap(options);
+		option.setValue("1".equals(selection.getAttributeAsString("folderOption")) ? "subfolders" : "current");
+
 		SelectItem notifyon = new SelectItem("notifyon", I18N.message("notifyon"));
 		notifyon.setWidth(280);
 		LinkedHashMap<String, String> vals = new LinkedHashMap<String, String>();
@@ -70,12 +88,10 @@ public class SubscriptionDialog extends Window {
 
 		final SelectItem event;
 		event = ItemFactory.newEventsSelector("event", I18N.message("event"), true, false, false);
-
 		event.setEndRow(true);
 		event.setDisabled(events == null || events.length == 0);
-		if (events != null) {
+		if (events != null)
 			event.setValues(events);
-		}
 
 		notifyon.addChangedHandler(new ChangedHandler() {
 			@Override
@@ -93,37 +109,41 @@ public class SubscriptionDialog extends Window {
 		save.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				String[] events = null;
+				final String eventsStr;
+				final String option = form.getValueAsString("option");
 				if ("selection".equals(form.getValueAsString("notifyon"))) {
 					String buf = form.getValues().get("event").toString().trim().toLowerCase();
 					buf = buf.replace('[', ' ');
 					buf = buf.replace(']', ' ');
-					buf = buf.replace(" ", "");
-					events = buf.split(",");
-				}
+					eventsStr = buf.replace(" ", "");
+					events = eventsStr.split(",");
+				} else
+					eventsStr = null;
 
-				service.update(Session.get().getSid(), subscriptionId, events, new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+				service.update(Session.get().getSid(), subscriptionId, option.equals("current"), events,
+						new AsyncCallback<Void>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-					@Override
-					public void onSuccess(Void ret) {
-						Log.info(I18N.message("settingssaved"), null);
-
-						String buf = form.getValues().get("event").toString().trim().toLowerCase();
-						buf = buf.replace('[', ',');
-						buf = buf.replace(']', ',');
-						buf = buf.replace(" ", "");
-
-						selection.setAttribute("events", buf);
-					}
-				});
+							@Override
+							public void onSuccess(Void ret) {
+								Log.info(I18N.message("settingssaved"), null);
+								selection.setAttribute("events", eventsStr);
+								selection.setAttribute("folderOption", option);
+								grid.refreshRow(grid.getRecordIndex(selection));
+							}
+						});
 				destroy();
 			}
 		});
 
-		form.setItems(notifyon, event, save);
+		if (isFolderSubscription)
+			form.setItems(option, notifyon, event, save);
+		else
+			form.setItems(notifyon, event, save);
+		
 		addItem(form);
 	}
 
@@ -139,7 +159,10 @@ public class SubscriptionDialog extends Window {
 			setTitle(I18N.message("documentsubscription"));
 
 		setWidth(290);
-		setHeight(360);
+		if (folderId != null)
+			setHeight(360);
+		else
+			setHeight(300);
 		setMembersMargin(6);
 		setCanDragResize(true);
 		setIsModal(true);
@@ -173,7 +196,6 @@ public class SubscriptionDialog extends Window {
 			event = ItemFactory.newEventsSelector("event", I18N.message("event"), true, false, false);
 		else
 			event = ItemFactory.newEventsSelector("event", I18N.message("event"), false, false, false);
-
 		event.setEndRow(true);
 		event.setDisabled(true);
 
@@ -193,17 +215,20 @@ public class SubscriptionDialog extends Window {
 		subscribe.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				String[] events = null;
+				final String eventsStr;
 				if ("selection".equals(form.getValueAsString("notifyon"))) {
 					String buf = form.getValues().get("event").toString().trim().toLowerCase();
 					buf = buf.replace('[', ' ');
 					buf = buf.replace(']', ' ');
-					buf = buf.replace(" ", "");
-					events = buf.split(",");
-				}
+					eventsStr = buf.replace(" ", "");
+					events = eventsStr.split(",");
+				} else
+					eventsStr = null;
 
 				if (folderId != null)
 					service.subscribeFolder(Session.get().getSid(), folderId,
-							form.getValueAsString("option").equals("current"), events, new AsyncCallback<Void>() {
+							form.getValueAsString("option").equals("current"), events, null, null,
+							new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -217,18 +242,20 @@ public class SubscriptionDialog extends Window {
 								}
 							});
 				else
-					service.subscribeDocuments(Session.get().getSid(), docIds, events, new AsyncCallback<Void>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-						}
+					service.subscribeDocuments(Session.get().getSid(), docIds, events, null, null,
+							new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-						@Override
-						public void onSuccess(Void ret) {
-							Log.info(I18N.message("foldersubscribed"), null);
-							Session.get().getUser().setSubscriptions(Session.get().getUser().getSubscriptions() + 1);
-						}
-					});
+								@Override
+								public void onSuccess(Void ret) {
+									Log.info(I18N.message("foldersubscribed"), null);
+									Session.get().getUser()
+											.setSubscriptions(Session.get().getUser().getSubscriptions() + 1);
+								}
+							});
 				destroy();
 			}
 		});

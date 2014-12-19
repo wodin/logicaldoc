@@ -36,7 +36,6 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.layout.VStack;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -132,14 +131,12 @@ public class Subscriptions extends com.smartgwt.client.widgets.Window {
 
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
-		list.setShowRecordComponents(true);
-		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(false);
-		list.setDataSource(new SubscriptionsDS());
+		list.setDataSource(new SubscriptionsDS(null, null));
 		list.setFields(id, icon, name, created);
 
 		list.sort(1, SortDirection.DESCENDING);
@@ -217,7 +214,7 @@ public class Subscriptions extends com.smartgwt.client.widgets.Window {
 		edit.setTitle(I18N.message("edit"));
 		edit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				SubscriptionDialog dialog = new SubscriptionDialog(selection[0]);
+				SubscriptionDialog dialog = new SubscriptionDialog(list);
 				dialog.show();
 			}
 		});
