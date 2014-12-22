@@ -52,8 +52,8 @@ public class FolderClient extends SoapClient<FolderService> implements FolderSer
 	}
 
 	@Override
-	public void copy(String sid, long folderId, long parentId, int foldersOnly) throws Exception {
-		client.copy(sid, folderId, parentId, foldersOnly);
+	public void copy(String sid, long folderId, long parentId, int foldersOnly, int inheritSecurity) throws Exception {
+		client.copy(sid, folderId, parentId, foldersOnly, inheritSecurity);
 	}
 
 	@Override

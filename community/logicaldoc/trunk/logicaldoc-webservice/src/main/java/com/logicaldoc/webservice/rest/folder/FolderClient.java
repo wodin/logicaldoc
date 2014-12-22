@@ -76,7 +76,7 @@ public class FolderClient extends RestClient implements FolderService {
 	}
 
 	@Override
-	public void copy(String sid, long folderId, long targetId, int foldersOnly) throws Exception {
+	public void copy(String sid, long folderId, long targetId, int foldersOnly, int inheritSecurity) throws Exception {
 		// TODO Auto-generated method stub
 
 	}
