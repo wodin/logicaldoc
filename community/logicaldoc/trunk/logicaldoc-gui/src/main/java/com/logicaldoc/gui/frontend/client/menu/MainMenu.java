@@ -40,7 +40,6 @@ import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
 import com.logicaldoc.gui.frontend.client.personal.MyPrivateKey;
 import com.logicaldoc.gui.frontend.client.personal.MySignature;
 import com.logicaldoc.gui.frontend.client.personal.Profile;
-import com.logicaldoc.gui.frontend.client.personal.Subscriptions;
 import com.logicaldoc.gui.frontend.client.personal.contacts.Contacts;
 import com.logicaldoc.gui.frontend.client.search.SearchPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -55,6 +54,7 @@ import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.TenantService;
 import com.logicaldoc.gui.frontend.client.services.TenantServiceAsync;
+import com.logicaldoc.gui.frontend.client.subscription.PersonalSubscriptions;
 import com.logicaldoc.gui.frontend.client.webcontent.WebcontentCreate;
 import com.logicaldoc.gui.frontend.client.webcontent.WebcontentEditor;
 import com.smartgwt.client.types.Alignment;
@@ -802,7 +802,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		subscriptions.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				Subscriptions s = new Subscriptions();
+				PersonalSubscriptions s = new PersonalSubscriptions();
 				s.show();
 			}
 		});

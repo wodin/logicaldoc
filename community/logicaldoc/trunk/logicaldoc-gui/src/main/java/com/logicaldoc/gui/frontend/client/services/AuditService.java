@@ -17,19 +17,20 @@ public interface AuditService extends RemoteService {
 	/**
 	 * Subscribes a folder
 	 */
-	public void subscribeFolder(String sid, long folderId, boolean currentOnly, String[] events, Long user, Long group) throws ServerException;
+	public void subscribeFolder(String sid, long folderId, boolean currentOnly, String[] events, Long user, Long group)
+			throws ServerException;
 
 	/**
 	 * Subscribes a selection of documents
 	 */
-	public void subscribeDocuments(String sid, long[] docIds, String[] events, Long userId, Long groupId) throws ServerException;
+	public void subscribeDocuments(String sid, long[] docIds, String[] events, Long userId, Long groupId)
+			throws ServerException;
 
-	
 	/**
-	 * Changes the assigned events
+	 * Changes a set of subscriptions
 	 */
-	public void update(String sid, long id, boolean currentOnly, String[] events) throws ServerException;
-	
+	public void update(String sid, long[] ids, boolean currentOnly, String[] events) throws ServerException;
+
 	/**
 	 * Deletes a list of Subscriptions
 	 */

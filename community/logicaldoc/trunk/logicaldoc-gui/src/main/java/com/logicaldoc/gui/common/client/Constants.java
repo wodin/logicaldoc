@@ -155,4 +155,6 @@ public final class Constants {
 	public final static int DASHLET_LAST_NOTES = 6;
 	
 	public final static int DASHLET_TAGCLOUD = 7;
+	
+	public static final String[] AUDIT_DEFAULT_EVENTS = new String[] { "event.stored", "event.changed", "event.checkedin" };
 }

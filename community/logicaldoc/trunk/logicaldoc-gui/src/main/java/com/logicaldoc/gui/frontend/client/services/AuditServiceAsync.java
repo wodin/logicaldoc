@@ -12,5 +12,5 @@ public interface AuditServiceAsync {
 
 	void deleteSubscriptions(String sid, long[] ids, AsyncCallback<Void> callback);
 
-	void update(String sid, long id, boolean currentOnly, String[] events, AsyncCallback<Void> callback);
+	void update(String sid, long[] ids, boolean currentOnly, String[] events, AsyncCallback<Void> callback);
 }
