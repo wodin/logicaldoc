@@ -189,10 +189,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			Set<Permission> permissions = dao.getEnabledPermissions(folderId, session.getUserId());
 			List<String> permissionsList = new ArrayList<String>();
-			for (Permission permission : permissions) {
+			for (Permission permission : permissions)
 				permissionsList.add(permission.toString());
-			}
-
 			f.setPermissions(permissionsList.toArray(new String[permissionsList.size()]));
 
 			Folder ref = folder;
@@ -278,9 +276,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly) throws ServerException {
+	public void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly, boolean inheritSecurity) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
-
+		
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
 			Folder folderToCopy = folderDao.findById(folderId);
@@ -315,7 +313,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			transaction.setSessionId(sid);
 			transaction.setUser(user);
 
-			folderDao.copy(folderToCopy, destParentFolder, foldersOnly, transaction);
+			folderDao.copy(folderToCopy, destParentFolder, foldersOnly, inheritSecurity, transaction);
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
