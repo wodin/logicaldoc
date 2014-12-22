@@ -324,8 +324,6 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		final long id = Long.parseLong(selectedNode.getAttribute("folderId"));
 		final String name = selectedNode.getAttribute("name");
 
-		GUIFolder parent = folder.getParent();
-
 		Menu contextMenu = new Menu();
 
 		MenuItem search = new MenuItem();
@@ -530,7 +528,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		}
 
 		// Avoid alterations of the Default workspace
-		if (folder.isDefaultWorkspace() || !parent.hasPermission(Constants.PERMISSION_DELETE)) {
+		if (folder.isDefaultWorkspace() || !folder.hasPermission(Constants.PERMISSION_DELETE)) {
 			delete.setEnabled(false);
 			move.setEnabled(false);
 		}
@@ -855,15 +853,15 @@ public class Navigator extends TreeGrid implements FolderObserver {
 	 * 
 	 * @param targetFolderId The parent folder
 	 */
-	public void copyTo(long targetFolderId, boolean foldersOnly) {
+	public void copyTo(long targetFolderId, boolean foldersOnly, boolean inheritPermissions) {
 		final TreeNode selected = (TreeNode) getSelectedRecord();
 		final TreeNode target = getTree().findById(Long.toString(targetFolderId));
 
 		Log.debug("try to copy folder " + selected.getAttribute("folderId"));
-		
+
 		ContactingServer.get().show();
 		service.copyFolder(Session.get().getSid(), Long.parseLong(selected.getAttribute("folderId")), targetFolderId,
-				foldersOnly, new AsyncCallback<Void>() {
+				foldersOnly, inheritPermissions, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

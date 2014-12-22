@@ -99,7 +99,7 @@ public interface FolderService extends RemoteService {
 	/**
 	 * Copies a folder under a target folder
 	 */
-	public void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly) throws ServerException;
+	public void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly, boolean inheritSecurity) throws ServerException;
 
 	/**
 	 * Pastes documents into the target folder.

@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
+import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.widgets.FolderTree;
@@ -9,6 +10,8 @@ import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tree.TreeGrid;
@@ -24,8 +27,8 @@ public class CopyDialog extends Dialog {
 		super();
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("copy"));
-		setWidth(250);
-		setHeight(270);
+		setWidth(450);
+		setHeight(280);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -46,6 +49,15 @@ public class CopyDialog extends Dialog {
 		buttons.setWidth100();
 		buttons.setHeight(30);
 
+		final boolean inheritOptionEnabled = "true".equals(Session.get().getInfo()
+				.getConfig("gui.security.inheritoption"));
+
+		final DynamicForm form = new DynamicForm();
+		CheckboxItem inheritSecurity = new CheckboxItem();
+		inheritSecurity.setName("inheritSecurity");
+		inheritSecurity.setTitle(I18N.message("inheritparentsec"));
+		form.setItems(inheritSecurity);
+
 		Button copy = new Button(I18N.message("copy"));
 		copy.setAutoFit(true);
 		copy.setMargin(1);
@@ -59,10 +71,12 @@ public class CopyDialog extends Dialog {
 							@Override
 							public void execute(Boolean value) {
 								if (value) {
-									
 									Navigator.get()
 											.copyTo(Long.parseLong(folders.getSelectedRecord().getAttributeAsString(
-													"folderId")), false);
+													"folderId")),
+													false,
+													!inheritOptionEnabled
+															|| "true".equals(form.getValueAsString("inheritSecurity")));
 								}
 								destroy();
 							}
@@ -85,7 +99,10 @@ public class CopyDialog extends Dialog {
 								if (value) {
 									Navigator.get()
 											.copyTo(Long.parseLong(folders.getSelectedRecord().getAttributeAsString(
-													"folderId")), true);
+													"folderId")),
+													true,
+													!inheritOptionEnabled
+															|| "true".equals(form.getValueAsString("inheritSecurity")));
 								}
 								destroy();
 							}
@@ -93,7 +110,10 @@ public class CopyDialog extends Dialog {
 			}
 		});
 
-		buttons.setMembers(copy, copyFolders);
+		if (inheritOptionEnabled)
+			buttons.setMembers(copy, copyFolders, form);
+		else
+			buttons.setMembers(copy, copyFolders);
 
 		content.setMembers(folders, buttons);
 		addItem(content);

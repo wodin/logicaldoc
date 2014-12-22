@@ -94,10 +94,9 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 	public boolean hasPermission(String permission) {
 		if (permissions == null)
 			return false;
-		for (String p : permissions) {
+		for (String p : permissions)
 			if (p.equals(permission))
 				return true;
-		}
 		return false;
 	}
 
