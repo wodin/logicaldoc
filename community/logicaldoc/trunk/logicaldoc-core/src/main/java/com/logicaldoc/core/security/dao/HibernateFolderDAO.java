@@ -1165,7 +1165,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public void copy(Folder source, Folder target, boolean foldersOnly, FolderHistory transaction) throws Exception {
+	public void copy(Folder source, Folder target, boolean foldersOnly, boolean inheritSecurity,
+			FolderHistory transaction) throws Exception {
 		assert (source != null);
 		assert (target != null);
 		assert (transaction != null);
@@ -1175,7 +1176,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			throw new IllegalArgumentException("Cannot copy a folder inside the same path");
 
 		// Create the same folder in the target
-		Folder newFolder = createPath(target, source.getName(), true, (FolderHistory) transaction.clone());
+		Folder newFolder = createPath(target, source.getName(), inheritSecurity, (FolderHistory) transaction.clone());
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		DocumentManager docMan = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
@@ -1215,7 +1216,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 		List<Folder> children = findChildren(source.getId(), transaction.getUser().getId());
 		for (Folder child : children)
-			copy(child, newFolder, foldersOnly, transaction);
+			copy(child, newFolder, foldersOnly, inheritSecurity, transaction);
 	}
 
 	@Override

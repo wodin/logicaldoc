@@ -159,7 +159,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals("email", target.getTemplate().getName());
 		Assert.assertEquals("test@acme.com", target.getValue("from"));
 
-		dao.copy(source, target, false, tr);
+		dao.copy(source, target, false, true, tr);
 
 		Folder folder = dao.findByPath("/Default/target/pippo/pluto", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(folder);
