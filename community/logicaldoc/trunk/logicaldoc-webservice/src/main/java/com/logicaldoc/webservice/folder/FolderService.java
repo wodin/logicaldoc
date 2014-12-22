@@ -90,12 +90,13 @@ public interface FolderService {
 	 * @param targetId The folder id of the target folder
 	 * @param foldersOnly If 1, only the folders will be copied and not the
 	 *        documents
-	 * 
+	 * @param inheritSecurity If 1, the new folders will inherit the target's
+	 *        security policies
 	 * @throws Exception
 	 */
 	public void copy(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId,
-			@WebParam(name = "targetId") long targetId, @WebParam(name = "foldersOnly") int foldersOnly)
-			throws Exception;
+			@WebParam(name = "targetId") long targetId, @WebParam(name = "foldersOnly") int foldersOnly,
+			@WebParam(name = "inheritSecurity") int inheritSecurity) throws Exception;
 
 	/**
 	 * Gets folder metadata of an existing folder with the given identifier.

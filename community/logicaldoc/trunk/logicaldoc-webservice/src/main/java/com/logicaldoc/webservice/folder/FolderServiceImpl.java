@@ -199,7 +199,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	}
 
 	@Override
-	public void copy(String sid, long folderId, long targetId, int foldersOnly) throws Exception {
+	public void copy(String sid, long folderId, long targetId, int foldersOnly, int inheritSecurity) throws Exception {
 		User user = validateSession(sid);
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
@@ -231,7 +231,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 		transaction.setSessionId(sid);
 		transaction.setUser(user);
 
-		folderDao.copy(folderToCopy, destTargetFolder, 1 == foldersOnly, transaction);
+		folderDao.copy(folderToCopy, destTargetFolder, 1 == foldersOnly, 1 == inheritSecurity, transaction);
 	}
 
 	@Override
