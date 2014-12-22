@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.SubscriptionsDS;
@@ -15,6 +16,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
+import com.logicaldoc.gui.frontend.client.subscription.SubscriptionDialog;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -36,14 +38,12 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
- * This panel shows the security policies.
+ * This panel shows the subscriptions on a folder. 
  * 
  * @author Marco Meschieri - Logical Objects
- * @since 6.0
+ * @since 7.1.3
  */
-public class SubscriptionsPanel extends FolderDetailTab {
-
-	private static final String[] DEFAULT_EVENTS = new String[] { "event.stored", "event.changed", "event.checkedin" };
+public class FolderSubscriptionsPanel extends FolderDetailTab {
 
 	private ListGrid list;
 
@@ -51,7 +51,7 @@ public class SubscriptionsPanel extends FolderDetailTab {
 
 	private VLayout container = new VLayout();
 
-	public SubscriptionsPanel(final GUIFolder folder) {
+	public FolderSubscriptionsPanel(final GUIFolder folder) {
 		super(folder, null);
 
 		container.setMembersMargin(3);
@@ -168,8 +168,8 @@ public class SubscriptionsPanel extends FolderDetailTab {
 				if (selectedRecord == null)
 					return;
 				long groupId = Long.parseLong(selectedRecord.getAttributeAsString("id"));
-				service.subscribeFolder(Session.get().getSid(), folder.getId(), false, DEFAULT_EVENTS, null, groupId,
-						new AsyncCallback<Void>() {
+				service.subscribeFolder(Session.get().getSid(), folder.getId(), false, Constants.AUDIT_DEFAULT_EVENTS, null,
+						groupId, new AsyncCallback<Void>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -195,8 +195,8 @@ public class SubscriptionsPanel extends FolderDetailTab {
 				if (selectedRecord == null)
 					return;
 				long userId = Long.parseLong(selectedRecord.getAttributeAsString("id"));
-				service.subscribeFolder(Session.get().getSid(), folder.getId(), false, DEFAULT_EVENTS, userId, null,
-						new AsyncCallback<Void>() {
+				service.subscribeFolder(Session.get().getSid(), folder.getId(), false, Constants.AUDIT_DEFAULT_EVENTS, userId,
+						null, new AsyncCallback<Void>() {
 
 							@Override
 							public void onFailure(Throwable caught) {

@@ -44,6 +44,8 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
  * @since 6.0
  */
 public class DocumentDetailsPanel extends VLayout {
+	private static final String TAB_SUBSCRIPTIONS = "TabSubscriptions";
+
 	protected GUIDocument document;
 
 	protected Layout propertiesTabPanel;
@@ -64,6 +66,8 @@ public class DocumentDetailsPanel extends VLayout {
 
 	protected Layout calendarTabPanel;
 
+	protected Layout subscriptionsTabPanel;
+
 	protected StandardPropertiesPanel propertiesPanel;
 
 	protected ExtendedPropertiesPanel extendedPropertiesPanel;
@@ -79,6 +83,8 @@ public class DocumentDetailsPanel extends VLayout {
 	protected PreviewPanel previewPanel;
 
 	protected DocumentCalendarPanel calendarPanel;
+
+	protected DocumentSubscriptionsPanel subscriptionsPanel;
 
 	protected RetentionPoliciesPanel retentionPoliciesPanel;
 
@@ -109,6 +115,8 @@ public class DocumentDetailsPanel extends VLayout {
 	protected Tab retentionPoliciesTab;
 
 	protected Tab calendarTab;
+
+	protected Tab subscriptionsTab;
 
 	public DocumentDetailsPanel(DocumentObserver observer) {
 		super();
@@ -233,6 +241,13 @@ public class DocumentDetailsPanel extends VLayout {
 		calendarTabPanel.setWidth100();
 		calendarTabPanel.setHeight100();
 		calendarTab.setPane(calendarTabPanel);
+
+		subscriptionsTab = new Tab(I18N.message("subscriptions"));
+		subscriptionsTab.setID(TAB_SUBSCRIPTIONS);
+		subscriptionsTabPanel = new HLayout();
+		subscriptionsTabPanel.setWidth100();
+		subscriptionsTabPanel.setHeight100();
+		subscriptionsTab.setPane(subscriptionsTabPanel);
 	}
 
 	protected void prepareTabset() {
@@ -317,6 +332,15 @@ public class DocumentDetailsPanel extends VLayout {
 				@Override
 				public void onTabSelected(TabSelectedEvent event) {
 					calendarPanel.onTabSelected();
+				}
+			});
+		}
+
+		if (Feature.visible(Feature.AUDIT)) {
+			subscriptionsTab.addTabSelectedHandler(new TabSelectedHandler() {
+				@Override
+				public void onTabSelected(TabSelectedEvent event) {
+					subscriptionsPanel.onTabSelected();
 				}
 			});
 		}
@@ -437,6 +461,25 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 		calendarPanel = new DocumentCalendarPanel(document);
 		calendarTabPanel.addMember(calendarPanel);
+
+		/*
+		 * Prepare the subscriptions tab
+		 */
+		if (Feature.visible(Feature.AUDIT)) {
+			if (subscriptionsPanel != null) {
+				subscriptionsPanel.destroy();
+				if (subscriptionsTabPanel.contains(subscriptionsPanel))
+					subscriptionsTabPanel.removeMember(subscriptionsPanel);
+			}
+
+			if (document.getFolder().hasPermission(Constants.PERMISSION_SUBSCRIPTION)) {
+				subscriptionsPanel = new DocumentSubscriptionsPanel(document);
+				subscriptionsTabPanel.addMember(subscriptionsPanel);
+				if (tabSet.getTab(TAB_SUBSCRIPTIONS) == null)
+					tabSet.addTab(subscriptionsTab);
+			} else
+				tabSet.removeTab(subscriptionsTab);
+		}
 
 		if (tabSet != null && tabSet.getSelectedTab() != null) {
 			Tab selectedTab = tabSet.getSelectedTab();

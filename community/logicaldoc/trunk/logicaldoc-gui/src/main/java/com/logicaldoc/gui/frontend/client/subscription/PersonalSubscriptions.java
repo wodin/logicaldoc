@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.personal;
+package com.logicaldoc.gui.frontend.client.subscription;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -12,7 +12,6 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
-import com.logicaldoc.gui.frontend.client.folder.SubscriptionDialog;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -48,7 +47,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class Subscriptions extends com.smartgwt.client.widgets.Window {
+public class PersonalSubscriptions extends com.smartgwt.client.widgets.Window {
 	private AuditServiceAsync service = (AuditServiceAsync) GWT.create(AuditService.class);
 
 	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
@@ -57,7 +56,7 @@ public class Subscriptions extends com.smartgwt.client.widgets.Window {
 
 	private Layout listing = new VLayout();
 
-	public Subscriptions() {
+	public PersonalSubscriptions() {
 		super();
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);

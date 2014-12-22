@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.folder;
+package com.logicaldoc.gui.frontend.client.subscription;
 
 import java.util.LinkedHashMap;
 
@@ -50,7 +50,12 @@ public class SubscriptionDialog extends Window {
 			events = buf.split(",");
 		}
 
-		final long subscriptionId = Long.parseLong(selection.getAttributeAsString("id"));
+		final ListGridRecord[] selectedRecords = grid.getSelectedRecords();
+		final long[] selectedIds = new long[selectedRecords.length];
+		for (int i = 0; i < selectedRecords.length; i++) {
+			selectedIds[i] = Long.parseLong(selectedRecords[i].getAttributeAsString("id"));
+		}
+
 		boolean isFolderSubscription = "folder".equals(selection.getAttributeAsString("type"));
 
 		setWidth(290);
@@ -120,7 +125,7 @@ public class SubscriptionDialog extends Window {
 				} else
 					eventsStr = null;
 
-				service.update(Session.get().getSid(), subscriptionId, option.equals("current"), events,
+				service.update(Session.get().getSid(), selectedIds, option.equals("current"), events,
 						new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -130,9 +135,12 @@ public class SubscriptionDialog extends Window {
 							@Override
 							public void onSuccess(Void ret) {
 								Log.info(I18N.message("settingssaved"), null);
-								selection.setAttribute("events", eventsStr);
-								selection.setAttribute("folderOption", option);
-								grid.refreshRow(grid.getRecordIndex(selection));
+								for (ListGridRecord record : selectedRecords) {
+									record.setAttribute("events", eventsStr);
+									if (option != null && !option.isEmpty())
+										record.setAttribute("folderOption", option);
+									grid.refreshRow(grid.getRecordIndex(record));
+								}
 							}
 						});
 				destroy();
@@ -143,7 +151,7 @@ public class SubscriptionDialog extends Window {
 			form.setItems(option, notifyon, event, save);
 		else
 			form.setItems(notifyon, event, save);
-		
+
 		addItem(form);
 	}
 

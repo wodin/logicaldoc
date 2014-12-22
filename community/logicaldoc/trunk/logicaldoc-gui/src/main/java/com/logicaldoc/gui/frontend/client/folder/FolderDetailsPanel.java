@@ -64,7 +64,7 @@ public class FolderDetailsPanel extends VLayout {
 
 	private WorkflowTriggersPanel workflowsPanel;
 
-	private SubscriptionsPanel subscriptionsPanel;
+	private FolderSubscriptionsPanel subscriptionsPanel;
 
 	private HLayout savePanel;
 
@@ -281,7 +281,7 @@ public class FolderDetailsPanel extends VLayout {
 					subscriptionsTabPanel.removeMember(subscriptionsPanel);
 				}
 
-				subscriptionsPanel = new SubscriptionsPanel(folder);
+				subscriptionsPanel = new FolderSubscriptionsPanel(folder);
 				subscriptionsTabPanel.addMember(subscriptionsPanel);
 			}
 		} catch (Throwable r) {
