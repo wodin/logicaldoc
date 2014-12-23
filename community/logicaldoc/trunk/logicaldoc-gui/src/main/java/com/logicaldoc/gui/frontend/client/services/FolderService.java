@@ -131,5 +131,5 @@ public interface FolderService extends RemoteService {
 	/**
 	 * Applies a template to a folder
 	 */
-	public void applyTemplate(String sid, long folderId, long templateId) throws ServerException;
+	public void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity) throws ServerException;
 }

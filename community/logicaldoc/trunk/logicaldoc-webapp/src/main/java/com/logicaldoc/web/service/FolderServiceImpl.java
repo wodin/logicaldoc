@@ -708,7 +708,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void applyTemplate(String sid, long folderId, long templateId) throws ServerException {
+	public void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity) throws ServerException {
 
 	}
 
