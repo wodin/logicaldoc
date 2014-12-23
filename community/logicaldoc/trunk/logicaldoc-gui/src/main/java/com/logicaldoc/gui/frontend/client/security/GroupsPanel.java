@@ -86,7 +86,7 @@ public class GroupsPanel extends VLayout {
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
-		list.setDataSource(GroupsDS.get());
+		list.setDataSource(new GroupsDS());
 		list.setFields(id, name, description);
 
 		listing.addMember(infoPanel);
@@ -212,7 +212,8 @@ public class GroupsPanel extends VLayout {
 			}
 		});
 
-		if (Constants.GROUP_ADMIN.equals(record.getAttributeAsString("name"))||Constants.GROUP_PUBLISHER.equals(record.getAttributeAsString("name"))) {
+		if (Constants.GROUP_ADMIN.equals(record.getAttributeAsString("name"))
+				|| Constants.GROUP_PUBLISHER.equals(record.getAttributeAsString("name"))) {
 			delete.setEnabled(false);
 		}
 

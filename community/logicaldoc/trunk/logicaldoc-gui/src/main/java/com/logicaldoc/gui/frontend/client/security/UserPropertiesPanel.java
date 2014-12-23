@@ -18,17 +18,10 @@ import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
-import com.smartgwt.client.widgets.grid.ListGridField;
-import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -39,8 +32,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class UserPropertiesPanel extends HLayout {
-	private HLayout addingGroup = new HLayout();
-
 	private DynamicForm form1 = new DynamicForm();
 
 	private ValuesManager vm = new ValuesManager();
@@ -52,6 +43,8 @@ public class UserPropertiesPanel extends HLayout {
 	private Canvas idLabel;
 
 	private VLayout layout = new VLayout();
+
+	private MultiComboBoxItem groupsItem;
 
 	public UserPropertiesPanel(GUIUser user, ChangedHandler changedHandler) {
 		if (user == null) {
@@ -69,11 +62,11 @@ public class UserPropertiesPanel extends HLayout {
 			idLabel.setHeight(15);
 			layout.addMember(idLabel, 0);
 
-			refresh();
+			prepareGUI();
 		}
 	}
 
-	public void refresh() {
+	public void prepareGUI() {
 		boolean readonly = (changedHandler == null);
 		vm.clearValues();
 		vm.clearErrors(false);
@@ -189,80 +182,30 @@ public class UserPropertiesPanel extends HLayout {
 					language, address, postalcode, city, country, state, phone, cell);
 		addMember(layout);
 
-		refreshAddingGroup();
+		prepareGroupsForm(readonly);
 	}
 
-	private void refreshAddingGroup() {
-		/*
-		 * Prepare the second form for the groups
-		 */
-		if (addingGroup != null) {
-			for (Canvas member : addingGroup.getMembers()) {
-				addingGroup.removeMember(member);
-			}
-		}
-		if (contains(addingGroup))
-			removeMember(addingGroup);
+	private void prepareGroupsForm(boolean readOnly) {
 		DynamicForm form2 = new DynamicForm();
+		form2.setValuesManager(vm);
 
-		List<FormItem> items = new ArrayList<FormItem>();
-		final SelectItem group = new SelectItem("group");
-		group.setTitle(I18N.message("addgroup"));
-		group.setWrapTitle(false);
-		group.setValueField("id");
-		group.setDisplayField("name");
-		group.setPickListWidth(300);
-		ListGridField n = new ListGridField("name");
-		ListGridField description = new ListGridField("description");
-		group.setPickListFields(n, description);
-		group.setOptionDataSource(GroupsDS.get(user.getId()));
-		group.addChangedHandler(new ChangedHandler() {
-			@Override
-			public void onChanged(ChangedEvent event) {
-				ListGridRecord selectedRecord = group.getSelectedRecord();
-				if (selectedRecord == null)
-					return;
-
-				if (!user.isMemberOf(selectedRecord.getAttributeAsString("name"))) {
-					GUIGroup group = new GUIGroup();
-					group.setId(Long.parseLong(selectedRecord.getAttributeAsString("id")));
-					group.setName(selectedRecord.getAttributeAsString("name"));
-					group.setDescription(selectedRecord.getAttributeAsString("description"));
-					user.addGroup(group);
-					refreshAddingGroup();
-					changedHandler.onChanged(null);
-				}
-			}
-		});
-
-		items.add(group);
-
-		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
-		int i = 0;
-		for (GUIGroup grp : user.getGroups()) {
-			if (grp.getName().contains("_user"))
-				continue;
-			final StaticTextItem gp = ItemFactory.newStaticTextItem("group" + i++, "group", grp.getName());
-			if (!("admin".equals(user.getUserName()) && "admin".equals(grp.getName())))
-				gp.setIcons(icon);
-			gp.setWrap(false);
-			gp.addIconClickHandler(new IconClickHandler() {
-				public void onIconClick(IconClickEvent event) {
-					user.removeGroup((String) gp.getValue());
-					changedHandler.onChanged(null);
-
-					// Mark the item as deleted
-					gp.setTextBoxStyle("deletedItem");
-					gp.setTitleStyle("deletedItem");
-					gp.setIcons(ItemFactory.newItemIcon("blank.gif"));
-				}
-			});
-			items.add(gp);
+		List<String> groupIds = new ArrayList<String>();
+		GUIGroup[] groups = user.getGroups();
+		if (groups != null && groups.length > 0) {
+			for (int i = 0; i < groups.length; i++)
+				if (groups[i].getType() == 0)
+					groupIds.add(Long.toString(groups[i].getId()));
 		}
 
-		form2.setItems(items.toArray(new FormItem[0]));
-		addingGroup.addMember(form2);
-		addMember(addingGroup, 2);
+		groupsItem = ItemFactory.newMultiComboBoxItem("groups", "groups", new GroupsDS(),
+				groupIds.toArray(new String[0]));
+		groupsItem.setDisabled(readOnly || user.isMemberOf("admin"));
+		groupsItem.setValueField("id");
+		groupsItem.setDisplayField("name");
+		groupsItem.addChangedHandler(changedHandler);
+
+		form2.setItems(groupsItem);
+		addMember(form2, 2);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -291,19 +234,20 @@ public class UserPropertiesPanel extends HLayout {
 			}
 		}
 
-		// The user must have at least one group (of standard type)
-		int count = 0;
-		for (GUIGroup g : user.getGroups())
-			if (g.getType() == GUIGroup.TYPE_DEFAULT) {
-				Log.debug(g.getName());
-				count++;
-			}
-
-		if (count == 0) {
+		String[] ids = groupsItem.getValues();
+		if (ids == null || ids.length == 0) {
 			SC.warn(I18N.message("usermustbelongtogroup"));
 			Log.warn(I18N.message("usermustbelongtogroup"), I18N.message("usermustbelongtogroup"));
 			return false;
 		}
+
+		GUIGroup[] groups = new GUIGroup[ids.length];
+		for (int i = 0; i < ids.length; i++) {
+			GUIGroup group = new GUIGroup();
+			group.setId(Long.parseLong(ids[i]));
+			groups[i] = group;
+		}
+		user.setGroups(groups);
 
 		return !vm.hasErrors();
 	}

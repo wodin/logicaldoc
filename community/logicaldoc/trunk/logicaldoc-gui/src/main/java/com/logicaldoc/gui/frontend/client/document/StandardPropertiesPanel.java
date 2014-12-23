@@ -25,7 +25,6 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
@@ -298,16 +297,10 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			String mode = Session.get().getConfig("tag.mode");
 			final DataSource ds = new TagsDS(null);
 
-			tagItem = new MultiComboBoxItem("tag", I18N.message("tag"));
+			tagItem = ItemFactory.newMultiComboBoxItem("tag", "tag", ds, (Object[]) document.getTags());
 			tagItem.setPrompt(I18N.message("typeatag"));
-			tagItem.setLayoutStyle(MultiComboBoxLayoutStyle.FLOW);
-			tagItem.setWidth(200);
-			tagItem.setMultiple(true);
-			tagItem.setOptionDataSource(ds);
 			tagItem.setValueField("word");
 			tagItem.setDisplayField("word");
-			tagItem.setAutoFetchData(true);
-			tagItem.setValues((Object[]) document.getTags());
 			tagItem.setDisabled(!updateEnabled);
 			tagItem.addChangedHandler(changedHandler);
 
