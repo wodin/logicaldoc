@@ -13,7 +13,6 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -591,32 +590,8 @@ public class Navigator extends TreeGrid implements FolderObserver {
 	 * Allows the selection of a folders template to apply to the current node
 	 */
 	private void onApplyTemplate() {
-		LD.askforValue(I18N.message("applytemplate"), I18N.message("foldertemplates"), null, "200px",
-				ItemFactory.newFolderTemplateSelector(), new ValueCallback() {
-					@Override
-					public void execute(String value) {
-						if (value == null)
-							return;
-
-						final TreeNode selectedNode = (TreeNode) getSelectedRecord();
-						final long folderId = Long.parseLong(selectedNode.getAttributeAsString("folderId"));
-						long templateId = Long.parseLong(value);
-
-						service.applyTemplate(Session.get().getSid(), folderId, templateId, new AsyncCallback<Void>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(Void arg0) {
-								Navigator.this.getTree().reloadChildren(selectedNode);
-								Log.info(I18N.message("templateapplied"), null);
-							}
-						});
-					}
-				});
+		ApplyTemplateDialog dialog = new ApplyTemplateDialog();
+		dialog.show();
 	}
 
 	/**

@@ -114,7 +114,7 @@ public class LD {
 	}
 
 	/**
-	 * Show a dialog asking for a value to complete a operation. The privided
+	 * Show a dialog asking for a value to complete an operation. The provided
 	 * form item will be used.
 	 */
 	public static void askforValue(String title, String message, String defaultValue, String width, FormItem item,
