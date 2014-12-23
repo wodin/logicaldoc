@@ -12,39 +12,19 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class GroupsDS extends DataSource {
-	private static GroupsDS instance;
-
-	private GroupsDS(Long excludeUserId) {
+	public GroupsDS() {
 		setTitleField("name");
 		setRecordXPath("/list/group");
 		DataSourceTextField id = new DataSourceTextField("id", I18N.message("id"));
 		id.setPrimaryKey(true);
-		id.setHidden(true);
 
 		DataSourceTextField name = new DataSourceTextField("name", I18N.message("name"));
 		DataSourceTextField description = new DataSourceTextField("description");
 		DataSourceTextField label = new DataSourceTextField("label");
 
 		setFields(id, name, description, label);
-		setDataURL("data/groups.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale()
-				+ (excludeUserId != null ? "&excludeUserId=" + excludeUserId : ""));
+		setDataURL("data/groups.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale());
 
 		setClientOnly(true);
-	}
-
-	public static GroupsDS get() {
-		if (instance == null)
-			instance = new GroupsDS(null);
-		return instance;
-	}
-
-	/**
-	 * Useful method to retrieve all groups that not contains the user with the
-	 * given excludeUserId.
-	 * 
-	 * @param excludeUserId The user id
-	 */
-	public static GroupsDS get(long excludeUserId) {
-		return new GroupsDS(excludeUserId);
 	}
 }

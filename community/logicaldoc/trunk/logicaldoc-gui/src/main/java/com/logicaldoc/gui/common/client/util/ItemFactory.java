@@ -23,10 +23,13 @@ import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.validators.EmailsValidator;
 import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
 import com.logicaldoc.gui.common.client.widgets.UserSelector;
+import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.DateDisplayFormat;
+import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -38,6 +41,7 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
+import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.RowSpacerItem;
@@ -272,7 +276,7 @@ public class ItemFactory {
 		ListGridField n = new ListGridField("name", I18N.message("name"));
 		ListGridField description = new ListGridField("description", I18N.message("description"));
 		group.setPickListFields(n, description);
-		group.setOptionDataSource(GroupsDS.get());
+		group.setOptionDataSource(new GroupsDS());
 		group.setHintStyle("hint");
 		return group;
 	}
@@ -335,6 +339,25 @@ public class ItemFactory {
 		item.setName(filterItemName(name));
 		item.setTitle(I18N.message(title));
 		item.setHintStyle("hint");
+		return item;
+	}
+
+	public static MultiComboBoxItem newMultiComboBoxItem(String name, String title, DataSource options, Object[] values) {
+		MultiComboBoxItem item = new MultiComboBoxItem(name, I18N.message(title));
+		item.setLayoutStyle(MultiComboBoxLayoutStyle.FLOW);
+		item.setWidth(200);
+		item.setHintStyle("hint");
+		item.setMultiple(true);
+		item.setOptionDataSource(options);
+		item.setAutoFetchData(true);
+
+		IButton tagButton = new IButton();
+		tagButton.setIcon("[SKIN]/headerIcons/close.gif");
+		tagButton.setIconOrientation("right");
+		item.setButtonProperties(tagButton);
+
+		if (values != null)
+			item.setValue(values);
 		return item;
 	}
 

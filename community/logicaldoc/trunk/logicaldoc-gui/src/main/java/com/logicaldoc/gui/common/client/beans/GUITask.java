@@ -36,42 +36,27 @@ public class GUITask implements Serializable {
 
 	private boolean sendActivityReport = false;
 
-	private GUIUser[] notifiedUsers = new GUIUser[0];
+	private GUIUser[] reportRecipients = new GUIUser[0];
 
 	public GUIUser[] getReportRecipients() {
-		return notifiedUsers;
+		return reportRecipients;
 	}
 
-	public void setNotifiedUsers(GUIUser[] notifiedUsers) {
-		this.notifiedUsers = notifiedUsers;
+	public void setReportRecipients(GUIUser[] reportRecipients) {
+		this.reportRecipients = reportRecipients;
 	}
 
 	public void addReportRecipient(GUIUser user) {
-		GUIUser[] tmp = new GUIUser[notifiedUsers.length + 1];
+		GUIUser[] tmp = new GUIUser[reportRecipients.length + 1];
 		int i = 0;
-		for (GUIUser u : notifiedUsers) {
+		for (GUIUser u : reportRecipients) {
 			// Skip if the user already exists
 			if (u.getUserName().equals(user.getUserName()))
 				return;
 			tmp[i++] = u;
 		}
 		tmp[i] = user;
-		notifiedUsers = tmp;
-	}
-
-	public void removeNotifiedUser(String username) {
-		if (notifiedUsers.length == 0)
-			return;
-
-		GUIUser[] tmp = new GUIUser[notifiedUsers.length - 1];
-		int i = 0;
-		for (GUIUser u : notifiedUsers) {
-			if (!u.getUserName().equals(username)) {
-				tmp[i] = u;
-				i++;
-			}
-		}
-		notifiedUsers = tmp;
+		reportRecipients = tmp;
 	}
 
 	public int getStatus() {

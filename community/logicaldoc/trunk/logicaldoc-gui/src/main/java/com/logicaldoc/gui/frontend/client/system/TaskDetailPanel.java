@@ -208,7 +208,7 @@ public class TaskDetailPanel extends VLayout {
 	}
 
 	public void onSave() {
-		if (schedulingPanel.validate()) {
+		if (schedulingPanel.validate() && notificationPanel.validate()) {
 			service.saveTask(Session.get().getSid(), task, I18N.getLocale(), new AsyncCallback<GUITask>() {
 				@Override
 				public void onFailure(Throwable caught) {

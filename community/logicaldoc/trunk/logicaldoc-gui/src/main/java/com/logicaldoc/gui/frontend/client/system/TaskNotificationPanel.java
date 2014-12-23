@@ -5,18 +5,15 @@ import java.util.List;
 
 import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.FormItemIcon;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.IconClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.IconClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -33,6 +30,8 @@ public class TaskNotificationPanel extends VLayout {
 	private ChangedHandler changedHandler;
 
 	private GUITask task;
+
+	private MultiComboBoxItem recipients;
 
 	public TaskNotificationPanel(GUITask task, ChangedHandler changedHandler) {
 		setWidth100();
@@ -74,43 +73,32 @@ public class TaskNotificationPanel extends VLayout {
 
 		items.add(sendReport);
 
-		final SelectItem user = ItemFactory.newUserSelector("notificationUsers", "user", null);
-		user.setHintStyle("hint");
-		user.addChangedHandler(new ChangedHandler() {
-			@Override
-			public void onChanged(ChangedEvent event) {
-				if (user.getSelectedRecord() == null)
-					return;
-				GUIUser u = new GUIUser();
-				u.setId(Long.parseLong(user.getSelectedRecord().getAttribute("id")));
-				u.setUserName(user.getSelectedRecord().getAttribute("username"));
-				task.addReportRecipient(u);
-				user.clearValue();
-				refreshNotifications();
+		String[] ids = new String[task.getReportRecipients().length];
+		for (int i = 0; i < ids.length; i++)
+			ids[i] = Long.toString(task.getReportRecipients()[i].getId());
 
-				// Notify the external handler
-				changedHandler.onChanged(event);
-			}
-		});
-		items.add(user);
-
-		FormItemIcon icon = ItemFactory.newItemIcon("delete.png");
-		int i = 0;
-
-		for (GUIUser u : task.getReportRecipients()) {
-			final StaticTextItem usrItem = ItemFactory.newStaticTextItem("usr" + i++, "user", u.getUserName());
-			usrItem.setIcons(icon);
-			usrItem.addIconClickHandler(new IconClickHandler() {
-				public void onIconClick(IconClickEvent event) {
-					task.removeNotifiedUser((String) usrItem.getValue());
-					changedHandler.onChanged(null);
-					refreshNotifications();
-				}
-			});
-			items.add(usrItem);
-		}
+		recipients = ItemFactory.newMultiComboBoxItem("recipients", "recipients", new UsersDS(null), ids);
+		recipients.setValueField("id");
+		recipients.setDisplayField("username");
+		recipients.addChangedHandler(changedHandler);
+		items.add(recipients);
 
 		notificationsForm.setItems(items.toArray(new FormItem[0]));
 		notificationsPane.setMembers(notificationsForm);
+	}
+
+	boolean validate() {
+		String[] ids = recipients.getValues();
+		GUIUser[] recipients = new GUIUser[ids != null ? ids.length : 0];
+
+		if (ids != null && ids.length > 0)
+			for (int i = 0; i < ids.length; i++) {
+				GUIUser user = new GUIUser();
+				user.setId(Long.parseLong(ids[i]));
+				recipients[i] = user;
+			}
+
+		task.setReportRecipients(recipients);
+		return true;
 	}
 }
