@@ -19,7 +19,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
 
 /**
- * This servlet is responsible for menues data.
+ * This servlet is responsible for menus data.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -62,6 +62,7 @@ public class MenuesDataServlet extends HttpServlet {
 				writer.print("<menu>");
 				writer.print("<id>" + menu.getId() + "</id>");
 				writer.print("<name><![CDATA[" + menu.getText() + "]]></name>");
+				writer.print("<position><![CDATA[" + menu.getPosition() + "]]></position>");
 				writer.print("</menu>");
 			}
 

@@ -149,6 +149,9 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	@Override
 	public int compareTo(Folder o) {
+		int comparation = Integer.compare(this.position, o.position);
+		if (comparation != 0)
+			return comparation;
 		return this.name.compareTo(o.name);
 	}
 

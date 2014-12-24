@@ -12,6 +12,7 @@
     <property name="deleted" type="int" column="ld_deleted" not-null="true" />
     <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />    
     <property name="text" type="string" column="ld_text" length="255" />
+    <property name="position" type="int" column="ld_position" not-null="true" />
     <property name="parentId" type="long" column="ld_parentid" not-null="true" />
     <property name="securityRef" type="long" column="ld_securityref" />
     <property name="icon" type="string" column="ld_icon" length="255" />

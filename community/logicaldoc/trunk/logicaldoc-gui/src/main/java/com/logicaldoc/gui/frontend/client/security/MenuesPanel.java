@@ -5,7 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIMenu;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
-import com.logicaldoc.gui.common.client.data.MenuesDS;
+import com.logicaldoc.gui.common.client.data.MenusDS;
 import com.logicaldoc.gui.common.client.formatters.I18NCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -65,7 +65,7 @@ public class MenuesPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(new MenuesDS());
+		list.setDataSource(new MenusDS());
 		list.setFields(id, name);
 
 		listing.addMember(list);
