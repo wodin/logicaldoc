@@ -15,11 +15,12 @@ public interface FolderObserver {
 	 * @param folder The newly selected folder
 	 */
 	public void onFolderSelected(GUIFolder folder);
-	
+
 	/**
 	 * Invoked after the folder has been saved
 	 * 
 	 * @param folder The updated folder
+	 * @param positionChanged True if the position changed
 	 */
-	public void onFolderSaved(GUIFolder folder);
+	public void onFolderSaved(GUIFolder folder, boolean positionChanged);
 }

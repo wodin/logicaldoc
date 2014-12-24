@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -34,7 +35,7 @@ public class PropertiesPanel extends FolderDetailTab {
 	private ValuesManager vm = new ValuesManager();
 
 	private boolean update = false;
-	
+
 	public PropertiesPanel(GUIFolder folder, ChangedHandler changedHandler) {
 		super(folder, changedHandler);
 		setWidth100();
@@ -68,8 +69,13 @@ public class PropertiesPanel extends FolderDetailTab {
 			name.addChangedHandler(changedHandler);
 		name.setRequired(true);
 
+		IntegerItem position = ItemFactory.newIntegerItem("position", "position", folder.getPosition());
+		if (folder.hasPermission(Constants.PERMISSION_RENAME))
+			position.addChangedHandler(changedHandler);
+		position.setRequired(true);
+
 		TextItem description = ItemFactory.newTextItem("description", "description", folder.getDescription());
-		description.setWidth(200);
+		description.setWidth(250);
 		if (folder.hasPermission(Constants.PERMISSION_RENAME))
 			description.addChangedHandler(changedHandler);
 
@@ -102,26 +108,28 @@ public class PropertiesPanel extends FolderDetailTab {
 
 		name.setDisabled(!update);
 		description.setDisabled(!update);
-		
+		position.setDisabled(!update);
+
 		if (folder.isDefaultWorkspace()) {
 			if (Feature.enabled(Feature.BARCODES))
-				form.setItems(idItem, pathItem, creation, documents, subfolders, barcode);
+				form.setItems(idItem, pathItem, position, creation, documents, subfolders, barcode);
 			else
-				form.setItems(idItem, pathItem, creation, documents, subfolders);
+				form.setItems(idItem, pathItem, position, creation, documents, subfolders);
 		} else if (Feature.enabled(Feature.BARCODES))
-			form.setItems(idItem, pathItem, name, description, creation, documents, subfolders, barcode);
+			form.setItems(idItem, pathItem, name, position, description, creation, documents, subfolders, barcode);
 		else
-			form.setItems(idItem, pathItem, name, description, creation, documents, subfolders);
+			form.setItems(idItem, pathItem, name, position, description, creation, documents, subfolders);
 		addMember(form);
 	}
 
 	boolean validate() {
+		vm.validate();
+		folder.setPosition(Integer.parseInt(vm.getValueAsString("position")));
+		
 		if (!folder.isDefaultWorkspace()) {
-			vm.validate();
 			folder.setName(vm.getValueAsString("name").replaceAll("/", ""));
 			folder.setDescription(vm.getValueAsString("description"));
-			return !vm.hasErrors();
-		} else
-			return true;
+		}	
+		return !vm.hasErrors();
 	}
 }

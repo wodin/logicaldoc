@@ -47,6 +47,8 @@ public class WSFolder implements Serializable {
 
 	private String creator;
 
+	private int position = 1;
+
 	private WSAttribute[] extendedAttributes = new WSAttribute[0];
 
 	public void addExtendedAttribute(WSAttribute att) {
@@ -81,6 +83,7 @@ public class WSFolder implements Serializable {
 		wsFolder.setLastModified(AbstractService.convertDateToString(folder.getLastModified()));
 		wsFolder.setCreation(AbstractService.convertDateToString(folder.getCreation()));
 		wsFolder.setCreator(folder.getCreator());
+		wsFolder.setPosition(folder.getPosition());
 
 		if (folder.getTemplate() != null) {
 			wsFolder.setTemplateId(folder.getTemplate().getId());
@@ -219,5 +222,13 @@ public class WSFolder implements Serializable {
 
 	public void setCreator(String creator) {
 		this.creator = creator;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 }

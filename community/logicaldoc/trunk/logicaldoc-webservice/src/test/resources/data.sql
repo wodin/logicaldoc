@@ -35,91 +35,91 @@ insert into ld_usergroup
 values (-5,5);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion)
-values     (99,'2008-10-22 00:00:00',0,'menu.admin',5,5,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (99,'2008-10-22 00:00:00',0,'menu.admin',5,5,0,1,1,1);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion)
-values     (100,'2008-10-22 00:00:00',0,'menu.adminxxx',5,3,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (100,'2008-10-22 00:00:00',0,'menu.adminxxx',5,3,0,1,1,2);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion)
-values     (101,'2008-10-22 00:00:00',0,'text',100,3,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (101,'2008-10-22 00:00:00',0,'text',100,3,0,1,1,3);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion)
-values     (102,'2008-10-22 00:00:00',0,'menu.admin',101,5,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (102,'2008-10-22 00:00:00',0,'menu.admin',101,5,0,1,1,3);
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_description,ld_templocked,ld_tenantid,ld_recordversion)
-values     (103,'2008-10-22 00:00:00',0,'menu.admin',101,3,'description',0,1,1);
-
-insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion)
-values     (1000,'2008-10-22 00:00:00',1,'menu.admin.1000',5,5,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_description,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (103,'2008-10-22 00:00:00',0,'menu.admin',101,3,'description',0,1,1,5);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion)
-values     (1100,'2008-10-22 00:00:00',1,'menu.admin.1100',1000,5,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (1000,'2008-10-22 00:00:00',1,'menu.admin.1000',5,5,0,1,1,7);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion)
-values     (1200,'2009-10-19 00:00:00',0,'test',5,3,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (1100,'2008-10-22 00:00:00',1,'menu.admin.1100',1000,5,0,1,1,8);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion)
-values     (1201,'2009-10-19 00:00:00',0,'abc',1200,3,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (1200,'2009-10-19 00:00:00',0,'test',5,3,0,1,1,9);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion)
-values     (1202,'2009-10-19 00:00:00',0,'xyz',1201,3,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (1201,'2009-10-19 00:00:00',0,'abc',1200,3,0,1,1,2);
 
 insert into ld_folder
-           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion)
-values     (1203,'2009-10-19 00:00:00',0,'qqqq',1201,3,0,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (1202,'2009-10-19 00:00:00',0,'xyz',1201,3,0,1,1,1);
+
+insert into ld_folder
+           (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
+values     (1203,'2009-10-19 00:00:00',0,'qqqq',1201,3,0,1,1,7);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (100,1,1,0,0,0,0,0,0,0,0,0,0,1,0);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (100,1,1,0,0,0,0,0,0,0,0,0,0,1,0,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (100,3,1,1,0,0,0,0,0,0,0,0,0,1,0);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (100,3,1,1,0,0,0,0,0,0,0,0,0,1,0,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (100,-3,1,1,0,0,0,0,0,0,0,0,0,1,0);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (100,-3,1,1,0,0,0,0,0,0,0,0,0,1,0,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (100,-4,1,1,0,0,0,0,0,0,0,0,0,1,0);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (100,-4,1,1,0,0,0,0,0,0,0,0,0,1,0,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (103,1,1,1,0,0,1,1,0,0,0,0,0,1,0);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (103,1,1,1,0,0,1,1,0,0,0,0,0,1,0,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (103,2,1,0,0,0,0,0,0,0,0,0,0,1,0);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (103,2,1,0,0,0,0,0,0,0,0,0,0,1,0,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (99,1,0,0,0,0,0,0,0,0,0,0,0,1,0);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (99,1,0,0,0,0,0,0,0,0,0,0,0,1,0,0);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (1200,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (1200,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (1201,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (1201,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (1202,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (1202,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 insert into ld_foldergroup
-			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar)
-values     (1203,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
+			   (ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
+values     (1203,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1);
 
 insert into ld_usergroup
            (ld_userid,ld_groupid)

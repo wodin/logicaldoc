@@ -53,6 +53,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			folderVO.setName(folder.getName());
 			folderVO.setDescription(folder.getDescription());
 			folderVO.setType(folder.getType());
+			folderVO.setPosition(folder.getPosition());
 			folder.updateExtendedAttributes(folderVO);
 			Folder f = folderDao.create(parentFolder, folderVO, true, transaction);
 

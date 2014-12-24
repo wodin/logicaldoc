@@ -430,7 +430,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	}
 
 	@Override
-	public void onFolderSaved(GUIFolder folder) {
+	public void onFolderSaved(GUIFolder folder, boolean positionChanged) {
 		GUIDocument doc = grid.getSelectedDocument();
 		if (doc != null) {
 			doc.setTitle(folder.getName());

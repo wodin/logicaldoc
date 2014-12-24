@@ -630,6 +630,7 @@ public class ItemFactory {
 		IsIntegerValidator iv = new IsIntegerValidator();
 		iv.setErrorMessage(I18N.message("wholenumber"));
 		item.setValidators(iv);
+		item.setWidth(60);
 		return item;
 	}
 
