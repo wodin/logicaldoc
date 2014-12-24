@@ -35,47 +35,47 @@ insert into ld_usergroup
 values (-5,5);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (99,'2008-10-22 00:00:00',0,'menu.admin1',2,'administration.gif',5,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (99,'2008-10-22 00:00:00',0,'menu.admin1',2,'administration.gif',5,1,1,1);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (100,'2008-10-22 00:00:00',0,'menu',2,'administration.gif',3,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (100,'2008-10-22 00:00:00',0,'menu',2,'administration.gif',3,1,1,1);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (101,'2008-10-22 00:00:00',0,'text',100,'administration.gif',3,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (101,'2008-10-22 00:00:00',0,'text',100,'administration.gif',3,1,1,1);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (102,'2008-10-22 00:00:00',0,'menu102',101,'administration.gif',3,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (102,'2008-10-22 00:00:00',0,'menu102',101,'administration.gif',3,1,1,1);
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (103,'2008-10-22 00:00:00',0,'menu103',101,'administration.gif',3,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (103,'2008-10-22 00:00:00',0,'menu103',101,'administration.gif',3,1,1,1);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (1000,'2008-10-22 00:00:00',1,'menu.admin.1000',2,'administration.gif',5,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (1000,'2008-10-22 00:00:00',1,'menu.admin.1000',2,'administration.gif',5,1,1,1);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (1100,'2008-10-22 00:00:00',1,'menu.admin.1100',1000,'administration.gif',5,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (1100,'2008-10-22 00:00:00',1,'menu.admin.1100',1000,'administration.gif',5,1,1,1);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (1200,'2009-10-19 00:00:00',0,'test',2,'administration.gif',3,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (1200,'2009-10-19 00:00:00',0,'test',2,'administration.gif',3,1,1,1);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (1201,'2009-10-19 00:00:00',0,'abc',1200,'administration.gif',3,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (1201,'2009-10-19 00:00:00',0,'abc',1200,'administration.gif',3,1,1,1);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (1202,'2009-10-19 00:00:00',0,'xyz',1201,'administration.gif',3,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (1202,'2009-10-19 00:00:00',0,'xyz',1201,'administration.gif',3,1,1,1);
 
 insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion)
-values     (1203,'2009-10-19 00:00:00',0,'qqqq',1201,'administration.gif',3,1,1);
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (1203,'2009-10-19 00:00:00',0,'qqqq',1201,'administration.gif',3,1,1,1);
 
 insert into ld_menugroup (ld_menuid, ld_groupid, ld_write) values (100,1,1);
 

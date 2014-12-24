@@ -34,6 +34,8 @@ public class Menu extends PersistentObject implements Comparable<Menu> {
 
 	private String description = "";
 
+	private int position = 1;
+
 	protected Set<MenuGroup> menuGroups = new HashSet<MenuGroup>();
 
 	public Menu() {
@@ -155,6 +157,17 @@ public class Menu extends PersistentObject implements Comparable<Menu> {
 
 	@Override
 	public int compareTo(Menu o) {
+		int comparation = Integer.compare(this.position, o.position);
+		if (comparation != 0)
+			return comparation;
 		return this.text.compareTo(o.text);
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 }
