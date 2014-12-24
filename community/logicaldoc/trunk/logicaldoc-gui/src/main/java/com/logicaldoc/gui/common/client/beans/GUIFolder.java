@@ -47,6 +47,8 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	private int templateLocked = 0;
 
+	private int position = 1;
+
 	public GUIFolder() {
 
 	}
@@ -224,5 +226,13 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	public void setSecurityRef(GUIFolder securityRef) {
 		this.securityRef = securityRef;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 }

@@ -11,6 +11,7 @@
     <property name="lastModified" type="timestamp" column="ld_lastmodified" />
     <property name="deleted" type="int" column="ld_deleted" not-null="true" />
     <property name="name" type="string" column="ld_name" length="255" />
+    <property name="position" type="int" column="ld_position" not-null="true" />
     <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />
     <property name="parentId" type="long" column="ld_parentid" not-null="true" />
     <property name="securityRef" type="long" column="ld_securityref" />

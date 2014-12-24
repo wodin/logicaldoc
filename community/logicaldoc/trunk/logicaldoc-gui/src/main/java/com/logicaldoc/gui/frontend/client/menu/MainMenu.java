@@ -925,7 +925,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 	}
 
 	@Override
-	public void onFolderSaved(GUIFolder folder) {
+	public void onFolderSaved(GUIFolder folder, boolean positionChanged) {
 		// Do nothing
 	}
 

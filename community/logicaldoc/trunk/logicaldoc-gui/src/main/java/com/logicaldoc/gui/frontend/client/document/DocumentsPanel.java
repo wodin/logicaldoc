@@ -330,7 +330,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	@Override
-	public void onFolderSaved(GUIFolder folder) {
+	public void onFolderSaved(GUIFolder folder, boolean positionChanged) {
 		// Nothing to do
 	}
 

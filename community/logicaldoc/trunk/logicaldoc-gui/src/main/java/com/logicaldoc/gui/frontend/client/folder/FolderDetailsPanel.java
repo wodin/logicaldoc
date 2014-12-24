@@ -316,6 +316,7 @@ public class FolderDetailsPanel extends VLayout {
 	}
 
 	public void onSave() {
+		final int oldPosition = folder.getPosition();
 		if (validate()) {
 			folder.setName(folder.getName().trim());
 			folderService.save(Session.get().getSid(), folder, new AsyncCallback<GUIFolder>() {
@@ -327,7 +328,7 @@ public class FolderDetailsPanel extends VLayout {
 				@Override
 				public void onSuccess(GUIFolder folder) {
 					if (listener != null)
-						listener.onFolderSaved(folder);
+						listener.onFolderSaved(folder, oldPosition != folder.getPosition());
 
 					// Adjust the path
 					String p = folder.getPathExtended();

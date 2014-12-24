@@ -680,12 +680,20 @@ public class Navigator extends TreeGrid implements FolderObserver {
 	}
 
 	@Override
-	public void onFolderSaved(GUIFolder folder) {
+	public void onFolderSaved(GUIFolder folder, boolean positionChanged) {
 		TreeNode selectedNode = getTree().find("folderId", Long.toString(folder.getId()));
 		if (selectedNode != null) {
 			selectedNode.setTitle(folder.getName());
 			selectedNode.setName(folder.getName());
 			getTree().reloadChildren(selectedNode);
+			
+			if(positionChanged){
+				TreeNode parentNode = getTree().find("folderId", Long.toString(folder.getParentId()));
+				if(parentNode!=null)
+					getTree().reloadChildren(parentNode);
+				else
+					getTree().reloadChildren(getTree().getRoot());
+			}
 		}
 		folder.setPathExtended(getPath(folder.getId()));
 	}

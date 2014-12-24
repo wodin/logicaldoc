@@ -24,7 +24,7 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	public static final long ROOTID = 5;
 
 	public static final long DEFAULTWORKSPACEID = 4;
-	
+
 	public static final String DEFAULTWORKSPACENAME = "Default";
 
 	public static final int TYPE_DEFAULT = 0;
@@ -48,6 +48,8 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	private String creator;
 
 	private Long creatorId;
+
+	private int position = 1;
 
 	protected Set<FolderGroup> folderGroups = new HashSet<FolderGroup>();
 
@@ -228,6 +230,14 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	public void setDeleteUserId(Long deleteUserId) {
 		this.deleteUserId = deleteUserId;
+	}
+
+	public int getPosition() {
+		return position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 
 }

@@ -161,6 +161,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setCreator(folder.getCreator());
 			f.setCreatorId(folder.getCreatorId());
 			f.setType(folder.getType());
+			f.setPosition(folder.getPosition());
 
 			if (folder.getSecurityRef() != null) {
 				GUIFolder secRef = new GUIFolder();
@@ -244,6 +245,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			if (computePath) {
 				String pathExtended = dao.computePathExtended(folderId);
+				
 				StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
 				int elements = st.countTokens();
 				GUIFolder[] path = new GUIFolder[elements];
@@ -256,7 +258,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					if (list.isEmpty())
 						return null;
 
-					if (parent.getId() == Folder.ROOTID || parent.getId() == parent.getId()) {
+					if (parent.getId() == Folder.ROOTID || parent.getId() == parent.getParentId()) {
 						GUIFolder f = new GUIFolder(parent.getId());
 						f.setName("/");
 						path[j] = f;
@@ -276,9 +278,10 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly, boolean inheritSecurity) throws ServerException {
+	public void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly, boolean inheritSecurity)
+			throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
-		
+
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
 			Folder folderToCopy = folderDao.findById(folderId);
@@ -419,6 +422,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setDescription(folder.getDescription());
 			f.setType(folder.getType());
 			f.setTemplateLocked(folder.getTemplateLocked());
+			f.setPosition(folder.getPosition());
 			if (f.getName().trim().equals(folderName)) {
 				f.setName(folderName.trim());
 				transaction.setEvent(FolderEvent.CHANGED.toString());
@@ -433,6 +437,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			folder.setId(f.getId());
 			folder.setName(f.getName());
+			folder.setPosition(f.getPosition());
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
@@ -555,7 +560,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					fg.setCalendar(1);
 				else
 					fg.setCalendar(0);
-				
+
 				if (isAdmin || right.isSubscription())
 					fg.setSubscription(1);
 				else
@@ -708,7 +713,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity) throws ServerException {
+	public void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity)
+			throws ServerException {
 
 	}
 
