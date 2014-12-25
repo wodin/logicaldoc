@@ -114,6 +114,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			log.error(e.getMessage(), e);
 		}
 
+		Collections.sort(coll);
 		return coll;
 	}
 
@@ -132,7 +133,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 				return coll;
 			if (user.isInGroup("admin"))
 				return findByWhere("_entity.id!=_entity.parentId and _entity.parentId=" + parentId
-						+ (type == null ? "" : (" and _entity.type=" + type)), " order by  _entity.text ", null);
+						+ (type == null ? "" : (" and _entity.type=" + type)), " order by  _entity.position asc, _entity.text asc", null);
 			/*
 			 * Search for all those menus that defines its own security policies
 			 */
@@ -190,12 +191,7 @@ public class HibernateMenuDAO extends HibernatePersistentObjectDAO<Menu> impleme
 			log.error(e.getMessage(), e);
 		}
 
-		Collections.sort(coll, new Comparator<Menu>() {
-			@Override
-			public int compare(Menu o1, Menu o2) {
-				return -1 * o1.getText().compareTo(o2.getText());
-			}
-		});
+		Collections.sort(coll);
 		return coll;
 	}
 

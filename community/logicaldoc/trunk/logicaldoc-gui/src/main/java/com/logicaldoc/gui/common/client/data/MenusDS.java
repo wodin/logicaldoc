@@ -15,6 +15,8 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 public class MenusDS extends DataSource {
 
 	public MenusDS() {
+		setID("MenusDS");
+		
 		setTitleField("name");
 		setRecordXPath("/list/menu");
 		DataSourceTextField name = new DataSourceTextField("name", I18N.message("name"), 255);
@@ -23,9 +25,14 @@ public class MenusDS extends DataSource {
 		id.setPrimaryKey(true);
 		id.setRequired(true);
 		
+		DataSourceTextField parent = new DataSourceTextField("parent", "Parent ID");
+		parent.setRequired(true);
+		parent.setForeignKey("MenusDS.id");
+		parent.setRootValue("/");
+		
 		DataSourceIntegerField position = new DataSourceIntegerField("position", I18N.message("position"));
 		
-		setFields(name, id, position);
+		setFields(name, id, position, parent);
 
 		setDataURL("data/menues.xml?sid=" + Session.get().getSid());
 		setClientOnly(false);

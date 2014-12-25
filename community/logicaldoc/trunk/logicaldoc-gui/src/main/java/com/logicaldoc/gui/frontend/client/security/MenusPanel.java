@@ -11,30 +11,30 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.Canvas;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionEvent;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.tree.TreeGrid;
 
 /**
- * This panel shows the list of menues visible by the current user allowing for
+ * This panel shows the list of menus visible by the current user allowing for
  * security management.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class MenuesPanel extends VLayout {
+public class MenusPanel extends VLayout {
 	private SecurityServiceAsync service = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
-	private ListGrid list;
+	private TreeGrid menus;
 
 	private Layout listing = new VLayout();
 
@@ -44,7 +44,7 @@ public class MenuesPanel extends VLayout {
 
 	private Canvas rights = SELECT_MENU;
 
-	public MenuesPanel() {
+	public MenusPanel() {
 		setWidth100();
 
 		// Initialize the listing panel as placeholder
@@ -59,26 +59,35 @@ public class MenuesPanel extends VLayout {
 		name.setCanFilter(true);
 		name.setCellFormatter(new I18NCellFormatter());
 
-		list = new ListGrid();
-		list.setEmptyMessage(I18N.message("notitemstoshow"));
-		list.setCanFreezeFields(true);
-		list.setAutoFetchData(true);
-		list.setSelectionType(SelectionStyle.SINGLE);
-		list.setFilterOnKeypress(true);
-		list.setDataSource(new MenusDS());
-		list.setFields(id, name);
+		menus=new TreeGrid();
+		menus.setWidth100();
+		menus.setShowHeader(false);
+		menus.setLeaveScrollbarGap(false);
+		menus.setCanReorderRecords(false);
+		menus.setCanDragRecordsOut(false);
+		menus.setAutoFetchData(true);
+		menus.setLoadDataOnDemand(true);
+		menus.setCanSelectAll(false);
+		menus.setShowConnectors(true);
+		menus.setShowRoot(false);
+		menus.setCanAcceptDrop(false);
+		menus.setCanAcceptDroppedRecords(false);
+		menus.setNodeIcon(Util.imageUrl("cube_yellow16.png"));
+		menus.setFolderIcon(Util.imageUrl("cube_yellow16.png"));
+		menus.setDataSource(new MenusDS());
+		menus.setFields(id, name);
 
-		listing.addMember(list);
+		listing.addMember(menus);
 
 		rightsContainer.setAlign(Alignment.CENTER);
 		rightsContainer.addMember(rights);
 
 		setMembers(listing, rightsContainer);
 
-		list.addSelectionChangedHandler(new SelectionChangedHandler() {
+		menus.addSelectionChangedHandler(new SelectionChangedHandler() {
 			@Override
 			public void onSelectionChanged(SelectionEvent event) {
-				Record record = list.getSelectedRecord();
+				Record record = menus.getSelectedRecord();
 				if (record != null)
 					service.getMenu(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
 							new AsyncCallback<GUIMenu>() {
@@ -101,7 +110,7 @@ public class MenuesPanel extends VLayout {
 	 * Updates the selected record with new data
 	 */
 	public void updateRecord(GUIUser user) {
-		ListGridRecord record = list.getSelectedRecord();
+		ListGridRecord record = menus.getSelectedRecord();
 		if (record == null)
 			record = new ListGridRecord();
 
@@ -118,12 +127,12 @@ public class MenuesPanel extends VLayout {
 
 		if (record.getAttributeAsString("id") != null
 				&& (user.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
-			list.refreshRow(list.getRecordIndex(record));
+			menus.refreshRow(menus.getRecordIndex(record));
 		} else {
 			// Append a new record
 			record.setAttribute("id", user.getId());
-			list.addData(record);
-			list.selectRecord(record);
+			menus.addData(record);
+			menus.selectRecord(record);
 		}
 	}
 

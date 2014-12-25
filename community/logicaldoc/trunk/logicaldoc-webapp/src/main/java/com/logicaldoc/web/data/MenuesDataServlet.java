@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +47,12 @@ public class MenuesDataServlet extends HttpServlet {
 
 			Context context = Context.getInstance();
 			MenuDAO dao = (MenuDAO) context.getBean(MenuDAO.class);
+			long parent = Menu.ROOT;
+
+			if ("/".equals(request.getParameter("parent")))
+				parent = Menu.ROOT;
+			else if(StringUtils.isNotEmpty(request.getParameter("parent")))
+				parent = Long.parseLong(request.getParameter("parent"));
 
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
@@ -53,7 +60,7 @@ public class MenuesDataServlet extends HttpServlet {
 			/*
 			 * Get the visible children
 			 */
-			List<Menu> menues = dao.findByUserId(session.getUserId());
+			List<Menu> menues = dao.findByUserId(session.getUserId(), parent);
 
 			/*
 			 * Iterate over records composing the response XML document
@@ -63,6 +70,7 @@ public class MenuesDataServlet extends HttpServlet {
 				writer.print("<id>" + menu.getId() + "</id>");
 				writer.print("<name><![CDATA[" + menu.getText() + "]]></name>");
 				writer.print("<position><![CDATA[" + menu.getPosition() + "]]></position>");
+				writer.print("<parent>" + menu.getParentId() + "</parent>");
 				writer.print("</menu>");
 			}
 

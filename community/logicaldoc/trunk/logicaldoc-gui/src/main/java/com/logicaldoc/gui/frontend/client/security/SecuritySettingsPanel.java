@@ -53,15 +53,15 @@ public class SecuritySettingsPanel extends VLayout {
 	public SecuritySettingsPanel(GUISecuritySettings settings) {
 		this.settings = settings;
 		setWidth100();
-		setMembersMargin(10);
-		setMargin(30);
+		setMembersMargin(5);
+		setMargin(5);
 
-		tabs.setWidth(510);
-		tabs.setHeight(350);
+		tabs.setWidth(600);
+		tabs.setHeight(400);
 
 		Tab menues = new Tab();
 		menues.setTitle(I18N.message("menues"));
-		menues.setPane(new MenuesPanel());
+		menues.setPane(new MenusPanel());
 
 		Tab filters = new Tab();
 		filters.setTitle(I18N.message("filters"));
