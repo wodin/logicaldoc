@@ -207,72 +207,87 @@ values     (1,CURRENT_TIMESTAMP,0,1,'default','Acme Inc.',0,1,null,1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (2,CURRENT_TIMESTAMP,0,'administration',2,'menu.png',1,1,1,1);
+values     (1,CURRENT_TIMESTAMP,0,'/',1,'menu.png',1,1,1,1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (9,CURRENT_TIMESTAMP,0,'security',2,'menu.png',1,1,1,1);
+values     (2,CURRENT_TIMESTAMP,0,'administration',1,'menu.png',1,1,1,20);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (14,CURRENT_TIMESTAMP,0,'tasks',2,'menu.png',1,1,1,1);
+values     (9,CURRENT_TIMESTAMP,0,'security',2,'menu.png',1,1,1,20);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (-2,CURRENT_TIMESTAMP,0,'lastchanges',2,'menu.png',1,1,1,1);
+values     (8,CURRENT_TIMESTAMP,0,'impex',2,'menu.png',1,1,1,40);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (-3,CURRENT_TIMESTAMP,0,'lockeddocs',2,'menu.png',1,1,1,1);
+values     (25,CURRENT_TIMESTAMP,0,'documentmetadata',2,'menu.png',1,1,1,30);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (3,CURRENT_TIMESTAMP,0,'clienttools',2,'menu.png',1,1,1,1);
+values     (7,CURRENT_TIMESTAMP,0,'settings',2,'menu.png',1,1,1,60);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (17,CURRENT_TIMESTAMP,0,'customid',2,'menu.png',1,1,1,1);
+values     (5,CURRENT_TIMESTAMP,0,'frontend',1,'menu.png',1,1,1,1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (16,CURRENT_TIMESTAMP,0,'reports',2,'menu.png',1,1,1,1);
+values     (1500,CURRENT_TIMESTAMP,0,'documents',5,'menu.png',1,1,1,50);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (8,CURRENT_TIMESTAMP,0,'impex',2,'menu.png',1,1,1,1);
+values     (1510,CURRENT_TIMESTAMP,0,'search',5,'menu.png',1,1,1,60);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (25,CURRENT_TIMESTAMP,0,'documentmetadata',2,'menu.png',1,1,1,1);
+values     (1520,CURRENT_TIMESTAMP,0,'dashboard',5,'menu.png',1,1,1,40);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (23,CURRENT_TIMESTAMP,0,'workflow',2,'menu.png',1,1,1,1);
+values     (1530,CURRENT_TIMESTAMP,0,'contacts',40,'menu.png',1,1,1,1);
+
+insert into ld_menu 
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (80,CURRENT_TIMESTAMP,0,'system',2,'system.png',1,1,1,10);
+
+insert into ld_menu 
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (90,CURRENT_TIMESTAMP,0,'reports',2,'reports.png',1,1,1,50);
+
+insert into ld_menu 
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (100,CURRENT_TIMESTAMP,0,'settings',2,'settings.png',1,1,1,60);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (7,CURRENT_TIMESTAMP,0,'settings',2,'menu.png',1,1,1,1);
+values     (14,CURRENT_TIMESTAMP,0,'scheduledtasks',80,'menu.png',1,1,1,1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (5,CURRENT_TIMESTAMP,0,'frontend',5,'menu.png',1,1,1,1);
+values     (-2,CURRENT_TIMESTAMP,0,'lastchanges',90,'menu.png',1,1,1,1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (1500,CURRENT_TIMESTAMP,0,'documents',5,'menu.png',1,1,1,1);
+values     (-3,CURRENT_TIMESTAMP,0,'lockeddocs',90,'menu.png',1,1,1,1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (1510,CURRENT_TIMESTAMP,0,'search',5,'menu.png',1,1,1,1);
+values     (3,CURRENT_TIMESTAMP,0,'clienttools',7,'menu.png',1,1,1,1);
+
+insert into ld_menu 
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (110,CURRENT_TIMESTAMP,0,'mainmenu',5,'menu.png',1,1,1,10);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (1520,CURRENT_TIMESTAMP,0,'dashboard',5,'menu.png',1,1,1,1);
+values     (16,CURRENT_TIMESTAMP,0,'tools',110,'menu.png',1,1,1,20);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (1530,CURRENT_TIMESTAMP,0,'contacts',5,'menu.png',1,1,1,1);
-
+values     (40,CURRENT_TIMESTAMP,0,'personal',110,'menu.png',1,1,1,10);
 
 insert into ld_group
            (ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_description,ld_type,ld_recordversion)
@@ -293,7 +308,6 @@ values     (4,CURRENT_TIMESTAMP,0,1,'poweruser','Group of power users',0,1);
 insert into ld_group
            (ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_description,ld_type,ld_recordversion)
 values     (-10000,CURRENT_TIMESTAMP,0,1,'publisher','Group of publishers',0,1);
-
 
 insert into ld_user
            (ld_id,ld_lastmodified,ld_deleted,ld_enabled,ld_username,ld_password,ld_passwordmd4,ld_name,ld_firstname,ld_street,ld_postalcode,ld_city,ld_country,ld_language,ld_email,ld_telephone,ld_telephone2,ld_type,ld_passwordchanged,ld_passwordexpires,ld_source,ld_quota,ld_welcomescreen,ld_passwordexpired,ld_tenantid,ld_recordversion)

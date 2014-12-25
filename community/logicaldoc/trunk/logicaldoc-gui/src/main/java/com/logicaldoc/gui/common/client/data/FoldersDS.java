@@ -38,12 +38,12 @@ public class FoldersDS extends DataSource {
 		DataSourceTextField type = new DataSourceTextField("type", I18N.message("type"));
 		type.setRequired(true);
 
-		DataSourceTextField parentId = new DataSourceTextField("parent", "Parent ID");
-		parentId.setRequired(true);
-		parentId.setForeignKey(dsId + ".folderId");
-		parentId.setRootValue("/");
+		DataSourceTextField parent = new DataSourceTextField("parent", "Parent ID");
+		parent.setRequired(true);
+		parent.setForeignKey(dsId + ".folderId");
+		parent.setRootValue("/");
 
-		setFields(name, folderId, parentId, type);
+		setFields(name, folderId, parent, type);
 
 		setDataURL("data/folders.xml?sid=" + Session.get().getSid());
 		setClientOnly(false);
