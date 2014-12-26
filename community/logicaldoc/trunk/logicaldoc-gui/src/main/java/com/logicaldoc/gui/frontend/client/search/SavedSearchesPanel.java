@@ -31,9 +31,7 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
  */
 public class SavedSearchesPanel extends VLayout {
 
-	private SavedSearchesDS dataSource;
-
-	private ListGrid listGrid;
+	private ListGrid list;
 
 	private SearchServiceAsync service = (SearchServiceAsync) GWT.create(SearchService.class);
 
@@ -50,16 +48,17 @@ public class SavedSearchesPanel extends VLayout {
 		ListGridField type = new ListGridField("type", I18N.message("type"), 70);
 		ListGridField description = new ListGridField("description", I18N.message("description"));
 
-		listGrid = new ListGrid();
-		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
-		listGrid.setCanFreezeFields(true);
-		listGrid.setAutoFetchData(true);
-		dataSource = new SavedSearchesDS();
-		listGrid.setDataSource(dataSource);
-		listGrid.setFields(name, type, description);
-		addMember(listGrid);
+		list = new ListGrid();
+		list.setWidth100();
+		list.setHeight100();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
+		list.setCanFreezeFields(true);
+		list.setAutoFetchData(true);
+		list.setDataSource(new SavedSearchesDS());
+		list.setFields(name, type, description);
+		addMember(list);
 
-		listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
+		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
@@ -80,7 +79,7 @@ public class SavedSearchesPanel extends VLayout {
 			}
 		});
 
-		listGrid.addCellContextClickHandler(new CellContextClickHandler() {
+		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
 				showContextMenu();
@@ -96,7 +95,7 @@ public class SavedSearchesPanel extends VLayout {
 		execute.setTitle(I18N.message("execute"));
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord selection = listGrid.getSelectedRecord();
+				ListGridRecord selection = list.getSelectedRecord();
 				service.load(Session.get().getSid(), selection.getAttributeAsString("name"),
 						new AsyncCallback<GUISearchOptions>() {
 
@@ -118,7 +117,7 @@ public class SavedSearchesPanel extends VLayout {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] selection = listGrid.getSelection();
+				ListGridRecord[] selection = list.getSelection();
 				if (selection == null || selection.length == 0)
 					return;
 				final String[] names = new String[selection.length];
@@ -138,7 +137,7 @@ public class SavedSearchesPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void result) {
-									listGrid.removeSelectedData();
+									list.removeSelectedData();
 								}
 							});
 						}
@@ -150,13 +149,6 @@ public class SavedSearchesPanel extends VLayout {
 		contextMenu.showContextMenu();
 	}
 
-	@Override
-	public void destroy() {
-		super.destroy();
-		if (dataSource != null)
-			dataSource.destroy();
-	}
-
 	public void addEntry(String name, String description, String type) {
 		// Incredible!!! Without this line we have a duplicated save search
 		// entry when the user saves the first search.
@@ -165,6 +157,6 @@ public class SavedSearchesPanel extends VLayout {
 		record.setAttribute("name", name);
 		record.setAttribute("description", description);
 		record.setAttribute("type", type);
-		listGrid.addData(record);
+		list.addData(record);
 	}
 }

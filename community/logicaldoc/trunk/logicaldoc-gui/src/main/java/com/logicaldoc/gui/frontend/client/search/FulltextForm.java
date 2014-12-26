@@ -20,6 +20,7 @@ import com.logicaldoc.gui.frontend.client.folder.FolderSelector;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -31,7 +32,6 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -76,6 +76,9 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 	public FulltextForm() {
 		setHeight100();
+		setWidth100();
+		setOverflow(Overflow.AUTO);
+
 		setMembersMargin(3);
 		setAlign(Alignment.LEFT);
 
@@ -179,12 +182,12 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		form2.setWidth(300);
 		form2.setItems(sizeOperator, size, dateSelector, dateOperator, date);
 		addMember(form2);
-		
-		Label searchin = new Label(I18N.message("searchin")+":");
+
+		Label searchin = new Label(I18N.message("searchin") + ":");
 		searchin.setHeight(20);
 		searchin.setMargin(3);
 		addMember(searchin);
-		
+
 		prepareExtendedAttributes(null);
 
 		Search.get().addObserver(this);
@@ -305,7 +308,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		extForm.setNumCols(4);
 		extForm.setWidth(300);
 		addMember(extForm);
-		
+
 		final List<FormItem> items = new ArrayList<FormItem>();
 
 		CheckboxItem titleFlag = new CheckboxItem("titleFlag", I18N.message("title"));

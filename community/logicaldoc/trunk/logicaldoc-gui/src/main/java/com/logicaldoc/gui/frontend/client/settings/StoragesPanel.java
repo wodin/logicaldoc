@@ -170,7 +170,7 @@ public class StoragesPanel extends VLayout {
 		writeTo.setWrap(false);
 		writeTo.setWrapTitle(false);
 
-		compression = ItemFactory.newYesNoItem("compression", "compression");
+		compression = ItemFactory.newYesNoRadioItem("compression", "compression");
 		if (!Feature.enabled(Feature.COMPRESSED_REPO)) {
 			compression.setDisabled(true);
 			compression.setTooltip(I18N.message("featuredisabled"));

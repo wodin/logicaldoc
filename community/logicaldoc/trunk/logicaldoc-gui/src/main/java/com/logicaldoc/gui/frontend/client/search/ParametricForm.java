@@ -23,6 +23,7 @@ import com.logicaldoc.gui.frontend.client.folder.FolderSelector;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
 import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.JSOHelper;
 import com.smartgwt.client.util.SC;
@@ -75,12 +76,12 @@ public class ParametricForm extends VLayout {
 
 	private ParametricForm() {
 		setHeight100();
+		setWidth100();
 		setMargin(3);
-		setTop(5);
-		setMembersMargin(5);
+		setMembersMargin(3);
 		setAlign(Alignment.LEFT);
 
-		HLayout topLayout = new HLayout(85);
+		setOverflow(Overflow.AUTO);
 
 		final DynamicForm languageForm = new DynamicForm();
 		languageForm.setValuesManager(vm);
@@ -91,7 +92,6 @@ public class ParametricForm extends VLayout {
 		languageForm.setItems(language);
 
 		IButton search = new IButton(I18N.message("search"));
-		search.setWidth(100);
 		search.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
 			@Override
@@ -100,8 +100,9 @@ public class ParametricForm extends VLayout {
 			}
 		});
 
+		HLayout topLayout = new HLayout(80);
 		topLayout.setMembers(languageForm, search);
-		topLayout.setTop(5);
+		topLayout.setTop(3);
 		topLayout.setHeight(15);
 		addMember(topLayout);
 
@@ -109,7 +110,6 @@ public class ParametricForm extends VLayout {
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(2);
-		form.setWidth(400);
 
 		folder = new FolderSelector(null, true);
 		folder.setColSpan(2);
@@ -217,7 +217,7 @@ public class ParametricForm extends VLayout {
 			removeMember(rowsLayout);
 		}
 
-		rowsLayout = new VLayout(5);
+		rowsLayout = new VLayout(3);
 
 		if (criteriaRows == null || criteriaRows.isEmpty()) {
 			criteriaRows = new ArrayList<RowCriteria>();
@@ -229,9 +229,8 @@ public class ParametricForm extends VLayout {
 		if (reload) {
 			int count = criteriaRows.size();
 			criteriaRows.clear();
-			for (int i = 0; i < count; i++) {
+			for (int i = 0; i < count; i++)
 				criteriaRows.add(new RowCriteria(selectedTemplate, i));
-			}
 		}
 
 		for (RowCriteria row : criteriaRows) {

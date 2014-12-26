@@ -54,7 +54,6 @@ public class TrashPanel extends VLayout {
 
 	public TrashPanel() {
 		setMembersMargin(3);
-
 		refresh();
 	}
 
