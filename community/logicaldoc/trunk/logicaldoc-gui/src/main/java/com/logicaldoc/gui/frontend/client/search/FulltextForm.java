@@ -21,6 +21,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -75,14 +76,14 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 	public FulltextForm() {
 		setHeight100();
-		setMembersMargin(5);
+		setMembersMargin(3);
 		setAlign(Alignment.LEFT);
 
-		DynamicForm form = new DynamicForm();
-		form.setValuesManager(vm);
-		form.setTitleOrientation(TitleOrientation.LEFT);
-		form.setNumCols(4);
-		form.setWidth(300);
+		DynamicForm form1 = new DynamicForm();
+		form1.setValuesManager(vm);
+		form1.setTitleOrientation(TitleOrientation.LEFT);
+		form1.setNumCols(4);
+		form1.setWidth(300);
 
 		PickerIcon searchPicker = new PickerIcon(PickerIcon.SEARCH, new FormItemClickHandler() {
 			public void onFormItemClick(FormItemIconClickEvent event) {
@@ -122,33 +123,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		language.setColSpan(4);
 		language.setEndRow(true);
 
-		SelectItem sizeOperator = ItemFactory.newSizeOperator("sizeOperator", "size");
-
-		IntegerItem size = ItemFactory.newIntegerItem("size", " ", null);
-		size.setWidth(60);
-		size.setShowTitle(false);
-		size.setHint("(KB)");
-		size.setEndRow(true);
-
-		SelectItem dateSelector = new SelectItem();
-		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put(CREATEDON, I18N.message(CREATEDON));
-		opts.put(PUBLISHEDON, I18N.message(PUBLISHEDON));
-		opts.put(DATE, I18N.message(DATE));
-		dateSelector.setValueMap(opts);
-		dateSelector.setName("dateSelector");
-		dateSelector.setTitle(I18N.message(DATE));
-		dateSelector.setValue(CREATEDON);
-		dateSelector.setWidth(80);
-
-		SelectItem dateOperator = ItemFactory.newDateOperator("dateOperator", null);
-
-		DateItem date = ItemFactory.newDateItem(DATE, null);
-
-		StaticTextItem searchin = ItemFactory.newStaticTextItem("searchin", "searchin", null);
-		searchin.setColSpan(3);
-		searchin.setEndRow(true);
-
 		SelectItem template = ItemFactory.newTemplateSelector(false, null);
 		template.setMultiple(false);
 		template.addChangedHandler(new ChangedHandler() {
@@ -172,11 +146,45 @@ public class FulltextForm extends VLayout implements SearchObserver {
 				return folder.getValue() != null && !"".equals(folder.getValue());
 			}
 		});
+		form1.setItems(expression, language, searchinhits, folder, subfolders, template);
+		addMember(form1);
 
-		form.setItems(expression, language, searchinhits, sizeOperator, size, dateSelector, dateOperator, date,
-				template, folder, subfolders, searchin);
-		addMember(form);
+		SelectItem sizeOperator = ItemFactory.newSizeOperator("sizeOperator", "size");
 
+		IntegerItem size = ItemFactory.newIntegerItem("size", " ", null);
+		size.setWidth(60);
+		size.setShowTitle(false);
+		size.setHint("(KB)");
+		size.setEndRow(true);
+
+		SelectItem dateSelector = new SelectItem();
+		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
+		opts.put(CREATEDON, I18N.message(CREATEDON));
+		opts.put(PUBLISHEDON, I18N.message(PUBLISHEDON));
+		opts.put(DATE, I18N.message(DATE));
+		dateSelector.setValueMap(opts);
+		dateSelector.setName("dateSelector");
+		dateSelector.setTitle(I18N.message(DATE));
+		dateSelector.setValue(CREATEDON);
+		dateSelector.setWidth(80);
+
+		SelectItem dateOperator = ItemFactory.newDateOperator("dateOperator", null);
+
+		DateItem date = ItemFactory.newDateItem(DATE, null);
+
+		DynamicForm form2 = new DynamicForm();
+		form2.setValuesManager(vm);
+		form2.setTitleOrientation(TitleOrientation.LEFT);
+		form2.setNumCols(4);
+		form2.setWidth(300);
+		form2.setItems(sizeOperator, size, dateSelector, dateOperator, date);
+		addMember(form2);
+		
+		Label searchin = new Label(I18N.message("searchin")+":");
+		searchin.setHeight(20);
+		searchin.setMargin(3);
+		addMember(searchin);
+		
 		prepareExtendedAttributes(null);
 
 		Search.get().addObserver(this);
@@ -204,7 +212,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			options.setLanguage(vm.getValueAsString("language"));
 			options.setExpressionLanguage(options.getLanguage());
 		}
-				
+
 		Long size = vm.getValueAsString("size") != null ? new Long(vm.getValueAsString("size")) : null;
 		if (size != null && !NOLIMIT.equals(vm.getValueAsString("sizeOperator"))) {
 			if (LESSTHAN.equals(vm.getValueAsString("sizeOperator")))
@@ -297,7 +305,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		extForm.setNumCols(4);
 		extForm.setWidth(300);
 		addMember(extForm);
-
+		
 		final List<FormItem> items = new ArrayList<FormItem>();
 
 		CheckboxItem titleFlag = new CheckboxItem("titleFlag", I18N.message("title"));
