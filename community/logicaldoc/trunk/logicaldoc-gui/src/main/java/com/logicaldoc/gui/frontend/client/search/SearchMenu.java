@@ -57,7 +57,7 @@ public class SearchMenu extends SectionStack {
 		if (Feature.visible(Feature.PARAMETRIC_SEARCHES)) {
 			SectionStackSection parametricSection = new SectionStackSection(I18N.message("parametricsearches"));
 			if (Feature.enabled(Feature.PARAMETRIC_SEARCHES))
-				parametricSection.addItem(new ParametricForm());
+				parametricSection.addItem(ParametricForm.get());
 			else
 				parametricSection.addItem(new FeatureDisabled());
 			addSection(parametricSection);

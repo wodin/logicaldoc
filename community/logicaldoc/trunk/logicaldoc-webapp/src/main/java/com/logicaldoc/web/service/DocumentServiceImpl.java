@@ -472,20 +472,24 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		if (doc != null) {
 			folder = FolderServiceImpl.getFolder(sid, doc.getFolder().getId());
 
+			Long aliasId = null;
+
 			// Check if it is an alias
 			if (doc.getDocRef() != null) {
 				long id = doc.getDocRef();
 				doc = docDao.findById(id);
+				aliasId = docId;
 			}
 
 			try {
 				User user = ServiceUtil.getSessionUser(sid);
 				checkPublished(user, doc);
-
 				docDao.initialize(doc);
 				document = fromDocument(doc, folder);
 				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 				document.setPathExtended(fdao.computePathExtended(folder.getId()));
+				if (aliasId != null)
+					document.setDocRef(aliasId);
 			} catch (Throwable t) {
 				ServiceUtil.throwServerException(session, log, t);
 			}
