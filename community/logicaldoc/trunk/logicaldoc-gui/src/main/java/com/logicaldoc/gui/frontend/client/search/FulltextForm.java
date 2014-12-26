@@ -1,9 +1,7 @@
 package com.logicaldoc.gui.frontend.client.search;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -22,7 +20,6 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -30,6 +27,7 @@ import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -68,7 +66,9 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 	private ValuesManager vm = new ValuesManager();
 
-	private DynamicForm extForm = new DynamicForm();
+	private DynamicForm fieldsForm = new DynamicForm();
+
+	private MultiComboBoxItem searchinItem = null;
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -132,9 +132,9 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			@Override
 			public void onChanged(ChangedEvent event) {
 				if (event.getValue() != null && !"".equals((String) event.getValue()))
-					prepareExtendedAttributes(new Long((String) event.getValue()));
+					prepareFields(new Long((String) event.getValue()));
 				else
-					prepareExtendedAttributes(null);
+					prepareFields(null);
 			}
 		});
 
@@ -183,12 +183,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		form2.setItems(sizeOperator, size, dateSelector, dateOperator, date);
 		addMember(form2);
 
-		Label searchin = new Label(I18N.message("searchin") + ":");
-		searchin.setHeight(20);
-		searchin.setMargin(3);
-		addMember(searchin);
-
-		prepareExtendedAttributes(null);
+		prepareFields(null);
 
 		Search.get().addObserver(this);
 	}
@@ -249,30 +244,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		if (values.containsKey("template") && !((String) values.get("template")).isEmpty())
 			options.setTemplate(new Long((String) values.get("template")));
 
-		List<String> fields = new ArrayList<String>();
-
-		// Now collect all flags from the string extended attributes
-		values = (Map<String, Object>) extForm.getValues();
-		for (String name : values.keySet()) {
-			boolean enabled = false;
-			if (values.get(name) instanceof String) {
-				enabled = "true".equals((String) values.get(name));
-			} else
-				enabled = ((Boolean) values.get(name)).booleanValue();
-
-			if (enabled) {
-				String tmp = name;
-				if (name.startsWith("_"))
-					name = name.substring(1);
-				if (!name.endsWith("Flag"))
-					tmp = "ext_" + name.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-				else
-					tmp = tmp.replaceAll("Flag", "");
-				fields.add(tmp);
-			}
-		}
-
-		options.setFields(fields.toArray(new String[0]));
+		String[] fields = searchinItem.getValues();
+		options.setFields(fields);
 
 		options.setFolder(folder.getFolderId());
 		options.setFolderName(folder.getFolderName());
@@ -297,50 +270,40 @@ public class FulltextForm extends VLayout implements SearchObserver {
 	}
 
 	/*
-	 * Prepare the second form for the extended attributes
+	 * Prepare the form for the selectable fields
 	 */
-	private void prepareExtendedAttributes(Long templateId) {
-		if (extForm != null && contains(extForm))
-			removeMember(extForm);
+	private void prepareFields(Long templateId) {
+		if (fieldsForm != null && contains(fieldsForm))
+			removeMember(fieldsForm);
 
-		extForm = new DynamicForm();
-		extForm.setTitleOrientation(TitleOrientation.LEFT);
-		extForm.setNumCols(4);
-		extForm.setWidth(300);
-		addMember(extForm);
+		fieldsForm = new DynamicForm();
+		fieldsForm.setTitleOrientation(TitleOrientation.TOP);
+		fieldsForm.setWidth100();
+		addMember(fieldsForm);
 
-		final List<FormItem> items = new ArrayList<FormItem>();
+		searchinItem = ItemFactory.newMultiComboBoxItem("searchin", "searchin", null, null);
+		searchinItem.setWidth(300);
 
-		CheckboxItem titleFlag = new CheckboxItem("titleFlag", I18N.message("title"));
-		titleFlag.setValue(true);
-		items.add(titleFlag);
-		CheckboxItem contentFlag = new CheckboxItem("contentFlag", I18N.message("content"));
-		contentFlag.setValue(true);
-		items.add(contentFlag);
-		CheckboxItem tagsFlag = new CheckboxItem("tagsFlag", I18N.message("tags"));
-		tagsFlag.setValue(true);
-		items.add(tagsFlag);
-		CheckboxItem customidFlag = new CheckboxItem("customIdFlag", I18N.message("customid"));
-		items.add(customidFlag);
-		CheckboxItem sourceFlag = new CheckboxItem("sourceFlag", I18N.message("source"));
-		items.add(sourceFlag);
-		CheckboxItem coverageFlag = new CheckboxItem("coverageFlag", I18N.message("coverage"));
-		items.add(coverageFlag);
-		CheckboxItem authorFlag = new CheckboxItem("sourceAuthorFlag", I18N.message("author"));
-		items.add(authorFlag);
-		CheckboxItem typeFlag = new CheckboxItem("sourceTypeFlag", I18N.message("type"));
-		items.add(typeFlag);
-		CheckboxItem sourceIdFlag = new CheckboxItem("sourceIdFlag", I18N.message("sourceid"));
-		items.add(sourceIdFlag);
-		CheckboxItem recipientFlag = new CheckboxItem("recipientFlag", I18N.message("recipient"));
-		items.add(recipientFlag);
-		CheckboxItem commentFlag = new CheckboxItem("commentFlag", I18N.message("comment"));
-		items.add(commentFlag);
+		final LinkedHashMap<String, String> fieldsMap = new LinkedHashMap<String, String>();
+		fieldsMap.put("title", I18N.message("title"));
+		fieldsMap.put("content", I18N.message("content"));
+		fieldsMap.put("tags", I18N.message("tags"));
+		fieldsMap.put("customId", I18N.message("customid"));
+		fieldsMap.put("coverage", I18N.message("coverage"));
+		fieldsMap.put("source", I18N.message("source"));
+		fieldsMap.put("sourceAuthor", I18N.message("author"));
+		fieldsMap.put("sourceType", I18N.message("type"));
+		fieldsMap.put("recipient", I18N.message("recipient"));
+		fieldsMap.put("object", I18N.message("object"));
+		fieldsMap.put("comment", I18N.message("comment"));
 
-		if (templateId == null) {
-			extForm.setItems(items.toArray(new FormItem[0]));
+		searchinItem.setValueMap(fieldsMap);
+		searchinItem.setValue(new String[] { "title", "content", "tags" });
+
+		fieldsForm.setItems(searchinItem);
+
+		if (templateId == null)
 			return;
-		}
 
 		documentService.getAttributes(Session.get().getSid(), templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
 			@Override
@@ -351,15 +314,12 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			@Override
 			public void onSuccess(GUIExtendedAttribute[] result) {
 				for (GUIExtendedAttribute att : result) {
-					// We cannot use spaces in items name
-					String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 					if (att.getType() == GUIExtendedAttribute.TYPE_STRING
 							|| att.getType() == GUIExtendedAttribute.TYPE_USER) {
-						CheckboxItem item = new CheckboxItem(itemName, att.getLabel());
-						items.add(item);
+						fieldsMap.put("ext_" + att.getName(), att.getName());
 					}
 				}
-				extForm.setItems(items.toArray(new FormItem[0]));
+				searchinItem.setValueMap(fieldsMap);
 			}
 		});
 	}
