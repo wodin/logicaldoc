@@ -16,11 +16,11 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -76,6 +76,10 @@ public class TagsForm extends VLayout {
 	 */
 	public TagsForm(final boolean admin, final boolean searchInHits) {
 		setMembersMargin(3);
+		setWidth100();
+		setHeight100();
+		setOverflow(Overflow.AUTO);
+
 		this.admin = admin;
 
 		HLayout vocabulary = new HLayout();
@@ -118,8 +122,9 @@ public class TagsForm extends VLayout {
 		otherChar.setEndRow(false);
 		otherChar.setIcons(searchPicker);
 
-		CheckboxItem searchinhits = new CheckboxItem("searchinhits", I18N.message("searchinhits"));
-		searchinhits.setColSpan(3);
+		FormItem searchinhits = ItemFactory.newYesNoSelectItem(SEARCHINHITS, SEARCHINHITS);
+		searchinhits.setValue("false");
+
 		if (searchInHits && !admin)
 			form2.setItems(otherChar, searchinhits);
 		else

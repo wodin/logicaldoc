@@ -50,12 +50,16 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 	private VLayout right = new VLayout();
 
 	private SearchPanel() {
+		Search.get().addObserver(this);
+
+		Session.get().addDocumentObserver(this);
+
 		setWidth100();
 
 		// Prepare the collapsable menu
-		SearchMenu leftMenu = SearchMenu.get();
-		leftMenu.setWidth(350);
-		leftMenu.setShowResizeBar(true);
+		SearchMenu searchMenu = SearchMenu.get();
+		searchMenu.setWidth(350);
+		searchMenu.setShowResizeBar(true);
 
 		// Initialize the listing panel as placeholder
 		listingPanel = new HitsListPanel();
@@ -72,13 +76,10 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 		right.addMember(content);
 		right.addMember(details);
 
-		addMember(leftMenu);
+		addMember(searchMenu);
 		addMember(right);
 
 		setShowEdges(true);
-
-		Search.get().addObserver(this);
-		Session.get().addDocumentObserver(this);
 	}
 
 	public static SearchPanel get() {

@@ -436,6 +436,18 @@ public class ItemFactory {
 		select.setHintStyle("hint");
 		return select;
 	}
+	
+	public static SelectItem newYesNoSelectItem(String name, String title) {
+		SelectItem item = newSelectItem(name, title);
+		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		map.put("true", I18N.message("yes"));
+		map.put("false", I18N.message("no"));
+		item.setValueMap(map);
+		item.setValue("true");
+		item.setWidth(50);
+		return item;
+	}
+	
 
 	public static SpinnerItem newSpinnerItem(String name, String title, Integer value) {
 		SpinnerItem spinner = new SpinnerItem(name);
@@ -986,7 +998,7 @@ public class ItemFactory {
 	/**
 	 * Simple yes/no radio button. yes=true, no=false
 	 */
-	public static RadioGroupItem newYesNoItem(String name, String label) {
+	public static RadioGroupItem newYesNoRadioItem(String name, String label) {
 		RadioGroupItem item = new RadioGroupItem(filterItemName(name), I18N.message(label));
 		item.setVertical(false);
 		item.setShowTitle(true);
