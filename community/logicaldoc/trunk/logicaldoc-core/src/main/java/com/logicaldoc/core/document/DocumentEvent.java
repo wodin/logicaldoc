@@ -28,7 +28,8 @@ public enum DocumentEvent {
 	VIEWED("event.viewed"),
 	RESTORED("event.restored"),
 	NEW_NOTE("event.newnote"),
-	SIGNED("event.signed");
+	SIGNED("event.signed"),
+	EXPORTPDF("event.exportpdf");
 
     private String event;
 
