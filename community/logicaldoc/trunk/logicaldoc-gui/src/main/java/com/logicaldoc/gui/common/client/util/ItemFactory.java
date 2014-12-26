@@ -348,7 +348,8 @@ public class ItemFactory {
 		item.setWidth(200);
 		item.setHintStyle("hint");
 		item.setMultiple(true);
-		item.setOptionDataSource(options);
+		if (options != null)
+			item.setOptionDataSource(options);
 		item.setAutoFetchData(true);
 
 		IButton tagButton = new IButton();
@@ -436,7 +437,7 @@ public class ItemFactory {
 		select.setHintStyle("hint");
 		return select;
 	}
-	
+
 	public static SelectItem newYesNoSelectItem(String name, String title) {
 		SelectItem item = newSelectItem(name, title);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
@@ -447,7 +448,6 @@ public class ItemFactory {
 		item.setWidth(50);
 		return item;
 	}
-	
 
 	public static SpinnerItem newSpinnerItem(String name, String title, Integer value) {
 		SpinnerItem spinner = new SpinnerItem(name);
