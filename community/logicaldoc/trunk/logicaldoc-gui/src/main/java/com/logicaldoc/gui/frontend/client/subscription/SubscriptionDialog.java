@@ -58,7 +58,7 @@ public class SubscriptionDialog extends Window {
 
 		boolean isFolderSubscription = "folder".equals(selection.getAttributeAsString("type"));
 
-		setWidth(290);
+		setWidth(320);
 		if (isFolderSubscription)
 			setHeight(360);
 		else
@@ -76,7 +76,7 @@ public class SubscriptionDialog extends Window {
 		form.setNumCols(1);
 
 		SelectItem option = new SelectItem("option", I18N.message("subscriptionoption"));
-		option.setWidth(280);
+		option.setWidth(290);
 		LinkedHashMap<String, String> options = new LinkedHashMap<String, String>();
 		options.put("current", I18N.message("subscribecurrent"));
 		options.put("subfolders", I18N.message("subscribesubfolders"));
@@ -84,7 +84,7 @@ public class SubscriptionDialog extends Window {
 		option.setValue("1".equals(selection.getAttributeAsString("folderOption")) ? "subfolders" : "current");
 
 		SelectItem notifyon = new SelectItem("notifyon", I18N.message("notifyon"));
-		notifyon.setWidth(280);
+		notifyon.setWidth(310);
 		LinkedHashMap<String, String> vals = new LinkedHashMap<String, String>();
 		vals.put("all", I18N.message("allevents"));
 		vals.put("selection", I18N.message("selectedevents"));

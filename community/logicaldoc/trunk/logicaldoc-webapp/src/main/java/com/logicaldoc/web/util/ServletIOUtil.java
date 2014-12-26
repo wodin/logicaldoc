@@ -277,11 +277,10 @@ public class ServletIOUtil {
 		response.setHeader("Accept-Ranges", "bytes");
 		response.setHeader("ETag", eTag);
 		response.setDateHeader("Last-Modified", lastModified);
-		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+		response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP
+																					// 1.1.
 		response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 		response.setDateHeader("Expires", 0); // Proxies.
-//		long expires = System.currentTimeMillis() + 604800L;
-//		response.setDateHeader("Expires", expires);
 
 		// Send requested file (part(s)) to client
 		// ------------------------------------------------
@@ -358,7 +357,7 @@ public class ServletIOUtil {
 			IOUtil.close(output);
 		}
 
-		if (user != null
+		if (user != null && request.getServletPath().toLowerCase().contains("preview")
 				&& (StringUtils.isEmpty(suffix) || suffix.equals("preview.swf") || suffix.equals("conversion.pdf"))) {
 			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 
@@ -437,28 +436,19 @@ public class ServletIOUtil {
 		OutputStream os = null;
 
 		try {
-			is = new BufferedInputStream(new FileInputStream(file), 128 * 1024);
+			is = new BufferedInputStream(new FileInputStream(file), DEFAULT_BUFFER_SIZE);
 			os = response.getOutputStream();
 
-			int letter = 0;
-
-			byte[] buffer = new byte[128 * 1024];
-			while ((letter = is.read(buffer)) != -1) {
-				os.write(buffer, 0, letter);
-			}
+			byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
+			int bytesRead = 0;
+			do {
+				bytesRead = is.read(buffer, 0, buffer.length);
+				os.write(buffer, 0, bytesRead);
+			} while (bytesRead > 0);
 		} finally {
-			try {
-				if (os != null) {
-					os.flush();
-					os.close();
-				}
-			} catch (Throwable t) {
-			}
-			try {
-				if (is != null)
-					is.close();
-			} catch (Throwable t) {
-			}
+			// Gently close streams.
+			IOUtil.close(is);
+			IOUtil.close(os);
 		}
 	}
 
