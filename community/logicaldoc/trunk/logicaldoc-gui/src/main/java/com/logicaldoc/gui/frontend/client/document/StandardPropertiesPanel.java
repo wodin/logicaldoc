@@ -114,6 +114,9 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			id.setValue(Util.padLeft(Long.toString(document.getId()) + " (" + document.getCustomId() + ")", 35));
 		}
 
+		if (document.getDocRef() != null)
+			id.setTooltip(I18N.message("thisisalias"));
+
 		StaticTextItem creation = ItemFactory.newStaticTextItem(
 				"creation",
 				"createdon",

@@ -73,8 +73,7 @@ public class RowCriteria extends HLayout {
 
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				destroy();
-				removeFromParent();
+				ParametricForm.get().removeCriteriaRow(RowCriteria.this);
 			}
 		});
 
@@ -199,5 +198,13 @@ public class RowCriteria extends HLayout {
 
 	public FormItem getValueFieldsItem() {
 		return valueFieldsItem;
+	}
+
+	public int getRowPosition() {
+		return rowPosition;
+	}
+
+	public void setRowPosition(int rowPosition) {
+		this.rowPosition = rowPosition;
 	}
 }

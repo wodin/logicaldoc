@@ -290,10 +290,9 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<id>" + doc.getId() + "</id>");
 					writer.print("<customId><![CDATA[" + (doc.getCustomId() != null ? doc.getCustomId() : "")
 							+ "]]></customId>");
-					writer.print("<docref>" + doc.getDocRef() != null  ? doc.getDocRef() : "" + "</docref>");
-					writer.print("<icon>"
-							+ (doc.getDocRef() != null ? "alias" : FilenameUtils.getBaseName(IconSelector
-									.selectIcon(doc.getType()))) + "</icon>");
+					writer.print("<docref>" + doc.getDocRef() != null ? doc.getDocRef() : "" + "</docref>");
+					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType()))
+							+ "</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
 					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");

@@ -112,15 +112,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 					extList.add(ext);
 				}
 				h.setAttributes(extList.toArray(new GUIExtendedAttribute[0]));
-
-				// Check if the document is not an alias to visualize the
-				// correct icon: if the document is an alias the FULL-TEXT
-				// search returns a custom id null, the PARAMETRIC and TAG
-				// searches return a doc ref equals to 0 or null
-				if ((hit.getDocRef() == null || hit.getDocRef() == 0) && hit.getCustomId() != null)
-					h.setIcon(FilenameUtils.getBaseName(hit.getIcon()));
-				else
-					h.setIcon("alias");
+				h.setIcon(FilenameUtils.getBaseName(hit.getIcon()));
+				
 				if ("folder".equals(hit.getType()))
 					h.setIcon("folder_closed");
 				guiResults.add(h);

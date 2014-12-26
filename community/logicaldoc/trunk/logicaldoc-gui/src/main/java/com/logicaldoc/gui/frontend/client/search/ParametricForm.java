@@ -65,7 +65,15 @@ public class ParametricForm extends VLayout {
 
 	private VLayout rowsLayout = null;
 
-	public ParametricForm() {
+	private static ParametricForm instance;
+
+	public static ParametricForm get() {
+		if (instance == null)
+			instance = new ParametricForm();
+		return instance;
+	}
+
+	private ParametricForm() {
 		setHeight100();
 		setMargin(3);
 		setTop(5);
@@ -231,6 +239,14 @@ public class ParametricForm extends VLayout {
 		}
 
 		addMember(rowsLayout);
+	}
+
+	public void removeCriteriaRow(RowCriteria criteria) {
+		criteriaRows.remove(criteria);
+		rowsLayout.removeMember(criteria);
+		int i = 0;
+		for (RowCriteria rowCriteria : criteriaRows)
+			rowCriteria.setRowPosition(i++);
 	}
 
 	public void addCriteriaRow() {
