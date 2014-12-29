@@ -256,7 +256,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				calEvent.setDocuments(docs);
 				calEvent.setTitle(docs[0].getTitle());
 				calEvent.setType(docs[0].getTemplate());
-				CalendarEventDialog eventDialog = new CalendarEventDialog(calEvent);
+				CalendarEventDialog eventDialog = new CalendarEventDialog(calEvent, null);
 				eventDialog.show();
 			}
 		});

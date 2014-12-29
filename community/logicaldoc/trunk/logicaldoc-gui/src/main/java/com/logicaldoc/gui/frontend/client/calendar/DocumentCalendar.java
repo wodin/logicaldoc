@@ -15,83 +15,60 @@ import com.logicaldoc.gui.frontend.client.services.CalendarService;
 import com.logicaldoc.gui.frontend.client.services.CalendarServiceAsync;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.TimeDisplayFormat;
-import com.smartgwt.client.types.ViewName;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.calendar.Calendar;
 import com.smartgwt.client.widgets.calendar.events.CalendarEventClick;
 import com.smartgwt.client.widgets.calendar.events.EventClickHandler;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
- * Calendar dashboard that displays the events in which the user is involved
- * into.
+ * Represents a calendar containing events related to documents.
  * 
  * @author Marco Meschieri - Logical Objects
- * @since 6.7
+ * @since 7.1.3
  */
-public class CalendarDashboard extends VLayout {
+public class DocumentCalendar extends Calendar {
+
 	protected CalendarServiceAsync service = (CalendarServiceAsync) GWT.create(CalendarService.class);
 
-	protected Calendar calendar = null;
-
-	private static CalendarDashboard instance;
-
-	private Date choosenDate = null;
-
-	private ViewName choosenView = null;
-
-	public static CalendarDashboard get() {
-		if (instance == null)
-			instance = new CalendarDashboard();
-		return instance;
-	}
-
-	public CalendarDashboard() {
-		setWidth100();
-		setHeight100();
-		refresh();
-	}
-
-	private void initGUI() {
-		calendar = new Calendar();
-		calendar.setDataSource(new CalendarEventsDS(null));
-		calendar.setAutoFetchData(true);
-		calendar.setScrollToWorkday(true);
-		calendar.setShowDayView(false);
-		calendar.setDayViewTitle(I18N.message("day"));
-		calendar.setWeekViewTitle(I18N.message("week"));
-		calendar.setMonthViewTitle(I18N.message("month"));
-		calendar.setPreviousButtonHoverText(I18N.message("previous"));
-		calendar.setNextButtonHoverText(I18N.message("next"));
-		calendar.setCancelButtonTitle(I18N.message("cancel"));
-		calendar.setDatePickerHoverText(I18N.message("choosedate"));
+	public DocumentCalendar(Long docId, Date date, final AsyncCallback<Void> onChangeCallback) {
+		setDataSource(new CalendarEventsDS(docId));
+		setAutoFetchData(true);
+		setScrollToWorkday(true);
+		setShowDayView(false);
+		setDayViewTitle(I18N.message("day"));
+		setWeekViewTitle(I18N.message("week"));
+		setMonthViewTitle(I18N.message("month"));
+		setPreviousButtonHoverText(I18N.message("previous"));
+		setNextButtonHoverText(I18N.message("next"));
+		setCancelButtonTitle(I18N.message("cancel"));
+		setDatePickerHoverText(I18N.message("choosedate"));
 		if (I18N.message("format_dateshort").startsWith("MM/dd"))
-			calendar.setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
+			setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
 		else
-			calendar.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
-		calendar.setTimeFormatter(TimeDisplayFormat.TOSHORT24HOURTIME);
-		calendar.setCanCreateEvents(false);
-		calendar.setCanResizeTimelineEvents(false);
-		calendar.setCanDragEvents(false);
-		calendar.setCanDragReposition(false);
-		calendar.setCanDragResize(false);
-		calendar.setCanDrop(false);
-		calendar.setCanDrag(false);
-		calendar.setCanAcceptDrop(false);
-		calendar.setCanDragScroll(false);
-		calendar.setCanEditLane(false);
-		calendar.setCanEditEvents(false);
-		calendar.setCanRemoveEvents(false);
-		if (choosenDate != null)
-			calendar.setChosenDate(choosenDate);
+			setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		setTimeFormatter(TimeDisplayFormat.TOSHORT24HOURTIME);
+		setCanCreateEvents(false);
+		setCanResizeTimelineEvents(false);
+		setCanDragEvents(false);
+		setCanDragReposition(false);
+		setCanDragResize(false);
+		setCanDrop(false);
+		setCanDrag(false);
+		setCanAcceptDrop(false);
+		setCanDragScroll(false);
+		setCanEditLane(false);
+		setCanEditEvents(false);
+		setCanRemoveEvents(false);
+		if (date != null)
+			setChosenDate(date);
 		else
-			calendar.setChosenDate(new Date());
-		
-		//this setting setting corrupts tha Calendar if there is high event frequency(daily events)
-		//calendar.setCurrentViewName(choosenView);
-		
-		
-		calendar.addEventClickHandler(new EventClickHandler() {
+			setChosenDate(new Date());
+
+		// this setting setting corrupts tha Calendar if there is high event
+		// frequency(daily events)
+		// setCurrentViewName(choosenView);
+
+		addEventClickHandler(new EventClickHandler() {
 
 			@Override
 			public void onEventClick(final CalendarEventClick event) {
@@ -114,7 +91,8 @@ public class CalendarDashboard extends VLayout {
 												@Override
 												public void execute(final Boolean editAllOccurrences) {
 													if (!editAllOccurrences) {
-														CalendarEventDialog eventDialog = new CalendarEventDialog(ev);
+														CalendarEventDialog eventDialog = new CalendarEventDialog(ev,
+																onChangeCallback);
 														eventDialog.show();
 													} else {
 														service.getEvent(Session.get().getSid(), Long.parseLong(event
@@ -127,7 +105,7 @@ public class CalendarDashboard extends VLayout {
 																	@Override
 																	public void onSuccess(GUICalendarEvent calEv) {
 																		CalendarEventDialog eventDialog = new CalendarEventDialog(
-																				calEv);
+																				calEv, onChangeCallback);
 																		eventDialog.show();
 																	}
 																});
@@ -135,7 +113,7 @@ public class CalendarDashboard extends VLayout {
 												}
 											});
 								} else {
-									CalendarEventDialog eventDialog = new CalendarEventDialog(ev);
+									CalendarEventDialog eventDialog = new CalendarEventDialog(ev, onChangeCallback);
 									eventDialog.show();
 								}
 							}
@@ -143,17 +121,5 @@ public class CalendarDashboard extends VLayout {
 				event.cancel();
 			}
 		});
-
-		addMember(calendar);
-	}
-
-	public void refresh() {
-		if (calendar != null) {
-			removeMember(calendar);
-			choosenDate = calendar.getChosenDate();
-			choosenView = calendar.getCurrentViewName();
-		}
-		
-		initGUI();
 	}
 }

@@ -76,8 +76,12 @@ public class CalendarEventDialog extends Window {
 
 	private boolean readOnly = false;
 
-	public CalendarEventDialog(GUICalendarEvent calEvent) {
+	private AsyncCallback<Void> onChangedCallback;
+
+	public CalendarEventDialog(GUICalendarEvent calEvent, AsyncCallback<Void> onChangedCallback) {
 		this.calendarEvent = calEvent;
+		this.onChangedCallback = onChangedCallback;
+
 		readOnly = Session.get().getUser().getId() != calEvent.getCreatorId()
 				&& !Session.get().getUser().isMemberOf("admin");
 
@@ -592,7 +596,8 @@ public class CalendarEventDialog extends Window {
 				@Override
 				public void onSuccess(Void arg) {
 					destroy();
-					CalendarDashboard.get().refresh();
+					if (onChangedCallback != null)
+						onChangedCallback.onSuccess(arg);
 				}
 			});
 		}
@@ -640,7 +645,8 @@ public class CalendarEventDialog extends Window {
 							@Override
 							public void onSuccess(Void arg) {
 								destroy();
-								CalendarDashboard.get().refresh();
+								if (onChangedCallback != null)
+									onChangedCallback.onSuccess(arg);
 							}
 						});
 				}
