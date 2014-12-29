@@ -4,7 +4,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
-import com.logicaldoc.gui.frontend.client.calendar.CalendarDashboard;
+import com.logicaldoc.gui.frontend.client.calendar.UserCalendarPanel;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDashboard;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -51,7 +51,7 @@ public class DashboardPanel extends VLayout {
 
 		calendarTab = new Tab(I18N.message("calendar"));
 		calendarTab.setID("calendar");
-		calendarTab.setPane(CalendarDashboard.get());
+		calendarTab.setPane(UserCalendarPanel.get());
 
 		tabSet.addTab(userTab);
 
