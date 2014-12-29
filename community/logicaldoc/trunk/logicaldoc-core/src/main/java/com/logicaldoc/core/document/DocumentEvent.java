@@ -29,7 +29,9 @@ public enum DocumentEvent {
 	RESTORED("event.restored"),
 	NEW_NOTE("event.newnote"),
 	SIGNED("event.signed"),
-	EXPORTPDF("event.exportpdf");
+	EXPORTPDF("event.exportpdf"),
+	ADDED_TO_CALEVENT("event.caladd"),
+	REMOVED_FROM_CALEVENT("event.caldel");
 
     private String event;
 
