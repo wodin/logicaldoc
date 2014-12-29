@@ -418,7 +418,7 @@ public class ItemFactory {
 
 	public static SelectItem newEventsSelector(String name, String title, boolean folder, boolean workflow, boolean user) {
 		SelectItem select = newMultipleSelector(filterItemName(name), title);
-		select.setWidth(300);
+		select.setWidth(330);
 		select.setHeight(200);
 		select.setMultipleAppearance(MultipleAppearance.GRID);
 		select.setMultiple(true);

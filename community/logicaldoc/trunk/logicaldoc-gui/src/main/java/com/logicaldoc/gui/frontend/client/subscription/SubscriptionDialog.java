@@ -58,7 +58,7 @@ public class SubscriptionDialog extends Window {
 
 		boolean isFolderSubscription = "folder".equals(selection.getAttributeAsString("type"));
 
-		setWidth(320);
+		setWidth(350);
 		if (isFolderSubscription)
 			setHeight(360);
 		else
