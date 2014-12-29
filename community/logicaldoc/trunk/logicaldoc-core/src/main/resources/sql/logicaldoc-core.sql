@@ -242,10 +242,6 @@ insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
 values     (1520,CURRENT_TIMESTAMP,0,'dashboard',5,'menu.png',1,1,1,40);
 
-insert into ld_menu
-           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (1530,CURRENT_TIMESTAMP,0,'contacts',40,'menu.png',1,1,1,1);
-
 insert into ld_menu 
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
 values     (80,CURRENT_TIMESTAMP,0,'system',2,'system.png',1,1,1,10);
@@ -285,6 +281,10 @@ values     (16,CURRENT_TIMESTAMP,0,'tools',110,'menu.png',1,1,1,20);
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
 values     (40,CURRENT_TIMESTAMP,0,'personal',110,'menu.png',1,1,1,10);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (1530,CURRENT_TIMESTAMP,0,'contacts',40,'menu.png',1,1,1,1);
 
 insert into ld_group
            (ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_description,ld_type,ld_recordversion)
