@@ -532,7 +532,7 @@ public class CalendarEventDialog extends Window {
 	private void onSave() {
 		if (vm.validate()) {
 			if (calendarEvent.getDocuments() == null || calendarEvent.getDocuments().length == 0) {
-				SC.warn("nodocsincalevent");
+				SC.warn(I18N.message("nodocsincalevent"));
 				return;
 			}
 
@@ -586,7 +586,7 @@ public class CalendarEventDialog extends Window {
 				calendarEvent.setDeadline((Date) vm.getValue("deadline"));
 			else
 				calendarEvent.setDeadline(null);
-
+			
 			service.saveEvent(Session.get().getSid(), calendarEvent, new AsyncCallback<Void>() {
 				@Override
 				public void onFailure(Throwable caught) {

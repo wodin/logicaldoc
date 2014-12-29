@@ -443,7 +443,8 @@ public class ServletIOUtil {
 			int bytesRead = 0;
 			do {
 				bytesRead = is.read(buffer, 0, buffer.length);
-				os.write(buffer, 0, bytesRead);
+				if (bytesRead > 0)
+					os.write(buffer, 0, bytesRead);
 			} while (bytesRead > 0);
 		} finally {
 			// Gently close streams.
