@@ -1,11 +1,14 @@
 package com.logicaldoc.gui.frontend.client.dashboard.dashlet;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.PostsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -20,8 +23,11 @@ import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
+import com.smartgwt.client.widgets.menu.Menu;
 
 /**
  * Portlet specialized in listing the most recent comments of the current user.
@@ -32,8 +38,8 @@ import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 public class LastNotesDashlet extends Dashlet {
 
 	private PostsDS dataSource;
-
-	private ListGrid list;
+	
+	protected ListGrid list;
 
 	public LastNotesDashlet() {
 		super(Constants.DASHLET_LAST_NOTES);
@@ -77,6 +83,29 @@ public class LastNotesDashlet extends Dashlet {
 		list.setDataSource(dataSource);
 		list.setFields(date, docTitle, title);
 
+		list.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				if (event != null)
+					event.cancel();
+				Record record = event.getRecord();
+				documentService.getById(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("docId")),
+						new AsyncCallback<GUIDocument>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIDocument document) {
+								Menu contextMenu = prepareContextMenu(document);
+								contextMenu.showContextMenu();
+							}
+						});
+			}
+		});
+		
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {

@@ -89,7 +89,7 @@ public class VersionsPanel extends DocumentDetailTab {
 		listGrid.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				setupContextMenu().showContextMenu();
+				prepareContextMenu().showContextMenu();
 				event.cancel();
 			}
 		});
@@ -118,7 +118,7 @@ public class VersionsPanel extends DocumentDetailTab {
 	/**
 	 * Prepares the context menu.
 	 */
-	private Menu setupContextMenu() {
+	private Menu prepareContextMenu() {
 		final ListGridRecord[] selection = listGrid.getSelectedRecords();
 
 		Menu contextMenu = new Menu();

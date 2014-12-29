@@ -1,10 +1,13 @@
 package com.logicaldoc.gui.frontend.client.dashboard.dashlet;
 
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -15,39 +18,67 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.widgets.HeaderControl;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 public class StatusDashlet extends Dashlet {
 
 	private DocumentsDS dataSource;
 
-	private ListGrid list;
+	protected ListGrid list;
+
+	protected String eventCode;
 
 	public StatusDashlet(int id, final String eventCode) {
 		super(id);
 
-		int max = 10;
-		int status = 0;
+		this.eventCode = eventCode;
+
 		String icn = "page_white.png";
-		setTitle(I18N.message(eventCode+"docs"));
-		if (eventCode.equals(Constants.EVENT_CHECKEDOUT)) {
+		setTitle(I18N.message(eventCode + "docs"));
+		if (eventCode.equals(Constants.EVENT_CHECKEDOUT))
 			icn = "page_edit.png";
-			status = Constants.DOC_CHECKED_OUT;
-		} else if (eventCode.equals(Constants.EVENT_LOCKED)) {
+		else if (eventCode.equals(Constants.EVENT_LOCKED))
 			icn = "page_white_lock.png";
-			status = Constants.DOC_LOCKED;
-		}
+
+		HeaderControl refresh = new HeaderControl(HeaderControl.REFRESH, new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				refresh();
+			}
+		});
 
 		HeaderIcon portletIcon = ItemFactory.newHeaderIcon(icn);
 		HeaderControl hcicon = new HeaderControl(portletIcon);
 		hcicon.setSize(16);
-		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, HeaderControls.MAXIMIZE_BUTTON,
+		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL, refresh, HeaderControls.MAXIMIZE_BUTTON,
 				HeaderControls.CLOSE_BUTTON);
+
+		refresh();
+	}
+
+	private void refresh() {
+		if (list != null)
+			removeItem(list);
+
+		int max = 20;
+		int status = 0;
+
+		if (eventCode.equals(Constants.EVENT_CHECKEDOUT))
+			status = Constants.DOC_CHECKED_OUT;
+		else if (eventCode.equals(Constants.EVENT_LOCKED))
+			status = Constants.DOC_LOCKED;
 
 		ListGridField version = new ListGridField("version", I18N.message("version"), 70);
 		ListGridField lastModified = new ListGridField("lastModified", I18N.message("date"), 110);
@@ -77,6 +108,29 @@ public class StatusDashlet extends Dashlet {
 		dataSource = new DocumentsDS(status, max);
 		list.setDataSource(dataSource);
 		list.setFields(icon, title, version, lastModified);
+
+		list.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				if (event != null)
+					event.cancel();
+				Record record = event.getRecord();
+				documentService.getById(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+						new AsyncCallback<GUIDocument>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIDocument document) {
+								Menu contextMenu = prepareContextMenu(document);
+								contextMenu.showContextMenu();
+							}
+						});
+			}
+		});
 
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
@@ -120,5 +174,34 @@ public class StatusDashlet extends Dashlet {
 		super.destroy();
 		if (dataSource != null)
 			dataSource.destroy();
+	}
+
+	@Override
+	protected Menu prepareContextMenu(final GUIDocument document) {
+		Menu contextMenu = super.prepareContextMenu(document);
+		if (eventCode.equals(Constants.EVENT_CHECKEDOUT) || eventCode.equals(Constants.EVENT_LOCKED)) {
+			MenuItem unlock = new MenuItem();
+			unlock.setTitle(I18N.message("unlock"));
+			unlock.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+				public void onClick(MenuItemClickEvent event) {
+					documentService.unlock(Session.get().getSid(), new long[] { document.getId() },
+							new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									Session.get().getUser().setLockedDocs(Session.get().getUser().getLockedDocs() - 1);
+									list.removeSelectedData();
+									refresh();
+								}
+							});
+				}
+			});
+			contextMenu.addItem(unlock);
+		}
+		return contextMenu;
 	}
 }

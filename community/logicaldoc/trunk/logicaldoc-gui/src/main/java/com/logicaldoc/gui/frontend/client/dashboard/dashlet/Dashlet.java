@@ -1,10 +1,22 @@
 package com.logicaldoc.gui.frontend.client.dashboard.dashlet;
 
+import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.DragAppearance;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.layout.Portlet;
+import com.smartgwt.client.widgets.menu.Menu;
+import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
  * A small window inside the dashboard.
@@ -14,6 +26,8 @@ import com.smartgwt.client.widgets.layout.Portlet;
  */
 public class Dashlet extends Portlet {
 	private int id;
+
+	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	public Dashlet(int id) {
 		super();
@@ -77,5 +91,48 @@ public class Dashlet extends Portlet {
 	@Override
 	public String toString() {
 		return "Dashlet " + getId();
+	}
+
+	/**
+	 * Prepares the context menu.
+	 */
+	protected Menu prepareContextMenu(final GUIDocument document) {
+		Menu contextMenu = new Menu();
+
+		MenuItem download = new MenuItem();
+		download.setTitle(I18N.message("download"));
+		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+						+ document.getId());
+			}
+		});
+		download.setEnabled(document.getFolder().isDownload());
+
+		MenuItem preview = new MenuItem();
+		preview.setTitle(I18N.message("preview"));
+		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				long id = document.getId();
+				String filename = document.getFileName();
+				String version = document.getVersion();
+
+				GUIFolder folder = document.getFolder();
+				PreviewPopup iv = new PreviewPopup(id, version, filename, folder != null && folder.isDownload());
+				iv.show();
+			}
+		});
+
+		MenuItem openInFolder = new MenuItem();
+		openInFolder.setTitle(I18N.message("openinfolder"));
+		openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				DocumentsPanel.get().openInFolder(document.getFolder().getId(), document.getId());
+			}
+		});
+
+		contextMenu.setItems(preview, download, openInFolder);
+
+		return contextMenu;
 	}
 }
