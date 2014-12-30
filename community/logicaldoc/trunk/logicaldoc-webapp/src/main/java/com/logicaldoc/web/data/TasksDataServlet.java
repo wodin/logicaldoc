@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import javax.servlet.ServletException;
@@ -19,6 +20,7 @@ import com.logicaldoc.core.task.TaskManager;
 import com.logicaldoc.core.task.TaskTrigger;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.web.util.ServiceUtil;
 
 /**
@@ -38,8 +40,10 @@ public class TasksDataServlet extends HttpServlet {
 			IOException {
 		try {
 			ServiceUtil.validateSession(request);
-			String locale = request.getParameter("locale");
-
+			String localeStr = request.getParameter("locale");
+			Locale locale = LocaleUtil.toLocale(localeStr);
+			
+			
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
 
