@@ -582,7 +582,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			pathExtended = computePathExtended(folder.getId());
 
 		transaction.setPath(pathExtended);
-		transaction.setComment("");
 
 		historyDAO.store(transaction);
 

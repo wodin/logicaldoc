@@ -31,7 +31,8 @@ public enum DocumentEvent {
 	SIGNED("event.signed"),
 	EXPORTPDF("event.exportpdf"),
 	ADDED_TO_CALEVENT("event.caladd"),
-	REMOVED_FROM_CALEVENT("event.caldel");
+	REMOVED_FROM_CALEVENT("event.caldel"),
+	SUBSCRIBED("event.subscribed");
 
     private String event;
 
