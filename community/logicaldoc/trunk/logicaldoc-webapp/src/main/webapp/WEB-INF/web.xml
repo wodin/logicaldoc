@@ -283,7 +283,7 @@
     </servlet>
     <servlet>
         <servlet-name>StatChart</servlet-name>
-        <servlet-class>com.logicaldoc.web.StatChartServlet</servlet-class>
+        <servlet-class>com.logicaldoc.web.stat.StatChartServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UploadServlet</servlet-name>
