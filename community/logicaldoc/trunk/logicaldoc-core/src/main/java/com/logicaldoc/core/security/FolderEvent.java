@@ -22,7 +22,8 @@ public enum FolderEvent {
 	SUBFOLDER_MOVED("event.folder.subfolder.moved"),
 	SUBFOLDER_RESTORED("event.folder.subfolder.restored"),
 	RESTORED("event.folder.restored"),
-	EXPORTED("event.folder.exported");
+	EXPORTED("event.folder.exported"),
+	SUBSCRIBED("event.folder.subscribed");
 	
     private String event;
 

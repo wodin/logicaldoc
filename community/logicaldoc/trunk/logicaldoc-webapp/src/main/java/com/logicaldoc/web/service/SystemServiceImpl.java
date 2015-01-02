@@ -506,7 +506,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			}
 
 			// Search in the folder history
-			query.append(" union select B.ld_username, B.ld_event, B.ld_date, null, B.ld_folderid, null, B.ld_sessionid, B.ld_docid, B.ld_userid from ld_folder_history B where B.ld_tenantid = "
+			query.append(" union select B.ld_username, B.ld_event, B.ld_date, B.ld_title, B.ld_folderid, B.ld_path, B.ld_sessionid, B.ld_docid, B.ld_userid from ld_folder_history B where B.ld_tenantid = "
 					+ session.getTenantId());
 			if (userName != null && StringUtils.isNotEmpty(userName))
 				query.append(" and lower(B.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");

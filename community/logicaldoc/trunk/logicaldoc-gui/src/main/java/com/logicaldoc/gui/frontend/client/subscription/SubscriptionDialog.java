@@ -165,7 +165,7 @@ public class SubscriptionDialog extends Window {
 			setTitle(I18N.message("foldersubscription"));
 		else
 			setTitle(I18N.message("documentsubscription"));
-
+		
 		setWidth(290);
 		if (folderId != null)
 			setHeight(360);
@@ -259,7 +259,7 @@ public class SubscriptionDialog extends Window {
 
 								@Override
 								public void onSuccess(Void ret) {
-									Log.info(I18N.message("foldersubscribed"), null);
+									Log.info(I18N.message("documentsubscribed"), null);
 									Session.get().getUser()
 											.setSubscriptions(Session.get().getUser().getSubscriptions() + 1);
 								}
