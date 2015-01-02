@@ -99,6 +99,11 @@
             <include name="launcher.xml" />
             <replacetoken>VERSION</replacetoken>
         </replace>
+        <replace dir="target/" value="2006-2015">
+            <include name="launcher.xml" />
+            <replacetoken>YEAR</replacetoken>
+        </replace>        
+        
         <java classname="net.sf.launch4j.Main">
             <arg value="target/launcher.xml" />
             <classpath>
@@ -127,7 +132,11 @@
             <include name="launcher.xml" />
             <replacetoken>VERSION</replacetoken>
         </replace>
-        
+        <replace dir="target/" value="2006-2015">
+            <include name="launcher.xml" />
+            <replacetoken>YEAR</replacetoken>
+        </replace>
+                
         <java classname="net.sf.launch4j.Main">
             <arg value="target/launcher.xml" />
             <classpath>
