@@ -185,7 +185,7 @@ public class TypeManager {
 
 		addTypeInteral(documentType);
 
-		// relationship types
+		// relationship types - not really supported
 		RelationshipTypeDefinitionImpl relationshipType = new RelationshipTypeDefinitionImpl();
 		relationshipType.setBaseTypeId(BaseTypeId.CMIS_RELATIONSHIP);
 		relationshipType.setIsControllableAcl(false);
@@ -202,9 +202,7 @@ public class TypeManager {
 		relationshipType.setId(RELATIONSHIP_TYPE_ID);
 
 		addBasePropertyDefinitions(relationshipType);
-
-		// not supported - don't expose it
-		// addTypeInteral(relationshipType);
+		addTypeInteral(relationshipType);
 
 		// policy type
 		PolicyTypeDefinitionImpl policyType = new PolicyTypeDefinitionImpl();

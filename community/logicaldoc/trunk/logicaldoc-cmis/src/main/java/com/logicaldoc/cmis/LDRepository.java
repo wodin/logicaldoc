@@ -1810,7 +1810,7 @@ public class LDRepository {
 								stringValue = df.format(attribute.getDateValue());
 								break;
 							case ExtendedAttribute.TYPE_DOUBLE:
-								stringValue = attribute.getDateValue() != null ? attribute.getDoubleValue().toString()
+								stringValue = attribute.getDoubleValue() != null ? attribute.getDoubleValue().toString()
 										: null;
 								break;
 							case ExtendedAttribute.TYPE_INT:
