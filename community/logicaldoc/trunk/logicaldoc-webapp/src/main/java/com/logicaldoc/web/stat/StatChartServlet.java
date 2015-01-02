@@ -1,4 +1,4 @@
-package com.logicaldoc.web;
+package com.logicaldoc.web.stat;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.DefaultDrawingSupplier;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.slf4j.Logger;
@@ -94,6 +95,7 @@ public class StatChartServlet extends HttpServlet {
 			plot.setOutlinePaint(null);
 			plot.setLabelGenerator(null);
 			plot.setIgnoreNullValues(false);
+			plot.setDrawingSupplier(new ChartDrawingSupplier());
 
 			if (plot instanceof PiePlot) {
 				PiePlot piePlot = (PiePlot) plot;
