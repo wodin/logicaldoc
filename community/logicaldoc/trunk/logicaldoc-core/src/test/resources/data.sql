@@ -91,7 +91,7 @@ insert into ld_menu
 values     (1203,'2009-10-19 00:00:00',0,'qqqq',1201,'administration.gif',3,1,1,1);
 
 
-insert into ld_menugroup (ld_menuid, ld_groupid, ld_write) values (100,3,1);
+insert into ld_menugroup (ld_menuid, ld_groupid, ld_write) values (2000,3,1);
 
 insert into ld_menugroup (ld_menuid, ld_groupid, ld_write) values (103,2,1);
 
