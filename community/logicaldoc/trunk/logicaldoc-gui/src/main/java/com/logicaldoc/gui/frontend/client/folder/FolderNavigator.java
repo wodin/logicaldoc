@@ -59,16 +59,16 @@ import com.smartgwt.client.widgets.tree.TreeNode;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class Navigator extends TreeGrid implements FolderObserver {
+public class FolderNavigator extends TreeGrid implements FolderObserver {
 	private FolderServiceAsync service = (FolderServiceAsync) GWT.create(FolderService.class);
 
 	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private static Navigator instance = new Navigator();
+	private static FolderNavigator instance = new FolderNavigator();
 
 	private boolean firstTime = true;
 
-	private Navigator() {
+	private FolderNavigator() {
 		setWidth100();
 		setBorder("0px");
 		setBodyStyleName("normal");
@@ -89,7 +89,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 
 			@Override
 			public void onDragStart(DragStartEvent ev) {
-				if (EventHandler.getDragTarget() instanceof Navigator) {
+				if (EventHandler.getDragTarget() instanceof FolderNavigator) {
 					// Workspaces cannot be moved
 					if ("1".equals(getDragData()[0].getAttributeAsString("type"))) {
 						ev.cancel();
@@ -103,7 +103,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		addDropHandler(new DropHandler() {
 			public void onDrop(final DropEvent event) {
 				try {
-					if (EventHandler.getDragTarget() instanceof Navigator) {
+					if (EventHandler.getDragTarget() instanceof FolderNavigator) {
 						// Workspaces cannot be moved
 						if ("1".equals(getDragData()[0].getAttributeAsString("type"))) {
 							event.cancel();
@@ -283,7 +283,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 								});
 					}
 
-					Navigator.this.firstTime = false;
+					FolderNavigator.this.firstTime = false;
 				}
 			}
 		});
@@ -615,7 +615,7 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		});
 	}
 
-	public static Navigator get() {
+	public static FolderNavigator get() {
 		return instance;
 	}
 
@@ -781,13 +781,14 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			docIds[i++] = doc.getId();
 
 		if (Feature.enabled(Feature.PDF))
-			LD.askforValue("pasteasalias", "type", "", "250", ItemFactory.newAliasTypeSelector(), new ValueCallback() {
+			LD.askforValue(I18N.message("pasteasalias"), "type", "", "250", ItemFactory.newAliasTypeSelector(),
+					new ValueCallback() {
 
-				@Override
-				public void execute(String type) {
-					pasteAsAlias(folderId, docIds, type);
-				}
-			});
+						@Override
+						public void execute(String type) {
+							pasteAsAlias(folderId, docIds, type);
+						}
+					});
 		else
 			pasteAsAlias(folderId, docIds, null);
 	}

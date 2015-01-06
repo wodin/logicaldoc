@@ -65,13 +65,13 @@ public class CopyDialog extends Dialog {
 			public void onClick(ClickEvent event) {
 				LD.ask(I18N.message("copy"),
 						I18N.message("copyask", new String[] {
-								Navigator.get().getSelectedRecord().getAttributeAsString("name"),
+								FolderNavigator.get().getSelectedRecord().getAttributeAsString("name"),
 								folders.getSelectedRecord().getAttributeAsString("name") }), new BooleanCallback() {
 
 							@Override
 							public void execute(Boolean value) {
 								if (value) {
-									Navigator.get()
+									FolderNavigator.get()
 											.copyTo(Long.parseLong(folders.getSelectedRecord().getAttributeAsString(
 													"folderId")),
 													false,
@@ -91,13 +91,13 @@ public class CopyDialog extends Dialog {
 			public void onClick(ClickEvent event) {
 				LD.ask(I18N.message("copy"),
 						I18N.message("copyask", new String[] {
-								Navigator.get().getSelectedRecord().getAttributeAsString("name"),
+								FolderNavigator.get().getSelectedRecord().getAttributeAsString("name"),
 								folders.getSelectedRecord().getAttributeAsString("name") }), new BooleanCallback() {
 
 							@Override
 							public void execute(Boolean value) {
 								if (value) {
-									Navigator.get()
+									FolderNavigator.get()
 											.copyTo(Long.parseLong(folders.getSelectedRecord().getAttributeAsString(
 													"folderId")),
 													true,

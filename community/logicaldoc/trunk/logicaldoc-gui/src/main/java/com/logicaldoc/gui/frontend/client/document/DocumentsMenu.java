@@ -4,7 +4,7 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
-import com.logicaldoc.gui.frontend.client.folder.Navigator;
+import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.events.ResizedEvent;
@@ -22,7 +22,7 @@ import com.smartgwt.client.widgets.layout.events.SectionHeaderClickHandler;
  */
 public class DocumentsMenu extends SectionStack {
 
-	protected Navigator browserTree;
+	protected FolderNavigator browserTree;
 
 	protected SectionStackSection browser = null;
 
@@ -50,7 +50,7 @@ public class DocumentsMenu extends SectionStack {
 		browser = new SectionStackSection(I18N.message("browser"));
 		browser.setName("browser");
 		browser.setCanCollapse(true);
-		browserTree = Navigator.get();
+		browserTree = FolderNavigator.get();
 		browser.setItems(browserTree);
 		if (showBrowser)
 			addSection(browser);

@@ -11,7 +11,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.frontend.client.folder.Navigator;
+import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
@@ -137,7 +137,7 @@ public class BookmarksPanel extends VLayout {
 												Long.parseLong(record.getAttributeAsString("folderId")),
 												Long.parseLong(record.getAttributeAsString("targetId")));
 									else
-										Navigator.get().openFolder(
+										FolderNavigator.get().openFolder(
 												Long.parseLong(record.getAttributeAsString("targetId")));
 								}
 							}

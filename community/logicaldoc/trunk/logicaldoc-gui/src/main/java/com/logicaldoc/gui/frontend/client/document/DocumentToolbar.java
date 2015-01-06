@@ -16,7 +16,7 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.calendar.CalendarEventDialog;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
-import com.logicaldoc.gui.frontend.client.folder.Navigator;
+import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
@@ -96,7 +96,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (Session.get().getCurrentFolder() != null)
-					Navigator.get().selectFolder(Session.get().getCurrentFolder().getId());
+					FolderNavigator.get().selectFolder(Session.get().getCurrentFolder().getId());
 			}
 		});
 		refresh.setDisabled(Session.get().getCurrentFolder() == null);

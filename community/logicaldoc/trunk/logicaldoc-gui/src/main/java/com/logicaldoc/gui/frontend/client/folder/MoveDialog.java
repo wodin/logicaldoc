@@ -52,13 +52,13 @@ public class MoveDialog extends Dialog {
 			public void onClick(ClickEvent event) {
 				LD.ask(I18N.message("move"),
 						I18N.message("moveask", new String[] {
-								Navigator.get().getSelectedRecord().getAttributeAsString("name"),
+								FolderNavigator.get().getSelectedRecord().getAttributeAsString("name"),
 								folders.getSelectedRecord().getAttributeAsString("name") }), new BooleanCallback() {
 
 							@Override
 							public void execute(Boolean value) {
 								if (value) {
-									Navigator.get()
+									FolderNavigator.get()
 											.moveTo(Long.parseLong(folders.getSelectedRecord().getAttributeAsString(
 													"folderId")));
 								}

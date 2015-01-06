@@ -7,7 +7,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
-import com.logicaldoc.gui.frontend.client.folder.Navigator;
+import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.SearchPanel;
 import com.logicaldoc.gui.frontend.client.services.DropboxService;
@@ -151,7 +151,7 @@ public class DropboxDialog extends Dialog {
 								@Override
 								public void onSuccess(Integer count) {
 									ContactingServer.get().hide();
-									Navigator.get().reload();
+									FolderNavigator.get().reload();
 									SC.say(I18N.message("importeddocs2", count.toString()));
 								}
 							});

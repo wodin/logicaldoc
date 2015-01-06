@@ -93,7 +93,7 @@ public class SecurityPanel extends FolderDetailTab {
 			path.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Navigator.get().openFolder(SecurityPanel.super.folder.getSecurityRef().getId());
+					FolderNavigator.get().openFolder(SecurityPanel.super.folder.getSecurityRef().getId());
 				}
 			});
 
