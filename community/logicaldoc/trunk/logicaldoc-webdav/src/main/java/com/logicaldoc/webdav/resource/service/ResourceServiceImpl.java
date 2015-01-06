@@ -570,8 +570,8 @@ public class ResourceServiceImpl implements ResourceService {
 
 				// Check if there are some shortcuts associated to the
 				// deleting document. All the shortcuts must be deleted.
-				if (documentDAO.findShortcutIds(Long.parseLong(resource.getID())).size() > 0)
-					for (Long shortcutId : documentDAO.findShortcutIds(Long.parseLong(resource.getID()))) {
+				if (documentDAO.findAliasIds(Long.parseLong(resource.getID())).size() > 0)
+					for (Long shortcutId : documentDAO.findAliasIds(Long.parseLong(resource.getID()))) {
 						documentDAO.delete(shortcutId);
 					}
 				documentDAO.delete(Long.parseLong(resource.getID()));

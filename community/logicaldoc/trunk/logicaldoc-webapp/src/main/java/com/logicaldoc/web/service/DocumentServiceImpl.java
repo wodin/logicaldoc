@@ -363,8 +363,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					}
 					// Check if there are some shortcuts associated to the
 					// deleting document. All the shortcuts must be deleted.
-					if (dao.findShortcutIds(doc.getId()).size() > 0)
-						for (Long shortcutId : dao.findShortcutIds(doc.getId())) {
+					if (dao.findAliasIds(doc.getId()).size() > 0)
+						for (Long shortcutId : dao.findAliasIds(doc.getId())) {
 							dao.delete(shortcutId);
 						}
 					dao.delete(doc.getId(), transaction);

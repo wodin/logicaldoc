@@ -206,7 +206,7 @@ public class FulltextSearch extends Search {
 			}
 			filters.add(folderFilter.toString());
 		}
-
+		
 		/*
 		 * Launch the search
 		 */
@@ -220,13 +220,12 @@ public class FulltextSearch extends Search {
 		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
 		while (results != null && results.hasNext()) {
 			Hit hit = results.next();
-
+			
 			// Skip a document if not in the filter set
 			if (opt.getFilterIds() != null && !opt.getFilterIds().isEmpty()) {
 				if (!opt.getFilterIds().contains(hit.getId()))
 					continue;
 			}
-
 			hitsMap.put(hit.getId(), hit);
 		}
 
@@ -292,7 +291,7 @@ public class FulltextSearch extends Search {
 			richQuery.append(" and ( REF.ld_stoppublishing is null or REF.ld_stoppublishing > CURRENT_TIMESTAMP )");
 		}
 		richQuery.append("  and A.ld_docref is not null and REF.ld_deleted=0 and A.ld_docref = REF.ld_id ");
-		richQuery.append("  and A.ld_docref in ");
+		richQuery.append("  and A.ld_id in ");
 		richQuery.append(hitsIdsStr);
 
 		log.debug("Execute query\n" + richQuery.toString());
