@@ -56,6 +56,7 @@ public class FulltextSearch extends Search {
 					hit.setContent(master.getContent());
 					hit.setSummary(master.getSummary());
 				}
+				hit.setDocRefType(rs.getString(40));
 			}
 			hit.setType(rs.getString(4));
 			hit.setTitle(rs.getString(5));
@@ -248,7 +249,9 @@ public class FulltextSearch extends Search {
 		richQuery
 				.append(" A.ld_sourceauthor, A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
 		richQuery
-				.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, A.ld_templateid, C.ld_name, A.ld_tenantid ");
+				.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, ");
+		richQuery
+				.append(" FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, A.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype ");
 		richQuery.append(" from ld_document A ");
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" left outer join ld_template C on A.ld_templateid=C.ld_id ");
@@ -274,7 +277,8 @@ public class FulltextSearch extends Search {
 		richQuery
 				.append(" REF.ld_sourceauthor, REF.ld_rating, REF.ld_fileversion, A.ld_comment, REF.ld_workflowstatus, REF.ld_startpublishing, ");
 		richQuery
-				.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, REF.ld_templateid, C.ld_name, A.ld_tenantid ");
+				.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, ");
+		richQuery.append(" FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, REF.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype ");
 		richQuery.append(" from ld_document A  ");
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" join ld_document REF on A.ld_docref=REF.ld_id ");

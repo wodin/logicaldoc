@@ -46,6 +46,7 @@
 		<property name="exportName" type="string" column="ld_exportname" length="255" />
 		<property name="exportVersion" type="string" column="ld_exportversion" length="10" />
         <property name="docRef" type="long" column="ld_docref" />
+        <property name="docRefType" type="string" column="ld_docreftype" length="255"/>
         <property name="deleteUserId" type="long" column="ld_deleteuserid" />
         <property name="rating" type="int" column="ld_rating"/>
         <property name="workflowStatus" type="string" column="ld_workflowstatus" length="1000" />

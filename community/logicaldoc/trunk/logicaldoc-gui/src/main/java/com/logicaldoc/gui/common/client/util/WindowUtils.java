@@ -1,9 +1,7 @@
 package com.logicaldoc.gui.common.client.util;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 
@@ -79,19 +77,19 @@ public class WindowUtils {
 		}
 		WindowUtils.setTitle(buf);
 	}
-	
-	public static void setFavicon(GUIInfo info){
+
+	public static void setFavicon(GUIInfo info) {
 		try {
-			Element link=DOM.getElementById("favicon");
-			Element parent=DOM.getParent(link);
+			Element link = DOM.getElementById("favicon");
+			Element parent = DOM.getParent(link);
 			DOM.removeChild(parent, link);
-			
-			link=DOM.createElement("link");
+
+			link = DOM.createElement("link");
 			link.setId("favicon");
 			link.setAttribute("rel", "shortcut icon");
 			link.setAttribute("type", "image/png");
 			link.setAttribute("href", info.getFaviconSrc());
-			
+
 			DOM.appendChild(parent, link);
 		} catch (Throwable t) {
 
@@ -101,20 +99,20 @@ public class WindowUtils {
 	public static native void openUrl(String url)/*-{
 		$wnd.location = url;
 	}-*/;
-	
+
 	public static native void openUrl(String url, String window, String specs)/*-{
-	    $wnd.open(url, window, specs); 
+		$wnd.open(url, window, specs);
 	}-*/;
-	
+
 	public static native void focus()/*-{
 		$wnd.focus();
 	}-*/;
-	
+
 	public static native String left()/*-{
-	 return $wnd.screenX;
+		return $wnd.screenX;
 	}-*/;
-	
+
 	public static native String top()/*-{
-	 return $wnd.screenY;
+		return $wnd.screenY;
 	}-*/;
 }

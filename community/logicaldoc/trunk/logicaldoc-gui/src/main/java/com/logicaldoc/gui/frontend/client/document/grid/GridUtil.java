@@ -37,6 +37,10 @@ public class GridUtil {
 		if (record != null) {
 			document = new GUIDocument();
 			document.setId(Long.parseLong(record.getAttribute("id")));
+			if(record.getAttribute("docref")!=null){
+				document.setDocRef(Long.parseLong(record.getAttribute("docref")));
+				document.setDocRefType(record.getAttribute("docrefType"));
+			}
 			document.setExtResId(record.getAttributeAsString("extResId"));
 			document.setTitle(record.getAttribute("title"));
 			document.setType(record.getAttribute("type"));
@@ -51,8 +55,10 @@ public class GridUtil {
 			if (record.getAttribute("lockUserId") != null)
 				document.setLockUserId(Long.parseLong(record.getAttribute("lockUserId")));
 
-			if (record.getAttribute("aliasId") != null)
-				document.setDocRef(Long.parseLong(record.getAttribute("aliasId")));
+			if (record.getAttribute("docref") != null){
+				document.setDocRef(Long.parseLong(record.getAttribute("docref")));
+				document.setDocRefType(record.getAttribute("docrefType"));
+			}
 			if (record.getAttributeAsString("status") != null)
 				document.setStatus(Integer.parseInt(record.getAttributeAsString("status")));
 			document.setIcon(record.getAttribute("icon"));
@@ -77,7 +83,8 @@ public class GridUtil {
 	static ListGridRecord fromDocument(GUIDocument doc) {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute("id", doc.getId());
-		record.setAttribute("aliasId", doc.getDocRef());
+		record.setAttribute("docref", doc.getDocRef());
+		record.setAttribute("docrefType", doc.getDocRefType());
 		record.setAttribute("title", doc.getTitle());
 		record.setAttribute("size", doc.getFileSize());
 		record.setAttribute("icon", doc.getIcon());
@@ -106,7 +113,6 @@ public class GridUtil {
 		record.setAttribute("lockUserId", doc.getLockUserId());
 		record.setAttribute("folderId", doc.getFolder().getId());
 		record.setAttribute("folder", doc.getFolder().getName());
-		record.setAttribute("docRef", doc.getDocRef());
 		record.setAttribute("source", doc.getSource());
 		record.setAttribute("sourceId", doc.getSourceId());
 		record.setAttribute("recipient", doc.getRecipient());

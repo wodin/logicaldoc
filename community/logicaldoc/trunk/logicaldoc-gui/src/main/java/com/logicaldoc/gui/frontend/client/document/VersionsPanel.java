@@ -96,10 +96,12 @@ public class VersionsPanel extends DocumentDetailTab {
 	}
 
 	protected void onDownload(final GUIDocument document, ListGridRecord record) {
-		if (document.getFolder().isDownload())
+		if (document.getFolder().isDownload()) {
 			Window.open(
-					GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + document.getId()
-							+ "&versionId=" + record.getAttribute("id") + "&open=true", "_blank", "");
+					GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+							+ (document.getDocRef() != null ? document.getDocRef() : document.getId()) + "&versionId="
+							+ record.getAttribute("id"), "_blank", "");
+		}
 	}
 
 	protected void onPreview(final GUIDocument document, ListGridRecord record) {

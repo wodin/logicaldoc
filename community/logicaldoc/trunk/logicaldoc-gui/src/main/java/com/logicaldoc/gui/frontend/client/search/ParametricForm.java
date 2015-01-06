@@ -172,9 +172,9 @@ public class ParametricForm extends VLayout {
 				}
 			});
 
-			form.setItems(folder, casesensitive, aliases, subfolders, template, searchinhits, match);
+			form.setItems(folder, subfolders, casesensitive, aliases, template, searchinhits, match);
 		} else {
-			form.setItems(folder, casesensitive, aliases, subfolders, searchinhits, match);
+			form.setItems(folder, subfolders, casesensitive, aliases, searchinhits, match);
 		}
 
 		addMember(form);

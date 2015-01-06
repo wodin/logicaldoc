@@ -20,7 +20,7 @@ public interface FolderServiceAsync {
 
 	void paste(String sid, long[] docIds, long folderId, String action, AsyncCallback<Void> callback);
 
-	void pasteAsAlias(String sid, long[] docIds, long folderId, AsyncCallback<Void> callback);
+	void pasteAsAlias(String sid, long[] docIds, long folderId, String type, AsyncCallback<Void> callback);
 
 	void loadTemplates(String sid, AsyncCallback<GUIValuePair[]> callback);
 

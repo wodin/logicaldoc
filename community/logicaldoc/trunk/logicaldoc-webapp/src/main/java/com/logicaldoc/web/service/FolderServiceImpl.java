@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -245,7 +246,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 			if (computePath) {
 				String pathExtended = dao.computePathExtended(folderId);
-				
+
 				StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
 				int elements = st.countTokens();
 				GUIFolder[] path = new GUIFolder[elements];
@@ -673,7 +674,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void pasteAsAlias(String sid, long[] docIds, long folderId) throws ServerException {
+	public void pasteAsAlias(String sid, long[] docIds, long folderId, String type) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
@@ -690,9 +691,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				transaction.setComment("");
 				transaction.setUser(ServiceUtil.getSessionUser(sid));
 
-				if (doc.getFolder().getId() != selectedFolderFolder.getId()) {
-					docManager.createShortcut(doc, selectedFolderFolder, transaction);
-				}
+				if (doc.getFolder().getId() != selectedFolderFolder.getId())
+					docManager.createAlias(doc, selectedFolderFolder, StringUtils.isNotEmpty(type) ? type : null,
+							transaction);
 			}
 		} catch (AccessControlException t) {
 			ServiceUtil.throwServerException(session, log, t);

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.hsqldb.lib.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +58,6 @@ public class DownloadServlet extends HttpServlet {
 		UserSession session = null;
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
 				AuthenticationChain.class);
-		String sid = null;
 
 		try {
 			session = ServiceUtil.validateSession(request);
@@ -81,14 +81,14 @@ public class DownloadServlet extends HttpServlet {
 				}
 
 				// No active session found, new login required
-				if (sid == null) {
+				if (session == null) {
 					boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(),
 							credentials.getPassword());
 					if (isLoggedOn == false) {
 						AuthenticationUtil.sendAuthorisationCommand(response);
 						return;
 					} else {
-						sid = AuthenticationChain.getSessionId();
+						String sid = AuthenticationChain.getSessionId();
 						session = SessionManager.getInstance().get(sid);
 					}
 				}
@@ -110,16 +110,16 @@ public class DownloadServlet extends HttpServlet {
 
 		try {
 			if (request.getParameter("pluginId") != null)
-				ServletIOUtil.downloadPluginResource(request, response, sid, request.getParameter("pluginId"),
-						request.getParameter("resourcePath"), request.getParameter("fileName"));
+				ServletIOUtil.downloadPluginResource(request, response, session.getId(),
+						request.getParameter("pluginId"), request.getParameter("resourcePath"),
+						request.getParameter("fileName"));
 			else
-				downloadDocument(request, response, sid, user);
+				downloadDocument(request, response, session.getId(), user);
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
 		} finally {
-			if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null) {
-				SessionManager.getInstance().kill(sid);
-			}
+			if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null)
+				SessionManager.getInstance().kill(session.getId());
 		}
 	}
 
@@ -144,6 +144,19 @@ public class DownloadServlet extends HttpServlet {
 
 			if (!folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
 				throw new IOException("You don't have the DOWNLOAD permission");
+
+			/*
+			 * In case of alias to PDF, we have to redirect to PDF conversion
+			 */
+			if (doc.getDocRef() != null && StringUtil.isEmpty(downloadText) && "pdf".equals(doc.getDocRefType())) {
+				String redirectUrl = "/convertpdf?sid=" + sid + "&docId=" + doc.getDocRef();
+				if (versionId != null)
+					redirectUrl += "&versionId=" + versionId;
+				if (fileVersion != null)
+					redirectUrl += "&fileVersion=" + fileVersion;
+				response.sendRedirect(redirectUrl);
+				return;
+			}
 
 			/*
 			 * In case of alias we have to work on the real document

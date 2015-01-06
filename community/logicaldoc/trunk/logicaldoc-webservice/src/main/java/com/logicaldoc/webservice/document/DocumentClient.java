@@ -141,8 +141,8 @@ public class DocumentClient extends SoapClient<DocumentService> implements Docum
 	}
 
 	@Override
-	public WSDocument createAlias(String sid, long docId, long folderId) throws Exception {
-		return client.createAlias(sid, docId, folderId);
+	public WSDocument createAlias(String sid, long docId, long folderId, String type) throws Exception {
+		return client.createAlias(sid, docId, folderId, type);
 	}
 
 	@Override

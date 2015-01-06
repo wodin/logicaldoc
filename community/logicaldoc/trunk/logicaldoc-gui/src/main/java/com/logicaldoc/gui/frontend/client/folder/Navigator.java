@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -686,10 +687,10 @@ public class Navigator extends TreeGrid implements FolderObserver {
 			selectedNode.setTitle(folder.getName());
 			selectedNode.setName(folder.getName());
 			getTree().reloadChildren(selectedNode);
-			
-			if(positionChanged){
+
+			if (positionChanged) {
 				TreeNode parentNode = getTree().find("folderId", Long.toString(folder.getParentId()));
-				if(parentNode!=null)
+				if (parentNode != null)
 					getTree().reloadChildren(parentNode);
 				else
 					getTree().reloadChildren(getTree().getRoot());
@@ -776,11 +777,23 @@ public class Navigator extends TreeGrid implements FolderObserver {
 		final long folderId = Long.parseLong(selectedNode.getAttribute("folderId"));
 		final long[] docIds = new long[Clipboard.getInstance().size()];
 		int i = 0;
-		for (GUIDocument doc : Clipboard.getInstance()) {
+		for (GUIDocument doc : Clipboard.getInstance())
 			docIds[i++] = doc.getId();
-		}
 
-		service.pasteAsAlias(Session.get().getSid(), docIds, folderId, new AsyncCallback<Void>() {
+		if (Feature.enabled(Feature.PDF))
+			LD.askforValue("pasteasalias", "type", "", "250", ItemFactory.newAliasTypeSelector(), new ValueCallback() {
+
+				@Override
+				public void execute(String type) {
+					pasteAsAlias(folderId, docIds, type);
+				}
+			});
+		else
+			pasteAsAlias(folderId, docIds, null);
+	}
+
+	private void pasteAsAlias(final long folderId, final long[] docIds, String type) {
+		service.pasteAsAlias(Session.get().getSid(), docIds, folderId, type, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

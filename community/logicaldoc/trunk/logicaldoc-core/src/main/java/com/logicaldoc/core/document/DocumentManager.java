@@ -190,7 +190,8 @@ public interface DocumentManager {
 	public Document copyToFolder(Document doc, Folder folder, History transaction) throws Exception;
 
 	/**
-	 * Create a shortcut associated to the given doc to the specified folder.
+	 * Create an alias(shortcut) associated to the given doc to the specified
+	 * folder.
 	 * 
 	 * @param doc The document for which will be created the shortcut
 	 * @param folder The target folder
@@ -198,7 +199,7 @@ public interface DocumentManager {
 	 * @return The created document
 	 * @throws Exception
 	 */
-	public Document createShortcut(Document doc, Folder folder, History transaction) throws Exception;
+	public Document createAlias(Document doc, Folder folder, String type, History transaction) throws Exception;
 
 	/**
 	 * Deletes a specific version.

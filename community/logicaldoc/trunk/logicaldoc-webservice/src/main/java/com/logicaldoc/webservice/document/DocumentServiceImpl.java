@@ -621,7 +621,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	}
 
 	@Override
-	public WSDocument createAlias(String sid, long docId, long folderId) throws Exception {
+	public WSDocument createAlias(String sid, long docId, long folderId, String type) throws Exception {
 		User user = validateSession(sid);
 
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
@@ -653,7 +653,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
-		Document doc = documentManager.createShortcut(originalDoc, folder, transaction);
+		Document doc = documentManager.createAlias(originalDoc, folder, type, transaction);
 
 		checkPublished(user, doc);
 

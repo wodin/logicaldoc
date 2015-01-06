@@ -141,12 +141,8 @@ public class ContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 				final long[] ids = new long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					if (selection[i].getDocRef() != null)
-						ids[i] = selection[i].getDocRef();
-					else
-						ids[i] = selection[i].getId();
-				}
+				for (int i = 0; i < selection.length; i++)
+					ids[i] = selection[i].getId();
 
 				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
@@ -576,7 +572,7 @@ public class ContextMenu extends Menu {
 		boolean enableImmutable = false;
 		boolean enableDelete = true;
 		boolean enableSign = selection != null && selection.length > 0;
-		
+
 		if (selection != null && selection.length == 1) {
 			GUIDocument record = selection[0];
 			if (record.getStatus() == Constants.DOC_UNLOCKED && record.getImmutable() == 0 && folder.isWrite()) {
@@ -588,8 +584,8 @@ public class ContextMenu extends Menu {
 						|| Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
 					enableUnlock = true;
 			}
-			
-			enableSign=enableSign && record.getSigned()==0;
+
+			enableSign = enableSign && record.getSigned() == 0;
 		}
 
 		for (GUIDocument record : selection)
