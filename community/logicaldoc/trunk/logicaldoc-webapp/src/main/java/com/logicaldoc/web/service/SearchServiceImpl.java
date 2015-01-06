@@ -112,10 +112,13 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 					extList.add(ext);
 				}
 				h.setAttributes(extList.toArray(new GUIExtendedAttribute[0]));
-				h.setIcon(FilenameUtils.getBaseName(hit.getIcon()));
-				
+
 				if ("folder".equals(hit.getType()))
 					h.setIcon("folder_closed");
+				else if ("pdf".equals(hit.getDocRefType()))
+					h.setIcon("pdf");
+				else
+					h.setIcon(FilenameUtils.getBaseName(hit.getIcon()));
 				guiResults.add(h);
 			}
 			result.setHits(guiResults.toArray(new GUIDocument[0]));

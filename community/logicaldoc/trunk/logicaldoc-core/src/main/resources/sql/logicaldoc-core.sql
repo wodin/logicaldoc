@@ -11,8 +11,9 @@ create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not n
                           ld_object varchar(1000), ld_coverage varchar(255), ld_language varchar(10), ld_filename varchar(255), 
                           ld_filesize bigint, ld_indexed int not null, ld_barcoded int not null, ld_signed int not null, ld_digest varchar(255),
                           ld_recipient varchar(1000), ld_folderid bigint, ld_templateid bigint, ld_exportstatus int not null, ld_exportid bigint,
-                          ld_exportname varchar(255), ld_exportversion varchar(10), ld_docref bigint, ld_deleteuserid bigint, ld_rating int,
-                          ld_comment varchar(1000), ld_workflowstatus varchar(1000), ld_published int not null, ld_startpublishing timestamp,
+                          ld_exportname varchar(255), ld_exportversion varchar(10), ld_docref bigint, ld_docreftype varchar(255),
+                          ld_deleteuserid bigint, ld_rating int, ld_comment varchar(1000), ld_workflowstatus varchar(1000), 
+                          ld_published int not null, ld_startpublishing timestamp,
                           ld_stoppublishing timestamp null, ld_transactionid varchar(255), ld_extresid varchar(255), ld_tgs varchar(1000), primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_docid, ld_name));
 create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null, 

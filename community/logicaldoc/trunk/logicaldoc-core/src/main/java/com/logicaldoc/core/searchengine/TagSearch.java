@@ -50,7 +50,8 @@ public class TagSearch extends Search {
 		query.append(" A.ld_date, A.ld_publisher, A.ld_creation, A.ld_creator, A.ld_filesize, A.ld_immutable, ");
 		query.append(" A.ld_indexed, A.ld_lockuserid, A.ld_filename, A.ld_status, A.ld_signed, A.ld_type, A.ld_sourcedate, ");
 		query.append(" A.ld_sourceauthor, A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
-		query.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, B.ld_name, A.ld_folderid, A.ld_templateid, C.ld_name, A.ld_tenantid ");
+		query.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, ");
+		query.append(" B.ld_name, A.ld_folderid, A.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype ");
 		query.append(" from ld_document A ");
 		query.append(" join ld_folder B on A.ld_folderid=B.ld_id ");
 		query.append(" left outer join ld_template C on A.ld_templateid=C.ld_id ");
@@ -58,11 +59,12 @@ public class TagSearch extends Search {
 		appendWhereClause(false, query);
 
 		// Append all shortcuts
-		query.append(" UNION select REF.ld_id, REF.ld_customid, A.ld_docref, REF.ld_type, REF.ld_title, REF.ld_version, REF.ld_lastmodified, ");
+		query.append(" UNION select A.ld_id, REF.ld_customid, A.ld_docref, REF.ld_type, REF.ld_title, REF.ld_version, REF.ld_lastmodified, ");
 		query.append(" REF.ld_date, REF.ld_publisher, REF.ld_creation, REF.ld_creator, REF.ld_filesize, REF.ld_immutable, ");
 		query.append(" REF.ld_indexed, REF.ld_lockuserid, REF.ld_filename, REF.ld_status, REF.ld_signed, REF.ld_type, REF.ld_sourcedate, ");
 		query.append(" REF.ld_sourceauthor, REF.ld_rating, REF.ld_fileversion, REF.ld_comment, REF.ld_workflowstatus, A.ld_startpublishing, ");
-		query.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, B.ld_name, A.ld_folderid, REF.ld_templateid, C.ld_name, A.ld_tenantid ");
+		query.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, ");
+		query.append(" B.ld_name, A.ld_folderid, REF.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype ");
 		query.append(" from ld_document A ");
 		query.append(" join ld_folder B on A.ld_folderid=B.ld_id ");
 		query.append(" join ld_document REF on A.ld_docref=REF.ld_id ");
@@ -79,19 +81,19 @@ public class TagSearch extends Search {
 	 * This method appends the where clause considering or not the shortcut on
 	 * the search.
 	 * 
-	 * @param searchShortcut If true, also the shortcut must be considered in
-	 *        the search
+	 * @param aliases If true, also the shortcut must be considered in the
+	 *        search
 	 * @param query
 	 */
-	private void appendWhereClause(boolean searchShortcut, StringBuffer query) {
+	private void appendWhereClause(boolean aliases, StringBuffer query) {
 		long tenantId = Tenant.DEFAULT_ID;
 		if (options.getTenantId() != null)
 			tenantId = options.getTenantId().longValue();
 		else if (searchUser != null)
 			tenantId = searchUser.getTenantId();
 
-		query.append(" where A.ld_deleted=0 and A.ld_folderid=B.ld_id ");
-		query.append(" and A.ld_tenantid = " + tenantId);
+		query.append(" where A.ld_deleted=0 and A.ld_folderid=B.ld_id and A.ld_tenantid = ");
+		query.append(tenantId);
 
 		// Ids string to be used in the query
 		String ids = null;
@@ -105,12 +107,14 @@ public class TagSearch extends Search {
 			query.append(ids);
 		}
 
-		if (searchShortcut)
-			query.append(" and A.ld_docref is not null and REF.ld_deleted=0 and A.ld_docref = REF.ld_id ");
+		/*
+		 * Now get the IDs of the documents tagged with searched tag and use
+		 * them as filter
+		 */
+		if (aliases)
+			query.append(" and A.ld_docref is not null and REF.ld_deleted=0 and A.ld_docref = REF.ld_id and A.ld_docref in ");
 		else
-			query.append(" and A.ld_docref is null ");
-
-		query.append(" and A.ld_id in ");
+			query.append(" and A.ld_docref is null and A.ld_id in ");
 		DocumentDAO docDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		List<Long> precoll = docDAO.findDocIdByUserIdAndTag(options.getUserId(), options.getExpression());
 		String buf = precoll.toString().replace("[", "(").replace("]", ")");
@@ -131,6 +135,7 @@ public class TagSearch extends Search {
 			hit.setId(rs.getLong(1));
 			hit.setCustomId(rs.getString(2));
 			hit.setDocRef(rs.getLong(3));
+			hit.setDocRefType(rs.getString(39));
 			hit.setType(rs.getString(4));
 			hit.setTitle(rs.getString(5));
 			hit.setVersion(rs.getString(6));

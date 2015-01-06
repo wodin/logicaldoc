@@ -110,13 +110,7 @@ public interface FolderService extends RemoteService {
 	 */
 	public void paste(String sid, long[] docIds, long folderId, String action) throws ServerException;
 
-	/**
-	 * Pastes documents alias into the target folder.
-	 * 
-	 * @param docIds The documents alias identifiers.
-	 * @param folderId The target folder identifier.
-	 */
-	public void pasteAsAlias(String sid, long[] docIds, long folderId) throws ServerException;
+	void pasteAsAlias(String sid, long[] docIds, long folderId, String type) throws ServerException;
 
 	/**
 	 * Loads the folders templates

@@ -46,6 +46,8 @@ public class DocumentsDS extends DataSource {
 		DataSourceTextField version = new DataSourceTextField("version");
 		DataSourceTextField docref = new DataSourceTextField("docref");
 		docref.setHidden(true);
+		DataSourceTextField docrefType = new DataSourceTextField("docrefType");
+		docrefType.setHidden(true);
 		DataSourceTextField publisher = new DataSourceTextField("publisher");
 		DataSourceTextField creator = new DataSourceTextField("creator");
 		DataSourceFloatField size = new DataSourceFloatField("size");
@@ -63,8 +65,6 @@ public class DocumentsDS extends DataSource {
 		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
 		DataSourceIntegerField status = new DataSourceIntegerField("status");
 		lockUserId.setHidden(true);
-		DataSourceTextField aliasId = new DataSourceTextField("aliasId");
-		aliasId.setHidden(true);
 		DataSourceDateTimeField sourceDate = new DataSourceDateTimeField("sourceDate");
 		sourceDate.setHidden(true);
 		DataSourceTextField sourceAuthor = new DataSourceTextField("sourceAuthor");
@@ -91,6 +91,7 @@ public class DocumentsDS extends DataSource {
 		fields.add(publisher);
 		fields.add(version);
 		fields.add(docref);
+		fields.add(docrefType);
 		fields.add(lastModified);
 		fields.add(published);
 		fields.add(created);

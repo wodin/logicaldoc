@@ -618,7 +618,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 				if (document.getDocRef() != null) {
 					document = documentDAO.findById(document.getDocRef());
-					documentManager.createShortcut(document, folder, transaction);
+					documentManager.createAlias(document, folder, document.getDocRefType(), transaction);
 				} else {
 					documentManager.copyToFolder(document, folder, transaction);
 				}

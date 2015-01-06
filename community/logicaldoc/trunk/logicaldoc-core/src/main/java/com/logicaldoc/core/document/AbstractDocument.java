@@ -141,6 +141,8 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private Long exportId = null;
 
 	private Long docRef;
+	
+	private String docRefType;
 
 	private Long deleteUserId;
 
@@ -748,5 +750,13 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public void setTemplateName(String templateName) {
 		this.templateName = templateName;
+	}
+
+	public String getDocRefType() {
+		return docRefType;
+	}
+
+	public void setDocRefType(String docRefType) {
+		this.docRefType = docRefType;
 	}
 }

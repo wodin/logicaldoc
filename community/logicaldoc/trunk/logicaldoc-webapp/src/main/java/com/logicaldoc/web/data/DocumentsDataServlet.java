@@ -208,7 +208,7 @@ public class DocumentsDataServlet extends HttpServlet {
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
 								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
-								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, A.source, A.sourceId, A.recipient, A.object, A.coverage, B.name "
+								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, A.source, A.sourceId, A.recipient, A.object, A.coverage, B.name, A.docRefType "
 								+ " from Document as A left outer join A.template as B ");
 				query.append(" where A.deleted = 0 ");
 				if (folderId != null)
@@ -235,14 +235,17 @@ public class DocumentsDataServlet extends HttpServlet {
 					Document doc = new Document();
 					doc.setId((Long) cols[0]);
 					doc.setDocRef((Long) cols[2]);
+					doc.setDocRefType((String) cols[35]);
 
 					// Replace with the real document if this is an alias
 					if (doc.getDocRef() != null && doc.getDocRef().longValue() != 0L) {
 						long aliasId = doc.getId();
 						long aliasDocRef = doc.getDocRef();
+						String aliasDocRefType = doc.getDocRefType();
 						doc = dao.findById(aliasDocRef);
 						doc.setId(aliasId);
 						doc.setDocRef(aliasDocRef);
+						doc.setDocRefType(aliasDocRefType);
 					} else {
 						doc.setStartPublishing((Date) cols[25]);
 						doc.setStopPublishing((Date) cols[26]);
@@ -290,9 +293,17 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<id>" + doc.getId() + "</id>");
 					writer.print("<customId><![CDATA[" + (doc.getCustomId() != null ? doc.getCustomId() : "")
 							+ "]]></customId>");
-					writer.print("<docref>" + doc.getDocRef() != null ? doc.getDocRef() : "" + "</docref>");
-					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType()))
-							+ "</icon>");
+					if (doc.getDocRef() != null) {
+						writer.print("<docref>" + doc.getDocRef() + "</docref>");
+						if (doc.getDocRefType() != null)
+							writer.print("<docrefType>" + doc.getDocRefType() + "</docrefType>");
+					}
+
+					if ("pdf".equals(doc.getDocRefType()))
+						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon("pdf")) + "</icon>");
+					else
+						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType()))
+								+ "</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
 					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
@@ -326,9 +337,6 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<signed>blank</signed>");
 					else if (doc.getSigned() == 1)
 						writer.print("<signed>rosette</signed>");
-
-					if (doc.getDocRef() != null)
-						writer.print("<aliasId>" + doc.getDocRef() + "</aliasId>");
 
 					writer.print("<sourceDate>" + (doc.getSourceDate() != null ? df.format(doc.getSourceDate()) : "")
 							+ "</sourceDate>");

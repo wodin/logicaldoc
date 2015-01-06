@@ -187,7 +187,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 	}
 
 	@Test
-	public void testCreateShortcut() throws Exception {
+	public void testCreateAlias() throws Exception {
 		User user = userDao.findByUserName("admin");
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
@@ -201,7 +201,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		transaction.setComment("pippo_reason");
 		Folder newFolder = folderDao.findById(6);
 
-		Document newDoc = documentManager.createShortcut(doc, newFolder, transaction);
+		Document newDoc = documentManager.createAlias(doc, newFolder, null, transaction);
 
 		Assert.assertNotSame(doc.getId(), newDoc.getId());
 		Assert.assertEquals(newFolder, newDoc.getFolder());

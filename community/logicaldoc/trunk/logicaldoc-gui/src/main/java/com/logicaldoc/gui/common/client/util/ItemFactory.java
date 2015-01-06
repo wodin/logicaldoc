@@ -887,25 +887,22 @@ public class ItemFactory {
 		return select;
 	}
 
-	public static SelectItem newArchiveTypeSelector() {
+	public static SelectItem newAliasTypeSelector() {
 		SelectItem item = new SelectItem();
-		item.setName("archivetype");
+		item.setName("aliastype");
 		item.setTitle(I18N.message("type"));
 		item.setWrapTitle(false);
-		item.setDefaultValue(Integer.toString(GUIArchive.TYPE_DEFAULT));
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put(Integer.toString(GUIArchive.TYPE_DEFAULT), I18N.message("default"));
-		map.put(Integer.toString(GUIArchive.TYPE_STORAGE), I18N.message("paperdematerialization"));
+		map.put("", I18N.message("document"));
+		map.put("pdf", I18N.message("pdfconversion"));
 
 		item.setValueMap(map);
 
-		if (!Feature.enabled(Feature.ARCHIVES))
-			item.setDisabled(true);
 		item.setHintStyle("hint");
 		return item;
 	}
-
+	
 	public static SelectItem newArchiveSelector(int mode, Integer status) {
 		SelectItem item = new SelectItem("archive");
 		item.setTitle("");

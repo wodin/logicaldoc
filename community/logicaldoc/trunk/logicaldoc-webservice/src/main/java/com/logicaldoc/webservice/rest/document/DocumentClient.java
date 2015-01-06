@@ -189,7 +189,7 @@ public class DocumentClient extends RestClient implements DocumentService {
 	}
 
 	@Override
-	public WSDocument createAlias(String sid, long docId, long folderId) throws Exception {
+	public WSDocument createAlias(String sid, long docId, long folderId, String type) throws Exception {
 		// TODO Auto-generated method stub
 		return null;
 	}

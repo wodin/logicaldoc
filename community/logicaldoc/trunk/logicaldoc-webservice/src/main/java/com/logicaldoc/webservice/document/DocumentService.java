@@ -317,12 +317,13 @@ public interface DocumentService {
 	 * @param docId The original document id
 	 * @param folderId Identifier of the folder in which will be stored the
 	 *        alias.
+	 * @param type Type of the alias.
 	 * @return The value object containing the document's metadata.
 	 * @throws Exception
 	 */
 	@WebResult(name = "document")
 	public WSDocument createAlias(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WebParam(name = "folderId") long folderId) throws Exception;
+			@WebParam(name = "folderId") long folderId, @WebParam(name = "type") String type) throws Exception;
 
 	/**
 	 * Creates a new link between two documents.

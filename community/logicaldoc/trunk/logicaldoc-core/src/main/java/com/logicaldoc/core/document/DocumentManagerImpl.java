@@ -698,7 +698,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		documentDAO.initialize(doc);
 
 		if (doc.getDocRef() != null) {
-			return createShortcut(doc, folder, transaction);
+			return createAlias(doc, folder, doc.getDocRefType(), transaction);
 		}
 
 		String resource = storer.getResourceName(doc, null, null);
@@ -810,7 +810,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public Document createShortcut(Document doc, Folder folder, History transaction) throws Exception {
+	public Document createAlias(Document doc, Folder folder, String aliasType, History transaction) throws Exception {
 		assert (doc != null);
 		assert (folder != null);
 		assert (transaction != null);
@@ -820,10 +820,10 @@ public class DocumentManagerImpl implements DocumentManager {
 			// initialize the document
 			documentDAO.initialize(doc);
 
-			Document shortcut = new Document();
-			shortcut.setFolder(folder);
-			shortcut.setFileName(doc.getFileName());
-			shortcut.setDate(new Date());
+			Document alias = new Document();
+			alias.setFolder(folder);
+			alias.setFileName(doc.getFileName());
+			alias.setDate(new Date());
 
 			String fallbackTitle = doc.getFileName();
 			String type = "unknown";
@@ -834,47 +834,48 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			if (StringUtils.isNotEmpty(doc.getTitle())) {
-				shortcut.setTitle(doc.getTitle());
+				alias.setTitle(doc.getTitle());
 			} else {
-				shortcut.setTitle(fallbackTitle);
+				alias.setTitle(fallbackTitle);
 			}
 
-			setUniqueTitleAndFilename(shortcut);
+			setUniqueTitleAndFilename(alias);
 
 			if (doc.getSourceDate() != null)
-				shortcut.setSourceDate(doc.getSourceDate());
+				alias.setSourceDate(doc.getSourceDate());
 			else
-				shortcut.setSourceDate(shortcut.getDate());
-			shortcut.setPublisher(transaction.getUserName());
-			shortcut.setPublisherId(transaction.getUserId());
-			shortcut.setCreator(transaction.getUserName());
-			shortcut.setCreatorId(transaction.getUserId());
-			shortcut.setStatus(Document.DOC_UNLOCKED);
-			shortcut.setType(type);
-			shortcut.setSource(doc.getSource());
-			shortcut.setSourceAuthor(doc.getSourceAuthor());
-			shortcut.setSourceType(doc.getSourceType());
-			shortcut.setCoverage(doc.getCoverage());
-			shortcut.setLocale(doc.getLocale());
-			shortcut.setObject(doc.getObject());
-			shortcut.setSourceId(doc.getSourceId());
-			shortcut.setRecipient(doc.getRecipient());
+				alias.setSourceDate(alias.getDate());
+			alias.setPublisher(transaction.getUserName());
+			alias.setPublisherId(transaction.getUserId());
+			alias.setCreator(transaction.getUserName());
+			alias.setCreatorId(transaction.getUserId());
+			alias.setStatus(Document.DOC_UNLOCKED);
+			alias.setType(type);
+			alias.setSource(doc.getSource());
+			alias.setSourceAuthor(doc.getSourceAuthor());
+			alias.setSourceType(doc.getSourceType());
+			alias.setCoverage(doc.getCoverage());
+			alias.setLocale(doc.getLocale());
+			alias.setObject(doc.getObject());
+			alias.setSourceId(doc.getSourceId());
+			alias.setRecipient(doc.getRecipient());
 
 			// Set the Doc Reference
 			if (doc.getDocRef() == null) {
 				// Set the docref as the id of the original document
-				shortcut.setDocRef(doc.getId());
+				alias.setDocRef(doc.getId());
 			} else {
 				// The doc is a shortcut, so we still copy a shortcut
-				shortcut.setDocRef(doc.getDocRef());
+				alias.setDocRef(doc.getDocRef());
 			}
+			alias.setDocRefType(aliasType);
 
 			// Modify document history entry
 			transaction.setEvent(DocumentEvent.SHORTCUT_STORED.toString());
 
-			documentDAO.store(shortcut, transaction);
+			documentDAO.store(alias, transaction);
 
-			return shortcut;
+			return alias;
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw e;
