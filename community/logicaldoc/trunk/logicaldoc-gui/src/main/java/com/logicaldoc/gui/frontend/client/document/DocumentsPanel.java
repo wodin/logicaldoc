@@ -14,7 +14,7 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.folder.FolderDetailsPanel;
-import com.logicaldoc.gui.frontend.client.folder.Navigator;
+import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -294,7 +294,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 			selectDocument(hiliteDocId, false);
 		else {
 			detailPanel.destroy();
-			detailPanel = new FolderDetailsPanel(folder, Navigator.get());
+			detailPanel = new FolderDetailsPanel(folder, FolderNavigator.get());
 			details.addMember(detailPanel);
 			details.redraw();
 		}

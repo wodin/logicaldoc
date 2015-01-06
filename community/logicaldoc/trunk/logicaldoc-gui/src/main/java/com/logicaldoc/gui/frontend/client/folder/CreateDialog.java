@@ -83,12 +83,12 @@ public class CreateDialog extends Dialog {
 									newNode.setAttribute("type", Long.toString(newFolder.getType()));
 
 									if (newFolder.getType() == 0) {
-										TreeNode selectedNode = (TreeNode) Navigator.get().getSelectedRecord();
-										if (!Navigator.get().getTree().isOpen(selectedNode))
-											Navigator.get().getTree().openFolder(selectedNode);
-										Navigator.get().getTree().add(newNode, selectedNode);
+										TreeNode selectedNode = (TreeNode) FolderNavigator.get().getSelectedRecord();
+										if (!FolderNavigator.get().getTree().isOpen(selectedNode))
+											FolderNavigator.get().getTree().openFolder(selectedNode);
+										FolderNavigator.get().getTree().add(newNode, selectedNode);
 									} else {
-										Navigator.get().getTree().add(newNode, Navigator.get().getTree().getRoot());
+										FolderNavigator.get().getTree().add(newNode, FolderNavigator.get().getTree().getRoot());
 									}
 
 									destroy();

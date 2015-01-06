@@ -22,7 +22,7 @@ import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.annnotation.AnnotationsDialog;
-import com.logicaldoc.gui.frontend.client.folder.Navigator;
+import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
@@ -241,7 +241,7 @@ public class Frontend implements EntryPoint {
 	 * Triggers the load of the last uploaded files
 	 */
 	public void triggerReload() {
-		Navigator.get().reload();
+		FolderNavigator.get().reload();
 	}
 
 	public String getCurrentFolderId() {

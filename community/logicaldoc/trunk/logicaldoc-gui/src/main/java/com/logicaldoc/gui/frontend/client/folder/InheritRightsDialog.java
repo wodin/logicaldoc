@@ -62,7 +62,7 @@ public class InheritRightsDialog extends Dialog {
 			public void onClick(ClickEvent event) {
 				LD.ask(I18N.message("inheritrights"),
 						I18N.message("inheritrightsask", new String[] {
-								Navigator.get().getSelectedRecord().getAttributeAsString("name"),
+								FolderNavigator.get().getSelectedRecord().getAttributeAsString("name"),
 								folders.getSelectedRecord().getAttributeAsString("name") }), new BooleanCallback() {
 
 							@Override

@@ -5,7 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.frontend.client.folder.Navigator;
+import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -72,13 +72,13 @@ public class BulkCheckoutDialog extends Window {
 					public void onFailure(Throwable t) {
 						// Log.serverError(t);
 						destroy();
-						Navigator.get().reload();
+						FolderNavigator.get().reload();
 					}
 
 					@Override
 					public void onSuccess(Void arg) {
 						destroy();
-						Navigator.get().reload();
+						FolderNavigator.get().reload();
 					}
 				});
 			}

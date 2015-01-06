@@ -75,7 +75,7 @@ public class ApplyTemplateDialog extends Dialog {
 				if (!form.validate())
 					return;
 
-				final TreeNode selectedNode = (TreeNode) Navigator.get().getSelectedRecord();
+				final TreeNode selectedNode = (TreeNode) FolderNavigator.get().getSelectedRecord();
 				final long folderId = Long.parseLong(selectedNode.getAttributeAsString("folderId"));
 				long templateId = Long.parseLong(form.getValueAsString("foldertemplate"));
 
@@ -90,7 +90,7 @@ public class ApplyTemplateDialog extends Dialog {
 
 							@Override
 							public void onSuccess(Void arg0) {
-								Navigator.get().getTree().reloadChildren(selectedNode);
+								FolderNavigator.get().getTree().reloadChildren(selectedNode);
 								Log.info(I18N.message("templateapplied"), null);
 								destroy();
 							}
