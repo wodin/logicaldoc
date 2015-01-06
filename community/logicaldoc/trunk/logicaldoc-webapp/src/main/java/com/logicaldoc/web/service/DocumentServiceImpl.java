@@ -500,7 +500,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	public static GUIDocument fromDocument(Document doc, GUIFolder folder) {
 		GUIDocument document = new GUIDocument();
 		document.setId(doc.getId());
-		if (doc.getDocRef() != null && doc.getDocRef().longValue() != 0){
+		if (doc.getDocRef() != null && doc.getDocRef().longValue() != 0) {
 			document.setDocRef(doc.getDocRef());
 			document.setDocRefType(doc.getDocRefType());
 		}
@@ -1110,7 +1110,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					}
 				} else {
 					for (long id : email.getDocIds())
-						createAttachment(mail, id);
+						createAttachment(mail, id, email.isPdfConversion());
 				}
 			}
 
@@ -1199,7 +1199,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		return null;
 	}
 
-	private void createAttachment(EMail email, long docId) throws IOException {
+	private void createAttachment(EMail email, long docId, boolean pdfConversion) throws IOException {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		EMailAttachment att = new EMailAttachment();
 		Document doc = docDao.findById(docId);
@@ -1207,11 +1207,18 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			doc = docDao.findById(doc.getDocRef());
 		att.setIcon(doc.getIcon());
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		String resource = storer.getResourceName(doc, null, null);
-		att.setData(storer.getBytes(doc.getId(), resource));
-		att.setFileName(doc.getFileName());
-		String extension = doc.getFileExtension();
-		att.setMimeType(MimeType.get(extension));
+		if (!pdfConversion) {
+			String resource = storer.getResourceName(doc, null, null);
+			att.setData(storer.getBytes(doc.getId(), resource));
+			att.setFileName(doc.getFileName());
+			String extension = doc.getFileExtension();
+			att.setMimeType(MimeType.get(extension));
+		} else {
+			String resource = storer.getResourceName(doc, null, "conversion.pdf");
+			att.setData(storer.getBytes(doc.getId(), resource));
+			att.setFileName(FilenameUtils.getBaseName(doc.getFileName()) + ".pdf");
+			att.setMimeType(MimeType.get("pdf"));
+		}
 
 		if (att != null) {
 			email.addAttachment(2 + email.getAttachments().size(), att);

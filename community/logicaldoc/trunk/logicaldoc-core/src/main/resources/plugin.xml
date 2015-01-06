@@ -37,6 +37,10 @@
     <parameter-def id="extension" />
     <parameter-def id="class" />
   </extension-point>
+  <extension-point id="PdfConverter">
+    <parameter-def id="extension" />
+    <parameter-def id="class" />
+  </extension-point>
   <extension-point id="Search">
     <parameter-def id="type" />
     <parameter-def id="class" />
