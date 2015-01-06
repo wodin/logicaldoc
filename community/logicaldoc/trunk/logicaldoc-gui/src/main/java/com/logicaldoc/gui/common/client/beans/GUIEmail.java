@@ -21,6 +21,8 @@ public class GUIEmail implements Serializable {
 	private boolean sendAsTicket = false;
 
 	private boolean zipCompression = false;
+	
+	private boolean pdfConversion = false;
 
 	private String message;
 
@@ -93,5 +95,13 @@ public class GUIEmail implements Serializable {
 
 	public void setZipCompression(boolean zipCompression) {
 		this.zipCompression = zipCompression;
+	}
+
+	public boolean isPdfConversion() {
+		return pdfConversion;
+	}
+
+	public void setPdfConversion(boolean pdfConversion) {
+		this.pdfConversion = pdfConversion;
 	}
 }

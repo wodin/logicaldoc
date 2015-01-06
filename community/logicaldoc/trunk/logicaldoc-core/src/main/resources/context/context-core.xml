@@ -327,6 +327,10 @@
         <property name="storer" ref="Storer" />
         <property name="tenantDao" ref="TenantDAO" />
     </bean>
+    <bean id="PdfConverterManager" class="com.logicaldoc.core.document.pdf.PdfConverterManager">
+        <property name="storer" ref="Storer" />
+        <property name="tenantDao" ref="TenantDAO" />
+    </bean>
     <bean id="LockManager" class="com.logicaldoc.core.lock.LockManager">
         <property name="config" ref="ContextProperties" />
         <property name="genericDao" ref="GenericDAO" />

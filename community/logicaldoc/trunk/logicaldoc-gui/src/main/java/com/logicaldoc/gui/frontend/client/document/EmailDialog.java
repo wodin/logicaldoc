@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -102,9 +103,12 @@ public class EmailDialog extends Window {
 		message.setWidth(490);
 		message.setHeight(200);
 
-		final CheckboxItem ticket = new CheckboxItem();
-		ticket.setName("sendticket");
+		final CheckboxItem ticket = new CheckboxItem("sendticket");
 		ticket.setTitle(I18N.message("sendticket"));
+
+		final CheckboxItem pdf = new CheckboxItem("pdf");
+		pdf.setTitle(I18N.message("sendpdfconversion"));
+		pdf.setVisible(Feature.enabled(Feature.PDF));
 
 		final CheckboxItem zip = new CheckboxItem();
 		zip.setName("zip");
@@ -122,6 +126,7 @@ public class EmailDialog extends Window {
 					mail.setMessage(message.getValue().toString());
 
 					mail.setSendAsTicket(ticket.getValue() != null && ticket.getValueAsBoolean());
+					mail.setPdfConversion(pdf.getValue() != null && pdf.getValueAsBoolean());
 					mail.setZipCompression(zip.getValue() != null && zip.getValueAsBoolean());
 					mail.setDocIds(EmailDialog.this.docIds);
 
@@ -181,9 +186,9 @@ public class EmailDialog extends Window {
 
 		// The download ticket is available on single selection only
 		if (docIds.length == 1)
-			form.setFields(subject, ticket, message, sendItem);
+			form.setFields(subject, ticket, pdf, message, sendItem);
 		else
-			form.setFields(subject, zip, message, sendItem);
+			form.setFields(subject, zip, pdf, message, sendItem);
 
 		addItem(recipientsStack);
 		addItem(form);
@@ -253,13 +258,13 @@ public class EmailDialog extends Window {
 				addEmptyRow();
 			}
 		});
-		
+
 		recipientsGrid.setCellFormatter(new CellFormatter() {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
-				if(value==null)
+				if (value == null)
 					return null;
-				if(colNum==0)
+				if (colNum == 0)
 					return I18N.message(value.toString());
 				else
 					return value.toString();
