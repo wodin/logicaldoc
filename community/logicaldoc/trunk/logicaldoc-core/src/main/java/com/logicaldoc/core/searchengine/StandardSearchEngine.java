@@ -75,26 +75,41 @@ public class StandardSearchEngine implements SearchEngine {
 	 */
 	@Override
 	public synchronized void addHit(Document document, String content) throws Exception {
-		SolrInputDocument doc = new SolrInputDocument();
+		documentDao.initialize(document);
+		Document doc = document;
 
-		doc.addField(Fields.ID.getName(), Long.toString(document.getId()));
-		doc.addField(Fields.TENANT_ID.getName(), Long.toString(document.getTenantId()));
-		doc.addField(Fields.LANGUAGE.getName(), document.getLanguage());
-		doc.addField(Fields.TITLE.getName(), document.getTitle());
-		doc.addField(Fields.SIZE.getName(), document.getFileSize());
-		doc.addField(Fields.DATE.getName(), document.getDate());
-		doc.addField(Fields.SOURCE_DATE.getName(), document.getSourceDate());
-		doc.addField(Fields.SOURCE_ID.getName(), document.getSourceId());
-		doc.addField(Fields.RECIPIENT.getName(), document.getRecipient());
-		doc.addField(Fields.CREATION.getName(), document.getCreation());
-		doc.addField(Fields.CUSTOM_ID.getName(), document.getCustomId());
-		doc.addField(Fields.SOURCE.getName(), document.getSource());
-		doc.addField(Fields.COMMENT.getName(), document.getComment());
-		doc.addField(Fields.TAGS.getName(), document.getTagsString());
-		doc.addField(Fields.COVERAGE.getName(), document.getCoverage());
-		doc.addField(Fields.SOURCE_AUTHOR.getName(), document.getSourceAuthor());
-		doc.addField(Fields.SOURCE_TYPE.getName(), document.getSourceType());
-		doc.addField(Fields.DOC_REF.getName(), document.getDocRef());
+		if (document.getDocRef() != null) {
+			// This is an alias
+			Document referencedDoc = documentDao.findById(document.getDocRef());
+			documentDao.initialize(referencedDoc);
+			doc = (Document) referencedDoc.clone();
+			doc.setId(document.getId());
+			doc.setTenantId(document.getTenantId());
+			doc.setDocRef(document.getDocRef());
+			doc.setDocRefType(document.getDocRefType());
+			doc.setFolder(document.getFolder());
+		}
+
+		SolrInputDocument hit = new SolrInputDocument();
+
+		hit.addField(Fields.ID.getName(), Long.toString(doc.getId()));
+		hit.addField(Fields.TENANT_ID.getName(), Long.toString(doc.getTenantId()));
+		hit.addField(Fields.LANGUAGE.getName(), doc.getLanguage());
+		hit.addField(Fields.TITLE.getName(), doc.getTitle());
+		hit.addField(Fields.SIZE.getName(), doc.getFileSize());
+		hit.addField(Fields.DATE.getName(), doc.getDate());
+		hit.addField(Fields.SOURCE_DATE.getName(), doc.getSourceDate());
+		hit.addField(Fields.SOURCE_ID.getName(), doc.getSourceId());
+		hit.addField(Fields.RECIPIENT.getName(), doc.getRecipient());
+		hit.addField(Fields.CREATION.getName(), doc.getCreation());
+		hit.addField(Fields.CUSTOM_ID.getName(), doc.getCustomId());
+		hit.addField(Fields.SOURCE.getName(), doc.getSource());
+		hit.addField(Fields.COMMENT.getName(), doc.getComment());
+		hit.addField(Fields.TAGS.getName(), doc.getTagsString());
+		hit.addField(Fields.COVERAGE.getName(), doc.getCoverage());
+		hit.addField(Fields.SOURCE_AUTHOR.getName(), doc.getSourceAuthor());
+		hit.addField(Fields.SOURCE_TYPE.getName(), doc.getSourceType());
+		hit.addField(Fields.DOC_REF.getName(), doc.getDocRef());
 
 		int maxText = -1;
 		if (StringUtils.isNotEmpty(config.getProperty("index.maxtext"))) {
@@ -106,34 +121,34 @@ public class StandardSearchEngine implements SearchEngine {
 
 		String utf8Content = StringUtil.removeNonUtf8Chars(content);
 		if (maxText > 0 && utf8Content.length() > maxText)
-			doc.addField(Fields.CONTENT.getName(), StringUtils.substring(utf8Content, 0, maxText));
+			hit.addField(Fields.CONTENT.getName(), StringUtils.substring(utf8Content, 0, maxText));
 		else
-			doc.addField(Fields.CONTENT.getName(), utf8Content);
+			hit.addField(Fields.CONTENT.getName(), utf8Content);
 
-		if (document.getFolder() != null) {
-			doc.addField(Fields.FOLDER_ID.getName(), document.getFolder().getId());
-			doc.addField(Fields.FOLDER_NAME.getName(), document.getFolder().getName());
+		if (doc.getFolder() != null) {
+			hit.addField(Fields.FOLDER_ID.getName(), doc.getFolder().getId());
+			hit.addField(Fields.FOLDER_NAME.getName(), doc.getFolder().getName());
 		}
 
-		if (document.getTemplateId() != null) {
-			doc.addField(Fields.TEMPLATE_ID.getName(), document.getTemplateId());
+		if (doc.getTemplateId() != null) {
+			hit.addField(Fields.TEMPLATE_ID.getName(), doc.getTemplateId());
 
-			for (String attribute : document.getAttributeNames()) {
-				ExtendedAttribute ext = document.getExtendedAttribute(attribute);
+			for (String attribute : doc.getAttributeNames()) {
+				ExtendedAttribute ext = doc.getExtendedAttribute(attribute);
 				// Skip all non-string attributes
 				if ((ext.getType() == ExtendedAttribute.TYPE_STRING || ext.getType() == ExtendedAttribute.TYPE_USER)
 						&& StringUtils.isNotEmpty(ext.getStringValue())) {
 
 					// Prefix all extended attributes with 'ext_' in order to
 					// avoid collisions with standard fields
-					doc.addField("ext_" + attribute, ext.getStringValue());
+					hit.addField("ext_" + attribute, ext.getStringValue());
 				}
 			}
 		}
-
+		
 		try {
-			MultilanguageAnalyzer.lang.set(document.getLanguage());
-			server.add(doc);
+			MultilanguageAnalyzer.lang.set(doc.getLanguage());
+			server.add(hit);
 			server.commit();
 		} finally {
 			MultilanguageAnalyzer.lang.remove();
@@ -150,30 +165,17 @@ public class StandardSearchEngine implements SearchEngine {
 	@Override
 	public synchronized void addHit(Document document, InputStream content) throws Exception {
 		Document doc = document;
+		if (doc.getDocRef() != null)
+			doc = documentDao.findById(doc.getDocRef());
+
 		Locale locale = doc.getLocale();
 		if (locale == null)
 			locale = Locale.ENGLISH;
 		Parser parser = ParserFactory.getParser(content, doc.getFileName(), locale, null, doc.getTenantId());
-		if (parser == null) {
+		if (parser == null)
 			return;
-		}
 
 		String contentString = parser.getContent();
-
-		if (doc.getDocRef() != null) {
-			// This is a shortcut
-			doc = documentDao.findById(doc.getDocRef());
-			documentDao.initialize(doc);
-			doc = (com.logicaldoc.core.document.Document) doc.clone();
-			doc.setId(document.getId());
-			doc.setTenantId(document.getTenantId());
-			doc.setDocRef(document.getDocRef());
-		}
-
-		if (log.isInfoEnabled()) {
-			log.info("addHit " + doc.getId() + " " + doc.getTitle() + " " + doc.getFileVersion() + " "
-					+ doc.getPublisher() + " " + doc.getStatus() + " " + doc.getSource() + " " + doc.getSourceAuthor());
-		}
 
 		addHit(doc, contentString);
 	}

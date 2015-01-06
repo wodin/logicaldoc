@@ -250,15 +250,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			documentDAO.store(doc);
 
-			// Check if there are some shortcuts associated to the indexing
-			// document. They must be re-indexed.
-			List<Long> shortcutIds = documentDAO.findShortcutIds(doc.getId());
-			for (Long shortcutId : shortcutIds) {
-				Document shortcutDoc = documentDAO.findById(shortcutId);
-				indexer.deleteHit(shortcutId);
-				shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
-				documentDAO.store(shortcutDoc);
-			}
+			markAliasesToIndex(doc.getId());
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -274,10 +266,12 @@ public class DocumentManagerImpl implements DocumentManager {
 	public String parseDocument(Document doc, String fileVersion) {
 		String content = null;
 
-		// Check if the document is a shortcut
+		// Check if the document is an alias
 		if (doc.getDocRef() != null) {
-			long docId = doc.getDocRef();
-			doc = documentDAO.findById(docId);
+			long docref = doc.getDocRef();
+			doc = documentDAO.findById(docref);
+			if (doc == null)
+				throw new RuntimeException("Unexisting referenced document " + docref);
 		}
 
 		// Parses the file where it is already stored
@@ -300,53 +294,29 @@ public class DocumentManagerImpl implements DocumentManager {
 	public void reindex(long docId) throws Exception {
 		Document doc = documentDAO.findById(docId);
 
-		// If the 'doc' is a shortcut, it must not be re-indexed, because it is
-		// re-indexed when it is analyzed the referenced doc
-		if (doc == null || doc.getDocRef() != null)
+		if (doc == null) {
+			log.warn("Unexisting document with ID: " + docId);
 			return;
+		}
 
 		log.debug("Reindexing document " + docId + " - " + doc.getTitle());
 
 		// Extract the content from the file. This may take very long time.
 		String content = parseDocument(doc, null);
 
-		// Check if there are some shortcuts associated to the indexing
-		// document. They must be re-indexed.
-		List<Long> shortcutIds = documentDAO.findShortcutIds(doc.getId());
-		for (Long shortcutId : shortcutIds) {
-			Document shortcutDoc = documentDAO.findById(shortcutId);
-			shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
-			documentDAO.store(shortcutDoc);
-		}
-
-		// Add the document to the index (lucene 2.x doesn't support the update
-		// operation)
-		String resource = storer.getResourceName(doc.getId(), null, null);
-
-		doc = documentDAO.findById(docId);
-		documentDAO.initialize(doc);
-
 		// This may take time
 		indexer.addHit(doc, content);
 
-		// For additional security update the DB directly
+		// For additional safety update the DB directly
 		documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_INDEXED + " where ld_id="
 				+ docId);
-		doc = documentDAO.findById(docId);
+		
+		markAliasesToIndex(docId);
+	}
 
-		for (Long shortcutId : shortcutIds) {
-			try {
-				Document shortcutDoc = documentDAO.findById(shortcutId);
-				indexer.addHit(shortcutDoc, storer.getStream(doc.getId(), resource));
-
-				// For additional security update the DB directly
-				documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_INDEXED
-						+ " where ld_id=" + shortcutId);
-				shortcutDoc = documentDAO.findById(shortcutId);
-			} catch (Throwable t) {
-
-			}
-		}
+	private void markAliasesToIndex(long referencedDocId) {
+		documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_TO_INDEX
+				+ " where ld_docref=" + referencedDocId);
 	}
 
 	@Override
@@ -454,14 +424,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				}
 				versionDAO.store(version);
 
-				// Check if there are some shortcuts associated to the indexing
-				// document. They must be re-indexed.
-				List<Long> shortcutIds = documentDAO.findShortcutIds(doc.getId());
-				for (Long shortcutId : shortcutIds) {
-					Document shortcutDoc = documentDAO.findById(shortcutId);
-					shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
-					documentDAO.store(shortcutDoc);
-				}
+				markAliasesToIndex(doc.getId());
 			} else {
 				throw new Exception("Document is immutable");
 			}
@@ -793,15 +756,7 @@ public class DocumentManagerImpl implements DocumentManager {
 					Version.EVENT_RENAMED, false);
 			versionDAO.store(version);
 
-			// Check if there are some shortcuts associated to the indexing
-			// document. They must be re-indexed.
-			List<Long> shortcutIds = documentDAO.findShortcutIds(document.getId());
-			for (Long shortcutId : shortcutIds) {
-				Document shortcutDoc = documentDAO.findById(shortcutId);
-				documentDAO.initialize(shortcutDoc);
-				shortcutDoc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
-				documentDAO.store(shortcutDoc);
-			}
+			markAliasesToIndex(doc.getId());
 
 			log.debug("Document renamed: " + document.getId());
 		} else {

@@ -799,7 +799,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public List<Long> findShortcutIds(long docId) {
+	public List<Long> findAliasIds(long docId) {
 		return findIdsByWhere("_entity.docRef = " + Long.toString(docId), null, null);
 	}
 

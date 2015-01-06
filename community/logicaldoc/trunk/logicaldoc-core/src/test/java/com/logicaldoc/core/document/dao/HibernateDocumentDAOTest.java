@@ -536,13 +536,13 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
-	public void testFindShortcutIds() {
-		Collection<Long> ids = dao.findShortcutIds(1);
+	public void testFindAliasIds() {
+		Collection<Long> ids = dao.findAliasIds(1);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(1, ids.size());
 		Assert.assertTrue(ids.contains(new Long(2)));
 
-		ids = dao.findShortcutIds(3);
+		ids = dao.findAliasIds(3);
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}

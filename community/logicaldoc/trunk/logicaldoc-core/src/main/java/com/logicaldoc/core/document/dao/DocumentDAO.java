@@ -283,12 +283,12 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	public boolean delete(long docId, History transaction);
 	
 	/**
-	 * Gets the ids of all shortcuts associated to the document with the given
+	 * Gets the ids of all aliases associated to the document with the given
 	 * docId
 	 * 
 	 * @param docId The document Id
 	 */
-	public List<Long> findShortcutIds(long docId);
+	public List<Long> findAliasIds(long docId);
 
 	/**
 	 * Finds all deleted docs of a specific user.
