@@ -1,6 +1,7 @@
 package com.logicaldoc.webservice.document;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
 import javax.activation.DataHandler;
@@ -110,6 +111,17 @@ public class DocumentClient extends SoapClient<DocumentService> implements Docum
 	}
 
 	@Override
+	public DataHandler getResource(String sid, long docId, String fileVersion, String suffix) throws Exception {
+		return client.getResource(sid, docId, fileVersion, suffix);
+	}
+
+	public void getResourceContent(String sid, long docId, String fileVersion, String suffix, File out)
+			throws Exception {
+		DataHandler data = client.getResource(sid, docId, fileVersion, suffix);
+		data.writeTo(new FileOutputStream(out));
+	}
+
+	@Override
 	public WSDocument[] getVersions(String sid, long docId) throws Exception {
 		return client.getVersions(sid, docId);
 	}
@@ -184,5 +196,21 @@ public class DocumentClient extends SoapClient<DocumentService> implements Docum
 	@Override
 	public void deleteLink(String sid, long id) throws Exception {
 		client.deleteLink(sid, id);
+	}
+
+	@Override
+	public void createPdf(String sid, long docId, String fileVersion) throws Exception {
+		client.createPdf(sid, docId, fileVersion);
+	}
+
+	@Override
+	public void uploadResource(String sid, long docId, String fileVersion, String suffix, DataHandler content)
+			throws Exception {
+		client.uploadResource(sid, docId, fileVersion, suffix, content);
+	}
+
+	public void uploadResource(String sid, long docId, String fileVersion, String suffix, File content)
+			throws Exception {
+		uploadResource(sid, docId, fileVersion, suffix, new DataHandler(new FileDataSource(content)));
 	}
 }

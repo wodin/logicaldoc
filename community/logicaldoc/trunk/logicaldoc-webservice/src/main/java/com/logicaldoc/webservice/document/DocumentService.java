@@ -163,17 +163,32 @@ public interface DocumentService {
 			throws Exception;
 
 	/**
-	 * Gets the document content of an existing document with the given
+	 * Gets the version content of an existing document with the given
 	 * identifier.
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
 	 * @param version The specific version(it can be empty)
-	 * @return The requested document's binary
+	 * @return The requested version's binary
 	 * @throws Exception
 	 */
 	public DataHandler getVersionContent(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "version") String version) throws Exception;
+
+	/**
+	 * Gets the content of a resource associated to the given document.
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * @param fileVersion The specific file version(it can be empty)
+	 * @param suffix Suffix specification(it can be empty, conversion.pdf to get
+	 *        the PDF conversion)
+	 * @return The requested resource's binary
+	 * @throws Exception
+	 */
+	public DataHandler getResource(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "fileVersion") String fileVersion, @WebParam(name = "suffix") String suffix)
+			throws Exception;
 
 	/**
 	 * Checkouts an existing document with the given identifier.
@@ -221,6 +236,22 @@ public interface DocumentService {
 			@WebParam(name = "folderId") Long folderId, @WebParam(name = "release") boolean release,
 			@WebParam(name = "filename") String filename, @WebParam(name = "content") DataHandler content)
 			throws Exception;
+
+	/**
+	 * Uploads a new resource attached to the given document. If the resource
+	 * already exists it is overwritten.
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * @param fileVersion The specific file version(it can be empty)
+	 * @param suffix Suffix specification(it cannot be empty, conversion.pdf to
+	 *        get the PDF conversion)
+	 * @param content The resource's binary content
+	 * @throws Exception
+	 */
+	public void uploadResource(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "fileVersion") String fileVersion, @WebParam(name = "suffix") String suffix,
+			@WebParam(name = "content") DataHandler content) throws Exception;
 
 	/**
 	 * Test if a document identifier is valid.
@@ -372,4 +403,15 @@ public interface DocumentService {
 	 */
 	public void reindex(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
 
+	/**
+	 * Creates the PDF conversion of the given document. If the conversion was
+	 * already created, nothing will happen.
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * @param fileVersion The specific file version(it can be empty)
+	 * @throws Exception
+	 */
+	public void createPdf(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "fileVersion") String fileVersion) throws Exception;
 }

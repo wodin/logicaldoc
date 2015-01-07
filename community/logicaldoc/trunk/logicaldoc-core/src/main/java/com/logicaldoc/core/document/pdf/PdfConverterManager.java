@@ -108,12 +108,19 @@ public class PdfConverterManager {
 
 		try {
 			src = writeToFile(document, fileVersion);
+			if (src == null || src.length() == 0)
+				log.warn("Unexisting source file,  document: " + document.getId() + " - " + document.getTitle());
+			else {
+				converter.createPdf(getTenantName(document), src, document.getFileName(), dest);
 
-			converter.createPdf(getTenantName(document), src, document.getFileName(), dest);
-
-			storer.store(dest, document.getId(), resource);
+				if (dest != null && dest.length() > 0)
+					storer.store(dest, document.getId(), resource);
+				else
+					log.warn("The pdf converter was unable to convert document: " + document.getId() + " - "
+							+ document.getTitle());
+			}
 		} catch (Throwable e) {
-			log.warn("Error rendering image for document: " + document.getId() + " - " + document.getTitle(), e);
+			log.warn("Error rendering pdf for document: " + document.getId() + " - " + document.getTitle(), e);
 		} finally {
 			// Delete temporary resources
 			FileUtil.strongDelete(src);
