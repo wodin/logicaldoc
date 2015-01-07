@@ -73,7 +73,7 @@ public class ExportZip extends HttpServlet {
 			ByteArrayOutputStream bos = null;
 
 			if (docIds != null && docIds.length > 0)
-				bos = exporter.process(docIds);
+				bos = exporter.process(docIds, false);
 			else {
 				FolderHistory transaction = new FolderHistory();
 				transaction.setUserId(userId.longValue());
@@ -84,7 +84,7 @@ public class ExportZip extends HttpServlet {
 				if (user != null)
 					transaction.setUser(user);
 
-				bos = exporter.process(transaction);
+				bos = exporter.process(transaction, false);
 			}
 
 			response.setContentType("application/zip");

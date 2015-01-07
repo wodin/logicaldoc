@@ -53,6 +53,7 @@ import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.RatingDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
+import com.logicaldoc.core.document.pdf.PdfConverterManager;
 import com.logicaldoc.core.document.thumbnail.ThumbnailManager;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
@@ -1097,7 +1098,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					try {
 						out = new FileOutputStream(zipFile);
 						ZipExport export = new ZipExport();
-						export.process(email.getDocIds(), out);
+						export.process(email.getDocIds(), out, email.isPdfConversion());
 						createAttachment(mail, zipFile);
 					} catch (Throwable t) {
 						log.error(t.getMessage(), t);
@@ -1201,24 +1202,37 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 	private void createAttachment(EMail email, long docId, boolean pdfConversion) throws IOException {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		EMailAttachment att = new EMailAttachment();
-		Document doc = docDao.findById(docId);
-		if (doc.getDocRef() != null)
-			doc = docDao.findById(doc.getDocRef());
-		att.setIcon(doc.getIcon());
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		if (!pdfConversion) {
-			String resource = storer.getResourceName(doc, null, null);
-			att.setData(storer.getBytes(doc.getId(), resource));
-			att.setFileName(doc.getFileName());
-			String extension = doc.getFileExtension();
-			att.setMimeType(MimeType.get(extension));
-		} else {
-			String resource = storer.getResourceName(doc, null, "conversion.pdf");
-			att.setData(storer.getBytes(doc.getId(), resource));
-			att.setFileName(FilenameUtils.getBaseName(doc.getFileName()) + ".pdf");
-			att.setMimeType(MimeType.get("pdf"));
+		Document doc = docDao.findById(docId);
+		String resource = storer.getResourceName(doc, null, null);
+
+		boolean convertToPdf = pdfConversion;
+		if (doc.getDocRef() != null) {
+			// this is an alias
+			if ("pdf".equals(doc.getDocRefType())) {
+				doc = docDao.findById(doc.getDocRef());
+				convertToPdf = true;
+			}
 		}
+
+		EMailAttachment att = new EMailAttachment();
+		att.setIcon(doc.getIcon());
+		att.setFileName(doc.getFileName());
+		String extension = doc.getFileExtension();
+		att.setMimeType(MimeType.get(extension));
+
+		if (convertToPdf) {
+			if (!"pdf".equals(FilenameUtils.getExtension(doc.getFileName().toLowerCase()))) {
+				PdfConverterManager manager = (PdfConverterManager) Context.getInstance().getBean(
+						PdfConverterManager.class);
+				manager.createPdf(doc);
+				resource = storer.getResourceName(doc, null, "conversion.pdf");
+			}
+			att.setMimeType(MimeType.get("pdf"));
+			att.setFileName(FilenameUtils.getBaseName(doc.getFileName()) + ".pdf");
+		}
+
+		att.setData(storer.getBytes(doc.getId(), resource));
 
 		if (att != null) {
 			email.addAttachment(2 + email.getAttachments().size(), att);
