@@ -1,8 +1,9 @@
 package com.logicaldoc.webservice;
 
+import java.io.File;
+
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
-import com.logicaldoc.webservice.document.WSLink;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.security.SecurityClient;
@@ -27,9 +28,9 @@ public class SoapWorgkbench {
 		System.out.println("Sid: " + sid);
 
 		try {
-			securityStuff(sid);
+			//securityStuff(sid);
 
-			// documentStuff(sid);
+			documentStuff(sid);
 
 			// WSFolder newFolder = new WSFolder();
 			// newFolder.setName("ddddd");
@@ -295,17 +296,16 @@ public class SoapWorgkbench {
 	private static void documentStuff(String sid) throws Exception {
 		DocumentClient documentClient = new DocumentClient(BASE + "/Document");
 
-		// 30081024
 
 		// WSLink link = documentClient.link(sid, 3621L, 3176L, "testws");
 		// System.out.println("Created link "+link.getId());
 
-		documentClient.deleteLink(sid, 30081024L);
-
-		WSLink[] links = documentClient.getLinks(sid, 3176L);
-		for (WSLink lnk : links) {
-			System.out.println("Link " + lnk.getType() + " - > " + lnk.getDoc2() + " (" + lnk.getId() + ")");
-		}
+//		documentClient.deleteLink(sid, 30081024L);
+//
+//		WSLink[] links = documentClient.getLinks(sid, 3176L);
+//		for (WSLink lnk : links) {
+//			System.out.println("Link " + lnk.getType() + " - > " + lnk.getDoc2() + " (" + lnk.getId() + ")");
+//		}
 
 		// WSDocument wsDoc = documentClient.getDocument(sid, 1);
 		// wsDoc.setId(0);
@@ -455,5 +455,9 @@ public class SoapWorgkbench {
 		// + (att.getType() == WSAttribute.TYPE_USER ? " " +
 		// att.getStringValue() : ""));
 		// }
+		
+		//documentClient.createPdf(sid, 669286400L,"1.0");
+		//documentClient.getResourceContent(sid, 669286400L, "1.0", "conversion.pdf", new File("D:/tmp/conversion.pdf"));
+		documentClient.uploadResource(sid, 669286400L, "1.0", "conversion.pdf", new File("D:/tmp/conversion.pdf"));
 	}
 }

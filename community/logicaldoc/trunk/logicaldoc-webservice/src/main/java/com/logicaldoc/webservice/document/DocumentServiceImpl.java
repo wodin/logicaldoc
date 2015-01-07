@@ -37,6 +37,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
+import com.logicaldoc.core.document.pdf.PdfConverterManager;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
@@ -196,12 +197,11 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 	@Override
 	public DataHandler getVersionContent(String sid, long docId, String version) throws Exception {
-		User user = validateSession(sid);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
-		checkReadEnable(user, doc.getFolder().getId());
-		checkDownloadEnable(user, doc.getFolder().getId());
-		checkPublished(user, doc);
+
+		if (doc.getDocRef() != null)
+			doc = docDao.findById(doc.getDocRef());
 
 		String fileVersion = null;
 		if (version != null) {
@@ -210,28 +210,104 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			fileVersion = v.getFileVersion();
 		}
 
-		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		String resourceName = storer.getResourceName(doc, fileVersion, null);
+		return getResource(sid, docId, fileVersion, null);
+	}
 
-		if (!storer.exists(doc.getId(), resourceName)) {
-			throw new FileNotFoundException(resourceName);
-		}
-
-		log.debug("Attach file " + resourceName);
-
-		// Now we can append the 'document' attachment to the response
-		byte[] bytes = storer.getBytes(doc.getId(), resourceName);
-
-		String mime = "application/octet-stream";
+	@Override
+	public DataHandler getResource(String sid, long docId, String fileVersion, String suffix) throws Exception {
+		User user = validateSession(sid);
 		try {
-			MagicMatch match = Magic.getMagicMatch(bytes, true);
-			mime = match.getMimeType();
-		} catch (Throwable t) {
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			Document doc = docDao.findById(docId);
+			checkReadEnable(user, doc.getFolder().getId());
+			checkDownloadEnable(user, doc.getFolder().getId());
+			checkPublished(user, doc);
 
+			if (doc.getDocRef() != null)
+				doc = docDao.findById(doc.getDocRef());
+
+			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+			String resourceName = storer.getResourceName(doc, fileVersion, suffix);
+
+			if (!storer.exists(doc.getId(), resourceName)) {
+				throw new FileNotFoundException(resourceName);
+			}
+
+			log.debug("Attach file " + resourceName);
+
+			// Now we can append the 'document' attachment to the response
+			byte[] bytes = storer.getBytes(doc.getId(), resourceName);
+
+			String mime = "application/octet-stream";
+			try {
+				MagicMatch match = Magic.getMagicMatch(bytes, true);
+				mime = match.getMimeType();
+			} catch (Throwable t) {
+
+			}
+
+			DataHandler content = new DataHandler(new ByteArrayDataSource(bytes, mime));
+			return content;
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
 		}
+	}
 
-		DataHandler content = new DataHandler(new ByteArrayDataSource(bytes, mime));
-		return content;
+	@Override
+	public void createPdf(String sid, long docId, String fileVersion) throws Exception {
+		User user = validateSession(sid);
+		try {
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			Document doc = docDao.findById(docId);
+			checkReadEnable(user, doc.getFolder().getId());
+
+			if (doc.getDocRef() != null)
+				doc = docDao.findById(doc.getDocRef());
+
+			PdfConverterManager manager = (PdfConverterManager) Context.getInstance()
+					.getBean(PdfConverterManager.class);
+			manager.createPdf(doc, fileVersion);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		}
+	}
+
+	@Override
+	public void uploadResource(String sid, long docId, String fileVersion, String suffix, DataHandler content)
+			throws Exception {
+		User user = validateSession(sid);
+
+		try {
+			if (StringUtils.isEmpty(suffix))
+				throw new Exception("Please provide a suffix");
+
+			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			Document doc = docDao.findById(docId);
+			checkReadEnable(user, doc.getFolder().getId());
+			checkWriteEnable(user, doc.getFolder().getId());
+
+			if (doc.getDocRef() != null)
+				doc = docDao.findById(doc.getDocRef());
+
+			if (doc.getImmutable() == 1)
+				throw new Exception("The document is immutable");
+
+			if ("sign.p7m".equals(suffix.toLowerCase()))
+				throw new Exception("You cannot upload a signature");
+
+		
+				Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+				String resource = storer.getResourceName(doc, fileVersion, suffix);
+
+				log.debug("Attach file " + resource);
+
+				storer.store(content.getInputStream(), doc.getId(), resource);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			throw e;
+		}
 	}
 
 	@Override

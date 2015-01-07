@@ -275,4 +275,23 @@ public class DocumentClient extends RestClient implements DocumentService {
 	public void deleteLink(String sid, long id) throws Exception {
 		// TODO Auto-generated method stub
 	}
+
+	@Override
+	public DataHandler getResource(String sid, long docId, String fileVersion, String suffix) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void createPdf(String sid, long docId, String fileVersion) throws Exception {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void uploadResource(String sid, long docId, String fileVersion, String suffix, DataHandler content)
+			throws Exception {
+		// TODO Auto-generated method stub
+
+	}
 }

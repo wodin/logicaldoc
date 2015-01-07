@@ -101,7 +101,7 @@ public class FSStorer implements Storer {
 			FileUtils.forceMkdir(dir);
 			file = new File(new StringBuilder(dir.getPath()).append("/").append(resource).toString());
 			FileUtil.writeFile(stream, file.getPath());
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			return -1;
 		} finally {
@@ -290,7 +290,7 @@ public class FSStorer implements Storer {
 			os = new BufferedOutputStream(new FileOutputStream(out, false), DEFAULT_BUFFER_SIZE);
 			is = getStream(docId, resource);
 			FileUtil.writeFile(is, out.getPath());
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(e.getMessage());
 		} finally {
 			if (os != null) {
