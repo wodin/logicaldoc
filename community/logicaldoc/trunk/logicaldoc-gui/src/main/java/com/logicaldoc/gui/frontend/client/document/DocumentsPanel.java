@@ -101,7 +101,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		addMember(documentsMenu);
 		addMember(right);
 
-		setShowEdges(true);
+		setShowEdges(false);
 	}
 
 	protected void prepareToolBar() {
