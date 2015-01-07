@@ -29,9 +29,9 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hsqldb.lib.StringUtil;
 
 import com.ibm.icu.util.Calendar;
-import com.ibm.icu.util.GregorianCalendar;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
@@ -193,7 +193,8 @@ public class ServletIOUtil {
 		acceptsGzip = acceptsGzip && "true".equals(config.getProperty("download.gzip"));
 
 		// Don't compress if we have to serve a thumbnail
-		acceptsGzip = acceptsGzip && !"thumb.jpg".endsWith(suffix) && !"tile.jpg".endsWith(suffix);
+		acceptsGzip = acceptsGzip
+				&& (StringUtil.isEmpty(suffix) || (!"thumb.jpg".endsWith(suffix) && !"tile.jpg".endsWith(suffix)));
 
 		if (StringUtils.isEmpty(suffix) || !suffix.contains("preview")) {
 			response.setContentType(contentType);
@@ -357,10 +358,22 @@ public class ServletIOUtil {
 			IOUtil.close(output);
 		}
 
-		if (user != null && request.getServletPath().toLowerCase().contains("preview")
-				&& (StringUtils.isEmpty(suffix) || suffix.equals("preview.swf") || suffix.equals("conversion.pdf"))) {
-			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+		/*
+		 * Save an history only if it is requested the first fragment
+		 */
+		boolean saveHistory = (StringUtils.isEmpty(suffix) || "preview.swf".equals(suffix) || (request.getServletPath()
+				.toLowerCase().contains("preview") && "conversion.pdf".equals(suffix)));
+		if (!ranges.isEmpty() && saveHistory) {
+			saveHistory = false;
+			for (Range rng : ranges)
+				if (rng.start == 0) {
+					saveHistory = true;
+					break;
+				}
+		}
+		saveHistory = saveHistory && (user != null);
 
+		if (saveHistory) {
 			// Add an history entry to track the download of the document
 			History history = new History();
 			history.setDocId(doc.getId());
@@ -377,23 +390,33 @@ public class ServletIOUtil {
 
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
-			if (suffix.endsWith(".swf") || suffix.endsWith(".pdf")) {
+			if (suffix != null && request.getServletPath().toLowerCase().contains("preview"))
 				history.setEvent(DocumentEvent.VIEWED.toString());
-				/*
-				 * Avoid to save frequent views of this document in the same
-				 * session. So we will not save if there is another view in the
-				 * same session in the same minute.
-				 */
-				List<History> oldPreviews = hdao.findByUserIdAndEvent(user.getId(), DocumentEvent.VIEWED.toString(),
-						session.getId());
-				Calendar cal = new GregorianCalendar();
-				cal.add(Calendar.MINUTE, -1);
-				Date oldestDate = cal.getTime();
-				if (oldPreviews.isEmpty() || oldestDate.after(oldPreviews.get(oldPreviews.size() - 1).getDate())) {
-					hdao.store(history);
-				}
-			} else {
+			else
 				history.setEvent(DocumentEvent.DOWNLOADED.toString());
+
+			/*
+			 * Avoid to save frequent views of this document in the same
+			 * session. So we will not save if there is another view in the same
+			 * session asked since 30 seconds.
+			 */
+			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+			List<History> oldHistories = hdao.findByUserIdAndEvent(user.getId(), history.getEvent(), session.getId());
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(history.getDate());
+			cal.add(Calendar.SECOND, -30);
+			Date oldestDate = cal.getTime();
+
+			History latestHistory = null;
+			Date latestDate = null;
+			if (!oldHistories.isEmpty()) {
+				latestHistory = oldHistories.get(oldHistories.size() - 1);
+				cal.setTime(latestHistory.getDate());
+				latestDate = cal.getTime();
+			}
+
+			if (latestHistory == null || oldestDate.getTime() > latestDate.getTime()
+					|| !latestHistory.getDocId().equals(history.getDocId())) {
 				hdao.store(history);
 			}
 		}

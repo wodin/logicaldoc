@@ -212,7 +212,7 @@ public class ThumbnailManager {
 		File target = File.createTempFile("scr", "." + FilenameUtils.getExtension(document.getFileName()));
 		String fver = getSuitableFileVersion(document, fileVersion);
 		String resource = storer.getResourceName(document.getId(), fver, null);
-		storer.writeTo(document.getId(), resource, target);
+		storer.writeToFile(document.getId(), resource, target);
 		return target;
 	}
 

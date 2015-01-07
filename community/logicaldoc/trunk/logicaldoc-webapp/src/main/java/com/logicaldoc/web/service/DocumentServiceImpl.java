@@ -1188,7 +1188,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		if (storer.exists(doc.getId(), thumbResource)) {
 			File file = UserUtil.getUserResource(userId, "/tmp/thumb.jpg");
 			file.getParentFile().mkdirs();
-			storer.writeTo(doc.getId(), thumbResource, file);
+			storer.writeToFile(doc.getId(), thumbResource, file);
 			try {
 				return file.toURI().toURL().toString();
 			} catch (MalformedURLException e) {
