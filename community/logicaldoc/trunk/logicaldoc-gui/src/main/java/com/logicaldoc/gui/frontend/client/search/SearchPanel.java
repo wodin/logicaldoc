@@ -79,7 +79,7 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 		addMember(searchMenu);
 		addMember(right);
 
-		setShowEdges(true);
+		setShowEdges(false);
 	}
 
 	public static SearchPanel get() {

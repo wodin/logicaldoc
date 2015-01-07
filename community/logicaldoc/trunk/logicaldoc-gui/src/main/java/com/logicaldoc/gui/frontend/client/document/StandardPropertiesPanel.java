@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Image;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
@@ -28,8 +27,9 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.IconButton;
+import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -201,8 +201,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			}
 
 			tile = new HLayout();
-			tile.setWidth(219);
-			tile.setMembersMargin(0);
+			// tile.setWidth(219);
+			tile.setMembersMargin(1);
 			tile.setAlign(Alignment.RIGHT);
 			tile.setOverflow(Overflow.HIDDEN);
 
@@ -216,14 +216,14 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 					}
 				});
 
-				Image image = new Image(Util.tileUrl(Session.get().getSid(), document.getId(), null));
-				image.setHeight(Integer.parseInt(Session.get().getConfig("gui.tile.size")) + "px");
+				String html = "<img border='0' alt='' title='' src='"
+						+ Util.tileUrl(Session.get().getSid(), document.getId(), null) + "' height='"
+						+ Session.get().getConfig("gui.tile.size") + "px' style='float:right;' align='right'/>";
+				HTMLFlow tileImage = new HTMLFlow(html);
 
-				IconButton icon = new IconButton("");
-				icon.setWidth(16);
-				icon.setHeight(16);
-				icon.setIcon("[SKIN]/headerIcons/close.gif");
-				icon.addClickHandler(new ClickHandler() {
+				Img closeTileImage = new Img("[SKIN]/headerIcons/close.gif", 16, 16);
+				closeTileImage.setShowRollOver(true);
+				closeTileImage.addClickHandler(new ClickHandler() {
 
 					@Override
 					public void onClick(ClickEvent event) {
@@ -232,8 +232,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 					}
 				});
 
-				tile.addMember(image);
-				tile.addMember(icon);
+				tile.setMembers(tileImage, closeTileImage);
 			} else {
 				IButton showThumbnail = new IButton(I18N.message("showthumbnail"));
 				showThumbnail.addClickHandler(new ClickHandler() {
