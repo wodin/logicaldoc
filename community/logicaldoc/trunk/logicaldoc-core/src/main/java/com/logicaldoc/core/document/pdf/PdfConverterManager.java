@@ -37,8 +37,8 @@ public class PdfConverterManager {
 	private Map<String, PdfConverter> builders = new HashMap<String, PdfConverter>();
 
 	/**
-	 * Retrieves the content of the generated PDF. If the Pdf conversion is not
-	 * available, it is created.
+	 * Retrieves the content of the Pdf conversion. If the Pdf conversion is not
+	 * available in the store, it is created.
 	 * 
 	 * @param document The document to be processed
 	 * @param fileVersion The file version(optional)
@@ -53,6 +53,25 @@ public class PdfConverterManager {
 		if (!storer.exists(document.getId(), resource))
 			createPdf(document, fileVersion);
 		return storer.getBytes(document.getId(), resource);
+	}
+
+	/**
+	 * Write the content of the Pdf conversion into a file. If the Pdf
+	 * conversion is not available in the store, it is created.
+	 * 
+	 * @param document The document to be processed
+	 * @param fileVersion The file version(optional)
+	 * @return The content of the PDF as bytes
+	 * @throws IOException
+	 */
+	public void writePdfToFile(Document document, String fileVersion, File out) throws IOException {
+		String resource = storer.getResourceName(document.getId(), getSuitableFileVersion(document, fileVersion),
+				SUFFIX);
+		if ("pdf".equals(FilenameUtils.getExtension(document.getFileName()).toLowerCase()))
+			resource = storer.getResourceName(document.getId(), getSuitableFileVersion(document, fileVersion), null);
+		if (!storer.exists(document.getId(), resource))
+			createPdf(document, fileVersion);
+		storer.writeToFile(document.getId(), resource, out);
 	}
 
 	/**
@@ -139,7 +158,7 @@ public class PdfConverterManager {
 		File target = File.createTempFile("scr", "." + FilenameUtils.getExtension(document.getFileName()));
 		String fver = getSuitableFileVersion(document, fileVersion);
 		String resource = storer.getResourceName(document.getId(), fver, null);
-		storer.writeTo(document.getId(), resource, target);
+		storer.writeToFile(document.getId(), resource, target);
 		return target;
 	}
 

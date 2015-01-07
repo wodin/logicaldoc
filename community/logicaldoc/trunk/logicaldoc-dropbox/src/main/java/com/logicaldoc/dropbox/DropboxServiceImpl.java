@@ -195,7 +195,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 		File temp = null;
 		try {
 			temp = File.createTempFile("dboxupload", ".tmp");
-			store.writeTo(docId, store.getResourceName(docId, null, null), temp);
+			store.writeToFile(docId, store.getResourceName(docId, null, null), temp);
 			dropbox.uploadFile(temp, path, true);
 
 			Document doc = ddao.findById(docId);

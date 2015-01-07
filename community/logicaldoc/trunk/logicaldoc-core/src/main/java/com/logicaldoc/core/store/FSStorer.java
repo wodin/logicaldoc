@@ -283,7 +283,7 @@ public class FSStorer implements Storer {
 	}
 
 	@Override
-	public void writeTo(long docId, String resource, File out) {
+	public void writeToFile(long docId, String resource, File out) {
 		OutputStream os = null;
 		InputStream is = null;
 		try {

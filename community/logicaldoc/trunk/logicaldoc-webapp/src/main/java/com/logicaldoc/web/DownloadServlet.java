@@ -99,7 +99,7 @@ public class DownloadServlet extends HttpServlet {
 		}
 
 		/*
-		 * We can reach this poin only if a valid session was created
+		 * We can reach this point only if a valid session was created
 		 */
 
 		// Load the user associated to the session

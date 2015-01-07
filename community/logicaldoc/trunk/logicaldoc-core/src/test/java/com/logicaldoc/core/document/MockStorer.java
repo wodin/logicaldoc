@@ -82,7 +82,7 @@ public class MockStorer implements Storer {
 	}
 
 	@Override
-	public void writeTo(long docId, String resource, File out) {
+	public void writeToFile(long docId, String resource, File out) {
 
 	}
 

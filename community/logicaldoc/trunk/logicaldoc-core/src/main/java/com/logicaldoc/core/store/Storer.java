@@ -105,7 +105,7 @@ public interface Storer {
 	 * @param resource Name of the resource
 	 * @param file File that will receive the resource's content
 	 */
-	public void writeTo(long docId, String resource, File out);
+	public void writeToFile(long docId, String resource, File out);
 
 	/**
 	 * Obtains the document's content for the specified resource
