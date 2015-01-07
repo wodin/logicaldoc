@@ -15,11 +15,13 @@ import java.util.zip.ZipEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream.UnicodeExtraFieldPolicy;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.pdf.PdfConverterManager;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderHistory;
@@ -57,10 +59,11 @@ public class ZipExport {
 	 * Exports the specified folder content
 	 * 
 	 * @param transaction Transaction with all informations about the export
-	 * 
+	 * @param pdfConversion True if the pdf conversion has to be used instead of
+	 *        the original files
 	 * @return The Stream of the zip archive
 	 */
-	public ByteArrayOutputStream process(FolderHistory transaction) {
+	public ByteArrayOutputStream process(FolderHistory transaction, boolean pdfConversion) {
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folder = folderDao.findById(transaction.getFolderId());
 		this.userId = transaction.getUserId();
@@ -73,7 +76,7 @@ public class ZipExport {
 		zos.setUseLanguageEncodingFlag(true);
 
 		try {
-			appendChildren(folder, 0);
+			appendChildren(folder, 0, pdfConversion);
 		} finally {
 			try {
 				zos.flush();
@@ -98,10 +101,12 @@ public class ZipExport {
 	 * 
 	 * @param docIds Identifiers of the documents
 	 * @return The Stream of the zip archive
+	 * @param pdfConversion True if the pdf conversion has to be used instead of
+	 *        the original files
 	 */
-	public ByteArrayOutputStream process(long[] docIds) {
+	public ByteArrayOutputStream process(long[] docIds, boolean pdfConversion) {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		process(docIds, bos);
+		process(docIds, bos, pdfConversion);
 		return bos;
 	}
 
@@ -110,9 +115,11 @@ public class ZipExport {
 	 * 
 	 * @param docIds Identifiers of the documents
 	 * @param out The stream that will receive the zip
+	 * @param pdfConversion True if the pdf conversion has to be used instead of
+	 *        the original files
 	 */
-	public void process(long[] docIds, OutputStream out) {
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+	public void process(long[] docIds, OutputStream out, boolean pdfConversion) {
+		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		zos = new ZipArchiveOutputStream(out);
 		zos.setEncoding("UTF-8");
 		zos.setMethod(ZipEntry.DEFLATED);
@@ -121,10 +128,15 @@ public class ZipExport {
 
 		try {
 			for (long id : docIds) {
-				Document doc = dao.findById(id);
-				if (doc.getDocRef() != null)
-					doc = dao.findById(doc.getDocRef());
-				addDocument("", doc);
+				Document doc = ddao.findById(id);
+				boolean convertToPdf = pdfConversion;
+				if (doc.getDocRef() != null) {
+					// This is an alias, retrieve the real document
+					doc = ddao.findById(doc.getDocRef());
+					if ("pdf".equals(doc.getDocRefType()))
+						convertToPdf = true;
+				}
+				addDocument("", doc, convertToPdf);
 			}
 		} finally {
 			try {
@@ -149,55 +161,73 @@ public class ZipExport {
 
 	/**
 	 * Adds all children of the specified folder up to the given level
-	 * 
-	 * @param folder
-	 * @param level
 	 */
-	protected void appendChildren(Folder folder, int level) {
+	protected void appendChildren(Folder folder, int level, boolean pdfConversion) {
 		if (!allLevel && (level > 1)) {
 			return;
 		} else {
-			addFolderDocuments(folder);
+			addFolderDocuments(folder, pdfConversion);
 			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			Collection<Folder> children = folderDao.findByUserId(userId, folder.getId());
 			Iterator<Folder> iter = children.iterator();
 
 			while (iter.hasNext()) {
-				appendChildren(iter.next(), level + 1);
+				appendChildren(iter.next(), level + 1, pdfConversion);
 			}
 		}
 	}
 
 	/**
 	 * Adds all folder's documents
-	 * 
-	 * @param folder
 	 */
-	protected void addFolderDocuments(Folder folder) {
+	protected void addFolderDocuments(Folder folder, boolean pdfConversion) {
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Collection<Document> docs = ddao.findByFolder(folder.getId(), null);
 
 		for (Document document : docs) {
 			Document doc = document;
-			if (doc.getDocRef() != null)
+			boolean convertToPdf = pdfConversion;
+			if (doc.getDocRef() != null) {
+				// This is an alias, retrieve the real document
 				doc = ddao.findById(doc.getDocRef());
-			addDocument(getZipEntryPath(folder), doc);
+				if ("pdf".equals(doc.getDocRefType()))
+					convertToPdf = true;
+			}
+
+			addDocument(getZipEntryPath(folder), doc, convertToPdf);
 		}
 	}
 
 	/**
 	 * Adds a single document into the archive in the specified path.
 	 */
-	private void addDocument(String path, Document document) {
+	private void addDocument(String path, Document document, boolean pdfConversion) {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		String resource = storer.getResourceName(document, null, null);
+
+		if (pdfConversion && !"pdf".equals(FilenameUtils.getExtension(document.getFileName().toLowerCase()))) {
+			PdfConverterManager manager = (PdfConverterManager) Context.getInstance()
+					.getBean(PdfConverterManager.class);
+			try {
+				manager.createPdf(document);
+			} catch (IOException e) {
+				log.warn(e.getMessage(), e);
+				return;
+			}
+			resource = storer.getResourceName(document, null, PdfConverterManager.SUFFIX);
+		}
+
 		InputStream is = null;
 		BufferedInputStream bis = null;
-		String resource = storer.getResourceName(document, null, null);
 		try {
 			is = storer.getStream(document.getId(), resource);
 			bis = new BufferedInputStream(is);
 
-			ZipEntry entry = new ZipEntry(path + document.getFileName());
+			String fileName = document.getFileName();
+			if (pdfConversion)
+				fileName = FilenameUtils.getBaseName(fileName) + ".pdf";
+
+			ZipEntry entry = new ZipEntry(path + fileName);
 			entry.setMethod(ZipEntry.DEFLATED);
 			zos.putArchiveEntry(new ZipArchiveEntry(entry));
 

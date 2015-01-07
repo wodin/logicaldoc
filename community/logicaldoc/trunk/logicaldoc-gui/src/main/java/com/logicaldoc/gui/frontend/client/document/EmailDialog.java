@@ -30,6 +30,8 @@ import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.RichTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
@@ -103,12 +105,24 @@ public class EmailDialog extends Window {
 		message.setWidth(490);
 		message.setHeight(200);
 
-		final CheckboxItem ticket = new CheckboxItem("sendticket");
-		ticket.setTitle(I18N.message("sendticket"));
-
 		final CheckboxItem pdf = new CheckboxItem("pdf");
 		pdf.setTitle(I18N.message("sendpdfconversion"));
 		pdf.setVisible(Feature.enabled(Feature.PDF));
+
+		final CheckboxItem ticket = new CheckboxItem("sendticket");
+		ticket.setTitle(I18N.message("sendticket"));
+		ticket.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if ((ticket.getValue() != null && ticket.getValueAsBoolean()) || !Feature.enabled(Feature.PDF)){
+					pdf.setValue(false);
+					pdf.hide();
+				}else{
+					pdf.show();
+				}
+			}
+		});
 
 		final CheckboxItem zip = new CheckboxItem();
 		zip.setName("zip");
@@ -124,7 +138,6 @@ public class EmailDialog extends Window {
 					GUIEmail mail = new GUIEmail();
 					mail.setSubject(subject.getValueAsString());
 					mail.setMessage(message.getValue().toString());
-
 					mail.setSendAsTicket(ticket.getValue() != null && ticket.getValueAsBoolean());
 					mail.setPdfConversion(pdf.getValue() != null && pdf.getValueAsBoolean());
 					mail.setZipCompression(zip.getValue() != null && zip.getValueAsBoolean());
