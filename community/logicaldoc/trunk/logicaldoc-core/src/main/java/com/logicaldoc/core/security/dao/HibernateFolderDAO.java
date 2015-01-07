@@ -620,7 +620,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					parentHistory.setEvent(FolderEvent.SUBFOLDER_RESTORED.toString());
 				}
 
-				historyDAO.store(parentHistory);
+				if (StringUtils.isNotEmpty(parentHistory.getEvent()))
+					historyDAO.store(parentHistory);
 			}
 		}
 	}
