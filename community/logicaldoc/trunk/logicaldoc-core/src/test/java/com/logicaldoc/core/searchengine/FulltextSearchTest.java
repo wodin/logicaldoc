@@ -15,7 +15,11 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.i18n.Language;
+import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 public class FulltextSearchTest extends AbstractCoreTCase {
 
@@ -70,10 +74,9 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		fold.setId(Folder.DEFAULTWORKSPACEID);
 		fold.setName("test");
 		document.setFolder(fold);
-
 		engine.addHit(document, "Questo è un documento di prova. Per fortuna che esistono i test. document");
 
-		//Adding unexisting document 111
+		// Adding unexisting document 111
 		document = new Document();
 		document.setId(111L);
 		document.setTitle("Document test 111");
@@ -92,9 +95,6 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		document.setFileName("test.doc");
 		document.setLanguage("en");
 		document.setDate(new Date());
-		fold = new Folder();
-		fold.setId(Folder.DEFAULTWORKSPACEID);
-		fold.setName("test");
 		document.setFolder(fold);
 		engine.addHit(document, "Another document");
 
@@ -102,54 +102,51 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		document.setId(3L);
 		document.setTitle("Document test 3");
 		document.setFileName("test.doc");
-		document.setTemplateId(0L);
-		document.setLanguage("standard");
+		document.setLanguage("en");
 		document.setDate(new Date());
 		document.setFolder(fold);
 		engine.addHit(document,
 				"Lorem ipsum dolor sit amet, consectetur 5568299afbX0 ZKBKCHZZ80A CH8900761016116097873 adipisicing elit");
-
 	}
 
 	@Test
 	public void testSearch() throws Exception {
-		 Assert.assertEquals(4, engine.getCount());
+		Assert.assertEquals(4, engine.getCount());
 		
-		 FulltextSearchOptions opt = new FulltextSearchOptions();
-		 opt.setLanguage("en");
-		 opt.setExpression("documento");
-		 opt.setFields(new String[] { "content", "title" });
-		 opt.setExpressionLanguage("en");
-		 opt.setType(SearchOptions.TYPE_FULLTEXT);
-		 opt.setUserId(1);
-		
-		 Search search = new FulltextSearch();
-		 search.setOptions(opt);
-		
-		 List<Hit> hits = search.search();
-		 Assert.assertEquals(2, hits.size());
-		
-		 opt.setMaxHits(1);
-		 hits = search.search();
-		 Assert.assertEquals(1, hits.size());
-		 Assert.assertTrue(search.isMoreHitsPresent());
-		
-		
-		 opt = new FulltextSearchOptions();
-		 opt.setLanguage("standard");
-		 opt.setExpression("CH8900761016116097873");
-		 opt.setFields(new String[] { "content", "title" });
-		 opt.setExpressionLanguage("standard");
-		 opt.setType(SearchOptions.TYPE_FULLTEXT);
-		 opt.setUserId(1);
-		
-		 search = new FulltextSearch();
-		 search.setOptions(opt);
-		
-		 hits = search.search();
-		 Assert.assertEquals(1, hits.size());
-		 Assert.assertEquals(3L, hits.get(0).getId());
-		 Assert.assertEquals("standard", hits.get(0).getLanguage());
-	}
+		FulltextSearchOptions opt = new FulltextSearchOptions();
+		opt.setLanguage("en");
+		opt.setExpression("document");
+		opt.setFields(new String[] { "content", "title" });
+		opt.setExpressionLanguage("en");
+		opt.setType(SearchOptions.TYPE_FULLTEXT);
+		opt.setUserId(1);
 
+		Search search = new FulltextSearch();
+		search.setOptions(opt);
+
+		List<Hit> hits = null;
+		hits=search.search();
+		Assert.assertEquals(2, hits.size());
+
+		opt.setMaxHits(1);
+		hits = search.search();
+		Assert.assertEquals(1, hits.size());
+		Assert.assertTrue(search.isMoreHitsPresent());
+
+		opt = new FulltextSearchOptions();
+		opt.setLanguage("en");
+		opt.setExpression("CH8900761016116097873");
+		opt.setFields(new String[] { "content", "title" });
+		opt.setExpressionLanguage("en");
+		opt.setType(SearchOptions.TYPE_FULLTEXT);
+		opt.setUserId(1);
+
+		search = new FulltextSearch();
+		search.setOptions(opt);
+
+		hits = search.search();
+		Assert.assertEquals(1, hits.size());
+		Assert.assertEquals(3L, hits.get(0).getId());
+		Assert.assertEquals("en", hits.get(0).getLanguage());
+	}
 }

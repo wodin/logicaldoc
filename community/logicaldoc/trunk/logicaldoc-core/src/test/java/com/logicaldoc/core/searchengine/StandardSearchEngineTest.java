@@ -39,7 +39,7 @@ public class StandardSearchEngineTest extends AbstractCoreTCase {
 		Document document = new Document();
 		document.setId(1L);
 		document.setTitle("Document test 1");
-		document.setLanguage("it");
+		document.setLanguage("en");
 		document.setDate(new Date());
 		Folder fold = new Folder();
 		fold.setId(Folder.DEFAULTWORKSPACEID);
@@ -47,7 +47,11 @@ public class StandardSearchEngineTest extends AbstractCoreTCase {
 		document.setFolder(fold);
 
 		engine.addHit(document, "Questo è un documento di prova. Per fortuna che esistono i test. document");
-
+		
+		Hit hit = engine.getHit(1L);
+		Assert.assertEquals(1L, hit.getId());
+		Assert.assertEquals("en", hit.getLanguage());
+		
 		document = new Document();
 		document.setId(111L);
 		document.setTitle("Document test 111");
@@ -59,8 +63,9 @@ public class StandardSearchEngineTest extends AbstractCoreTCase {
 				document,
 				"This is another test documents just for test insertion.Solr is an enterprise-ready, Lucene-based search server that supports faceted ... This is useful for retrieving and highlighting the documents contents for display but is not .... hl, When hl=true , highlight snippets in the query response.");
 
-		Hit hit = engine.getHit(1L);
+		hit = engine.getHit(1L);
 		Assert.assertEquals(1L, hit.getId());
+		Assert.assertEquals("en", hit.getLanguage());
 
 		hit = engine.getHit(111L);
 		Assert.assertEquals(111L, hit.getId());
@@ -76,7 +81,7 @@ public class StandardSearchEngineTest extends AbstractCoreTCase {
 		testAddHit();
 		Hit hit = engine.getHit(1L);
 		Assert.assertEquals(1L, hit.getId());
-		Assert.assertEquals("it", hit.getLanguage());
+		Assert.assertEquals("en", hit.getLanguage());
 
 		engine.deleteHit(1L);
 
