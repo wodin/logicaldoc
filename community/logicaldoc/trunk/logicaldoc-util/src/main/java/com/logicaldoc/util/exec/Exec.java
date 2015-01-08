@@ -47,17 +47,20 @@ public class Exec {
 
 		Worker worker = new Worker(process);
 		worker.start();
-		try {
-			worker.join(timeout * 1000);
-			if (worker.getExit() == null)
-				throw new TimeoutException();
-		} catch (TimeoutException e) {
-			log.error("Command timed out");
-		} catch (InterruptedException ex) {
-			worker.interrupt();
-			Thread.currentThread().interrupt();
-		} finally {
-			process.destroy();
+
+		if (timeout > 0) {
+			try {
+				worker.join(timeout * 1000);
+				if (worker.getExit() == null)
+					throw new TimeoutException();
+			} catch (TimeoutException e) {
+				log.error("Command timed out");
+			} catch (InterruptedException ex) {
+				worker.interrupt();
+				Thread.currentThread().interrupt();
+			} finally {
+				process.destroy();
+			}
 		}
 	}
 
