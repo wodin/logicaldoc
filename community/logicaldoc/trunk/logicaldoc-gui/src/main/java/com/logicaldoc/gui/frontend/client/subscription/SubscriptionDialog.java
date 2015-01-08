@@ -138,7 +138,7 @@ public class SubscriptionDialog extends Window {
 								for (ListGridRecord record : selectedRecords) {
 									record.setAttribute("events", eventsStr);
 									if (option != null && !option.isEmpty())
-										record.setAttribute("folderOption", option);
+										record.setAttribute("folderOption", option.equals("current") ? "0" : "1");
 									grid.refreshRow(grid.getRecordIndex(record));
 								}
 							}
@@ -165,7 +165,7 @@ public class SubscriptionDialog extends Window {
 			setTitle(I18N.message("foldersubscription"));
 		else
 			setTitle(I18N.message("documentsubscription"));
-		
+
 		setWidth(290);
 		if (folderId != null)
 			setHeight(360);
