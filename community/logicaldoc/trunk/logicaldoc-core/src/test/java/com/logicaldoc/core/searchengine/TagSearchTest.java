@@ -32,7 +32,8 @@ public class TagSearchTest extends AbstractCoreTCase {
 		}
 
 		List<Hit> results = search.getHits();
-		Assert.assertEquals(1, results.size());
+		
+		Assert.assertEquals(2, results.size());
 		Assert.assertEquals(1, results.get(0).getId());
 		
 		opt = new SearchOptions();
@@ -51,8 +52,9 @@ public class TagSearchTest extends AbstractCoreTCase {
 			log.error(e.getMessage(), e);
 		}
 
+		//We should get 2 entries because document 2 is an alias
 		results = search.getHits();
-		Assert.assertEquals(1, results.size());
+		Assert.assertEquals(2, results.size());
 		Assert.assertEquals(1, results.get(0).getId());
 	}
 }

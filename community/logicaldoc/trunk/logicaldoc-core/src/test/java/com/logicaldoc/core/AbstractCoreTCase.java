@@ -19,6 +19,7 @@ import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.logicaldoc.util.io.FileUtil;
+import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
  * Abstract test case for the Core module. This class initialises a test
@@ -53,6 +54,7 @@ public abstract class AbstractCoreTCase {
 		tempDir = new File("target/tmp");
 		userHome = System.getProperty("user.home");
 		System.setProperty("user.home", tempDir.getPath());
+		
 		createTestDirs();
 		context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
 		createTestDatabase();

@@ -9,7 +9,6 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -45,7 +44,6 @@ public class ApplicationListener implements ServletContextListener, HttpSessionL
 	/**
 	 * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
 	 */
-	@SuppressWarnings("deprecation")
 	public void contextDestroyed(ServletContextEvent sce) {
 		log.warn("Shutting down application");
 
@@ -66,7 +64,6 @@ public class ApplicationListener implements ServletContextListener, HttpSessionL
 		}
 
 		try {
-			ContextProperties config = new ContextProperties();
 			Enumeration<Driver> drivers = DriverManager.getDrivers();
 			Driver d = null;
 			while (drivers.hasMoreElements()) {
@@ -78,30 +75,32 @@ public class ApplicationListener implements ServletContextListener, HttpSessionL
 					log.warn(String.format("Error unregistering driver %s", d), ex);
 				}
 			}
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			log.warn(e.getMessage(), e);
 		}
 
-//		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-//		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
-//
-//		for (Thread t : threadArray) {
-//			synchronized (t) {
-//				// if ((t.getName().startsWith("Abandoned connection cleanup")
-//				// || t.getName().contains("webdav")
-//				// || t.getName().startsWith("Scheduler_") ||
-//				// t.getName().startsWith("Thread-"))
-//				// && !Thread.currentThread().equals(t) && !t.isInterrupted())
-//				if ((t.getName().toLowerCase().contains("abandoned connection") || t.getName().startsWith("Scheduler_"))
-//						&& !Thread.currentThread().equals(t) && !t.isInterrupted())
-//					try {
-//						t.stop(); // don't complain, it works
-//						log.warn("Killed thread " + t.getName());
-//					} catch (Throwable e) {
-//						log.warn("Error killing " + t.getName());
-//					}
-//			}
-//		}
+		// Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+		// Thread[] threadArray = threadSet.toArray(new
+		// Thread[threadSet.size()]);
+		//
+		// for (Thread t : threadArray) {
+		// synchronized (t) {
+		// // if ((t.getName().startsWith("Abandoned connection cleanup")
+		// // || t.getName().contains("webdav")
+		// // || t.getName().startsWith("Scheduler_") ||
+		// // t.getName().startsWith("Thread-"))
+		// // && !Thread.currentThread().equals(t) && !t.isInterrupted())
+		// if ((t.getName().toLowerCase().contains("abandoned connection") ||
+		// t.getName().startsWith("Scheduler_"))
+		// && !Thread.currentThread().equals(t) && !t.isInterrupted())
+		// try {
+		// t.stop(); // don't complain, it works
+		// log.warn("Killed thread " + t.getName());
+		// } catch (Throwable e) {
+		// log.warn("Error killing " + t.getName());
+		// }
+		// }
+		// }
 
 		log.warn("Application stopped");
 	}

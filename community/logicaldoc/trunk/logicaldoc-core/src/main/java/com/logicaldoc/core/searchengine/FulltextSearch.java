@@ -215,12 +215,13 @@ public class FulltextSearch extends Search {
 				null);
 		log.debug("End of Full-text search");
 		log.debug("Fulltext hits count: " + results.getCount());
-
+				
+		
 		// Save here the binding between ID and Hit
 		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
 		while (results != null && results.hasNext()) {
 			Hit hit = results.next();
-			
+						
 			// Skip a document if not in the filter set
 			if (opt.getFilterIds() != null && !opt.getFilterIds().isEmpty()) {
 				if (!opt.getFilterIds().contains(hit.getId()))
@@ -237,7 +238,7 @@ public class FulltextSearch extends Search {
 		log.debug("DB search");
 
 		String hitsIdsStr = hitsMap.keySet().toString().replace('[', '(').replace(']', ')');
-
+		
 		StringBuffer richQuery = new StringBuffer();
 		// Find real documents
 		richQuery = new StringBuffer(
@@ -293,12 +294,12 @@ public class FulltextSearch extends Search {
 		richQuery.append("  and A.ld_docref is not null and REF.ld_deleted=0 and A.ld_docref = REF.ld_id ");
 		richQuery.append("  and A.ld_id in ");
 		richQuery.append(hitsIdsStr);
-
+		
 		log.debug("Execute query\n" + richQuery.toString());
 
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), null);
-
+		
 		// Populate the hits list discarding unexisting documents
 		Iterator<Hit> iter = hitsMap.values().iterator();
 
@@ -309,9 +310,10 @@ public class FulltextSearch extends Search {
 				break;
 			}
 			Hit hit = iter.next();
-
+			
 			if (StringUtils.isEmpty(hit.getTitle()) || StringUtils.isEmpty(hit.getFileName()))
 				continue;
+			
 			if ((searchUser.isInGroup("admin") && opt.getFolderId() == null)
 					|| (accessibleFolderIds != null && accessibleFolderIds.contains(hit.getFolder().getId())))
 				hits.add(hit);
@@ -319,7 +321,7 @@ public class FulltextSearch extends Search {
 
 		// Now sort by score desc
 		Collections.sort(hits);
-
+		
 		/*
 		 * Check for suggestions
 		 */
