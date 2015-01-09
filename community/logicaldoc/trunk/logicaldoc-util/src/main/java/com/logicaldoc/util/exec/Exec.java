@@ -28,6 +28,25 @@ public class Exec {
 		return windows;
 	}
 
+	public static void exec3(String... command) throws IOException {
+		ProcessBuilder pb = new ProcessBuilder(command);
+		pb.redirectErrorStream(true); // equivalent of 2>&1
+
+		Process p = pb.start();
+
+		StreamEater outEater = new StreamEater("out", p.getInputStream());
+
+		Thread b = new Thread(outEater);
+		b.start();
+
+		try {
+			p.waitFor();
+		} catch (InterruptedException ex) {
+		}
+
+		p.destroy();
+	}
+
 	/**
 	 * Executes the command by using the process builder.
 	 * 
@@ -48,18 +67,23 @@ public class Exec {
 		Worker worker = new Worker(process);
 		worker.start();
 
-		if (timeout > 0) {
-			try {
+		try {
+			if (timeout > 0)
 				worker.join(timeout * 1000);
-				if (worker.getExit() == null)
-					throw new TimeoutException();
-			} catch (TimeoutException e) {
-				log.error("Command timed out");
-			} catch (InterruptedException ex) {
-				worker.interrupt();
-				Thread.currentThread().interrupt();
-			} finally {
+			else
+				worker.join();
+			if (worker.getExit() == null)
+				throw new TimeoutException();
+		} catch (TimeoutException e) {
+			log.error("Command timed out");
+		} catch (InterruptedException ex) {
+			worker.interrupt();
+			Thread.currentThread().interrupt();
+		} finally {
+			try {
 				process.destroy();
+			} catch (Throwable t) {
+
 			}
 		}
 	}
@@ -113,6 +137,12 @@ public class Exec {
 
 		}
 
+		try {
+			process.destroy();
+		} catch (Throwable t) {
+
+		}
+
 		return exit;
 	}
 
@@ -155,6 +185,12 @@ public class Exec {
 		try {
 			exit = process.waitFor();
 		} catch (InterruptedException e) {
+
+		}
+
+		try {
+			process.destroy();
+		} catch (Throwable t) {
 
 		}
 
