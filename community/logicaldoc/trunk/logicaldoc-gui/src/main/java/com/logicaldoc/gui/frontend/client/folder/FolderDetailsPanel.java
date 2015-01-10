@@ -327,17 +327,17 @@ public class FolderDetailsPanel extends VLayout {
 
 				@Override
 				public void onSuccess(GUIFolder folder) {
+					savePanel.setVisible(false);
+					
 					if (listener != null)
 						listener.onFolderSaved(folder, oldPosition != folder.getPosition());
-
+					
 					// Adjust the path
 					String p = folder.getPathExtended();
 					p = p.substring(0, p.lastIndexOf('/'));
 					p += "/" + folder.getName().trim();
 					folder.setPathExtended(p);
 					setFolder(folder);
-
-					savePanel.setVisible(false);
 
 					GUIFolder current = Session.get().getCurrentFolder();
 					current.setTemplate(folder.getTemplate());
