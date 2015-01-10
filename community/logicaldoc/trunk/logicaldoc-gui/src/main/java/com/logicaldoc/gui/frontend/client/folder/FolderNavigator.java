@@ -683,6 +683,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	@Override
 	public void onFolderSaved(GUIFolder folder, boolean positionChanged) {
 		TreeNode selectedNode = getTree().find("folderId", Long.toString(folder.getId()));
+		folder.setPathExtended(getPath(folder.getId()));
 		if (selectedNode != null) {
 			selectedNode.setTitle(folder.getName());
 			selectedNode.setName(folder.getName());
@@ -696,7 +697,6 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 					getTree().reloadChildren(getTree().getRoot());
 			}
 		}
-		folder.setPathExtended(getPath(folder.getId()));
 	}
 
 	public void reload() {

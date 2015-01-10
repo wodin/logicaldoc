@@ -28,9 +28,11 @@ public class Exec {
 		return windows;
 	}
 
-	public static void exec3(String... command) throws IOException {
+	public static void exec3(int timeout, File workDir, String... command) throws IOException {
 		ProcessBuilder pb = new ProcessBuilder(command);
 		pb.redirectErrorStream(true); // equivalent of 2>&1
+		if (workDir != null)
+			pb.directory(workDir);
 
 		Process p = pb.start();
 
@@ -40,7 +42,10 @@ public class Exec {
 		b.start();
 
 		try {
-			p.waitFor();
+			if (timeout > 0)
+				p.waitFor(timeout, TimeUnit.SECONDS);
+			else
+				p.waitFor();
 		} catch (InterruptedException ex) {
 		}
 

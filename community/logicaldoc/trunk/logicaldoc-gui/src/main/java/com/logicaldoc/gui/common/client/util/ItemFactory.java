@@ -1031,7 +1031,7 @@ public class ItemFactory {
 
 	public static SelectItem newFolderTemplateSelector() {
 		SelectItem item = new SelectItem("foldertemplate");
-		item.setTitle(I18N.message("ttemplate"));
+		item.setTitle(I18N.message("foldertemplate"));
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setValueField("id");
 		item.setDisplayField("name");
