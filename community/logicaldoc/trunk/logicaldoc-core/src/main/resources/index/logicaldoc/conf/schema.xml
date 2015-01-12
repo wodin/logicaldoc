@@ -26,6 +26,7 @@
     <field name="comment" type="text_general" indexed="true" stored="false" />
     <field name="tags" type="text_general" indexed="true" stored="false" />
     <field name="coverage" type="text_general" indexed="true" stored="false" />
+    <field name="object" type="text_general" indexed="true" stored="false" />
     <field name="sourceId" type="text_general" indexed="true" stored="false" />
     <field name="recipient" type="text_general" indexed="true" stored="false" />
     <field name="sourceAuthor" type="string" indexed="true" stored="false" />
