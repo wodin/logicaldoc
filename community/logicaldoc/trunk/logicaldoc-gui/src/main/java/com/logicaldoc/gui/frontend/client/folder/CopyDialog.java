@@ -27,7 +27,7 @@ public class CopyDialog extends Dialog {
 		super();
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("copy"));
-		setWidth(450);
+		setWidth(470);
 		setHeight(280);
 		setCanDragResize(true);
 		setIsModal(true);

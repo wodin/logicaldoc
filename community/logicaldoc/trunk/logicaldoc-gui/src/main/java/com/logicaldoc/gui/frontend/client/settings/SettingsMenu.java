@@ -108,7 +108,7 @@ public class SettingsMenu extends VLayout {
 
 		addMember(smtp);
 
-		if (Session.get().isDefaultTenant())
+		if (Session.get().isDefaultTenant() && Menu.enabled(Menu.PARAMETERS))
 			addMember(parameters);
 
 		searchAndIndexing.addClickHandler(new ClickHandler() {

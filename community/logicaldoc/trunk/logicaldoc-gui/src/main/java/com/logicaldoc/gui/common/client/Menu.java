@@ -43,6 +43,8 @@ public class Menu {
 	public static final long BARCODES = 30;
 
 	public static final long REPORTS = 16;
+	
+	public static final long PARAMETERS = 100;
 
 	public static final long OFFICE = -1090;
 
