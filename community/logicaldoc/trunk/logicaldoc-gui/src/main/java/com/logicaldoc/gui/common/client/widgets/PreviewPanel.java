@@ -131,7 +131,7 @@ public class PreviewPanel extends VLayout {
 		html.setContentsType(ContentsType.FRAGMENT);
 
 		setWidth100();
-		setHeight(getHeight() - 30);
+		Log.info("**1", null);
 		addMember(html);
 	}
 
