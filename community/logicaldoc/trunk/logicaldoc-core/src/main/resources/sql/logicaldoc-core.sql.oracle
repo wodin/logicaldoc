@@ -256,7 +256,7 @@ values     (90,CURRENT_TIMESTAMP,0,'reports',2,'reports.png',1,1,1,50);
 
 insert into ld_menu 
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (100,CURRENT_TIMESTAMP,0,'settings',2,'settings.png',1,1,1,60);
+values     (100,CURRENT_TIMESTAMP,0,'parameters',7,'settings.png',1,1,1,60);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
@@ -272,7 +272,7 @@ values     (-3,CURRENT_TIMESTAMP,0,'lockeddocs',90,'menu.png',1,1,1,1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
-values     (3,CURRENT_TIMESTAMP,0,'clienttools',7,'menu.png',1,1,1,1);
+values     (3,CURRENT_TIMESTAMP,0,'clienandextapps',7,'menu.png',1,1,1,1);
 
 insert into ld_menu 
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
