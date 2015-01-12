@@ -244,8 +244,8 @@ public interface DocumentService {
 	 * @param sid Session identifier
 	 * @param docId The document id
 	 * @param fileVersion The specific file version(it can be empty)
-	 * @param suffix Suffix specification(it cannot be empty, conversion.pdf to
-	 *        get the PDF conversion)
+	 * @param suffix Suffix specification(it cannot be empty, use
+	 *        'conversion.pdf' to put the PDF conversion)
 	 * @param content The resource's binary content
 	 * @throws Exception
 	 */
