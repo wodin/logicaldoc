@@ -10,7 +10,7 @@
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/ojdbc6-11.2.0.2.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/jtds-1.2.5.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/hsqldb-2.2.8.jar" />
-    <jar src="lib/logicaldoc-community-installer.jar" stage="both"/>
+    <jar src="lib/logicaldoc-enterprise-installer.jar" stage="both"/>
 
     <info>
         <appname>LogicalDOC Community</appname>

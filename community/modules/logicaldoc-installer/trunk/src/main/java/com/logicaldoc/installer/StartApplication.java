@@ -11,6 +11,7 @@ import com.logicaldoc.installer.util.Exec;
 import com.logicaldoc.installer.util.FileUtil;
 import com.logicaldoc.installer.util.Log;
 import com.logicaldoc.installer.util.Wget;
+import com.logicaldoc.installer.util.WinFirewall;
 
 public class StartApplication {
 	public void run(AbstractUIProcessHandler handler, String[] args) {
@@ -86,6 +87,17 @@ public class StartApplication {
 			writer.write(tip);
 			writer.flush();
 			writer.close();
+			
+			/*
+			 * Try to open the firewall port
+			 */
+			if (FileUtil.isWindows())
+				try {
+					WinFirewall.openPort(port);
+				} catch (Throwable e) {
+					Log.error("Unable to open the port " + port
+							+ " in the firewall, please make sure this port is accessible from outside", null);
+				}
 			
 			/*
 			 * Try to open the tip with the GUI also
