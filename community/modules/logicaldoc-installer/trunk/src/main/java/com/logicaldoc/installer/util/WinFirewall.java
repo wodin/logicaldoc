@@ -23,8 +23,8 @@ public class WinFirewall {
 		command.add("service=LogicalDOC");
 		command.add("localip=any");
 		command.add("remoteip=any");
-		command.add("localport=any");
-		command.add("remoteport="+port);
+		command.add("localport="+port);
+		command.add("remoteport=any");
 		command.add("protocol=tcp");
 		command.add("interfacetype=any");
 		command.add("security=notrequired");
