@@ -75,14 +75,14 @@ public class EmailDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("sendmail"));
-		setWidth(500);
-		setHeight(400);
+		setWidth(550);
+		setHeight(430);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
 		setPadding(5);
-		setAutoSize(true);
+		setAutoSize(false);
 
 		SectionStack recipientsStack = prepareRecipientsGrid();
 
@@ -102,8 +102,8 @@ public class EmailDialog extends Window {
 		message.setName("message");
 		message.setTitle(I18N.message("message"));
 		message.setValue("");
-		message.setWidth(490);
-		message.setHeight(200);
+		message.setWidth("*");
+		message.setHeight("*");
 
 		final CheckboxItem pdf = new CheckboxItem("pdf");
 		pdf.setTitle(I18N.message("sendpdfconversion"));
@@ -210,7 +210,7 @@ public class EmailDialog extends Window {
 	private SectionStack prepareRecipientsGrid() {
 		SectionStack sectionStack = new SectionStack();
 		sectionStack.setWidth100();
-		sectionStack.setHeight(150);
+		sectionStack.setHeight(130);
 		sectionStack.setMargin(6);
 		SectionStackSection section = new SectionStackSection("<b>" + I18N.message("recipients") + "</b>");
 		section.setCanCollapse(false);
