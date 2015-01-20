@@ -493,18 +493,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		addSeparator();
 		addButton(list);
 		addButton(gallery);
-
-		// ToolStripButton annotations=new ToolStripButton();
-		// annotations.setIcon(ItemFactory.newImgIcon("image_add.png").getSrc());
-		// annotations.setTooltip(I18N.message("annotations"));
-		// annotations.addClickHandler(new ClickHandler() {
-		// @Override
-		// public void onClick(ClickEvent event) {
-		// AnnotationsDialog dialog=new AnnotationsDialog(50L, "Pippo");
-		// dialog.show();
-		// }
-		// });
-		// addButton(annotations);
 	}
 
 	/**

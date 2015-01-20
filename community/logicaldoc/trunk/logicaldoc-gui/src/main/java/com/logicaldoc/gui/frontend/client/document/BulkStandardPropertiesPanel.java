@@ -87,10 +87,10 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 
 		language.setValue(document.getLanguage());
 		items.add(language);
-		
+
 		if (Feature.enabled(Feature.TAGS)) {
 			String mode = Session.get().getConfig("tag.mode");
-			final DataSource ds = new TagsDS(null);
+			final DataSource ds = new TagsDS(null, true);
 
 			tagItem = new MultiComboBoxItem("tag", I18N.message("tag"));
 			tagItem.setPrompt(I18N.message("typeatag"));

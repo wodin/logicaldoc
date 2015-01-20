@@ -148,6 +148,8 @@ public class Feature {
 	public static final int DROPBOX = 80;
 	
 	public static final int ANTIVIRUS = 81;
+	
+	public static final int ANNOTATIONS = 82;
 
 	private static Set<String> features = new HashSet<String>();
 

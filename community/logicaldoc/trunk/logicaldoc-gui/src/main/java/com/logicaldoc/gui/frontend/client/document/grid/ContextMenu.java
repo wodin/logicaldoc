@@ -17,6 +17,7 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
+import com.logicaldoc.gui.frontend.client.annnotation.AnnotationsDialog;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentCheckin;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -562,6 +563,19 @@ public class ContextMenu extends Menu {
 		});
 		preview.setEnabled(selection.length == 1);
 
+		MenuItem annotations = new MenuItem();
+		annotations.setTitle(I18N.message("annotations"));
+		annotations.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				GUIDocument selection = grid.getSelectedDocument();
+				long id = selection.getId();
+
+				AnnotationsDialog dialog = new AnnotationsDialog(id, selection.getTitle());
+				dialog.show();
+			}
+		});
+		annotations.setEnabled(selection.length == 1);
+
 		MenuItem more = new MenuItem(I18N.message("more"));
 
 		MenuItem externalCall = new MenuItem();
@@ -699,6 +713,11 @@ public class ContextMenu extends Menu {
 
 		Menu moreMenu = new Menu();
 		moreMenu.setItems(indexSelection, markIndexable, markUnindexable, immutable);
+
+		if (Feature.visible(Feature.ANNOTATIONS)) {
+			moreMenu.addItem(annotations);
+			annotations.setEnabled(selection.length == 1 && Feature.enabled(Feature.ANNOTATIONS));
+		}
 
 		if (enableSign && Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);
