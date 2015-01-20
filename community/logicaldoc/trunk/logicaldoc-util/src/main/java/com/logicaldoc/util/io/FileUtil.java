@@ -84,23 +84,30 @@ public class FileUtil {
 		try {
 			bos = new BufferedOutputStream(new FileOutputStream(filepath));
 			bos.write(text.getBytes("UTF-8"));
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			logError(e.getLocalizedMessage());
 		} finally {
 			if (bos != null) {
 				try {
 					bos.flush();
 					bos.close();
-				} catch (IOException ioe) {
-					;
+				} catch (Throwable ioe) {
 				}
 			}
 		}
 	}
 
 	public static String readFile(File file) throws IOException {
-		FileInputStream fisTargetFile = new FileInputStream(file);
-		return IOUtils.toString(fisTargetFile, "UTF-8");
+		FileInputStream fisTargetFile = null;
+		try {
+			fisTargetFile = new FileInputStream(file);
+			return IOUtils.toString(fisTargetFile, "UTF-8");
+		} finally {
+			try {
+				fisTargetFile.close();
+			} catch (Throwable ioe) {
+			}
+		}
 	}
 
 	public static String readFile(String filePath) throws IOException {
@@ -578,10 +585,10 @@ public class FileUtil {
 			}
 		}
 	}
-	
+
 	public static boolean isDirEmpty(final Path directory) throws IOException {
-	    try(DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
-	        return !dirStream.iterator().hasNext();
-	    }
+		try (DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
+			return !dirStream.iterator().hasNext();
+		}
 	}
 }

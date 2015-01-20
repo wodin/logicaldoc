@@ -135,7 +135,7 @@ public class TagsPreset extends VLayout {
 		index.setHidden(true);
 		ListGridField word = new ListGridField("word", I18N.message("tag"));
 		tags.setFields(index, word);
-		tags.setDataSource(new TagsDS("preset"));
+		tags.setDataSource(new TagsDS("preset",true));
 		tags.setAutoFetchData(true);
 		tags.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
