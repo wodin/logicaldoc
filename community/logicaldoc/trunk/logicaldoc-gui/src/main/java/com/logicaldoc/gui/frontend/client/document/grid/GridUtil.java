@@ -37,7 +37,7 @@ public class GridUtil {
 		if (record != null) {
 			document = new GUIDocument();
 			document.setId(Long.parseLong(record.getAttribute("id")));
-			if(record.getAttribute("docref")!=null){
+			if (record.getAttribute("docref") != null) {
 				document.setDocRef(Long.parseLong(record.getAttribute("docref")));
 				document.setDocRefType(record.getAttribute("docrefType"));
 			}
@@ -49,13 +49,20 @@ public class GridUtil {
 			document.setVersion(record.getAttribute("version"));
 			document.setFileVersion(record.getAttribute("fileVersion"));
 			document.setImmutable("blank".equals(record.getAttributeAsString("immutable")) ? 0 : 1);
-			document.setIndexed("blank".equals(record.getAttributeAsString("indexed")) ? 0 : 1);
-			document.setSigned("blank".equals(record.getAttributeAsString("signed")) ? 0 : 1);
 			
+			if ("blank".equals(record.getAttributeAsString("indexed")))
+				document.setIndexed(Constants.INDEX_INDEXED);
+			else if ("blank".equals(record.getAttributeAsString("blank")))
+				document.setIndexed(Constants.INDEX_TO_INDEX);
+			else
+				document.setIndexed(Constants.INDEX_SKIP);
+
+			document.setSigned("blank".equals(record.getAttributeAsString("signed")) ? 0 : 1);
+
 			if (record.getAttribute("lockUserId") != null)
 				document.setLockUserId(Long.parseLong(record.getAttribute("lockUserId")));
 
-			if (record.getAttribute("docref") != null){
+			if (record.getAttribute("docref") != null) {
 				document.setDocRef(Long.parseLong(record.getAttribute("docref")));
 				document.setDocRefType(record.getAttribute("docrefType"));
 			}
@@ -153,10 +160,12 @@ public class GridUtil {
 			record.setAttribute("title", document.getFolder().getName());
 			record.setAttribute("comment", document.getFolder().getDescription());
 		} else {
-			if (document.getIndexed() == 0)
-				record.setAttribute("indexed", "blank");
-			else if (document.getIndexed() == 1)
+			if (document.getIndexed() == Constants.INDEX_INDEXED)
 				record.setAttribute("indexed", "indexed");
+			else if (document.getIndexed() == Constants.INDEX_SKIP)
+				record.setAttribute("indexed", "unindexable");
+			else
+				record.setAttribute("indexed", "blank");
 
 			if (document.getStatus() == 2)
 				record.setAttribute("locked", "lock");
