@@ -17,7 +17,6 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
-import com.logicaldoc.gui.frontend.client.annnotation.AnnotationsDialog;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentCheckin;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -56,7 +55,7 @@ public class ContextMenu extends Menu {
 
 	protected WorkflowServiceAsync workflowService = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
-	private SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
+	protected SignServiceAsync signService = (SignServiceAsync) GWT.create(SignService.class);
 
 	public ContextMenu(final GUIFolder folder, final DocumentsGrid grid) {
 		final GUIDocument[] selection = grid.getSelectedDocuments();
@@ -405,7 +404,7 @@ public class ContextMenu extends Menu {
 					@Override
 					public void onSuccess(Void result) {
 						for (GUIDocument record : selection) {
-							record.setIndexed(0);
+							record.setIndexed(Constants.INDEX_SKIP);
 							grid.updateDocument(record);
 						}
 					}
@@ -429,7 +428,7 @@ public class ContextMenu extends Menu {
 					@Override
 					public void onSuccess(Void result) {
 						for (GUIDocument record : selection) {
-							record.setIndexed(1);
+							record.setIndexed(Constants.INDEX_TO_INDEX);
 							grid.updateDocument(record);
 						}
 					}
@@ -460,7 +459,7 @@ public class ContextMenu extends Menu {
 					public void onSuccess(Void result) {
 						ContactingServer.get().hide();
 						for (GUIDocument record : selection) {
-							record.setIndexed(1);
+							record.setIndexed(Constants.INDEX_INDEXED);
 							grid.updateDocument(record);
 						}
 					}
@@ -563,19 +562,6 @@ public class ContextMenu extends Menu {
 		});
 		preview.setEnabled(selection.length == 1);
 
-		MenuItem annotations = new MenuItem();
-		annotations.setTitle(I18N.message("annotations"));
-		annotations.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				GUIDocument selection = grid.getSelectedDocument();
-				long id = selection.getId();
-
-				AnnotationsDialog dialog = new AnnotationsDialog(id, selection.getTitle());
-				dialog.show();
-			}
-		});
-		annotations.setEnabled(selection.length == 1);
-
 		MenuItem more = new MenuItem(I18N.message("more"));
 
 		MenuItem externalCall = new MenuItem();
@@ -642,6 +628,13 @@ public class ContextMenu extends Menu {
 			indexSelection.setEnabled(false);
 		}
 
+		for (GUIDocument record : selection) {
+			if (record.getIndexed() == Constants.INDEX_SKIP) {
+				indexSelection.setEnabled(false);
+				break;
+			}
+		}
+
 		if (selection.length != 1 || Constants.DOC_CHECKED_OUT != selection[0].getStatus())
 			checkin.setEnabled(false);
 
@@ -657,16 +650,6 @@ public class ContextMenu extends Menu {
 		checkout.setEnabled(enableLock);
 		immutable.setEnabled(enableImmutable);
 		delete.setEnabled(enableDelete);
-
-		for (GUIDocument record : selection)
-			if (record.getIndexed() == 1 && record.getImmutable() == 0) {
-				markIndexable.setEnabled(false);
-				indexSelection.setEnabled(false);
-				break;
-			}
-
-		// if (selection.length == 1 && selection[0].getIndexed()==0)
-		// markIndexable.setEnabled(false);
 
 		if (selection.length == 1 && selection[0].getStatus() < 0) {
 			checkin.setEnabled(false);
@@ -713,11 +696,6 @@ public class ContextMenu extends Menu {
 
 		Menu moreMenu = new Menu();
 		moreMenu.setItems(indexSelection, markIndexable, markUnindexable, immutable);
-
-		if (Feature.visible(Feature.ANNOTATIONS)) {
-			moreMenu.addItem(annotations);
-			annotations.setEnabled(selection.length == 1 && Feature.enabled(Feature.ANNOTATIONS));
-		}
 
 		if (enableSign && Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);
