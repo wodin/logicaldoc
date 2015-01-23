@@ -1417,7 +1417,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		for (long id : ids) {
 			try {
 				GUIDocument buf = getById(sid, id);
-
+				if (buf.getImmutable() == 1 || buf.getStatus() != Document.DOC_UNLOCKED)
+					continue;
+				
 				buf.setComment(vo.getComment() != null ? vo.getComment() : "");
 				if (StringUtils.isNotEmpty(vo.getLanguage()))
 					buf.setLanguage(vo.getLanguage());
