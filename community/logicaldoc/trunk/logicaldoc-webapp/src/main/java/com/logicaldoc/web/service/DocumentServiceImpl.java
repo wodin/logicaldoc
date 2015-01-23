@@ -543,6 +543,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setBarcoded(doc.getBarcoded());
 		document.setIndexed(doc.getIndexed());
 		document.setExtResId(doc.getExtResId());
+		document.setPages(doc.getPages());
 
 		if (doc.getRating() != null)
 			document.setRating(doc.getRating());
@@ -616,6 +617,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version1.setStartPublishing(docVersion.getStartPublishing());
 				version1.setStopPublishing(docVersion.getStopPublishing());
 				version1.setPublished(docVersion.getPublished());
+				version1.setPages(docVersion.getPages());
 
 				version1.setTemplate(docVersion.getTemplateName());
 				versDao.initialize(docVersion);
@@ -665,6 +667,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version2.setStartPublishing(docVersion.getStartPublishing());
 				version2.setStopPublishing(docVersion.getStopPublishing());
 				version2.setPublished(docVersion.getPublished());
+				version2.setPages(docVersion.getPages());
 
 				version2.setTemplateId(docVersion.getTemplateId());
 				version2.setTemplate(docVersion.getTemplateName());
@@ -912,6 +915,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		docVO.setPublished(document.getPublished());
 		docVO.setBarcoded(document.getBarcoded());
 		docVO.setExtResId(document.getExtResId());
+		docVO.setPages(document.getPages());
 
 		if (document.getTemplateId() != null) {
 			docVO.setTemplateId(document.getTemplateId());
@@ -1417,6 +1421,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		for (long id : ids) {
 			try {
 				GUIDocument buf = getById(sid, id);
+				if (buf.getImmutable() == 1 || buf.getStatus() != Document.DOC_UNLOCKED)
+					continue;
 
 				buf.setComment(vo.getComment() != null ? vo.getComment() : "");
 				if (StringUtils.isNotEmpty(vo.getLanguage()))
