@@ -917,6 +917,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				throw new Exception("User with email " + emailAddress + " not found");
 
 			email = new EMail();
+			email.setHtml(1);
 			email.setTenantId(user.getTenantId());
 			Recipient recipient = new Recipient();
 			recipient.setAddress(user.getEmail());

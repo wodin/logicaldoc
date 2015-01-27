@@ -116,6 +116,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			document.setSigned(0);
+			document.setPages(-1);
+			
 			if (document.getIndexed() != AbstractDocument.INDEX_SKIP)
 				document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			if (document.getBarcoded() != AbstractDocument.BARCODE_SKIP)

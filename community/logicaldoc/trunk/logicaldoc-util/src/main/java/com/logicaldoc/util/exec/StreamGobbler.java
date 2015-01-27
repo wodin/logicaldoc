@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * When Runtime.exec() won't.
@@ -15,7 +16,7 @@ public class StreamGobbler extends Thread {
 
 	private InputStream is;
 
-	private Logger log;
+	protected static Logger log = LoggerFactory.getLogger(StreamGobbler.class);
 
 	public StreamGobbler(InputStream is, Logger log) {
 		this.is = is;
@@ -29,6 +30,7 @@ public class StreamGobbler extends Thread {
 			String line = null;
 			while ((line = br.readLine()) != null) {
 				System.out.println(line);
+				log.debug(line);
 			}
 		} catch (IOException ioe) {
 			log.error(ioe.getMessage());

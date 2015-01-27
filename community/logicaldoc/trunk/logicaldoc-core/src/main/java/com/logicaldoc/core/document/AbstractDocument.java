@@ -141,7 +141,7 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private Long exportId = null;
 
 	private Long docRef;
-	
+
 	private String docRefType;
 
 	private Long deleteUserId;
@@ -159,8 +159,10 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private String transactionId;
 
 	private String transactionAgent;
-	
+
 	private String templateName;
+
+	private int pages = -1;
 
 	/*
 	 * Used for saving the external resource ID when editing online
@@ -758,5 +760,13 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public void setDocRefType(String docRefType) {
 		this.docRefType = docRefType;
+	}
+
+	public int getPages() {
+		return pages;
+	}
+
+	public void setPages(int pages) {
+		this.pages = pages;
 	}
 }

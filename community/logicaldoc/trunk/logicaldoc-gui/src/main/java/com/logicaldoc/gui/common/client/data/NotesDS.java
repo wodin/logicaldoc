@@ -11,8 +11,8 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class PostsDS extends DataSource {
-	public PostsDS(Long userIdentifier, Long documentIdentifier) {
+public class NotesDS extends DataSource {
+	public NotesDS(Long userIdentifier, Long documentIdentifier, Integer pageNumber) {
 		setRecordXPath("/list/post");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
@@ -24,14 +24,17 @@ public class PostsDS extends DataSource {
 		docId.setHidden(true);
 		DataSourceTextField user = new DataSourceTextField("user");
 		DataSourceTextField message = new DataSourceTextField("message");
+		DataSourceTextField snippet = new DataSourceTextField("snippet");
+		DataSourceTextField page = new DataSourceTextField("page");
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 		DataSourceTextField docTitle = new DataSourceTextField("docTitle");
 
-		setFields(id, userId, user, message, date, docId, docTitle);
+		setFields(id, page, userId, user, message, date, docId, docTitle, snippet);
 		setClientOnly(true);
 
-		setDataURL("data/posts.xml?sid=" + Session.get().getSid()
+		setDataURL("data/notes.xml?sid=" + Session.get().getSid()
 				+ (userIdentifier != null ? "&" + "userId=" + userIdentifier : "")
-				+ (documentIdentifier != null ? "&" + "docId=" + documentIdentifier : ""));
+				+ (documentIdentifier != null ? "&" + "docId=" + documentIdentifier : "")
+				+ (pageNumber != null ? "&" + "page=" + pageNumber : ""));
 	}
 }

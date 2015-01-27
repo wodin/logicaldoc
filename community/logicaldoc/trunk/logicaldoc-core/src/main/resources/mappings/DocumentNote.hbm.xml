@@ -16,5 +16,7 @@
     <property name="userId" type="long" column="ld_userid" />
     <property name="date" type="timestamp" column="ld_date" />
     <property name="message" type="string" column="ld_message" length="4000" />
+    <property name="snippet" type="string" column="ld_snippet" length="4000" />
+    <property name="page" type="int" column="ld_page" not-null="true" />
   </class>
 </hibernate-mapping>

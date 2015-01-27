@@ -62,6 +62,7 @@
     <property name="stopPublishing" type="timestamp" column="ld_stoppublishing" />
     <property name="transactionId" type="string" column="ld_transactionid" length="255" />
     <property name="extResId" type="string" column="ld_extresid" length="255" />
+    <property name="pages" type="int" column="ld_pages" not-null="true"/>
    
     <map name="attributes" table="ld_version_ext" lazy="true" cascade="all" order-by="ld_position asc">
       <key column="ld_versionid" />

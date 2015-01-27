@@ -95,6 +95,7 @@ public class PswRecovery extends HttpServlet {
 				EMail email;
 				try {
 					email = new EMail();
+					email.setHtml(1);
 					Recipient recipient = new Recipient();
 					recipient.setRead(1);
 					recipient.setAddress(user.getEmail());
