@@ -58,11 +58,12 @@ public class Exec {
 	 * @commandLine The command line to process
 	 * @timeout The timeout in seconds
 	 */
-	public static void exec2(List<String> commandLine, int timeout) throws IOException {
+	public static void exec2(List<String> commandLine, File directory, int timeout) throws IOException {
 		log.debug("Executing command: " + commandLine);
 		ProcessBuilder pb = new ProcessBuilder();
 		pb.redirectErrorStream(true);
 		pb.command(commandLine);
+		pb.directory(directory);
 
 		Process process = pb.start();
 

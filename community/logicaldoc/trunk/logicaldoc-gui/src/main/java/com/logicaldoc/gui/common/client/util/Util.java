@@ -59,6 +59,17 @@ public class Util {
 		return html;
 	}
 
+	public static String downloadURL(long docId, String fileVersion, String suffix, boolean open) {
+		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + docId;
+		if (fileVersion != null)
+			url += "&fileVersion=" + fileVersion;
+		if (suffix != null)
+			url += "&suffix=" + suffix;
+		if (open)
+			url += "&open=true";
+		return url;
+	}
+
 	public static String downloadURL(long docId, String fileVersion, boolean open) {
 		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + docId;
 		if (fileVersion != null)

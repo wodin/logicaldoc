@@ -163,6 +163,8 @@ public class WSDocument implements Serializable {
 	private String startPublishing;
 
 	private String stopPublishing;
+	
+	private int pages=-1;
 
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
@@ -205,6 +207,7 @@ public class WSDocument implements Serializable {
 			wsDoc.setDocRefType(document.getDocRefType());
 			wsDoc.setLastModified(AbstractService.convertDateToString(document.getLastModified()));
 			wsDoc.setRating(document.getRating());
+			wsDoc.setPages(document.getPages());
 
 			String date = null;
 			if (document.getSourceDate() != null)
@@ -365,6 +368,7 @@ public class WSDocument implements Serializable {
 		if (StringUtils.isNotEmpty(date))
 			newdate = AbstractService.convertStringToDate(date);
 		doc.setDate(newdate);
+		doc.setPages(pages);
 
 		Date creationDate = null;
 		if (StringUtils.isNotEmpty(creation))
@@ -809,5 +813,13 @@ public class WSDocument implements Serializable {
 
 	public void setDocRefType(String docRefType) {
 		this.docRefType = docRefType;
+	}
+
+	public int getPages() {
+		return pages;
+	}
+
+	public void setPages(int pages) {
+		this.pages = pages;
 	}
 }

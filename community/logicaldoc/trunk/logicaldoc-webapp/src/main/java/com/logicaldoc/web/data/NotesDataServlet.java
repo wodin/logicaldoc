@@ -26,11 +26,11 @@ import com.logicaldoc.web.util.ServiceUtil;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class PostsDataServlet extends HttpServlet {
+public class NotesDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger log = LoggerFactory.getLogger(PostsDataServlet.class);
+	private static Logger log = LoggerFactory.getLogger(NotesDataServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -45,6 +45,10 @@ public class PostsDataServlet extends HttpServlet {
 			Long docId = null;
 			if (request.getParameter("docId") != null)
 				docId = Long.parseLong(request.getParameter("docId"));
+
+			Long page = null;
+			if (request.getParameter("page") != null)
+				page = Long.parseLong(request.getParameter("page"));
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -61,12 +65,14 @@ public class PostsDataServlet extends HttpServlet {
 			writer.write("<list>");
 
 			StringBuffer query = new StringBuffer(
-					"select A.ld_id,A.ld_message,A.ld_username,A.ld_date,A.ld_docid,B.ld_title,A.ld_userid from ld_note A, ld_document B where A.ld_deleted=0 and B.ld_deleted=0 and A.ld_docid=B.ld_id ");
+					"select A.ld_id,A.ld_message,A.ld_username,A.ld_date,A.ld_docid,B.ld_title,A.ld_userid,A.ld_page,A.ld_snippet from ld_note A, ld_document B where A.ld_deleted=0 and B.ld_deleted=0 and A.ld_docid=B.ld_id ");
 			if (userId != null)
 				query.append(" and A.ld_userid =" + userId);
 			if (docId != null)
 				query.append(" and A.ld_docid =" + docId);
-			query.append(" order by A.ld_date desc ");
+			if (page != null)
+				query.append(" and A.ld_page =" + page);
+			query.append(" order by A.ld_date desc, A.ld_page asc ");
 
 			DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
 			SqlRowSet set = dao.queryForRowSet(query.toString(), null, 200);
@@ -75,6 +81,9 @@ public class PostsDataServlet extends HttpServlet {
 				writer.print("<post>");
 				writer.print("<id>" + set.getLong(1) + "</id>");
 				writer.print("<title><![CDATA[" + StringUtils.abbreviate(set.getString(2), 100) + "]]></title>");
+				if (set.getString(9) != null)
+					writer.print("<snippet><![CDATA[" + set.getString(9) + "]]></snippet>");
+				writer.print("<page>" + set.getInt(8) + "</page>");
 				writer.print("<user><![CDATA[" + set.getString(3) + "]]></user>");
 				writer.print("<date>" + df.format(set.getDate(4)) + "</date>");
 				writer.print("<message><![CDATA[" + set.getString(2) + "]]></message>");

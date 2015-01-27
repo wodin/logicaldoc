@@ -182,8 +182,8 @@
         <servlet-class>com.logicaldoc.web.data.BookmarksDataServlet</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>PostsData</servlet-name>
-        <servlet-class>com.logicaldoc.web.data.PostsDataServlet</servlet-class>
+        <servlet-name>NotesData</servlet-name>
+        <servlet-class>com.logicaldoc.web.data.NotesDataServlet</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>EventsData</servlet-name>
@@ -398,8 +398,8 @@
         <url-pattern>/data/discussions.xml</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>PostsData</servlet-name>
-        <url-pattern>/data/posts.xml</url-pattern>
+        <servlet-name>NotesData</servlet-name>
+        <url-pattern>/data/notes.xml</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>EventsData</servlet-name>
