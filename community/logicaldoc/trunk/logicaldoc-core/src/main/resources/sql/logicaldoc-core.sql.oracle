@@ -16,8 +16,8 @@ create table ld_document (ld_id number(19,0) not null, ld_lastmodified timestamp
                           ld_recipient varchar(1000), ld_folderid number(19,0), ld_templateid number(19,0), ld_exportstatus int not null, ld_exportid number(19,0),
                           ld_exportname varchar(255), ld_exportversion varchar(10), ld_docref number(19,0), ld_docreftype varchar(255),
                           ld_deleteuserid number(19,0), ld_rating int, ld_comment varchar(1000), ld_workflowstatus varchar(1000), 
-                          ld_published int not null, ld_startpublishing timestamp,
-                          ld_stoppublishing timestamp null, ld_transactionid varchar(255), ld_extresid varchar(255), ld_tgs varchar(1000), primary key (ld_id));
+                          ld_published int not null, ld_startpublishing timestamp, ld_stoppublishing timestamp null, ld_transactionid varchar(255), 
+                          ld_extresid varchar(255), ld_tgs varchar(1000), ld_pages int not null, primary key (ld_id));
 create table ld_document_ext (ld_docid number(19,0) not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue number(19,0), ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_docid, ld_name));
 create table ld_generic (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_recordversion number(19,0) not null, 
                          ld_deleted int not null, ld_tenantid number(19,0) not null, ld_type varchar(255) not null, 
@@ -90,7 +90,8 @@ create table ld_version (ld_id number(19,0) not null, ld_lastmodified timestamp 
                          ld_tgs varchar(1000), ld_username varchar(255), ld_userid number(19,0), ld_versiondate timestamp, ld_comment varchar(1000),ld_event varchar(255),
                          ld_documentid number(19,0) not null, ld_exportstatus int not null, ld_exportid number(19,0), ld_exportname varchar(255), ld_exportversion varchar(10),
                          ld_deleteuserid number(19,0), ld_workflowstatus varchar(1000), ld_published int not null, ld_startpublishing timestamp,
-                         ld_stoppublishing timestamp null, ld_transactionid varchar(255), ld_extresid varchar(255),primary key (ld_id));
+                         ld_stoppublishing timestamp null, ld_transactionid varchar(255), ld_extresid varchar(255),
+                         ld_pages int not null, primary key (ld_id));
 create table ld_version_ext (ld_versionid number(19,0) not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue number(19,0), ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_versionid, ld_name));
 create table ld_folder(ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_recordversion number(19,0) not null,
                        ld_deleted int not null, ld_tenantid number(19,0) not null, ld_name varchar(255), 
@@ -121,7 +122,7 @@ create table ld_rating (ld_id number(19,0) not null, ld_lastmodified timestamp n
 create table ld_note (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_recordversion number(19,0) not null,
                       ld_deleted int not null, ld_tenantid number(19,0) not null, ld_docid number(19,0) not null, 
                       ld_username varchar(255), ld_userid number(19,0), ld_date timestamp, 
-                      ld_message varchar(4000), primary key (ld_id));
+                      ld_message varchar(4000), ld_snippet varchar(4000), ld_page int not null, primary key (ld_id));
 create table ld_messagetemplate (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_recordversion number(19,0) not null,
                                  ld_deleted int not null, ld_tenantid number(19,0) not null, ld_name varchar(255) not null, ld_language varchar(10) not null,
                                  ld_description varchar(1000), ld_body varchar(4000),
