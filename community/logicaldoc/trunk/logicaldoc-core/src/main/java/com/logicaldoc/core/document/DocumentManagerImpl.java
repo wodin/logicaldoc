@@ -23,6 +23,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DocumentNoteDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.parser.Parser;
@@ -48,6 +49,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	protected static Logger log = LoggerFactory.getLogger(DocumentManagerImpl.class);
 
 	private DocumentDAO documentDAO;
+
+	private DocumentNoteDAO documentNoteDAO;
 
 	private FolderDAO folderDAO;
 
@@ -117,7 +120,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			document.setSigned(0);
 			document.setPages(-1);
-			
+
 			if (document.getIndexed() != AbstractDocument.INDEX_SKIP)
 				document.setIndexed(AbstractDocument.INDEX_TO_INDEX);
 			if (document.getBarcoded() != AbstractDocument.BARCODE_SKIP)
@@ -164,6 +167,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			}
 
 			log.debug("Checked in document " + docId);
+
+			documentNoteDAO.deleteContentAnnotations(docId);
 		}
 	}
 
@@ -312,7 +317,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		// For additional safety update the DB directly
 		documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_INDEXED + " where ld_id="
 				+ docId);
-		
+
 		markAliasesToIndex(docId);
 	}
 
@@ -936,5 +941,9 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 
 		return lastVersion;
+	}
+
+	public void setDocumentNoteDAO(DocumentNoteDAO documentNoteDAO) {
+		this.documentNoteDAO = documentNoteDAO;
 	}
 }

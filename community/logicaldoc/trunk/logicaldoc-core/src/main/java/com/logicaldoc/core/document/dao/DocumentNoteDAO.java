@@ -15,7 +15,7 @@ import com.logicaldoc.core.document.History;
 public interface DocumentNoteDAO extends PersistentObjectDAO<DocumentNote> {
 
 	public boolean store(DocumentNote note, History transaction);
-	
+
 	/**
 	 * This method finds the list of document note regarding a document with the
 	 * given ID.
@@ -24,6 +24,13 @@ public interface DocumentNoteDAO extends PersistentObjectDAO<DocumentNote> {
 	 * @return The list of document note.
 	 */
 	public List<DocumentNote> findByDocId(long docId);
+
+	/**
+	 * Deletes all content annotations(notes on pages)
+	 * 
+	 * @param docId The identifier of the document
+	 */
+	public void deleteContentAnnotations(long docId);
 
 	/**
 	 * This method finds the list of document notes regarding posted by a

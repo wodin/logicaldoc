@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.document.dao.DocumentNoteDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
@@ -30,6 +31,8 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 	private UserDAO userDao;
 
 	private FolderDAO folderDao;
+	
+	private DocumentNoteDAO documentNoteDao;
 
 	// Instance under test
 	private DocumentManager documentManager;
@@ -41,6 +44,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		verDao = (VersionDAO) context.getBean("VersionDAO");
 		userDao = (UserDAO) context.getBean("UserDAO");
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
+		documentNoteDao = (DocumentNoteDAO) context.getBean("DocumentNoteDAO");
 
 		// Make sure that this is a DocumentManagerImpl instance
 		documentManager = (DocumentManager) context.getBean("DocumentManager");
@@ -233,12 +237,16 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
 
+		Assert.assertNotNull(documentNoteDao.findById(2L));
+		
 		documentManager.checkin(1L, file, "pippo", true, null, transaction);
 
 		doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
 
+		Assert.assertNull(documentNoteDao.findById(2L));		
+		
 		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
 		Assert.assertEquals(0, doc.getSigned());
 		Assert.assertEquals(Document.DOC_UNLOCKED, doc.getStatus());
