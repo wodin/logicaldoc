@@ -61,4 +61,12 @@ public class HibernateDocumentNoteDAO extends HibernatePersistentObjectDAO<Docum
 	public List<DocumentNote> findByUserId(long userId) {
 		return findByWhere("_entity.userId =" + userId, "order by _entity.date desc", null);
 	}
+
+	@Override
+	public void deleteContentAnnotations(long docId) {
+		List<DocumentNote> notes = findByDocId(docId);
+		for (DocumentNote note : notes)
+			if (note.getPage() != 0)
+				delete(note.getId());
+	}
 }
