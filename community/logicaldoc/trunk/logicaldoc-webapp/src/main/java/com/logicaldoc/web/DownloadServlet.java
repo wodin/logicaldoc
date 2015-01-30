@@ -61,7 +61,7 @@ public class DownloadServlet extends HttpServlet {
 
 		try {
 			session = ServiceUtil.validateSession(request);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			/*
 			 * No current session, try to handle a basic authentication
 			 */
