@@ -45,14 +45,14 @@ public class WorkflowSettings extends Window {
 
 		setTitle(I18N.message("workflowsettings"));
 		setWidth(400);
-		setHeight(200);
+		setHeight(220);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
 
 		form = new DynamicForm();
-		form.setMargin(5);
+		form.setMargin(1);
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
 		form.setValuesManager(vm);
