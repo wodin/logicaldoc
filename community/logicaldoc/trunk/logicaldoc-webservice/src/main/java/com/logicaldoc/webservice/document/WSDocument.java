@@ -28,7 +28,7 @@ import com.logicaldoc.webservice.WSAttribute;
 
 /**
  * Web Service Document. Useful class to create repository Documents.
- * 
+ *  
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
@@ -132,7 +132,7 @@ public class WSDocument implements Serializable {
 	private Long exportId = null;
 
 	private Long docRef;
-
+	
 	private String docRefType;
 
 	private Long deleteUserId;
@@ -163,8 +163,8 @@ public class WSDocument implements Serializable {
 	private String startPublishing;
 
 	private String stopPublishing;
-
-	private Integer pages = null;
+	
+	private int pages=-1;
 
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
@@ -368,8 +368,7 @@ public class WSDocument implements Serializable {
 		if (StringUtils.isNotEmpty(date))
 			newdate = AbstractService.convertStringToDate(date);
 		doc.setDate(newdate);
-		if (pages != null)
-			doc.setPages(pages);
+		doc.setPages(pages);
 
 		Date creationDate = null;
 		if (StringUtils.isNotEmpty(creation))
@@ -816,11 +815,11 @@ public class WSDocument implements Serializable {
 		this.docRefType = docRefType;
 	}
 
-	public Integer getPages() {
+	public int getPages() {
 		return pages;
 	}
 
-	public void setPages(Integer pages) {
+	public void setPages(int pages) {
 		this.pages = pages;
 	}
 }
