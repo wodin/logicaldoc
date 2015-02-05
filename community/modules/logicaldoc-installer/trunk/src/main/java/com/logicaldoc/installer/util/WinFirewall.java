@@ -17,13 +17,13 @@ public class WinFirewall {
 		command.add("firewall");
 		command.add("add");
 		command.add("rule");
-		command.add("name=LogicalDOC");
+		command.add("name=Port " + port);
 		command.add("dir=in");
 		command.add("action=allow");
-		command.add("service=LogicalDOC");
+		command.add("service=any");
 		command.add("localip=any");
 		command.add("remoteip=any");
-		command.add("localport="+port);
+		command.add("localport=" + port);
 		command.add("remoteport=any");
 		command.add("protocol=tcp");
 		command.add("interfacetype=any");
@@ -31,7 +31,6 @@ public class WinFirewall {
 		command.add("edge=no");
 		command.add("profile=any");
 		command.add("enable=yes");
-		
 		System.out.println(command.toString().replace(',', ' '));
 		
 		Exec.exec(command);
