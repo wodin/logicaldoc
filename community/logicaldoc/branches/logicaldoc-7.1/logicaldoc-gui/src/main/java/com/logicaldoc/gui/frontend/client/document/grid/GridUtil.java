@@ -50,9 +50,9 @@ public class GridUtil {
 			document.setFileVersion(record.getAttribute("fileVersion"));
 			document.setImmutable("blank".equals(record.getAttributeAsString("immutable")) ? 0 : 1);
 			
-			if ("blank".equals(record.getAttributeAsString("indexed")))
+			if ("indexed".equals(record.getAttributeAsString("indexed")))
 				document.setIndexed(Constants.INDEX_INDEXED);
-			else if ("blank".equals(record.getAttributeAsString("blank")))
+			else if ("blank".equals(record.getAttributeAsString("indexed")))
 				document.setIndexed(Constants.INDEX_TO_INDEX);
 			else
 				document.setIndexed(Constants.INDEX_SKIP);
