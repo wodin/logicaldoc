@@ -17,7 +17,7 @@ public class PreviewPopup extends Window {
 
 	private PreviewPanel previewPanel = null;
 
-	public PreviewPopup(long docId, String fileVersion, String filename, boolean printEnabled) {
+	public PreviewPopup(long docId, String version, String filename, boolean printEnabled) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("preview"));
 
@@ -38,7 +38,7 @@ public class PreviewPopup extends Window {
 		centerInPage();
 		setMargin(2);
 
-		previewPanel = new PreviewPanel(docId, fileVersion, filename, printEnabled, null);
+		previewPanel = new PreviewPanel(docId, version, filename, printEnabled, null);
 		previewPanel.setWidth100();
 		previewPanel.setHeight100();
 
