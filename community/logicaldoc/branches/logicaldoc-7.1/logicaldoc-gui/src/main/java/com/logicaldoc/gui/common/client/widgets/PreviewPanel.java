@@ -131,7 +131,6 @@ public class PreviewPanel extends VLayout {
 		html.setContentsType(ContentsType.FRAGMENT);
 
 		setWidth100();
-		Log.info("**1", null);
 		addMember(html);
 	}
 
@@ -146,7 +145,7 @@ public class PreviewPanel extends VLayout {
 			if (Feature.enabled(Feature.PREVIEW)) {
 				contents = "<iframe src='" + Util.contextPath() + "/prev" + (printEnabled ? "" : "_ro")
 						+ "/index.jsp?sid=" + Session.get().getSid() + "&docId=" + id
-						+ (version != null ? "&version" + version : "") + "&lang=" + getPreviewLanguage(language)
+						+ (version != null ? "&version=" + version : "") + "&lang=" + getPreviewLanguage(language)
 						+ "&print=" + printEnabled + "&zoom=" + zoom + "&key="
 						+ Session.get().getInfo().getConfig("flexpaperviewer.key")
 						+ "' style='border:0px solid white; width:" + (getWidth() - 1) + "px; height:"

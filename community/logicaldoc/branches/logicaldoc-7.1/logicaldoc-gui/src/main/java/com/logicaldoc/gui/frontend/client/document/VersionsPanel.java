@@ -113,6 +113,7 @@ public class VersionsPanel extends DocumentDetailTab {
 			filename = record.getAttribute("title") + "." + record.getAttribute("type");
 
 		GUIFolder folder = document.getFolder();
+		
 		PreviewPopup iv = new PreviewPopup(id, version, filename, folder != null && folder.isDownload());
 		iv.show();
 	}

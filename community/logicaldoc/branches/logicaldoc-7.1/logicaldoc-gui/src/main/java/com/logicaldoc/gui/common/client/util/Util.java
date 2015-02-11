@@ -59,6 +59,17 @@ public class Util {
 		return html;
 	}
 
+	public static String downloadURL(long docId, String fileVersion, String suffix, boolean open) {
+		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + docId;
+		if (fileVersion != null)
+			url += "&fileVersion=" + fileVersion;
+		if (suffix != null)
+			url += "&suffix=" + suffix;
+		if (open)
+			url += "&open=true";
+		return url;
+	}
+
 	public static String downloadURL(long docId, String fileVersion, boolean open) {
 		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + docId;
 		if (fileVersion != null)
@@ -160,11 +171,11 @@ public class Util {
 		return tmp;
 	}
 
-	public static String fullPreviewUrl(String sid, long docId, String fileVersion) {
+	public static String fullPreviewUrl(String sid, long docId, String version) {
 		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + docId
 				+ "%26suffix=preview.swf";
-		if (fileVersion != null)
-			url += "%26fileVersion=" + fileVersion;
+		if (version != null)
+			url += "%26version=" + version;
 		return url;
 	}
 
