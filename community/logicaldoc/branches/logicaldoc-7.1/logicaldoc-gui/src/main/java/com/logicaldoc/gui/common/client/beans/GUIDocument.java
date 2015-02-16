@@ -15,7 +15,7 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private long id;
 
 	private Long docRef;
-	
+
 	private String docRefType;
 
 	private String title;
@@ -97,6 +97,10 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private int score;
 
 	private String extResId;
+
+	private int pages;
+
+	private String tagsString;
 
 	public long getId() {
 		return id;
@@ -182,12 +186,16 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	}
 
 	public String getTagsString() {
-		StringBuffer buf = new StringBuffer();
-		for (String tag : getTags()) {
-			buf.append(tag);
-			buf.append(" ");
+		if (tagsString != null || !tagsString.isEmpty())
+			return tagsString;
+		else {
+			StringBuffer buf = new StringBuffer();
+			for (String tag : getTags()) {
+				buf.append(tag);
+				buf.append(" ");
+			}
+			return buf.toString();
 		}
-		return buf.toString();
 	}
 
 	public String getCreator() {
@@ -494,5 +502,17 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	public void setDocRefType(String docRefType) {
 		this.docRefType = docRefType;
+	}
+
+	public int getPages() {
+		return pages;
+	}
+
+	public void setPages(int pages) {
+		this.pages = pages;
+	}
+
+	public void setTagsString(String tagsString) {
+		this.tagsString = tagsString;
 	}
 }
