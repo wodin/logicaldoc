@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
-import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.io.FileUtil;
 
 public class CryptUtil {
@@ -48,9 +47,9 @@ public class CryptUtil {
 		if (encryptionKey == null)
 			throw new IllegalArgumentException("encryption key was null");
 		try {
-			String key=encryptionKey;
-			if(encryptionKey.length()<32)
-				key=StringUtils.rightPad(encryptionKey, 32, '*');
+			String key = encryptionKey;
+			if (encryptionKey.length() < 32)
+				key = StringUtils.rightPad(encryptionKey, 32, '*');
 			byte[] keyAsBytes = key.getBytes(UNICODE_FORMAT);
 			if (encryptionScheme.equals(DESEDE_ENCRYPTION_SCHEME)) {
 				keySpec = new DESedeKeySpec(keyAsBytes);
