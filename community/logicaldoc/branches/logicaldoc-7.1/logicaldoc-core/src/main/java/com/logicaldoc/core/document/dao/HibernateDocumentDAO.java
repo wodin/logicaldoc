@@ -426,10 +426,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		try {
 			StringBuilder sb = new StringBuilder("select distinct(A.ld_tag) ");
 			if (tenantId != null) {
-				sb.append(" from ld_tag as A join ld_document as B on A.ld_docid=B.ld_id ");
+				sb.append(" from ld_tag A join ld_document B on A.ld_docid=B.ld_id ");
 				sb.append(" where B.ld_tenantid=" + tenantId);
 			} else {
-				sb.append(" from ld_tag as A where ");
+				sb.append(" from ld_tag A where ");
 			}
 			if (StringUtils.isNotEmpty(firstLetter)) {
 				if (tenantId != null)
