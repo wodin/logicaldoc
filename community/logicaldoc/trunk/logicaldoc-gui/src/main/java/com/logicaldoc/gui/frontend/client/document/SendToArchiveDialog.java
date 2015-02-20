@@ -43,7 +43,7 @@ public class SendToArchiveDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
-		setTitle(I18N.message("sendtoarchive"));
+		setTitle(I18N.message("sendtoexparchive"));
 		setWidth(380);
 		setHeight(100);
 		setCanDragResize(true);
@@ -60,7 +60,7 @@ public class SendToArchiveDialog extends Window {
 
 		ButtonItem send = new ButtonItem();
 		send.setStartRow(false);
-		send.setTitle(I18N.message("sendtoarchive"));
+		send.setTitle(I18N.message("sendtoexparchive"));
 		send.setAutoFit(true);
 		send.addClickHandler(new ClickHandler() {
 			@Override

@@ -27,6 +27,7 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.ibm.icu.util.StringTokenizer;
 import com.logicaldoc.core.ExtendedAttribute;
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.User;
@@ -87,11 +88,14 @@ public class DocumentsDataServlet extends HttpServlet {
 			if (StringUtils.isNotEmpty(request.getParameter("page")))
 				page = Integer.parseInt(request.getParameter("page"));
 
+			Integer status = null;
+			if (StringUtils.isNotEmpty(request.getParameter("status")))
+				status = Integer.parseInt(request.getParameter("status"));
+
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			if (StringUtils.isNotEmpty(request.getParameter("status"))) {
-				int status = Integer.parseInt(request.getParameter("status"));
+			if (status != null && status.intValue() != AbstractDocument.DOC_ARCHIVED) {
 				List<Document> docs = dao.findByLockUserAndStatus(session.getUserId(), status);
 				int begin = (page - 1) * max;
 				int end = Math.min(begin + max - 1, docs.size() - 1);
@@ -210,7 +214,7 @@ public class DocumentsDataServlet extends HttpServlet {
 								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
 								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, A.source, A.sourceId, A.recipient, A.object, A.coverage, B.name, A.docRefType "
 								+ " from Document as A left outer join A.template as B ");
-				query.append(" where A.deleted = 0 ");
+				query.append(" where A.deleted = 0 and not A.status=" + AbstractDocument.DOC_ARCHIVED);
 				if (folderId != null)
 					query.append(" and A.folder.id=" + folderId);
 				if (StringUtils.isNotEmpty(request.getParameter("indexed")))

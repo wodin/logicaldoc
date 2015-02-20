@@ -8,14 +8,14 @@ import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
- * Datasource to handle locked documents grid lists.
+ * Datasource to handle achived documents grid lists.
  * 
  * @author Marco Meschieri - Logical Objects
- * @since 7.1.2
+ * @since 7.2
  */
-public class LockedDocsDS extends DataSource {
+public class ArchivedDocsDS extends DataSource {
 
-	public LockedDocsDS(Long userId) {
+	public ArchivedDocsDS(Long folderId, Integer max) {
 		setTitleField("title");
 		setRecordXPath("/list/document");
 
@@ -28,24 +28,21 @@ public class LockedDocsDS extends DataSource {
 		DataSourceTextField customId = new DataSourceTextField("customId");
 		DataSourceTextField version = new DataSourceTextField("version");
 		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
-		DataSourceTextField userIdItem = new DataSourceTextField("userId");
-		DataSourceTextField username = new DataSourceTextField("username");
 		DataSourceFloatField size = new DataSourceFloatField("size");
 		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
 		DataSourceTextField filename = new DataSourceTextField("filename");
-		DataSourceTextField digest = new DataSourceTextField("digest");
-		DataSourceImageField immutable = new DataSourceImageField("immutable");
-		DataSourceTextField folderId = new DataSourceTextField("folderId");
+		DataSourceTextField fid = new DataSourceTextField("folderId");
+		DataSourceTextField folder = new DataSourceTextField("folder");
 		DataSourceTextField type = new DataSourceTextField("type");
-		DataSourceImageField locked = new DataSourceImageField("locked");
 
-		setFields(id, userIdItem, username, title, size, version, fileVersion, lastModified, customId, icon, filename,
-				digest, immutable, folderId, type, locked);
+		setFields(id, title, size, version, fileVersion, lastModified, customId, icon, filename, fid, folder, type);
 		setClientOnly(true);
 
-		String url = "data/lockeddocs.xml?sid=" + Session.get().getSid();
-		if (userId != null)
-			url += "&userId=" + userId;
+		String url = "data/archiveddocs.xml?sid=" + Session.get().getSid();
+		if (folderId != null)
+			url += "&folderId=" + folderId;
+		if (max != null)
+			url += "&max=" + max;
 		setDataURL(url);
 	}
 }

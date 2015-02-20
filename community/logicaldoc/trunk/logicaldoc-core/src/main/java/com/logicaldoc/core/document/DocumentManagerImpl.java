@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -30,6 +32,7 @@ import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
@@ -945,5 +948,57 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	public void setDocumentNoteDAO(DocumentNoteDAO documentNoteDAO) {
 		this.documentNoteDAO = documentNoteDAO;
+	}
+
+	@Override
+	public long archiveFolder(long folderId, History transaction) throws Exception {
+		List<Long> docIds = new ArrayList<Long>();
+
+		Collection<Long> folderIds = folderDAO.findFolderIdByUserIdAndPermission(transaction.getUserId(),
+				Permission.ARCHIVE, folderId, true);
+		for (Long fid : folderIds) {
+			String where = " where ld_deleted=0 and ld_docref is null and not ld_status="
+					+ AbstractDocument.DOC_ARCHIVED + " and ld_folderid=" + fid;
+			List<Long> ids = (List<Long>) documentDAO
+					.queryForList("select ld_id from ld_document " + where, Long.class);
+			if (ids.isEmpty())
+				continue;
+			docIds.addAll(ids);
+			long[] idsArray = new long[ids.size()];
+			for (int i = 0; i < idsArray.length; i++)
+				idsArray[i] = ids.get(i).longValue();
+			archiveDocuments(idsArray, transaction);
+		}
+
+		return docIds.size();
+	}
+
+	@Override
+	public void archiveDocuments(long[] docIds, History transaction) throws Exception {
+		assert (transaction.getUser() != null);
+		List<Long> idsList = new ArrayList<Long>();
+		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Collection<Long> folderIds = folderDAO.findFolderIdByUserIdAndPermission(transaction.getUserId(),
+				Permission.ARCHIVE, null, true);
+
+		
+		for (long id : docIds) {
+			Document doc = dao.findById(id);
+
+			// Skip documents in folders without Archive permission
+			if (!transaction.getUser().isInGroup("admin") && !folderIds.contains(doc.getFolder().getId()))
+				continue;
+			
+			// Create the document history event
+			History t = (History) transaction.clone();
+			if (dao.archive(id, t))
+				idsList.add(id);
+		}
+
+		// Remove all corresponding hits from the index
+		SearchEngine engine = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+		engine.deleteHits(idsList);
+
+		log.info("Archived documents " + idsList);
 	}
 }

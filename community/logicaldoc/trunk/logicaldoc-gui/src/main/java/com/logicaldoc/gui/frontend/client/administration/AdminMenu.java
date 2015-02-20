@@ -52,7 +52,7 @@ public class AdminMenu extends SectionStack {
 			addSection(metadataSection);
 		}
 
-		if ((Feature.visible(Feature.ARCHIVES) || Feature.visible(Feature.EMAIL_IMPORT)
+		if ((Feature.visible(Feature.IMPEX) || Feature.visible(Feature.EMAIL_IMPORT)
 				|| Feature.visible(Feature.IMPORT_LOCAL_FOLDERS) || Feature.visible(Feature.IMPORT_REMOTE_FOLDERS))
 				&& Menu.enabled(Menu.IMPEX)) {
 			SectionStackSection impexSection = new SectionStackSection(I18N.message("impex"));

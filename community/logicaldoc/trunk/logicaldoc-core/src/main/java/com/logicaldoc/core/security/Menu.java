@@ -18,9 +18,9 @@ import com.logicaldoc.core.PersistentObject;
  */
 public class Menu extends PersistentObject implements Comparable<Menu> {
 
-	public static int ROOT = 1;
+	public static long ROOT = 1;
 	
-	public static int DOCUMENTS = 1500;
+	public static long DOCUMENTS = 1500;
 
 	private long id = 0;
 

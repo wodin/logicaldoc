@@ -19,6 +19,7 @@ import org.junit.Test;
 import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.GregorianCalendar;
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
@@ -66,6 +67,55 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(dao.delete(1, transaction));
 		Document doc = dao.findById(1);
 		Assert.assertNull(doc);
+	}
+
+	@Test
+	public void testArchive() {
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId("123");
+		transaction.setComment("");
+		transaction.setUser(new User());
+
+		Assert.assertTrue(dao.archive(1, transaction));
+		Document doc = dao.findById(1);
+		Assert.assertNotNull(doc);
+		Assert.assertEquals(AbstractDocument.DOC_ARCHIVED, doc.getStatus());
+	}
+
+	@Test
+	public void testFindArchivedByFolder() {
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId("123");
+		transaction.setComment("");
+		transaction.setUser(new User());
+
+		Assert.assertTrue(dao.archive(1, transaction));
+		Document doc = dao.findById(1);
+
+		List<Document> docs = dao.findArchivedByFolder(doc.getFolder().getId());
+		Assert.assertEquals(1, docs.size());
+		Assert.assertEquals(doc, docs.get(0));
+	}
+
+	@Test
+	public void testUnArchive() {
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSessionId("123");
+		transaction.setComment("");
+		transaction.setUser(new User());
+
+		Assert.assertTrue(dao.archive(1, transaction));
+		Document doc = dao.findById(1);
+		Assert.assertNotNull(doc);
+		Assert.assertEquals(AbstractDocument.DOC_ARCHIVED, doc.getStatus());
+
+		dao.unarchive(1, transaction);
+		doc = dao.findById(1);
+		Assert.assertNotNull(doc);
+		Assert.assertEquals(AbstractDocument.DOC_UNLOCKED, doc.getStatus());
 	}
 
 	@Test

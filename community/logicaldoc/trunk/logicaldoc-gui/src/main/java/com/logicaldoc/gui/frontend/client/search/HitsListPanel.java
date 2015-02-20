@@ -64,7 +64,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
 
-	private int mode = DocumentsGrid.MODE_LIST;;
+	private int mode = DocumentsGrid.MODE_LIST;
 
 	public HitsListPanel() {
 		if (Offline.get(Constants.COOKIE_HITSLIST_MODE) != null)
@@ -157,11 +157,11 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 												+ "&docId=" + doc.getId(), "_blank", "");
 									else {
 										String filename = doc.getFileName();
-										String version = doc.getVersion();
+										String fileVersion = doc.getFileVersion();
 
 										if (filename == null)
 											filename = doc.getTitle() + "." + doc.getType();
-										PreviewPopup iv = new PreviewPopup(doc.getId(), version, filename,
+										PreviewPopup iv = new PreviewPopup(doc.getId(), fileVersion, filename,
 												folder != null && folder.isDownload());
 										iv.show();
 									}

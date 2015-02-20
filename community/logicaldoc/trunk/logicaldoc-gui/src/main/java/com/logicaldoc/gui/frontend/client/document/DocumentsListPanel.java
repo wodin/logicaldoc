@@ -88,7 +88,7 @@ public class DocumentsListPanel extends VLayout {
 				String title = doc.getTitle();
 				String type = doc.getType();
 				String filename = doc.getFileName();
-				String version = doc.getVersion();
+				String fileVersion = doc.getFileVersion();
 
 				if (filename == null)
 					filename = title + "." + type;
@@ -103,7 +103,7 @@ public class DocumentsListPanel extends VLayout {
 					}
 				else {
 					GUIFolder folder = Session.get().getCurrentFolder();
-					PreviewPopup iv = new PreviewPopup(id, version, filename, folder != null && folder.isDownload());
+					PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
 					iv.show();
 				}
 

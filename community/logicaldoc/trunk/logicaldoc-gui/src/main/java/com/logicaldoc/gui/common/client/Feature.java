@@ -19,7 +19,7 @@ public class Feature {
 
 	public static final int OCR = 3;
 
-	public static final int ARCHIVES = 4;
+	public static final int IMPEX = 4;
 
 	public static final int TAGS = 5;
 
@@ -150,6 +150,8 @@ public class Feature {
 	public static final int ANTIVIRUS = 81;
 	
 	public static final int ANNOTATIONS = 82;
+	
+	public static final int ARCHIVING = 83;
 
 	private static Set<String> features = new HashSet<String>();
 

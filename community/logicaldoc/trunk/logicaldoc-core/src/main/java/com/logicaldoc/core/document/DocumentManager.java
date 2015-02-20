@@ -220,5 +220,26 @@ public interface DocumentManager {
 	 */
 	public String parseDocument(Document doc, String fileVersion);
 
+	/**
+	 * Archives all the documents in a folder's tree
+	 * 
+	 * @param folderId The root folder
+	 * @param transaction entry to log the event (set the user)
+	 * 
+	 * @return Total number of archived documents
+	 * @throws Exception
+	 */
+	public long archiveFolder(long folderId, History transaction) throws Exception;
+
+	/**
+	 * Archives all the documents in a folder's tree
+	 * 
+	 * @param docIds Documents to be archived
+	 * @param transaction entry to log the event (set the user)
+	 * 
+	 * @throws Exception
+	 */
+	public void archiveDocuments(long[] docIds, History transaction) throws Exception;
+
 	public void setStorer(Storer storer);
 }

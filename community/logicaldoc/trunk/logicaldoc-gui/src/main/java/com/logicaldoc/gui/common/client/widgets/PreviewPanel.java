@@ -34,7 +34,7 @@ public class PreviewPanel extends VLayout {
 
 	private String fileName;
 
-	private String version;
+	private String fileVersion;
 
 	private boolean printEnabled = false;
 
@@ -43,13 +43,13 @@ public class PreviewPanel extends VLayout {
 	private int zoom = 0;
 
 	public PreviewPanel(GUIDocument document, Integer zoom) {
-		this(document.getId(), document.getVersion(), document.getFileName(), false, zoom);
+		this(document.getId(), document.getFileVersion(), document.getFileName(), false, zoom);
 	}
 
-	public PreviewPanel(long docId, String version, String filename, boolean printEnabled, Integer zoom) {
+	public PreviewPanel(long docId, String fileVersion, String filename, boolean printEnabled, Integer zoom) {
 		this.id = docId;
 		this.fileName = filename;
-		this.version = version;
+		this.fileVersion = fileVersion;
 		this.printEnabled = printEnabled;
 
 		retrieveUserInfo();
@@ -105,8 +105,8 @@ public class PreviewPanel extends VLayout {
 
 		try {
 			String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id;
-			if (version != null)
-				url += "&version=" + version;
+			if (fileVersion != null)
+				url += "&fileVersion=" + fileVersion;
 
 			if (Util.isAudioFile(fileName))
 				contents = Util.audioHTML(url);
@@ -127,11 +127,10 @@ public class PreviewPanel extends VLayout {
 	private void reloadHTML() {
 		html = new HTMLPane();
 		html.setShowEdges(false);
-		html.setContentsURL(Util.downloadURL(id, version, false));
+		html.setContentsURL(Util.downloadURL(id, fileVersion, false));
 		html.setContentsType(ContentsType.FRAGMENT);
 
 		setWidth100();
-		Log.info("**1", null);
 		addMember(html);
 	}
 
@@ -146,13 +145,13 @@ public class PreviewPanel extends VLayout {
 			if (Feature.enabled(Feature.PREVIEW)) {
 				contents = "<iframe src='" + Util.contextPath() + "/prev" + (printEnabled ? "" : "_ro")
 						+ "/index.jsp?sid=" + Session.get().getSid() + "&docId=" + id
-						+ (version != null ? "&version" + version : "") + "&lang=" + getPreviewLanguage(language)
+						+ (fileVersion != null ? "&fileVersion=" + fileVersion : "") + "&lang=" + getPreviewLanguage(language)
 						+ "&print=" + printEnabled + "&zoom=" + zoom + "&key="
 						+ Session.get().getInfo().getConfig("flexpaperviewer.key")
 						+ "' style='border:0px solid white; width:" + (getWidth() - 1) + "px; height:"
 						+ (getHeight() - 1) + "px; overflow:hidden;'  scrolling='no' seamless='seamless'></iframe>";
 			} else {
-				String url = Util.fullPreviewUrl(Session.get().getSid(), id, version);
+				String url = Util.fullPreviewUrl(Session.get().getSid(), id, fileVersion);
 				contents = Util.flashPreview(getWidth() - 4, getHeight() - 4, zoom, "SwfFile=" + url, printEnabled,
 						getPreviewLanguage(language));
 			}

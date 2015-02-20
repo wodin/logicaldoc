@@ -43,7 +43,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	public List<Long> findDocIdByFolder(long folderId, Integer max);
 
 	/**
-	 * Finds all documents inside the given folder.
+	 * Finds all documents direct children of the given folder.
 	 * 
 	 * @param folderId Folder identifier
 	 * @return Collection of all documents in the folder.
@@ -232,6 +232,14 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	public void restore(long docId, long folderId, History transaction);
 
 	/**
+	 * Restores a previously archived document
+	 * 
+	 * @param docId Ids of the document to be restored
+	 * @param transaction entry to log the event
+	 */
+	public void unarchive(long docId, History transaction);
+
+	/**
 	 * Marks the document, with the given docId, as immutable. Unlocks the
 	 * document if it was locked.
 	 * 
@@ -240,12 +248,11 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 */
 	public void makeImmutable(long docId, History transaction);
 
-	
 	/**
 	 * Shortcut for deleteAll(documents, 1, transaction
 	 */
 	public void deleteAll(Collection<Document> documents, History transaction);
-	
+
 	/**
 	 * Deletes all documents form the database and modifies the custom ids of
 	 * all documents
@@ -281,7 +288,17 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * Shortcut for delete(docId, 1, transaction)
 	 */
 	public boolean delete(long docId, History transaction);
-	
+
+	/**
+	 * Archives a document
+	 */
+	public boolean archive(long docId, History transaction);
+
+	/**
+	 * Finds archived documents in a folder (direct childeren only)
+	 */
+	public List<Document> findArchivedByFolder(long folderId);
+
 	/**
 	 * Gets the ids of all aliases associated to the document with the given
 	 * docId

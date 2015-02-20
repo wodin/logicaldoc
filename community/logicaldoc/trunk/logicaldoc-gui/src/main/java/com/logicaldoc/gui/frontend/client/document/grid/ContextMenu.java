@@ -368,6 +368,43 @@ public class ContextMenu extends Menu {
 			}
 		});
 
+		MenuItem archive = new MenuItem();
+		archive.setTitle(I18N.message("archive"));
+		archive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				if (selection == null || selection.length == 0)
+					return;
+
+				LD.askforValue(I18N.message("warning"), I18N.message("archiveadvice"), "", "50%", new ValueCallback() {
+
+					@Override
+					public void execute(String value) {
+						if (value == null)
+							return;
+
+						if (value.isEmpty())
+							SC.warn(I18N.message("commentrequired"));
+						else
+							documentService.archiveDocuments(Session.get().getSid(), selectionIds, value,
+									new AsyncCallback<Void>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
+
+										@Override
+										public void onSuccess(Void result) {
+											grid.removeSelectedDocuments();
+											Log.info(I18N.message("documentswerearchived", "" + selectionIds.length),
+													null);
+										}
+									});
+					}
+
+				});
+			}
+		});
+
 		MenuItem bookmark = new MenuItem();
 		bookmark.setTitle(I18N.message("addbookmark"));
 		bookmark.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -511,8 +548,8 @@ public class ContextMenu extends Menu {
 			}
 		});
 
-		MenuItem archive = new MenuItem(I18N.message("sendtoarchive"));
-		archive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem sendToExpArchive = new MenuItem(I18N.message("sendtoexparchive"));
+		sendToExpArchive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null || selection.length == 0)
@@ -549,14 +586,14 @@ public class ContextMenu extends Menu {
 				GUIDocument selection = grid.getSelectedDocument();
 				long id = selection.getId();
 				String filename = selection.getFileName();
-				String version = selection.getVersion();
+				String fileVersion = selection.getFileVersion();
 
 				// In the search hitlist we don't have the filename
 				if (filename == null)
 					filename = selection.getTitle() + "." + selection.getType();
 
 				GUIFolder folder = Session.get().getCurrentFolder();
-				PreviewPopup iv = new PreviewPopup(id, version, filename, folder != null && folder.isDownload());
+				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
 				iv.show();
 			}
 		});
@@ -673,7 +710,7 @@ public class ContextMenu extends Menu {
 		}
 
 		final GUIExternalCall extCall = Session.get().getSession().getExternalCall();
-		if (Feature.enabled(Feature.EXTERNAL_CALL) && extCall != null) {
+		if (extCall != null) {
 			externalCall.setTitle(extCall.getName());
 			externalCall.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 				public void onClick(MenuItemClickEvent event) {
@@ -688,11 +725,22 @@ public class ContextMenu extends Menu {
 							extCall.getTargetWindow() != null ? extCall.getTargetWindow() : "_blank", null);
 				}
 			});
-			setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock,
-					unlockItem, more, externalCall);
-		} else
-			setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock,
-					unlockItem, more);
+		}
+
+		setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock, unlockItem);
+		
+		if (Feature.visible(Feature.ARCHIVING)) {
+			addItem(archive);
+			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.ARCHIVING))
+				archive.setEnabled(false);
+			else
+				archive.setEnabled(true);
+		}
+
+		if (Feature.enabled(Feature.EXTERNAL_CALL) && extCall != null)
+			addItem(externalCall);
+
+		addItem(more);
 
 		Menu moreMenu = new Menu();
 		moreMenu.setItems(indexSelection, markIndexable, markUnindexable, immutable);
@@ -705,12 +753,12 @@ public class ContextMenu extends Menu {
 				sign.setEnabled(enableSign && selection.length > 0);
 		}
 
-		if (Feature.visible(Feature.ARCHIVES)) {
-			moreMenu.addItem(archive);
-			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.ARCHIVES))
-				archive.setEnabled(false);
+		if (Feature.visible(Feature.IMPEX)) {
+			moreMenu.addItem(sendToExpArchive);
+			if (!folder.hasPermission(Constants.PERMISSION_EXPORT) || !Feature.enabled(Feature.IMPEX))
+				sendToExpArchive.setEnabled(false);
 			else
-				archive.setEnabled(true);
+				sendToExpArchive.setEnabled(true);
 		}
 
 		if (Feature.visible(Feature.WORKFLOW)) {

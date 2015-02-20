@@ -80,4 +80,12 @@ public interface DocumentServiceAsync {
 	void deleteFromTrash(String sid, Long[] ids, AsyncCallback<Void> callback);
 
 	void emptyTrash(String sid, AsyncCallback<Void> callback);
+
+	void archiveDocuments(String sid, long[] docIds, String comment, AsyncCallback<Void> callback);
+
+	void archiveFolder(String sid, long folderId, String comment, AsyncCallback<Long> callback);
+
+	void countDocuments(String sid, long folderId, int status, AsyncCallback<Long> callback);
+
+	void unarchiveDocuments(String sid, long[] docIds, AsyncCallback<Void> callback);
 }

@@ -74,6 +74,8 @@ public final class Constants {
 	public static final int DOC_CHECKED_OUT = 1;
 
 	public static final int DOC_LOCKED = 2;
+	
+	public static final int DOC_ARCHIVED = 3;
 
 	public static final String SMTP_SECURITY_NONE = "0";
 

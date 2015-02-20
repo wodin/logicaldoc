@@ -124,7 +124,7 @@
 	</category>
 
 	<category name="com.logicaldoc.core.security" additivity="true">
-		<priority value="error" />
+		<priority value="warn" />
 	</category>
 
 	<category name="com.logicaldoc.core.searchengine.IndexOptimizer"

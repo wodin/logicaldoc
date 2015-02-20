@@ -61,9 +61,9 @@ public class ImpexMenu extends VLayout {
 		Button importArchives = new Button(I18N.message("importarchives"));
 		importArchives.setWidth100();
 		importArchives.setHeight(25);
-		if (Feature.visible(Feature.ARCHIVES)) {
+		if (Feature.visible(Feature.IMPEX)) {
 			addMember(importArchives);
-			if (!Feature.enabled(Feature.ARCHIVES)) {
+			if (!Feature.enabled(Feature.IMPEX)) {
 				importArchives.setDisabled(true);
 				importArchives.setTooltip(I18N.message("featuredisabled"));
 			}
@@ -79,9 +79,9 @@ public class ImpexMenu extends VLayout {
 		exportArchives.setWidth100();
 		exportArchives.setHeight(25);
 
-		if (Feature.visible(Feature.ARCHIVES)) {
+		if (Feature.visible(Feature.IMPEX)) {
 			addMember(exportArchives);
-			if (!Feature.enabled(Feature.ARCHIVES)) {
+			if (!Feature.enabled(Feature.IMPEX)) {
 				exportArchives.setDisabled(true);
 				exportArchives.setTooltip(I18N.message("featuredisabled"));
 			}

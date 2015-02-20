@@ -287,4 +287,17 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		documentManager.deleteVersion(13L, null);
 		Assert.assertNull(verDao.findById(13L));
 	}
+	
+	@Test
+	public void testArchiveDocuments() throws Exception {
+		User user = userDao.findByUserName("admin");
+		History transaction=new History();
+		transaction.setSessionId("1234");
+		transaction.setUser(user);
+		
+		documentManager.archiveDocuments(new long[]{1L}, transaction);
+		
+		Document doc=docDao.findById(1L);
+		Assert.assertEquals(AbstractDocument.DOC_ARCHIVED, doc.getStatus());
+	}
 }
