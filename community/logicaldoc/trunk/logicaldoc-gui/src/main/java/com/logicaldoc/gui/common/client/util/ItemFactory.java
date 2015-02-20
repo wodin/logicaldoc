@@ -914,7 +914,7 @@ public class ItemFactory {
 		item.setPickListWidth(300);
 		item.setPickListFields(name, description);
 		item.setOptionDataSource(new ArchivesDS(mode, null, status, null));
-		if (!Feature.enabled(Feature.ARCHIVES))
+		if (!Feature.enabled(Feature.IMPEX))
 			item.setDisabled(true);
 		item.setHintStyle("hint");
 		return item;

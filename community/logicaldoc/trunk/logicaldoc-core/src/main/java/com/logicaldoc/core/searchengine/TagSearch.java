@@ -102,7 +102,7 @@ public class TagSearch extends Search {
 			ids = ids.replace('[', '(').replace(']', ')');
 		}
 
-		if (StringUtils.isNotEmpty(ids)) {
+		if (StringUtils.isNotEmpty(ids) && !"()".equals(ids)) {
 			query.append(" and A.ld_id in ");
 			query.append(ids);
 		}
@@ -118,7 +118,7 @@ public class TagSearch extends Search {
 		DocumentDAO docDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		List<Long> precoll = docDAO.findDocIdByUserIdAndTag(options.getUserId(), options.getExpression());
 		String buf = precoll.toString().replace("[", "(").replace("]", ")");
-		query.append(buf);
+		query.append(!"()".equals(buf) ? buf : "(0)");
 
 		// For normal users we have to exclude not published documents
 		if (!searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {

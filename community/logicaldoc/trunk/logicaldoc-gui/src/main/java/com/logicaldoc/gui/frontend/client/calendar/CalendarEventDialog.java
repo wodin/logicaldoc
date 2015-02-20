@@ -272,12 +272,12 @@ public class CalendarEventDialog extends Window {
 
 				long id = Long.parseLong(selection.getAttribute("id"));
 				String filename = selection.getAttribute("filename");
-				String version = selection.getAttribute("version");
+				String fileVersion = selection.getAttribute("fileVersion");
 
 				if (filename == null)
 					filename = selection.getAttribute("title") + "." + selection.getAttribute("type");
 
-				PreviewPopup iv = new PreviewPopup(id, version, filename, false);
+				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, false);
 				iv.show();
 			}
 		});

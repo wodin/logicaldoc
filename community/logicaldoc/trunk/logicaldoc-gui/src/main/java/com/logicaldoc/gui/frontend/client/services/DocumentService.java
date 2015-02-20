@@ -82,16 +82,32 @@ public interface DocumentService extends RemoteService {
 	 * Deletes a selection of documents from trash
 	 */
 	public void deleteFromTrash(String sid, Long[] ids) throws ServerException;
-	
+
 	/**
 	 * Clear the user's trash
 	 */
 	public void emptyTrash(String sid) throws ServerException;
-	
+
 	/**
 	 * Makes immutable a set of documents
 	 */
 	public void makeImmutable(String sid, long[] docIds, String comment) throws ServerException;
+
+	/**
+	 * Archives a set of documents
+	 */
+	public void archiveDocuments(String sid, long[] docIds, String comment) throws ServerException;
+
+	/**
+	 * Archives the documents in a folder
+	 */
+	public long archiveFolder(String sid, long folderId, String comment) throws ServerException;
+
+	/**
+	 * Counts the documents in a given status contained the specified folder's
+	 * tree
+	 */
+	public long countDocuments(String sid, long folderId, int status) throws ServerException;
 
 	/**
 	 * Unlocks a set of documents
@@ -159,6 +175,11 @@ public interface DocumentService extends RemoteService {
 	 * Restores a given document
 	 */
 	public void restore(String sid, long docId, long folderId) throws ServerException;
+
+	/**
+	 * Restores a given set of archived documents
+	 */
+	public void unarchiveDocuments(String sid, long[] docIds) throws ServerException;
 
 	/**
 	 * Adds new bookmarks

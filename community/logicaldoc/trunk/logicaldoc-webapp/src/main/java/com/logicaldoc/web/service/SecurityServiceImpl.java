@@ -326,7 +326,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				return;
 
 			FileUtils.forceDelete(UserUtil.getUserResource(session.getUserId(), "temp"));
-			log.info("User " + session.getUserName() + " logged out.");
+			log.info("User " + session.getUserName() + " logged out and closed session "+sid);
 			kill(sid);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);

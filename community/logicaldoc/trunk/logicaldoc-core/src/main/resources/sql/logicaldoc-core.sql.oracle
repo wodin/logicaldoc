@@ -195,6 +195,7 @@ create unique index  AK_EXTOPTION on ld_extoption (ld_templateid, ld_attribute, 
 create index LD_DOC_LUID on ld_document (ld_lockuserid);
 create index LD_DOC_FID on ld_document (ld_folderid);
 create index LD_DOC_RID on ld_document (ld_docref);
+create index LD_DOC_STATUS on ld_document (ld_status);
 create index LD_HIST_DOCID on ld_history (ld_docid);
 create index LD_HIST_UID on ld_history (ld_userid);
 create index LD_HIST_NOT on ld_history (ld_notified);

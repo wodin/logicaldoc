@@ -62,7 +62,7 @@ import com.smartgwt.client.widgets.tree.TreeNode;
 public class FolderNavigator extends TreeGrid implements FolderObserver {
 	private FolderServiceAsync service = (FolderServiceAsync) GWT.create(FolderService.class);
 
-	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private static FolderNavigator instance = new FolderNavigator();
 
@@ -342,35 +342,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
-
-								@Override
-								public void onSuccess(Void result) {
-									/*
-									 * This is needed because of strange
-									 * behaviours if we directly delete the
-									 * selected node.
-									 */
-									TreeNode node = getTree().find("folderId", Long.toString(id));
-									TreeNode parent = getTree().find("folderId", node.getAttribute("parent"));
-									getTree().closeFolder(parent);
-									getTree().remove(node);
-									getTree().openFolder(parent);
-
-									selectFolder(Long.parseLong(node.getAttributeAsString("parent")));
-								}
-							});
-						}
-					}
-				});
+				onDelete(id);
 			}
 		});
 
@@ -403,6 +375,14 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		applyTemplate.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				onApplyTemplate();
+			}
+		});
+
+		MenuItem archive = new MenuItem();
+		archive.setTitle(I18N.message("archive"));
+		archive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				onArchive(folder.getId());
 			}
 		});
 
@@ -486,9 +466,9 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 			}
 		});
 
-		MenuItem archive = new MenuItem();
-		archive.setTitle(I18N.message("sendtoarchive"));
-		archive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem sendToExpArchive = new MenuItem();
+		sendToExpArchive.setTitle(I18N.message("sendtoexparchive"));
+		sendToExpArchive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				LD.ask(I18N.message("question"), I18N.message("confirmarchive"), new BooleanCallback() {
 					@Override
@@ -574,17 +554,70 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 				applyTemplate.setEnabled(false);
 		}
 
-		if (Feature.visible(Feature.ARCHIVES)) {
+		if (Feature.visible(Feature.ARCHIVING)) {
 			contextMenu.addItem(archive);
-			if (!Feature.enabled(Feature.ARCHIVES) || !folder.hasPermission(Constants.PERMISSION_EXPORT)
-					|| !folder.hasPermission(Constants.PERMISSION_DOWNLOAD))
+			if (!Feature.enabled(Feature.ARCHIVING) || !folder.hasPermission(Constants.PERMISSION_ARCHIVE))
 				archive.setEnabled(false);
+		}
+
+		if (Feature.visible(Feature.IMPEX)) {
+			contextMenu.addItem(sendToExpArchive);
+			if (!Feature.enabled(Feature.IMPEX) || !folder.hasPermission(Constants.PERMISSION_EXPORT))
+				sendToExpArchive.setEnabled(false);
 		}
 
 		if (externalCall != null)
 			contextMenu.addItem(externalCall);
 
 		return contextMenu;
+	}
+
+	private void onDelete(final long folderId) {
+		documentService.countDocuments(Session.get().getSid(), folderId, Constants.DOC_ARCHIVED,
+				new AsyncCallback<Long>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Long count) {
+						LD.ask(I18N.message("question"),
+								count == 0 ? I18N.message("confirmdeletefolder") : I18N
+										.message("confirmdeletefolderarchdocs"), new BooleanCallback() {
+									@Override
+									public void execute(Boolean value) {
+										if (value) {
+											service.delete(Session.get().getSid(), folderId, new AsyncCallback<Void>() {
+												@Override
+												public void onFailure(Throwable caught) {
+													Log.serverError(caught);
+												}
+
+												@Override
+												public void onSuccess(Void result) {
+													/*
+													 * This is needed because of
+													 * strange behaviours if we
+													 * directly delete the
+													 * selected node.
+													 */
+													TreeNode node = getTree().find("folderId", Long.toString(folderId));
+													TreeNode parent = getTree().find("folderId",
+															node.getAttribute("parent"));
+													getTree().closeFolder(parent);
+													getTree().remove(node);
+													getTree().openFolder(parent);
+
+													selectFolder(Long.parseLong(node.getAttributeAsString("parent")));
+												}
+											});
+										}
+									}
+								});
+					}
+				});
 	}
 
 	/**
@@ -602,7 +635,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		final long folderId = Long.parseLong(selectedNode.getAttributeAsString("folderId"));
 
-		docService.addBookmarks(Session.get().getSid(), new long[] { folderId }, 1, new AsyncCallback<Void>() {
+		documentService.addBookmarks(Session.get().getSid(), new long[] { folderId }, 1, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -898,5 +931,32 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	@Override
 	public void onFolderSelected(GUIFolder folder) {
 		// Nothing to do
+	}
+
+	public void onArchive(final long folderId) {
+		LD.askforValue(I18N.message("warning"), I18N.message("archiveadvice"), "", "50%", new ValueCallback() {
+
+			@Override
+			public void execute(String value) {
+				if (value == null)
+					return;
+
+				if (value.isEmpty())
+					SC.warn(I18N.message("commentrequired"));
+				else
+					documentService.archiveFolder(Session.get().getSid(), folderId, value, new AsyncCallback<Long>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(Long result) {
+							Log.info(I18N.message("documentswerearchived", "" + result), null);
+							reload();
+						}
+					});
+			}
+		});
 	}
 }

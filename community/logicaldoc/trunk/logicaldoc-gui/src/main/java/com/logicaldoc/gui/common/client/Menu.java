@@ -12,8 +12,10 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
  * @since 6.0
  */
 public class Menu {
+	public static final long ARCHIVED_DOCS = -4;
+
 	public static final long LOCKED_DOCS = -3;
-	
+
 	public static final long LAST_CHANGES = -2;
 
 	public static final long ADMINISTRATION = 2;
@@ -43,7 +45,7 @@ public class Menu {
 	public static final long BARCODES = 30;
 
 	public static final long REPORTS = 16;
-	
+
 	public static final long PARAMETERS = 100;
 
 	public static final long OFFICE = -1090;
@@ -55,9 +57,9 @@ public class Menu {
 	public static final long CALENDAR_REPORT = -2060;
 
 	public static final long DROPBOX = -2070;
-	
+
 	public static final long GDOCS = -2080;
-	
+
 	public static final long WEBCONTENT = -2100;
 
 	private static Set<Long> menues = new HashSet<Long>();

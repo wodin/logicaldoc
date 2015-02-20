@@ -24,6 +24,7 @@ import com.ibm.icu.util.Calendar;
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentLink;
@@ -99,6 +100,35 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
+	public boolean archive(long docId, History transaction) {
+		boolean result = true;
+		try {
+			Document doc = (Document) findById(docId);
+			doc.setStatus(AbstractDocument.DOC_ARCHIVED);
+			transaction.setEvent(DocumentEvent.ARCHIVED.toString());
+			store(doc, transaction);
+			log.debug("Archived document " + docId);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			result = false;
+		}
+		return result;
+	}
+
+	@Override
+	public void unarchive(long docId, History transaction) {
+		try {
+			Document doc = (Document) findById(docId);
+			doc.setStatus(AbstractDocument.DOC_UNLOCKED);
+			transaction.setEvent(DocumentEvent.RESTORED.toString());
+			store(doc, transaction);
+			log.debug("Unarchived document " + docId);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	@Override
 	public boolean delete(long docId, History transaction) {
 		return delete(docId, PersistentObject.DELETED_CODE_DEFAULT, transaction);
 	}
@@ -137,9 +167,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					doc.setCustomId(doc.getCustomId() + "." + doc.getId());
 				store(doc, transaction);
 			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			result = false;
 		}
 
@@ -161,7 +190,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			query.append(folder.getId());
 			first = false;
 		}
-		query.append(")");
+		query.append(") and not _entity.status=" + AbstractDocument.DOC_ARCHIVED);
 		return findIdsByWhere(query.toString(), null, null);
 	}
 
@@ -197,8 +226,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Long> findDocIdByTag(String tag) {
-		StringBuilder query = new StringBuilder("select distinct(ld_docid) from ld_tag where ");
-		query.append("lower(ld_tag)='" + SqlUtil.doubleQuotes(tag).toLowerCase() + "'");
+		StringBuilder query = new StringBuilder(
+				"select distinct(A.ld_docid) from ld_tag A, ld_document B where A.ld_docid=B.ld_id and not B.ld_status="
+						+ AbstractDocument.DOC_ARCHIVED);
+		query.append(" and lower(ld_tag)='" + SqlUtil.doubleQuotes(tag).toLowerCase() + "'");
 		return (List<Long>) queryForList(query.toString(), Long.class);
 	}
 
@@ -299,13 +330,11 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
 			log.debug("Invoke listeners before store");
-			for (DocumentListener listener : listenerManager.getListeners()) {
+			for (DocumentListener listener : listenerManager.getListeners())
 				listener.beforeStore(doc, transaction, dictionary);
-			}
 
-			if (doc.getCustomId() == null) {
+			if (doc.getCustomId() == null)
 				doc.setCustomId(UUID.randomUUID().toString());
-			}
 
 			// Save the document
 			saveOrUpdate(doc);
@@ -317,9 +346,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				refresh(doc);
 
 			log.debug("Invoke listeners after store");
-			for (DocumentListener listener : listenerManager.getListeners()) {
+			for (DocumentListener listener : listenerManager.getListeners())
 				listener.afterStore(doc, transaction, dictionary);
-			}
 
 			if (StringUtils.isEmpty(doc.getCustomId()))
 				doc.setCustomId(Long.toString(doc.getId()));
@@ -399,13 +427,15 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 		try {
 			StringBuilder query = new StringBuilder("SELECT COUNT(tag), tag");
-			query.append(" FROM Document _entity JOIN _entity.tags tag where 1=1 ");
+			query.append(" FROM Document _entity JOIN _entity.tags tag where not _entity.status="
+					+ AbstractDocument.DOC_ARCHIVED);
 			if (StringUtils.isNotEmpty(firstLetter))
 				query.append(" and lower(tag) like '" + firstLetter.toLowerCase() + "%' ");
 			if (tenantId != null)
 				query.append(" and _entity.tenantId=" + tenantId);
 			query.append(" GROUP BY tag");
 
+			
 			List ssss = findByQuery(query.toString(), null, null);
 			for (Iterator iter = ssss.iterator(); iter.hasNext();) {
 				Object[] element = (Object[]) iter.next();
@@ -426,10 +456,10 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		try {
 			StringBuilder sb = new StringBuilder("select distinct(A.ld_tag) ");
 			if (tenantId != null) {
-				sb.append(" from ld_tag as A join ld_document as B on A.ld_docid=B.ld_id ");
+				sb.append(" from ld_tag A join ld_document B on A.ld_docid=B.ld_id ");
 				sb.append(" where B.ld_tenantid=" + tenantId);
 			} else {
-				sb.append(" from ld_tag as A where ");
+				sb.append(" from ld_tag A where ");
 			}
 			if (StringUtils.isNotEmpty(firstLetter)) {
 				if (tenantId != null)
@@ -490,7 +520,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				String precollString = precoll.toString().replace('[', '(').replace(']', ')');
 
 				query.append("select distinct(C.ld_id) from ld_document C, ld_tag D "
-						+ " where C.ld_id=D.ld_docid AND C.ld_deleted=0 AND C.ld_folderid in ");
+						+ " where C.ld_id=D.ld_docid AND C.ld_deleted=0 and not C.ld_status="
+						+ AbstractDocument.DOC_ARCHIVED);
+				query.append(" AND C.ld_folderid in ");
 				query.append(precollString);
 				query.append(" AND D.ld_tag='" + SqlUtil.doubleQuotes(tag.toLowerCase()) + "' ");
 
@@ -528,8 +560,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				tmpal.subList(0, maxResults - 1);
 			}
 
-			query = new StringBuffer("from Document _entity  ");
-			query.append(" where _entity.id in (");
+			query = new StringBuffer("from Document _entity ");
+			query.append(" where not _entity.status=" + AbstractDocument.DOC_ARCHIVED);
+			query.append(" and _entity.id in (");
 
 			for (int i = 0; i < docIds.size(); i++) {
 				Long docId = docIds.get(i);
@@ -564,13 +597,20 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Long> findDocIdByFolder(long folderId, Integer max) {
-		String sql = "select ld_id from ld_document where ld_deleted=0 and ld_folderid = " + folderId;
+		String sql = "select ld_id from ld_document where ld_deleted=0 and ld_folderid = " + folderId
+				+ " and not ld_status=" + AbstractDocument.DOC_ARCHIVED;
 		return (List<Long>) queryForList(sql, null, Long.class, max);
 	}
 
 	@Override
 	public List<Document> findByFolder(long folderId, Integer max) {
 		return findByWhere("_entity.folder.id = " + Long.toString(folderId), null, max);
+	}
+
+	@Override
+	public List<Document> findArchivedByFolder(long folderId) {
+		return findByWhere("_entity.folder.id = " + folderId + " and _entity.status=" + AbstractDocument.DOC_ARCHIVED,
+				null, null);
 	}
 
 	@Override
@@ -591,6 +631,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				query.append(linkType);
 				query.append("'");
 			}
+			query.append(" and not _entity.status=" + AbstractDocument.DOC_ARCHIVED);
 
 			coll = (List<Document>) findByQuery(query.toString(), new Object[] { docId }, null);
 
@@ -613,6 +654,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		}
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
+		query += " and not _entity.status=" + AbstractDocument.DOC_ARCHIVED;
 
 		return findByWhere(query, null, max);
 	}
@@ -623,6 +665,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				+ SqlUtil.doubleQuotes(title.toLowerCase()) + "'";
 		if (excludeId != null)
 			query += " and not(_entity.id = " + excludeId + ")";
+		query += " and not _entity.status=" + AbstractDocument.DOC_ARCHIVED;
 
 		return findByWhere(query, null, null);
 	}
@@ -889,7 +932,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public Collection<Long> findPublishedIds(Collection<Long> folderIds) {
-		StringBuffer query = new StringBuffer("select ld_id from ld_document where ld_deleted=0 ");
+		StringBuffer query = new StringBuffer("select ld_id from ld_document where ld_deleted=0 and not ld_status="
+				+ AbstractDocument.DOC_ARCHIVED);
 		if (folderIds != null && !folderIds.isEmpty()) {
 			query.append(" and ld_folderid in (");
 			query.append(folderIds.toString().replace('[', ' ').replace(']', ' '));

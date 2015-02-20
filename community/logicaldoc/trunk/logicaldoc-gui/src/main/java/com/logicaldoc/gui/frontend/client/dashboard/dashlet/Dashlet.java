@@ -115,10 +115,10 @@ public class Dashlet extends Portlet {
 			public void onClick(MenuItemClickEvent event) {
 				long id = document.getId();
 				String filename = document.getFileName();
-				String version = document.getVersion();
+				String fileVersion = document.getFileVersion();
 
 				GUIFolder folder = document.getFolder();
-				PreviewPopup iv = new PreviewPopup(id, version, filename, folder != null && folder.isDownload());
+				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
 				iv.show();
 			}
 		});

@@ -301,6 +301,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNull(book);
 	}
 
+
 	@Test
 	public void testMarkHistoryAsRead() throws ServerException {
 		List<History> histories = historyDao.findByUserIdAndEvent(1, "data test 01", null);
@@ -347,5 +348,11 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		doc3 = docDao.findById(3);
 		Assert.assertNotNull(doc3);
 		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc3.getIndexed());
+	}
+	
+	@Test
+	public void testCountDocuments() throws ServerException {
+		Assert.assertEquals(4, service.countDocuments(session.getSid(), 5, 0));
+		Assert.assertEquals(0, service.countDocuments(session.getSid(), 5, 3));
 	}
 }

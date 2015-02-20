@@ -206,7 +206,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		});
 
 		archive.setIcon(ItemFactory.newImgIcon("server_add.png").getSrc());
-		archive.setTooltip(I18N.message("sendtoarchive"));
+		archive.setTooltip(I18N.message("sendtoexparchive"));
 		archive.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -401,10 +401,10 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
-		if (Feature.visible(Feature.ARCHIVES)) {
+		if (Feature.visible(Feature.IMPEX)) {
 			addSeparator();
 			addButton(archive);
-			if (!Feature.enabled(Feature.ARCHIVES)) {
+			if (!Feature.enabled(Feature.IMPEX)) {
 				archive.setDisabled(true);
 				archive.setTooltip(I18N.message("featuredisabled"));
 			}
@@ -554,7 +554,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						|| !Feature.enabled(Feature.DROP_SPOT));
 				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
 				archive.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
-						|| !Feature.enabled(Feature.ARCHIVES));
+						|| !Feature.enabled(Feature.IMPEX));
 				startWorkflow.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_WORKFLOW)
 						|| !Feature.enabled(Feature.WORKFLOW));
 				addCalendarEvent.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_CALENDAR)

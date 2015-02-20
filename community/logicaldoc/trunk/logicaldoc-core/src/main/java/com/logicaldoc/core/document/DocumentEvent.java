@@ -30,6 +30,7 @@ public enum DocumentEvent {
 	NEW_NOTE("event.newnote"),
 	SIGNED("event.signed"),
 	EXPORTPDF("event.exportpdf"),
+	EXPORTED("event.exported"),
 	ADDED_TO_CALEVENT("event.caladd"),
 	REMOVED_FROM_CALEVENT("event.caldel"),
 	SUBSCRIBED("event.subscribed");

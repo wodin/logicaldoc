@@ -68,7 +68,7 @@ public class LockedDocsDataServlet extends HttpServlet {
 			StringBuffer query = new StringBuffer(
 					"select A.ld_id, A.ld_customid, A.ld_type, A.ld_title, A.ld_version, A.ld_lastmodified, ");
 			query.append(" A.ld_publisher, A.ld_filesize, A.ld_filename, A.ld_immutable, A.ld_folderid, A.ld_type, A.ld_status, A.ld_lockuserid, ");
-			query.append(" B.ld_firstname, B.ld_name ");
+			query.append(" B.ld_firstname, B.ld_name, A.ld_fileversion ");
 			query.append(" from ld_document A ");
 			query.append(" left outer join ld_user B on A.ld_lockuserid=B.ld_id ");
 			query.append(" where A.ld_deleted = 0 and A.ld_tenantid=");
@@ -91,6 +91,7 @@ public class LockedDocsDataServlet extends HttpServlet {
 					doc.setType(rs.getString(3));
 					doc.setTitle(rs.getString(4));
 					doc.setVersion(rs.getString(5));
+					doc.setFileVersion(rs.getString(17));
 					doc.setLastModified(new Date(rs.getTimestamp(6).getTime()));
 					doc.setPublisher(rs.getString(7));
 					doc.setFileSize(rs.getLong(8));

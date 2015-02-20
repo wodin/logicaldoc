@@ -4,30 +4,33 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.data.LockedDocsDS;
+import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.data.ArchivedDocsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.FolderChangeListener;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.folder.FolderSelector;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -43,36 +46,51 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
- * This panel shows a list of locked documents
+ * This panel shows a list of archived documents
  * 
  * @author Marco Meschieri - Logical Objects
- * @since 7.1.2
+ * @since 7.2
  */
-public class LockedDocsPanel extends VLayout {
+public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 	protected DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private ListGrid list;
 
 	private InfoPanel infoPanel;
 
-	private SelectItem userSelector;
+	private FolderSelector folderSelector;
 
-	public LockedDocsPanel() {
+	private IntegerItem max;
+
+	public ArchivedDocsPanel() {
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setHeight(20);
 		toolStrip.setWidth100();
 		toolStrip.addSpacer(2);
 
-		userSelector = ItemFactory.newUserSelector("user", "user", null);
-		userSelector.setWrapTitle(false);
-		userSelector.setWidth(100);
-		userSelector.addChangedHandler(new ChangedHandler() {
+		max = ItemFactory.newValidateIntegerItem("max", "", 100, 1, null);
+		max.setHint(I18N.message("elements"));
+		max.setShowTitle(false);
+		max.setWidth(40);
+
+		ToolStripButton display = new ToolStripButton();
+		display.setTitle(I18N.message("display"));
+		display.addClickHandler(new ClickHandler() {
 			@Override
-			public void onChanged(ChangedEvent event) {
-				refresh(Long.parseLong(userSelector.getValueAsString()));
+			public void onClick(ClickEvent event) {
+				if (max.validate())
+					refresh();
 			}
 		});
-		toolStrip.addFormItem(userSelector);
+		toolStrip.addButton(display);
+		toolStrip.addFormItem(max);
+		toolStrip.addSeparator();
+
+		folderSelector = new FolderSelector("folder", true);
+		folderSelector.setWrapTitle(false);
+		folderSelector.setWidth(250);
+		folderSelector.addFolderChangeListener(this);
+		toolStrip.addFormItem(folderSelector);
 
 		ToolStripButton print = new ToolStripButton();
 		print.setIcon(ItemFactory.newImgIcon("printer.png").getSrc());
@@ -113,16 +131,19 @@ public class LockedDocsPanel extends VLayout {
 		addMember(toolStrip);
 		addMember(infoPanel);
 
-		refresh(null);
+		refresh();
 	}
 
-	private void refresh(Long userId) {
+	private void refresh() {
 		if (list != null) {
 			list.destroy();
 			removeMember(list);
 		}
 
-		ListGridField id = new ListGridField("id");
+		Long folderId = folderSelector.getFolderId();
+		int maxElements=max.getValueAsInteger();
+		
+		ListGridField id = new ListGridField("id",I18N.message("id"));
 		id.setHidden(true);
 		id.setCanGroupBy(false);
 
@@ -146,15 +167,6 @@ public class LockedDocsPanel extends VLayout {
 		icon.setCanFilter(false);
 		icon.setCanGroupBy(false);
 
-		ListGridField immutable = new ListGridField("immutable", " ", 24);
-		immutable.setType(ListGridFieldType.IMAGE);
-		immutable.setCanSort(false);
-		immutable.setAlign(Alignment.CENTER);
-		immutable.setShowDefaultContextMenu(false);
-		immutable.setImageURLPrefix(Util.imagePrefix());
-		immutable.setImageURLSuffix(".png");
-		immutable.setCanFilter(false);
-
 		ListGridField version = new ListGridField("version", I18N.message("version"), 55);
 		version.setAlign(Alignment.CENTER);
 		version.setCanFilter(true);
@@ -173,10 +185,10 @@ public class LockedDocsPanel extends VLayout {
 		lastModified.setCanFilter(false);
 		lastModified.setCanGroupBy(false);
 
-		ListGridField user = new ListGridField("username", I18N.message("lockedby"), 200);
-		user.setAlign(Alignment.CENTER);
-		user.setCanFilter(true);
-		user.setCanGroupBy(true);
+		ListGridField folder = new ListGridField("folder", I18N.message("folder"), 200);
+		folder.setAlign(Alignment.CENTER);
+		folder.setCanFilter(true);
+		folder.setCanGroupBy(true);
 
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
@@ -186,35 +198,13 @@ public class LockedDocsPanel extends VLayout {
 		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setCanFilter(true);
 
-		ListGridField locked = new ListGridField("locked", " ", 24);
-		locked.setType(ListGridFieldType.IMAGE);
-		locked.setCanSort(false);
-		locked.setAlign(Alignment.CENTER);
-		locked.setShowDefaultContextMenu(false);
-		locked.setImageURLPrefix(Util.imagePrefix());
-		locked.setImageURLSuffix(".png");
-		locked.setCanFilter(false);
-
 		ListGridField type = new ListGridField("type", I18N.message("type"), 55);
 		type.setType(ListGridFieldType.TEXT);
 		type.setAlign(Alignment.CENTER);
 		type.setHidden(true);
 		type.setCanGroupBy(false);
 
-		list = new ListGrid() {
-			@Override
-			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
-				if (getFieldName(colNum).equals("title")) {
-					if ("stop".equals(record.getAttribute("immutable"))) {
-						return "color: #888888; font-style: italic;";
-					} else {
-						return super.getCellCSSText(record, rowNum, colNum);
-					}
-				} else {
-					return super.getCellCSSText(record, rowNum, colNum);
-				}
-			}
-		};
+		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
@@ -222,10 +212,9 @@ public class LockedDocsPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setFilterOnKeypress(true);
 		list.setSelectionType(SelectionStyle.MULTIPLE);
-		list.setDataSource(new LockedDocsDS(userId));
+		list.setDataSource(new ArchivedDocsDS(folderId, maxElements));
 
-		list.setFields(locked, immutable, icon, filename, version, fileVersion, size, title, lastModified, user,
-				customId, type);
+		list.setFields(icon, filename, version, fileVersion, size, title, lastModified, folder, id, customId, type);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
@@ -240,7 +229,7 @@ public class LockedDocsPanel extends VLayout {
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
 				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-						+ id + "&open=true");
+						+ id);
 			}
 		});
 
@@ -257,34 +246,6 @@ public class LockedDocsPanel extends VLayout {
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 		final ListGridRecord[] selection = list.getSelectedRecords();
-
-		MenuItem unlock = new MenuItem();
-		unlock.setTitle(I18N.message("unlock"));
-		unlock.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				if (selection == null || selection.length == 0)
-					return;
-				final long[] ids = new long[selection.length];
-				for (int i = 0; i < selection.length; i++) {
-					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
-				}
-
-				docService.unlock(Session.get().getSid(), ids, new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						if (userSelector.getValue() != null)
-							refresh(Long.parseLong(userSelector.getValueAsString()));
-						else
-							refresh(null);
-					}
-				});
-			}
-		});
 
 		MenuItem preview = new MenuItem();
 		preview.setTitle(I18N.message("preview"));
@@ -309,9 +270,9 @@ public class LockedDocsPanel extends VLayout {
 			}
 		});
 
-		MenuItem openInFolder = new MenuItem();
-		openInFolder.setTitle(I18N.message("openinfolder"));
-		openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem openFolder = new MenuItem();
+		openFolder.setTitle(I18N.message("openfolder"));
+		openFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord record = list.getSelectedRecord();
 				DocumentsPanel.get().openInFolder(Long.parseLong(record.getAttributeAsString("folderId")),
@@ -319,13 +280,74 @@ public class LockedDocsPanel extends VLayout {
 			}
 		});
 
+		MenuItem restore = new MenuItem();
+		restore.setTitle(I18N.message("restore"));
+		restore.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				long[] docIds = new long[selection.length];
+				for (int i = 0; i < selection.length; i++)
+					docIds[i] = Long.parseLong(selection[i].getAttributeAsString("id"));
+				docService.unarchiveDocuments(Session.get().getSid(), docIds, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void arg0) {
+						list.removeSelectedData();
+						Log.info(I18N.message("docsrestored"), null);
+					}
+				});
+			}
+		});
+
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.message("ddelete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				final long[] docIds = new long[selection.length];
+				for (int i = 0; i < selection.length; i++)
+					docIds[i] = Long.parseLong(selection[i].getAttributeAsString("id"));
+				
+				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
+					@Override
+					public void execute(Boolean value) {
+						if (value) {
+							docService.delete(Session.get().getSid(), docIds, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									list.removeSelectedData();
+								}
+							});
+						}
+					}
+				});
+			}
+		});
+
 		if (!(list.getSelectedRecords() != null && list.getSelectedRecords().length == 1)) {
 			download.setEnabled(false);
 			preview.setEnabled(false);
-			openInFolder.setEnabled(false);
+			openFolder.setEnabled(false);
 		}
 
-		contextMenu.setItems(download, preview, unlock, openInFolder);
+		if (list.getSelectedRecords() == null || list.getSelectedRecords().length < 1) {
+			restore.setEnabled(false);
+			delete.setEnabled(false);
+		}
+
+		contextMenu.setItems(download, preview, openFolder, restore, delete);
 		contextMenu.showContextMenu();
+	}
+
+	@Override
+	public void onChanged(GUIFolder folder) {
+		refresh();
 	}
 }

@@ -355,13 +355,16 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					// The document of the selected documentRecord must be
 					// not immutable
 					if (doc.getImmutable() == 1 && !transaction.getUser().isInGroup("admin")) {
+						log.debug("Document " + id + " was not deleted because immutable");
 						continue;
 					}
 
 					// The document must be not locked
-					if (doc.getStatus() != Document.DOC_UNLOCKED) {
+					if (doc.getStatus() == Document.DOC_LOCKED) {
+						log.debug("Document " + id + " was not deleted because locked");
 						continue;
 					}
+
 					// Check if there are some shortcuts associated to the
 					// deleting document. All the shortcuts must be deleted.
 					if (dao.findAliasIds(doc.getId()).size() > 0)
@@ -370,6 +373,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						}
 					dao.delete(doc.getId(), transaction);
 				} catch (Throwable t) {
+					t.printStackTrace();
 					ServiceUtil.throwServerException(session, log, t);
 				}
 			}
@@ -581,6 +585,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		try {
 			VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 			Version docVersion = versDao.findById(id1);
+			versDao.initialize(docVersion);
 
 			GUIVersion version1 = null;
 			if (docVersion != null) {
@@ -591,7 +596,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version1.setId(id1);
 				version1.setTitle(docVersion.getTitle());
 				version1.setCustomId(docVersion.getCustomId());
-				version1.setTags(docVersion.getTags().toArray(new String[docVersion.getTags().size()]));
+				version1.setTagsString(docVersion.getTgs());
 				version1.setType(docVersion.getType());
 				version1.setFileName(docVersion.getFileName());
 				version1.setVersion(docVersion.getVersion());
@@ -632,6 +637,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 
 			docVersion = versDao.findById(id2);
+			versDao.initialize(docVersion);
 
 			GUIVersion version2 = null;
 			if (docVersion != null) {
@@ -642,7 +648,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version2.setId(id1);
 				version2.setTitle(docVersion.getTitle());
 				version2.setCustomId(docVersion.getCustomId());
-				version2.setTags(docVersion.getTags().toArray(new String[docVersion.getTags().size()]));
+				version2.setTagsString(docVersion.getTgs());
 				version2.setType(docVersion.getType());
 				version2.setFileName(docVersion.getFileName());
 				version2.setVersion(docVersion.getVersion());
@@ -1565,6 +1571,77 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			fdao.bulkUpdate("set ld_deleted=2 where ld_deleted=1 and  ld_deleteuserid=" + session.getUserId(), null);
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void archiveDocuments(String sid, long[] docIds, String comment) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+		try {
+			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setUser(ServiceUtil.getSessionUser(sid));
+			transaction.setComment(comment);
+			manager.archiveDocuments(docIds, transaction);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public long archiveFolder(String sid, long folderId, String comment) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+		try {
+			DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+			History transaction = new History();
+			transaction.setSessionId(sid);
+			transaction.setUser(ServiceUtil.getSessionUser(sid));
+			transaction.setComment(comment);
+			return manager.archiveFolder(folderId, transaction);
+		} catch (Throwable t) {
+			return (Long) ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void unarchiveDocuments(String sid, long[] docIds) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+		
+		try {
+			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			User user = ServiceUtil.getSessionUser(sid);
+						
+			for (long id : docIds) {
+				// Create the document history event
+				History transaction = new History();
+				transaction.setSessionId(sid);
+				transaction.setUser(user);
+
+				dao.unarchive(id, transaction);
+			}
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public long countDocuments(String sid, long folderId, int status) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+		User user = ServiceUtil.getSessionUser(sid);
+		try {
+			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+			List<Long> accessibleIds = fdao.findIdByUserId(user.getId(), folderId);
+
+			StringBuffer query = new StringBuffer(
+					"select count(ld_id) from ld_document where ld_deleted=0 and ld_status=" + status);
+			query.append(" and ld_folderid in " + accessibleIds.toString().replace("[", "(").replace("]", ")"));
+			return dao.queryForLong(query.toString());
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+			return 0L;
 		}
 	}
 }

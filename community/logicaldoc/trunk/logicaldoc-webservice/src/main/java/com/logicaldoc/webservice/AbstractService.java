@@ -23,6 +23,7 @@ import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
+import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -48,7 +49,7 @@ public class AbstractService {
 
 	@Resource
 	protected MessageContext messageContext;
-	
+
 	/**
 	 * Utility method that validates the session and retrieve the associated
 	 * user
@@ -112,6 +113,15 @@ public class AbstractService {
 		if (!dao.isPermissionEnabled(permission, folderId, user.getId())) {
 			String message = "User " + user.getUserName() + " doesn't have permission " + permission.getName()
 					+ " on folder " + folderId;
+			log.error(message);
+			throw new Exception(message);
+		}
+	}
+
+	protected void checkMenu(User user, long menuId) throws Exception {
+		MenuDAO dao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
+		if (!dao.isReadEnable(menuId, user.getId())) {
+			String message = "User " + user.getUserName() + " doesn't have read permission on menu " + menuId;
 			log.error(message);
 			throw new Exception(message);
 		}

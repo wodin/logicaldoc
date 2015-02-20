@@ -332,9 +332,9 @@ public class DuplicatesPanel extends VLayout {
 			public void onClick(MenuItemClickEvent event) {
 				long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
 				String filename = list.getSelectedRecord().getAttribute("filename");
-				String version = list.getSelectedRecord().getAttribute("version");
+				String fileVersion = list.getSelectedRecord().getAttribute("fileVersion");
 
-				PreviewPopup iv = new PreviewPopup(id, version, filename, false);
+				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, false);
 				iv.show();
 			}
 		});

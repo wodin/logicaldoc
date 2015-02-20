@@ -810,7 +810,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			Set<Group> precoll = user.getGroups();
 
 			if (!precoll.isEmpty()) {
-
 				/*
 				 * Check folders that specify its own permissions. Here we
 				 * cannot restrict to the tree since a folder in the tree can

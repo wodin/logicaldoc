@@ -42,6 +42,8 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	public static final int DOC_CHECKED_OUT = 1;
 
 	public static final int DOC_LOCKED = 2;
+	
+	public static final int DOC_ARCHIVED = 3;
 
 	public static final int EXPORT_UNLOCKED = 0;
 
