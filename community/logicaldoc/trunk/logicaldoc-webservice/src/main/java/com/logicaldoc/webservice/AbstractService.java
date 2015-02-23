@@ -16,6 +16,7 @@ import org.apache.cxf.jaxrs.ext.MessageContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
@@ -154,6 +155,11 @@ public class AbstractService {
 			throw new FileNotFoundException("Document not published");
 	}
 
+	protected void checkArchived(Document doc) throws Exception {
+		if (doc.getStatus()==AbstractDocument.DOC_ARCHIVED)
+			throw new FileNotFoundException("Document is archived");
+	}
+	
 	public static String convertDateToString(Date date) {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 		try {

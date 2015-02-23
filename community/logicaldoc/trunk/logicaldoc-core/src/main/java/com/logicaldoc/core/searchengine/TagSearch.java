@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
@@ -94,6 +95,7 @@ public class TagSearch extends Search {
 
 		query.append(" where A.ld_deleted=0 and A.ld_folderid=B.ld_id and A.ld_tenantid = ");
 		query.append(tenantId);
+		query.append(" and not A.ld_status = "+AbstractDocument.DOC_ARCHIVED);
 
 		// Ids string to be used in the query
 		String ids = null;

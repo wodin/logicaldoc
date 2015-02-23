@@ -435,7 +435,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				query.append(" and _entity.tenantId=" + tenantId);
 			query.append(" GROUP BY tag");
 
-			
 			List ssss = findByQuery(query.toString(), null, null);
 			for (Iterator iter = ssss.iterator(); iter.hasNext();) {
 				Object[] element = (Object[]) iter.next();
@@ -727,10 +726,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	}
 
 	@Override
-	public long count(Long tenantId, boolean computeDeleted) {
+	public long count(Long tenantId, boolean computeDeleted, boolean computeArchived) {
 		String query = "select count(*) from ld_document where 1=1 ";
 		if (!computeDeleted)
 			query += " and ld_deleted = 0 ";
+		if (!computeArchived)
+			query += " and not ld_status = " + AbstractDocument.DOC_ARCHIVED;
 		if (tenantId != null)
 			query += " and ld_tenantid = " + tenantId;
 		return queryForLong(query);

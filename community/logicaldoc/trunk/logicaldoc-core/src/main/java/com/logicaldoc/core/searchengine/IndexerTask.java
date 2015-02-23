@@ -89,8 +89,9 @@ public class IndexerTask extends Task {
 
 			// First of all find documents to be indexed and not already
 			// involved into a transaction
-			List<Long> ids = documentDao.findIdsByWhere("_entity.indexed = "
-					+ AbstractDocument.INDEX_TO_INDEX + " and _entity.transactionId is null", "order by _entity.date asc", max);
+			List<Long> ids = documentDao.findIdsByWhere("_entity.indexed = " + AbstractDocument.INDEX_TO_INDEX
+					+ " and _entity.transactionId is null and not _entity.status=" + AbstractDocument.DOC_ARCHIVED,
+					"order by _entity.date asc", max);
 			size = ids.size();
 			log.info("Found a total of " + size + " documents to be indexed");
 
@@ -132,7 +133,7 @@ public class IndexerTask extends Task {
 			log.info("Indexing finished");
 			log.info("Indexed documents: " + indexed);
 			log.info("Errors: " + errors);
-			
+
 			indexer.unlock();
 
 			// To be safer always release the lock

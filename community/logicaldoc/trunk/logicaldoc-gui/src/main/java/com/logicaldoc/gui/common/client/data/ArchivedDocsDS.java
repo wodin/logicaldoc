@@ -30,12 +30,13 @@ public class ArchivedDocsDS extends DataSource {
 		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
 		DataSourceFloatField size = new DataSourceFloatField("size");
 		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
+		DataSourceDateTimeField created = new DataSourceDateTimeField("created");
 		DataSourceTextField filename = new DataSourceTextField("filename");
 		DataSourceTextField fid = new DataSourceTextField("folderId");
 		DataSourceTextField folder = new DataSourceTextField("folder");
 		DataSourceTextField type = new DataSourceTextField("type");
 
-		setFields(id, title, size, version, fileVersion, lastModified, customId, icon, filename, fid, folder, type);
+		setFields(id, title, size, version, fileVersion, created, lastModified, customId, icon, filename, fid, folder, type);
 		setClientOnly(true);
 
 		String url = "data/archiveddocs.xml?sid=" + Session.get().getSid();

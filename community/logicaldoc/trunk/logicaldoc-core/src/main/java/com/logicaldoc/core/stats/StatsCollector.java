@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.communication.EMailSender;
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
@@ -172,7 +173,8 @@ public class StatsCollector extends Task {
 		 */
 		long[] docStats = extractDocStats(Tenant.SYSTEM_ID);
 		long totaldocs = docStats[3];
-		long docdir = docStats[4];
+		long archiveddocs = docStats[4];
+		long docdir = docStats[5];
 
 		List<Tenant> tenants = tenantDAO.findAll();
 		for (Tenant tenant : tenants)
@@ -208,6 +210,7 @@ public class StatsCollector extends Task {
 		long notes = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_note");
 		long links = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_link");
 		long aliases = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_document WHERE ld_docref IS NOT NULL");
+		long tenantsCount = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_tenant");
 
 		long workflow_histories = -1;
 		try {
@@ -256,6 +259,7 @@ public class StatsCollector extends Task {
 			post.setParameter("users", Integer.toString(users));
 			post.setParameter("groups", Integer.toString(groups));
 			post.setParameter("docs", Long.toString(totaldocs));
+			post.setParameter("archived_docs", Long.toString(archiveddocs));
 			post.setParameter("folders", Long.toString(withdocs + empty + deletedfolders));
 			post.setParameter("tags", Long.toString(tags));
 			post.setParameter("versions", Long.toString(versions));
@@ -268,6 +272,7 @@ public class StatsCollector extends Task {
 			post.setParameter("links", Long.toString(links));
 			post.setParameter("aliases", Long.toString(aliases));
 			post.setParameter("workflow_histories", Long.toString(workflow_histories));
+			post.setParameter("tenants", Long.toString(tenantsCount));
 
 			// Quotas
 			post.setParameter("docdir", Long.toString(docdir));
@@ -332,24 +337,31 @@ public class StatsCollector extends Task {
 	 *         <li>indexeddocs</li>
 	 *         <li>deleteddocs</li>
 	 *         <li>totaldocs</li>
+	 *         <li>archiveddocs</li>
 	 *         <li>docdir (total size of the whole repository)</li>
 	 *         </ol>
 	 */
 	private long[] extractDocStats(long tenantId) {
-		long[] stats = new long[5];
+		long[] stats = new long[6];
 		stats[0] = documentDAO
 				.queryForLong("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 0 and A.ld_deleted = 0 "
-						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
+						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : "")
+						+ " and not A.ld_status=" + AbstractDocument.DOC_ARCHIVED);
 		stats[1] = documentDAO
 				.queryForLong("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_indexed = 1 and A.ld_deleted = 0 "
-						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
+						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : "")
+						+ " and not A.ld_status=" + AbstractDocument.DOC_ARCHIVED);
 		stats[2] = documentDAO.queryForLong("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_deleted  > 0 "
 				+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
-		if (tenantId != Tenant.SYSTEM_ID)
-			stats[3] = documentDAO.count(tenantId, true);
-		else
-			stats[3] = documentDAO.count(null, true);
-		stats[4] = documentDAO
+		if (tenantId != Tenant.SYSTEM_ID) {
+			stats[3] = documentDAO.count(tenantId, true, true);
+		} else {
+			stats[3] = documentDAO.count(null, true, true);
+		}
+		stats[4] = documentDAO.queryForLong("SELECT COUNT(A.ld_id) FROM ld_document A where A.ld_status = "
+				+ AbstractDocument.DOC_ARCHIVED
+				+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
+		stats[5] = documentDAO
 				.queryForLong("SELECT SUM(A.ld_filesize) from ld_version A where A.ld_version = A.ld_fileversion "
 						+ (tenantId != Tenant.SYSTEM_ID ? " and A.ld_tenantid=" + tenantId : ""));
 
@@ -357,7 +369,8 @@ public class StatsCollector extends Task {
 		saveStatistic("indexeddocs", stats[1], tenantId);
 		saveStatistic("deleteddocs", stats[2], tenantId);
 		saveStatistic("totaldocs", stats[3], tenantId);
-		saveStatistic("docdir", stats[4], tenantId);
+		saveStatistic("archiveddocs", stats[4], tenantId);
+		saveStatistic("docdir", stats[5], tenantId);
 
 		return stats;
 	}

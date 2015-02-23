@@ -141,9 +141,9 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 		}
 
 		Long folderId = folderSelector.getFolderId();
-		int maxElements=max.getValueAsInteger();
-		
-		ListGridField id = new ListGridField("id",I18N.message("id"));
+		int maxElements = max.getValueAsInteger();
+
+		ListGridField id = new ListGridField("id", I18N.message("id"));
 		id.setHidden(true);
 		id.setCanGroupBy(false);
 
@@ -184,6 +184,13 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 		lastModified.setCellFormatter(new DateCellFormatter(false));
 		lastModified.setCanFilter(false);
 		lastModified.setCanGroupBy(false);
+		lastModified.setHidden(true);
+
+		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
+		created.setAlign(Alignment.CENTER);
+		created.setType(ListGridFieldType.DATE);
+		created.setCellFormatter(new DateCellFormatter(false));
+		created.setCanFilter(false);
 
 		ListGridField folder = new ListGridField("folder", I18N.message("folder"), 200);
 		folder.setAlign(Alignment.CENTER);
@@ -214,7 +221,8 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setDataSource(new ArchivedDocsDS(folderId, maxElements));
 
-		list.setFields(icon, filename, version, fileVersion, size, title, lastModified, folder, id, customId, type);
+		list.setFields(icon, filename, version, fileVersion, size, title, created, lastModified, folder, id, customId,
+				type);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
@@ -309,7 +317,7 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 				final long[] docIds = new long[selection.length];
 				for (int i = 0; i < selection.length; i++)
 					docIds[i] = Long.parseLong(selection[i].getAttributeAsString("id"));
-				
+
 				LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
 					@Override
 					public void execute(Boolean value) {
