@@ -22,7 +22,7 @@ public class Recipient {
 
 	// The recipient mode (for the system message is not useful, for the email
 	// can be To, CC, CCN, ecc.)
-	private String mode = "";
+	private String mode = MODE_EMAIL_TO;
 
 	// The recipient type (i.e. system, user, group, email)
 	private int type = TYPE_SYSTEM;
