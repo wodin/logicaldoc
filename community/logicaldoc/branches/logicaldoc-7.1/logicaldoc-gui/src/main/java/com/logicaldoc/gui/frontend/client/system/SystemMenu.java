@@ -207,7 +207,9 @@ public class SystemMenu extends VLayout {
 		else
 			supportForm.setItems(support, installationID);
 
-		addMember(systemForm);
-		addMember(supportForm);
+		if (!Session.get().isDemo()) {
+			addMember(systemForm);
+			addMember(supportForm);
+		}
 	}
 }
