@@ -546,8 +546,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testCount() {
-		Assert.assertEquals(6L, dao.count(null, true));
-		Assert.assertEquals(3L, dao.count(Tenant.DEFAULT_ID, false));
+		Assert.assertEquals(6L, dao.count(null, true, false));
+		Assert.assertEquals(3L, dao.count(Tenant.DEFAULT_ID, false, false));
 	}
 
 	@Test

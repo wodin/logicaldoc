@@ -297,13 +297,12 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			if ("sign.p7m".equals(suffix.toLowerCase()))
 				throw new Exception("You cannot upload a signature");
 
-		
-				Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-				String resource = storer.getResourceName(doc, fileVersion, suffix);
+			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+			String resource = storer.getResourceName(doc, fileVersion, suffix);
 
-				log.debug("Attach file " + resource);
+			log.debug("Attach file " + resource);
 
-				storer.store(content.getInputStream(), doc.getId(), resource);
+			storer.store(content.getInputStream(), doc.getId(), resource);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw e;
@@ -514,6 +513,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		for (Document doc : docs) {
 			try {
 				checkPublished(user, doc);
+				checkArchived(doc);
 			} catch (Throwable t) {
 				continue;
 			}
@@ -545,6 +545,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		for (int i = 0; i < docs.size(); i++) {
 			try {
 				checkPublished(user, docs.get(i));
+				checkArchived(docs.get(i));
 			} catch (Throwable t) {
 				continue;
 			}

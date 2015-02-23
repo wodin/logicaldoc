@@ -218,6 +218,13 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			deletedDocs.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[1][2] = deletedDocs;
 
+			gen = genDao.findByAlternateKey(StatsCollector.STAT, "archiveddocs", null, session.getTenantId());
+			GUIParameter archivedDocs = new GUIParameter();
+			archivedDocs.setName("archiveddocs");
+			archivedDocs.setLabel("archiveds");
+			archivedDocs.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
+			parameters[1][3] = archivedDocs;
+			
 			/*
 			 * Folders statistics
 			 */

@@ -957,7 +957,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Collection<Long> folderIds = folderDAO.findFolderIdByUserIdAndPermission(transaction.getUserId(),
 				Permission.ARCHIVE, folderId, true);
 		for (Long fid : folderIds) {
-			String where = " where ld_deleted=0 and ld_docref is null and not ld_status="
+			String where = " where ld_deleted=0 and not ld_status="
 					+ AbstractDocument.DOC_ARCHIVED + " and ld_folderid=" + fid;
 			List<Long> ids = (List<Long>) documentDAO
 					.queryForList("select ld_id from ld_document " + where, Long.class);

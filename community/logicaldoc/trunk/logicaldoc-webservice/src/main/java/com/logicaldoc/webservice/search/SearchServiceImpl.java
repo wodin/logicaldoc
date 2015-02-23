@@ -77,6 +77,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			try {
 				checkReadEnable(user, docs.get(i).getFolder().getId());
 				checkPublished(user, docs.get(i));
+				checkArchived(docs.get(i));
 			} catch (Exception e) {
 				continue;
 			}
@@ -97,6 +98,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		for (int i = 0; i < docs.size(); i++) {
 			try {
 				checkPublished(user, docs.get(i));
+				checkArchived(docs.get(i));
 			} catch (Exception e) {
 				continue;
 			}
