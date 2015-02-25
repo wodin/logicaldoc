@@ -43,7 +43,6 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 			return AuthenticationChain.getSessionId();
 		else
 			throw new Exception("Unable to create a new session");
-
 	}
 
 	@Override
