@@ -86,7 +86,7 @@ public class DocumentDetailsPanel extends VLayout {
 
 	protected DocumentSubscriptionsPanel subscriptionsPanel;
 
-	protected RetentionPoliciesPanel retentionPoliciesPanel;
+	protected PublishingPanel retentionPoliciesPanel;
 
 	protected HLayout savePanel;
 
@@ -393,7 +393,7 @@ public class DocumentDetailsPanel extends VLayout {
 			if (retentionPoliciesTabPanel.contains(retentionPoliciesPanel))
 				retentionPoliciesTabPanel.removeMember(retentionPoliciesPanel);
 		}
-		retentionPoliciesPanel = new RetentionPoliciesPanel(document, changeHandler);
+		retentionPoliciesPanel = new PublishingPanel(document, changeHandler);
 		retentionPoliciesTabPanel.addMember(retentionPoliciesPanel);
 
 		/*

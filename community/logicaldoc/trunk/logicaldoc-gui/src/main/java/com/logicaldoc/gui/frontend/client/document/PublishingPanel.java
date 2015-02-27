@@ -16,17 +16,17 @@ import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 
 /**
- * Shows document's retention policies
+ * Shows document's publishing options.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class RetentionPoliciesPanel extends DocumentDetailTab {
+public class PublishingPanel extends DocumentDetailTab {
 	private DynamicForm form1 = new DynamicForm();
 
 	private ValuesManager vm = new ValuesManager();
 
-	public RetentionPoliciesPanel(GUIDocument document, ChangedHandler changedHandler) {
+	public PublishingPanel(GUIDocument document, ChangedHandler changedHandler) {
 		super(document, changedHandler, null);
 		setWidth100();
 		setHeight100();
