@@ -55,7 +55,7 @@ public class BarcodePatternsPanel extends VLayout {
 		HTMLFlow hint = new HTMLFlow(I18N.message("barcodepatternhint"));
 		hint.setMargin(3);
 
-		templateSelector = ItemFactory.newTemplateSelector(false, null);
+		templateSelector = ItemFactory.newTemplateSelector(true, null);
 		templateSelector.setWrapTitle(false);
 		templateSelector.setMultiple(false);
 		templateSelector.setEndRow(false);

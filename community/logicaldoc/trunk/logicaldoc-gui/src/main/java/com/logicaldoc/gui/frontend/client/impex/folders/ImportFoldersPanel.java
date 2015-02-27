@@ -41,7 +41,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
- * Panel showing the list of import folders
+ * Panel showing the details of an import folder
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
@@ -106,7 +106,7 @@ public class ImportFoldersPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(id, src, type, enabled);
+		list.setFields(enabled, id, src, type);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);

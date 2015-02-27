@@ -176,5 +176,23 @@ public class MetadataMenu extends VLayout {
 				folderTemplates.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
+		
+		Button retentionPolicies = new Button(I18N.message("retentionpolicies"));
+		retentionPolicies.setWidth100();
+		retentionPolicies.setHeight(25);
+
+		if (Feature.visible(Feature.RETENTION_POLICIES) && Menu.enabled(Menu.RETENTION_POLICIES)) {
+			addMember(retentionPolicies);
+			if (!Feature.enabled(Feature.RETENTION_POLICIES)) {
+				retentionPolicies.setDisabled(true);
+				retentionPolicies.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+		retentionPolicies.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new RetentionPoliciesPanel());
+			}
+		});
 	}
 }

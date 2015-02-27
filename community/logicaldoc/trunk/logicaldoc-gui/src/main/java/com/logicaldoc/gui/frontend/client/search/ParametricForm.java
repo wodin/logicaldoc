@@ -145,7 +145,7 @@ public class ParametricForm extends VLayout {
 		match.setColSpan(4);
 
 		if (Feature.visible(Feature.TEMPLATE)) {
-			SelectItem template = ItemFactory.newTemplateSelector(false, null);
+			SelectItem template = ItemFactory.newTemplateSelector(true, null);
 			template.setMultiple(false);
 			template.setEndRow(true);
 			template.addChangedHandler(new ChangedHandler() {

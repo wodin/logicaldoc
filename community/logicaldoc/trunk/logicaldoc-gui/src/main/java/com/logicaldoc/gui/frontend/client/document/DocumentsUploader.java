@@ -131,7 +131,7 @@ public class DocumentsUploader extends Window {
 		final SelectItem encodingItem = ItemFactory.newEncodingSelector("encoding");
 		encodingItem.setDisabled(zipImport);
 
-		SelectItem template = ItemFactory.newTemplateSelector(false, null);
+		SelectItem template = ItemFactory.newTemplateSelector(true, null);
 		template.setMultiple(false);
 
 		zipItem.addChangeHandler(new ChangeHandler() {

@@ -126,7 +126,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		language.setColSpan(4);
 		language.setEndRow(true);
 
-		SelectItem template = ItemFactory.newTemplateSelector(false, null);
+		SelectItem template = ItemFactory.newTemplateSelector(true, null);
 		template.setMultiple(false);
 		template.addChangedHandler(new ChangedHandler() {
 			@Override

@@ -134,7 +134,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		coverageItem.addChangedHandler(changedHandler);
 		coverageItem.setDisabled(!updateEnabled);
 
-		final SelectItem templateItem = ItemFactory.newTemplateSelector(false, null);
+		final SelectItem templateItem = ItemFactory.newTemplateSelector(true, null);
 		templateItem.addChangedHandler(changedHandler);
 		templateItem.setMultiple(false);
 		templateItem.setDisabled(!updateEnabled || document.getFolder().getTemplateLocked() == 1);

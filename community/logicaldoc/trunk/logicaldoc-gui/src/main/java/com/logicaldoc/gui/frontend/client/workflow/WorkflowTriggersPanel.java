@@ -126,7 +126,7 @@ public class WorkflowTriggersPanel extends VLayout {
 				templateForm.setNumCols(2);
 				templateForm.setColWidths(110, "*");
 
-				templates = ItemFactory.newTemplateSelector(false, getFolder().getId());
+				templates = ItemFactory.newTemplateSelector(true, getFolder().getId());
 				templates.setWrapTitle(false);
 				templates.setColSpan(2);
 				templates.setEndRow(true);
