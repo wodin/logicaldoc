@@ -1,27 +1,30 @@
-package com.logicaldoc.gui.frontend.client.impex.accounts;
+package com.logicaldoc.gui.frontend.client.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIEmailAccount;
-import com.logicaldoc.gui.common.client.data.EmailAccountsDS;
+import com.logicaldoc.gui.common.client.beans.GUIRetentionPolicy;
+import com.logicaldoc.gui.common.client.data.RetentionPoliciesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
-import com.logicaldoc.gui.frontend.client.services.EmailAccountService;
-import com.logicaldoc.gui.frontend.client.services.EmailAccountServiceAsync;
+import com.logicaldoc.gui.frontend.client.impex.folders.ImportFolderDetailsPanel;
+import com.logicaldoc.gui.frontend.client.services.RetentionPoliciesService;
+import com.logicaldoc.gui.frontend.client.services.RetentionPoliciesServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.DropCompleteEvent;
+import com.smartgwt.client.widgets.events.DropCompleteHandler;
+import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -40,13 +43,14 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
- * Panel showing the list of import email accounts
+ * Panel showing the list of retention policies
  * 
  * @author Marco Meschieri - Logical Objects
- * @since 6.0
+ * @since 7.2
  */
-public class AccountsPanel extends VLayout {
-	private EmailAccountServiceAsync service = (EmailAccountServiceAsync) GWT.create(EmailAccountService.class);
+public class RetentionPoliciesPanel extends VLayout {
+	private RetentionPoliciesServiceAsync service = (RetentionPoliciesServiceAsync) GWT
+			.create(RetentionPoliciesService.class);
 
 	private Layout listing = new VLayout();
 
@@ -54,13 +58,13 @@ public class AccountsPanel extends VLayout {
 
 	private ListGrid list;
 
-	private Canvas details = SELECT_ACCOUNT;
+	private Canvas details = SELECT_POLICY;
 
 	private InfoPanel infoPanel;
 
-	final static Canvas SELECT_ACCOUNT = new HTMLPanel("&nbsp;" + I18N.message("selectaccount"));
+	final static Canvas SELECT_POLICY = new HTMLPanel("&nbsp;" + I18N.message("selectpolicy"));
 
-	public AccountsPanel() {
+	public RetentionPoliciesPanel() {
 		setWidth100();
 		infoPanel = new InfoPanel("");
 		init();
@@ -71,21 +75,61 @@ public class AccountsPanel extends VLayout {
 		listing.clear();
 		if (list != null)
 			listing.removeMember(list);
-		if (details != null && details instanceof AccountDetailsPanel) {
+		if (details != null && details instanceof ImportFolderDetailsPanel) {
 			detailsContainer.removeMember(details);
-			details = SELECT_ACCOUNT;
+			details = SELECT_POLICY;
 		}
 
 		// Initialize the listing panel
 		listing.setAlign(Alignment.CENTER);
-		listing.setHeight("60%");
+		listing.setHeight("70%");
 		listing.setShowResizeBar(true);
 
 		ListGridField id = new ListGridField("id", 50);
 		id.setHidden(true);
 
-		ListGridField email = new ListGridField("email", I18N.message("email"), 300);
-		email.setCanFilter(true);
+		ListGridField name = new ListGridField("name", I18N.message("name"), 150);
+		name.setCanFilter(false);
+
+		ListGridField days = new ListGridField("days", I18N.message("ddays"), 60);
+		days.setCanFilter(false);
+
+		ListGridField dateOption = new ListGridField("dateOption", I18N.message("dateoption"), 100);
+		dateOption.setCanFilter(false);
+		dateOption.setCellFormatter(new CellFormatter() {
+
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				int val = Integer.parseInt(value.toString());
+				if (val == GUIRetentionPolicy.DATE_OPT_ARCHIVED)
+					return I18N.message("archiveds");
+				else if (val == GUIRetentionPolicy.DATE_OPT_CREATION)
+					return I18N.message("created");
+				else if (val == GUIRetentionPolicy.DATE_OPT_PUBLISHED)
+					return I18N.message("published");
+				else
+					return I18N.message("stoppublishing");
+			}
+		});
+
+		ListGridField template = new ListGridField("template", I18N.message("template"), 150);
+		template.setCanFilter(false);
+
+		ListGridField action = new ListGridField("action", I18N.message("action"), 150);
+		action.setCanFilter(false);
+		action.setCellFormatter(new CellFormatter() {
+
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				int val = Integer.parseInt(value.toString());
+				if (val == GUIRetentionPolicy.ACTION_ARCHIVE)
+					return I18N.message("archive");
+				else if (val == GUIRetentionPolicy.ACTION_DELETE)
+					return I18N.message("ddelete");
+				else
+					return I18N.message("unpublish");
+			}
+		});
 
 		ListGridField enabled = new ListGridField("eenabled", " ", 24);
 		enabled.setType(ListGridFieldType.IMAGE);
@@ -102,13 +146,16 @@ public class AccountsPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(enabled, id, email);
+		list.setFields(enabled, id, name, days, dateOption, template, action);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
+		list.setCanSort(false);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(new EmailAccountsDS(false));
+		list.setDataSource(new RetentionPoliciesDS());
+		list.setShowRowNumbers(true);
+		list.setCanReorderRecords(true);
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
@@ -128,15 +175,15 @@ public class AccountsPanel extends VLayout {
 			}
 		});
 
-		ToolStripButton addAccount = new ToolStripButton();
-		addAccount.setTitle(I18N.message("addaccount"));
-		toolStrip.addButton(addAccount);
-		addAccount.addClickHandler(new ClickHandler() {
+		ToolStripButton addPolicy = new ToolStripButton();
+		addPolicy.setTitle(I18N.message("addpolicy"));
+		toolStrip.addButton(addPolicy);
+		addPolicy.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				list.deselectAllRecords();
-				GUIEmailAccount account = new GUIEmailAccount();
-				showDetails(account);
+				GUIRetentionPolicy policy = new GUIRetentionPolicy();
+				showPolicyDetails(policy);
 			}
 		});
 
@@ -153,8 +200,8 @@ public class AccountsPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.get(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-							new AsyncCallback<GUIEmailAccount>() {
+					service.getPolicy(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+							new AsyncCallback<GUIRetentionPolicy>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -162,8 +209,8 @@ public class AccountsPanel extends VLayout {
 								}
 
 								@Override
-								public void onSuccess(GUIEmailAccount account) {
-									showDetails(account);
+								public void onSuccess(GUIRetentionPolicy policy) {
+									showPolicyDetails(policy);
 								}
 							});
 			}
@@ -172,7 +219,30 @@ public class AccountsPanel extends VLayout {
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.message("showaccounts", Integer.toString(list.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showretpolicies", Integer.toString(list.getTotalRows())));
+			}
+		});
+
+		list.addDropCompleteHandler(new DropCompleteHandler() {
+
+			@Override
+			public void onDropComplete(DropCompleteEvent event) {
+				ListGridRecord[] records = list.getRecords();
+				long[] ids = new long[records.length];
+				for (int i = 0; i < ids.length; i++)
+					ids[i] = Long.parseLong(records[i].getAttributeAsString("id"));
+				service.reorder(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void arg) {
+
+					}
+				});
 			}
 		});
 
@@ -206,35 +276,12 @@ public class AccountsPanel extends VLayout {
 								public void onSuccess(Void result) {
 									list.removeSelectedData();
 									list.deselectAllRecords();
-									showDetails(null);
+									showPolicyDetails(null);
 								}
 							});
 						}
 					}
 				});
-			}
-		});
-
-		MenuItem test = new MenuItem();
-		test.setTitle(I18N.message("testconnection"));
-		test.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				service.test(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-						new AsyncCallback<Boolean>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(Boolean result) {
-								if (result.booleanValue())
-									SC.say(I18N.message("connectionestablished"));
-								else
-									SC.warn(I18N.message("connectionfailed"));
-							}
-						});
-
 			}
 		});
 
@@ -280,45 +327,21 @@ public class AccountsPanel extends VLayout {
 			}
 		});
 
-		MenuItem resetCache = new MenuItem();
-		resetCache.setTitle(I18N.message("resetcache"));
-		resetCache.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				LD.ask(I18N.message("question"), I18N.message("confirmresetcache"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							service.resetCache(Session.get().getSid(), id, new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
-
-								@Override
-								public void onSuccess(Void result) {
-									Log.info(I18N.message("cachedeleted"), null);
-								}
-							});
-						}
-					}
-				});
-			}
-		});
-
 		if ("0".equals(record.getAttributeAsString("eenabled")))
-			contextMenu.setItems(test, disable, delete, resetCache);
+			contextMenu.setItems(disable, delete);
 		else
-			contextMenu.setItems(test, enable, delete, resetCache);
+			contextMenu.setItems(enable, delete);
+
 		contextMenu.showContextMenu();
 	}
 
-	public void showDetails(GUIEmailAccount account) {
-		if (!(details instanceof AccountDetailsPanel)) {
+	public void showPolicyDetails(GUIRetentionPolicy policy) {
+		if (!(details instanceof ImportFolderDetailsPanel)) {
 			detailsContainer.removeMember(details);
-			details = new AccountDetailsPanel(this);
+			details = new RetentionPolicyDetailsPanel(this);
 			detailsContainer.addMember(details);
 		}
-		((AccountDetailsPanel) details).setAccount(account);
+		((RetentionPolicyDetailsPanel) details).setPolicy(policy);
 	}
 
 	public ListGrid getList() {
@@ -328,20 +351,25 @@ public class AccountsPanel extends VLayout {
 	/**
 	 * Updates the selected record with new data
 	 */
-	public void updateRecord(GUIEmailAccount share) {
+	public void updateRecord(GUIRetentionPolicy policy) {
 		ListGridRecord record = list.getSelectedRecord();
 		if (record == null)
 			record = new ListGridRecord();
 
-		record.setAttribute("email", share.getMailAddress());
-		record.setAttribute("eenabled", share.getEnabled() == 1 ? "0" : "2");
+		record.setAttribute("id", "" + policy.getId());
+		record.setAttribute("name", policy.getName());
+		record.setAttribute("days", "" + policy.getRetentionDays());
+		record.setAttribute("dateOption", "" + policy.getDateOption());
+		record.setAttribute("template", policy.getTemplateName() != null ? policy.getTemplateName() : null);
+		record.setAttribute("position", "" + policy.getPosition());
+		record.setAttribute("action", "" + policy.getAction());
 
 		if (record.getAttributeAsString("id") != null
-				&& (share.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
+				&& (policy.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
 			list.refreshRow(list.getRecordIndex(record));
 		} else {
 			// Append a new record
-			record.setAttribute("id", share.getId());
+			record.setAttribute("id", policy.getId());
 			list.addData(record);
 			list.selectRecord(record);
 		}

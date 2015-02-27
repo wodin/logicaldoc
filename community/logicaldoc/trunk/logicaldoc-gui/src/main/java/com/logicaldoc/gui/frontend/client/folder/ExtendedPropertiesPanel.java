@@ -82,7 +82,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		form1.setTitleOrientation(TitleOrientation.TOP);
 		List<FormItem> items = new ArrayList<FormItem>();
 
-		final SelectItem templateItem = ItemFactory.newTemplateSelector(false, null);
+		final SelectItem templateItem = ItemFactory.newTemplateSelector(true, null);
 		templateItem.addChangedHandler(changedHandler);
 		templateItem.setMultiple(false);
 		templateItem.setDisabled(!update);

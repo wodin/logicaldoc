@@ -62,6 +62,8 @@ public class Menu {
 
 	public static final long WEBCONTENT = -2100;
 
+	public static final long RETENTION_POLICIES = -2110;
+	
 	private static Set<Long> menues = new HashSet<Long>();
 
 	static public void init(GUIUser user) {

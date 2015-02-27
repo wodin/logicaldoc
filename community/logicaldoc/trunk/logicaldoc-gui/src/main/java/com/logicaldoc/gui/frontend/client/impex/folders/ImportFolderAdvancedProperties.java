@@ -70,7 +70,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		TextItem exclude = ItemFactory.newTextItem("exclude", "exclude", share.getExcludes());
 		exclude.addChangedHandler(changedHandler);
 
-		SelectItem template = ItemFactory.newTemplateSelector(false, null);
+		SelectItem template = ItemFactory.newTemplateSelector(true, null);
 		template.addChangedHandler(changedHandler);
 		template.setMultiple(false);
 		if (share.getTemplateId() != null)

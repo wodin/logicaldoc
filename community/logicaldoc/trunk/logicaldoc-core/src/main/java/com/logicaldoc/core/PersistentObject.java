@@ -9,8 +9,14 @@ import java.util.Date;
  * @since 4.0
  */
 public abstract class PersistentObject {
+	/**
+	 * This is used to mark a deletion that must be shown in the trash bin
+	 */
 	public final static int DELETED_CODE_DEFAULT = 1;
 
+	/**
+	 * This is used to mark a deletion that must be physically removed
+	 */
 	public final static int DELETED_CODE_STRONG = 2;
 
 	private long id = 0;

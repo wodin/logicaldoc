@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
+import com.logicaldoc.gui.common.client.beans.GUIRetentionPolicy;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
@@ -795,20 +796,20 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static SelectItem newTemplateSelector(boolean allowEmpty, Long templateId) {
+	public static SelectItem newTemplateSelector(boolean withEmpty, Long templateId) {
 		SelectItem templateItem = new SelectItem("template", I18N.message("template"));
 		templateItem.setDisplayField("name");
 		templateItem.setValueField("id");
 		templateItem.setPickListWidth(250);
 		templateItem.setMultiple(false);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
-		if (!allowEmpty)
-			templateItem.setOptionDataSource(new TemplatesDS(true, templateId, null, false));
-		else
-			templateItem.setOptionDataSource(new TemplatesDS(false, templateId, null, false));
+		templateItem.setOptionDataSource(new TemplatesDS(withEmpty, templateId, null, false));
+		
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
 		templateItem.setHintStyle("hint");
+		if (templateId != null)
+			templateItem.setValue(templateId.toString());
 		return templateItem;
 	}
 
@@ -902,7 +903,7 @@ public class ItemFactory {
 		item.setHintStyle("hint");
 		return item;
 	}
-	
+
 	public static SelectItem newArchiveSelector(int mode, Integer status) {
 		SelectItem item = new SelectItem("archive");
 		item.setTitle("");
@@ -1040,6 +1041,43 @@ public class ItemFactory {
 			item.setDisabled(true);
 		item.setHintStyle("hint");
 		return item;
+	}
+
+	public static SelectItem newRetentionDateOption(int value) {
+		SelectItem selector = new SelectItem("dateoption", I18N.message("dateoption"));
+		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
+		opts.put("" + GUIRetentionPolicy.DATE_OPT_CREATION, I18N.message("created"));
+		opts.put("" + GUIRetentionPolicy.DATE_OPT_PUBLISHED, I18N.message("published"));
+		opts.put("" + GUIRetentionPolicy.DATE_OPT_STOPPUBLISHING, I18N.message("stoppublishing"));
+		opts.put("" + GUIRetentionPolicy.DATE_OPT_ARCHIVED, I18N.message("archiveds"));
+		selector.setValueMap(opts);
+
+		selector.setWrapTitle(false);
+		selector.setWidth(150);
+		selector.setHintStyle("hint");
+
+		selector.setValue("" + value);
+		selector.setDefaultValue("" + value);
+
+		return selector;
+	}
+
+	public static SelectItem newRetentionAction(int value) {
+		SelectItem selector = new SelectItem("action", I18N.message("action"));
+		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
+		opts.put("" + GUIRetentionPolicy.ACTION_ARCHIVE, I18N.message("archive"));
+		opts.put("" + GUIRetentionPolicy.ACTION_UNPUBLISH, I18N.message("unpublish"));
+		opts.put("" + GUIRetentionPolicy.ACTION_DELETE, I18N.message("ddelete"));
+		selector.setValueMap(opts);
+
+		selector.setWrapTitle(false);
+		selector.setWidth(150);
+		selector.setHintStyle("hint");
+
+		selector.setValue("" + value);
+		selector.setDefaultValue("" + value);
+
+		return selector;
 	}
 
 	/**

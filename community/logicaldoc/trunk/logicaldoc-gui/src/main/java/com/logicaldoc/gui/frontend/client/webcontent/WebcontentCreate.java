@@ -61,7 +61,7 @@ public class WebcontentCreate extends Window {
 		title.setRequired(true);
 		title.setWidth(200);
 
-		SelectItem template = ItemFactory.newTemplateSelector(false, null);
+		SelectItem template = ItemFactory.newTemplateSelector(true, null);
 
 		create = new SubmitItem();
 		create.setTitle(I18N.message("create"));
