@@ -39,7 +39,7 @@ public class BulkUpdatePanel extends VLayout {
 
 	protected ExtendedPropertiesPanel extendedPropertiesPanel;
 
-	protected RetentionPoliciesPanel retentionPoliciesPanel;
+	protected PublishingPanel retentionPoliciesPanel;
 
 	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -162,7 +162,7 @@ public class BulkUpdatePanel extends VLayout {
 				retentionPoliciesTabPanel.removeMember(retentionPoliciesPanel);
 		}
 
-		retentionPoliciesPanel = new RetentionPoliciesPanel(document, nothingToDo);
+		retentionPoliciesPanel = new PublishingPanel(document, nothingToDo);
 		retentionPoliciesTabPanel.addMember(retentionPoliciesPanel);
 	}
 
