@@ -117,7 +117,7 @@ public class IndexerTask extends Task {
 			for (Long id : ids) {
 				try {
 					log.debug("Indexing document " + id);
-					documentManager.reindex(id);
+					documentManager.reindex(id, null);
 					log.debug("Indexed document " + id);
 					indexed++;
 				} catch (Throwable e) {

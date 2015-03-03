@@ -163,8 +163,8 @@ public class DocumentClient extends SoapClient<DocumentService> implements Docum
 	}
 
 	@Override
-	public void reindex(String sid, long docId) throws Exception {
-		client.reindex(sid, docId);
+	public void reindex(String sid, long docId, String content) throws Exception {
+		client.reindex(sid, docId, content);
 	}
 
 	@Override
@@ -212,5 +212,10 @@ public class DocumentClient extends SoapClient<DocumentService> implements Docum
 	public void uploadResource(String sid, long docId, String fileVersion, String suffix, File content)
 			throws Exception {
 		uploadResource(sid, docId, fileVersion, suffix, new DataHandler(new FileDataSource(content)));
+	}
+
+	@Override
+	public String getExtractedText(String sid, long docId) throws Exception {
+		return client.getExtractedText(sid, docId);
 	}
 }

@@ -163,6 +163,18 @@ public interface DocumentService {
 			throws Exception;
 
 	/**
+	 * Gets the document's text stored in the full-text index
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * @return The requested document's text 
+	 * @throws Exception
+	 */
+	@WebResult(name = "text")
+	public String getExtractedText(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
+			throws Exception;
+	
+	/**
 	 * Gets the version content of an existing document with the given
 	 * identifier.
 	 * 
@@ -398,10 +410,12 @@ public interface DocumentService {
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
+	 * @param content The content to be used (if null the file is parsed)
 	 * 
 	 * @throws Exception
 	 */
-	public void reindex(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
+	public void reindex(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "content") String content) throws Exception;
 
 	/**
 	 * Creates the PDF conversion of the given document. If the conversion was

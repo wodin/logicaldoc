@@ -144,7 +144,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		for (Long id : docIds) {
 			if (id != null)
 				try {
-					documentManager.reindex(id);
+					documentManager.reindex(id,null);
 				} catch (Exception e) {
 					ServiceUtil.throwServerException(session, log, e);
 				}
