@@ -70,17 +70,6 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		GUIVersion[] versions = service.getVersionsById(session.getSid(), 1, 2);
 		Assert.assertNotNull(versions);
 		Assert.assertEquals(2, versions.length);
-
-		versions = service.getVersionsById(session.getSid(), 1, 4);
-		Assert.assertNotNull(versions);
-		Assert.assertEquals(1, versions.length);
-
-		versions = service.getVersionsById(session.getSid(), 5, 2);
-		Assert.assertNotNull(versions);
-		Assert.assertEquals(1, versions.length);
-
-		versions = service.getVersionsById(session.getSid(), 8, 9);
-		Assert.assertNull(versions);
 	}
 
 	@Test
