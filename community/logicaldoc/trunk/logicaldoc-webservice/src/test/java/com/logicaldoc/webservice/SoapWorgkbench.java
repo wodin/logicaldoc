@@ -459,9 +459,6 @@ public class SoapWorgkbench {
 		// documentClient.getResourceContent(sid, 669286400L, "1.0",
 		// "conversion.pdf", new File("D:/tmp/conversion.pdf"));
 
-		WSDocument[] docs = documentClient.listDocuments(sid, 677806080L, null);
-		for (WSDocument doc : docs) {
-			System.out.println(doc.getFileName());
-		}
+		System.out.println(documentClient.getExtractedText(sid, 643L));
 	}
 }

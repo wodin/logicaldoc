@@ -301,7 +301,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	@Override
-	public void reindex(long docId) throws Exception {
+	public void reindex(long docId, String content) throws Exception {
 		Document doc = documentDAO.findById(docId);
 
 		if (doc == null) {
@@ -311,11 +311,14 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		log.debug("Reindexing document " + docId + " - " + doc.getTitle());
 
-		// Extract the content from the file. This may take very long time.
-		String content = parseDocument(doc, null);
+		String cont = content;
+		if (StringUtils.isEmpty(cont)) {
+			// Extract the content from the file. This may take very long time.
+			cont = parseDocument(doc, null);
+		}
 
 		// This may take time
-		indexer.addHit(doc, content);
+		indexer.addHit(doc, cont);
 
 		// For additional safety update the DB directly
 		documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_INDEXED + " where ld_id="

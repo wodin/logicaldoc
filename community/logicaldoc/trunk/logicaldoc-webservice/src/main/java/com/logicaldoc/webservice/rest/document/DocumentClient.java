@@ -195,7 +195,7 @@ public class DocumentClient extends RestClient implements DocumentService {
 	}
 
 	@Override
-	public void reindex(String sid, long docId) throws Exception {
+	public void reindex(String sid, long docId, String content) throws Exception {
 		// TODO Auto-generated method stub
 	}
 
@@ -293,5 +293,11 @@ public class DocumentClient extends RestClient implements DocumentService {
 			throws Exception {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public String getExtractedText(String sid, long docId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

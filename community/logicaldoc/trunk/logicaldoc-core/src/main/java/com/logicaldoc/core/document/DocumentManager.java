@@ -105,9 +105,10 @@ public interface DocumentManager {
 	 * Reindexes an existing document in the full-text index.
 	 * 
 	 * @param docId The document to be indexed
+	 * @param content The content to use as document's body (can be null to parse the file)
 	 * @throws Exception if an error occurs, this exception is thrown
 	 */
-	public void reindex(long docId) throws Exception;
+	public void reindex(long docId, String content) throws Exception;
 
 	/**
 	 * Rename an existing document title/filename.

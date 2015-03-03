@@ -38,6 +38,7 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.document.pdf.PdfConverterManager;
+import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
@@ -738,10 +739,10 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	}
 
 	@Override
-	public void reindex(String sid, long docId) throws Exception {
+	public void reindex(String sid, long docId, String content) throws Exception {
 		validateSession(sid);
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		documentManager.reindex(docId);
+		documentManager.reindex(docId, content);
 	}
 
 	@Override
@@ -859,5 +860,12 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		validateSession(sid);
 		DocumentLinkDAO linkDao = (DocumentLinkDAO) Context.getInstance().getBean(DocumentLinkDAO.class);
 		linkDao.delete(id);
+	}
+
+	@Override
+	public String getExtractedText(String sid, long docId) throws Exception {
+		validateSession(sid);
+		SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+		return indexer.getHit(docId).getContent();
 	}
 }
