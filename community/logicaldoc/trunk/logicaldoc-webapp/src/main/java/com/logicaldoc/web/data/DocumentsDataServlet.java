@@ -375,8 +375,8 @@ public class DocumentsDataServlet extends HttpServlet {
 					if (doc.getCoverage() != null)
 						writer.print("<coverage><![CDATA[" + doc.getCoverage() + "]]></coverage>");
 
-					if (doc.getTemplate() != null)
-						writer.print("<template><![CDATA[" + doc.getTemplate().getName() + "]]></template>");
+					if (doc.getTemplateName() != null)
+						writer.print("<template><![CDATA[" + doc.getTemplateName() + "]]></template>");
 
 					if (!extValues.isEmpty())
 						for (String name : attrs) {
