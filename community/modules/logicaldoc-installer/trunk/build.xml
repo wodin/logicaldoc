@@ -1,6 +1,7 @@
 <project name="logicaldoc-community-installer" default="all" basedir="."
     xmlns:artifact="urn:maven-artifact-ant">
     <property name="targetDist" value="target/dist" />
+    <property name="targetDistAbs" location="target/dist" />
     <property name="installerFile" value="target/logicaldoc-installer.jar" />
     <property file="${user.home}/logicaldoc-dev.properties" />
     <import file="${logicaldoc.devroot}/build/ant/build.xml" />
@@ -92,6 +93,28 @@
             update="false" level="9" />
         <echo message="Distribution package built succesfully" />
     </target>
+    <target name="prepare-hsqldb" depends="init-all" description="Prepares the HSQL database">
+        <copy file="${targetDist}/conf/context.properties" tofile="${targetDist}/conf/context.bak" overwrite="true"/>
+        <propertyfile file="${targetDist}/conf/context.properties">
+          <entry key="jdbc.url" value="jdbc:hsqldb:/${targetDistAbs}/repository/db/db" />
+          <entry key="jdbc.dms" value="hsqldb" />
+        </propertyfile>
+        
+        <delete failonerror="false">
+	       <fileset dir="${targetDistAbs}/repository/db" includes="**"/>
+        </delete>
+        
+        <exec executable="${targetDistAbs}/ant/bin/ant.bat" dir="${targetDistAbs}/loader">
+            <env key="ANT_HOME" value="${targetDistAbs}/ant"/>
+        </exec>
+
+        <delete failonerror="false" includeemptydirs="true">
+           <fileset dir="${targetDistAbs}/repository" includes="db.*" />
+        </delete>
+        
+        <delete file="target/dist/conf/context.properties" />
+        <move file="target/dist/conf/context.bak" tofile="target/dist/conf/context.properties" overwrite="true"/>
+    </target>    
     <target name="prepare-exe" depends="init-all" description="Prepares the executable artifact">
         <artifact:pom file="pom.xml" id="pom" />
         <copy file="launcher/launcher.xml" tofile="target/launcher.xml" overwrite="true"/>
@@ -121,7 +144,7 @@
                 line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll target/setup.exe" />
         </exec>
     </target>
-    <target name="all" depends="init-all,dist,installer,prepare-exe,package,prepare-exe-single"
+    <target name="all" depends="init-all,dist,prepare-hsqldb,installer,prepare-exe,package,prepare-exe-single"
         description="Makes the dist and creates the installer">
     </target>
     <target name="prepare-exe-single" depends="init-all"
