@@ -316,10 +316,12 @@ public class ParametricForm extends VLayout {
 				fieldValue = fieldValue.toString().equals("yes") ? 1L : 0L;
 			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_DATE))
 				fieldValue = (Date) fieldValue;
-			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET))
+			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET)){
 				fieldName = fieldName.replaceAll("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET, "type:"
 						+ GUIExtendedAttribute.TYPE_STRING);
+			}
 
+			
 			GUICriterion criterion = new GUICriterion();
 			criterion.setField(fieldName);
 
