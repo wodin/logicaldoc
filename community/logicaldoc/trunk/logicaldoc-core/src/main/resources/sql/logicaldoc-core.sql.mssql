@@ -111,7 +111,7 @@ create table ld_foldergroup (ld_folderid bigint not null, ld_groupid bigint not 
                              ld_rename int not null, ld_import int not null, ld_export int not null, ld_sign int not null, 
                              ld_archive int not null, ld_workflow int not null, ld_download int not null, ld_calendar int not null,
                              ld_subscription int not null,  
-                             primary key (ld_folderid, ld_groupid, ld_write, ld_add, ld_security, ld_immutable, ld_delete, 
+                             constraint PK_LD_FOLDERGROUP primary key (ld_folderid, ld_groupid, ld_write, ld_add, ld_security, ld_immutable, ld_delete, 
                              ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, 
                              ld_calendar, ld_subscription));
 create table ld_feedmessage (ld_id bigint not null, ld_lastmodified datetime not null, ld_recordversion bigint not null,
