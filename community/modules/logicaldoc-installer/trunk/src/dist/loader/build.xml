@@ -31,6 +31,7 @@
          <or>
             <equals arg1="${jdbc.dbms}" arg2="oracle" />
             <equals arg1="${jdbc.dbms}" arg2="hsqldb"/>
+            <equals arg1="${jdbc.dbms}" arg2="h2"/>
          </or>
          <then/>
          <else>
@@ -50,34 +51,44 @@
          </else>
         </if>
         
-        
-		<trycatch property="error" reference="exception">
-			<try>
-				<!--Iterate over each file and execute it in a connection-->
-				<for list="${dbinit.sql.files}" param="file">
-					<sequential>
-						<var name="sqlFile" unset="true" />
-						<if>
-							<available file="${dbinit.sql.dir}/@{file}.sql.${jdbc.dbms}" property="dbms.present" />
-							<then>
-								<property name="sqlFile" value="${dbinit.sql.dir}/@{file}.sql.${jdbc.dbms}" />
-							</then>
-							<else>
-								<property name="sqlFile" value="${dbinit.sql.dir}/@{file}.sql" />
-							</else>
-						</if>
-						<echo>Executing sql file ${sqlFile}</echo>
-						<sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}" password="${jdbc.password}" autocommit="true" print="yes" output="${log.dir}/output.txt" append="true" src="${sqlFile}" onerror="${dbinit.onerror}">
-							<classpath refid="class.path" />
-						</sql>
-					</sequential>
-				</for>
-			</try>
-			<catch>
-				<echo>Unable to import data</echo>
-				<echo>${error}</echo>
-			</catch>
-		</trycatch>
+        <if>
+            <and>
+                <equals arg1="${jdbc.dbms}" arg2="hsqldb" />
+                <available file="../repository/db/db.script"  />
+            </and>
+            <then>
+                <echo>Embedded database already created</echo>
+            </then>
+            <else>
+        		<trycatch property="error" reference="exception">
+        			<try>
+        				<!--Iterate over each file and execute it in a connection-->
+        				<for list="${dbinit.sql.files}" param="file">
+        					<sequential>
+        						<var name="sqlFile" unset="true" />
+        						<if>
+        							<available file="${dbinit.sql.dir}/@{file}.sql.${jdbc.dbms}" property="dbms.present" />
+        							<then>
+        								<property name="sqlFile" value="${dbinit.sql.dir}/@{file}.sql.${jdbc.dbms}" />
+        							</then>
+        							<else>
+        								<property name="sqlFile" value="${dbinit.sql.dir}/@{file}.sql" />
+        							</else>
+        						</if>
+        						<echo>Executing sql file ${sqlFile}</echo>
+        						<sql driver="${jdbc.driver}" url="${jdbc.url}" userid="${jdbc.username}" password="${jdbc.password}" autocommit="true" print="yes" output="${log.dir}/output.txt" append="true" src="${sqlFile}" onerror="${dbinit.onerror}">
+        							<classpath refid="class.path" />
+        						</sql>
+        					</sequential>
+        				</for>
+        			</try>
+        			<catch>
+        				<echo>Unable to import data</echo>
+        				<echo>${error}</echo>
+        			</catch>
+        		</trycatch>
+            </else>        
+        </if>
 	</target>
 
 	<target name="langinit" description="Initializes the language">
