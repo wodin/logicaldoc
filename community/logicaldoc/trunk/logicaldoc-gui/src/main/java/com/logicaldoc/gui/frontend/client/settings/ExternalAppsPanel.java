@@ -97,7 +97,7 @@ public class ExternalAppsPanel extends VLayout {
 				tesseract = parameter;
 			else if (parameter.getName().equals("command.openssl"))
 				openssl = parameter;
-			else if (parameter.getName().equals("command.pdf2html"))
+			else if (parameter.getName().equals("command.pdftohtml"))
 				pdftohtml = parameter;
 			else if (parameter.getName().equals("openoffice.path"))
 				openofficePath = parameter;

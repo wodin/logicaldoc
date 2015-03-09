@@ -120,7 +120,7 @@ public class RowCriteria extends HLayout {
 			operatorsMap = operatorsFor(null);
 		operatorsFieldsItem.setValueMap(operatorsMap);
 		if (!operatorsMap.isEmpty())
-			operatorsFieldsItem.setValue(operatorsMap.values().iterator().next());
+			operatorsFieldsItem.setValue(operatorsMap.keySet().iterator().next());
 
 		criteriaFieldsItem.addChangedHandler(new ChangedHandler() {
 
