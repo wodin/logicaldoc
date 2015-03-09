@@ -558,6 +558,29 @@ public class ItemFactory {
 		return item;
 	}
 
+	/**
+	 * Creates a new TextItem for the Extended Attributes.
+	 */
+	public static FormItem newStringItemForPresetExtendedAttribute(Long templateId, String attributeName) {
+		// We cannot use spaces in items name
+		String itemName = attributeName.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		FormItem item = new SelectItem();
+		item.setOptionDataSource(new ExtendedAttributeOptionsDS(templateId, attributeName, false));
+
+		ListGridField value = new ListGridField("value", I18N.message("value"));
+		((SelectItem) item).setPickListWidth(200);
+		((SelectItem) item).setPickListFields(value);
+		((SelectItem) item).setValueField("value");
+		((SelectItem) item).setDisplayField("value");
+
+		item.setName(itemName);
+		item.setWrapTitle(false);
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setHintStyle("hint");
+
+		return item;
+	}
+
 	public static PasswordItem newPasswordItem(String name, String title, String value) {
 		PasswordItem password = new PasswordItem();
 		password.setTitle(I18N.message(title));
@@ -804,7 +827,7 @@ public class ItemFactory {
 		templateItem.setMultiple(false);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
 		templateItem.setOptionDataSource(new TemplatesDS(withEmpty, templateId, null, false));
-		
+
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
 		templateItem.setHintStyle("hint");

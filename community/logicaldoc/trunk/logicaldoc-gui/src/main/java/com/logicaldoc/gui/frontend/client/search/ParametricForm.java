@@ -14,6 +14,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -26,7 +27,6 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.JSOHelper;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.ImgButton;
@@ -308,10 +308,17 @@ public class ParametricForm extends VLayout {
 			// This lines are necessary to avoid error for GWT values type.
 			if (row.getValueFieldsItem() instanceof IntegerItem)
 				fieldValue = Long.parseLong(fieldValue.toString());
-			if (fieldName.endsWith("type:1") || fieldName.endsWith("type:2") || fieldName.endsWith("type:5"))
+
+			if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_INT)
+					|| fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_DOUBLE))
 				fieldValue = Long.parseLong(fieldValue.toString());
-			else if (fieldName.endsWith("type:3"))
+			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_BOOLEAN))
+				fieldValue = fieldValue.toString().equals("yes") ? 1L : 0L;
+			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_DATE))
 				fieldValue = (Date) fieldValue;
+			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET))
+				fieldName = fieldName.replaceAll("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET, "type:"
+						+ GUIExtendedAttribute.TYPE_STRING);
 
 			GUICriterion criterion = new GUICriterion();
 			criterion.setField(fieldName);
@@ -330,7 +337,6 @@ public class ParametricForm extends VLayout {
 				criterion.setStringValue((String) fieldValue);
 			else if (fieldValue instanceof JavaScriptObject) {
 				Map m = JSOHelper.convertToMap((JavaScriptObject) fieldValue);
-				SC.say("" + m.get("value"));
 			}
 
 			criterion.setOperator(fieldOperator.toLowerCase());
