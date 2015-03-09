@@ -2,8 +2,10 @@ package com.logicaldoc.gui.frontend.client.search;
 
 import java.util.LinkedHashMap;
 
+import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DataSourceField;
@@ -65,7 +67,7 @@ public class RowCriteria extends HLayout {
 		removeImg.setShowDown(false);
 		removeImg.setShowRollOver(false);
 		removeImg.setLayoutAlign(Alignment.LEFT);
-		removeImg.setSrc("[SKIN]/actions/remove.png");
+		removeImg.setSrc("[SKIN]/headerIcons/close.gif");
 		removeImg.setHeight(18);
 		removeImg.setWidth(18);
 		removeImg.setDisabled(rowPosition == 0);
@@ -109,12 +111,16 @@ public class RowCriteria extends HLayout {
 		operatorsFieldsItem.setMultiple(false);
 		operatorsFieldsItem.setShowTitle(false);
 		operatorsFieldsItem.setColSpan(1);
-		operatorsFieldsItem.setDefaultValue("");
+
+		LinkedHashMap<String, String> operatorsMap = null;
 
 		if (fieldSelected != null && !fieldSelected.trim().isEmpty())
-			operatorsFieldsItem.setValueMap(operatorsFor(fieldSelected));
+			operatorsMap = operatorsFor(fieldSelected);
 		else
-			operatorsFieldsItem.setValueMap(operatorsFor(null));
+			operatorsMap = operatorsFor(null);
+		operatorsFieldsItem.setValueMap(operatorsMap);
+		if (!operatorsMap.isEmpty())
+			operatorsFieldsItem.setValue(operatorsMap.values().iterator().next());
 
 		criteriaFieldsItem.addChangedHandler(new ChangedHandler() {
 
@@ -145,13 +151,12 @@ public class RowCriteria extends HLayout {
 
 	private LinkedHashMap<String, String> operatorsFor(String criteriaField) {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("", " ");
 		if (criteriaField == null)
 			return map;
 
 		if (criteriaField.equals("id") || criteriaField.equals("fileSize") || criteriaField.equals("rating")
-				|| criteriaField.equals("published") || criteriaField.endsWith("type:1")
-				|| criteriaField.endsWith("type:2")) {
+				|| criteriaField.equals("published") || criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_INT)
+				|| criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_DOUBLE)) {
 			map.put("greaterthan", I18N.message("greaterthan"));
 			map.put("lessthan", I18N.message("lessthan"));
 			map.put("equals", I18N.message("equals"));
@@ -159,11 +164,14 @@ public class RowCriteria extends HLayout {
 		} else if (criteriaField.equals("sourceDate") || criteriaField.equals("lastModified")
 				|| criteriaField.equals("date") || criteriaField.equals("creation")
 				|| criteriaField.equals("startPublishing") || criteriaField.equals("stopPublishing")
-				|| criteriaField.endsWith("type:3")) {
+				|| criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_DATE)) {
 			map.put("greaterthan", I18N.message("greaterthan"));
 			map.put("lessthan", I18N.message("lessthan"));
-		} else if (criteriaField.endsWith("type:5")) {
+		} else if (criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_BOOLEAN)) {
 			map.put("equals", I18N.message("equals"));
+		} else if (criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET)) {
+			map.put("equals", I18N.message("equals"));
+			map.put("notequal", I18N.message("notequal"));
 		} else {
 			map.put("contains", I18N.message("contains"));
 			map.put("notcontains", I18N.message("notcontains"));
@@ -176,12 +184,22 @@ public class RowCriteria extends HLayout {
 
 	private FormItem valueItemFor(String criteriaField) {
 		if (criteriaField.equals("id") || criteriaField.equals("fileSize") || criteriaField.equals("rating")
-				|| criteriaField.endsWith("type:1") || criteriaField.endsWith("type:2")) {
+				|| criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_INT)
+				|| criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_DOUBLE)) {
 			return ItemFactory.newIntegerItem("value", "integer", null);
+		} else if (criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_BOOLEAN)) {
+			FormItem item = ItemFactory.newBooleanSelector("value", "boolean");
+			item.setValue("yes");
+			return item;
+		} else if (criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET)) {
+			String attributeName = criteriaField.substring(0, criteriaField.lastIndexOf(':') - 4).replaceAll("_", "");
+			FormItem item = ItemFactory.newStringItemForPresetExtendedAttribute(template.getId(), attributeName);
+			item.setName("value");
+			return item;
 		} else if (criteriaField.equals("sourceDate") || criteriaField.equals("lastModified")
 				|| criteriaField.equals("date") || criteriaField.equals("creation")
 				|| criteriaField.equals("startPublishing") || criteriaField.equals("stopPublishing")
-				|| criteriaField.endsWith("type:3")) {
+				|| criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_DATE)) {
 			return ItemFactory.newDateItem("value", "date");
 		} else {
 			return ItemFactory.newTextItem("value", "text", null);
