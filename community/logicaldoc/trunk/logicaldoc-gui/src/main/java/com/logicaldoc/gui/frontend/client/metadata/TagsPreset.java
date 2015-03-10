@@ -59,21 +59,17 @@ public class TagsPreset extends VLayout {
 			public void onChanged(ChangedEvent event) {
 				settingService.saveSettings(Session.get().getSid(), new GUIParameter[] { new GUIParameter(Session.get()
 						.getTenantName() + ".tag.mode", mode.getValueAsString()) }, new AsyncCallback<Void>() {
-					@Override
-					public void onSuccess(Void arg) {
-						Log.info(I18N.message("settingssaved"), null);
-						if (mode.getValueAsString().equals("preset")) {
-							addTag.setDisabled(false);
-							tags.setDisabled(false);
-						} else {
-							addTag.setDisabled(true);
-							tags.setDisabled(true);
-						}
-					}
 
 					@Override
 					public void onFailure(Throwable t) {
 						Log.serverError(t);
+					}
+
+					@Override
+					public void onSuccess(Void arg) {
+						Session.get().getInfo()
+								.setConfig(Session.get().getTenantName() + ".tag.mode", mode.getValueAsString());
+						Log.info(I18N.message("settingssaved"), null);
 					}
 				});
 			}
@@ -111,14 +107,6 @@ public class TagsPreset extends VLayout {
 		addMember(form);
 
 		reloadTags();
-
-		if (mode.getValueAsString().equals("preset")) {
-			addTag.setDisabled(false);
-			tags.setDisabled(false);
-		} else {
-			addTag.setDisabled(true);
-			tags.setDisabled(true);
-		}
 	}
 
 	private void reloadTags() {
@@ -135,7 +123,7 @@ public class TagsPreset extends VLayout {
 		index.setHidden(true);
 		ListGridField word = new ListGridField("word", I18N.message("tag"));
 		tags.setFields(index, word);
-		tags.setDataSource(new TagsDS("preset",true));
+		tags.setDataSource(new TagsDS("preset", true));
 		tags.setAutoFetchData(true);
 		tags.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
