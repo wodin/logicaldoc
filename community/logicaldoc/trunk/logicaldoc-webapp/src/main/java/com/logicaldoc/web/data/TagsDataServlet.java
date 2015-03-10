@@ -58,7 +58,7 @@ public class TagsDataServlet extends HttpServlet {
 
 			HashMap<String, Integer> tgs = new HashMap<String, Integer>();
 
-			if ("preset".equals(mode) && "true".equals(editing)) {
+			if (("preset".equals(firstLetter) ||"preset".equals(mode)) && "true".equals(editing)) {
 				// We have to return the preset only, since the user is editing a document
 				GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 				List<Generic> buf = gDao.findByTypeAndSubtype("tag", null, null, session.getTenantId());
