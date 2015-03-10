@@ -77,7 +77,7 @@ public class TagsSettingsPanel extends VLayout {
 		save.addClickHandler(new ClickHandler() {
 			@SuppressWarnings("unchecked")
 			public void onClick(ClickEvent event) {
-				Map<String, Object> values = (Map<String, Object>) vm.getValues();
+				final Map<String, Object> values = (Map<String, Object>) vm.getValues();
 
 				if (vm.validate()) {
 					List<GUIParameter> params = new ArrayList<GUIParameter>();
@@ -96,6 +96,7 @@ public class TagsSettingsPanel extends VLayout {
 
 								@Override
 								public void onSuccess(Void ret) {
+									Session.get().getInfo().setConfig(Session.get().getTenantName()+".tag.mode", values.get("mode").toString());
 									Log.info(I18N.message("settingssaved"), null);
 								}
 							});
