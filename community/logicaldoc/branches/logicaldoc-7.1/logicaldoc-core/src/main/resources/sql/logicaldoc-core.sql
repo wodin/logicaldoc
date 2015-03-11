@@ -42,7 +42,7 @@ create table ld_menu (ld_id bigint not null, ld_lastmodified timestamp not null,
                       ld_parentid bigint not null, ld_securityref bigint, ld_icon varchar(255), 
                       ld_type int not null, ld_description varchar(4000), ld_position int not null, 
                       primary key (ld_id));
-create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint not null, ld_write int not null, primary key (ld_menuid, ld_groupid, ld_write));
+create table ld_menugroup (ld_menuid bigint not null, ld_groupid bigint not null, ld_write int not null, primary key (ld_menuid, ld_groupid));
 create table ld_recipient (ld_messageid bigint not null, ld_name varchar(255) not null, ld_address varchar(255) not null, ld_mode varchar(255) not null, ld_type int not null, ld_read int not null);
 create table ld_systemmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
                                ld_deleted int not null, ld_tenantid bigint not null, 
@@ -106,10 +106,7 @@ create table ld_foldergroup (ld_folderid bigint not null, ld_groupid bigint not 
                              ld_add int not null, ld_security int not null, ld_immutable int not null, ld_delete int not null, 
                              ld_rename int not null, ld_import int not null, ld_export int not null, ld_sign int not null, 
                              ld_archive int not null, ld_workflow int not null, ld_download int not null, ld_calendar int not null,
-                             ld_subscription int not null,  
-                             primary key (ld_folderid, ld_groupid, ld_write, ld_add, ld_security, ld_immutable, ld_delete, 
-                             ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, 
-                             ld_calendar, ld_subscription));
+                             ld_subscription int not null, primary key (ld_folderid, ld_groupid));
 create table ld_feedmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
                              ld_deleted int not null, ld_tenantid bigint not null, ld_guid varchar(512) null, ld_title varchar(512) null, ld_description  varchar(4000) null, ld_link varchar(512) null, ld_pubdate timestamp, ld_read int not null, primary key (ld_id));
 create table ld_rating (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
