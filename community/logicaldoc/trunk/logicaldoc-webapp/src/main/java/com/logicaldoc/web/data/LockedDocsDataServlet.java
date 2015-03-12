@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
@@ -71,7 +72,8 @@ public class LockedDocsDataServlet extends HttpServlet {
 			query.append(" B.ld_firstname, B.ld_name, A.ld_fileversion ");
 			query.append(" from ld_document A ");
 			query.append(" left outer join ld_user B on A.ld_lockuserid=B.ld_id ");
-			query.append(" where A.ld_deleted = 0 and A.ld_tenantid=");
+			query.append(" where A.ld_deleted = 0 and not A.ld_status="+AbstractDocument.DOC_ARCHIVED);
+			query.append(" and A.ld_tenantid=");
 			query.append(Long.toString(session.getTenantId()));
 			query.append(" and A.ld_docref is null ");
 			query.append(" and (not A.ld_status=0 or not A.ld_immutable=0) ");
