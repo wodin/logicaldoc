@@ -17,6 +17,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -185,7 +186,7 @@ public class SecurityPanel extends FolderDetailTab {
 		ListGridField subscription = new ListGridField("subscription", I18N.message("subscription"), 60);
 		subscription.setType(ListGridFieldType.BOOLEAN);
 		subscription.setCanEdit(true);
-		
+
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
@@ -346,10 +347,14 @@ public class SecurityPanel extends FolderDetailTab {
 	 * Create an array of all right defined
 	 */
 	public GUIRight[] getRights() {
-		ListGridRecord[] records = list.getRecords();
+		// This returns 0 records if the grid is composed by 80 rows!!
+		// ListGridRecord[] records = list.getRecords();
+
+		int totalRecords = list.getRecordList().getLength();
 		List<GUIRight> tmp = new ArrayList<GUIRight>();
 
-		for (ListGridRecord record : records) {
+		for (int i = 0; i < totalRecords; i++) {
+			Record record = list.getRecordList().get(i);
 			if (!record.getAttributeAsBoolean("read"))
 				continue;
 
@@ -419,7 +424,6 @@ public class SecurityPanel extends FolderDetailTab {
 	}
 
 	public void onSave(final boolean recursive) {
-
 		// Apply all rights
 		folder.setRights(this.getRights());
 
@@ -437,8 +441,9 @@ public class SecurityPanel extends FolderDetailTab {
 				else
 					Log.info(I18N.message("appliedrightsonsubfolders"), null);
 
-				ListGridRecord[] records = list.getRecords();
-				for (ListGridRecord rec : records) {
+				int totalRecords = list.getRecordList().getLength();
+				for (int i = 0; i < totalRecords; i++) {
+					Record rec = list.getRecordList().get(i);
 					if (!rec.getAttributeAsBoolean("read"))
 						list.removeData(rec);
 				}
@@ -446,6 +451,5 @@ public class SecurityPanel extends FolderDetailTab {
 				refresh(folder);
 			}
 		});
-
 	}
 }
