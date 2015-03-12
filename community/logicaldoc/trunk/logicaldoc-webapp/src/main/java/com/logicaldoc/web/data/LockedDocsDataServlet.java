@@ -141,7 +141,8 @@ public class LockedDocsDataServlet extends HttpServlet {
 				else
 					writer.print("<locked>blank</locked>");
 				writer.print("<userId>" + doc.getLockUserId() + "</userId>");
-				writer.print("<username>" + doc.getComment() + "</username>");
+				if(doc.getComment()!=null)
+					writer.print("<username>" + doc.getComment() + "</username>");
 				writer.print("</document>");
 			}
 			writer.write("</list>");

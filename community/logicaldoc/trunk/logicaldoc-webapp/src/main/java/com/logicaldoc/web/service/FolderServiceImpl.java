@@ -484,6 +484,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 		boolean sqlerrors = false;
 		try {
+			log.info("Applying " + (rights != null ? rights.length : 0) + " rights to folder " + folder.getId());
+
 			folder.setSecurityRef(null);
 			folder.getFolderGroups().clear();
 			sqlerrors = false;
