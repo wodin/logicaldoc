@@ -105,6 +105,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		try {
 			Document doc = (Document) findById(docId);
 			doc.setStatus(AbstractDocument.DOC_ARCHIVED);
+			doc.setLockUserId(transaction.getUserId());
 			transaction.setEvent(DocumentEvent.ARCHIVED.toString());
 			store(doc, transaction);
 			log.debug("Archived document " + docId);
@@ -120,6 +121,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		try {
 			Document doc = (Document) findById(docId);
 			doc.setStatus(AbstractDocument.DOC_UNLOCKED);
+			doc.setLockUserId(null);
 			transaction.setEvent(DocumentEvent.RESTORED.toString());
 			store(doc, transaction);
 			log.debug("Unarchived document " + docId);
