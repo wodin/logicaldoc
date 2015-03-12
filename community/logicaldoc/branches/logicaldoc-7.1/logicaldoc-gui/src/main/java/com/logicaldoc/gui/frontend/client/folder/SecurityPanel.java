@@ -17,6 +17,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -346,10 +347,14 @@ public class SecurityPanel extends FolderDetailTab {
 	 * Create an array of all right defined
 	 */
 	public GUIRight[] getRights() {
-		ListGridRecord[] records = list.getRecords();
+		// This returns 0 records if the grid is composed by 80 rows!!
+		// ListGridRecord[] records = list.getRecords();
+
+		int totalRecords = list.getRecordList().getLength();
 		List<GUIRight> tmp = new ArrayList<GUIRight>();
 
-		for (ListGridRecord record : records) {
+		for (int i = 0; i < totalRecords; i++) {
+			Record record = list.getRecordList().get(i);
 			if (!record.getAttributeAsBoolean("read"))
 				continue;
 
