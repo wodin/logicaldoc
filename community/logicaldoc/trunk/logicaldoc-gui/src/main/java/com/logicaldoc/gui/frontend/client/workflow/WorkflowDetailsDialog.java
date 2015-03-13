@@ -256,7 +256,7 @@ public class WorkflowDetailsDialog extends Window {
 				final Window window = new Window();
 				window.setTitle(I18N.message("workflowtaskreassign"));
 				window.setWidth(250);
-				window.setHeight(100);
+				window.setHeight(120);
 				window.setCanDragResize(true);
 				window.setIsModal(true);
 				window.setShowModalMask(true);
