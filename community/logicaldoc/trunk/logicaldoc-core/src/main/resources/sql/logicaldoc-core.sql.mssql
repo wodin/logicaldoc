@@ -56,8 +56,7 @@ create table ld_systemmessage (ld_id bigint not null, ld_lastmodified datetime n
 create table ld_template (ld_id bigint not null, ld_lastmodified datetime not null, ld_recordversion bigint not null,
                           ld_deleted int not null, ld_tenantid bigint not null, ld_name varchar(255) not null, 
                           ld_description varchar(2000), ld_readonly int not null, ld_type int not null, 
-                          ld_category int not null, ld_signrequired int not null, ld_retentiondays int null, 
-                          primary key (ld_id));
+                          ld_category int not null, ld_signrequired int not null, primary key (ld_id));
 create table ld_template_ext (ld_templateid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue datetime null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_templateid, ld_name));
 create table ld_ticket (ld_id bigint not null, ld_lastmodified datetime not null, ld_recordversion bigint not null,
                         ld_deleted int not null, ld_tenantid bigint not null, ld_ticketid varchar(255) not null, 

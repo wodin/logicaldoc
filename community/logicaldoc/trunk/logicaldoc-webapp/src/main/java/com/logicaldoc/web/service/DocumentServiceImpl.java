@@ -144,7 +144,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		for (Long id : docIds) {
 			if (id != null)
 				try {
-					documentManager.reindex(id,null);
+					documentManager.reindex(id, null);
 				} catch (Exception e) {
 					ServiceUtil.throwServerException(session, log, e);
 				}
@@ -1607,11 +1607,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	@Override
 	public void unarchiveDocuments(String sid, long[] docIds) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
-		
+
 		try {
 			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 			User user = ServiceUtil.getSessionUser(sid);
-						
+
 			for (long id : docIds) {
 				// Create the document history event
 				History transaction = new History();
@@ -1637,7 +1637,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			StringBuffer query = new StringBuffer(
 					"select count(ld_id) from ld_document where ld_deleted=0 and ld_status=" + status);
-			query.append(" and ld_folderid in " + accessibleIds.toString().replace("[", "(").replace("]", ")"));
+			if (!user.isInGroup("admin"))
+				query.append(" and ld_folderid in " + accessibleIds.toString().replace("[", "(").replace("]", ")"));
 			return dao.queryForLong(query.toString());
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
