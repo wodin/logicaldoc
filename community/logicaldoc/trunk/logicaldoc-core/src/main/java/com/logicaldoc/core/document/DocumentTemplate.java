@@ -50,12 +50,6 @@ public class DocumentTemplate extends ExtensibleObject {
 
 	private int signRequired = SIGNED_NO;
 
-	/**
-	 * Stores an optional amount of retention days that will be applied to an
-	 * up coming document
-	 */
-	private Integer retentionDays;
-
 	public String getName() {
 		return name;
 	}
@@ -102,13 +96,5 @@ public class DocumentTemplate extends ExtensibleObject {
 
 	public void setSignRequired(int signRequired) {
 		this.signRequired = signRequired;
-	}
-
-	public Integer getRetentionDays() {
-		return retentionDays;
-	}
-
-	public void setRetentionDays(Integer retentionDays) {
-		this.retentionDays = retentionDays;
 	}
 }

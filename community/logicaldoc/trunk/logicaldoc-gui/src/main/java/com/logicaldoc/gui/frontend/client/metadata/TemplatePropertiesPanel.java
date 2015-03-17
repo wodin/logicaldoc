@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
@@ -380,8 +379,8 @@ public class TemplatePropertiesPanel extends HLayout {
 				if (template.getId() == 0L) {
 					SC.say("savetemplatefirst");
 				} else {
-					Options options = new Options(template.getId(), attributeName
-							.getValueAsString(), template.isReadonly());
+					Options options = new Options(template.getId(), attributeName.getValueAsString(), template
+							.isReadonly());
 					options.show();
 				}
 			}
@@ -470,16 +469,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		if (!readonly)
 			description.addChangedHandler(changedHandler);
 
-		TextItem retentionDays = ItemFactory.newIntegerItem("retentionDays", "retention", template.getRetentionDays());
-		retentionDays.setHint(I18N.message("days"));
-		retentionDays.setDisabled(readonly);
-		if (!readonly)
-			retentionDays.addChangedHandler(changedHandler);
-
-		if (Feature.enabled(Feature.RETENTION_POLICIES))
-			form1.setItems(id, name, description, retentionDays);
-		else
-			form1.setItems(id, name, description);
+		form1.setItems(id, name, description);
 
 		form1.setWidth(200);
 	}
@@ -497,10 +487,6 @@ public class TemplatePropertiesPanel extends HLayout {
 	protected void validateFields(Map<String, Object> values) {
 		template.setName((String) values.get("name"));
 		template.setDescription((String) values.get("description"));
-		if (values.get("retentionDays") != null)
-			template.setRetentionDays(new Integer(values.get("retentionDays").toString()));
-		else
-			template.setRetentionDays(null);
 
 		if (guiAttributes.size() > 0) {
 			for (String attrName : guiAttributes.keySet()) {

@@ -158,7 +158,6 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 			templ.setTenantId(session.getTenantId());
 			templ.setName(template.getName());
 			templ.setDescription(template.getDescription());
-			templ.setRetentionDays(template.getRetentionDays());
 			templ.setReadonly(template.isReadonly() ? 1 : 0);
 			templ.setType(template.getType());
 			templ.setCategory(template.getCategory());
@@ -219,7 +218,6 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 			templ.setId(templateId);
 			templ.setName(template.getName());
 			templ.setDescription(template.getDescription());
-			templ.setRetentionDays(template.getRetentionDays());
 			templ.setReadonly(template.getReadonly() == 1);
 			templ.setType(template.getType());
 			templ.setCategory(template.getCategory());
