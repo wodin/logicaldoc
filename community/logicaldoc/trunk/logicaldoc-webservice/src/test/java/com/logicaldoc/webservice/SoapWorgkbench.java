@@ -1,10 +1,13 @@
 package com.logicaldoc.webservice;
 
+import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
+import com.logicaldoc.webservice.search.WSSearchOptions;
+import com.logicaldoc.webservice.search.WSSearchResult;
 import com.logicaldoc.webservice.security.SecurityClient;
 import com.logicaldoc.webservice.security.WSUser;
 import com.logicaldoc.webservice.system.SystemClient;
@@ -17,7 +20,6 @@ public class SoapWorgkbench {
 		AuthClient auth = new AuthClient(BASE + "/Auth");
 
 		FolderClient folderClient = new FolderClient(BASE + "/Folder", 1, false, 50);
-		SearchClient searchClient = new SearchClient(BASE + "/Search");
 		SystemClient systemClient = new SystemClient(BASE + "/System");
 		SecurityClient securityClient = new SecurityClient(BASE + "/Security");
 
@@ -29,7 +31,9 @@ public class SoapWorgkbench {
 		try {
 			// securityStuff(sid);
 
-			documentStuff(sid);
+			// documentStuff(sid);
+			
+			searchStuff(sid);
 
 			// WSFolder newFolder = new WSFolder();
 			// newFolder.setName("ddddd");
@@ -62,71 +66,6 @@ public class SoapWorgkbench {
 			// for (String lang : systemClient.getLanguages(sid)) {
 			// System.out.println("lang: " + lang);
 			// System.out.println("++++++++++++++++++++++++++++++++");
-			// }
-
-			// WSDocument[] documents = searchClient.findByFilename(sid,
-			// "pizzo.ods");
-			// System.out.println("---- " + documents.length);
-			//
-			// List<WSDocument> docsList = Arrays.asList(documents);
-			// for (WSDocument doc : docsList) {
-			// System.out.println("title: " + doc.getTitle());
-			// System.out.println("custom id: " + doc.getCustomId());
-			// System.out.println("version: " + doc.getVersion());
-			// System.out.println("date: " + doc.getDate());
-			// System.out.println("++++++++++++++++++++++++++++++++");
-			// }
-			//
-			// documents = searchClient.findByFilename(sid, "marketing.txt");
-			// System.out.println("---- " + documents.length);
-
-			// WSFolder[] folders = searchClient.findFolders(sid, "xxx");
-			// System.out.println("---- " + folders.length);
-			// List<WSFolder> foldersList = Arrays.asList(folders);
-			// for (WSFolder folder : foldersList) {
-			// System.out.println("id: " + folder.getId());
-			// System.out.println("title: " + folder.getName());
-			// System.out.println("++++++++++++++++++++++++++++++++");
-			// }
-
-			// WSDocument[] documents = searchClient.findByTag(sid, "abc");
-			// System.out.println("---- " + documents.length);
-			// List<WSDocument> docsList = Arrays.asList(documents);
-			// for (WSDocument doc : docsList) {
-			// System.out.println("title: " + doc.getTitle());
-			// System.out.println("custom id: " + doc.getCustomId());
-			// System.out.println("version: " + doc.getVersion());
-			// System.out.println("++++++++++++++++++++++++++++++++");
-			// }
-
-			// for (String tag : searchClient.getTags(sid)) {
-			// System.out.println("tag: " + tag);
-			// System.out.println("++++++++++++++++++++++++++++++++");
-			// }
-
-			// for (WSTagCloud tag : searchClient.getTagCloud(sid)) {
-			// System.out.println("tag: " + tag.getTag());
-			// System.out.println("tag count: " + tag.getCount());
-			// System.out.println("tag scale: " + tag.getScale());
-			// System.out.println("++++++++++++++++++++++++++++++++");
-			// }
-			//
-			// WSSearchOptions opt = new WSSearchOptions();
-			// opt.setLanguage("en");
-			// opt.setExpression("paper");
-			// opt.setExpressionLanguage("en");
-			// opt.setType(SearchOptions.TYPE_FULLTEXT);
-			// opt.setMaxHits(10);
-			// WSSearchResult result = searchClient.find(sid, opt);
-			// System.out.println("---- " + result.getHits().length);
-			// for (WSDocument hit : result.getHits()) {
-			// System.out.println("hit customid: " + hit.getCustomId());
-			// System.out.println("hit score: " + hit.getScore());
-			// System.out.println("hit folderid: " + hit.getFolderId());
-			// System.out.println("hit title: " + hit.getTitle());
-			// System.out.println("hit creation: " + hit.getCreation());
-			// System.out.println("hit summary: " + hit.getSummary());
-			// System.out.println("************************");
 			// }
 
 			// WSFolder folder = folderClient.getFolder(sid, 6);
@@ -290,6 +229,77 @@ public class SoapWorgkbench {
 		// for (WSFolder wsFolder : path) {
 		// System.out.print(wsFolder.getName() + "/");
 		// }
+	}
+
+	private static void searchStuff(String sid) throws Exception {
+		SearchClient searchClient = new SearchClient(BASE + "/Search");
+
+		// WSDocument[] documents = searchClient.findByFilename(sid,
+		// "pizzo.ods");
+		// System.out.println("---- " + documents.length);
+		//
+		// List<WSDocument> docsList = Arrays.asList(documents);
+		// for (WSDocument doc : docsList) {
+		// System.out.println("title: " + doc.getTitle());
+		// System.out.println("custom id: " + doc.getCustomId());
+		// System.out.println("version: " + doc.getVersion());
+		// System.out.println("date: " + doc.getDate());
+		// System.out.println("++++++++++++++++++++++++++++++++");
+		// }
+		//
+		// documents = searchClient.findByFilename(sid, "marketing.txt");
+		// System.out.println("---- " + documents.length);
+
+		// WSFolder[] folders = searchClient.findFolders(sid, "xxx");
+		// System.out.println("---- " + folders.length);
+		// List<WSFolder> foldersList = Arrays.asList(folders);
+		// for (WSFolder folder : foldersList) {
+		// System.out.println("id: " + folder.getId());
+		// System.out.println("title: " + folder.getName());
+		// System.out.println("++++++++++++++++++++++++++++++++");
+		// }
+
+		// WSDocument[] documents = searchClient.findByTag(sid, "abc");
+		// System.out.println("---- " + documents.length);
+		// List<WSDocument> docsList = Arrays.asList(documents);
+		// for (WSDocument doc : docsList) {
+		// System.out.println("title: " + doc.getTitle());
+		// System.out.println("custom id: " + doc.getCustomId());
+		// System.out.println("version: " + doc.getVersion());
+		// System.out.println("++++++++++++++++++++++++++++++++");
+		// }
+
+		// for (String tag : searchClient.getTags(sid)) {
+		// System.out.println("tag: " + tag);
+		// System.out.println("++++++++++++++++++++++++++++++++");
+		// }
+
+		// for (WSTagCloud tag : searchClient.getTagCloud(sid)) {
+		// System.out.println("tag: " + tag.getTag());
+		// System.out.println("tag count: " + tag.getCount());
+		// System.out.println("tag scale: " + tag.getScale());
+		// System.out.println("++++++++++++++++++++++++++++++++");
+		// }
+		//
+		WSSearchOptions opt = new WSSearchOptions();
+		opt.setLanguage("en");
+		opt.setExpression("paper");
+		opt.setExpressionLanguage("en");
+		opt.setType(SearchOptions.TYPE_FULLTEXT);
+		opt.setMaxHits(10);
+		opt.setFolderId(4L);
+		opt.setSearchInSubPath(1);
+		WSSearchResult result = searchClient.find(sid, opt);
+		System.out.println("---- " + result.getHits().length);
+		for (WSDocument hit : result.getHits()) {
+			System.out.println("hit customid: " + hit.getCustomId());
+			System.out.println("hit score: " + hit.getScore());
+			System.out.println("hit folderid: " + hit.getFolderId());
+			System.out.println("hit title: " + hit.getTitle());
+			System.out.println("hit creation: " + hit.getCreation());
+			System.out.println("hit summary: " + hit.getSummary());
+			System.out.println("************************");
+		}
 	}
 
 	private static void documentStuff(String sid) throws Exception {
