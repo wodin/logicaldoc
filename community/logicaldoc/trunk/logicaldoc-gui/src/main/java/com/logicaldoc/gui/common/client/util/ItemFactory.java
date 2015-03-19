@@ -805,7 +805,6 @@ public class ItemFactory {
 		map.put("minute", I18N.message("minutes"));
 		map.put("hour", I18N.message("hours"));
 		map.put("day", I18N.message("ddays"));
-		map.put("week", I18N.message("weeks"));
 		select.setValueMap(map);
 		select.setValue("minute");
 		select.setHintStyle("hint");
