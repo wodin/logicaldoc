@@ -54,6 +54,8 @@ public class NotesPanel extends DocumentDetailTab {
 	private ListGrid notesGrid;
 
 	private Button addNote;
+	
+	private HLayout buttons;
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -75,6 +77,8 @@ public class NotesPanel extends DocumentDetailTab {
 			container.removeMember(addNote);
 		if (notesGrid != null)
 			container.removeMember(notesGrid);
+		if(buttons!=null)
+			container.removeMember(buttons);
 
 		ListGridField id = new ListGridField("id", I18N.message("id"), 50);
 		id.setHidden(true);
@@ -157,7 +161,7 @@ public class NotesPanel extends DocumentDetailTab {
 			}
 		});
 
-		HLayout buttons = new HLayout();
+		buttons = new HLayout();
 		buttons.setWidth100();
 		buttons.setHeight(30);
 		buttons.setMembersMargin(5);
