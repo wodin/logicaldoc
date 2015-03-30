@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+   "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-lazy="false" auto-import="false">
+	<class name="com.logicaldoc.core.security.User" table="ld_user" where="ld_deleted=0">
+		<cache usage="read-write" />
+		<id name="id" type="long" column="ld_id" unsaved-value="0">
+			<generator class="hilo" />
+		</id>
+		<version name="recordVersion" column="ld_recordversion"  type="long" />   
+        <property name="lastModified" type="timestamp" column="ld_lastmodified" />
+		<property name="deleted" type="int" column="ld_deleted" not-null="true" />
+        <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />
+		<property name="enabled" type="int" column="ld_enabled" not-null="true" />
+		<property name="userName" type="string" column="ld_username" length="255" not-null="true" />
+		<property name="password" type="string" column="ld_password" length="255" />
+        <property name="passwordmd4" type="string" column="ld_passwordmd4" length="255" />
+		<property name="passwordChanged" type="timestamp" column="ld_passwordchanged"  />
+		<property name="passwordExpires" type="int" column="ld_passwordexpires" not-null="true"/>
+		<property name="passwordExpired" type="int" column="ld_passwordexpired" not-null="true"/>
+		<property name="name" type="string" column="ld_name" length="255" />
+		<property name="firstName" type="string" column="ld_firstname" length="255" />
+		<property name="street" type="string" column="ld_street" length="255" />
+		<property name="postalcode" type="string" column="ld_postalcode" length="255" />
+		<property name="city" type="string" column="ld_city" length="255" />
+		<property name="country" type="string" column="ld_country" length="255" />
+		<property name="state" type="string" column="ld_state" length="255" />
+		<property name="language" type="string" column="ld_language" length="10" />
+		<property name="email" type="string" column="ld_email" length="255" />
+		<property name="telephone" type="string" column="ld_telephone" length="255" />
+		<property name="telephone2" type="string" column="ld_telephone2" length="255" />
+		<property name="type" type="int" column="ld_type" not-null="true"/>
+        <property name="source" type="int" column="ld_source" not-null="true" />
+        <property name="quota" type="long" column="ld_quota" not-null="true" />
+    	<property name="cert" type="string" column="ld_cert" length="4000" />
+        <property name="certSubject" type="string" column="ld_certsubject" length="255" />
+        <property name="certDigest" type="string" column="ld_certdigest" length="255" />
+		<property name="key" type="string" column="ld_key" length="4000" />
+        <property name="keyDigest" type="string" column="ld_keydigest" length="255" />
+		<property name="welcomeScreen" type="int" column="ld_welcomescreen" not-null="false" />
+		<property name="ipWhiteList" type="string" column="ld_ipwhitelist" length="4000" not-null="false" />
+		<property name="ipBlackList" type="string" column="ld_ipblacklist" length="4000" not-null="false" />
+		<set name="groups" table="ld_usergroup" lazy="false" inverse="true">
+			<key column="ld_userid" />
+			<many-to-many column="ld_groupid" class="com.logicaldoc.core.security.Group" where="ld_deleted=0" />
+		</set>
+	</class>
+</hibernate-mapping>
