@@ -42,7 +42,7 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	public static final int DOC_CHECKED_OUT = 1;
 
 	public static final int DOC_LOCKED = 2;
-	
+
 	public static final int DOC_ARCHIVED = 3;
 
 	public static final int EXPORT_UNLOCKED = 0;
@@ -124,7 +124,7 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	private int signed = 0;
 
-	private Set<String> tags = new HashSet<String>();
+	private Set<Tag> tags = new HashSet<Tag>();
 
 	private Folder folder;
 
@@ -358,12 +358,33 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	/**
 	 * The set of tags for this document.
 	 */
-	public Set<String> getTags() {
+	public Set<Tag> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<String> tags) {
+	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
+	}
+
+	public void setTagsFromWords(Set<String> tgs) {
+		if (this.tags != null)
+			this.tags.clear();
+		else
+			this.tags = new HashSet<Tag>();
+
+		for (String word : tgs) {
+			Tag tag = new Tag(getTenantId(), word);
+			this.tags.add(tag);
+		}
+	}
+
+	public Set<String> getTagsAsWords() {
+		Set<String> words = new HashSet<String>();
+		if (tags != null)
+			for (Tag tag : tags) {
+				words.add(tag.getTag());
+			}
+		return words;
 	}
 
 	public int getIndexed() {
@@ -379,11 +400,11 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 		if (tags == null)
 			return "";
 
-		Iterator<String> iter = tags.iterator();
+		Iterator<Tag> iter = tags.iterator();
 		boolean start = true;
 
 		while (iter.hasNext()) {
-			String words = iter.next();
+			String words = iter.next().toString();
 
 			if (!start) {
 				sb.append(",");
@@ -447,12 +468,15 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	}
 
 	public void addTag(String word) {
-		tags.add(word);
+		Tag tg = new Tag();
+		tg.setTenantId(getTenantId());
+		tg.setTag(word);
+		tags.add(tg);
 	}
 
 	public void clearTags() {
 		tags.clear();
-		tags = new HashSet<String>();
+		tags = new HashSet<Tag>();
 	}
 
 	public String getFileExtension() {

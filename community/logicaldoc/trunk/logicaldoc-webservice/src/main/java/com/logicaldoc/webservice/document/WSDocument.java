@@ -262,7 +262,7 @@ public class WSDocument implements Serializable {
 			String[] tags = new String[0];
 			if (document.getTags() != null && document.getTags().size() > 0) {
 				tags = new String[document.getTags().size()];
-				List<String> docTags = new ArrayList<String>(document.getTags());
+				List<String> docTags = new ArrayList<String>(document.getTagsAsWords());
 				if (docTags != null && docTags.size() > 0) {
 					for (int j = 0; j < docTags.size(); j++) {
 						tags[j] = docTags.get(j);
@@ -349,7 +349,7 @@ public class WSDocument implements Serializable {
 		doc.setSourceAuthor(sourceAuthor);
 		doc.setSourceType(sourceType);
 		doc.setCoverage(coverage);
-		doc.setTags(setTags);
+		doc.setTagsFromWords(setTags);
 		doc.setTemplate(template);
 		if (template != null)
 			doc.setTemplateId(template.getId());
