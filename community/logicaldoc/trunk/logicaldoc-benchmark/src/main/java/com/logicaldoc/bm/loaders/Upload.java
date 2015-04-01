@@ -105,6 +105,7 @@ public class Upload extends AbstractLoader {
 		List<String> folderPath = chooseFolderPath();
 
 		// Make sure the folder exists
+		log.info("Create the folders");
 		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);
 		// Long folderID = makeFoldersFromPath(serverProxy.sid, serverProxy,
 		// rootFolder, folderPath);
