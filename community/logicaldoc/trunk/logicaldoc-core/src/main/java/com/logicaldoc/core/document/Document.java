@@ -56,8 +56,8 @@ public class Document extends AbstractDocument {
 			getAttributes().put(name, docVO.getAttributes().get(name));
 		}
 
-		setTags(new HashSet<String>());
-		for (String tag : docVO.getTags()) {
+		setTags(new HashSet<Tag>());
+		for (Tag tag : docVO.getTags()) {
 			getTags().add(tag);
 		}
 	}

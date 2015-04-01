@@ -167,17 +167,20 @@ values     (1,1,'testVer01','fileVer01','testUser',1,'2006-12-19 00:00:00','test
 insert into ld_version(ld_id, ld_documentid, ld_version, ld_fileversion, ld_username, ld_userid, ld_versiondate, ld_comment, ld_lastmodified, ld_deleted, ld_immutable, ld_creation, ld_publisherid, ld_indexed, ld_signed, ld_status, ld_filesize, ld_folderid,ld_creator,ld_creatorid,ld_exportstatus,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages)
 values     (2,1,'testVer02','fileVer02','testUser',1,'2006-12-20 00:00:00','testComment','2009-02-09 00:00:00',0,0,'2009-02-09 00:00:00',1,0,0,0,0,5,'',1,0,0,1,1,1,5);
 
-insert into ld_tag
-values     (1,'abc');
+insert into ld_tag(ld_docid, ld_tenantid, ld_tag)
+values     (1, 1,'abc');
 
-insert into ld_tag
-values     (1,'def');
+insert into ld_tag(ld_docid, ld_tenantid, ld_tag)
+values     (1, 1, 'def');
 
-insert into ld_tag
-values     (1,'ghi');
+insert into ld_tag(ld_docid, ld_tenantid, ld_tag)
+values     (1, 1,'ghi');
 
-insert into ld_tag
-values     (2,'ask');
+insert into ld_tag(ld_docid, ld_tenantid, ld_tag)
+values     (2, 1,'ask');
+
+insert into ld_tag(ld_docid, ld_tenantid, ld_tag)
+values     (3, 1,'zzz');
 
 insert into ld_history 
 				(ld_id, ld_lastmodified, ld_deleted, ld_docid, ld_folderid, ld_userid, ld_date, ld_username, ld_event, ld_comment, ld_version, ld_notified, ld_new,ld_tenantid,ld_recordversion)

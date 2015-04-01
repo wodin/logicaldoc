@@ -59,12 +59,17 @@
         <property name="pages" type="int" column="ld_pages" not-null="true"/>
 
 		<many-to-one name="folder" class="com.logicaldoc.core.security.Folder" column="ld_folderid" />
+        
 		<many-to-one name="template" class="com.logicaldoc.core.document.DocumentTemplate" column="ld_templateid" />
 		
-		<set name="tags" table="ld_tag" lazy="true" cascade="all" order-by="ld_tag"> 
-			<key column="ld_docid" />
-			<element type="string" column="ld_tag" length="255" />
-		</set>
+        <set name="tags" table="ld_tag" lazy="true" cascade="all" order-by="ld_tag">
+            <key column="ld_docid" />
+            <composite-element class="com.logicaldoc.core.document.Tag">
+		   	   <property name="tag" type="string" column="ld_tag" length="255"/>
+    	       <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />
+		   </composite-element>
+        </set>
+        
 		<map name="attributes" table="ld_document_ext" lazy="true" cascade="all" order-by="ld_position asc">
 		   <key column="ld_docid" />
 		   <map-key type="string" column="ld_name" length="255"/>

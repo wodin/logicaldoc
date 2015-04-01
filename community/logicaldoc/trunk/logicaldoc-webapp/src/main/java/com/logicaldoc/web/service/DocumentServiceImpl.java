@@ -512,7 +512,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setTitle(doc.getTitle());
 		document.setCustomId(doc.getCustomId());
 		if (doc.getTags().size() > 0)
-			document.setTags(doc.getTags().toArray(new String[doc.getTags().size()]));
+			document.setTags(doc.getTagsAsWords().toArray(new String[doc.getTags().size()]));
 		else
 			document.setTags(new String[0]);
 		document.setType(doc.getType());
@@ -891,7 +891,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	protected Document toDocument(GUIDocument document) {
 		Document docVO = new Document();
 		if (document.getTags() != null && document.getTags().length > 0)
-			docVO.setTags(new HashSet<String>(Arrays.asList(document.getTags())));
+			docVO.setTagsFromWords(new HashSet<String>(Arrays.asList(document.getTags())));
 
 		docVO.setTitle(document.getTitle());
 		docVO.setCustomId(document.getCustomId());

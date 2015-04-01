@@ -32,6 +32,7 @@ import com.logicaldoc.core.document.DocumentListener;
 import com.logicaldoc.core.document.DocumentListenerManager;
 import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.Tag;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.SessionManager;
@@ -273,17 +274,19 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 							.getName() + ".barcode.excludes")))
 				doc.setBarcoded(Document.BARCODE_SKIP);
 
-			Set<String> src = doc.getTags();
+			Set<Tag> src = doc.getTags();
 			if (src != null && src.size() > 0) {
 				// Trim too long tags
-				Set<String> dst = new HashSet<String>();
-				for (String str : src) {
-					String s = str;
-					if (str.length() > 255) {
-						s = str.substring(0, 255);
+				Set<Tag> dst = new HashSet<Tag>();
+				for (Tag str : src) {
+					str.setTenantId(doc.getTenantId());
+					String s = str.getTag();
+					if (s.length() > 255) {
+						s = s.substring(0, 255);
+						str.setTag(s);
 					}
-					if (!dst.contains(s))
-						dst.add(s);
+					if (!dst.contains(str))
+						dst.add(str);
 				}
 				doc.setTags(dst);
 				doc.setTgs(doc.getTagsString());
@@ -425,27 +428,27 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@SuppressWarnings("rawtypes")
 	@Override
 	public Map<String, Integer> findTags(String firstLetter, Long tenantId) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		final Map<String, Integer> map = new HashMap<String, Integer>();
 
 		try {
-			StringBuilder query = new StringBuilder("SELECT COUNT(tag), tag");
-			query.append(" FROM Document _entity JOIN _entity.tags tag where not _entity.status="
-					+ AbstractDocument.DOC_ARCHIVED);
+			StringBuilder query = new StringBuilder("SELECT COUNT(ld_tag), ld_tag from ld_tag where 1=1 ");
 			if (StringUtils.isNotEmpty(firstLetter))
-				query.append(" and lower(tag) like '" + firstLetter.toLowerCase() + "%' ");
+				query.append(" and lower(ld_tag) like '" + firstLetter.toLowerCase() + "%' ");
 			if (tenantId != null)
-				query.append(" and _entity.tenantId=" + tenantId);
-			query.append(" GROUP BY tag");
+				query.append(" and ld_tenantid=" + tenantId);
+			query.append(" GROUP BY ld_tag");
+			
+			query(query.toString(), null, new RowMapper<Object>(){
 
-			List ssss = findByQuery(query.toString(), null, null);
-			for (Iterator iter = ssss.iterator(); iter.hasNext();) {
-				Object[] element = (Object[]) iter.next();
-				if (element != null && element.length > 1) {
-					Long value = (Long) element[0];
-					String key = (String) element[1];
+				@Override
+				public Object mapRow(ResultSet rs, int rowNumber) throws SQLException {
+					Long value = (Long) rs.getLong(1);
+					String key = (String) rs.getString(2);
 					map.put(key, value.intValue());
+					return null;
 				}
-			}
+				
+			}, null);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}
@@ -455,19 +458,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public List<String> findAllTags(String firstLetter, Long tenantId) {
 		try {
-			StringBuilder sb = new StringBuilder("select distinct(A.ld_tag) ");
+			StringBuilder sb = new StringBuilder("select distinct(ld_tag) from ld_tag where 1=1 ");
 			if (tenantId != null) {
-				sb.append(" from ld_tag A join ld_document B on A.ld_docid=B.ld_id ");
-				sb.append(" where B.ld_tenantid=" + tenantId);
-			} else {
-				sb.append(" from ld_tag A where ");
+				sb.append(" and ld_tenantid=" + tenantId);
 			}
-			if (StringUtils.isNotEmpty(firstLetter)) {
-				if (tenantId != null)
-					sb.append(" and lower(A.ld_tag) like '" + firstLetter.toLowerCase() + "%'");
-				else
-					sb.append(" lower(A.ld_tag) like '" + firstLetter.toLowerCase() + "%'");
-			}
+
+			if (firstLetter != null)
+				sb.append(" and lower(ld_tag) like '" + firstLetter.toLowerCase() + "%'");
 
 			return (List<String>) queryForList(sb.toString(), String.class);
 		} catch (Exception e) {
@@ -678,8 +675,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		for (String attribute : doc.getAttributes().keySet()) {
 			attribute.getBytes();
 		}
-		for (String tag : doc.getTags()) {
-			tag.getBytes();
+		for (Tag tag : doc.getTags()) {
+			tag.getTag().getBytes();
 		}
 	}
 
