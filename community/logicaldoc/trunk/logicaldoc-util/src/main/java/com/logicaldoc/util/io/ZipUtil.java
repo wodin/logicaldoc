@@ -1,18 +1,20 @@
 package com.logicaldoc.util.io;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Enumeration;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipFile;
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.model.FileHeader;
+
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +25,21 @@ import org.slf4j.LoggerFactory;
  * @version 4.0
  */
 public class ZipUtil {
+
+	public static List<String> listEntries(File zipsource) {
+		List<String> files = new ArrayList<String>();
+		try {
+			ZipFile zipFile = new ZipFile(zipsource);
+			@SuppressWarnings("unchecked")
+			List<FileHeader> fileHeaders = zipFile.getFileHeaders();
+			for (FileHeader fileHeader : fileHeaders)
+				files.add(fileHeader.getFileName());
+		} catch (Throwable e) {
+			logError(e.getMessage());
+		}
+		return files;
+	}
+
 	/**
 	 * This method extracts all entries of a zip-file.
 	 * 
@@ -30,39 +47,12 @@ public class ZipUtil {
 	 * @param target Path of the extracted files.
 	 * @return True if successfully extracted.
 	 */
-	@SuppressWarnings("unchecked")
 	public static boolean unzip(String zipsource, String target) {
-		return unzip(zipsource, target, "Cp850");
-	}
-
-	/**
-	 * This method extracts all entries of a zip-file specifying the encoding.
-	 * 
-	 * @param zipsource Path of the zip-file.
-	 * @param target Path of the extracted files.
-	 * @param encoding Encoding for file names. If empty, will be used the
-	 *        platform's native encoding for file names.
-	 * @return True if successfully extracted.
-	 */
-	@SuppressWarnings("unchecked")
-	public static boolean unzip(String zipsource, String target, String encoding) {
 		boolean result = true;
 		try {
-			if (!target.endsWith("/"))
-				target = target + "/";
-			ZipFile zip = null;
-			if (StringUtils.isNotEmpty(encoding.trim())) {
-				zip = new ZipFile(zipsource, encoding);
-			} else {
-				zip = new ZipFile(zipsource);
-			}
-			Enumeration entries = zip.getEntries();
-			while (entries.hasMoreElements()) {
-				ZipEntry entry = (ZipEntry) entries.nextElement();
-				saveEntry(target, zip, entry);
-			}
-			zip.close();
-		} catch (Exception e) {
+			ZipFile zipFile = new ZipFile(zipsource);
+			zipFile.extractAll("target");
+		} catch (Throwable e) {
 			result = false;
 			logError(e.getMessage());
 		}
@@ -70,30 +60,35 @@ public class ZipUtil {
 	}
 
 	/**
-	 * This method extracts one entry of a zip-file.
+	 * Read the entry inside the file zip resource.
 	 * 
-	 * @param zipsource Path of the zip-file.
-	 * @param target Path of the extracted files.
-	 * @param entry Name of the entry to be extracted.
-	 * @return True if successfully extracted.
+	 * @param zipFile File to read inside it
+	 * @param entry The entry to be read
+	 * @return The bytes of the entry
 	 */
-	public static boolean unzipEntry(String zipsource, String target, String entry) {
-		boolean result = true;
+	public static byte[] getEntryBytes(File zipsource, String entry) {
+		if (entry.startsWith("/"))
+			entry = entry.substring(1);
 
+		InputStream entryStream = null;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
-			if (!target.endsWith("/")) {
-				target = target + "/";
-			}
+			ZipFile zipFile = new ZipFile(zipsource);
+			FileHeader header = zipFile.getFileHeader(entry);
 
-			ZipFile zip = new ZipFile(zipsource);
-			ZipEntry zipe = new ZipEntry(entry);
-			saveEntry(target, zip, zipe);
-		} catch (Exception e) {
-			result = false;
+			entryStream = zipFile.getInputStream(header);
+			IOUtils.copy(entryStream, baos);
+			baos.flush();
+		} catch (Throwable e) {
 			logError(e.getMessage());
+		} finally {
+			try {
+				baos.close();
+				entryStream.close();
+			} catch (IOException e) {
+			}
 		}
-
-		return result;
+		return baos.toByteArray();
 	}
 
 	/**
@@ -103,58 +98,17 @@ public class ZipUtil {
 	 * @param entry The entry to be read
 	 * @return The stream of the entry
 	 */
-	public static byte[] readEntry(File zipFile, String entry) {
-		InputStream entryStream = null;
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ZipFile file = null;
+	public static InputStream getEntryStream(File zipsource, String entry) {
+		if (entry.startsWith("/"))
+			entry = entry.substring(1);
+
 		try {
-			file = new ZipFile(zipFile);
-			entryStream = file.getInputStream(file.getEntry(entry));
-			int nextChar;
-			while ((nextChar = entryStream.read()) != -1)
-				baos.write((char) nextChar);
-			baos.flush();
-		} catch (Exception e) {
+			ZipFile zipFile = new ZipFile(zipsource);
+			FileHeader header = zipFile.getFileHeader(entry);
+			return zipFile.getInputStream(header);
+		} catch (Throwable e) {
 			logError(e.getMessage());
-		} finally {
-			try {
-				baos.close();
-				entryStream.close();
-				file.close();
-			} catch (IOException e) {
-			}
-		}
-		return baos.toByteArray();
-	}
-
-	/**
-	 * Extracts an entry from a zip file to a target directory.
-	 * 
-	 * @param target the base directory the entry should be extracted to
-	 * @param zip the ZIP file
-	 * @param entry the to be extracted entry in the ZIP file
-	 */
-	private static void saveEntry(String target, ZipFile zip, org.apache.tools.zip.ZipEntry entry) throws Exception {
-		String targetFileName = target + entry.getName();
-		if (entry.isDirectory()) {
-			File dir = new File(targetFileName);
-			dir.mkdirs();
-		} else {
-			File file = new File(targetFileName);
-			File dir = new File(file.getParent());
-			dir.mkdirs();
-			dir = null;
-			file = null;
-
-			InputStream in = zip.getInputStream(entry);
-			BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(targetFileName));
-			byte[] buffer = new byte[1024];
-			int len;
-			while ((len = in.read(buffer)) > 0) {
-				bos.write(buffer, 0, len);
-			}
-			in.close();
-			bos.close();
+			return null;
 		}
 	}
 

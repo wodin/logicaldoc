@@ -40,10 +40,8 @@ public class BulkUpdateDialog extends Window {
 
 	private BulkUpdatePanel bulkPanel;
 
-	private String encoding;
-
 	private boolean zip = false;
-	
+
 	private boolean immediteIndexing = false;
 
 	public BulkUpdateDialog(final long[] ids, final GUIDocument metadata, final boolean checkin,
@@ -156,8 +154,8 @@ public class BulkUpdateDialog extends Window {
 				else {
 					bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
 					ContactingServer.get().show();
-					documentService.addDocuments(Session.get().getSid(), encoding, zip, immediteIndexing, bulkPanel.getDocument(),
-							new AsyncCallback<Void>() {
+					documentService.addDocuments(Session.get().getSid(), zip, immediteIndexing,
+							bulkPanel.getDocument(), new AsyncCallback<Void>() {
 
 								@Override
 								public void onSuccess(Void arg0) {
@@ -228,14 +226,6 @@ public class BulkUpdateDialog extends Window {
 		content.setMembers(bulkPanel, savePanel);
 
 		addItem(content);
-	}
-
-	public String getEncoding() {
-		return encoding;
-	}
-
-	public void setEncoding(String encoding) {
-		this.encoding = encoding;
 	}
 
 	public boolean isZip() {

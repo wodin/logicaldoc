@@ -1,14 +1,9 @@
 package com.logicaldoc.core.transfer;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Enumeration;
-import java.util.zip.ZipException;
+import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.tools.zip.ZipEntry;
-import org.apache.tools.zip.ZipFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +16,7 @@ import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.io.ZipUtil;
 
 /**
  * This is an import utilities that imports documents stored in a zip archive.
@@ -41,108 +37,57 @@ public class InMemoryZipImport extends ZipImport {
 	}
 
 	public void process(File zipsource, Folder parent, long userId, String sessionId) {
-		// process the files in the zip using UTF-8 encoding for file names
-		process(zipsource, parent, userId, "UTF-8", sessionId);
-	}
-
-	@SuppressWarnings({ "rawtypes" })
-	public void process(File zipsource, Folder parent, long userId, String encoding, String sessionId) {
 		this.zipFile = zipsource;
 		this.sessionId = sessionId;
 
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		FolderDAO fDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+
 		this.user = userDao.findById(userId);
 
-		logger.debug("Using encoding: " + encoding);
-		ZipFile zip = null;
 		try {
-			zip = new ZipFile(zipFile, encoding);
-			Enumeration zipEntries = zip.getEntries();
-			ZipEntry zipe = null;
-			while (zipEntries.hasMoreElements()) {
-				zipe = (ZipEntry) zipEntries.nextElement();
+			// Open the Zip and list all the contents
+			List<String> entries = ZipUtil.listEntries(zipsource);
+			for (String entry : entries) {
+				String relativePath = FilenameUtils.getPath(entry);
+				if (relativePath.startsWith("/"))
+					relativePath = relativePath.substring(1);
+				if (relativePath.endsWith("/"))
+					relativePath = relativePath.substring(0, relativePath.length() - 1);
+
+				// Ensure to have the proper folder to upload the file into
+				FolderHistory folderTransaction = new FolderHistory();
+				folderTransaction.setSessionId(sessionId);
+				folderTransaction.setUser(user);
+				Folder folder = fDao.createPath(parent, relativePath, true, folderTransaction);
+
+				// Create the document
+				String fileName = FilenameUtils.getName(entry);
+				String title = FilenameUtils.getBaseName(fileName);
+
 				try {
-					// Avoid import of unnecessary folders or file
-					if (zipe.isDirectory() && zipe.getName().startsWith("__MAC")) {
-						continue;
-					} else if (!zipe.isDirectory() && (zipe.getName().startsWith(".") || zipe.getName().contains("/."))) {
-						continue;
-					}
-					addEntry(zip, zipe, parent);
-				} catch (IOException e) {
-					logger.warn("InMemoryZipImport unable to import ZIP entry", e);
+					Document doc = (Document) docVo.clone();
+					doc.setTitle(title);
+					doc.setFileName(fileName);
+					doc.setFolder(folder);
+
+					History history = new History();
+					history.setEvent(DocumentEvent.STORED.toString());
+					history.setComment("");
+					history.setUser(user);
+					history.setSessionId(sessionId);
+
+					docManager.create(ZipUtil.getEntryStream(zipsource, entry), doc, history);
+				} catch (Exception e) {
+					logger.warn("InMemoryZipImport unable to import ZIP entry " + entry, e);
 				}
 			}
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			logger.error("InMemoryZipImport process failed", e);
-		} finally {
-			if (zip != null)
-				try {
-					zip.close();
-				} catch (IOException e) {
-					logger.error("InMemoryZipImport error closing zip file", e);
-				}
 		}
 
 		if (isNotifyUser())
 			sendNotificationMessage();
-	}
-
-	/**
-	 * Stores a file in the repository of LogicalDOC and inserts some
-	 * information in the database of LogicalDOC (folder, document, filename,
-	 * title, tags, templateid, created user, locale)
-	 * 
-	 * @param zis
-	 * @param file
-	 * @param ze
-	 * @throws IOException
-	 * @throws ZipException
-	 */
-	protected void addEntry(ZipFile zip, ZipEntry ze, Folder parent) throws ZipException, IOException {
-		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-
-		FolderHistory transaction = new FolderHistory();
-		transaction.setSessionId(sessionId);
-		transaction.setUser(user);
-
-		if (ze.isDirectory()) {
-			// creates a logicaldoc folder
-			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-			dao.createPath(parent, folderPath, true, transaction);
-		} else {
-			InputStream stream = zip.getInputStream(ze);
-			File docFile = new File(ze.getName());
-			String filename = docFile.getName();
-			String doctitle = FilenameUtils.getBaseName(filename);
-
-			// ensure to have the proper folder to upload the file into
-			String folderPath = FilenameUtils.getFullPathNoEndSeparator(ze.getName());
-			Folder documentPath = dao.createPath(parent, folderPath, true, transaction);
-
-			// create a document
-			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-			try {
-				Document doc = (Document) docVo.clone();
-				doc.setTitle(doctitle);
-				doc.setFileName(filename);
-				doc.setFolder(documentPath);
-
-				// Reopen the stream (the parser has closed it)
-				stream = zip.getInputStream(ze);
-
-	
-				History history = new History();
-				history.setEvent(DocumentEvent.STORED.toString());
-				history.setComment("");
-				history.setUser(user);
-				transaction.setSessionId(sessionId);
-				docManager.create(stream, doc, history);
-			} catch (Exception e) {
-				logger.error("InMemoryZipImport addEntry failed", e);
-			} finally {
-				stream.close();
-			}
-		}
 	}
 }

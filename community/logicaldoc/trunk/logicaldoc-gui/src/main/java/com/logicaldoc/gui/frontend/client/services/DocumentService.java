@@ -130,27 +130,16 @@ public interface DocumentService extends RemoteService {
 	 * @param sid The session identifier
 	 * @param language The language applied to all documents
 	 * @param folderId The destination folder identifier
-	 * @param encoding The zip encoding
 	 * @param importZip If .zip files have to be unpacked and the contained
 	 *        documents imported
 	 * @param immediteIndexing If the documents must be immediately indexed
 	 * @param templateId The documents template
 	 */
-	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
-			boolean immediateIndexing, Long templateId) throws ServerException;
+	public void addDocuments(String sid, String language, long folderId, boolean importZip, boolean immediateIndexing,
+			Long templateId) throws ServerException;
 
-	/**
-	 * Adds new documents previously uploaded, with metadata specification.
-	 * 
-	 * @param sid The session identifier
-	 * @param vo The metadata applied to all new documents
-	 * @param encoding The zip encoding
-	 * @param importZip If .zip files have to be unpacked and the contained
-	 *        documents imported.
-	 * @param immediteIndexing If the documents must be immediately indexed
-	 */
-	public void addDocuments(String sid, String encoding, boolean importZip, boolean immediateIndexing,
-			GUIDocument metadata) throws ServerException;
+	public void addDocuments(String sid, boolean importZip, boolean immediateIndexing, GUIDocument metadata)
+			throws ServerException;
 
 	/**
 	 * Indexes the gien set of documents

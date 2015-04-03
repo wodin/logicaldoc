@@ -53,7 +53,7 @@ public class DocumentsUploader extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("adddocuments"));
 		setWidth(460);
-		setHeight(270);
+		setHeight(245);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -128,20 +128,16 @@ public class DocumentsUploader extends Window {
 			zipItem.setValue(false);
 		}
 
-		final SelectItem encodingItem = ItemFactory.newEncodingSelector("encoding");
-		encodingItem.setDisabled(zipImport);
-
 		SelectItem template = ItemFactory.newTemplateSelector(true, null);
 		template.setMultiple(false);
 
 		zipItem.addChangeHandler(new ChangeHandler() {
 			public void onChange(ChangeEvent event) {
 				zipImport = !zipImport;
-				encodingItem.setDisabled(zipImport);
 			}
 		});
 
-		form.setItems(zipItem, encodingItem, immediateIndexing);
+		form.setItems(zipItem, immediateIndexing);
 	}
 
 	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
@@ -176,7 +172,6 @@ public class DocumentsUploader extends Window {
 
 		BulkUpdateDialog bulk = new BulkUpdateDialog(null, metadata, false, false);
 		bulk.setZip(getImportZip());
-		bulk.setEncoding(getEncoding());
 		bulk.setImmediateIndexing(getImmediateIndexing());
 		
 		bulk.show();
