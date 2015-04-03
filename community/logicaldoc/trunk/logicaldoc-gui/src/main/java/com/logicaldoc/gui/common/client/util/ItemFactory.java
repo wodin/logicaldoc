@@ -184,52 +184,6 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static SelectItem newEncodingSelector(String name) {
-		SelectItem item = new SelectItem();
-		item.setName(filterItemName(name));
-		item.setTitle(I18N.message("encoding"));
-		item.setWrapTitle(false);
-		item.setDefaultValue("UTF8");
-
-		// String platformEncoding = System.getProperty("file.encoding");
-		// Charset ce = Charset.forName(platformEncoding);
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		// Eight-bit Unicode (or UCS) Transformation Format
-		map.put("UTF8", "UTF-8 Unicode");
-		// PC Greek
-		map.put("Cp737", "PC Greek");
-		// ISO-8859-1, Latin Alphabet No. 1
-		map.put("ISO8859_1", "Latin Alphabet No. 1");
-		// Latin/Cyrillic Alphabet
-		map.put("ISO8859_5", "Latin/Cyrillic");
-		// Latin/Arabic Alphabet
-		map.put("ISO8859_6", "Latin/Arabic");
-		// Latin/Greek Alphabet (ISO-8859-7:2003)
-		map.put("ISO8859_7", "Latin/Greek");
-		// Simplified Chinese, PRC standard
-		map.put("GB18030", "GB18030 Simplified Chinese");
-		// GB2312, EUC encoding, Simplified Chinese
-		map.put("EUC_CN", "GB2312 Simplified Chinese");
-		// JISX 0201, 0208 and 0212, EUC encoding Japanese
-		map.put("EUC_JP", "EUC-JP Japanese");
-		// Shift-JIS, Japanese
-		map.put("SJIS", "Shift_JIS Japanese");
-		// KS C 5601, EUC encoding, Korean
-		map.put("EUC_KR", "EUC-KR Korean");
-		// Windows Eastern European
-		map.put("Cp1250", "windows-1250 Eastern European");
-		// Windows Latin-1
-		map.put("Cp1252", "windows-1252 Latin-1");
-		// Windows Greek
-		map.put("Cp1253", "windows-1253 Greek");
-		// Windows Arabic
-		map.put("Cp1256", "windows-1256 Arabic");
-
-		item.setValueMap(map);
-		item.setHintStyle("hint");
-		return item;
-	}
-
 	public static TextItem newEmailItem(String name, String title, boolean multiple) {
 		TextItem item = new TextItem();
 		item.setName(filterItemName(name));

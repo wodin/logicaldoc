@@ -47,6 +47,11 @@
 			<artifactId>commons-compress</artifactId>
 			<type>jar</type>
 		</dependency>
+    <dependency>
+      <groupId>net.lingala.zip4j</groupId>
+      <artifactId>zip4j</artifactId>
+      <type>jar</type>
+    </dependency>
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant</artifactId>
@@ -360,6 +365,7 @@
                                     <exclude name="noggit*" />
                                     <exclude name="zookeeper*" />
                                     <exclude name="*restlet*" />
+                                    <exclude name="*zip4j*" />
 								</delete>
 
 								<copy

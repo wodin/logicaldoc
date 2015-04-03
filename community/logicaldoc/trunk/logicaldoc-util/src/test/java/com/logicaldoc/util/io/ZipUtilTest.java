@@ -1,13 +1,10 @@
 package com.logicaldoc.util.io;
 
-import static org.junit.Assert.assertNotNull;
-
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.util.List;
+
+import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -34,28 +31,21 @@ public class ZipUtilTest {
 	}
 
 	@Test
-	public void testReadEntry() throws IOException {
+	public void testListEntries() throws IOException {
 		File file = new File("target/test.zip");
 		FileUtil.copyResource("/test.zip", file);
-		byte[] in = ZipUtil.readEntry(file, "index.xsl");
-		ByteArrayInputStream is=new ByteArrayInputStream(in);
-		assertNotNull(is);
-		File dir = new File("target/test");
-		dir.mkdirs();
-		dir.mkdir();
-		File tmp = new File("target/test/index.xsl");
-		OutputStream out;
-		try {
-			out = new FileOutputStream(tmp);
-			byte buf[] = new byte[1024];
-			int len;
-			while ((len = is.read(buf)) > 0)
-				out.write(buf, 0, len);
-			out.close();
-			is.close();
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
+		List<String> entries = ZipUtil.listEntries(file);
+
+		Assert.assertEquals(3, entries.size());
+		Assert.assertTrue(entries.contains("impex.xsd"));
+	}
+
+	@Test
+	public void testGetEntryBytes() throws IOException {
+		File file = new File("target/test.zip");
+		FileUtil.copyResource("/test.zip", file);
+		byte[] in = ZipUtil.getEntryBytes(file, "index.xml");
+		Assert.assertEquals(132997526, in.length);
 	}
 
 }

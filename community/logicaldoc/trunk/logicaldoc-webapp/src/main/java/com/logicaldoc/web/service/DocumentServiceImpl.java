@@ -152,8 +152,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void addDocuments(String sid, String encoding, boolean importZip, boolean immediateIndexing,
-			final GUIDocument metadata) throws ServerException {
+	public void addDocuments(String sid, boolean importZip, boolean immediateIndexing, final GUIDocument metadata)
+			throws ServerException {
 		final UserSession session = ServiceUtil.validateSession(sid);
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
@@ -190,7 +190,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 					final long userId = ServiceUtil.getSessionUser(sid).getId();
 					final String sessionId = sid;
-					final String zipEncoding = encoding;
 					// Prepare the import thread
 					Thread zipImporter = new Thread(new Runnable() {
 						public void run() {
@@ -203,7 +202,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 							doc.setCreation(new Date());
 
 							InMemoryZipImport importer = new InMemoryZipImport(doc);
-							importer.process(destFile, parent, userId, zipEncoding, sessionId);
+							importer.process(destFile, parent, userId, sessionId);
 							try {
 								FileUtils.forceDelete(destFile);
 							} catch (IOException e) {
@@ -249,8 +248,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void addDocuments(String sid, String language, long folderId, String encoding, boolean importZip,
-			boolean immediateIndexing, final Long templateId) throws ServerException {
+	public void addDocuments(String sid, String language, long folderId, boolean importZip, boolean immediateIndexing,
+			final Long templateId) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		if (folderId == fdao.findRoot(session.getTenantId()).getId())
@@ -260,7 +259,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		metadata.setLanguage(language);
 		metadata.setFolder(new GUIFolder(folderId));
 		metadata.setTemplateId(templateId);
-		addDocuments(sid, encoding, importZip, immediateIndexing, metadata);
+		addDocuments(sid, importZip, immediateIndexing, metadata);
 	}
 
 	@Override
