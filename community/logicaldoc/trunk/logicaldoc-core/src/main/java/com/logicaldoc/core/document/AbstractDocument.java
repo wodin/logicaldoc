@@ -372,10 +372,11 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 		else
 			this.tags = new HashSet<Tag>();
 
-		for (String word : tgs) {
-			Tag tag = new Tag(getTenantId(), word);
-			this.tags.add(tag);
-		}
+		if (tgs != null)
+			for (String word : tgs) {
+				Tag tag = new Tag(getTenantId(), word);
+				this.tags.add(tag);
+			}
 	}
 
 	public Set<String> getTagsAsWords() {

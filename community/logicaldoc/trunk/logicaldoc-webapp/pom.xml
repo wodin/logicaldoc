@@ -168,9 +168,9 @@
             <artifactId>mail</artifactId>
         </dependency>
         <dependency>
-            <groupId>postgresql</groupId>
+            <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>9.0-801.jdbc4</version>
+            <version>9.4-1201-jdbc41</version>
             <type>jar</type>
         </dependency>
         <dependency>
