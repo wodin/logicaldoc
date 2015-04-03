@@ -64,12 +64,6 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		size.setHint("KB");
 		size.setWidth(100);
 
-		TextItem include = ItemFactory.newTextItem("include", "include", share.getIncludes());
-		include.addChangedHandler(changedHandler);
-
-		TextItem exclude = ItemFactory.newTextItem("exclude", "exclude", share.getExcludes());
-		exclude.addChangedHandler(changedHandler);
-
 		SelectItem template = ItemFactory.newTemplateSelector(true, null);
 		template.addChangedHandler(changedHandler);
 		template.setMultiple(false);
@@ -123,7 +117,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 		updatePolicy.setValueMap(map);
 		updatePolicy.setValue(Integer.toString(share.getUpdatePolicy()));
 
-		form.setItems(depth, size, startDate, include, exclude, template, tags, updatePolicy, importEmpty, delImport);
+		form.setItems(depth, size, startDate, template, tags, updatePolicy, importEmpty, delImport);
 
 		formsContainer.addMember(form);
 
@@ -143,8 +137,7 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 
 			share.setDepth(Integer.parseInt(values.get("depth").toString()));
 			share.setUpdatePolicy(Integer.parseInt(values.get("updatePolicy").toString()));
-			share.setIncludes((String) values.get("include"));
-			share.setExcludes((String) values.get("exclude"));
+			
 			if (values.get("template") == null || "".equals((String) values.get("template")))
 				share.setTemplateId(null);
 			else
