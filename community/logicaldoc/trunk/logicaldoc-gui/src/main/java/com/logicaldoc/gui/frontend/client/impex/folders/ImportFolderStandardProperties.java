@@ -80,14 +80,19 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		language.addChangedHandler(changedHandler);
 		language.setRequired(true);
 		language.setValue(share.getLanguage());
+		
+		TextItem include = ItemFactory.newTextItem("include", "include", share.getIncludes());
+		include.addChangedHandler(changedHandler);
+
+		TextItem exclude = ItemFactory.newTextItem("exclude", "exclude", share.getExcludes());
+		exclude.addChangedHandler(changedHandler);
 
 		if ("smb".equals(share.getProvider()))
-			form.setItems(path, targetSelector, language, domain, username, password );
+			form.setItems(path, targetSelector, language, domain, username, password, include, exclude);
 		else
-			form.setItems(path, targetSelector, language);
+			form.setItems(path, targetSelector, language, include, exclude);
 
 		formsContainer.addMember(form);
-
 	}
 
 	@SuppressWarnings("unchecked")
@@ -101,6 +106,8 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 			share.setDomain((String) values.get("domain"));
 			share.setTarget(targetSelector.getFolder());
 			share.setLanguage((String) values.get("language"));
+			share.setIncludes((String) values.get("include"));
+			share.setExcludes((String) values.get("exclude"));
 		}
 		return !form.hasErrors();
 	}

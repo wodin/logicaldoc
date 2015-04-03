@@ -33,9 +33,9 @@ public class GUIShare implements Serializable {
 
 	private int extractTags = 0;
 
-	private String includes = "*.pdf,*.doc,*.xls";
+	private String includes = "*.*";
 
-	private String excludes = "*~,#*#,.#*,%*%,._*,.DS_Store";
+	private String excludes = "~*,*~,#*#,.#*,%*%,._*,.DS_Store,desktop.ini,Thumbs";
 
 	private String tags = "";
 
