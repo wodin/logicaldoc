@@ -75,7 +75,11 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 			pbean.setProperty("jdbc.url", data.getDbUrl() != null ? data.getDbUrl() : "");
 			pbean.setProperty("jdbc.username", data.getDbUsername() != null ? data.getDbUsername() : "");
 			pbean.setProperty("jdbc.password", data.getDbPassword() != null ? data.getDbPassword() : "");
-			pbean.setProperty("jdbc.dbms", data.getDbEngine().toLowerCase());
+
+			String dbmms = data.getDbEngine().toLowerCase();
+			if (dbmms.startsWith("postgre"))
+				dbmms = "postgres";
+			pbean.setProperty("jdbc.dbms", dbmms);
 
 			if (StringUtils.isNotEmpty(data.getDbValidationQuery())) {
 				pbean.setProperty("jdbc.validationQuery", data.getDbValidationQuery());
