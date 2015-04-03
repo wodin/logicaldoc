@@ -651,7 +651,7 @@
           <url>http://repo1.maven.org/maven2/</url>
         </repository>
         <repository>
-          <id>centra2</id>
+          <id>central2</id>
           <url>http://repo2.maven.org/maven2/</url>
         </repository>
         
@@ -661,11 +661,6 @@
           <url>http://logicaldoc.sourceforge.net/maven</url>
         </repository>
     
-        <repository>
-          <id>ibiblio</id>
-          <name>Ibiblio Repository</name>
-          <url>http://www.ibiblio.org/maven2</url>
-        </repository>
         <repository>
           <id>ibiblio-mirror</id>
           <name>Ibiblio Mirror Repository</name>
