@@ -28,10 +28,9 @@ public class DatabaseValidator implements DataValidator {
 				"org.hibernate.dialect.HSQLDialect", "SELECT 1 FROM INFORMATION_SCHEMA.SYSTEM_USERS", "", "" });
 		dbDefaults.put("mysql", new String[] { "mysql", "com.mysql.jdbc.Driver", "org.hibernate.dialect.MySQLDialect",
 				"SELECT 1", "3306", "jdbc:mysql://<server>[,<failoverhost>][<:3306>]/<database>" });
-		// settings.put(DATABASES[2], new String[] { "postgresql",
-		// "org.postgresql.Driver",
-		// "org.hibernate.dialect.PostgreSQLDialect", "SELECT 1",
-		// "5432","jdbc:postgresql:[<//server>[<:5432>/]]<database>" });
+		dbDefaults.put("postgres", new String[] { "postgres", "org.postgresql.Driver",
+				"org.hibernate.dialect.PostgreSQLDialect", "SELECT 1", "5432",
+				"jdbc:postgresql:[<//server>[<:5432>/]]<database>" });
 		dbDefaults.put("oracle", new String[] { "oracle", "oracle.jdbc.driver.OracleDriver",
 				"org.hibernate.dialect.Oracle10gDialect", "SELECT 1 FROM DUAL", "1521",
 				"jdbc:oracle:thin:@<server>[<:1521>]:<sid>", "org.hibernate.dialect.Oracle10gDialect" });
@@ -110,16 +109,14 @@ public class DatabaseValidator implements DataValidator {
 		url = "jdbc:";
 		if (engine.equals("mysql"))
 			url += "mysql://" + host.trim() + ":" + port.trim() + (withDb ? "/" + database.trim() : "");
-		// else if
-		// (engine.getSelectedItem().toString().contains(DATABASES[2]))
-		// url += "postgresql://" + host.getText().trim() + ":" +
-		// port.getText().trim() + "/"
-		// + database.getText().trim();
+		else if (engine.equals("postgres"))
+			url += "postgresql://" + host.trim() + ":" + port.trim() + (withDb ? "/" + database.trim() : "");
 		else if (engine.equals("oracle"))
 			url += "oracle:thin:@" + host.trim() + ":" + port.trim() + (withDb ? ":" + database.trim() : "");
 		else if (engine.equals("mssql"))
 			url += "jtds:sqlserver://" + host.trim() + ":" + port.trim() + (withDb ? "/" + database.trim() : "")
 					+ (withDb ? (";instance=" + instance.trim()) : "");
+		
 		return url;
 	}
 

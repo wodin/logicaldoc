@@ -35,10 +35,11 @@
         <field type="combo" variable="dbengine">
             <description align="left" txt="Engine" id="dbengine"/>
             <spec>
-                <choice txt="Embedded (for a small repository)" id="embedded" value="embedded" set="true"/>
-                <choice txt="MySQL (suggested choice for production)" id="mysql" value="mysql" />
+                <choice txt="MySQL (suggested choice for production)" id="mysql" value="mysql" set="true" />
                 <choice txt="Oracle" id="oracle" value="oracle" />
                 <choice txt="SQL Server" id="mssql" value="mssql" />
+                <choice txt="PostgreSQL" id="postgres" value="postgres" />
+                <choice txt="Embedded (for trial only, not for production)" id="embedded" value="embedded" />
             </spec>
         </field>
     </panel>
