@@ -120,7 +120,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		doc = service.getById(session.getSid(), 3);
 		Assert.assertEquals("testDocname3", doc.getTitle());
 		Assert.assertEquals("pippo", doc.getFileName());
-		
+
 		doc = service.save(session.getSid(), doc);
 		Assert.assertNotNull(doc);
 		Assert.assertEquals("testDocname3", doc.getTitle());
@@ -256,7 +256,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 	public void testRestore() throws ServerException {
 		docDao.delete(4);
 		Assert.assertNull(docDao.findById(4));
-		service.restore(session.getSid(), 4, 5);
+		service.restore(session.getSid(), new long[] { 4 }, 5);
 		Assert.assertNotNull(docDao.findById(4));
 		Assert.assertNotNull(docDao.findById(4));
 		Assert.assertEquals(5L, docDao.findById(4).getFolder().getId());
@@ -289,7 +289,6 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		book = bookDao.findById(2);
 		Assert.assertNull(book);
 	}
-
 
 	@Test
 	public void testMarkHistoryAsRead() throws ServerException {
@@ -338,7 +337,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(doc3);
 		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc3.getIndexed());
 	}
-	
+
 	@Test
 	public void testCountDocuments() throws ServerException {
 		Assert.assertEquals(4, service.countDocuments(session.getSid(), 5, 0));

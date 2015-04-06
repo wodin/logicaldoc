@@ -70,7 +70,7 @@ public class MessageDialog extends Window {
 				"<b>" + I18N.message("recipient") + "</b>");
 		recipientItem.setShouldSaveValue(false);
 		recipientItem.setWrapTitle(false);
-		recipient = ItemFactory.newUserSelector("recipient", " ", null);
+		recipient = ItemFactory.newUserSelector("recipient", " ", null, true);
 		recipient.setShowTitle(false);
 		recipient.setDisplayField("username");
 

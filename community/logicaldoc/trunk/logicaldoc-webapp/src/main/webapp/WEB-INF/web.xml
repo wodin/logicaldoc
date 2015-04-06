@@ -226,6 +226,10 @@
         <servlet-class>com.logicaldoc.web.data.LockedDocsDataServlet</servlet-class>
     </servlet>
     <servlet>
+        <servlet-name>DeletedDocsData</servlet-name>
+        <servlet-class>com.logicaldoc.web.data.DeletedDocsDataServlet</servlet-class>
+    </servlet>
+    <servlet>
         <servlet-name>Preview</servlet-name>
         <servlet-class>com.logicaldoc.web.DocumentPreview</servlet-class>
     </servlet>
@@ -468,6 +472,10 @@
     <servlet-mapping>
         <servlet-name>LockedDocsData</servlet-name>
         <url-pattern>/data/lockeddocs.xml</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>DeletedDocsData</servlet-name>
+        <url-pattern>/data/deleteddocs.xml</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>Preview</servlet-name>

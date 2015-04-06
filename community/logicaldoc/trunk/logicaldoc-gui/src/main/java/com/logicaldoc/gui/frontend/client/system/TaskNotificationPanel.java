@@ -77,7 +77,7 @@ public class TaskNotificationPanel extends VLayout {
 		for (int i = 0; i < ids.length; i++)
 			ids[i] = Long.toString(task.getReportRecipients()[i].getId());
 
-		recipients = ItemFactory.newMultiComboBoxItem("recipients", "recipients", new UsersDS(null), ids);
+		recipients = ItemFactory.newMultiComboBoxItem("recipients", "recipients", new UsersDS(null, false), ids);
 		recipients.setValueField("id");
 		recipients.setDisplayField("username");
 		recipients.addChangedHandler(changedHandler);

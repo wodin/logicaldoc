@@ -40,7 +40,7 @@ public interface DocumentServiceAsync {
 
 	void linkDocuments(String sid, long[] inDocIds, long[] outDocIds, AsyncCallback<Void> callback);
 
-	void restore(String sid, long docId, long folderId, AsyncCallback<Void> callback);
+	void restore(String sid, long[] docIds, long folderId, AsyncCallback<Void> callback);
 
 	void addBookmarks(String sid, long[] targetIds, int type, AsyncCallback<Void> callback);
 

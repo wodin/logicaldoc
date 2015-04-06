@@ -44,6 +44,18 @@ public class ReportsMenu extends VLayout {
 		if (Menu.enabled(Menu.LOCKED_DOCS))
 			addMember(lockedDocs);
 
+		Button deletedDocs = new Button(I18N.message("deleteddocs"));
+		deletedDocs.setWidth100();
+		deletedDocs.setHeight(25);
+		deletedDocs.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new DeletedDocsPanel());
+			}
+		});
+		if (Menu.enabled(Menu.DELETED_DOCS))
+			addMember(deletedDocs);
+
 		Button archivedDocs = new Button(I18N.message("archiveddocs"));
 		archivedDocs.setWidth100();
 		archivedDocs.setHeight(25);
@@ -53,7 +65,7 @@ public class ReportsMenu extends VLayout {
 				AdminPanel.get().setContent(new ArchivedDocsPanel());
 			}
 		});
-		
+
 		if (Feature.visible(Feature.ARCHIVING) && Menu.enabled(Menu.SETTINGS)) {
 			addMember(archivedDocs);
 			if (!Feature.enabled(Feature.ARCHIVING)) {
@@ -61,7 +73,7 @@ public class ReportsMenu extends VLayout {
 				archivedDocs.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
-		
+
 		Button duplicates = new Button(I18N.message("duplicates"));
 		duplicates.setWidth100();
 		duplicates.setHeight(25);

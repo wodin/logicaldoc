@@ -51,7 +51,7 @@ public class ZipUtil {
 		boolean result = true;
 		try {
 			ZipFile zipFile = new ZipFile(zipsource);
-			zipFile.extractAll("target");
+			zipFile.extractAll(target);
 		} catch (Throwable e) {
 			result = false;
 			logError(e.getMessage());

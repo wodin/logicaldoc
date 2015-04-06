@@ -118,7 +118,7 @@ public class ItemFactory {
 
 	public static SelectItem newUserSelectorForExtendedAttribute(String name, String title, String groupIdOrName) {
 		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title,
-				groupIdOrName);
+				groupIdOrName, false);
 		return item;
 	}
 
@@ -236,7 +236,7 @@ public class ItemFactory {
 		return group;
 	}
 
-	public static SelectItem newUserSelector(String name, String title, String groupIdOrName) {
+	public static SelectItem newUserSelector(String name, String title, String groupIdOrName, boolean required) {
 		SelectItem user = new SelectItem(filterItemName(name));
 		user.setTitle(I18N.message(title));
 		user.setWrapTitle(false);
@@ -248,7 +248,7 @@ public class ItemFactory {
 		user.setDisplayField("username");
 		user.setPickListWidth(300);
 		user.setPickListFields(id, username, label);
-		user.setOptionDataSource(new UsersDS(groupIdOrName));
+		user.setOptionDataSource(new UsersDS(groupIdOrName, required));
 		user.setHintStyle("hint");
 		return user;
 	}

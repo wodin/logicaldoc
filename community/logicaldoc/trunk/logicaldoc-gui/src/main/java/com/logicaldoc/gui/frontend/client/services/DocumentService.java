@@ -163,7 +163,7 @@ public interface DocumentService extends RemoteService {
 	/**
 	 * Restores a given document
 	 */
-	public void restore(String sid, long docId, long folderId) throws ServerException;
+	public void restore(String sid, long[] docIds, long folderId) throws ServerException;
 
 	/**
 	 * Restores a given set of archived documents
