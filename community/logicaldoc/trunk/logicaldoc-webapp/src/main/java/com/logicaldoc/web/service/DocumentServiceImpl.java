@@ -832,16 +832,17 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void restore(String sid, long docId, long folderId) throws ServerException {
+	public void restore(String sid, long[] docIds, long folderId) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		History transaction = new History();
-		transaction.setUser(ServiceUtil.getSessionUser(session.getId()));
-		transaction.setSessionId(session.getId());
 
-		System.out.println("restore: " + transaction);
-		docDao.restore(docId, folderId, transaction);
+		for (long docId : docIds) {
+			History transaction = new History();
+			transaction.setUser(ServiceUtil.getSessionUser(session.getId()));
+			transaction.setSessionId(session.getId());
+			docDao.restore(docId, folderId, transaction);
+		}
 	}
 
 	@Override

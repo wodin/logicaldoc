@@ -181,7 +181,7 @@ public class CalendarEventDialog extends Window {
 
 		DynamicForm form = new DynamicForm();
 		form.setTitleOrientation(TitleOrientation.LEFT);
-		final SelectItem newUser = ItemFactory.newUserSelector("user", "adduser", null);
+		final SelectItem newUser = ItemFactory.newUserSelector("user", "adduser", null, true);
 		newUser.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -586,7 +586,7 @@ public class CalendarEventDialog extends Window {
 				calendarEvent.setDeadline((Date) vm.getValue("deadline"));
 			else
 				calendarEvent.setDeadline(null);
-			
+
 			service.saveEvent(Session.get().getSid(), calendarEvent, new AsyncCallback<Void>() {
 				@Override
 				public void onFailure(Throwable caught) {

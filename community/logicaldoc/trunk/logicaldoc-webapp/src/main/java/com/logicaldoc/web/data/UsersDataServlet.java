@@ -42,7 +42,9 @@ public class UsersDataServlet extends HttpServlet {
 			UserSession session = ServiceUtil.validateSession(request);
 
 			String groupIdOrName = request.getParameter("groupId");
-
+			boolean required= "true".equals(request.getParameter("required"));
+			
+			
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
 
@@ -53,6 +55,9 @@ public class UsersDataServlet extends HttpServlet {
 
 			PrintWriter writer = response.getWriter();
 			writer.print("<list>");
+			
+			if(!required)
+				writer.print("<user><id></id><username></username><name></name></user>");
 
 			if (groupIdOrName != null && !groupIdOrName.trim().isEmpty()) {
 				GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
@@ -64,7 +69,7 @@ public class UsersDataServlet extends HttpServlet {
 				if (group == null)
 					group = groupDao.findByName(groupIdOrName, session.getTenantId());
 				groupDao.initialize(group);
-
+				
 				/*
 				 * Iterate over records composing the response XML document
 				 */

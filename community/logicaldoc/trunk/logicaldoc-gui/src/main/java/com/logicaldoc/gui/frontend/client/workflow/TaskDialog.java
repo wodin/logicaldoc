@@ -154,7 +154,7 @@ public class TaskDialog extends Window {
 
 		// Prepare the combo and button for adding a new user
 		final DynamicForm usergroupForm = new DynamicForm();
-		final SelectItem user = ItemFactory.newUserSelector("user", "user", null);
+		final SelectItem user = ItemFactory.newUserSelector("user", "user", null, true);
 		user.setRequired(true);
 		user.addChangedHandler(new ChangedHandler() {
 			@Override

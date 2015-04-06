@@ -67,7 +67,7 @@ public class WorkflowSettings extends Window {
 		workflowDescr.setWrapTitle(false);
 		workflowDescr.setValue(this.workflow.getDescription());
 
-		supervisor = ItemFactory.newUserSelector("supervisor", "supervisor", null);
+		supervisor = ItemFactory.newUserSelector("supervisor", "supervisor", null, true);
 		supervisor.setValue(workflow.getSupervisor());
 		supervisor.setWrapTitle(false);
 		supervisor.setDisplayField("username");

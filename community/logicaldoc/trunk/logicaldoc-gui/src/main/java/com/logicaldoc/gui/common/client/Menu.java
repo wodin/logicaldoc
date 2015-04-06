@@ -12,6 +12,9 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
  * @since 6.0
  */
 public class Menu {
+	
+	public static final long DELETED_DOCS = -5;
+	
 	public static final long ARCHIVED_DOCS = -4;
 
 	public static final long LOCKED_DOCS = -3;

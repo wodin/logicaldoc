@@ -309,7 +309,7 @@ public class SecurityPanel extends FolderDetailTab {
 		});
 
 		final DynamicForm userForm = new DynamicForm();
-		final SelectItem user = ItemFactory.newUserSelector("user", "adduser", null);
+		final SelectItem user = ItemFactory.newUserSelector("user", "adduser", null, true);
 		userForm.setItems(user);
 
 		user.addChangedHandler(new ChangedHandler() {

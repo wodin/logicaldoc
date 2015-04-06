@@ -111,7 +111,7 @@ public class TrashPanel extends VLayout {
 	}
 
 	private void restoreDocument(final long id) {
-		documentService.restore(Session.get().getSid(), id, Session.get().getCurrentFolder().getId(),
+		documentService.restore(Session.get().getSid(), new long[] { id }, Session.get().getCurrentFolder().getId(),
 				new AsyncCallback<Void>() {
 
 					@Override

@@ -182,7 +182,7 @@ public class SecuritySettingsPanel extends VLayout {
 		StaticTextItem url = ItemFactory.newStaticTextItem("anonUrl", I18N.message("url"), GWT.getHostPageBaseURL()
 				+ "?anonymous=login&tenant=" + Session.get().getTenantName());
 
-		final SelectItem user = ItemFactory.newUserSelector("anonymousUser", "user", null);
+		final SelectItem user = ItemFactory.newUserSelector("anonymousUser", "user", null, false);
 		user.setHint(I18N.message("anonymoususerhint"));
 		user.setHintStyle("hint");
 		user.addChangedHandler(new ChangedHandler() {

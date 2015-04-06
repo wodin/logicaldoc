@@ -273,6 +273,10 @@ values     (-3,CURRENT_TIMESTAMP,0,'lockeddocs',90,'menu.png',1,1,1,1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (-5,CURRENT_TIMESTAMP,0,'deleteddocs',90,'menu.png',1,1,1,1);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
 values     (3,CURRENT_TIMESTAMP,0,'clienandextapps',7,'menu.png',1,1,1,1);
 
 insert into ld_menu 
