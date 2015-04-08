@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.FolderObserver;
+import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -171,7 +172,8 @@ public class FolderDetailsPanel extends VLayout {
 		historyTabPanel.setWidth100();
 		historyTabPanel.setHeight100();
 		historyTab.setPane(historyTabPanel);
-		tabSet.addTab(historyTab);
+		if (Menu.enabled(Menu.HISTORY))
+			tabSet.addTab(historyTab);
 
 		workflowTab = new Tab(I18N.message("workflow"));
 		if (folder.hasPermission(Constants.PERMISSION_WORKFLOW))
@@ -328,10 +330,10 @@ public class FolderDetailsPanel extends VLayout {
 				@Override
 				public void onSuccess(GUIFolder folder) {
 					savePanel.setVisible(false);
-					
+
 					if (listener != null)
 						listener.onFolderSaved(folder, oldPosition != folder.getPosition());
-					
+
 					// Adjust the path
 					String p = folder.getPathExtended();
 					p = p.substring(0, p.lastIndexOf('/'));

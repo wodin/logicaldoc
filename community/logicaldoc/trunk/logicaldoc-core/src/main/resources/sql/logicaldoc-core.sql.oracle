@@ -241,6 +241,10 @@ values     (1500,CURRENT_TIMESTAMP,0,'documents',5,'menu.png',1,1,1,50);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
+values     (1600,CURRENT_TIMESTAMP,0,'history',1500,'menu.png',1,1,1,10);
+
+insert into ld_menu
+           (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
 values     (1510,CURRENT_TIMESTAMP,0,'search',5,'menu.png',1,1,1,60);
 
 insert into ld_menu
