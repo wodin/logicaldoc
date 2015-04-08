@@ -109,7 +109,7 @@ public class UsersPanel extends VLayout {
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
-		list.setDataSource(new UsersDS(null, false));
+		list.setDataSource(new UsersDS(null, true));
 		list.setFields(id, enabled, username, firstName, name, email, phone, cell);
 
 		listing.addMember(infoPanel);
