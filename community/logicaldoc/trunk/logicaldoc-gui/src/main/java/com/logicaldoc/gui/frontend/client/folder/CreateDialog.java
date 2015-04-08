@@ -98,9 +98,10 @@ public class CreateDialog extends Dialog {
 			}
 		});
 
-		if (inheritOptionEnabled)
+		if (inheritOptionEnabled){
 			form.setItems(name, inheritSecurity, create);
-		else
+			inheritSecurity.setValue(Session.get().getInfo().getConfig("gui.security.inheritoption.default"));
+		}else
 			form.setItems(name, create);
 		
 		VLayout content = new VLayout();
