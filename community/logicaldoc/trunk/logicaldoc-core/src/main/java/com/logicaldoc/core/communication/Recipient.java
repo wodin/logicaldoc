@@ -28,7 +28,7 @@ public class Recipient {
 	private int type = TYPE_SYSTEM;
 
 	private int read = 0;
-	
+
 	public Recipient() {
 	}
 
@@ -83,5 +83,21 @@ public class Recipient {
 
 	public void setRead(int read) {
 		this.read = read;
+	}
+
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		Recipient cloned = new Recipient();
+		cloned.setAddress(getAddress());
+		cloned.setMode(getMode());
+		cloned.setName(getName());
+		cloned.setRead(getRead());
+		cloned.setType(getType());
+		return cloned;
+	}
+
+	@Override
+	public String toString() {
+		return address;
 	}
 }

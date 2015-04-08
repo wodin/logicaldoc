@@ -1,6 +1,8 @@
 package com.logicaldoc.core.communication;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * SystemMessages are messages which an user only can send to other system
@@ -81,5 +83,32 @@ public class SystemMessage extends Message {
 
 	public void setTrials(int trials) {
 		this.trials = trials;
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		SystemMessage cloned = new SystemMessage();
+		cloned.setAuthor(getAuthor());
+		cloned.setConfirmation(getConfirmation());
+		cloned.setDateScope(getDateScope());
+		cloned.setHtml(getHtml());
+		cloned.setLastNotified(getLastNotified());
+		cloned.setLocale(getLocale());
+		cloned.setMessageText(getMessageText());
+		cloned.setPrio(getPrio());
+		Set<Recipient> recs = new HashSet<Recipient>();
+		for (Recipient rec : getRecipients()) {
+			Recipient newRec = (Recipient) rec.clone();
+			recs.add(newRec);
+		}
+		cloned.setRecipients(recs);
+		cloned.setSentDate(getSentDate());
+		cloned.setStatus(getStatus());
+		cloned.setSubject(getSubject());
+		cloned.setTenantId(getTenantId());
+		cloned.setTrials(getTrials());
+		cloned.setType(getType());
+
+		return cloned;
 	}
 }
