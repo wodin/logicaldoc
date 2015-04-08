@@ -2,14 +2,15 @@
 <izpack:installation version="5.0"
     xmlns:izpack="http://izpack.org/schema/installation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
-    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-i18n-7.1.3.jar" />
-    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-util-7.1.3.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-i18n-7.2.0.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-util-7.2.0.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/slf4j-api-1.7.7.jar" /> 
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/commons-io-1.4.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/mysql-connector-java-5.1.31.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/ojdbc6-11.2.0.2.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/jtds-1.2.5.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/hsqldb-2.2.8.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/postgresql-9.0-801.jdbc4.jar" />
     <jar src="lib/logicaldoc-community-installer.jar" stage="both"/>
 
     <info>
