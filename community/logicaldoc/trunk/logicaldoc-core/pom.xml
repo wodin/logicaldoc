@@ -247,7 +247,7 @@
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
-			<version>1.8.1</version>
+			<version>1.8.9</version>
 		</dependency>
 		<!-- Extracting text in languages whose text goes from right to left (such 
 			as Arabic and Hebrew) in PDF files can result in text that is backwards. 
