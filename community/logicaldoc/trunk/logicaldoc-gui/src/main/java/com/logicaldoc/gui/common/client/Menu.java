@@ -24,6 +24,8 @@ public class Menu {
 	public static final long ADMINISTRATION = 2;
 
 	public static final long DOCUMENTS = 1500;
+	
+	public static final long HISTORY = 1600;
 
 	public static final long SEARCH = 1510;
 

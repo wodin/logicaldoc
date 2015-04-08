@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
+import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -297,13 +298,15 @@ public class DocumentDetailsPanel extends VLayout {
 			}
 		});
 
-		tabSet.addTab(historyTab);
-		historyTab.addTabSelectedHandler(new TabSelectedHandler() {
-			@Override
-			public void onTabSelected(TabSelectedEvent event) {
-				historyPanel.onTabSelected();
-			}
-		});
+		if (Menu.enabled(Menu.HISTORY)) {
+			tabSet.addTab(historyTab);
+			historyTab.addTabSelectedHandler(new TabSelectedHandler() {
+				@Override
+				public void onTabSelected(TabSelectedEvent event) {
+					historyPanel.onTabSelected();
+				}
+			});
+		}
 
 		if (Feature.visible(Feature.NOTES)) {
 			tabSet.addTab(notesTab);
