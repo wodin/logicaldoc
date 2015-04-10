@@ -130,7 +130,6 @@ public class GUISettingsPanel extends VLayout {
 		TextItem searchhits = ItemFactory.newIntegerItem("searchhits", I18N.message("searchhits"), null);
 		searchhits.setRequired(true);
 		searchhits.setWrapTitle(false);
-		searchhits.setWidth(400);
 
 		RadioGroupItem ondoubleclick = ItemFactory.newBooleanSelector("ondoubleclick", "ondoubleclick");
 		ondoubleclick.setValueMap("download", "preview");
