@@ -1042,6 +1042,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		if (folderVO.getCreator() != null)
 			folder.setCreator(folderVO.getCreator());
 		folder.setParentId(parent.getId());
+
+		folder.setTemplate(folderVO.getTemplate());
+		folder.setTemplateLocked(folderVO.getTemplateLocked());
 		if (folderVO.getAttributes() != null && !folderVO.getAttributes().isEmpty())
 			for (String name : folderVO.getAttributes().keySet())
 				folder.getAttributes().put(name, folderVO.getAttributes().get(name));
