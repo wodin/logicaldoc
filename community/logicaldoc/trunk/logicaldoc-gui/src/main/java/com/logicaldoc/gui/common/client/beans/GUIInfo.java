@@ -31,7 +31,7 @@ public class GUIInfo implements Serializable {
 
 	private String forum = "http://forums.logicaldoc.com";
 
-	private String vendor = "Logical Objects Srl";
+	private String vendor = "LogicalDOC";
 
 	private String vendorAddress = "via Aldo Moro interna, 3";
 
