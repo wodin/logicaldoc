@@ -1012,6 +1012,7 @@ public class ItemFactory {
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setValueField("id");
 		item.setDisplayField("name");
+		item.setWrapTitle(false);
 		item.setOptionDataSource(new FolderTemplatesDS());
 		if (!Feature.enabled(Feature.FOLDER_TEMPLATE))
 			item.setDisabled(true);
