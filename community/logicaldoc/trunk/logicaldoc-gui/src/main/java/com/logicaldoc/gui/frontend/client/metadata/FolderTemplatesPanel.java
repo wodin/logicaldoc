@@ -117,16 +117,15 @@ public class FolderTemplatesPanel extends VLayout {
 	 */
 	private void saveTemplates() {
 		Record[] records = grid.getRecords();
-		if (records == null || records.length == 0)
-			return;
 
-		GUIValuePair[] templates = new GUIValuePair[records.length];
+		GUIValuePair[] templates = new GUIValuePair[records != null ? records.length : 0];
 		int i = 0;
-		for (Record record : records) {
-			templates[i] = new GUIValuePair();
-			templates[i].setCode(record.getAttributeAsString("name"));
-			templates[i++].setValue(record.getAttributeAsString("folders"));
-		}
+		if (records != null)
+			for (Record record : records) {
+				templates[i] = new GUIValuePair();
+				templates[i].setCode(record.getAttributeAsString("name"));
+				templates[i++].setValue(record.getAttributeAsString("folders"));
+			}
 
 		service.saveTemplates(Session.get().getSid(), templates, new AsyncCallback<Void>() {
 			@Override
