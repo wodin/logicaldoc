@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.administration;
 
 import com.logicaldoc.gui.frontend.client.system.GeneralPanel;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -21,6 +22,7 @@ public class AdminPanel extends HLayout {
 
 	private AdminPanel() {
 		setWidth100();
+		setOverflow(Overflow.HIDDEN);
 
 		// Prepare the collapsible menu
 		AdminMenu leftMenu = AdminMenu.get();

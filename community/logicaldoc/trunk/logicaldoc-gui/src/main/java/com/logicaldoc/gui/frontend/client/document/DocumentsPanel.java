@@ -21,6 +21,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
@@ -77,6 +78,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		Session.get().addDocumentObserver(this);
 
 		setWidth100();
+		setOverflow(Overflow.HIDDEN);
 
 		prepareMenu();
 

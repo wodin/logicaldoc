@@ -6,6 +6,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.calendar.UserCalendarPanel;
 import com.logicaldoc.gui.frontend.client.workflow.WorkflowDashboard;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -33,6 +34,8 @@ public class DashboardPanel extends VLayout {
 	private Tab tagsTab = null;
 
 	private DashboardPanel() {
+		setOverflow(Overflow.HIDDEN);
+		
 		userTab = new Tab(I18N.message("user"));
 		userTab.setID("user");
 		userTab.setPane(new UserDashboard());
