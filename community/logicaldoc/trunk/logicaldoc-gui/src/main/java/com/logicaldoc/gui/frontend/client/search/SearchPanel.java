@@ -19,6 +19,7 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -55,6 +56,7 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 		Session.get().addDocumentObserver(this);
 
 		setWidth100();
+		setOverflow(Overflow.HIDDEN);
 
 		// Prepare the collapsable menu
 		SearchMenu searchMenu = SearchMenu.get();
