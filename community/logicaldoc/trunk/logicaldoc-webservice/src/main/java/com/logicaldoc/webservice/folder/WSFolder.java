@@ -43,6 +43,8 @@ public class WSFolder implements Serializable {
 
 	private Long templateId;
 
+	private int templateLocked = 0;
+
 	private String creation;
 
 	private String creator;
@@ -84,10 +86,10 @@ public class WSFolder implements Serializable {
 		wsFolder.setCreation(AbstractService.convertDateToString(folder.getCreation()));
 		wsFolder.setCreator(folder.getCreator());
 		wsFolder.setPosition(folder.getPosition());
+		wsFolder.setTemplateLocked(folder.getTemplateLocked());
 
-		if (folder.getTemplate() != null) {
+		if (folder.getTemplate() != null)
 			wsFolder.setTemplateId(folder.getTemplate().getId());
-		}
 
 		// Populate extended attributes
 		WSAttribute[] attributes = new WSAttribute[0];
@@ -230,5 +232,13 @@ public class WSFolder implements Serializable {
 
 	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	public int getTemplateLocked() {
+		return templateLocked;
+	}
+
+	public void setTemplateLocked(int templateLocked) {
+		this.templateLocked = templateLocked;
 	}
 }

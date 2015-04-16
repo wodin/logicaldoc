@@ -1,10 +1,12 @@
 package com.logicaldoc.webservice;
 
+import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.webservice.auth.AuthClient;
 import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.FolderClient;
+import com.logicaldoc.webservice.folder.WSFolder;
 import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.search.WSSearchOptions;
 import com.logicaldoc.webservice.search.WSSearchResult;
@@ -19,7 +21,6 @@ public class SoapWorgkbench {
 
 		AuthClient auth = new AuthClient(BASE + "/Auth");
 
-		FolderClient folderClient = new FolderClient(BASE + "/Folder", 1, false, 50);
 		SystemClient systemClient = new SystemClient(BASE + "/System");
 		SecurityClient securityClient = new SecurityClient(BASE + "/Security");
 
@@ -33,7 +34,9 @@ public class SoapWorgkbench {
 
 			// documentStuff(sid);
 			
-			searchStuff(sid);
+			folderStuff(sid);
+
+			// searchStuff(sid);
 
 			// WSFolder newFolder = new WSFolder();
 			// newFolder.setName("ddddd");
@@ -118,6 +121,25 @@ public class SoapWorgkbench {
 		} finally {
 			auth.logout(sid);
 		}
+	}
+
+	private static void folderStuff(String sid) throws Exception {
+		FolderClient folderClient = new FolderClient(BASE + "/Folder", 1, false, 50);
+
+		WSFolder newFolder = new WSFolder();
+		newFolder.setName("ddddd");
+		newFolder.setParentId(4L);
+		newFolder.setTemplateId(1L);
+		newFolder.setTemplateLocked(1);
+		
+		WSAttribute[] att=new WSAttribute[1];
+		att[0]=new WSAttribute();
+		att[0].setName("from");
+		att[0].setType(ExtendedAttribute.TYPE_STRING);
+		att[0].setStringValue("pippo");
+		newFolder.setExtendedAttributes(att);
+		
+		newFolder = folderClient.create(sid, newFolder);
 	}
 
 	private static void securityStuff(String sid) throws Exception {

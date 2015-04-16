@@ -35,7 +35,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	@Override
 	public WSFolder create(String sid, WSFolder folder) throws Exception {
 		User user = validateSession(sid);
-
+		
 		try {
 			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			Folder parentFolder = folderDao.findById(folder.getParentId());
@@ -54,7 +54,9 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			folderVO.setDescription(folder.getDescription());
 			folderVO.setType(folder.getType());
 			folderVO.setPosition(folder.getPosition());
+			folderVO.setTemplateLocked(folder.getTemplateLocked());
 			folder.updateExtendedAttributes(folderVO);
+			
 			Folder f = folderDao.create(parentFolder, folderVO, true, transaction);
 
 			if (f == null) {
@@ -460,7 +462,9 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 			fld.setName(name);
 			fld.setDescription(folder.getDescription());
-
+			fld.setTemplateLocked(folder.getTemplateLocked());
+			fld.setPosition(folder.getPosition());
+			
 			folder.updateExtendedAttributes(fld);
 
 			// Add a folder history entry
