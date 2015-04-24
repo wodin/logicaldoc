@@ -107,6 +107,9 @@
         <jaxrs:serviceBeans>
            <bean class="com.logicaldoc.webservice.rest.document.DocumentServiceImpl" />
         </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="JacksonJsonProvider"/>
+        </jaxrs:providers>   
     </jaxrs:server>
     
     <jaxrs:server id="rest-folder" address="/rest/folder">

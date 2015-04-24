@@ -41,7 +41,7 @@ public class WorkflowDialog extends Window {
 
 		setTitle(I18N.message("startworkflow"));
 		setWidth(420);
-		setHeight(120);
+		setHeight(115);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);

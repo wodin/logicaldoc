@@ -1,12 +1,13 @@
 package com.logicaldoc.webservice;
 
+import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.rest.auth.AuthClient;
 import com.logicaldoc.webservice.rest.document.DocumentClient;
 import com.logicaldoc.webservice.rest.folder.FolderClient;
 
 public class RestWorgkbench {
 	public static void main(String[] args) throws Exception {
-		String base = "http://localhost:1000/services/rest";
+		String base = "http://localhost:9080/services/rest";
 		AuthClient auth = new AuthClient(base + "/auth");
 		DocumentClient doc = new DocumentClient(base + "/document");
 		FolderClient fld = new FolderClient(base + "/folder");
@@ -31,7 +32,8 @@ public class RestWorgkbench {
 			// doc.checkin(sid, 673284114L, "rest checkin", "phototest.gif",
 			// true, file);
 
-			doc.getDocument(sid, 723812352L);
+			WSDocument document = doc.getDocument(sid, 583761920L);
+			System.out.println(document);
 
 		} finally {
 			auth.logout(sid);

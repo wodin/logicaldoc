@@ -195,6 +195,7 @@ public class ItemFactory {
 			item.setValidators(new EmailsValidator());
 		else
 			item.setValidators(new EmailValidator());
+		item.setWrapTitle(false);
 		item.setHintStyle("hint");
 		item.setWidth(180);
 		return item;
@@ -915,6 +916,7 @@ public class ItemFactory {
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		ListGridField name = new ListGridField("name", I18N.message("name"));
 		ListGridField description = new ListGridField("description", I18N.message("description"));
+		item.setWidth(250);
 		item.setPickListWidth(300);
 		item.setPickListFields(name, description);
 		item.setDisplayField("name");

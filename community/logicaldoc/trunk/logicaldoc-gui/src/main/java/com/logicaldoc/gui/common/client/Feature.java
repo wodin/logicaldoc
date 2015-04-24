@@ -152,6 +152,8 @@ public class Feature {
 	public static final int ANNOTATIONS = 82;
 	
 	public static final int ARCHIVING = 83;
+	
+	public static final int SHAREFILE = 84;
 
 	private static Set<String> features = new HashSet<String>();
 

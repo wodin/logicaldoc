@@ -50,10 +50,14 @@ import com.logicaldoc.gui.frontend.client.services.GDocsService;
 import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ShareFileService;
+import com.logicaldoc.gui.frontend.client.services.ShareFileServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.TenantService;
 import com.logicaldoc.gui.frontend.client.services.TenantServiceAsync;
+import com.logicaldoc.gui.frontend.client.sharefile.ShareFileDialog;
+import com.logicaldoc.gui.frontend.client.sharefile.ShareFileSettings;
 import com.logicaldoc.gui.frontend.client.subscription.PersonalSubscriptions;
 import com.logicaldoc.gui.frontend.client.webcontent.WebcontentCreate;
 import com.logicaldoc.gui.frontend.client.webcontent.WebcontentEditor;
@@ -91,6 +95,8 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 	protected GDocsServiceAsync gdocsService = (GDocsServiceAsync) GWT.create(GDocsService.class);
 
 	protected DropboxServiceAsync dboxService = (DropboxServiceAsync) GWT.create(DropboxService.class);
+
+	protected ShareFileServiceAsync sharefileService = (ShareFileServiceAsync) GWT.create(ShareFileService.class);
 
 	protected TenantServiceAsync tenantService = (TenantServiceAsync) GWT.create(TenantService.class);
 
@@ -464,6 +470,59 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		return dropboxItem;
 	}
 
+	private MenuItem getShareFileMenuItem(GUIFolder folder, final GUIDocument document) {
+		final MenuItem exportTo = new MenuItem(I18N.message("exporttosharefile"));
+		exportTo.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				ShareFileDialog dialog = new ShareFileDialog(true);
+				dialog.show();
+			}
+		});
+
+		final MenuItem importFrom = new MenuItem(I18N.message("importfromsharefile"));
+		importFrom.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				ShareFileDialog dialog = new ShareFileDialog(false);
+				dialog.show();
+			}
+		});
+
+		final MenuItem account = new MenuItem(I18N.message("sharefileaccount"));
+		account.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				sharefileService.loadSettings(Session.get().getSid(), new AsyncCallback<String[]>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(String[] settings) {
+						ShareFileSettings dialog = new ShareFileSettings(settings);
+						dialog.show();
+					}
+				});
+			}
+		});
+
+		Menu menu = new Menu();
+		menu.setShowShadow(true);
+		menu.setShadowDepth(3);
+		menu.setItems(exportTo, importFrom, account);
+
+		exportTo.setEnabled(folder != null && folder.isDownload() && Feature.enabled(Feature.SHAREFILE));
+		importFrom.setEnabled(folder != null && folder.isWrite() && Feature.enabled(Feature.SHAREFILE)
+				&& MainPanel.get().isOnDocumentsTab());
+
+		MenuItem sharefileItem = new MenuItem(I18N.message("sharefile"));
+		sharefileItem.setSubmenu(menu);
+
+		return sharefileItem;
+	}
+
 	private MenuItem getGDocsMenuItem(GUIFolder folder, final GUIDocument document) {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
@@ -679,6 +738,9 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			if (Feature.enabled(Feature.DROPBOX)
 					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DROPBOX))
 				menu.addItem(getDropboxMenuItem(folder, document));
+			if (Feature.enabled(Feature.SHAREFILE)
+					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.SHAREFILE))
+				menu.addItem(getShareFileMenuItem(folder, document));
 			if (Feature.enabled(Feature.GDOCS)
 					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.GDOCS))
 				menu.addItem(getGDocsMenuItem(folder, document));

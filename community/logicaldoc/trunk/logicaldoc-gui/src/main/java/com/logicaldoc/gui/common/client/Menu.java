@@ -62,6 +62,8 @@ public class Menu {
 	public static final long CALENDAR_REPORT = -2060;
 
 	public static final long DROPBOX = -2070;
+	
+	public static final long SHAREFILE = -2075;
 
 	public static final long GDOCS = -2080;
 

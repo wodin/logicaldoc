@@ -32,9 +32,16 @@ public class DocumentServiceImpl extends com.logicaldoc.webservice.document.Docu
 	@Path("/getDocument")
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-	@Override
-	public WSDocument getDocument(@FormParam("sid") String sid, @FormParam("docId") long docId) throws Exception {
-		return super.getDocument(sid, docId);
+	public Response getDocumentRest(@FormParam("sid") String sid, @FormParam("docId") long docId) throws Exception {
+		try {
+			WSDocument doc = super.getDocument(sid, docId);
+			if (doc == null)
+				throw new Exception("Unexisting document " + docId);
+			return Response.ok(doc).build();
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			return Response.serverError().build();
+		}
 	}
 
 	@POST
