@@ -74,8 +74,23 @@ public class DocumentClient extends RestClient implements DocumentService {
 
 	@Override
 	public WSDocument getDocument(String sid, long docId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		String url = endpoint + "/getDocument";
+
+		PostMethod post = preparePostMethod(url);
+		try {
+			post.setParameter("sid", sid);
+			post.setParameter("docId", Long.toString(docId));
+
+			try {
+				client.executeMethod(post);
+				System.out.println(post.getResponseBodyAsString());
+			} catch (Throwable e) {
+				log.error(e.getMessage(), e);
+			}
+			return null;
+		} finally {
+			post.releaseConnection();
+		}
 	}
 
 	@Override

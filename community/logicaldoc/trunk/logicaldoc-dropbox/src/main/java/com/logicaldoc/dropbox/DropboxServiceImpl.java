@@ -299,7 +299,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 
 		File temp = null;
 		try {
-			temp = File.createTempFile("dboxsownload", ".tmp");
+			temp = File.createTempFile("dboxdownload", ".tmp");
 			dbox.downloadFile(src.path, temp);
 
 			List<Document> docs = ddao.findByFileNameAndParentFolderId(root.getId(), src.name, null,
@@ -348,7 +348,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 
 				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 				history.setPath(fdao.computePathExtended(root.getId()));
-				history.setEvent(DocumentEvent.DOWNLOADED.toString());
+				history.setEvent(DocumentEvent.STORED.toString());
 
 				manager.create(temp, docVO, history);
 			}

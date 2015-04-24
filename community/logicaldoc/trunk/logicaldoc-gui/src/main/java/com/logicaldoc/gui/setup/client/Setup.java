@@ -66,6 +66,8 @@ public class Setup implements EntryPoint {
 	private static final String MYSQL = "MySQL";
 
 	private static final String SQLSERVER = "MSSQL";
+	
+	private static final String POSTGRESQL = "PostgreSQL";
 
 	private static final String REPOSITORY_FOLDER = "repositoryFolder";
 
@@ -221,7 +223,7 @@ public class Setup implements EntryPoint {
 		engines.put(MYSQL, new String[] { "MySQL", "com.mysql.jdbc.Driver",
 				"jdbc:mysql://<server>[,<failoverhost>][<:3306>]/<database>", "org.hibernate.dialect.MySQLDialect",
 				"SELECT 1" });
-		engines.put("PostgreSQL", new String[] { "PostgreSQL", "org.postgresql.Driver",
+		engines.put(POSTGRESQL, new String[] { "PostgreSQL", "org.postgresql.Driver",
 				"jdbc:postgresql:[<//server>[<:5432>/]]<database>", "org.hibernate.dialect.PostgreSQLDialect",
 				"SELECT 1" });
 		engines.put(ORACLE, new String[] { "Oracle", "oracle.jdbc.driver.OracleDriver",
