@@ -1,8 +1,6 @@
 package com.logicaldoc.web.service;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.Vector;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -27,6 +26,7 @@ import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.csv.CSVFileReader;
 import com.logicaldoc.web.UploadServlet;
 import com.logicaldoc.web.util.ServiceUtil;
 
@@ -287,7 +287,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 		List<String> options = new ArrayList<String>();
 
-		BufferedReader reader = null;
+		CSVFileReader reader = null;
 		try {
 			File file = null;
 			for (String fileId : uploadedFilesMap.keySet())
@@ -297,11 +297,13 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				}
 
 			if (file != null) {
-				reader = new BufferedReader(new FileReader(file));
-				String line = null;
-				while ((line = reader.readLine()) != null) {
-					if (StringUtils.isNotEmpty(line) && StringUtils.isNotEmpty(line.trim()))
-						options.add(line.trim());
+				reader = new CSVFileReader(file.getPath());
+				Vector<String> row = reader.readFields();
+				if (row != null && "value".equals(row.get(0).toLowerCase()))
+					row = reader.readFields();
+				while (row != null && !row.isEmpty()) {
+					options.add(row.get(0).trim());
+					row = reader.readFields();
 				}
 			}
 		} catch (Throwable e) {
