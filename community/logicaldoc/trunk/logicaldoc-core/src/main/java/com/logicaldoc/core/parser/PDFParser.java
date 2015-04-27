@@ -94,7 +94,7 @@ public class PDFParser extends AbstractParser {
 				if (pdfDocument.isEncrypted()) {
 					try {
 						pdfDocument.decrypt("");
-					} catch (InvalidPasswordException e) {
+					} catch (Throwable e) {
 						log.error("Error: The document is encrypted.");
 						content.append("The document is encrypted");
 						return;
