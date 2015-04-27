@@ -135,7 +135,9 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
 					|| name.startsWith("ip.") || name.contains(".extcall.") || name.contains("anonymous")
 					|| name.startsWith("hibernate.") || name.contains(".session.") || name.contains("acmecad.")
-					|| name.contains("antivirus.") || name.startsWith("login."))
+					|| name.contains("antivirus.") || name.startsWith("login.") || name.equals("upload.maxsize")
+					|| name.startsWith("news.") || name.equals("registry") || name.equals("searchengine")
+					|| name.equals("load"))
 				continue;
 
 			sortedSet.add(key.toString());
@@ -324,7 +326,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					&& !name.toString().contains("dropspot.mode"))
 				params.add(new GUIParameter(name.toString(), conf.getProperty(name.toString())));
 		}
-		params.add(new GUIParameter("upload.maxsize", conf.getProperty("upload.maxsize")));
+		if (session.getTenantName().equals(Tenant.DEFAULT_NAME))
+			params.add(new GUIParameter("upload.maxsize", conf.getProperty("upload.maxsize")));
 		params.add(new GUIParameter(session.getTenantName() + ".upload.disallow", conf.getProperty(session
 				.getTenantName() + ".upload.disallow")));
 		params.add(new GUIParameter(session.getTenantName() + ".search.hits", conf.getProperty(session.getTenantName()
