@@ -65,7 +65,6 @@ public class PublishingPanel extends DocumentDetailTab {
 		startPublishing.setShowPickerIcon(true);
 		startPublishing.setWrapTitle(false);
 		startPublishing.setEndRow(true);
-		startPublishing.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		startPublishing.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -89,7 +88,6 @@ public class PublishingPanel extends DocumentDetailTab {
 		stopPublishing.setShowPickerIcon(true);
 		stopPublishing.setEndRow(true);
 		stopPublishing.setWrapTitle(false);
-		stopPublishing.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
 		stopPublishing.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
