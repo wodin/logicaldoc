@@ -963,7 +963,7 @@ public class LDRepository {
 
 			// Try to check if the path is a folder
 			Folder folder = folderDao.findByPath(fullPath, getSessionUser().getTenantId());
-
+			
 			ObjectData out = null;
 
 			if (folder != null) {
@@ -975,12 +975,12 @@ public class LDRepository {
 				folder = folderDao.findByPath(parentPath, getSessionUser().getTenantId());
 				if (folder == null)
 					out = null;
-
+				
 				if (folder != null) {
-					String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
-
+					String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);				
 					List<Document> docs = documentDao.findByFileNameAndParentFolderId(folder.getId(), fileName, null,
-							getSessionUser().getId(), null);
+							getSessionUser().getTenantId(), null);
+				
 					if (docs == null || docs.isEmpty())
 						out = null;
 					else
