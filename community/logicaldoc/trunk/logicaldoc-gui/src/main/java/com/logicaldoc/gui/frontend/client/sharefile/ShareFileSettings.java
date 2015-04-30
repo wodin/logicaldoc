@@ -36,7 +36,7 @@ public class ShareFileSettings extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("sharefile"));
 		setWidth(400);
-		setHeight(120);
+		setHeight(150);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -51,11 +51,16 @@ public class ShareFileSettings extends Window {
 		TextItem username = ItemFactory.newEmailItem("username", "username", false);
 		username.setValue(settings[0]);
 		username.setRequired(true);
-		username.setWidth(200);
+		username.setWidth(220);
 
 		TextItem password = ItemFactory.newPasswordItem("password", "password", null);
 		password.setRequired(true);
-		password.setWidth(200);
+		password.setWidth(150);
+
+		TextItem host = ItemFactory.newTextItem("host", "host", null);
+		host.setValue(settings[2]);
+		host.setRequired(true);
+		host.setWidth(220);
 
 		save = new SubmitItem();
 		save.setTitle(I18N.message("save"));
@@ -67,7 +72,7 @@ public class ShareFileSettings extends Window {
 			}
 		});
 
-		form.setItems(username, password, save);
+		form.setItems(host, username, password, save);
 
 		addItem(form);
 	}
@@ -77,8 +82,8 @@ public class ShareFileSettings extends Window {
 			return;
 
 		ContactingServer.get().show();
-		sharefileService.saveSettings(Session.get().getSid(), vm.getValueAsString("username"),
-				vm.getValueAsString("password"), new AsyncCallback<Void>() {
+		sharefileService.saveSettings(Session.get().getSid(), vm.getValueAsString("host"),
+				vm.getValueAsString("username"), vm.getValueAsString("password"), new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						ContactingServer.get().hide();
