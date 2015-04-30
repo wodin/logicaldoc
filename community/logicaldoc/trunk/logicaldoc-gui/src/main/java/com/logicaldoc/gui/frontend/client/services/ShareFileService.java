@@ -32,11 +32,12 @@ public interface ShareFileService extends RemoteService {
 	 * Save the settings used by the FileShare module
 	 * 
 	 * @param sid
+	 * @param hostname
 	 * @param username
 	 * @param password
 	 * @throws ServerException
 	 */
-	public void saveSettings(String sid, String username, String password) throws ServerException;
+	public void saveSettings(String sid, String hostname, String username, String password) throws ServerException;
 
 	/**
 	 * Retrieve the settings saved for connecting to FileShare.
