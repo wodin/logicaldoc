@@ -62,11 +62,13 @@ import com.logicaldoc.gui.frontend.client.subscription.PersonalSubscriptions;
 import com.logicaldoc.gui.frontend.client.webcontent.WebcontentCreate;
 import com.logicaldoc.gui.frontend.client.webcontent.WebcontentEditor;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -75,6 +77,7 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.ClickHandler;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 import com.smartgwt.client.widgets.toolbar.ToolStripMenuButton;
 
 /**
@@ -148,6 +151,19 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		Label userInfo = new Label(I18N.message("loggedin") + " <b>" + Session.get().getUser().getUserName() + "</b>");
 		userInfo.setWrap(false);
 		addMember(userInfo);
+
+		ToolStripButton exitButton = new ToolStripButton();
+		exitButton.setIcon("[SKIN]/actions/close.png");
+		exitButton.setActionType(SelectionType.CHECKBOX);
+		exitButton.setTooltip(I18N.message("exit"));
+		exitButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				onLogout();
+			}
+		});
+		addButton(exitButton);
+
 		addSeparator();
 
 		if (Feature.enabled(Feature.MULTI_TENANT)) {
@@ -215,31 +231,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		exitItem.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				LD.ask(I18N.message("question"), I18N.message("confirmexit"), new BooleanCallback() {
-					@Override
-					public void execute(Boolean value) {
-						if (value) {
-							securityService.logout(Session.get().getSid(), new AsyncCallback<Void>() {
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-									SC.warn(caught.getMessage());
-								}
-
-								@Override
-								public void onSuccess(Void result) {
-									try {
-										Offline.remove(Constants.COOKIE_SID);
-									} catch (Throwable t) {
-
-									}
-
-									Session.get().close();
-									Util.redirectToRoot();
-								}
-							});
-						}
-					}
-				});
+				onLogout();
 			}
 		});
 
@@ -251,6 +243,34 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		ToolStripMenuButton menuButton = new ToolStripMenuButton(I18N.message("file"), menu);
 		menuButton.setWidth(100);
 		return menuButton;
+	}
+
+	private void onLogout() {
+		LD.ask(I18N.message("question"), I18N.message("confirmexit"), new BooleanCallback() {
+			@Override
+			public void execute(Boolean value) {
+				if (value) {
+					securityService.logout(Session.get().getSid(), new AsyncCallback<Void>() {
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+							SC.warn(caught.getMessage());
+						}
+
+						@Override
+						public void onSuccess(Void result) {
+							try {
+								Offline.remove(Constants.COOKIE_SID);
+							} catch (Throwable t) {
+
+							}
+
+							Session.get().close();
+							Util.redirectToRoot();
+						}
+					});
+				}
+			}
+		});
 	}
 
 	private MenuItem getWebContentMenuItem(GUIFolder folder, final GUIDocument document) {
