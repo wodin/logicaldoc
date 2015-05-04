@@ -377,7 +377,7 @@ public class TemplatePropertiesPanel extends HLayout {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
 				if (template.getId() == 0L) {
-					SC.say("savetemplatefirst");
+					SC.say(I18N.message("savetemplatefirst"));
 				} else {
 					Options options = new Options(template.getId(), attributeName.getValueAsString(), template
 							.isReadonly());
