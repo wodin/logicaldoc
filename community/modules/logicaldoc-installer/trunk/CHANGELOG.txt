@@ -1,14 +1,25 @@
-    __                _            __   ____  __      _           __
-   / /   ____  ____ _(_)________ _/ /  / __ \/ /_    (_)__  _____/ /______
-  / /   / __ \/ __ `/ / ___/ __ `/ /  / / / / __ \  / / _ \/ ___/ __/ ___/
- / /___/ /_/ / /_/ / / /__/ /_/ / /  / /_/ / /_/ / / /  __/ /__/ /_(__  )
-/_____/\____/\__, /_/\___/\__,_/_/   \____/_.___/_/ /\___/\___/\__/____/
-            /____/                             /___/
+            __                _            ______  ____  ______
+           / /   ____  ____ _(_)________ _/ / __ \/ __ \/ ____/
+          / /   / __ \/ __ `/ / ___/ __ `/ / / / / / / / /     
+         / /___/ /_/ / /_/ / / /__/ /_/ / / /_/ / /_/ / /___   
+        /_____/\____/\__, /_/\___/\__,_/_/_____/\____/\____/   
+                     /____/                 
 
-                    http://www.logicalobjects.com
                       http://www.logicaldoc.com                    
 
-                     LogicalDOC Community Edition
+                    LogicalDOC Community Edition
+
+LogicalDOC 7.2.1 (2015-05-05; logicaldoc-7.2.1)
+==============================================================                    
+510 - Ability to show/hide the history tab for certain users - Improvement - User Interface
+531 - Inherit option not enabled by default for new folder creation - Wish - Core
+549 - Encoding issue during import from ZIP files - Bug - Core
+552 - Full support of the application for PostgreSQL - Improvement - Core
+553 - Deleted documents report - Improvement - Core
+557 - Entry Prior to 1/1/1970 Limitation with Date Type for an Attribute in a Template - Bug - Core
+560 - Metadata Preset Export/Import Issue - Bug - User Interface
+561 - Make exit button more accessible 	Dominik Fakner - Improvement - User Interface
+548 - Change timestamp to datetime in MySQL - Improvement - Core                         
                      
 LogicalDOC 7.2 (2015-03-20; logicaldoc-7.2)
 ==============================================================                    
