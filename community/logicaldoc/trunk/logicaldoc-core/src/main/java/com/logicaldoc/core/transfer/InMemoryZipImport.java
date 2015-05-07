@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,6 +66,9 @@ public class InMemoryZipImport extends ZipImport {
 				// Create the document
 				String fileName = FilenameUtils.getName(entry);
 				String title = FilenameUtils.getBaseName(fileName);
+
+				if (StringUtils.isEmpty(fileName) || StringUtils.isEmpty(title))
+					continue;
 
 				try {
 					Document doc = (Document) docVo.clone();
