@@ -10,6 +10,8 @@ import java.util.ResourceBundle;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +84,9 @@ public class ZipImport {
 		File[] files = dir.listFiles();
 
 		for (int i = 0; i < files.length; i++) {
-			addEntry(files[i], parent);
+			if (StringUtils.isNotEmpty(files[i].getName())
+					|| StringUtils.isNotEmpty(FilenameUtils.getBaseName(files[i].getName())))
+				addEntry(files[i], parent);
 		}
 
 		try {
@@ -122,9 +126,10 @@ public class ZipImport {
 
 			File[] files = file.listFiles();
 
-			for (int i = 0; i < files.length; i++) {
-				addEntry(files[i], folder);
-			}
+			for (int i = 0; i < files.length; i++)
+				if (StringUtils.isNotEmpty(files[i].getName())
+						|| StringUtils.isNotEmpty(FilenameUtils.getBaseName(files[i].getName())))
+					addEntry(files[i], folder);
 		} else {
 			// creates a document
 			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
