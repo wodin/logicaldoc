@@ -97,4 +97,9 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 	public void setMessageTemplateDao(MessageTemplateDAO messageTemplateDao) {
 		this.messageTemplateDao = messageTemplateDao;
 	}
+
+	@Override
+	public boolean store(Tenant entity) {
+		throw new RuntimeException("Feature not enabled");
+	}
 }
