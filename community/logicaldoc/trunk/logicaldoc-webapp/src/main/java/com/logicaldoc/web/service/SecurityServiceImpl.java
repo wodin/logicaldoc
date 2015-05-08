@@ -326,7 +326,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				return;
 
 			FileUtils.forceDelete(UserUtil.getUserResource(session.getUserId(), "temp"));
-			log.info("User " + session.getUserName() + " logged out and closed session "+sid);
+			log.info("User " + session.getUserName() + " logged out and closed session " + sid);
 			kill(sid);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -694,9 +694,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		 * Prepare the template
 		 */
 		Map<String, String> args = new HashMap<String, String>();
-		HttpServletRequest request = this.getThreadLocalRequest();
-		String address = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-				+ request.getContextPath();
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		String address = config.getProperty("server.url");
 		args.put("_url", address);
 		args.put("_product", SystemInfo.get().getProduct());
 		args.put(
