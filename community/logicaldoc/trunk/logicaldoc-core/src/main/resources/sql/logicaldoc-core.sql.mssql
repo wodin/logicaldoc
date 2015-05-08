@@ -205,7 +205,7 @@ create index LD_TAG_TAG on ld_tag (ld_tag);
 
 
 insert into ld_tenant(ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_displayname,ld_type,ld_enabled,ld_expire,ld_recordversion)
-values     (1,CURRENT_TIMESTAMP,0,1,'default','Acme Inc.',0,1,null,1);
+values     (1,CURRENT_TIMESTAMP,0,1,'default','Default',0,1,null,1);
 
 insert into ld_menu
            (ld_id,ld_lastmodified,ld_deleted,ld_text,ld_parentid,ld_icon,ld_type,ld_tenantid,ld_recordversion,ld_position)
