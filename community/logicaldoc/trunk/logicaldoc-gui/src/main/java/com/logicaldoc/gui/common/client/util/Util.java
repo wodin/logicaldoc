@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.common.client.util;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
@@ -8,7 +10,6 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.logicaldoc.gui.common.client.Constants;
@@ -180,7 +181,8 @@ public class Util {
 	}
 
 	public static String thumbnailUrl(String sid, long docId, String fileVersion) {
-		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "&docId=" + docId;
+		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "&docId=" + docId
+				+ "&random=" + new Date().getTime();
 		if (fileVersion != null)
 			url += "&fileVersion=" + fileVersion;
 		return url;
@@ -317,14 +319,6 @@ public class Util {
 				return true;
 		}
 		return false;
-	}
-
-	public static void showWaitCursor() {
-		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "wait");
-	}
-
-	public static void showDefaultCursor() {
-		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
 	}
 
 	/**

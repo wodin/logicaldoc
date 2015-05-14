@@ -33,6 +33,8 @@ public class Menu {
 
 	public static final long CONTACTS = 1530;
 
+	public static final long STAMPS = 1540;
+	
 	public static final long SECURITY = 9;
 
 	public static final long CLIENTS = 3;

@@ -176,7 +176,7 @@ public class MetadataMenu extends VLayout {
 				folderTemplates.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
-		
+
 		Button retentionPolicies = new Button(I18N.message("retentionpolicies"));
 		retentionPolicies.setWidth100();
 		retentionPolicies.setHeight(25);
@@ -192,6 +192,24 @@ public class MetadataMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new RetentionPoliciesPanel());
+			}
+		});
+
+		Button stamps = new Button(I18N.message("stamps"));
+		stamps.setWidth100();
+		stamps.setHeight(25);
+
+		if (Feature.visible(Feature.STAMPS) && Menu.enabled(Menu.STAMPS)) {
+			addMember(stamps);
+			if (!Feature.enabled(Feature.STAMPS)) {
+				stamps.setDisabled(true);
+				stamps.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+		stamps.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new StampsPanel());
 			}
 		});
 	}
