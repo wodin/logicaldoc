@@ -633,6 +633,7 @@ public class ItemFactory {
 			item.setValue(value);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setHintStyle("hint");
+		item.setWidth(150);
 		return item;
 	}
 

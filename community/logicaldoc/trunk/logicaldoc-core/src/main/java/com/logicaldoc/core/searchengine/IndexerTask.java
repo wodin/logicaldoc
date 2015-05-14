@@ -1,6 +1,5 @@
 package com.logicaldoc.core.searchengine;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -102,9 +101,8 @@ public class IndexerTask extends Task {
 				// Mark all these documents as belonging to the current
 				// transaction. This may require time
 				String idsStr = ids.toString().replace('[', '(').replace(']', ')');
-				documentDao.bulkUpdate(
-						" set ld_transactionid = ?1, ld_lastmodified = ?2 where ld_transactionid is null and ld_id in "
-								+ idsStr, new Object[] { transactionId, new Date() });
+				documentDao.bulkUpdate(" set ld_transactionid = ?1 where ld_transactionid is null and ld_id in "
+						+ idsStr, new Object[] { transactionId });
 			}
 			log.info("Documents marked for indexing in transaction " + transactionId);
 
@@ -140,8 +138,8 @@ public class IndexerTask extends Task {
 			lockManager.release(getName(), transactionId);
 
 			// Remove the transaction reference
-			documentDao.bulkUpdate("set ld_transactionid = null, ld_lastmodified = ?1 where ld_transactionId = ?2",
-					new Object[] { new Date(), transactionId });
+			documentDao.bulkUpdate("set ld_transactionid = null where ld_transactionId = ?1",
+					new Object[] { transactionId });
 
 			// Last step done
 			next();

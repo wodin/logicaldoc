@@ -76,7 +76,7 @@ public class Feature {
 	public static final int BULK_CHECKOUT = 32;
 
 	public static final int WEBCONTENT = 33;
-	
+
 	public static final int CONTENT_DIFF = 34;
 
 	public static final int SHOW_LICENSEE = 40;
@@ -146,14 +146,16 @@ public class Feature {
 	public static final int MULTI_TENANT = 79;
 
 	public static final int DROPBOX = 80;
-	
+
 	public static final int ANTIVIRUS = 81;
-	
+
 	public static final int ANNOTATIONS = 82;
-	
+
 	public static final int ARCHIVING = 83;
-	
+
 	public static final int SHAREFILE = 84;
+
+	public static final int STAMPS = 85;
 
 	private static Set<String> features = new HashSet<String>();
 

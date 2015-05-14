@@ -188,9 +188,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		/*
 		 * Prepare the tile
 		 */
-		if (document.getId() != 0L) {
+		if (document.getId() != 0L)
 			prepareTile();
-		}
 	}
 
 	private void prepareTile() {
@@ -201,7 +200,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 			}
 
 			tile = new HLayout();
-			// tile.setWidth(219);
 			tile.setMembersMargin(1);
 			tile.setAlign(Alignment.RIGHT);
 			tile.setOverflow(Overflow.HIDDEN);

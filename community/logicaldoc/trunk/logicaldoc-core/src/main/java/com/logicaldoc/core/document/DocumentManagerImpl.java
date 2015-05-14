@@ -321,9 +321,9 @@ public class DocumentManagerImpl implements DocumentManager {
 		indexer.addHit(doc, cont);
 
 		// For additional safety update the DB directly
-		documentDAO.jdbcUpdate("update ld_document set ld_indexed=" + AbstractDocument.INDEX_INDEXED + " where ld_id="
-				+ docId);
-
+		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
+		documentDAO.store(doc);
+		
 		markAliasesToIndex(docId);
 	}
 
