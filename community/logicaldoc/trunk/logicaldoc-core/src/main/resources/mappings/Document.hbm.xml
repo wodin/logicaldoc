@@ -39,6 +39,7 @@
 		<property name="indexed" type="int" column="ld_indexed" not-null="true"/>
 		<property name="barcoded" type="int" column="ld_barcoded" not-null="true"/>
 		<property name="signed" type="int" column="ld_signed" not-null="true"/>
+        <property name="stamped" type="int" column="ld_stamped" not-null="true"/>
 		<property name="digest" type="string" column="ld_digest" length="255" />
 		<property name="recipient" type="string" column="ld_recipient" length="1000" />
 		<property name="exportStatus" type="int" column="ld_exportstatus" not-null="true"/>

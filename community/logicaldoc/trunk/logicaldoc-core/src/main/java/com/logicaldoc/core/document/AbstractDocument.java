@@ -123,6 +123,8 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private int barcoded = BARCODE_TO_PROCESS;
 
 	private int signed = 0;
+	
+	private int stamped = 0;
 
 	private Set<Tag> tags = new HashSet<Tag>();
 
@@ -795,5 +797,13 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public void setPages(int pages) {
 		this.pages = pages;
+	}
+
+	public int getStamped() {
+		return stamped;
+	}
+
+	public void setStamped(int stamped) {
+		this.stamped = stamped;
 	}
 }

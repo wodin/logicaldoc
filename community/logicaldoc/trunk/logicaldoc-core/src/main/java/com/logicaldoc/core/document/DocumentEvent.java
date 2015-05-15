@@ -33,7 +33,8 @@ public enum DocumentEvent {
 	EXPORTED("event.exported"),
 	ADDED_TO_CALEVENT("event.caladd"),
 	REMOVED_FROM_CALEVENT("event.caldel"),
-	SUBSCRIBED("event.subscribed");
+	SUBSCRIBED("event.subscribed"),
+	STAMP_APPLIED("event.stampapplied");
 
     private String event;
 

@@ -543,6 +543,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setStopPublishing(doc.getStopPublishing());
 		document.setPublished(doc.getPublished());
 		document.setSigned(doc.getSigned());
+		document.setStamped(doc.getStamped());
 		document.setBarcoded(doc.getBarcoded());
 		document.setIndexed(doc.getIndexed());
 		document.setExtResId(doc.getExtResId());

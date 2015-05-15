@@ -57,6 +57,7 @@ public class DocumentsDS extends DataSource {
 		DataSourceImageField immutable = new DataSourceImageField("immutable");
 		DataSourceImageField iindexed = new DataSourceImageField("indexed");
 		DataSourceImageField signed = new DataSourceImageField("signed");
+		DataSourceImageField stamped = new DataSourceImageField("stamped");
 		DataSourceImageField locked = new DataSourceImageField("locked");
 		DataSourceTextField lockUserId = new DataSourceTextField("lockUserId");
 		DataSourceTextField filename = new DataSourceTextField("filename");
@@ -103,6 +104,7 @@ public class DocumentsDS extends DataSource {
 		fields.add(immutable);
 		fields.add(iindexed);
 		fields.add(signed);
+		fields.add(stamped);
 		fields.add(locked);
 		fields.add(lockUserId);
 		fields.add(filename);
