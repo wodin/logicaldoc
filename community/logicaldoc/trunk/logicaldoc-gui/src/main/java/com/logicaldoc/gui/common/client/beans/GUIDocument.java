@@ -77,6 +77,8 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private int indexed = 0;
 
 	private int signed = 0;
+	
+	private int stamped = 0;
 
 	private int rating = 0;
 
@@ -514,5 +516,13 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	public void setTagsString(String tagsString) {
 		this.tagsString = tagsString;
+	}
+
+	public int getStamped() {
+		return stamped;
+	}
+
+	public void setStamped(int stamped) {
+		this.stamped = stamped;
 	}
 }

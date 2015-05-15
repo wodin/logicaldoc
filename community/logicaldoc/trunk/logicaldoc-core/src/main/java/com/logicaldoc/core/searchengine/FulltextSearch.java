@@ -103,6 +103,8 @@ public class FulltextSearch extends Search {
 			}
 
 			hit.setTenantId(rs.getLong(39));
+			hit.setStamped(rs.getInt(40));
+			
 			return hit;
 		}
 	};
@@ -206,7 +208,7 @@ public class FulltextSearch extends Search {
 			}
 			filters.add(folderFilter.toString());
 		}
-		
+
 		/*
 		 * Launch the search
 		 */
@@ -215,13 +217,12 @@ public class FulltextSearch extends Search {
 				null);
 		log.debug("End of Full-text search");
 		log.debug("Fulltext hits count: " + results.getCount());
-				
-		
+
 		// Save here the binding between ID and Hit
 		Map<Long, Hit> hitsMap = new HashMap<Long, Hit>();
 		while (results != null && results.hasNext()) {
 			Hit hit = results.next();
-						
+
 			// Skip a document if not in the filter set
 			if (opt.getFilterIds() != null && !opt.getFilterIds().isEmpty()) {
 				if (!opt.getFilterIds().contains(hit.getId()))
@@ -238,7 +239,7 @@ public class FulltextSearch extends Search {
 		log.debug("DB search");
 
 		String hitsIdsStr = hitsMap.keySet().toString().replace('[', '(').replace(']', ')');
-		
+
 		StringBuffer richQuery = new StringBuffer();
 		// Find real documents
 		richQuery = new StringBuffer(
@@ -251,7 +252,8 @@ public class FulltextSearch extends Search {
 		richQuery
 				.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, ");
 		richQuery
-				.append(" FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, A.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype ");
+				.append(" FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, A.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype, ");
+		richQuery.append(" A.ld_stamped ");
 		richQuery.append(" from ld_document A ");
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" left outer join ld_template C on A.ld_templateid=C.ld_id ");
@@ -278,7 +280,9 @@ public class FulltextSearch extends Search {
 				.append(" REF.ld_sourceauthor, REF.ld_rating, REF.ld_fileversion, A.ld_comment, REF.ld_workflowstatus, REF.ld_startpublishing, ");
 		richQuery
 				.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, ");
-		richQuery.append(" FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, REF.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype ");
+		richQuery
+				.append(" FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, REF.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype, ");
+		richQuery.append(" REF.ld_stamped ");
 		richQuery.append(" from ld_document A  ");
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" join ld_document REF on A.ld_docref=REF.ld_id ");
@@ -294,12 +298,12 @@ public class FulltextSearch extends Search {
 		richQuery.append("  and A.ld_docref is not null and REF.ld_deleted=0 and A.ld_docref = REF.ld_id ");
 		richQuery.append("  and A.ld_id in ");
 		richQuery.append(hitsIdsStr);
-		
+
 		log.debug("Execute query\n" + richQuery.toString());
 
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), null);
-		
+
 		// Populate the hits list discarding unexisting documents
 		Iterator<Hit> iter = hitsMap.values().iterator();
 
@@ -310,10 +314,10 @@ public class FulltextSearch extends Search {
 				break;
 			}
 			Hit hit = iter.next();
-			
+
 			if (StringUtils.isEmpty(hit.getTitle()) || StringUtils.isEmpty(hit.getFileName()))
 				continue;
-			
+
 			if ((searchUser.isInGroup("admin") && opt.getFolderId() == null)
 					|| (accessibleFolderIds != null && accessibleFolderIds.contains(hit.getFolder().getId())))
 				hits.add(hit);
@@ -321,7 +325,7 @@ public class FulltextSearch extends Search {
 
 		// Now sort by score desc
 		Collections.sort(hits);
-		
+
 		/*
 		 * Check for suggestions
 		 */

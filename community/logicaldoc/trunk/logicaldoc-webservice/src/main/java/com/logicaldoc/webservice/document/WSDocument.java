@@ -112,6 +112,8 @@ public class WSDocument implements Serializable {
 	private int indexed = INDEX_TO_INDEX;
 
 	private int signed = 0;
+	
+	private int stamped = 0;
 
 	private String[] tags = new String[0];
 
@@ -208,6 +210,8 @@ public class WSDocument implements Serializable {
 			wsDoc.setLastModified(AbstractService.convertDateToString(document.getLastModified()));
 			wsDoc.setRating(document.getRating());
 			wsDoc.setPages(document.getPages());
+			wsDoc.setSigned(document.getSigned());
+			wsDoc.setStamped(document.getStamped());
 
 			String date = null;
 			if (document.getSourceDate() != null)
@@ -821,5 +825,13 @@ public class WSDocument implements Serializable {
 
 	public void setPages(int pages) {
 		this.pages = pages;
+	}
+
+	public int getStamped() {
+		return stamped;
+	}
+
+	public void setStamped(int stamped) {
+		this.stamped = stamped;
 	}
 }

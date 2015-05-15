@@ -82,7 +82,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		size.setCellFormatter(new FileSizeCellFormatter());
 		size.setCanFilter(false);
 
-		ListGridField icon = new ListGridField("icon", " ", 24);
+		ListGridField icon = new ListGridField("icon", " ", 20);
 		icon.setType(ListGridFieldType.IMAGE);
 		icon.setCanSort(false);
 		icon.setAlign(Alignment.CENTER);
@@ -144,7 +144,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		type.setType(ListGridFieldType.TEXT);
 		type.setAlign(Alignment.CENTER);
 
-		ListGridField immutable = new ListGridField("immutable", " ", 24);
+		ListGridField immutable = new ListGridField("immutable", " ", 20);
 		immutable.setType(ListGridFieldType.IMAGE);
 		immutable.setCanSort(false);
 		immutable.setAlign(Alignment.CENTER);
@@ -153,7 +153,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		immutable.setImageURLSuffix(".png");
 		immutable.setCanFilter(false);
 
-		ListGridField indexed = new ListGridField("indexed", " ", 24);
+		ListGridField indexed = new ListGridField("indexed", " ", 20);
 		indexed.setType(ListGridFieldType.IMAGE);
 		indexed.setCanSort(false);
 		indexed.setAlign(Alignment.CENTER);
@@ -162,7 +162,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		indexed.setImageURLSuffix(".png");
 		indexed.setCanFilter(false);
 
-		ListGridField locked = new ListGridField("locked", " ", 24);
+		ListGridField locked = new ListGridField("locked", " ", 20);
 		locked.setType(ListGridFieldType.IMAGE);
 		locked.setCanSort(false);
 		locked.setAlign(Alignment.CENTER);
@@ -171,7 +171,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		locked.setImageURLSuffix(".png");
 		locked.setCanFilter(false);
 
-		ListGridField signed = new ListGridField("signed", " ", 24);
+		ListGridField signed = new ListGridField("signed", " ", 20);
 		signed.setType(ListGridFieldType.IMAGE);
 		signed.setCanSort(false);
 		signed.setAlign(Alignment.CENTER);
@@ -179,6 +179,15 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		signed.setImageURLPrefix(Util.imagePrefix());
 		signed.setImageURLSuffix(".png");
 		signed.setCanFilter(false);
+
+		ListGridField stamped = new ListGridField("stamped", " ", 20);
+		stamped.setType(ListGridFieldType.IMAGE);
+		stamped.setCanSort(false);
+		stamped.setAlign(Alignment.CENTER);
+		stamped.setShowDefaultContextMenu(false);
+		stamped.setImageURLPrefix(Util.imagePrefix());
+		stamped.setImageURLSuffix(".png");
+		stamped.setCanFilter(false);
 
 		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setHidden(true);
@@ -286,6 +295,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			fields.add(locked);
 			fields.add(immutable);
 			fields.add(signed);
+			fields.add(stamped);
 			fields.add(icon);
 			fields.add(filename);
 			fields.add(title);
@@ -351,6 +361,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			fields.add(locked);
 			fields.add(immutable);
 			fields.add(signed);
+			fields.add(stamped);
 			fields.add(icon);
 			fields.add(filename);
 			fields.add(title);
@@ -416,7 +427,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 							final String id = getSelectedRecord().getAttribute("id");
 							final String fileName = getSelectedRecord().getAttribute("filename") + ".p7m";
 							String fileVersion = getSelectedRecord().getAttribute("fileVersion");
-							
+
 							ContactingServer.get().show();
 							signService.extractSubjectSignatures(Session.get().getSid(), Long.parseLong(id),
 									fileVersion, new AsyncCallback<String[]>() {
@@ -437,6 +448,23 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 												SC.warn(I18N.message("verificationfailed"));
 										}
 									});
+						}
+					}
+					event.cancel();
+				} else if ("stamped".equals(getFieldName(event.getColNum()))) {
+					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
+						if ("stamp".equals(record.getAttribute("stamped"))) {
+							final String id = getSelectedRecord().getAttribute("id");
+							final String fileName = getSelectedRecord().getAttribute("filename") + "-stamp.pdf";
+							String fileVersion = getSelectedRecord().getAttribute("fileVersion");
+
+							if (Session.get().getCurrentFolder().isDownload())
+								try {
+									WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid="
+											+ Session.get().getSid() + "&docId=" + id + "&downloadStamp=true");
+								} catch (Throwable t) {
+
+								}
 						}
 					}
 					event.cancel();
