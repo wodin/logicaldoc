@@ -14,4 +14,10 @@ public interface StampServiceAsync {
 	void changeStatus(String sid, long id, boolean enabled, AsyncCallback<Void> callback);
 
 	void saveImage(String sid, long stampId, AsyncCallback<Void> callback);
+
+	void applyStamp(String sid, long[] docIds, long stampId, AsyncCallback<Void> callback);
+
+	void removeUsers(String sid, long[] userIds, long stampId, AsyncCallback<Void> callback);
+
+	void addUsers(String sid, long[] userIds, long stampId, AsyncCallback<Void> callback);
 }

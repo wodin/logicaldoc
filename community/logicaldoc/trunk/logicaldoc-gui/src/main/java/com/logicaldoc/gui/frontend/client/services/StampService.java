@@ -35,4 +35,19 @@ public interface StampService extends RemoteService {
 	 * Changes a stamp enabled/disabled status
 	 */
 	public void changeStatus(String sid, long id, boolean enabled) throws ServerException;
+
+	/**
+	 * Applies a stamp to the given document
+	 */
+	public void applyStamp(String sid, long[] docIds, long stampId) throws ServerException;
+
+	/**
+	 * Remove users from stamp
+	 */
+	public void removeUsers(String sid, long[] userIds, long stampId) throws ServerException;
+
+	/**
+	 * Assignes users to stamp
+	 */
+	public void addUsers(String sid, long[] userIds, long stampId) throws ServerException;
 }

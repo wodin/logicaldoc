@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.metadata;
+package com.logicaldoc.gui.frontend.client.metadata.stamp;
 
 import java.util.Date;
 
@@ -129,7 +129,7 @@ public class StampsPanel extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setCanSort(false);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(new StampsDS());
+		list.setDataSource(new StampsDS(false));
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);

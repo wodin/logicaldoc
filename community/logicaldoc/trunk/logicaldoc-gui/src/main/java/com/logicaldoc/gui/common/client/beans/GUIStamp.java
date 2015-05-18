@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class GUIStamp implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	private long id;
+	private long id = 0L;
 
 	public static int TYPE_TEXT = 0;
 
@@ -31,11 +31,13 @@ public class GUIStamp implements Serializable {
 
 	private int rotation = 0;
 
+	private int page = 1;
+
 	private String exprX;
 
 	private String exprY;
 
-	private String color="black";
+	private String color = "black";
 
 	private GUIUser[] users;
 
@@ -134,6 +136,12 @@ public class GUIStamp implements Serializable {
 	public void setUsers(GUIUser[] users) {
 		this.users = users;
 	}
-	
-	
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
 }

@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.metadata;
+package com.logicaldoc.gui.frontend.client.metadata.stamp;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -67,6 +67,8 @@ public class StampDetailsPanel extends VLayout {
 	private DynamicForm form2 = null;
 
 	private VLayout image = new VLayout();
+
+	private StampUsersPanel usersPanel;
 
 	public StampDetailsPanel(StampsPanel stampsPanel) {
 		super();
@@ -166,6 +168,14 @@ public class StampDetailsPanel extends VLayout {
 		propertiesTab.setPane(propertiesTabPanel);
 		tabSet.addTab(propertiesTab);
 
+		if (stamp.getId() != 0L) {
+			Tab usersTab = new Tab(I18N.message("users"));
+			usersPanel = new StampUsersPanel(stamp.getId());
+			usersPanel.setHeight100();
+			usersTab.setPane(usersPanel);
+			tabSet.addTab(usersTab);
+		}
+
 		addMember(tabSet);
 
 		ChangedHandler changedHandler = new ChangedHandler() {
@@ -223,7 +233,10 @@ public class StampDetailsPanel extends VLayout {
 		SpinnerItem opacity = ItemFactory.newSpinnerItem("opacity", "opacity", stamp.getOpacity(), 1, 100);
 		opacity.addChangedHandler(changedHandler);
 
-		form1.setItems(name, type, exprx, expry, rotation, opacity, description);
+		SpinnerItem page = ItemFactory.newSpinnerItem("page", "page", stamp.getPage(), 1, 9999);
+		page.addChangedHandler(changedHandler);
+
+		form1.setItems(name, type, page, exprx, rotation, expry, opacity, description);
 
 		form2.setItems(text, color);
 
@@ -240,7 +253,8 @@ public class StampDetailsPanel extends VLayout {
 				if (type.getValue().toString().equals("" + GUIStamp.TYPE_IMAGE)) {
 					text.hide();
 					color.hide();
-					image.show();
+					if (stamp.getId() != 0L)
+						image.show();
 				} else {
 					text.show();
 					color.show();
@@ -308,10 +322,13 @@ public class StampDetailsPanel extends VLayout {
 	}
 
 	void refreshStampImage() {
-		if (image != null && propertiesTabPanel.contains(image))
+		if (image != null && propertiesTabPanel.contains(image)) {
 			propertiesTabPanel.removeMember(image);
-		if (image != null)
 			image.destroy();
+		}
+
+		if (stamp.getId() == 0L)
+			return;
 
 		image = new VLayout();
 		image.setAlign(VerticalAlignment.TOP);
@@ -334,7 +351,7 @@ public class StampDetailsPanel extends VLayout {
 
 		image.setMembers(uploadStamp, img);
 		propertiesTabPanel.addMember(image);
-		
+
 		stampsPanel.updateRecord(stamp);
 	}
 }
