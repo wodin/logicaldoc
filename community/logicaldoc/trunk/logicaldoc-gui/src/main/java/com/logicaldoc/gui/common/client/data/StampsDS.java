@@ -13,7 +13,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class StampsDS extends DataSource {
 
-	public StampsDS() {
+	public StampsDS(boolean enabledOnly) {
 		setTitleField("name");
 		setRecordXPath("/list/stamp");
 		DataSourceTextField id = new DataSourceTextField("id");
@@ -25,7 +25,7 @@ public class StampsDS extends DataSource {
 		DataSourceImageField image = new DataSourceImageField("image");
 
 		setFields(id, name, description, text, image, enabled);
-		setDataURL("data/stamps.xml?sid=" + Session.get().getSid());
+		setDataURL("data/stamps.xml?sid=" + Session.get().getSid() + "&enabledOnly=" + enabledOnly);
 		setClientOnly(true);
 	}
 }

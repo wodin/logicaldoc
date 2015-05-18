@@ -56,6 +56,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	protected ToolStripButton bulkCheckout = new ToolStripButton();
 
+	protected ToolStripButton stamp = new ToolStripButton();
+
 	protected ToolStripButton archive = new ToolStripButton();
 
 	protected ToolStripButton startWorkflow = new ToolStripButton();
@@ -370,6 +372,20 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		});
 
+		stamp.setIcon(ItemFactory.newImgIcon("stamp.png").getSrc());
+		stamp.setTooltip(I18N.message("stamp"));
+		stamp.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				if (grid.getSelectedCount() == 0)
+					return;
+
+				StampDialog dialog = new StampDialog(grid.getSelectedIds());
+				dialog.show();
+			}
+		});
+
 		bulkCheckout.setIcon(ItemFactory.newImgIcon("page_edit.png").getSrc());
 		bulkCheckout.setTooltip(I18N.message("bulkcheckout"));
 		bulkCheckout.addClickHandler(new ClickHandler() {
@@ -426,6 +442,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			if (!Feature.enabled(Feature.BULK_CHECKOUT)) {
 				bulkCheckout.setDisabled(true);
 				bulkCheckout.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
+		if (Feature.visible(Feature.STAMP)) {
+			addSeparator();
+			addButton(stamp);
+			if (!Feature.enabled(Feature.STAMP)) {
+				stamp.setDisabled(true);
+				stamp.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
@@ -516,6 +541,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				subscribe.setDisabled(!Feature.enabled(Feature.AUDIT));
 				bulkUpdate.setDisabled(!Feature.enabled(Feature.BULK_UPDATE) || !writeEnabled);
 				bulkCheckout.setDisabled(!Feature.enabled(Feature.BULK_CHECKOUT) || !downloadEnabled || !writeEnabled);
+				stamp.setDisabled(!Feature.enabled(Feature.STAMP) || !writeEnabled);
 				addCalendarEvent.setDisabled(!Feature.enabled(Feature.CALENDAR));
 
 				boolean isOfficeFile = false;
@@ -544,6 +570,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				addCalendarEvent.setDisabled(true);
 				bulkUpdate.setDisabled(true);
 				bulkCheckout.setDisabled(true);
+				stamp.setDisabled(true);
 				office.setDisabled(true);
 			}
 

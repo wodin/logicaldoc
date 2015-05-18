@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.ExtendedAttributeOptionsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
+import com.logicaldoc.gui.common.client.data.StampsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.TenantsDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
@@ -925,6 +926,23 @@ public class ItemFactory {
 		item.setWrapTitle(false);
 		item.setOptionDataSource(new WorkflowsDS(false, false, true));
 		if (!Feature.enabled(Feature.WORKFLOW))
+			item.setDisabled(true);
+		item.setHintStyle("hint");
+		return item;
+	}
+	
+	public static SelectItem newStampSelector() {
+		SelectItem item = new SelectItem("stamp", I18N.message("stamp"));
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		ListGridField name = new ListGridField("name", I18N.message("name"));
+		item.setWidth(200);
+		item.setPickListWidth(200);
+		item.setPickListFields(name);
+		item.setDisplayField("name");
+		item.setValueField("id");
+		item.setWrapTitle(false);
+		item.setOptionDataSource(new StampsDS(true));
+		if (!Feature.enabled(Feature.STAMP))
 			item.setDisabled(true);
 		item.setHintStyle("hint");
 		return item;

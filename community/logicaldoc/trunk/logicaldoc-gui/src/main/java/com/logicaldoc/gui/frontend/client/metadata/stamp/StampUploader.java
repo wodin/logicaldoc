@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.metadata;
+package com.logicaldoc.gui.frontend.client.metadata.stamp;
 
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;

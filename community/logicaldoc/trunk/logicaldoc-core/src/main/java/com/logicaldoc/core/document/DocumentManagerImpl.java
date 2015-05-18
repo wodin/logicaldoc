@@ -121,6 +121,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				listener.beforeCheckin(document, transaction, dictionary);
 			}
 
+			document.setStamped(0);
 			document.setSigned(0);
 			document.setPages(-1);
 

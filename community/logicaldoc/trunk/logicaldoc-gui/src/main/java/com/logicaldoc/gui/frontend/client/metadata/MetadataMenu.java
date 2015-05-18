@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.logicaldoc.gui.frontend.client.metadata.stamp.StampsPanel;
 import com.logicaldoc.gui.frontend.client.services.CustomIdService;
 import com.logicaldoc.gui.frontend.client.services.CustomIdServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.TagService;
@@ -199,9 +200,9 @@ public class MetadataMenu extends VLayout {
 		stamps.setWidth100();
 		stamps.setHeight(25);
 
-		if (Feature.visible(Feature.STAMPS) && Menu.enabled(Menu.STAMPS)) {
+		if (Feature.visible(Feature.STAMP) && Menu.enabled(Menu.STAMPS)) {
 			addMember(stamps);
-			if (!Feature.enabled(Feature.STAMPS)) {
+			if (!Feature.enabled(Feature.STAMP)) {
 				stamps.setDisabled(true);
 				stamps.setTooltip(I18N.message("featuredisabled"));
 			}
