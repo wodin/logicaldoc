@@ -202,20 +202,19 @@ public class StampDetailsPanel extends VLayout {
 
 		TextItem exprx = ItemFactory.newSimpleTextItem("exprx", "exprx", stamp.getExprX());
 		exprx.addChangedHandler(changedHandler);
-		exprx.setWidth(200);
+		exprx.setWidth(250);
 
 		TextItem expry = ItemFactory.newSimpleTextItem("expry", "expry", stamp.getExprY());
 		expry.addChangedHandler(changedHandler);
-		expry.setWidth(200);
+		expry.setWidth(250);
 
 		TextAreaItem description = ItemFactory.newTextAreaItem("description", "description", stamp.getDescription());
 		description.addChangedHandler(changedHandler);
-		description.setWidth("300");
-		description.setColSpan(2);
+		description.setWidth("250");
 
 		final TextAreaItem text = ItemFactory.newTextAreaItem("text", "text", stamp.getText());
 		text.addChangedHandler(changedHandler);
-		text.setWidth("300");
+		text.setWidth("250");
 
 		final ColorItem color = ItemFactory.newColorItem("color", "color", stamp.getColor());
 		color.addChangedHandler(changedHandler);
@@ -236,9 +235,12 @@ public class StampDetailsPanel extends VLayout {
 		SpinnerItem page = ItemFactory.newSpinnerItem("page", "page", stamp.getPage(), 1, 9999);
 		page.addChangedHandler(changedHandler);
 
+		SpinnerItem size = ItemFactory.newSpinnerItem("size", "size", stamp.getSize(), 1, 9999);
+		page.addChangedHandler(changedHandler);
+
 		form1.setItems(name, type, page, exprx, rotation, expry, opacity, description);
 
-		form2.setItems(text, color);
+		form2.setItems(text, color, size);
 
 		// For the spinners we need to manually update the VM or the widget will
 		// not be refreshed
@@ -296,7 +298,8 @@ public class StampDetailsPanel extends VLayout {
 			stamp.setExprY(vm.getValueAsString("expry"));
 			stamp.setRotation(Integer.parseInt(vm.getValueAsString("rotation")));
 			stamp.setOpacity(Integer.parseInt(vm.getValueAsString("opacity")));
-
+			stamp.setSize(Integer.parseInt(vm.getValueAsString("size")));
+			
 			stamp.setDescription(vm.getValueAsString("description"));
 			stamp.setColor(vm.getValueAsString("color"));
 			stamp.setText(vm.getValueAsString("text"));

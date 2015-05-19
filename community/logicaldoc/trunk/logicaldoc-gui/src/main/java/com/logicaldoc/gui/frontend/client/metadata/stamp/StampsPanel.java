@@ -81,7 +81,7 @@ public class StampsPanel extends VLayout {
 
 		// Initialize the listing panel
 		listing.setAlign(Alignment.CENTER);
-		listing.setHeight("70%");
+		listing.setHeight("60%");
 		listing.setShowResizeBar(true);
 
 		ListGridField id = new ListGridField("id", 50);

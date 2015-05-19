@@ -32,6 +32,8 @@ public class GUIStamp implements Serializable {
 	private int rotation = 0;
 
 	private int page = 1;
+	
+	private int size = 24;
 
 	private String exprX;
 
@@ -143,5 +145,13 @@ public class GUIStamp implements Serializable {
 
 	public void setPage(int page) {
 		this.page = page;
+	}
+
+	public int getSize() {
+		return size;
+	}
+
+	public void setSize(int size) {
+		this.size = size;
 	}
 }

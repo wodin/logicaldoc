@@ -455,16 +455,11 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
 						if ("stamp".equals(record.getAttribute("stamped"))) {
 							final String id = getSelectedRecord().getAttribute("id");
-							final String fileName = getSelectedRecord().getAttribute("filename") + "-stamp.pdf";
 							String fileVersion = getSelectedRecord().getAttribute("fileVersion");
 
 							if (Session.get().getCurrentFolder().isDownload())
-								try {
-									WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid="
-											+ Session.get().getSid() + "&docId=" + id + "&downloadStamp=true");
-								} catch (Throwable t) {
-
-								}
+								WindowUtils.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid()
+										+ "&docId=" + id + "&version=" + fileVersion);
 						}
 					}
 					event.cancel();
