@@ -200,11 +200,11 @@ public class StampDetailsPanel extends VLayout {
 		name.setRequired(true);
 		name.setDisabled(stamp.getId() != 0L);
 
-		TextItem exprx = ItemFactory.newSimpleTextItem("exprx", "exprx", stamp.getExprX());
+		TextItem exprx = ItemFactory.newTextItem("exprx", "exprx", stamp.getExprX());
 		exprx.addChangedHandler(changedHandler);
 		exprx.setWidth(250);
 
-		TextItem expry = ItemFactory.newSimpleTextItem("expry", "expry", stamp.getExprY());
+		TextItem expry = ItemFactory.newTextItem("expry", "expry", stamp.getExprY());
 		expry.addChangedHandler(changedHandler);
 		expry.setWidth(250);
 
