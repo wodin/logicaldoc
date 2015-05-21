@@ -27,6 +27,12 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @since 4.5
  */
 public class ThumbnailManager {
+	public static final String SUFFIX_PREVIEW = "preview.swf";
+
+	public static final String SUFFIX_TILE = "tile.jpg";
+
+	public static final String SUFFIX_THUMB = "thumb.jpg";
+
 	protected static Logger log = LoggerFactory.getLogger(ThumbnailManager.class);
 
 	private Storer storer;
@@ -45,7 +51,7 @@ public class ThumbnailManager {
 	 * @throws IOException
 	 */
 	public void createTumbnail(Document document, String fileVersion) throws IOException {
-		createImage(document, fileVersion, "thumbnail", "thumb.jpg");
+		createImage(document, fileVersion, "thumbnail", SUFFIX_THUMB);
 	}
 
 	/**
@@ -57,7 +63,7 @@ public class ThumbnailManager {
 	 * @throws IOException
 	 */
 	public void createTile(Document document, String fileVersion) throws IOException {
-		createImage(document, fileVersion, "tile", "tile.jpg");
+		createImage(document, fileVersion, "tile", SUFFIX_TILE);
 	}
 
 	protected void createImage(Document document, String fileVersion, String type, String suffix) throws IOException {
@@ -190,7 +196,7 @@ public class ThumbnailManager {
 			previewFile = builder.buildPreview(tenantName, src, document.getFileName(), pagesRoot);
 
 			String fileVer = getSuitableFileVersion(document, fileVersion);
-			String resource = storer.getResourceName(document.getId(), fileVer, "preview.swf");
+			String resource = storer.getResourceName(document.getId(), fileVer, SUFFIX_PREVIEW);
 			storer.store(previewFile, document.getId(), resource);
 			log.debug("Stored preview for " + document.getFileName());
 		} catch (Throwable e) {
