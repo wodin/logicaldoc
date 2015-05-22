@@ -103,7 +103,7 @@ public class FulltextSearch extends Search {
 			}
 
 			hit.setTenantId(rs.getLong(39));
-			hit.setStamped(rs.getInt(40));
+			hit.setStamped(rs.getInt(41));
 			
 			return hit;
 		}

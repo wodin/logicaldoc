@@ -137,7 +137,6 @@ public class TagSearch extends Search {
 			hit.setId(rs.getLong(1));
 			hit.setCustomId(rs.getString(2));
 			hit.setDocRef(rs.getLong(3));
-			hit.setDocRefType(rs.getString(39));
 			hit.setType(rs.getString(4));
 			hit.setTitle(rs.getString(5));
 			hit.setVersion(rs.getString(6));
@@ -183,7 +182,8 @@ public class TagSearch extends Search {
 			}
 
 			hit.setTenantId(rs.getLong(38));
-			hit.setStamped(rs.getInt(39));
+			hit.setDocRefType(rs.getString(39));
+			hit.setStamped(rs.getInt(40));
 
 			return hit;
 		}

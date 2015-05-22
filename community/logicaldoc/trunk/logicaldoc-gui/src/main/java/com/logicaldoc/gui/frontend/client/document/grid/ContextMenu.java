@@ -22,6 +22,7 @@ import com.logicaldoc.gui.frontend.client.document.DocumentCheckin;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.document.EmailDialog;
 import com.logicaldoc.gui.frontend.client.document.SendToArchiveDialog;
+import com.logicaldoc.gui.frontend.client.document.StampDialog;
 import com.logicaldoc.gui.frontend.client.document.UploadSignedDocument;
 import com.logicaldoc.gui.frontend.client.document.WorkflowDialog;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -548,6 +549,20 @@ public class ContextMenu extends Menu {
 			}
 		});
 
+		MenuItem stamp = new MenuItem();
+		stamp.setTitle(I18N.message("stamp"));
+		stamp.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				GUIDocument selection = grid.getSelectedDocument();
+				if (selection == null)
+					return;
+				long docId = selection.getId();
+				
+				StampDialog dialog = new StampDialog(new long[]{docId});
+				dialog.show();
+			}
+		});
+		
 		MenuItem sendToExpArchive = new MenuItem(I18N.message("sendtoexparchive"));
 		sendToExpArchive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
@@ -609,6 +624,7 @@ public class ContextMenu extends Menu {
 		boolean enableImmutable = false;
 		boolean enableDelete = true;
 		boolean enableSign = selection != null && selection.length > 0;
+		boolean enableStamp = selection != null && selection.length > 0;
 
 		if (selection != null && selection.length == 1) {
 			GUIDocument record = selection[0];
@@ -623,6 +639,7 @@ public class ContextMenu extends Menu {
 			}
 
 			enableSign = enableSign && record.getSigned() == 0;
+			enableStamp = enableStamp && record.getStamped() == 0;
 		}
 
 		for (GUIDocument record : selection)
@@ -751,6 +768,14 @@ public class ContextMenu extends Menu {
 				sign.setEnabled(false);
 			else
 				sign.setEnabled(enableSign && selection.length > 0);
+		}
+		
+		if (enableStamp && Feature.visible(Feature.STAMP)) {
+			moreMenu.addItem(stamp);
+			if (!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.STAMP))
+				stamp.setEnabled(false);
+			else
+				stamp.setEnabled(enableStamp && selection.length > 0);
 		}
 
 		if (Feature.visible(Feature.IMPEX)) {

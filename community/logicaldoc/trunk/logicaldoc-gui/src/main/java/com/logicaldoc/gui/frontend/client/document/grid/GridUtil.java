@@ -58,6 +58,7 @@ public class GridUtil {
 				document.setIndexed(Constants.INDEX_SKIP);
 
 			document.setSigned("blank".equals(record.getAttributeAsString("signed")) ? 0 : 1);
+			document.setSigned("stamped".equals(record.getAttributeAsString("stamped")) ? 0 : 1);
 
 			if (record.getAttribute("lockUserId") != null)
 				document.setLockUserId(Long.parseLong(record.getAttribute("lockUserId")));
@@ -107,6 +108,7 @@ public class GridUtil {
 		record.setAttribute("type", doc.getType());
 		record.setAttribute("immutable", doc.getImmutable() == 1 ? "stop" : "blank");
 		record.setAttribute("signed", doc.getSigned() == 1 ? "rosette" : "blank");
+		record.setAttribute("stamped", doc.getStamped() == 1 ? "stamp" : "blank");
 		record.setAttribute("filename", doc.getFileName());
 		record.setAttribute("fileVersion", doc.getFileVersion());
 		record.setAttribute("fileVersion", doc.getFileVersion());
@@ -127,7 +129,6 @@ public class GridUtil {
 		record.setAttribute("coverage", doc.getCoverage());
 		record.setAttribute("rating", "rating" + doc.getRating());
 		record.setAttribute("template", doc.getTemplate());
-
 		record.setAttribute("lockUserId", doc.getLockUserId());
 
 		if (doc.getIndexed() == Constants.INDEX_INDEXED)
