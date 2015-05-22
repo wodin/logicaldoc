@@ -78,7 +78,7 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 					html += "<td>" + Util.imageHTML(record.getAttribute("locked") + ".png") + "</td>";
 					html += "<td>" + Util.imageHTML(record.getAttribute("immutable") + ".png") + "</td>";
 					html += "<td>" + Util.imageHTML(record.getAttribute("signed") + ".png") + "</td>";
-					html += "<td>" + Util.imageHTML(record.getAttribute("stamp") + ".png") + "</td>";
+					html += "<td>" + Util.imageHTML(record.getAttribute("stamped") + ".png") + "</td>";
 					html += "</tr></table>";
 
 					return html;
