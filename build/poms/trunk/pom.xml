@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>73</version>
+  <version>74</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -248,6 +248,11 @@
 	       <artifactId>commons-net</artifactId>
 	       <version>3.3</version>
       </dependency>
+      <dependency>
+         <groupId>org.apache.xmlgraphics</groupId>
+         <artifactId>fop</artifactId>
+         <version>1.1</version>
+      </dependency>      
       <dependency>
          <groupId>net.lingala.zip4j</groupId>
          <artifactId>zip4j</artifactId>
