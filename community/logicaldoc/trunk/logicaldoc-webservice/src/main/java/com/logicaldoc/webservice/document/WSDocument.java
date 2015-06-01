@@ -28,7 +28,7 @@ import com.logicaldoc.webservice.WSAttribute;
 
 /**
  * Web Service Document. Useful class to create repository Documents.
- *  
+ * 
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
@@ -112,7 +112,7 @@ public class WSDocument implements Serializable {
 	private int indexed = INDEX_TO_INDEX;
 
 	private int signed = 0;
-	
+
 	private int stamped = 0;
 
 	private String[] tags = new String[0];
@@ -134,7 +134,7 @@ public class WSDocument implements Serializable {
 	private Long exportId = null;
 
 	private Long docRef;
-	
+
 	private String docRefType;
 
 	private Long deleteUserId;
@@ -165,8 +165,12 @@ public class WSDocument implements Serializable {
 	private String startPublishing;
 
 	private String stopPublishing;
-	
-	private int pages=-1;
+
+	private int pages = -1;
+
+	private int nature = AbstractDocument.NATURE_DOC;
+
+	private Long formId = null;
 
 	public static WSDocument fromDocument(AbstractDocument document) {
 		WSDocument wsDoc = new WSDocument();
@@ -212,7 +216,10 @@ public class WSDocument implements Serializable {
 			wsDoc.setPages(document.getPages());
 			wsDoc.setSigned(document.getSigned());
 			wsDoc.setStamped(document.getStamped());
-
+			wsDoc.setNature(document.getNature());
+			wsDoc.setFormId(document.getFormId());
+			
+			
 			String date = null;
 			if (document.getSourceDate() != null)
 				date = AbstractService.convertDateToString(document.getSourceDate());
@@ -373,6 +380,8 @@ public class WSDocument implements Serializable {
 			newdate = AbstractService.convertStringToDate(date);
 		doc.setDate(newdate);
 		doc.setPages(pages);
+		doc.setNature(nature);
+		doc.setFormId(formId);
 
 		Date creationDate = null;
 		if (StringUtils.isNotEmpty(creation))
@@ -833,5 +842,21 @@ public class WSDocument implements Serializable {
 
 	public void setStamped(int stamped) {
 		this.stamped = stamped;
+	}
+
+	public int getNature() {
+		return nature;
+	}
+
+	public void setNature(int nature) {
+		this.nature = nature;
+	}
+
+	public Long getFormId() {
+		return formId;
+	}
+
+	public void setFormId(Long formId) {
+		this.formId = formId;
 	}
 }

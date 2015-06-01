@@ -260,19 +260,20 @@ public class UsersPanel extends VLayout {
 		signature.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				service.getUser(Session.get().getSid(), Session.get().getUser().getId(), new AsyncCallback<GUIUser>() {
+				service.getUser(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+						new AsyncCallback<GUIUser>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-					@Override
-					public void onSuccess(GUIUser user) {
-						MySignature mysign = new MySignature(user, true);
-						mysign.show();
-					}
-				});
+							@Override
+							public void onSuccess(GUIUser user) {
+								MySignature mysign = new MySignature(user, true);
+								mysign.show();
+							}
+						});
 			}
 		});
 

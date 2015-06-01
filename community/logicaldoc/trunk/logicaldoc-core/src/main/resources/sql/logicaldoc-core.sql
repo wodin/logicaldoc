@@ -14,7 +14,8 @@ create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not n
                           ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), ld_docref bigint, ld_docreftype varchar(255),
                           ld_deleteuserid bigint, ld_rating int, ld_comment varchar(1000), ld_workflowstatus varchar(1000), 
                           ld_published int not null, ld_startpublishing timestamp, ld_stoppublishing timestamp null, ld_transactionid varchar(255), 
-                          ld_extresid varchar(255), ld_tgs varchar(1000), ld_pages int not null, primary key (ld_id));
+                          ld_extresid varchar(255), ld_tgs varchar(1000), ld_pages int not null, ld_nature int not null,
+                          ld_formid bigint, primary key (ld_id));
 create table ld_document_ext (ld_docid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_docid, ld_name));
 create table ld_generic (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null, 
                          ld_deleted int not null, ld_tenantid bigint not null, ld_type varchar(255) not null, 
@@ -87,14 +88,15 @@ create table ld_version (ld_id bigint not null, ld_lastmodified timestamp not nu
                          ld_comment varchar(1000),ld_event varchar(255), ld_documentid bigint not null, ld_exportstatus int not null, 
                          ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), ld_deleteuserid bigint, 
                          ld_workflowstatus varchar(1000), ld_published int not null, ld_startpublishing timestamp, ld_stoppublishing timestamp null, 
-                         ld_transactionid varchar(255), ld_extresid varchar(255), ld_pages int not null, primary key (ld_id));
+                         ld_transactionid varchar(255), ld_extresid varchar(255), ld_pages int not null, ld_nature int not null,
+                         ld_formid bigint, primary key (ld_id));
 create table ld_version_ext (ld_versionid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_versionid, ld_name));
 create table ld_folder(ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
                        ld_deleted int not null, ld_tenantid bigint not null, ld_name varchar(255), 
                        ld_parentid bigint not null, ld_securityref bigint, ld_description varchar(4000), 
                        ld_type int not null, ld_creation timestamp, ld_creator varchar(255), ld_creatorid bigint, 
                        ld_templateid bigint, ld_templocked int not null, ld_deleteuserid bigint, ld_position int not null, 
-                       primary key (ld_id));
+                       ld_hidden int not null, primary key (ld_id));
 create table ld_folder_ext (ld_folderid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_folderid, ld_name));
 create table ld_folder_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
                                 ld_deleted int not null, ld_tenantid bigint not null, ld_docid bigint, 
@@ -362,8 +364,8 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1530,3,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1530,4,0);
 insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1530,-10000,0);
 
-insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation,ld_templocked,ld_tenantid,ld_recordversion,ld_position)
-values (5,CURRENT_TIMESTAMP,0,'/',5,1,CURRENT_TIMESTAMP,0,1,1,1);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation,ld_templocked,ld_tenantid,ld_recordversion,ld_position,ld_hidden)
+values (5,CURRENT_TIMESTAMP,0,'/',5,1,CURRENT_TIMESTAMP,0,1,1,1,0);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
 values (5,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
@@ -373,8 +375,8 @@ values (5,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
 values (5,-10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 
-insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation, ld_templocked,ld_tenantid,ld_recordversion,ld_position)
-values (4,CURRENT_TIMESTAMP,0,'Default',5,1,CURRENT_TIMESTAMP,0,1,1,1);
+insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation, ld_templocked,ld_tenantid,ld_recordversion,ld_position,ld_hidden)
+values (4,CURRENT_TIMESTAMP,0,'Default',5,1,CURRENT_TIMESTAMP,0,1,1,1,0);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)
 values (4,2,1,1,0,0,1,1,0,0,0,0,0,1,1,0);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription)

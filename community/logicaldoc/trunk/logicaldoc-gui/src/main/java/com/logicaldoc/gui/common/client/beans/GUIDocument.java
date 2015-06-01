@@ -77,7 +77,7 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private int indexed = 0;
 
 	private int signed = 0;
-	
+
 	private int stamped = 0;
 
 	private int rating = 0;
@@ -103,6 +103,10 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private int pages;
 
 	private String tagsString;
+
+	private int nature = 0;
+
+	private Long formId = null;
 
 	public long getId() {
 		return id;
@@ -524,5 +528,21 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	public void setStamped(int stamped) {
 		this.stamped = stamped;
+	}
+
+	public int getNature() {
+		return nature;
+	}
+
+	public void setNature(int nature) {
+		this.nature = nature;
+	}
+
+	public Long getFormId() {
+		return formId;
+	}
+
+	public void setFormId(Long formId) {
+		this.formId = formId;
 	}
 }

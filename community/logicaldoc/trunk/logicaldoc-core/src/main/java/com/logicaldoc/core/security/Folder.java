@@ -50,6 +50,8 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	private Long creatorId;
 
 	private int position = 1;
+	
+	private int hidden = 0;
 
 	protected Set<FolderGroup> folderGroups = new HashSet<FolderGroup>();
 
@@ -241,6 +243,14 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	public int getHidden() {
+		return hidden;
+	}
+
+	public void setHidden(int hidden) {
+		this.hidden = hidden;
 	}
 
 }

@@ -67,7 +67,6 @@
                 <property name="userDAO" ref="UserDAO" />
                 <property name="historyDAO" ref="FolderHistoryDAO" />
                 <property name="config" ref="ContextProperties" />
-                <property name="lockManager" ref="LockManager" />
                 <property name="storer" ref="Storer" />
             </bean>
         </property>

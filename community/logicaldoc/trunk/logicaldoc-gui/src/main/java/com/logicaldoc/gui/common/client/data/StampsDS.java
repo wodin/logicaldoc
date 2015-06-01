@@ -6,7 +6,7 @@ import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
- * Data source to retrieve allstampss. It is based on Xml parsing.
+ * Data source to retrieve all stamps. It is based on Xml parsing.
  * 
  * @author Marco Meschieri - LogicalDOC
  * @since 7.3

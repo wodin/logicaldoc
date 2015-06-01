@@ -582,6 +582,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		record.setAttribute("status", Constants.DOC_UNLOCKED);
 		record.setAttribute("indexed", Constants.INDEX_TO_INDEX);
 		record.setAttribute("signed", "blank");
+		record.setAttribute("stamped", "blank");
 		record.setAttribute("extResId", (String) null);
 		refreshRow(getRecordIndex(record));
 		return getSelectedDocument();

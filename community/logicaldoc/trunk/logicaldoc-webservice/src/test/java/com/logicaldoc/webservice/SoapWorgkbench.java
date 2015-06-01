@@ -139,7 +139,9 @@ public class SoapWorgkbench {
 		att[0].setStringValue("pippo");
 		newFolder.setExtendedAttributes(att);
 		
-		newFolder = folderClient.create(sid, newFolder);
+//		newFolder = folderClient.create(sid, newFolder);
+		
+		System.out.println(folderClient.findByPath(sid, "/Default/Kofax"));
 	}
 
 	private static void securityStuff(String sid) throws Exception {

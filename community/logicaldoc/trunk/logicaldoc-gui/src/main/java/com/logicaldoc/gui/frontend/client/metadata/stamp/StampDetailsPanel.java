@@ -117,8 +117,8 @@ public class StampDetailsPanel extends VLayout {
 						}
 					});
 				} else {
-					GUIStamp newsStamp = new GUIStamp();
-					setStamp(newsStamp);
+					GUIStamp newStamp = new GUIStamp();
+					setStamp(newStamp);
 				}
 				savePanel.setVisible(false);
 			}
@@ -313,12 +313,13 @@ public class StampDetailsPanel extends VLayout {
 				@Override
 				public void onSuccess(GUIStamp newStamp) {
 					savePanel.setVisible(false);
-					if (newStamp != null) {
+					if (stamp.getId() == 0L)
+						stampsPanel.init();
+					else if (newStamp != null) {
 						stampsPanel.updateRecord(newStamp);
 						stampsPanel.showStampDetails(newStamp);
 					}
-					if (stamp.getId() == 0L)
-						stampsPanel.init();
+					
 				}
 			});
 		}

@@ -57,7 +57,7 @@ public class FolderSearch extends Search {
 		// Find all real documents
 		StringBuffer query = new StringBuffer(
 				"select A.ld_id, A.ld_parentid, A.ld_name, A.ld_description, A.ld_creation, A.ld_lastmodified from ld_folder A ");
-		query.append(" where A.ld_deleted=0 and A.ld_type=0 ");
+		query.append(" where A.ld_deleted=0 and A.ld_type=0 and A.ld_hidden=0 ");
 
 		long tenantId = Tenant.DEFAULT_ID;
 		if (options.getTenantId() != null)

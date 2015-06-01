@@ -35,7 +35,7 @@
 		<property name="coverage" type="string" column="ld_coverage" length="255" />
 		<property name="language" type="string" column="ld_language" length="10" />
 		<property name="fileName" type="string" column="ld_filename" length="255" />
-		<property name="fileSize" type="long" column="ld_filesize" />
+		<property name="fileSize" type="long" column="ld_filesize" />        
 		<property name="indexed" type="int" column="ld_indexed" not-null="true"/>
 		<property name="barcoded" type="int" column="ld_barcoded" not-null="true"/>
 		<property name="signed" type="int" column="ld_signed" not-null="true"/>
@@ -58,6 +58,8 @@
         <property name="extResId" type="string" column="ld_extresid" length="255" />
         <property name="tgs" type="string" column="ld_tgs" length="1000" />
         <property name="pages" type="int" column="ld_pages" not-null="true"/>
+        <property name="nature" type="int" column="ld_nature" not-null="true"/>
+        <property name="formId" type="long" column="ld_formid" />
 
 		<many-to-one name="folder" class="com.logicaldoc.core.security.Folder" column="ld_folderid" />
         

@@ -35,7 +35,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 	@Override
 	public WSFolder create(String sid, WSFolder folder) throws Exception {
 		User user = validateSession(sid);
-		
+
 		try {
 			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			Folder parentFolder = folderDao.findById(folder.getParentId());
@@ -55,8 +55,9 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			folderVO.setType(folder.getType());
 			folderVO.setPosition(folder.getPosition());
 			folderVO.setTemplateLocked(folder.getTemplateLocked());
+			folderVO.setHidden(folder.getHidden());
 			folder.updateExtendedAttributes(folderVO);
-			
+
 			Folder f = folderDao.create(parentFolder, folderVO, true, transaction);
 
 			if (f == null) {
@@ -149,13 +150,15 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		List<Folder> folders = folderDao.findChildren(folderId, user.getId());
-		WSFolder[] wsFolders = new WSFolder[folders.size()];
-		for (int i = 0; i < folders.size(); i++) {
-			folderDao.initialize(folders.get(i));
-			wsFolders[i] = WSFolder.fromFolder(folders.get(i));
+		List<WSFolder> wsFolders = new ArrayList<WSFolder>();
+		for (Folder folder : folders) {
+			if (folder.getHidden() == 0) {
+				folderDao.initialize(folder);
+				wsFolders.add(WSFolder.fromFolder(folder));
+			}
 		}
 
-		return wsFolders;
+		return wsFolders.toArray(new WSFolder[0]);
 	}
 
 	@Override
@@ -464,7 +467,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			fld.setDescription(folder.getDescription());
 			fld.setTemplateLocked(folder.getTemplateLocked());
 			fld.setPosition(folder.getPosition());
-			
+
 			folder.updateExtendedAttributes(fld);
 
 			// Add a folder history entry
