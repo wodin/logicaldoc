@@ -156,6 +156,8 @@ public class Feature {
 	public static final int SHAREFILE = 84;
 
 	public static final int STAMP = 85;
+	
+	public static final int FORM = 86;
 
 	private static Set<String> features = new HashSet<String>();
 

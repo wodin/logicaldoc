@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
+import com.logicaldoc.gui.frontend.client.metadata.form.FormsPanel;
 import com.logicaldoc.gui.frontend.client.metadata.stamp.StampsPanel;
 import com.logicaldoc.gui.frontend.client.services.CustomIdService;
 import com.logicaldoc.gui.frontend.client.services.CustomIdServiceAsync;
@@ -211,6 +212,24 @@ public class MetadataMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new StampsPanel());
+			}
+		});
+
+		Button forms = new Button(I18N.message("forms"));
+		forms.setWidth100();
+		forms.setHeight(25);
+
+		if (Feature.visible(Feature.FORM) && Menu.enabled(Menu.FORMS)) {
+			addMember(forms);
+			if (!Feature.enabled(Feature.FORM)) {
+				forms.setDisabled(true);
+				forms.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+		forms.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new FormsPanel());
 			}
 		});
 	}

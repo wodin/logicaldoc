@@ -639,12 +639,13 @@ public class ContextMenu extends Menu {
 			}
 
 			enableSign = enableSign && record.getSigned() == 0;
-			enableStamp = enableStamp && record.getStamped() == 0;
 		}
 
 		for (GUIDocument record : selection)
 			if (record.getStatus() != Constants.DOC_UNLOCKED || record.getImmutable() != 0) {
 				cut.setEnabled(false);
+				enableSign=false;
+				enableStamp=false;
 				break;
 			}
 
@@ -718,7 +719,6 @@ public class ContextMenu extends Menu {
 			checkout.setEnabled(false);
 			copy.setEnabled(false);
 			cut.setEnabled(false);
-			enableSign = false;
 		}
 
 		if (!folder.isWrite()) {

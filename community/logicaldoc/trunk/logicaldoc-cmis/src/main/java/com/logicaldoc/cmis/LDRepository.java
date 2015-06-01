@@ -1155,6 +1155,9 @@ public class LDRepository {
 
 			// iterate through children folders
 			for (Folder child : folderDao.findChildren(folder.getId(), userId)) {
+				if(child.getHidden()==1)
+					continue;
+
 				count++;
 
 				if (skip > 0) {

@@ -64,6 +64,8 @@
     <property name="transactionId" type="string" column="ld_transactionid" length="255" />
     <property name="extResId" type="string" column="ld_extresid" length="255" />
     <property name="pages" type="int" column="ld_pages" not-null="true"/>
+    <property name="nature" type="int" column="ld_nature" not-null="true"/>
+    <property name="formId" type="long" column="ld_formid" />
    
     <map name="attributes" table="ld_version_ext" lazy="true" cascade="all" order-by="ld_position asc">
       <key column="ld_versionid" />

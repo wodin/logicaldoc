@@ -93,7 +93,7 @@ public class TagSearch extends Search {
 		else if (searchUser != null)
 			tenantId = searchUser.getTenantId();
 
-		query.append(" where A.ld_deleted=0 and A.ld_folderid=B.ld_id and A.ld_tenantid = ");
+		query.append(" where A.ld_deleted=0 and A.ld_nature="+AbstractDocument.NATURE_DOC+" and A.ld_folderid=B.ld_id and A.ld_tenantid = ");
 		query.append(tenantId);
 		query.append(" and not A.ld_status = "+AbstractDocument.DOC_ARCHIVED);
 

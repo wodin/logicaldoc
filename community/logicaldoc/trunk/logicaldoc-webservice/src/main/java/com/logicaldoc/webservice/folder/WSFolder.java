@@ -51,6 +51,8 @@ public class WSFolder implements Serializable {
 
 	private int position = 1;
 
+	private int hidden = 0;
+
 	private WSAttribute[] extendedAttributes = new WSAttribute[0];
 
 	public void addExtendedAttribute(WSAttribute att) {
@@ -87,6 +89,7 @@ public class WSFolder implements Serializable {
 		wsFolder.setCreator(folder.getCreator());
 		wsFolder.setPosition(folder.getPosition());
 		wsFolder.setTemplateLocked(folder.getTemplateLocked());
+		wsFolder.setHidden(folder.getHidden());
 
 		if (folder.getTemplate() != null)
 			wsFolder.setTemplateId(folder.getTemplate().getId());
@@ -240,5 +243,13 @@ public class WSFolder implements Serializable {
 
 	public void setTemplateLocked(int templateLocked) {
 		this.templateLocked = templateLocked;
+	}
+
+	public int getHidden() {
+		return hidden;
+	}
+
+	public void setHidden(int hidden) {
+		this.hidden = hidden;
 	}
 }

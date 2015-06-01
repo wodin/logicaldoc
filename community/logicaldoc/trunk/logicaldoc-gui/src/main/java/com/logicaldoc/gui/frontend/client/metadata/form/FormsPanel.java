@@ -1,29 +1,26 @@
-package com.logicaldoc.gui.frontend.client.metadata.stamp;
-
-import java.util.Date;
+package com.logicaldoc.gui.frontend.client.metadata.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIStamp;
-import com.logicaldoc.gui.common.client.data.StampsDS;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
+import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
-import com.logicaldoc.gui.frontend.client.services.StampService;
-import com.logicaldoc.gui.frontend.client.services.StampServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.FormService;
+import com.logicaldoc.gui.frontend.client.services.FormServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -42,13 +39,15 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
- * Panel showing the list of stamps
+ * Panel showing the list of forms
  * 
  * @author Marco Meschieri - LogicalDOC
  * @since 7.3
  */
-public class StampsPanel extends VLayout {
-	private StampServiceAsync service = (StampServiceAsync) GWT.create(StampService.class);
+public class FormsPanel extends VLayout {
+	private FormServiceAsync service = (FormServiceAsync) GWT.create(FormService.class);
+
+	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private Layout listing = new VLayout();
 
@@ -56,13 +55,13 @@ public class StampsPanel extends VLayout {
 
 	private ListGrid list;
 
-	private Canvas details = SELECT_STAMP;
+	private Canvas details = SELECT_FORM;
 
 	private InfoPanel infoPanel;
 
-	final static Canvas SELECT_STAMP = new HTMLPanel("&nbsp;" + I18N.message("selectstamp"));
+	final static Canvas SELECT_FORM = new HTMLPanel("&nbsp;" + I18N.message("selectform"));
 
-	public StampsPanel() {
+	public FormsPanel() {
 		setWidth100();
 		infoPanel = new InfoPanel("");
 		init();
@@ -73,9 +72,9 @@ public class StampsPanel extends VLayout {
 		listing.clear();
 		if (list != null)
 			listing.removeMember(list);
-		if (details != null && details instanceof StampDetailsPanel) {
+		if (details != null && details instanceof FormDetailsPanel) {
 			detailsContainer.removeMember(details);
-			details = SELECT_STAMP;
+			details = SELECT_FORM;
 		}
 
 		// Initialize the listing panel
@@ -88,47 +87,20 @@ public class StampsPanel extends VLayout {
 
 		ListGridField name = new ListGridField("name", I18N.message("name"), 150);
 
-		ListGridField description = new ListGridField("description", I18N.message("description"), 200);
-
-		ListGridField text = new ListGridField("text", I18N.message("text"), 200);
-
-		ListGridField image = new ListGridField("image", I18N.message("image"), 300);
-		image.setCanFilter(false);
-		image.setCellFormatter(new CellFormatter() {
-
-			@Override
-			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
-				if (value != null && !value.toString().trim().equals(""))
-					return "<img height='60px' src='" + Util.contextPath() + "stampimage/" + value + "?sid="
-							+ Session.get().getSid() + "&random=" + new Date().getTime() + "'/>";
-				else
-					return "";
-			}
-		});
-
-		ListGridField enabled = new ListGridField("eenabled", " ", 24);
-		enabled.setType(ListGridFieldType.IMAGE);
-		enabled.setCanSort(false);
-		enabled.setAlign(Alignment.CENTER);
-		enabled.setShowDefaultContextMenu(false);
-		enabled.setImageURLPrefix(Util.imagePrefix());
-		enabled.setImageURLSuffix(".gif");
-		enabled.setCanFilter(false);
-
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setShowAllRecords(true);
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(enabled, id, name, description, text, image);
+		list.setFields(id, name);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setCanSort(false);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(new StampsDS(false));
+		list.setDataSource(new FormsDS());
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
@@ -148,15 +120,15 @@ public class StampsPanel extends VLayout {
 			}
 		});
 
-		ToolStripButton addStamp = new ToolStripButton();
-		addStamp.setTitle(I18N.message("addstamp"));
-		toolStrip.addButton(addStamp);
-		addStamp.addClickHandler(new ClickHandler() {
+		ToolStripButton addForm = new ToolStripButton();
+		addForm.setTitle(I18N.message("addform"));
+		toolStrip.addButton(addForm);
+		addForm.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				list.deselectAllRecords();
-				GUIStamp stamp = new GUIStamp();
-				showStampDetails(stamp);
+				FormCreate dialog = new FormCreate(FormsPanel.this);
+				dialog.show();
 			}
 		});
 
@@ -173,8 +145,8 @@ public class StampsPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.getStamp(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-							new AsyncCallback<GUIStamp>() {
+					docService.getById(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+							new AsyncCallback<GUIDocument>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -182,8 +154,8 @@ public class StampsPanel extends VLayout {
 								}
 
 								@Override
-								public void onSuccess(GUIStamp stamp) {
-									showStampDetails(stamp);
+								public void onSuccess(GUIDocument form) {
+									showFormDetails(form);
 								}
 							});
 			}
@@ -192,7 +164,7 @@ public class StampsPanel extends VLayout {
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.message("showstamps", Integer.toString(list.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showforms", Integer.toString(list.getTotalRows())));
 			}
 		});
 
@@ -226,7 +198,7 @@ public class StampsPanel extends VLayout {
 								public void onSuccess(Void result) {
 									list.removeSelectedData();
 									list.deselectAllRecords();
-									showStampDetails(null);
+									showFormDetails(null);
 								}
 							});
 						}
@@ -235,63 +207,18 @@ public class StampsPanel extends VLayout {
 			}
 		});
 
-		MenuItem enable = new MenuItem();
-		enable.setTitle(I18N.message("enable"));
-		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				service.changeStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
-						new AsyncCallback<Void>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(Void result) {
-								record.setAttribute("eenabled", "0");
-								list.refreshRow(list.getRecordIndex(record));
-							}
-						});
-			}
-		});
-
-		MenuItem disable = new MenuItem();
-		disable.setTitle(I18N.message("disable"));
-		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
-			public void onClick(MenuItemClickEvent event) {
-				service.changeStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), false,
-						new AsyncCallback<Void>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(Void result) {
-								record.setAttribute("eenabled", "2");
-								list.refreshRow(list.getRecordIndex(record));
-							}
-						});
-			}
-		});
-
-		if ("0".equals(record.getAttributeAsString("eenabled")))
-			contextMenu.setItems(disable, delete);
-		else
-			contextMenu.setItems(enable, delete);
+		contextMenu.setItems(delete);
 
 		contextMenu.showContextMenu();
 	}
 
-	public void showStampDetails(GUIStamp stamp) {
-		if (!(details instanceof StampDetailsPanel)) {
+	public void showFormDetails(GUIDocument form) {
+		if (!(details instanceof FormDetailsPanel)) {
 			detailsContainer.removeMember(details);
-			details = new StampDetailsPanel(this);
+			details = new FormDetailsPanel(this);
 			detailsContainer.addMember(details);
 		}
-		((StampDetailsPanel) details).setStamp(stamp);
+		((FormDetailsPanel) details).setForm(form);
 	}
 
 	public ListGrid getList() {
@@ -301,28 +228,20 @@ public class StampsPanel extends VLayout {
 	/**
 	 * Updates the selected record with new data
 	 */
-	public void updateRecord(GUIStamp stamp) {
+	public void updateRecord(GUIDocument form) {
 		ListGridRecord record = list.getSelectedRecord();
 		if (record == null)
 			record = new ListGridRecord();
 
-		record.setAttribute("id", "" + stamp.getId());
-		record.setAttribute("name", stamp.getName());
-		record.setAttribute("description", "" + stamp.getDescription());
-		if (stamp.getType() == GUIStamp.TYPE_TEXT) {
-			record.setAttribute("text", "" + stamp.getText());
-			record.setAttribute("image", "");
-		} else {
-			record.setAttribute("image", "" + stamp.getId());
-			record.setAttribute("text", "");
-		}
+		record.setAttribute("id", "" + form.getId());
+		record.setAttribute("name", form.getTitle());
 
 		if (record.getAttributeAsString("id") != null
-				&& (stamp.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
+				&& (form.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
 			list.refreshRow(list.getRecordIndex(record));
 		} else {
 			// Append a new record
-			record.setAttribute("id", stamp.getId());
+			record.setAttribute("id", form.getId());
 			list.addData(record);
 			list.selectRecord(record);
 		}

@@ -22,11 +22,11 @@ public final class Constants {
 	public static final long DOCUMENTS_FOLDERID = 5L;
 
 	public static final String WORKSPACE_DEFAULTNAME = "Default";
-	
+
 	public static final long TENANT_DEFAULTID = 1L;
 
 	public static final String TENANT_DEFAULTNAME = "default";
-	
+
 	public final static String TIME_MINUTE = "minute";
 
 	public final static String TIME_HOUR = "hour";
@@ -40,7 +40,7 @@ public final class Constants {
 	public final static String TIME_WEEK = "week";
 
 	public final static String TIME_BUSINESS_WEEK = "businessweek";
-	
+
 	public static final String PERMISSION_DELETE = "delete";
 
 	public static final String PERMISSION_IMMUTABLE = "immutable";
@@ -66,16 +66,18 @@ public final class Constants {
 	public static final String PERMISSION_DOWNLOAD = "download";
 
 	public static final String PERMISSION_CALENDAR = "calendar";
-	
+
 	public static final String PERMISSION_SUBSCRIPTION = "subscription";
-	
+
 	public static final int DOC_UNLOCKED = 0;
 
 	public static final int DOC_CHECKED_OUT = 1;
 
 	public static final int DOC_LOCKED = 2;
-	
+
 	public static final int DOC_ARCHIVED = 3;
+
+	public static final int NATURE_FORM = 2;
 
 	public static final String SMTP_SECURITY_NONE = "0";
 
@@ -90,7 +92,7 @@ public final class Constants {
 	public static final String GROUP_ADMIN = "admin";
 
 	public static final String GROUP_PUBLISHER = "publisher";
-	
+
 	public final static String EVENT_LOCKED = "event.locked";
 
 	public final static String EVENT_CHECKEDOUT = "event.checkedout";
@@ -109,54 +111,55 @@ public final class Constants {
 	public final static int INDEX_SKIP = 2;
 
 	public static final String LOCALE = "locale";
-	
+
 	public static final String TENANT = "tenant";
-	
+
 	public static final String ANONYMOUS = "anonymous";
 
 	public static final String BLANK_PLACEHOLDER = "___";
-	
+
 	public static final String COOKIE_HITSLIST = "ldoc-hitslist";
-	
+
 	public static final String COOKIE_HITSLIST_MODE = "ldoc-hitslist-mode";
-	
+
 	public static final String COOKIE_DOCSLIST = "ldoc-docslist";
-	
+
 	public static final String COOKIE_DOCSLIST_MAX = "ldoc-docslist-max";
-	
+
 	public static final String COOKIE_DOCSLIST_MODE = "ldoc-docslist-mode";
-	
+
 	public static final String COOKIE_DOCSMENU_W = "ldoc-docsmenu-w";
-	
+
 	public static final String COOKIE_SAVELOGIN = "ldoc-savelogin";
-	
+
 	public static final String COOKIE_USER = "ldoc-user";
-	
+
 	public static final String COOKIE_PASSWORD = "ldoc-password";
-	
+
 	public static final String COOKIE_VERSION = "ldoc-version";
-	
+
 	public static final String COOKIE_SID = "ldoc-sid";
-	
+
 	public static final String SID = "sid";
-	
+
 	public static final String DOC_ID = "docId";
-	
+
 	public static final String FOLDER_ID = "folderId";
-	
+
 	public final static int DASHLET_CHECKOUT = 1;
 
 	public final static int DASHLET_CHECKIN = 2;
 
 	public final static int DASHLET_LOCKED = 3;
-	
+
 	public final static int DASHLET_DOWNLOADED = 4;
 
 	public final static int DASHLET_CHANGED = 5;
-	
+
 	public final static int DASHLET_LAST_NOTES = 6;
-	
+
 	public final static int DASHLET_TAGCLOUD = 7;
-	
-	public static final String[] AUDIT_DEFAULT_EVENTS = new String[] { "event.stored", "event.changed", "event.checkedin" };
+
+	public static final String[] AUDIT_DEFAULT_EVENTS = new String[] { "event.stored", "event.changed",
+			"event.checkedin" };
 }

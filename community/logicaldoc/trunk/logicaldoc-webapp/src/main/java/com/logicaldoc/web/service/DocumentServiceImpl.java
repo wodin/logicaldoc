@@ -548,6 +548,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setIndexed(doc.getIndexed());
 		document.setExtResId(doc.getExtResId());
 		document.setPages(doc.getPages());
+		document.setNature(doc.getNature());
+		document.setFormId(doc.getFormId());
 
 		if (doc.getRating() != null)
 			document.setRating(doc.getRating());
@@ -923,6 +925,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		docVO.setBarcoded(document.getBarcoded());
 		docVO.setExtResId(document.getExtResId());
 		docVO.setPages(document.getPages());
+		docVO.setNature(document.getNature());
+		docVO.setFormId(document.getFormId());
 
 		if (document.getTemplateId() != null) {
 			docVO.setTemplateId(document.getTemplateId());

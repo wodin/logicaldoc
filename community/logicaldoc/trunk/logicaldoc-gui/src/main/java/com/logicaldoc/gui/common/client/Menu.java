@@ -35,6 +35,8 @@ public class Menu {
 
 	public static final long STAMPS = 1540;
 	
+	public static final long FORMS = 1550;
+	
 	public static final long SECURITY = 9;
 
 	public static final long CLIENTS = 3;

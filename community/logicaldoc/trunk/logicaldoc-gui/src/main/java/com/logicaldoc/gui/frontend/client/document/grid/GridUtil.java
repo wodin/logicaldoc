@@ -58,7 +58,7 @@ public class GridUtil {
 				document.setIndexed(Constants.INDEX_SKIP);
 
 			document.setSigned("blank".equals(record.getAttributeAsString("signed")) ? 0 : 1);
-			document.setSigned("stamped".equals(record.getAttributeAsString("stamped")) ? 0 : 1);
+			document.setStamped("blank".equals(record.getAttributeAsString("stamped")) ? 0 : 1);
 
 			if (record.getAttribute("lockUserId") != null)
 				document.setLockUserId(Long.parseLong(record.getAttribute("lockUserId")));

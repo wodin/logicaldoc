@@ -61,6 +61,10 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public static final int BARCODE_SKIP = 2;
 
+	public static final int NATURE_DOC = 0;
+
+	public static final int NATURE_FORM = 1;
+
 	private String comment;
 
 	private long fileSize = 0;
@@ -123,7 +127,7 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private int barcoded = BARCODE_TO_PROCESS;
 
 	private int signed = 0;
-	
+
 	private int stamped = 0;
 
 	private Set<Tag> tags = new HashSet<Tag>();
@@ -162,8 +166,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	private String transactionId;
 
-	private String transactionAgent;
-
 	private String templateName;
 
 	private int pages = -1;
@@ -174,6 +176,10 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private String extResId;
 
 	private String tgs;
+
+	private int nature = NATURE_DOC;
+
+	private Long formId = null;
 
 	public Long getDeleteUserId() {
 		return deleteUserId;
@@ -805,5 +811,21 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public void setStamped(int stamped) {
 		this.stamped = stamped;
+	}
+
+	public Long getFormId() {
+		return formId;
+	}
+
+	public void setFormId(Long formId) {
+		this.formId = formId;
+	}
+
+	public int getNature() {
+		return nature;
+	}
+
+	public void setNature(int nature) {
+		this.nature = nature;
 	}
 }

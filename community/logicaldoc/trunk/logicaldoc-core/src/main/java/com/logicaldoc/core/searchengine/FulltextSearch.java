@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.ibm.icu.text.SimpleDateFormat;
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.Folder;
@@ -257,7 +258,7 @@ public class FulltextSearch extends Search {
 		richQuery.append(" from ld_document A ");
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" left outer join ld_template C on A.ld_templateid=C.ld_id ");
-		richQuery.append(" where A.ld_deleted=0 and A.ld_folderid=FOLD.ld_id  ");
+		richQuery.append(" where A.ld_deleted=0 and A.ld_nature="+AbstractDocument.NATURE_DOC+" and A.ld_folderid=FOLD.ld_id  ");
 		richQuery.append(" and A.ld_tenantid = " + tenantId);
 		// For normal users we have to exclude not published documents
 		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
@@ -287,7 +288,7 @@ public class FulltextSearch extends Search {
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" join ld_document REF on A.ld_docref=REF.ld_id ");
 		richQuery.append(" left outer join ld_template C on REF.ld_templateid=C.ld_id ");
-		richQuery.append(" where A.ld_deleted=0 and A.ld_folderid=FOLD.ld_id ");
+		richQuery.append(" where A.ld_deleted=0 and A.ld_nature="+AbstractDocument.NATURE_DOC+" and A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" and A.ld_tenantid = " + tenantId);
 		// For normal users we have to exclude not published documents
 		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {

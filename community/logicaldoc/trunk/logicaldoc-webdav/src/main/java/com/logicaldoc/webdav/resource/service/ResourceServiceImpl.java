@@ -136,8 +136,9 @@ public class ResourceServiceImpl implements ResourceService {
 		if (folders != null) {
 			for (Iterator<Folder> iterator = folders.iterator(); iterator.hasNext();) {
 				Folder currentFolder = iterator.next();
-				resourceList.add(marshallFolder(currentFolder, parentResource.getRequestedPerson(),
-						parentResource.getSession()));
+				if (currentFolder.getHidden() == 0)
+					resourceList.add(marshallFolder(currentFolder, parentResource.getRequestedPerson(),
+							parentResource.getSession()));
 			}
 		}
 

@@ -29,7 +29,6 @@ import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.lock.LockManager;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderEvent;
 import com.logicaldoc.core.security.FolderGroup;
@@ -56,8 +55,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	private FolderHistoryDAO historyDAO;
 
 	private ContextProperties config;
-
-	private LockManager lockManager;
 
 	private Storer storer;
 
@@ -1391,10 +1388,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	public void setConfig(ContextProperties config) {
 		this.config = config;
-	}
-
-	public void setLockManager(LockManager lockManager) {
-		this.lockManager = lockManager;
 	}
 
 	@Override
