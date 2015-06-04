@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.calendar.CalendarEventDialog;
+import com.logicaldoc.gui.frontend.client.document.form.AddForm;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
@@ -45,6 +46,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 	protected ToolStripButton pdf = new ToolStripButton();
 
 	protected ToolStripButton add = new ToolStripButton();
+
+	protected ToolStripButton addForm = new ToolStripButton();
 
 	protected ToolStripButton dropSpot = new ToolStripButton();
 
@@ -169,6 +172,17 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				final DocumentsUploader uploader = new DocumentsUploader();
 				uploader.show();
+				event.cancel();
+			}
+		});
+
+		addForm.setIcon(ItemFactory.newImgIcon("application_form_add.png").getSrc());
+		addForm.setTooltip(I18N.message("addform"));
+		addForm.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AddForm dialog = new AddForm();
+				dialog.show();
 				event.cancel();
 			}
 		});
@@ -342,6 +356,14 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			if (!Feature.enabled(Feature.SCAN)) {
 				scan.setDisabled(true);
 				scan.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
+		if (Feature.visible(Feature.FORM)) {
+			addButton(addForm);
+			if (!Feature.enabled(Feature.FORM)) {
+				addForm.setDisabled(true);
+				addForm.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
@@ -572,6 +594,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				bulkCheckout.setDisabled(true);
 				stamp.setDisabled(true);
 				office.setDisabled(true);
+				addForm.setDisabled(true);
 			}
 
 			if (folder != null) {
@@ -579,6 +602,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				add.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE));
 				dropSpot.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE)
 						|| !Feature.enabled(Feature.DROP_SPOT));
+				addForm.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.FORM));
 				scan.setDisabled(!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.SCAN));
 				archive.setDisabled(document == null || !folder.hasPermission(Constants.PERMISSION_ARCHIVE)
 						|| !Feature.enabled(Feature.IMPEX));
@@ -591,6 +615,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			} else {
 				refresh.setDisabled(true);
 				add.setDisabled(true);
+				addForm.setDisabled(true);
 				office.setDisabled(true);
 				scan.setDisabled(true);
 				archive.setDisabled(true);

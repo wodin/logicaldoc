@@ -8,12 +8,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.ServletException;
@@ -60,6 +63,8 @@ public class ServletIOUtil {
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // ..bytes = 10KB.
 
 	private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
+
+	private static Set<String> localAddresses = null;
 
 	/**
 	 * Downloads a plugin resource
@@ -124,6 +129,41 @@ public class ServletIOUtil {
 	}
 
 	/**
+	 * Checks if the remote agent is the preview engine and if the request comes
+	 * from the local host.
+	 */
+	public static boolean isPreviewAgent(HttpServletRequest request) {
+		boolean agent = request.getHeader("User-Agent") != null
+				&& request.getHeader("User-Agent").toLowerCase().contains("office");
+
+		if(!agent)
+			return false;
+
+		/*
+		 * Get all possible addresses for this host
+		 */
+		System.out.println("*about to sync");
+		synchronized (ServletIOUtil.class) {
+			if (localAddresses == null) {
+				try {
+					localAddresses = new HashSet<String>();
+					localAddresses.add(InetAddress.getLocalHost().getHostAddress());
+					for (InetAddress inetAddress : InetAddress.getAllByName("localhost"))
+						localAddresses.add(inetAddress.getHostAddress());
+				} catch (Throwable e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		for (String localAddr : localAddresses)
+			if (request.getRemoteAddr().equals(localAddr))
+				return true;
+
+		return false;
+	}
+
+	/**
 	 * Sends the specified document to the response object; the client will
 	 * receive it as a download
 	 * 
@@ -145,17 +185,23 @@ public class ServletIOUtil {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
 		UserSession session = null;
-		if (sid != null)
-			try {
-				session = ServiceUtil.validateSession(sid);
-			} catch (ServerException e) {
-				throw new ServletException(e.getMessage(), e);
-			}
-		else
-			session = ServiceUtil.validateSession(request);
+		if (!isPreviewAgent(request)) {
+			if (sid != null)
+				try {
+					session = ServiceUtil.validateSession(sid);
+				} catch (ServerException e) {
+					throw new ServletException(e.getMessage(), e);
+				}
+			else
+				try {
+					session = ServiceUtil.validateSession(request);
+				} catch (Throwable t) {
 
-		if (user != null)
-			udao.initialize(user);
+				}
+
+			if (user != null)
+				udao.initialize(user);
+		}
 
 		Document doc = dao.findById(docId);
 

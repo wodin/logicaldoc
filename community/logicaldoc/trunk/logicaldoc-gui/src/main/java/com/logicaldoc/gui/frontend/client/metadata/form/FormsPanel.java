@@ -207,7 +207,17 @@ public class FormsPanel extends VLayout {
 			}
 		});
 
-		contextMenu.setItems(delete);
+		MenuItem edit = new MenuItem();
+		edit.setTitle(I18N.message("edit"));
+		edit.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				FormEditor popup = new FormEditor(getSelectedForm());
+				popup.show();
+			}
+		});
+
+		contextMenu.setItems(edit, delete);
 
 		contextMenu.showContextMenu();
 	}
@@ -245,5 +255,17 @@ public class FormsPanel extends VLayout {
 			list.addData(record);
 			list.selectRecord(record);
 		}
+	}
+
+	GUIDocument getSelectedForm() {
+		ListGridRecord record = list.getSelectedRecord();
+		if (record == null)
+			return null;
+
+		GUIDocument form = new GUIDocument();
+		form.setId(Long.parseLong(record.getAttributeAsString("id")));
+		form.setTitle(record.getAttributeAsString("name"));
+		form.setFileName(form.getTitle() + ".html");
+		return form;
 	}
 }

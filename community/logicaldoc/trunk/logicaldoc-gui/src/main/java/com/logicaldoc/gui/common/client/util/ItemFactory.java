@@ -14,6 +14,7 @@ import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.ExtendedAttributeOptionsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
+import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.StampsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
@@ -930,7 +931,22 @@ public class ItemFactory {
 		item.setHintStyle("hint");
 		return item;
 	}
-	
+
+	public static SelectItem newFormSelector() {
+		SelectItem item = new SelectItem("form", I18N.message("form"));
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		ListGridField name = new ListGridField("name", I18N.message("name"));
+		item.setPickListFields(name);
+		item.setDisplayField("name");
+		item.setValueField("id");
+		item.setWrapTitle(false);
+		item.setOptionDataSource(new FormsDS());
+		if (!Feature.enabled(Feature.FORM))
+			item.setDisabled(true);
+		item.setHintStyle("hint");
+		return item;
+	}
+
 	public static SelectItem newStampSelector() {
 		SelectItem item = new SelectItem("stamp", I18N.message("stamp"));
 		item.setRequiredMessage(I18N.message("fieldrequired"));

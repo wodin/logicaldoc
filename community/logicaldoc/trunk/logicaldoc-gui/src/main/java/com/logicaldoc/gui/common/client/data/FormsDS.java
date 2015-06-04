@@ -18,8 +18,9 @@ public class FormsDS extends DataSource {
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		DataSourceTextField name = new DataSourceTextField("name");
+		DataSourceTextField templateId = new DataSourceTextField("templateId");
 
-		setFields(id, name);
+		setFields(id, name, templateId);
 		setDataURL("data/forms.xml?sid=" + Session.get().getSid());
 		setClientOnly(true);
 	}
