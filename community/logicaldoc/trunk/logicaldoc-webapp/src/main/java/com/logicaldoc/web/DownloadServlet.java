@@ -55,71 +55,71 @@ public class DownloadServlet extends HttpServlet {
 	 * @throws IOException if an error occurred
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserSession session = null;
+		String sessionId = null;
+		User user = null;
+
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
 				AuthenticationChain.class);
 
-		try {
-			session = ServiceUtil.validateSession(request);
-		} catch (Throwable e) {
-			/*
-			 * No current session, try to handle a basic authentication
-			 */
-			if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null) {
-				Credentials credentials = null;
-				try {
-					credentials = AuthenticationUtil.authenticate(request);
-				} catch (AuthenticationException e1) {
-					AuthenticationUtil.sendAuthorisationCommand(response);
-					return;
-				}
+		if (!ServletIOUtil.isPreviewAgent(request)) {
+			try {
+				sessionId = ServiceUtil.validateSession(request).getId();
+			} catch (Throwable e) {
+				/*
+				 * No current session, try to handle a basic authentication
+				 */
+				if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null) {
+					Credentials credentials = null;
+					try {
+						credentials = AuthenticationUtil.authenticate(request);
+					} catch (AuthenticationException e1) {
+						AuthenticationUtil.sendAuthorisationCommand(response);
+						return;
+					}
 
-				// Check the credentials
-				if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
-					AuthenticationUtil.sendAuthorisationCommand(response);
-					return;
-				}
+					// Check the credentials
+					if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
+						AuthenticationUtil.sendAuthorisationCommand(response);
+						return;
+					}
 
-				// No active session found, new login required
-				if (session == null) {
+					// No active session found, new login required
 					boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(),
 							credentials.getPassword());
 					if (isLoggedOn == false) {
 						AuthenticationUtil.sendAuthorisationCommand(response);
 						return;
 					} else {
-						String sid = AuthenticationChain.getSessionId();
-						session = SessionManager.getInstance().get(sid);
+						sessionId = AuthenticationChain.getSessionId();
 					}
+				} else {
+					AuthenticationUtil.sendAuthorisationCommand(response);
+					return;
 				}
-			} else {
-				AuthenticationUtil.sendAuthorisationCommand(response);
-				return;
 			}
+
+			/*
+			 * We can reach this point only if a valid session was created
+			 */
+			UserSession session = SessionManager.getInstance().get(sessionId);
+			// Load the user associated to the session
+			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			user = udao.findById(session.getUserId());
+			if (user == null)
+				return;
 		}
-
-		/*
-		 * We can reach this point only if a valid session was created
-		 */
-
-		// Load the user associated to the session
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = udao.findById(session.getUserId());
-		if (user == null)
-			return;
 
 		try {
 			if (request.getParameter("pluginId") != null)
-				ServletIOUtil.downloadPluginResource(request, response, session.getId(),
-						request.getParameter("pluginId"), request.getParameter("resourcePath"),
-						request.getParameter("fileName"));
+				ServletIOUtil.downloadPluginResource(request, response, sessionId, request.getParameter("pluginId"),
+						request.getParameter("resourcePath"), request.getParameter("fileName"));
 			else
-				downloadDocument(request, response, session.getId(), user);
+				downloadDocument(request, response, sessionId, user);
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
 		} finally {
-			if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null)
-				SessionManager.getInstance().kill(session.getId());
+			if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null && sessionId != null)
+				SessionManager.getInstance().kill(sessionId);
 		}
 	}
 
@@ -142,7 +142,7 @@ public class DownloadServlet extends HttpServlet {
 		if (!StringUtils.isEmpty(docId)) {
 			doc = docDao.findById(Long.parseLong(docId));
 
-			if (!folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
+			if (user!=null && !folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
 				throw new IOException("You don't have the DOWNLOAD permission");
 
 			/*

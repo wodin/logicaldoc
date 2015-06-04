@@ -100,7 +100,7 @@ public class ServiceUtil {
 			message = t.getMessage();
 		}
 
-		message = message.replaceAll("com.logicaldoc.", "");
+		message = message.replaceAll("com.logicaldoc.", "").replaceAll("java.lang.", "");
 		throw new ServerException(message);
 	}
 }

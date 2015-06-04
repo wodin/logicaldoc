@@ -226,6 +226,11 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	private long store(Document doc, File file) throws IOException {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		String resourceName = storer.getResourceName(doc, null, null);
+
+		// In case the resouce already exists, avoid the overwrite
+		if (storer.exists(doc.getId(), resourceName))
+			return storer.size(doc.getId(), resourceName);
 
 		// Prepare the inputStream
 		InputStream is = null;
@@ -236,7 +241,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 
 		// stores it
-		long stored = storer.store(is, doc.getId(), storer.getResourceName(doc, null, null));
+		long stored = storer.store(is, doc.getId(), resourceName);
 		if (stored < 0)
 			throw new IOException("Unable to store the document");
 
@@ -324,7 +329,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		// For additional safety update the DB directly
 		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
 		documentDAO.store(doc);
-		
+
 		markAliasesToIndex(docId);
 	}
 
@@ -496,7 +501,6 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(File file, Document docVO, History transaction) throws Exception {
 		assert (transaction != null);
 		assert (docVO != null);
-		assert (file != null);
 
 		boolean documentSaved = false;
 		try {
@@ -568,18 +572,20 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			docVO.setId(0L);
 
-			transaction.setFile(file.getAbsolutePath());
+			if (file != null)
+				transaction.setFile(file.getAbsolutePath());
 
 			// Create the record
 			documentSaved = documentDAO.store(docVO, transaction);
 
 			if (documentSaved) {
 				/* store the document into filesystem */
-				try {
-					store(docVO, file);
-				} catch (Exception e) {
-					documentDAO.delete(docVO.getId());
-				}
+				if (file != null)
+					try {
+						store(docVO, file);
+					} catch (Exception e) {
+						documentDAO.delete(docVO.getId());
+					}
 
 				// Store the initial version (default 1.0)
 				Version vers = Version.create(docVO, userDAO.findById(transaction.getUserId()),
@@ -600,12 +606,12 @@ public class DocumentManagerImpl implements DocumentManager {
 	public Document create(InputStream content, Document docVO, History transaction) throws Exception {
 		assert (transaction != null);
 		assert (docVO != null);
-		assert (content != null);
 
 		// Write content to temporary file, then delete it
 		File tmp = File.createTempFile("create", "");
 		try {
-			FileUtil.writeFile(content, tmp.getPath());
+			if (content != null)
+				FileUtil.writeFile(content, tmp.getPath());
 			return create(tmp, docVO, transaction);
 		} finally {
 			FileUtils.deleteQuietly(tmp);
