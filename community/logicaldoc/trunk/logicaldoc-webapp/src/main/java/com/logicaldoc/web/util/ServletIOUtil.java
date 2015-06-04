@@ -142,7 +142,6 @@ public class ServletIOUtil {
 		/*
 		 * Get all possible addresses for this host
 		 */
-		System.out.println("*about to sync");
 		synchronized (ServletIOUtil.class) {
 			if (localAddresses == null) {
 				try {
