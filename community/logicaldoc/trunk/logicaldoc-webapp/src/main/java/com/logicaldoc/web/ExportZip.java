@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.document.DocumentEvent;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
@@ -70,17 +72,25 @@ public class ExportZip extends HttpServlet {
 			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 
+			User user = userDao.findById(userId.longValue());
+
 			ByteArrayOutputStream bos = null;
 
-			if (docIds != null && docIds.length > 0)
-				bos = exporter.process(docIds, false);
-			else {
+			if (docIds != null && docIds.length > 0) {
+				// Create the document history event
+				History transaction = new History();
+				transaction.setSessionId(session.getId());
+				transaction.setEvent(DocumentEvent.DOWNLOADED.toString());
+				if (user != null)
+					transaction.setUser(user);
+
+				bos = exporter.process(docIds, false, transaction);
+			} else {
 				FolderHistory transaction = new FolderHistory();
 				transaction.setUserId(userId.longValue());
 				transaction.setFolderId(Long.parseLong(folderId));
 				transaction.setSessionId(session.getId());
 
-				User user = userDao.findById(userId.longValue());
 				if (user != null)
 					transaction.setUser(user);
 

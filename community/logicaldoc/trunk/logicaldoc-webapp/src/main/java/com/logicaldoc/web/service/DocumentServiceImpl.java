@@ -1112,8 +1112,15 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 					try {
 						out = new FileOutputStream(zipFile);
+
+						// Create the document history event
+						History transaction = new History();
+						transaction.setSessionId(sid);
+						transaction.setEvent(DocumentEvent.DOWNLOADED.toString());
+						transaction.setUser(ServiceUtil.getSessionUser(sid));
+
 						ZipExport export = new ZipExport();
-						export.process(email.getDocIds(), out, email.isPdfConversion());
+						export.process(email.getDocIds(), out, email.isPdfConversion(), transaction);
 						createAttachment(mail, zipFile);
 					} catch (Throwable t) {
 						log.error(t.getMessage(), t);
