@@ -963,7 +963,7 @@ public class LDRepository {
 
 			// Try to check if the path is a folder
 			Folder folder = folderDao.findByPath(fullPath, getSessionUser().getTenantId());
-			
+
 			ObjectData out = null;
 
 			if (folder != null) {
@@ -975,12 +975,12 @@ public class LDRepository {
 				folder = folderDao.findByPath(parentPath, getSessionUser().getTenantId());
 				if (folder == null)
 					out = null;
-				
+
 				if (folder != null) {
-					String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);				
+					String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
 					List<Document> docs = documentDao.findByFileNameAndParentFolderId(folder.getId(), fileName, null,
 							getSessionUser().getTenantId(), null);
-				
+
 					if (docs == null || docs.isEmpty())
 						out = null;
 					else
@@ -989,7 +989,10 @@ public class LDRepository {
 				}
 			}
 
-			return out;
+			if (out == null)
+				throw new CmisObjectNotFoundException("Object not found!");
+			else
+				return out;
 		} catch (Throwable t) {
 			return (ObjectData) catchError(t);
 		}
@@ -1155,7 +1158,7 @@ public class LDRepository {
 
 			// iterate through children folders
 			for (Folder child : folderDao.findChildren(folder.getId(), userId)) {
-				if(child.getHidden()==1)
+				if (child.getHidden() == 1)
 					continue;
 
 				count++;
@@ -1813,8 +1816,8 @@ public class LDRepository {
 								stringValue = df.format(attribute.getDateValue());
 								break;
 							case ExtendedAttribute.TYPE_DOUBLE:
-								stringValue = attribute.getDoubleValue() != null ? attribute.getDoubleValue().toString()
-										: null;
+								stringValue = attribute.getDoubleValue() != null ? attribute.getDoubleValue()
+										.toString() : null;
 								break;
 							case ExtendedAttribute.TYPE_INT:
 								stringValue = Long.toString(attribute.getIntValue());
