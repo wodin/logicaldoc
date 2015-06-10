@@ -322,17 +322,16 @@ public abstract class Task implements Runnable {
 			email.setRecipients(rec);
 
 			// Prepare the arguments for the template
-			Map<String, String> args = new HashMap<String, String>();
-			args.put("_task", I18N.message("task.name." + name, recipient.getLocale()));
-			DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			args.put("_started", df.format(scheduling.getPreviousFireTime()));
-			args.put("_ended", df.format(new Date()));
-			args.put("_error", (lastRunError != null ? lastRunError.getMessage() : null));
-			args.put("_report", prepareReport(recipient.getLocale()).replaceAll("\\n", "<br />"));
+			Map<String, Object> dictionary = new HashMap<String, Object>();
+			dictionary.put("task", I18N.message("task.name." + name, recipient.getLocale()));
+			dictionary.put("started", scheduling.getPreviousFireTime());
+			dictionary.put("ended", new Date());
+			dictionary.put("error", (lastRunError != null ? lastRunError.getMessage() : null));
+			dictionary.put("report", prepareReport(recipient.getLocale()).replaceAll("\\n", "<br />"));
 
 			// Send the email
 			try {
-				sender.send(email, "task.report", args);
+				sender.send(email, "task.report", dictionary);
 				log.info("Report sent to: " + recipient.getEmail());
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);

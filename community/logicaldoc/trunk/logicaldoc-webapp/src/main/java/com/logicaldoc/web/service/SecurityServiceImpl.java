@@ -679,6 +679,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	private void notifyAccount(User user, String password, GUIInfo info) throws Exception {
 		EMail email;
 		email = new EMail();
+		email.setHtml(1);
 		Recipient recipient = new Recipient();
 		recipient.setAddress(user.getEmail());
 		recipient.setRead(1);
@@ -693,18 +694,15 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		/*
 		 * Prepare the template
 		 */
-		Map<String, String> args = new HashMap<String, String>();
+		Map<String, Object> dictionary = new HashMap<String, Object>();
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		String address = config.getProperty("server.url");
-		args.put("_url", address);
-		args.put("_product", SystemInfo.get().getProduct());
-		args.put(
-				"_message",
-				I18N.message("emailnotifyaccount", locale, new Object[] { user.getFirstName() + " " + user.getName(),
-						"", user.getUserName(), password, address }));
+		dictionary.put("url",address);
+		dictionary.put("user", user);
+		dictionary.put("password", password);
 
 		EMailSender sender = new EMailSender(user.getTenantId());
-		sender.send(email, "psw.rec1", args);
+		sender.send(email, "psw.rec1", dictionary);
 	}
 
 	@Override
@@ -948,9 +946,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			email.setLocale(locale);
 			email.setSentDate(new Date());
-			email.setSubject(productName + " " + I18N.message("passwordrequest", locale));
 			email.setUserName(user.getUserName());
-
+			
 			HttpServletRequest request = this.getThreadLocalRequest();
 			String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 					+ request.getContextPath();
@@ -959,12 +956,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			/*
 			 * Prepare the template
 			 */
-			Map<String, String> args = new HashMap<String, String>();
-			args.put("_product", productName);
-			args.put("_url", address);
+			Map<String, Object> dictionary = new HashMap<String, Object>();
+			dictionary.put("product", productName);
+			dictionary.put("url", address);
+			dictionary.put("user", user);
 
 			EMailSender sender = new EMailSender(user.getTenantId());
-			sender.send(email, "psw.rec2", args);
+			sender.send(email, "psw.rec2", dictionary);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
