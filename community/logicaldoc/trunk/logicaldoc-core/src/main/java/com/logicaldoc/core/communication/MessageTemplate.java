@@ -1,14 +1,17 @@
 package com.logicaldoc.core.communication;
 
 import java.io.StringWriter;
+import java.util.Locale;
 import java.util.Map;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
 
 import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * A template for messaging purposes.
@@ -31,36 +34,53 @@ public class MessageTemplate extends PersistentObject {
 	public MessageTemplate() {
 	}
 
-	public String getFormattedBody(Map<String, String> args) {
-		// Retrieve all labels and add/overwrite with provided arguments
-		Map<String, String> ctx = I18N.getMessages(LocaleUtil.toLocale(getLanguage()));
-		ctx.putAll(args);
+	private String getFormattedContent(Map<String, Object> dictionary, String text) {
+		// This is needed to handle new lines
+		dictionary.put("nl", "\n");
 
-		VelocityContext context = new VelocityContext(ctx);
+		// The product name
+		dictionary.put("product", SystemInfo.get().getProduct());
+
+		// This is the locale
+		Locale locale = LocaleUtil.toLocale(language);
+		dictionary.put("locale", locale);
+
+		// General configurations
+		ContextProperties config = (ContextProperties) com.logicaldoc.util.Context.getInstance().getBean(
+				ContextProperties.class);
+		dictionary.put("serverUrl", config.get("server.url"));
+
+		// This is needed to format dates
+		DateTool dateTool = new DateTool(I18N.getMessages(locale).get("format_date"), I18N.getMessages(locale).get(
+				"format_dateshort"));
+		dictionary.put("DateTool", dateTool);
+
+		// Localized messages map
+		dictionary.put("I18N", new I18NTool(I18N.getMessages(locale)));
+
+		// This is needed to print document's URL
+		dictionary.put("DocTool", new DocTool());
+
+		// This is needed to print folder's URL
+		dictionary.put("FolderTool", new FolderTool());
+
+		VelocityContext context = new VelocityContext(dictionary);
 
 		StringWriter writer = new StringWriter();
 		try {
-			Velocity.evaluate(context, writer, getName(), getBody());
+			Velocity.evaluate(context, writer, getName(), text.replace("\n", "${nl}"));
 			return writer.toString();
 		} catch (Exception e) {
-			return getBody();
+			return text;
 		}
 	}
 
-	public String getFormattedSubject(Map<String, String> args) {
-		// Retrieve all labels and add/overwrite with provided arguments
-		Map<String, String> ctx = I18N.getMessages(LocaleUtil.toLocale(getLanguage()));
-		ctx.putAll(args);
+	public String getFormattedBody(Map<String, Object> dictionary) {
+		return getFormattedContent(dictionary, getBody());
+	}
 
-		VelocityContext context = new VelocityContext(ctx);
-
-		StringWriter writer = new StringWriter();
-		try {
-			Velocity.evaluate(context, writer, getName(), getSubject());
-			return writer.toString();
-		} catch (Exception e) {
-			return getBody();
-		}
+	public String getFormattedSubject(Map<String, Object> dictionary) {
+		return getFormattedContent(dictionary, getSubject());
 	}
 
 	public String getName() {

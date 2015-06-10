@@ -20,6 +20,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentEvent;
+import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.pdf.PdfConverterManager;
 import com.logicaldoc.core.security.Folder;
@@ -104,9 +106,9 @@ public class ZipExport {
 	 * @param pdfConversion True if the pdf conversion has to be used instead of
 	 *        the original files
 	 */
-	public ByteArrayOutputStream process(long[] docIds, boolean pdfConversion) {
+	public ByteArrayOutputStream process(long[] docIds, boolean pdfConversion, History transaction) {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		process(docIds, bos, pdfConversion);
+		process(docIds, bos, pdfConversion, transaction);
 		return bos;
 	}
 
@@ -118,7 +120,7 @@ public class ZipExport {
 	 * @param pdfConversion True if the pdf conversion has to be used instead of
 	 *        the original files
 	 */
-	public void process(long[] docIds, OutputStream out, boolean pdfConversion) {
+	public void process(long[] docIds, OutputStream out, boolean pdfConversion, History transaction) {
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		zos = new ZipArchiveOutputStream(out);
 		zos.setEncoding("UTF-8");
@@ -137,6 +139,15 @@ public class ZipExport {
 						convertToPdf = true;
 				}
 				addDocument("", doc, convertToPdf);
+
+				if (transaction != null) {
+					try {
+						History t = (History) transaction.clone();
+						transaction.setEvent(DocumentEvent.DOWNLOADED.toString());
+						ddao.saveDocumentHistory(doc, t);
+					} catch (CloneNotSupportedException e) {
+					}
+				}
 			}
 		} finally {
 			try {

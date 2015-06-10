@@ -387,23 +387,28 @@ insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_securi
 values (4,-10000,1,1,0,0,1,1,0,0,0,0,0,1,1,0);
 
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
-values(1, CURRENT_TIMESTAMP,0,'task.report','en', '$_task',
-'$_task<br/>
-$startedon: <b>$_started</b><br/>
-$finishedon: <b>$_ended</b><br/>
+values(1, CURRENT_TIMESTAMP,0,'task.report','en', '$product - $task',
+'$task<br/>
+$I18N.get(''startedon''): <b>$DateTool.format($started, true)</b><br/>
+$I18N.get(''finishedon''): <b>$DateTool.format($ended, true)</b><br/>
 <hr/>
-#if( $_error )
-$error: <b>$_error</b>
+#if( $error )
+$I18N.get(''error''): <b>$error</b>
 <hr />
 #end
-$_report',1,1);
+$report',1,1);
 
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
-values(2, CURRENT_TIMESTAMP,0,'psw.rec1','en', '$_product - $emailnotifyaccountobject', '$_message',1,1);
+values(2, CURRENT_TIMESTAMP,0,'psw.rec1','en', '$product - $I18N.get(''emailnotifyaccountobject'')', 
+'$I18N.format('emailnotifyaccount', $user.fullName) <br/>
+$I18N.get(''username''): <b>$user.userName</b> <br/>
+$I18N.get(''password''): <b>$password</b> <br/>
+$I18N.get(''clickhere''): <a href="$url">$url</a>',1,1);
+
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
-values(3, CURRENT_TIMESTAMP,0,'psw.rec2','en', '$_product - $passwordrequest',
-'$_product - $passwordrequest<br/>
-$clickhere: <a href="$_url">$_url</a>',1,1);
+values(3, CURRENT_TIMESTAMP,0,'psw.rec2','en', '$product - $I18N.get(''passwordrequest'')',
+'$product - $I18N.get(''passwordrequest'') <br/>
+$I18N.get(''clickhere''): <a href="$url">$url</a>',1,1);
 
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_document', 100);
 insert into hibernate_unique_key(tablename, next_hi) values ('ld_bookmark', 100);

@@ -131,10 +131,10 @@ public class EMailSender {
 	 * 
 	 * @param email The email to send
 	 * @param templateName Name of the template to be applied
-	 * @param args The arguments to be used in the template
+	 * @param dictionarty The dictionary to be used in the template
 	 * @throws Exception
 	 */
-	public void send(EMail email, String templateName, Map<String, String> args) throws Exception {
+	public void send(EMail email, String templateName, Map<String, Object> dictionarty) throws Exception {
 		MessageTemplateDAO templateDao = (MessageTemplateDAO) Context.getInstance().getBean(MessageTemplateDAO.class);
 		MessageTemplate template = templateDao.findByNameAndLanguage(templateName, email.getLocale().toString(),
 				email.getTenantId());
@@ -143,8 +143,8 @@ public class EMailSender {
 			return;
 		}
 
-		email.setSubject(template.getFormattedSubject(args));
-		email.setMessageText(template.getFormattedBody(args));
+		email.setSubject(template.getFormattedSubject(dictionarty));
+		email.setMessageText(template.getFormattedBody(dictionarty));
 
 		send(email);
 	}

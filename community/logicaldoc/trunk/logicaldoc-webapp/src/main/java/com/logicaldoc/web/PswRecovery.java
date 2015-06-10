@@ -116,23 +116,20 @@ public class PswRecovery extends HttpServlet {
 						email.setSentDate(new Date());
 						email.setUserName(user.getUserName());
 						email.setLocale(locale);
+						email.setHtml(1);
 
 						/*
 						 * Prepare the template
 						 */
-						Map<String, String> args = new HashMap<String, String>();
+						Map<String, Object> dictionary = new HashMap<String, Object>();
 						String address = request.getScheme() + "://" + request.getServerName() + ":"
 								+ request.getServerPort() + request.getContextPath();
-						args.put("_url", address);
-						args.put("_product", SystemInfo.get().getProduct());
-						args.put(
-								"_message",
-								I18N.message("emailnotifyaccount", locale, new Object[] {
-										user.getFirstName() + " " + user.getName(), "", user.getUserName(), password,
-										address }));
+						dictionary.put("url", address);
+						dictionary.put("user", user);
+						dictionary.put("password", password);
 
 						EMailSender sender = new EMailSender(tenant);
-						sender.send(email, "psw.rec1", args);
+						sender.send(email, "psw.rec1", dictionary);
 
 						response.getWriter().println("A message was sent to " + user.getEmail());
 
