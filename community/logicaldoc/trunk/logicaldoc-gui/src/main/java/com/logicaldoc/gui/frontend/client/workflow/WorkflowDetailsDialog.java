@@ -385,7 +385,7 @@ public class WorkflowDetailsDialog extends Window {
 				DynamicForm transitionsForm = new DynamicForm();
 				transitionsForm.setWidth(150);
 				transitionsForm.setIsGroup(true);
-				transitionsForm.setGroupTitle(I18N.message("transitions"));
+				transitionsForm.setGroupTitle(I18N.message("actions"));
 
 				List<FormItem> items = new ArrayList<FormItem>();
 				// Add Transitions buttons
