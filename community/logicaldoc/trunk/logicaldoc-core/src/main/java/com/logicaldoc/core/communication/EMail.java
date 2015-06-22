@@ -37,7 +37,7 @@ public class EMail extends Message {
 
 	/**
 	 * This images are added as part of the body, each image will be identified
-	 * with 'image-i'. Use an URL to reference them.
+	 * with 'image_i'. Use an URL to reference them.
 	 */
 	private Set<String> images = new HashSet<String>();
 
