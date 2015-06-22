@@ -43,12 +43,13 @@ public class HibernateMessageTemplateDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindByNameAndLanguage() {
 		Map<String, Object> dictionary = new HashMap<String, Object>();
+		dictionary.put("username", "pippo");
 		dictionary.put("xxx", "label");
 
 		MessageTemplate tmp = dao.findByNameAndLanguage("test1", "en", 1L);
 		Assert.assertNotNull(tmp);
 		Assert.assertEquals("test1", tmp.getName());
-		Assert.assertEquals("body Username label", tmp.getFormattedBody(dictionary));
+		Assert.assertEquals("body pippo label", tmp.getFormattedBody(dictionary));
 		Assert.assertEquals("subject label", tmp.getFormattedSubject(dictionary));
 
 		tmp = dao.findByNameAndLanguage("test1", "de", 1L);
@@ -59,7 +60,7 @@ public class HibernateMessageTemplateDAOTest extends AbstractCoreTCase {
 		tmp = dao.findByNameAndLanguage("test1", "it", 1L);
 		Assert.assertNotNull(tmp);
 		Assert.assertEquals("test1", tmp.getName());
-		Assert.assertEquals("corpo Username label", tmp.getFormattedBody(dictionary));
+		Assert.assertEquals("corpo pippo label", tmp.getFormattedBody(dictionary));
 		Assert.assertEquals("soggetto label", tmp.getFormattedSubject(dictionary));
 
 		tmp = dao.findByNameAndLanguage("xxxxxx", "en", 1L);
