@@ -38,9 +38,6 @@ public class SendToArchiveDialog extends Window {
 	 *        folders
 	 */
 	public SendToArchiveDialog(final long[] ids, final boolean document) {
-		VLayout layout = new VLayout();
-		layout.setMargin(25);
-
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(I18N.message("sendtoexparchive"));
@@ -50,8 +47,6 @@ public class SendToArchiveDialog extends Window {
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-
-		layout.addMember(form);
 
 		SelectItem archive = ItemFactory.newArchiveSelector(GUIArchive.MODE_EXPORT, GUIArchive.STATUS_OPENED);
 		archive.setTitle(I18N.message("selectopenarchive"));
@@ -70,7 +65,7 @@ public class SendToArchiveDialog extends Window {
 		});
 
 		form.setFields(archive, send);
-		addChild(layout);
+		addItem(form);
 	}
 
 	public void onSend(long[] ids, boolean document) {
