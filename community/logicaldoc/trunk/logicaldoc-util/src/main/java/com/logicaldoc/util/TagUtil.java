@@ -1,7 +1,6 @@
 package com.logicaldoc.util;
 
 import java.io.IOException;
-import java.text.BreakIterator;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -29,22 +28,23 @@ public class TagUtil {
 	 * @param words
 	 * @return
 	 */
-	public static Set<String> extractTags(String words) {
+	public static Set<String> extractTags(String tenantName, String words) {
+		if (words != null && !words.contains(","))
+			words = "," + words + ",";
 		Set<String> coll = new HashSet<String>();
 		try {
 			ContextProperties conf = new ContextProperties();
-
-			BreakIterator boundary = BreakIterator.getWordInstance();
-			boundary.setText(words);
+			int minSize = conf.getInt(tenantName + ".tag.minsize");
+			int maxSize = conf.getInt(tenantName + ".tag.maxsize");
 
 			StringTokenizer st = new StringTokenizer(words, ",", false);
 			while (st.hasMoreTokens()) {
 				String word = st.nextToken();
 				if (StringUtils.isNotEmpty(word)) {
 					word = word.trim();
-					if (word.length() >= conf.getInt("tag.minsize")) {
-						if (word.length() > conf.getInt("tag.maxsize"))
-							coll.add(word.substring(0, conf.getInt("tag.maxsize")));
+					if (word.length() >= minSize) {
+						if (word.length() > maxSize)
+							coll.add(word.substring(0, maxSize));
 						else
 							coll.add(word);
 					}
@@ -66,9 +66,9 @@ public class TagUtil {
 	 * @param words The string to be normalized
 	 * @return a string in the form "tag1,tag2,tag3"
 	 */
-	public static String normalizeTags(String words) {
+	public static String normalizeTags(String tenantName, String words) {
 		// Extract tags ad compose the normalized string
-		Set<String> tags = extractTags(words);
+		Set<String> tags = extractTags(tenantName, words);
 		StringBuffer sb = new StringBuffer();
 		for (String tag : tags) {
 			if (sb.length() > 0)
