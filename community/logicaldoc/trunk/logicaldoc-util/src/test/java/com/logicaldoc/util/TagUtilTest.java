@@ -20,15 +20,15 @@ public class TagUtilTest {
 
 	@Test
 	public void testExtractTags() {
-		Collection<String> coll = TagUtil.extractTags("my name is tom");
+		Collection<String> coll = TagUtil.extractTags("default","my name is tom");
 		assertNotNull(coll);
 		assertEquals(1, coll.size());
 
-		coll = TagUtil.extractTags("il mio,nome, e' tom");
+		coll = TagUtil.extractTags("default","il mio,nome, e' tom");
 		assertNotNull(coll);
 		assertEquals(3, coll.size());
 
-		coll = TagUtil.extractTags("il mio, nome e' ,123456789123456789123456789");
+		coll = TagUtil.extractTags("default","il mio, nome e' ,123456789123456789123456789");
 		assertNotNull(coll);
 		assertEquals(3, coll.size());
 		assertFalse(coll.contains("123456789123456789123456789"));
