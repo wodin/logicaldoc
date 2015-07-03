@@ -247,9 +247,12 @@ public class DocumentsDataServlet extends HttpServlet {
 						long aliasDocRef = doc.getDocRef();
 						String aliasDocRefType = doc.getDocRefType();
 						doc = dao.findById(aliasDocRef);
-						doc.setId(aliasId);
-						doc.setDocRef(aliasDocRef);
-						doc.setDocRefType(aliasDocRefType);
+						if (doc != null) {
+							doc.setId(aliasId);
+							doc.setDocRef(aliasDocRef);
+							doc.setDocRefType(aliasDocRefType);
+						} else
+							continue;
 					} else {
 						doc.setStartPublishing((Date) cols[25]);
 						doc.setStopPublishing((Date) cols[26]);
