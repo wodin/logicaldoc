@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.gdocs;
+package com.logicaldoc.gui.frontend.client.gdrive;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -14,8 +14,8 @@ import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.menu.SearchBox;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.logicaldoc.gui.frontend.client.services.GDocsService;
-import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.GDriveService;
+import com.logicaldoc.gui.frontend.client.services.GDriveServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -33,21 +33,21 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
- * This popup window is used to show documents in Google Docs that can be
+ * This popup window is used to show documents in Google Drive that can be
  * imported into LogicalDOC
  * 
  * @author Marco Meschieri - Logical Objects
- * @since 6.7
+ * @since 7.3
  */
-public class GDocsImport extends Window {
+public class GDriveImport extends Window {
 
 	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	protected GDocsServiceAsync gdocsService = (GDocsServiceAsync) GWT.create(GDocsService.class);
+	protected GDriveServiceAsync gdocsService = (GDriveServiceAsync) GWT.create(GDriveService.class);
 
 	private VLayout layout = null;
 
-	public GDocsImport() {
+	public GDriveImport() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("importfromgdocs"));
 
@@ -93,7 +93,6 @@ public class GDocsImport extends Window {
 		icon.setAlign(Alignment.CENTER);
 		icon.setShowDefaultContextMenu(false);
 		icon.setImageURLPrefix(Util.imagePrefix());
-		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
 		ListGridField version = new ListGridField("version", I18N.message("version"), 90);

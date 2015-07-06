@@ -31,10 +31,10 @@ import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.dropbox.DropboxAuthorizationWizard;
 import com.logicaldoc.gui.frontend.client.dropbox.DropboxDialog;
-import com.logicaldoc.gui.frontend.client.gdocs.GDocsCreate;
-import com.logicaldoc.gui.frontend.client.gdocs.GDocsEditor;
-import com.logicaldoc.gui.frontend.client.gdocs.GDocsImport;
-import com.logicaldoc.gui.frontend.client.gdocs.GDocsSettings;
+import com.logicaldoc.gui.frontend.client.gdrive.GDriveCreate;
+import com.logicaldoc.gui.frontend.client.gdrive.GDriveEditor;
+import com.logicaldoc.gui.frontend.client.gdrive.GDriveImport;
+import com.logicaldoc.gui.frontend.client.gdrive.GDriveSettings;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
 import com.logicaldoc.gui.frontend.client.personal.MyPrivateKey;
@@ -46,8 +46,8 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.DropboxService;
 import com.logicaldoc.gui.frontend.client.services.DropboxServiceAsync;
-import com.logicaldoc.gui.frontend.client.services.GDocsService;
-import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.GDriveService;
+import com.logicaldoc.gui.frontend.client.services.GDriveServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.ShareFileService;
@@ -95,7 +95,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 
 	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	protected GDocsServiceAsync gdocsService = (GDocsServiceAsync) GWT.create(GDocsService.class);
+	protected GDriveServiceAsync gdriveService = (GDriveServiceAsync) GWT.create(GDriveService.class);
 
 	protected DropboxServiceAsync dboxService = (DropboxServiceAsync) GWT.create(DropboxService.class);
 
@@ -543,12 +543,51 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		return sharefileItem;
 	}
 
-	private MenuItem getGDocsMenuItem(GUIFolder folder, final GUIDocument document) {
+	private MenuItem getGDriveMenuItem(GUIFolder folder, final GUIDocument document) {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
 
-		final MenuItem edit = new MenuItem(I18N.message("editingdocs"));
+		final MenuItem importDocs = new MenuItem(I18N.message("importfromgdrive"));
+		importDocs.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				GDriveImport popup = new GDriveImport();
+				popup.show();
+			}
+		});
+		final MenuItem exportDocs = new MenuItem(I18N.message("exporttogdrive"));
+		exportDocs.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
+				final long[] ids = grid.getSelectedIds();
+
+				ContactingServer.get().show();
+				gdriveService.exportDocuments(Session.get().getSid(), ids, new AsyncCallback<String[]>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+						ContactingServer.get().hide();
+					}
+
+					@Override
+					public void onSuccess(String[] settings) {
+						ContactingServer.get().hide();
+						Log.info(I18N.message("gdriveexportok"), null);
+					}
+				});
+			}
+		});
+		final MenuItem authorize = new MenuItem(I18N.message("authorize"));
+		authorize.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				new GDriveSettings().show();
+			}
+		});
+
+		final MenuItem edit = new MenuItem(I18N.message("editdoc"));
 		edit.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
@@ -576,7 +615,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 							Log.info(I18N.message("documentcheckedout"), null);
 
 							ContactingServer.get().show();
-							gdocsService.upload(Session.get().getSid(), document.getId(), new AsyncCallback<String>() {
+							gdriveService.upload(Session.get().getSid(), document.getId(), new AsyncCallback<String>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									ContactingServer.get().hide();
@@ -587,12 +626,12 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 								public void onSuccess(String resourceId) {
 									ContactingServer.get().hide();
 									if (resourceId == null) {
-										Log.error(I18N.message("gdocserror"), null, null);
+										Log.error(I18N.message("gdriveerror"), null, null);
 										return;
 									}
 									document.setExtResId(resourceId);
 									grid.updateExtResId(resourceId);
-									GDocsEditor popup = new GDocsEditor(document, grid);
+									GDriveEditor popup = new GDriveEditor(document, grid);
 									popup.show();
 								}
 							});
@@ -600,7 +639,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					});
 				} else {
 					if (document.getStatus() == 1 && document.getExtResId() != null) {
-						GDocsEditor popup = new GDocsEditor(document, grid);
+						GDriveEditor popup = new GDriveEditor(document, grid);
 						popup.show();
 					} else {
 						SC.warn(I18N.message("event.locked"));
@@ -613,72 +652,23 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		create.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				GDocsCreate popup = new GDocsCreate();
+				GDriveCreate popup = new GDriveCreate();
 				popup.show();
 			}
 		});
-		final MenuItem importDocs = new MenuItem(I18N.message("importfromgdocs"));
-		importDocs.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				GDocsImport popup = new GDocsImport();
-				popup.show();
-			}
-		});
-		final MenuItem exportDocs = new MenuItem(I18N.message("exporttogdocs"));
-		exportDocs.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				DocumentsGrid grid = DocumentsPanel.get().getDocumentsGrid();
-				final long[] ids = grid.getSelectedIds();
 
-				ContactingServer.get().show();
-				gdocsService.exportDocuments(Session.get().getSid(), ids, new AsyncCallback<String[]>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-						ContactingServer.get().hide();
-					}
+		menu.setItems(importDocs, exportDocs, edit, create, authorize);
 
-					@Override
-					public void onSuccess(String[] settings) {
-						ContactingServer.get().hide();
-						Log.info(I18N.message("gddocsexportok"), null);
-					}
-				});
-			}
-		});
-		final MenuItem account = new MenuItem(I18N.message("googleaccount"));
-		account.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(MenuItemClickEvent event) {
-				gdocsService.loadSettings(Session.get().getSid(), new AsyncCallback<String[]>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(String[] settings) {
-						GDocsSettings dialog = new GDocsSettings(settings);
-						dialog.show();
-					}
-				});
-			}
-		});
-
-		menu.setItems(edit, create, importDocs, exportDocs, account);
-
-		edit.setEnabled(document != null && document.getImmutable() == 0 && folder != null && folder.isDownload()
-				&& folder.isWrite() && Feature.enabled(Feature.GDOCS));
-		create.setEnabled(folder != null && folder.isWrite() && Feature.enabled(Feature.GDOCS)
-				&& MainPanel.get().isOnDocumentsTab());
 		importDocs.setEnabled(folder != null && folder.isDownload() && folder.isWrite()
-				&& Feature.enabled(Feature.GDOCS) && MainPanel.get().isOnDocumentsTab());
-		exportDocs.setEnabled(folder != null && folder.isDownload() && Feature.enabled(Feature.GDOCS));
-		account.setEnabled(Feature.enabled(Feature.GDOCS));
+				&& Feature.enabled(Feature.GDRIVE) && MainPanel.get().isOnDocumentsTab());
+		exportDocs.setEnabled(folder != null && folder.isDownload() && Feature.enabled(Feature.GDRIVE));
+		authorize.setEnabled(Feature.enabled(Feature.GDRIVE));
+		edit.setEnabled(document != null && document.getImmutable() == 0 && folder != null && folder.isDownload()
+				&& folder.isWrite() && Feature.enabled(Feature.GDRIVE));
+		create.setEnabled(folder != null && folder.isWrite() && Feature.enabled(Feature.GDRIVE)
+				&& MainPanel.get().isOnDocumentsTab());
 
-		MenuItem gdocsItem = new MenuItem(I18N.message("googledocs"));
+		MenuItem gdocsItem = new MenuItem(I18N.message("googledrive"));
 		gdocsItem.setSubmenu(menu);
 
 		return gdocsItem;
@@ -761,9 +751,9 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			if (Feature.enabled(Feature.SHAREFILE)
 					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.SHAREFILE))
 				menu.addItem(getShareFileMenuItem(folder, document));
-			if (Feature.enabled(Feature.GDOCS)
+			if (Feature.enabled(Feature.GDRIVE)
 					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.GDOCS))
-				menu.addItem(getGDocsMenuItem(folder, document));
+				menu.addItem(getGDriveMenuItem(folder, document));
 			if (Feature.enabled(Feature.OFFICE)
 					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.OFFICE))
 				menu.addItem(getOfficeMenuItem(document));
