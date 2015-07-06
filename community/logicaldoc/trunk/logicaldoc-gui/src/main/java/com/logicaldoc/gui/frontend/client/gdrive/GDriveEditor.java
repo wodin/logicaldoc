@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.gdocs;
+package com.logicaldoc.gui.frontend.client.gdrive;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -11,8 +11,8 @@ import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.logicaldoc.gui.frontend.client.services.GDocsService;
-import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.GDriveService;
+import com.logicaldoc.gui.frontend.client.services.GDriveServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.HTMLFlow;
@@ -28,16 +28,16 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
- * This popup window is used to show the document in Google Docs.
+ * This popup window is used to show the document in Google Drive.
  * 
- * @author Marco Meschieri - Logical Objects
- * @since 6.7
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.3
  */
-public class GDocsEditor extends Window {
+public class GDriveEditor extends Window {
 
 	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	protected GDocsServiceAsync gdocsService = (GDocsServiceAsync) GWT.create(GDocsService.class);
+	protected GDriveServiceAsync gdriveService = (GDriveServiceAsync) GWT.create(GDriveService.class);
 
 	private HTMLFlow html = new HTMLFlow();
 
@@ -47,7 +47,7 @@ public class GDocsEditor extends Window {
 
 	private DocumentsGrid grid;
 
-	public GDocsEditor(final GUIDocument document, final DocumentsGrid grid) {
+	public GDriveEditor(final GUIDocument document, final DocumentsGrid grid) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		if (document.getId() > 0)
 			setTitle(I18N.message("editdoc") + ": " + document.getTitle());
@@ -72,9 +72,9 @@ public class GDocsEditor extends Window {
 					destroy();
 				else {
 					// Creating a new document document, so delete the temporary
-					// doc in Google Docs
+					// doc in Google Drive
 					ContactingServer.get().show();
-					gdocsService.delete(Session.get().getSid(), GDocsEditor.this.document.getExtResId(),
+					gdriveService.delete(Session.get().getSid(), GDriveEditor.this.document.getExtResId(),
 							new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
@@ -113,19 +113,20 @@ public class GDocsEditor extends Window {
 	 * Reloads a preview.
 	 */
 	private void reloadBody() {
-		String url = null;
-		if (document.getExtResId().startsWith("spreadsheet:"))
-			url = "https://spreadsheets.google.com/ccc?key="
-					+ document.getExtResId().substring("spreadsheet:".length()) + "&hl="
-					+ Session.get().getUser().getLanguage();
-		else if (document.getExtResId().startsWith("presentation:"))
-			url = "https://docs.google.com/presentation/d/"
-					+ document.getExtResId().substring("presentation:".length()) + "/edit?hl="
-					+ Session.get().getUser().getLanguage();
-		else
-			url = "https://docs.google.com/document/d/" + document.getExtResId().substring("document:".length())
-					+ "/edit?hl=" + Session.get().getUser().getLanguage();
-
+		String url =  "https://docs.google.com/document/d/" + document.getExtResId() + "/edit?hl=" + Session.get().getUser().getLanguage();
+//		if (document.getExtResId().startsWith("spreadsheet:"))
+//			url = "https://spreadsheets.google.com/ccc?key="
+//					+ document.getExtResId().substring("spreadsheet:".length()) + "&hl="
+//					+ Session.get().getUser().getLanguage();
+//		else if (document.getExtResId().startsWith("presentation:"))
+//			url = "https://docs.google.com/presentation/d/"
+//					+ document.getExtResId().substring("presentation:".length()) + "/edit?hl="
+//					+ Session.get().getUser().getLanguage();
+//		else
+//			url = "https://docs.google.com/document/d/" + document.getExtResId().substring("document:".length())
+//					+ "/edit?hl=" + Session.get().getUser().getLanguage();
+	
+		
 		String iframe = "<iframe src='" + url + "' style='border: 0px solid white; width:" + (getWidth() - 18)
 				+ "px; height:" + (getHeight() - 68) + "px' scrolling='no'></iframe>";
 		html.setContents(iframe);
@@ -160,7 +161,7 @@ public class GDocsEditor extends Window {
 		cancel.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				documentService.unlock(Session.get().getSid(), new long[] { GDocsEditor.this.document.getId() },
+				documentService.unlock(Session.get().getSid(), new long[] { GDriveEditor.this.document.getId() },
 						new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -173,7 +174,7 @@ public class GDocsEditor extends Window {
 								grid.markSelectedAsCheckedIn();
 								Session.get().setCurrentDocument(document);
 								ContactingServer.get().show();
-								gdocsService.delete(Session.get().getSid(), GDocsEditor.this.document.getExtResId(),
+								gdriveService.delete(Session.get().getSid(), GDriveEditor.this.document.getExtResId(),
 										new AsyncCallback<Void>() {
 											@Override
 											public void onFailure(Throwable caught) {
@@ -200,11 +201,11 @@ public class GDocsEditor extends Window {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (document.getId() != 0) {
-					GDocsCheckin checkin = new GDocsCheckin(document, GDocsEditor.this, grid);
+					GDriveCheckin checkin = new GDriveCheckin(document, GDriveEditor.this, grid);
 					checkin.show();
 				} else {
 					ContactingServer.get().show();
-					gdocsService.importDocuments(Session.get().getSid(), new String[] { document.getExtResId() },
+					gdriveService.importDocuments(Session.get().getSid(), new String[] { document.getExtResId() },
 							Session.get().getCurrentFolder().getId(), document.getType(), new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
@@ -217,8 +218,8 @@ public class GDocsEditor extends Window {
 								public void onSuccess(Void result) {
 									DocumentsPanel.get().refresh();
 
-									// Delete the temporary resource in GDocs
-									gdocsService.delete(Session.get().getSid(), document.getExtResId(),
+									// Delete the temporary resource in GDrive
+									gdriveService.delete(Session.get().getSid(), document.getExtResId(),
 											new AsyncCallback<Void>() {
 
 												@Override

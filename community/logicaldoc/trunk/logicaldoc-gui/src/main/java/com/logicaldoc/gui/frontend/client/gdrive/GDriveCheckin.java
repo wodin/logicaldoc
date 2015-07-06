@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.gdocs;
+package com.logicaldoc.gui.frontend.client.gdrive;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -9,8 +9,8 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
-import com.logicaldoc.gui.frontend.client.services.GDocsService;
-import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.GDriveService;
+import com.logicaldoc.gui.frontend.client.services.GDriveServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Window;
@@ -23,20 +23,20 @@ import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 
 /**
- * This popup window is used to perform the checkin of a Google Docs document
+ * This popup window is used to perform the checkin of a Google Drive document
  * into LogicalDOC.
  * 
- * @author Marco Meschieri - Logical Objects
- * @since 6.7
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.3
  */
-public class GDocsCheckin extends Window {
+public class GDriveCheckin extends Window {
 	private SubmitItem checkin;
 
 	private ValuesManager vm;
 
-	protected GDocsServiceAsync gdocsService = (GDocsServiceAsync) GWT.create(GDocsService.class);
+	protected GDriveServiceAsync gdocsService = (GDriveServiceAsync) GWT.create(GDriveService.class);
 
-	public GDocsCheckin(final GUIDocument document, final GDocsEditor parentDialog, final DocumentsGrid grid) {
+	public GDriveCheckin(final GUIDocument document, final GDriveEditor parentDialog, final DocumentsGrid grid) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("checkin"));
 		setWidth(400);
@@ -74,7 +74,7 @@ public class GDocsCheckin extends Window {
 		addItem(form);
 	}
 
-	public void onCheckin(GUIDocument document, final GDocsEditor parentDialog, final DocumentsGrid grid) {
+	public void onCheckin(GUIDocument document, final GDriveEditor parentDialog, final DocumentsGrid grid) {
 		if (!vm.validate())
 			return;
 		ContactingServer.get().show();

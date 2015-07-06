@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.gdocs;
+package com.logicaldoc.gui.frontend.client.gdrive;
 
 import java.util.LinkedHashMap;
 
@@ -11,8 +11,8 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
-import com.logicaldoc.gui.frontend.client.services.GDocsService;
-import com.logicaldoc.gui.frontend.client.services.GDocsServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.GDriveService;
+import com.logicaldoc.gui.frontend.client.services.GDriveServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
@@ -26,19 +26,19 @@ import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 
 /**
- * This popup window is used to create a new document in Google Docs.
+ * This popup window is used to create a new document in Google Drive.
  * 
- * @author Marco Meschieri - Logical Objects
- * @since 6.7
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.3
  */
-public class GDocsCreate extends Window {
+public class GDriveCreate extends Window {
 	private SubmitItem create;
 
 	private ValuesManager vm;
 
-	protected GDocsServiceAsync gdocsService = (GDocsServiceAsync) GWT.create(GDocsService.class);
+	protected GDriveServiceAsync gdriveService = (GDriveServiceAsync) GWT.create(GDriveService.class);
 
-	public GDocsCreate() {
+	public GDriveCreate() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("createdoc"));
 		setWidth(300);
@@ -97,7 +97,7 @@ public class GDocsCreate extends Window {
 			return;
 		hide();
 		ContactingServer.get().show();
-		gdocsService.create(Session.get().getSid(), vm.getValueAsString("title"), vm.getValueAsString("type"),
+		gdriveService.create(Session.get().getSid(), vm.getValueAsString("title") + "." + vm.getValueAsString("type"),
 				new AsyncCallback<String>() {
 					@Override
 					public void onFailure(Throwable caught) {
@@ -114,7 +114,7 @@ public class GDocsCreate extends Window {
 						document.setFileName(vm.getValueAsString("title") + "." + vm.getValueAsString("type"));
 						document.setType(vm.getValueAsString("type"));
 						document.setExtResId(resId);
-						GDocsEditor editor = new GDocsEditor(document, DocumentsPanel.get().getDocumentsGrid());
+						GDriveEditor editor = new GDriveEditor(document, DocumentsPanel.get().getDocumentsGrid());
 						editor.show();
 						destroy();
 					}

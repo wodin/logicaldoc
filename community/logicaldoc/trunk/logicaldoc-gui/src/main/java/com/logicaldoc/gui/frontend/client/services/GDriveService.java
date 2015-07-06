@@ -6,16 +6,16 @@ import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 
 /**
- * The client side stub for the Google Docs Service.
+ * The client side stub for the Google Drive Service.
  * 
- * @author Marco Meschieri - Logical Objects
- * @since 6.7
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.3
  */
-@RemoteServiceRelativePath("gdocs")
-public interface GDocsService extends RemoteService {
+@RemoteServiceRelativePath("gdrive")
+public interface GDriveService extends RemoteService {
 
 	/**
-	 * Uploads a document to Google Docs.
+	 * Uploads a document to Google Drive.
 	 * 
 	 * @param docId ID of the document to upload
 	 * 
@@ -24,14 +24,14 @@ public interface GDocsService extends RemoteService {
 	public String upload(String sid, long docId) throws ServerException;
 
 	/**
-	 * Deletes a document to Google Docs.
+	 * Deletes a document in Google Drive.
 	 * 
 	 * @param docId ID of the document to delete
 	 */
 	public void delete(String sid, String resourceId) throws ServerException;
 
 	/**
-	 * Performs the check-in of a Google Docs's document into the LogicalDOC
+	 * Performs the check-in of a Google Drives's document into the LogicalDOC
 	 * repository.
 	 * 
 	 * @param sid The session identifier
@@ -42,17 +42,6 @@ public interface GDocsService extends RemoteService {
 	 * @return The checked-in document
 	 */
 	public GUIDocument checkin(String sid, long docId, String comment, boolean major) throws ServerException;
-
-	/**
-	 * Performs the creation of a new Google Docs's document.
-	 * 
-	 * @param sid The session identifier
-	 * @param title Title of the new document
-	 * @param type The type of the new document ('doc', 'xls' ...)
-	 * 
-	 * @returns The resource ID of the newly created document
-	 */
-	public String create(String sid, String title, String type) throws ServerException;
 
 	/**
 	 * Imports some Google documents into LogicalDOC
@@ -70,28 +59,40 @@ public interface GDocsService extends RemoteService {
 	 * 
 	 * @param sid The session identifier
 	 * @param ids The ids of the document to be exported
-	 * @return The list of the imported documents into Google Docs
+	 * @return The list of the imported documents into Google Drive
 	 * @throws ServerException
 	 */
 	public String[] exportDocuments(String sid, long[] ids) throws ServerException;
 
 	/**
-	 * Save the settings used by the Google Docs module
+	 * Save the settings used by the Google Drive module
 	 * 
 	 * @param sid
-	 * @param username
-	 * @param password
+	 * @return The URL of the consent page
 	 * @throws ServerException
 	 */
-	public void saveSettings(String sid, String username, String password) throws ServerException;
+	public String saveSettings(String sid, String clientId, String clientSecret) throws ServerException;
 
 	/**
-	 * Retrieve the settings saved for connecting to Google Docs.
+	 * Save the settings used by the Google Drive module
+	 * 
+	 * @param sid
+	 * @return clientId, clientSecret
+	 * @throws ServerException
 	 */
 	public String[] loadSettings(String sid) throws ServerException;
 
 	/**
-	 * Search in documents into Google Docs
+	 * Creates a new Google Document
+	 * 
+	 * @param sid
+	 * @return The newly created document's ID in Google Drive
+	 * @throws ServerException
+	 */
+	public String create(String sid, String fileName) throws ServerException;
+
+	/**
+	 * Search in documents into Google Drive
 	 * 
 	 * @param sid
 	 * @param expression
