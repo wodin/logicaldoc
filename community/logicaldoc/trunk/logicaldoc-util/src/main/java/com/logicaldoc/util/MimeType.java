@@ -35,7 +35,7 @@ public class MimeType {
 		String type = mimeTypes.getProperty(extension, "application/octet-stream");
 		if (type == null)
 			type = "application/octet-stream";
-		return null;
+		return type;
 	}
 
 	public static String getByFilename(String filename) {

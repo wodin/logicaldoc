@@ -120,7 +120,8 @@ public class StringUtil {
 				writer.write(buffer, 0, n);
 			}
 		} finally {
-			is.close();
+			if (is != null)
+				is.close();
 		}
 		return writer.toString();
 	}
