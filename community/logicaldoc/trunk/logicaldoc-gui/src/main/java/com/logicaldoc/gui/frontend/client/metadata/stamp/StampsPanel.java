@@ -128,7 +128,7 @@ public class StampsPanel extends VLayout {
 		list.setCanFreezeFields(true);
 		list.setCanSort(false);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(new StampsDS(false));
+		list.setDataSource(new StampsDS(null, false));
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
