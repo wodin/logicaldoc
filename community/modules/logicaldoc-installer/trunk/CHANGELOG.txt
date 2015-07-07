@@ -9,6 +9,14 @@
 
                     LogicalDOC Community Edition
 
+LogicalDOC 7.3 (2015-07-08; logicaldoc-7.3)
+==============================================================                    
+568 - No history recorded for multiple document download - Improvement - Core
+575 - Add Documents - "Immediate Indexing" failing - Bug - Core
+577 - search criteria and search attributes of a saved search get lost after logout - Bug - Core
+579 - Unexisting paths not handled in getObjectByPath method - Bug - CMIS
+580 - Scripting capabilities in notification messages - Improvement - Core
+
 LogicalDOC 7.2.1 (2015-05-05; logicaldoc-7.2.1)
 ==============================================================                    
 510 - Ability to show/hide the history tab for certain users - Improvement - User Interface

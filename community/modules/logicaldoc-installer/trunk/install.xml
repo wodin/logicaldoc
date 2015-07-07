@@ -2,8 +2,6 @@
 <izpack:installation version="5.0"
     xmlns:izpack="http://izpack.org/schema/installation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://izpack.org/schema/installation http://izpack.org/schema/5.0/izpack-installation-5.0.xsd">
-    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-i18n-7.2.1.jar" />
-    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-util-7.2.1.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/slf4j-api-1.7.7.jar" /> 
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/commons-io-1.4.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/mysql-connector-java-5.1.31.jar" />
@@ -11,11 +9,13 @@
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/jtds-1.2.5.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/hsqldb-2.2.8.jar" />
     <jar src="tomcat/webapps/ROOT/WEB-INF/lib/postgresql-9.4-1201-jdbc41.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-i18n-7.3.0.jar" />
+    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-util-7.3.0.jar" />    
     <jar src="lib/logicaldoc-community-installer.jar" stage="both"/>
 
     <info>
         <appname>LogicalDOC Community</appname>
-        <appversion>7.2.1</appversion>
+        <appversion>7.3</appversion>
         <authors>
             <author name="LogicalDOC" email="support@logicaldoc.com" />
         </authors>
