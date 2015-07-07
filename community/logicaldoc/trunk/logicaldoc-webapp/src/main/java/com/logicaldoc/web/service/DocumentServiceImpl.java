@@ -1540,6 +1540,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			History transaction = new History();
 			transaction.setUser(user);
+			transaction.setEvent(DocumentEvent.STORED.toString());
 			Document document = documentManager.create(IOUtils.toInputStream(""), doc, transaction);
 
 			// If that VO is in checkout, perform a checkout also

@@ -957,7 +957,7 @@ public class ItemFactory {
 		item.setDisplayField("name");
 		item.setValueField("id");
 		item.setWrapTitle(false);
-		item.setOptionDataSource(new StampsDS(true));
+		item.setOptionDataSource(new StampsDS(Session.get().getUser().getId(), true));
 		if (!Feature.enabled(Feature.STAMP))
 			item.setDisabled(true);
 		item.setHintStyle("hint");
