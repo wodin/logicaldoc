@@ -235,7 +235,7 @@ public class StampDetailsPanel extends VLayout {
 		SpinnerItem page = ItemFactory.newSpinnerItem("page", "page", stamp.getPage(), 1, 9999);
 		page.addChangedHandler(changedHandler);
 
-		SpinnerItem size = ItemFactory.newSpinnerItem("size", "size", stamp.getSize(), 1, 9999);
+		final SpinnerItem size = ItemFactory.newSpinnerItem("size", "size", stamp.getSize(), 1, 9999);
 		page.addChangedHandler(changedHandler);
 
 		form1.setItems(name, type, page, exprx, rotation, expry, opacity, description);
@@ -255,11 +255,13 @@ public class StampDetailsPanel extends VLayout {
 				if (type.getValue().toString().equals("" + GUIStamp.TYPE_IMAGE)) {
 					text.hide();
 					color.hide();
+					size.hide();
 					if (stamp.getId() != 0L)
 						image.show();
 				} else {
 					text.show();
 					color.show();
+					size.show();
 					image.hide();
 				}
 			}
