@@ -280,12 +280,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				for (Tag str : src) {
 					str.setTenantId(doc.getTenantId());
 					String s = str.getTag();
-					if (s.length() > 255) {
-						s = s.substring(0, 255);
-						str.setTag(s);
+					if (s != null) {
+						if (s.length() > 255) {
+							s = s.substring(0, 255);
+							str.setTag(s);
+						}
+						if (!dst.contains(str))
+							dst.add(str);
 					}
-					if (!dst.contains(str))
-						dst.add(str);
 				}
 				doc.setTags(dst);
 				doc.setTgs(doc.getTagsString());
