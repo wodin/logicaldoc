@@ -671,12 +671,17 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public void initialize(Document doc) {
 		refresh(doc);
 
-		for (String attribute : doc.getAttributes().keySet()) {
-			attribute.getBytes();
-		}
-		for (Tag tag : doc.getTags()) {
-			tag.getTag().getBytes();
-		}
+		if (doc.getAttributes() != null)
+			for (String attribute : doc.getAttributes().keySet()) {
+				if (attribute != null)
+					attribute.getBytes();
+			}
+
+		if (doc.getTags() != null)
+			for (Tag tag : doc.getTags()) {
+				if (tag.getTag() != null)
+					tag.getTag().getBytes();
+			}
 	}
 
 	@Override
