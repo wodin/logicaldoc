@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -437,8 +436,8 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			if (tenantId != null)
 				query.append(" and ld_tenantid=" + tenantId);
 			query.append(" GROUP BY ld_tag");
-			
-			query(query.toString(), null, new RowMapper<Object>(){
+
+			query(query.toString(), null, new RowMapper<Object>() {
 
 				@Override
 				public Object mapRow(ResultSet rs, int rowNumber) throws SQLException {
@@ -447,7 +446,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					map.put(key, value.intValue());
 					return null;
 				}
-				
+
 			}, null);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -672,12 +671,17 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	public void initialize(Document doc) {
 		refresh(doc);
 
-		for (String attribute : doc.getAttributes().keySet()) {
-			attribute.getBytes();
-		}
-		for (Tag tag : doc.getTags()) {
-			tag.getTag().getBytes();
-		}
+		if (doc.getAttributes() != null)
+			for (String attribute : doc.getAttributes().keySet()) {
+				if (attribute != null)
+					attribute.getBytes();
+			}
+
+		if (doc.getTags() != null)
+			for (Tag tag : doc.getTags()) {
+				if (tag.getTag() != null)
+					tag.getTag().getBytes();
+			}
 	}
 
 	@Override
