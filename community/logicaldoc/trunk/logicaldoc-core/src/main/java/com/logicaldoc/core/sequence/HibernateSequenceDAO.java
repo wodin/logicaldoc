@@ -27,6 +27,7 @@ public class HibernateSequenceDAO extends HibernatePersistentObjectDAO<Sequence>
 	@Override
 	public synchronized void reset(String sequence, Long objectId, long tenantId, long value) {
 		synchronized (SequenceDAO.class) {
+			flush();
 			Sequence seq = findByAlternateKey(sequence, objectId, tenantId);
 			if (seq == null) {
 				seq = new Sequence();
@@ -43,6 +44,7 @@ public class HibernateSequenceDAO extends HibernatePersistentObjectDAO<Sequence>
 	@Override
 	public synchronized long next(String sequence, Long objectId, long tenantId, long increment) {
 		synchronized (SequenceDAO.class) {
+			flush();
 			Sequence seq = findByAlternateKey(sequence, objectId, tenantId);
 			if (seq == null) {
 				seq = new Sequence();
@@ -63,6 +65,7 @@ public class HibernateSequenceDAO extends HibernatePersistentObjectDAO<Sequence>
 
 	@Override
 	public long getCurrentValue(String sequence, Long objectId, long tenantId) {
+		flush();
 		Sequence seq = findByAlternateKey(sequence, objectId, tenantId);
 		if (seq == null)
 			return 0L;
