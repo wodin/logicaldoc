@@ -101,6 +101,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		if (document.getImmutable() == 0) {
 			documentDAO.initialize(document);
 
+			Folder originalDocFolder = document.getFolder();
+			
 			// Check CustomId uniqueness
 			if (docVO != null && docVO.getCustomId() != null) {
 				Document test = documentDAO.findByCustomId(docVO.getCustomId(), document.getTenantId());
@@ -113,6 +115,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			 */
 			if (docVO != null)
 				document.copyAttributes(docVO);
+			document.setFolder(originalDocFolder);
 
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 
