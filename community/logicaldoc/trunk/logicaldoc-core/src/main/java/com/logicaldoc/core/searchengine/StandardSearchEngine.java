@@ -16,7 +16,7 @@ import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.util.Version;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrQuery.ORDER;
+import org.apache.solr.client.solrj.SolrQuery.SortClause;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
@@ -145,7 +145,7 @@ public class StandardSearchEngine implements SearchEngine {
 				}
 			}
 		}
-		
+
 		try {
 			MultilanguageAnalyzer.lang.set(doc.getLanguage());
 			server.add(hit);
@@ -361,7 +361,7 @@ public class StandardSearchEngine implements SearchEngine {
 	protected SolrQuery prepareSearchQuery(String expression, String[] filters, String expressionLanguage, Integer rows) {
 		SolrQuery query = new SolrQuery();
 		query.setQuery(expression);
-		query.setSortField("score", ORDER.desc);
+		query.setSort(SortClause.desc("score"));
 		if (rows != null)
 			query.setRows(rows);
 		if (filters != null)

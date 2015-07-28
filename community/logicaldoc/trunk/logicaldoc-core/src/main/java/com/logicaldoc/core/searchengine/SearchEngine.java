@@ -3,8 +3,6 @@ package com.logicaldoc.core.searchengine;
 import java.io.InputStream;
 import java.util.Collection;
 
-import org.apache.lucene.util.Version;
-
 import com.logicaldoc.core.document.Document;
 
 /**

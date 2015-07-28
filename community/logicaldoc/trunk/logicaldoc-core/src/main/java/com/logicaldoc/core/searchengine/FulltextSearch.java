@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -105,7 +106,7 @@ public class FulltextSearch extends Search {
 
 			hit.setTenantId(rs.getLong(39));
 			hit.setStamped(rs.getInt(41));
-			
+
 			return hit;
 		}
 	};
@@ -258,7 +259,8 @@ public class FulltextSearch extends Search {
 		richQuery.append(" from ld_document A ");
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" left outer join ld_template C on A.ld_templateid=C.ld_id ");
-		richQuery.append(" where A.ld_deleted=0 and A.ld_nature="+AbstractDocument.NATURE_DOC+" and A.ld_folderid=FOLD.ld_id  ");
+		richQuery.append(" where A.ld_deleted=0 and A.ld_nature=" + AbstractDocument.NATURE_DOC
+				+ " and A.ld_folderid=FOLD.ld_id  ");
 		richQuery.append(" and A.ld_tenantid = " + tenantId);
 		// For normal users we have to exclude not published documents
 		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
@@ -288,7 +290,8 @@ public class FulltextSearch extends Search {
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" join ld_document REF on A.ld_docref=REF.ld_id ");
 		richQuery.append(" left outer join ld_template C on REF.ld_templateid=C.ld_id ");
-		richQuery.append(" where A.ld_deleted=0 and A.ld_nature="+AbstractDocument.NATURE_DOC+" and A.ld_folderid=FOLD.ld_id ");
+		richQuery.append(" where A.ld_deleted=0 and A.ld_nature=" + AbstractDocument.NATURE_DOC
+				+ " and A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" and A.ld_tenantid = " + tenantId);
 		// For normal users we have to exclude not published documents
 		if (searchUser != null && !searchUser.isInGroup("admin") && !searchUser.isInGroup("publisher")) {
@@ -305,9 +308,12 @@ public class FulltextSearch extends Search {
 		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), null);
 
-		// Populate the hits list discarding unexisting documents
-		Iterator<Hit> iter = hitsMap.values().iterator();
+		// Now sort the hits by score desc
+		List<Hit> sortedHitsList = new ArrayList<Hit>(hitsMap.values());
+		Collections.sort(sortedHitsList);
 
+		// Populate the hits list discarding unexisting documents
+		Iterator<Hit> iter = sortedHitsList.iterator();
 		while (iter.hasNext()) {
 			if (options.getMaxHits() > 0 && hits.size() >= options.getMaxHits()) {
 				// The maximum number of hits was reached
@@ -323,9 +329,6 @@ public class FulltextSearch extends Search {
 					|| (accessibleFolderIds != null && accessibleFolderIds.contains(hit.getFolder().getId())))
 				hits.add(hit);
 		}
-
-		// Now sort by score desc
-		Collections.sort(hits);
 
 		/*
 		 * Check for suggestions
