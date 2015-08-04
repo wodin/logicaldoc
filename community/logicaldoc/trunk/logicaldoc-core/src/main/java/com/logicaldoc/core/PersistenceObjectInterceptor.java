@@ -11,7 +11,7 @@ import org.hibernate.type.Type;
  * Takes care about updating the last modified date of a persistence object
  * 
  * @author Marco Meschieri - Logical Objects
- * @since 6.9
+ * @since 6.9 
  */
 public class PersistenceObjectInterceptor extends EmptyInterceptor {
 
