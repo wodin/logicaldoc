@@ -17,6 +17,8 @@ import com.smartgwt.client.widgets.form.fields.SubmitItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
+import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
@@ -44,6 +46,9 @@ public class CreateDialog extends Dialog {
 		centerInPage();
 		setPadding(3);
 
+		final boolean inheritOptionEnabled = "true".equals(Session.get().getInfo()
+				.getConfig("gui.security.inheritoption"));
+
 		form = new DynamicForm();
 		form.setHeight100();
 		form.setWidth100();
@@ -56,54 +61,30 @@ public class CreateDialog extends Dialog {
 				: I18N.message("newworkspace"));
 		name.setWidth(250);
 		name.setRequired(true);
-		
-		final boolean inheritOptionEnabled="true".equals(Session.get().getInfo().getConfig("gui.security.inheritoption"));
-		
+		name.addKeyPressHandler(new KeyPressHandler() {
+			@Override
+			public void onKeyPress(KeyPressEvent event) {
+				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase()))
+					onCreate(folder, inheritOptionEnabled);
+			}
+		});
+
 		SubmitItem create = new SubmitItem();
 		create.setTitle(I18N.message("create"));
 		create.setAutoFit(true);
 		create.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (form.validate()) {
-					folder.setName(form.getValueAsString("name").trim());
-					service.create(Session.get().getSid(), folder,
-							!inheritOptionEnabled || "true".equals(form.getValueAsString("inheritSecurity")), new AsyncCallback<GUIFolder>() {
-
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
-
-								@Override
-								public void onSuccess(GUIFolder newFolder) {
-									TreeNode newNode = new TreeNode(newFolder.getName());
-									newNode.setAttribute("name", newFolder.getName());
-									newNode.setAttribute("folderId", Long.toString(newFolder.getId()));
-									newNode.setAttribute("type", Long.toString(newFolder.getType()));
-
-									if (newFolder.getType() == 0) {
-										TreeNode selectedNode = (TreeNode) FolderNavigator.get().getSelectedRecord();
-										if (!FolderNavigator.get().getTree().isOpen(selectedNode))
-											FolderNavigator.get().getTree().openFolder(selectedNode);
-										FolderNavigator.get().getTree().add(newNode, selectedNode);
-									} else {
-										FolderNavigator.get().getTree().add(newNode, FolderNavigator.get().getTree().getRoot());
-									}
-
-									destroy();
-								}
-							});
-				}
+				onCreate(folder, inheritOptionEnabled);
 			}
 		});
 
-		if (inheritOptionEnabled){
+		if (inheritOptionEnabled) {
 			form.setItems(name, inheritSecurity, create);
 			inheritSecurity.setValue(Session.get().getInfo().getConfig("gui.security.inheritoption.default"));
-		}else
+		} else
 			form.setItems(name, create);
-		
+
 		VLayout content = new VLayout();
 		content.setTop(10);
 		content.setWidth100();
@@ -112,5 +93,39 @@ public class CreateDialog extends Dialog {
 		content.addMember(form);
 
 		addItem(content);
+	}
+
+	private void onCreate(final GUIFolder folder, boolean inheritOptionEnabled) {
+		if (form.validate()) {
+			folder.setName(form.getValueAsString("name").trim());
+			service.create(Session.get().getSid(), folder,
+					!inheritOptionEnabled || "true".equals(form.getValueAsString("inheritSecurity")),
+					new AsyncCallback<GUIFolder>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(GUIFolder newFolder) {
+							TreeNode newNode = new TreeNode(newFolder.getName());
+							newNode.setAttribute("name", newFolder.getName());
+							newNode.setAttribute("folderId", Long.toString(newFolder.getId()));
+							newNode.setAttribute("type", Long.toString(newFolder.getType()));
+
+							if (newFolder.getType() == 0) {
+								TreeNode selectedNode = (TreeNode) FolderNavigator.get().getSelectedRecord();
+								if (!FolderNavigator.get().getTree().isOpen(selectedNode))
+									FolderNavigator.get().getTree().openFolder(selectedNode);
+								FolderNavigator.get().getTree().add(newNode, selectedNode);
+							} else {
+								FolderNavigator.get().getTree().add(newNode, FolderNavigator.get().getTree().getRoot());
+							}
+
+							destroy();
+						}
+					});
+		}
 	}
 }
