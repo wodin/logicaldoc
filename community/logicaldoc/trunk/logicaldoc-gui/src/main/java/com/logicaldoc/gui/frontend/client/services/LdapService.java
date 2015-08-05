@@ -5,7 +5,7 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 
 /**
  * The client side stub for the LdapService.
@@ -43,5 +43,5 @@ public interface LdapService extends RemoteService {
 	 * 
 	 * @return Number of imports, updates, errors.
 	 */
-	public GUIValuePair[] importUsers(String sid, String[] usernames, long tenantId) throws ServerException;
+	public GUIValue[] importUsers(String sid, String[] usernames, long tenantId) throws ServerException;
 }

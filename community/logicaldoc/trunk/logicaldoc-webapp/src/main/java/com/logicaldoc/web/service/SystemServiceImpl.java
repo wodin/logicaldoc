@@ -40,7 +40,7 @@ import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUIScheduling;
 import com.logicaldoc.gui.common.client.beans.GUITask;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
@@ -728,14 +728,14 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUIValuePair[] getPlugins(String sid) throws ServerException {
+	public GUIValue[] getPlugins(String sid) throws ServerException {
 		ServiceUtil.validateSession(sid);
 
 		Collection<PluginDescriptor> descriptors = PluginRegistry.getInstance().getPlugins();
-		List<GUIValuePair> plugins = new ArrayList<GUIValuePair>();
+		List<GUIValue> plugins = new ArrayList<GUIValue>();
 		for (PluginDescriptor descriptor : descriptors) {
 			try {
-				GUIValuePair plugin = new GUIValuePair();
+				GUIValue plugin = new GUIValue();
 				String pluginName = descriptor.getId();
 				if (pluginName.startsWith("logicaldoc-"))
 					pluginName = pluginName.replaceAll("logicaldoc-", "");
@@ -750,8 +750,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 		if (plugins.size() > 1) {
 			// Sort by ascending date and number
-			Collections.sort(plugins, new Comparator<GUIValuePair>() {
-				public int compare(GUIValuePair c1, GUIValuePair c2) {
+			Collections.sort(plugins, new Comparator<GUIValue>() {
+				public int compare(GUIValue c1, GUIValue c2) {
 					if (c1.getCode() != null && c2.getCode() != null) {
 						int compare = c1.getCode().compareTo(c2.getCode());
 						if (compare != 0)
@@ -762,6 +762,6 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			});
 		}
 
-		return plugins.toArray(new GUIValuePair[0]);
+		return plugins.toArray(new GUIValue[0]);
 	}
 }

@@ -60,13 +60,13 @@ public class GUIInfo implements Serializable {
 	// Optional list of messages to be shown to the user
 	private GUIMessage[] messages = new GUIMessage[0];
 
-	private GUIValuePair[] supportedLanguages = new GUIValuePair[0];
+	private GUIValue[] supportedLanguages = new GUIValue[0];
 
-	private GUIValuePair[] supportedGUILanguages = new GUIValuePair[0];
+	private GUIValue[] supportedGUILanguages = new GUIValue[0];
 
-	private GUIValuePair[] bundle = new GUIValuePair[0];
+	private GUIValue[] bundle = new GUIValue[0];
 
-	private GUIValuePair[] config = new GUIValuePair[0];
+	private GUIValue[] config = new GUIValue[0];
 
 	private String[] features = new String[0];
 
@@ -184,19 +184,19 @@ public class GUIInfo implements Serializable {
 		this.vendorCity = vendorCity;
 	}
 
-	public GUIValuePair[] getSupportedLanguages() {
+	public GUIValue[] getSupportedLanguages() {
 		return supportedLanguages;
 	}
 
-	public void setSupportedLanguages(GUIValuePair[] supportedLanguages) {
+	public void setSupportedLanguages(GUIValue[] supportedLanguages) {
 		this.supportedLanguages = supportedLanguages;
 	}
 
-	public GUIValuePair[] getBundle() {
+	public GUIValue[] getBundle() {
 		return bundle;
 	}
 
-	public void setBundle(GUIValuePair[] bundle) {
+	public void setBundle(GUIValue[] bundle) {
 		this.bundle = bundle;
 	}
 
@@ -228,11 +228,11 @@ public class GUIInfo implements Serializable {
 		this.installationId = installationId;
 	}
 
-	public GUIValuePair[] getSupportedGUILanguages() {
+	public GUIValue[] getSupportedGUILanguages() {
 		return supportedGUILanguages;
 	}
 
-	public void setSupportedGUILanguages(GUIValuePair[] supportedGUILanguages) {
+	public void setSupportedGUILanguages(GUIValue[] supportedGUILanguages) {
 		this.supportedGUILanguages = supportedGUILanguages;
 	}
 
@@ -260,7 +260,7 @@ public class GUIInfo implements Serializable {
 		this.sessionHeartbeat = sessionHeartbeat;
 	}
 
-	public GUIValuePair[] getConfig() {
+	public GUIValue[] getConfig() {
 		return config;
 	}
 
@@ -282,7 +282,7 @@ public class GUIInfo implements Serializable {
 		/*
 		 * Look for tenant specific
 		 */
-		for (GUIValuePair val : getConfig()) {
+		for (GUIValue val : getConfig()) {
 			if ((tenantName + "." + name).equals(val.getCode()))
 				return val.getValue();
 		}
@@ -290,7 +290,7 @@ public class GUIInfo implements Serializable {
 		/*
 		 * Look for general property
 		 */
-		for (GUIValuePair val : getConfig()) {
+		for (GUIValue val : getConfig()) {
 			if (name.equals(val.getCode()))
 				return val.getValue();
 		}
@@ -298,7 +298,7 @@ public class GUIInfo implements Serializable {
 	}
 
 	public void setConfig(String name, String value) {
-		for (GUIValuePair val : getConfig()) {
+		for (GUIValue val : getConfig()) {
 			if (name.equals(val.getCode())) {
 				val.setValue(value);
 				return;
@@ -306,7 +306,7 @@ public class GUIInfo implements Serializable {
 		}
 	}
 
-	public void setConfig(GUIValuePair[] config) {
+	public void setConfig(GUIValue[] config) {
 		this.config = config;
 	}
 

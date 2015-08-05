@@ -9,7 +9,7 @@ import java.util.List;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUISession;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 
 /**
  * Retrieves i18n resources
@@ -20,9 +20,9 @@ import com.logicaldoc.gui.common.client.beans.GUIValuePair;
 public class I18N {
 	private static String locale = "en";
 
-	private static GUIValuePair[] languages;
+	private static GUIValue[] languages;
 
-	private static GUIValuePair[] guiLanguages;
+	private static GUIValue[] guiLanguages;
 
 	private static HashMap<String, String> bundle = new HashMap<String, String>();
 
@@ -75,13 +75,13 @@ public class I18N {
 	 */
 	public static String getDefaultLocaleForDoc() {
 		// Search for exact match
-		for (GUIValuePair l : languages) {
+		for (GUIValue l : languages) {
 			if (l.getCode().equals(locale))
 				return l.getCode();
 		}
 
 		// Check the first 2 letters(the language)
-		for (GUIValuePair l : languages) {
+		for (GUIValue l : languages) {
 			if (l.getCode().startsWith(locale.substring(0, 2)))
 				return l.getCode();
 		}
@@ -108,7 +108,7 @@ public class I18N {
 		if (addEmpty)
 			map.put("", " ");
 		if (languages != null)
-			for (GUIValuePair l : languages) {
+			for (GUIValue l : languages) {
 				map.put(l.getCode(), l.getValue());
 			}
 		return map;
@@ -119,23 +119,23 @@ public class I18N {
 		if (addEmpty)
 			map.put("", " ");
 		if (guiLanguages != null)
-			for (GUIValuePair l : guiLanguages) {
+			for (GUIValue l : guiLanguages) {
 				map.put(l.getCode(), l.getValue());
 			}
 		return map;
 	}
 
-	public GUIValuePair[] getLanguages() {
+	public GUIValue[] getLanguages() {
 		return languages;
 	}
 
-	public static void setLanguages(GUIValuePair[] languages) {
+	public static void setLanguages(GUIValue[] languages) {
 		I18N.languages = languages;
 	}
 
-	public static void initBundle(GUIValuePair[] messages) {
+	public static void initBundle(GUIValue[] messages) {
 		bundle.clear();
-		for (GUIValuePair val : messages) {
+		for (GUIValue val : messages) {
 			bundle.put(val.getCode(), val.getValue());
 		}
 	}
@@ -157,11 +157,11 @@ public class I18N {
 		I18N.locale = session.getUser().getLanguage();
 	}
 
-	public static GUIValuePair[] getGuiLanguages() {
+	public static GUIValue[] getGuiLanguages() {
 		return guiLanguages;
 	}
 
-	public static void setGuiLanguages(GUIValuePair[] guiLanguages) {
+	public static void setGuiLanguages(GUIValue[] guiLanguages) {
 		I18N.guiLanguages = guiLanguages;
 	}
 

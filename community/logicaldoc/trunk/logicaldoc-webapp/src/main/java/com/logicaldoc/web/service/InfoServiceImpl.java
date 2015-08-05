@@ -27,7 +27,7 @@ import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITenant;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
@@ -58,32 +58,32 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			info.setBundle(getBundle(locale));
 
 			Locale withLocale = LocaleUtil.toLocale(locale);
-			ArrayList<GUIValuePair> supportedLanguages = new ArrayList<GUIValuePair>();
+			ArrayList<GUIValue> supportedLanguages = new ArrayList<GUIValue>();
 
 			List<String> installedLocales = I18N.getLocales();
 			for (String loc : installedLocales) {
 				if ("enabled".equals(config.getProperty(tenantName + ".lang." + loc + ".gui"))) {
 					Locale lc = LocaleUtil.toLocale(loc);
-					GUIValuePair l = new GUIValuePair();
+					GUIValue l = new GUIValue();
 					l.setCode(loc);
 					l.setValue(lc.getDisplayName(withLocale));
 					supportedLanguages.add(l);
 				}
 			}
 
-			info.setSupportedGUILanguages(supportedLanguages.toArray(new GUIValuePair[0]));
+			info.setSupportedGUILanguages(supportedLanguages.toArray(new GUIValue[0]));
 
 			LanguageManager manager = LanguageManager.getInstance();
 			Collection<Language> languages = manager.getActiveLanguages(tenantName);
 			supportedLanguages.clear();
 			for (Language language : languages) {
 				Locale lc = language.getLocale();
-				GUIValuePair l = new GUIValuePair();
+				GUIValue l = new GUIValue();
 				l.setCode(lc.toString());
 				l.setValue(lc.getDisplayName(withLocale));
 				supportedLanguages.add(l);
 			}
-			info.setSupportedLanguages(supportedLanguages.toArray(new GUIValuePair[0]));
+			info.setSupportedLanguages(supportedLanguages.toArray(new GUIValue[0]));
 
 			List<GUIMessage> messages = new ArrayList<GUIMessage>();
 
@@ -219,14 +219,14 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		info.setSessionHeartbeat(Integer.parseInt(config.getProperty(tname + ".session.heartbeat")));
 
 		try {
-			ArrayList<GUIValuePair> values = new ArrayList<GUIValuePair>();
+			ArrayList<GUIValue> values = new ArrayList<GUIValue>();
 			for (Object key : config.keySet()) {
-				GUIValuePair pair = new GUIValuePair();
+				GUIValue pair = new GUIValue();
 				pair.setCode((String) key);
 				pair.setValue(config.getProperty((String) key));
 				values.add(pair);
 			}
-			info.setConfig(values.toArray(new GUIValuePair[0]));
+			info.setConfig(values.toArray(new GUIValue[0]));
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
@@ -235,13 +235,13 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		return info;
 	}
 
-	static protected GUIValuePair[] getBundle(String locale) {
+	static protected GUIValue[] getBundle(String locale) {
 		Locale l = LocaleUtil.toLocale(locale);
 		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);
-		GUIValuePair[] buf = new GUIValuePair[rb.keySet().size()];
+		GUIValue[] buf = new GUIValue[rb.keySet().size()];
 		int i = 0;
 		for (String key : rb.keySet()) {
-			GUIValuePair entry = new GUIValuePair();
+			GUIValue entry = new GUIValue();
 			entry.setCode(key);
 			entry.setValue(rb.getString(key));
 			buf[i++] = entry;
@@ -250,7 +250,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	}
 
 	protected String getValue(GUIInfo info, String message) {
-		for (GUIValuePair valuePair : info.getBundle()) {
+		for (GUIValue valuePair : info.getBundle()) {
 			if (valuePair.getCode().equals(message)) {
 				return valuePair.getValue();
 			}

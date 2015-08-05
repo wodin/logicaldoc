@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 
 public interface FolderServiceAsync {
 
@@ -22,9 +22,9 @@ public interface FolderServiceAsync {
 
 	void pasteAsAlias(String sid, long[] docIds, long folderId, String type, AsyncCallback<Void> callback);
 
-	void loadTemplates(String sid, AsyncCallback<GUIValuePair[]> callback);
+	void loadTemplates(String sid, AsyncCallback<GUIValue[]> callback);
 
-	void saveTemplates(String sid, GUIValuePair[] templates, AsyncCallback<Void> callback);
+	void saveTemplates(String sid, GUIValue[] templates, AsyncCallback<Void> callback);
 
 	void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity ,AsyncCallback<Void> callback);
 

@@ -3,7 +3,7 @@ package com.logicaldoc.gui.frontend.client.system;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
@@ -47,14 +47,14 @@ public class PluginsPanel extends VLayout {
 
 		addMember(list);
 
-		service.getPlugins(Session.get().getSid(), new AsyncCallback<GUIValuePair[]>() {
+		service.getPlugins(Session.get().getSid(), new AsyncCallback<GUIValue[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
 			}
 
 			@Override
-			public void onSuccess(GUIValuePair[] plugins) {
+			public void onSuccess(GUIValue[] plugins) {
 				ListGridRecord[] records = new ListGridRecord[plugins.length];
 				for (int i = 0; i < plugins.length; i++) {
 					records[i] = new ListGridRecord();
