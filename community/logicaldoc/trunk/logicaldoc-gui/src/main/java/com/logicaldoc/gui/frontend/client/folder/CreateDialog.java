@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
