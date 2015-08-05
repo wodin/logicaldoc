@@ -3,7 +3,7 @@ package com.logicaldoc.gui.frontend.client.security;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -67,7 +67,7 @@ public class LdapImportDialog extends Window {
 				long tnt = Long.parseLong(tenant.getSelectedRecord().getAttributeAsString("id"));
 
 				ContactingServer.get().show();
-				service.importUsers(Session.get().getSid(), usernames, tnt, new AsyncCallback<GUIValuePair[]>() {
+				service.importUsers(Session.get().getSid(), usernames, tnt, new AsyncCallback<GUIValue[]>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -75,7 +75,7 @@ public class LdapImportDialog extends Window {
 					}
 
 					@Override
-					public void onSuccess(GUIValuePair[] report) {
+					public void onSuccess(GUIValue[] report) {
 						ContactingServer.get().hide();
 						String message = I18N.message("importreport",
 								new String[] { report[0].getValue(), report[1].getValue(), report[2].getValue() });

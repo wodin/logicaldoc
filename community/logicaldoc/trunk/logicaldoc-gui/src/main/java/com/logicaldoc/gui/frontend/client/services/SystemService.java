@@ -8,7 +8,7 @@ import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITask;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 
 /**
  * The client side stub for the System Service. This service allows the
@@ -136,5 +136,5 @@ public interface SystemService extends RemoteService {
 	 * 
 	 * @param sid The current user session
 	 */
-	public GUIValuePair[] getPlugins(String sid) throws ServerException;
+	public GUIValue[] getPlugins(String sid) throws ServerException;
 }

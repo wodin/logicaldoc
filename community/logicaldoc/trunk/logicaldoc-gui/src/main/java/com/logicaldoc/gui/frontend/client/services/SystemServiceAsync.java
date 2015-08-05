@@ -6,7 +6,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITask;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 
 public interface SystemServiceAsync {
 
@@ -37,5 +37,5 @@ public interface SystemServiceAsync {
 
 	void markFeedMsgAsRead(String sid, long[] ids, AsyncCallback<Void> callback);
 
-	void getPlugins(String sid, AsyncCallback<GUIValuePair[]> callback);
+	void getPlugins(String sid, AsyncCallback<GUIValue[]> callback);
 }

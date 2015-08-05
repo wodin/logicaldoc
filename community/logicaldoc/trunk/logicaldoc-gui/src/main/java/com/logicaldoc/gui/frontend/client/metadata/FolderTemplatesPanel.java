@@ -3,7 +3,7 @@ package com.logicaldoc.gui.frontend.client.metadata;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
@@ -77,14 +77,14 @@ public class FolderTemplatesPanel extends VLayout {
 
 		setMembers(hint, toolStrip);
 
-		service.loadTemplates(Session.get().getSid(), new AsyncCallback<GUIValuePair[]>() {
+		service.loadTemplates(Session.get().getSid(), new AsyncCallback<GUIValue[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
 			}
 
 			@Override
-			public void onSuccess(GUIValuePair[] p) {
+			public void onSuccess(GUIValue[] p) {
 				reloadTemplates(p);
 			}
 		});
@@ -118,11 +118,11 @@ public class FolderTemplatesPanel extends VLayout {
 	private void saveTemplates() {
 		Record[] records = grid.getRecords();
 
-		GUIValuePair[] templates = new GUIValuePair[records != null ? records.length : 0];
+		GUIValue[] templates = new GUIValue[records != null ? records.length : 0];
 		int i = 0;
 		if (records != null)
 			for (Record record : records) {
-				templates[i] = new GUIValuePair();
+				templates[i] = new GUIValue();
 				templates[i].setCode(record.getAttributeAsString("name"));
 				templates[i++].setValue(record.getAttributeAsString("folders"));
 			}
@@ -140,7 +140,7 @@ public class FolderTemplatesPanel extends VLayout {
 		});
 	}
 
-	protected void reloadTemplates(GUIValuePair[] templates) {
+	protected void reloadTemplates(GUIValue[] templates) {
 		if (grid != null)
 			removeMember(grid);
 
@@ -174,7 +174,7 @@ public class FolderTemplatesPanel extends VLayout {
 		removeMember(grid);
 		ListGridRecord[] records = new ListGridRecord[templates.length];
 		int i = 0;
-		for (GUIValuePair template : templates) {
+		for (GUIValue template : templates) {
 			ListGridRecord record = new ListGridRecord();
 			record.setAttribute("name", template.getCode());
 			record.setAttribute("folders", template.getValue());

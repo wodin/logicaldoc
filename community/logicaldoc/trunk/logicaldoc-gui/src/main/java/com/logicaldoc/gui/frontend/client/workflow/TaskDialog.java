@@ -6,7 +6,7 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -241,7 +241,7 @@ public class TaskDialog extends Window {
 
 		// Initialize the participants list
 		if (this.state.getParticipants() != null)
-			for (GUIValuePair part : this.state.getParticipants()) {
+			for (GUIValue part : this.state.getParticipants()) {
 				if (part.getCode() == null || part.getValue() == null)
 					continue;
 				String prefix = I18N.message("user");
@@ -334,10 +334,10 @@ public class TaskDialog extends Window {
 						TaskDialog.this.state.setReminderUnit((String) values.get("remindTime"));
 					}
 
-					GUIValuePair[] b = new GUIValuePair[participants.size()];
+					GUIValue[] b = new GUIValue[participants.size()];
 					int i = 0;
 					for (String key : participants.keySet())
-						b[i++] = new GUIValuePair(key, participants.get(key));
+						b[i++] = new GUIValue(key, participants.get(key));
 					TaskDialog.this.state.setParticipants(b);
 
 					if (state.getType() == GUIWFState.TYPE_TASK

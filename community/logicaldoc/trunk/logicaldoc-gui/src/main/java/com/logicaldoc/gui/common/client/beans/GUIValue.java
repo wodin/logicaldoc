@@ -8,18 +8,18 @@ import java.io.Serializable;
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class GUIValuePair implements Serializable {
+public class GUIValue implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String code;
 	
 	private String value;
 
-	public GUIValuePair() {
+	public GUIValue() {
 
 	}
 
-	public GUIValuePair(String code, String value) {
+	public GUIValue(String code, String value) {
 		super();
 		this.code = code;
 		this.value = value;

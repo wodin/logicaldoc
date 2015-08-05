@@ -36,7 +36,7 @@ import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
-import com.logicaldoc.gui.common.client.beans.GUIValuePair;
+import com.logicaldoc.gui.common.client.beans.GUIValue;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.util.Context;
@@ -706,12 +706,12 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public GUIValuePair[] loadTemplates(String sid) throws ServerException {
-		return new GUIValuePair[0];
+	public GUIValue[] loadTemplates(String sid) throws ServerException {
+		return new GUIValue[0];
 	}
 
 	@Override
-	public void saveTemplates(String sid, GUIValuePair[] templates) throws ServerException {
+	public void saveTemplates(String sid, GUIValue[] templates) throws ServerException {
 
 	}
 
