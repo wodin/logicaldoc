@@ -238,9 +238,9 @@ public class EMailSender {
 		MimeBodyPart body = new MimeBodyPart();
 		if (email.isHtml()){
 			body.setContent(email.getMessageText(), "text/html; charset=utf-8");
-			//body.setHeader("Content-Transfer-Encoding","8bit");
-		}else
+		}else{
 			body.setText(email.getMessageText(), "UTF-8");
+		}
 		
 		/*
 		 * If we have to images, the parts must be 'related' otherwise 'mixed'
