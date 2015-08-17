@@ -75,6 +75,7 @@ import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.crypt.CryptUtil;
 import com.logicaldoc.util.io.FileUtil;
@@ -1033,7 +1034,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public String sendAsEmail(String sid, GUIEmail email) throws ServerException {
+	public String sendAsEmail(String sid, GUIEmail email, String locale) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
@@ -1089,7 +1090,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				String address = urlPrefix + "/download-ticket?ticketId=" + ticketid;
 				message = email.getMessage()
 						+ "<div style='margin-top:10px; border-top:1px solid black; background-color:#CCCCCC;'><b>&nbsp;"
-						+ I18N.message("clicktodownload") + ": <a href='" + address + "'>" + doc.getFileName()
+						+ I18N.message("clicktodownload", LocaleUtil.toLocale(locale)) + ": <a href='" + address + "'>" + doc.getFileName()
 						+ "</a></b></div>";
 
 				if (doc.getDocRef() != null)
@@ -1100,7 +1101,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					message += "<p><img src='cid:image_1'/></p>";
 				}
 
-				mail.setMessageText("<html>" + message + "</html>");
+				mail.setMessageText("<html><body>" + message + "</body></html>");
 			} else {
 				if (email.isZipCompression()) {
 					/*
@@ -1138,7 +1139,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 
 			try {
-				message = "<html>" + message + "</html>";
+				message = "<html><body>" + message + "</body></html>";
+				// message =
+				// "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"></head><body>"
+				// + message + "</body></html>";
 				mail.setMessageText(message);
 
 				// Send the message

@@ -78,6 +78,8 @@ public class Feature {
 	public static final int WEBCONTENT = 33;
 
 	public static final int CONTENT_DIFF = 34;
+	
+	public static final int UPDATES = 35;
 
 	public static final int SHOW_LICENSEE = 40;
 

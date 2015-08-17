@@ -62,11 +62,23 @@ public class SystemMenu extends VLayout {
 		tenants.setWidth100();
 		tenants.setHeight(25);
 
-		if (Feature.visible(Feature.MULTI_TENANT) && "admin".equals(Session.get().getUser().getUserName())) {
+		if (Feature.visible(Feature.MULTI_TENANT) && Menu.enabled(Menu.TENANTS) && Session.get().isDefaultTenant()) {
 			addMember(tenants);
 			if (!Feature.enabled(Feature.MULTI_TENANT)) {
 				tenants.setDisabled(true);
 				tenants.setTooltip(I18N.message("featuredisabled"));
+			}
+		}
+
+		Button updates = new Button(I18N.message("updates"));
+		updates.setWidth100();
+		updates.setHeight(25);
+
+		if (Feature.visible(Feature.UPDATES) && Menu.enabled(Menu.UPDATES) && Session.get().isDefaultTenant()) {
+			addMember(updates);
+			if (!Feature.enabled(Feature.UPDATES)) {
+				updates.setDisabled(true);
+				updates.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
@@ -85,11 +97,13 @@ public class SystemMenu extends VLayout {
 		if (Session.get().isDemo()) {
 			clustering.setDisabled(true);
 			tenants.setDisabled(true);
+			updates.setDisabled(true);
 		}
 
 		if (!Session.get().isDefaultTenant()) {
 			clustering.setVisible(false);
 			tenants.setVisible(false);
+			updates.setVisible(false);
 		}
 
 		addInformations();
@@ -112,6 +126,13 @@ public class SystemMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new ProductNewsPanel());
+			}
+		});
+
+		updates.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				AdminPanel.get().setContent(new UpdatePanel());
 			}
 		});
 
@@ -161,7 +182,7 @@ public class SystemMenu extends VLayout {
 				+ Session.get().getInfo().getVendor());
 		vendor.setShouldSaveValue(false);
 
-		String userno = Session.get().getInfo().getConfig("userno");
+		String userno = Session.get().getInfo().getUserNo();
 
 		DynamicForm supportForm = new DynamicForm();
 		supportForm.setAlign(Alignment.LEFT);

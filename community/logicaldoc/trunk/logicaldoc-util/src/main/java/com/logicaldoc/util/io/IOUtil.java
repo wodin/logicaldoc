@@ -1,8 +1,10 @@
 package com.logicaldoc.util.io;
 
+import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 
 public class IOUtil {
@@ -32,5 +34,31 @@ public class IOUtil {
 		while ((letter = input.read(buffer)) != -1) {
 			output.write(buffer, 0, letter);
 		}
+	}
+
+	public static String getStringFromInputStream(InputStream is) throws IOException {
+		BufferedReader br = null;
+		StringBuilder sb = new StringBuilder();
+
+		String line;
+		try {
+			br = new BufferedReader(new InputStreamReader(is));
+			while ((line = br.readLine()) != null) {
+				if (sb.length() > 0)
+					sb.append("\n");
+				sb.append(line);
+			}
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		return sb.toString();
+
 	}
 }

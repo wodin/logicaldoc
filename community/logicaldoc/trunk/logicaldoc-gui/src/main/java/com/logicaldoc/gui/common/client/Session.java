@@ -86,54 +86,75 @@ public class Session {
 		return session.getUser();
 	}
 
-	public void init(GUISession session) {
-		try {
-			this.session = session;
-			this.info = session.getInfo();
-			I18N.init(session);
-			Menu.init(session.getUser());
-			if (session.isLoggedIn()) {
-				for (SessionObserver listener : sessionObservers) {
-					listener.onUserLoggedIn(session.getUser());
-				}
-			}
+	public void init(final GUISession session) {
+		//Retrieve again the Info from the server (may be it is enriched by the enterprise)
+		service.getInfo(session.getUser().getLanguage(), session.getInfo().getTenant().getName(),
+				new AsyncCallback<GUIInfo>() {
 
-			if (info.getSessionHeartbeat() > 0) {
-				/*
-				 * Create the timer that synchronize the session info
-				 */
-				timer = new Timer() {
-					public void run() {
-						service.getSessionInfo(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								if (isDevel())
-									Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable arg0) {
+						// TODO Auto-generated method stub
 
-							@Override
-							public void onSuccess(GUIParameter[] parameters) {
-								if (parameters.length > 0) {
-									GUIUser user = getUser();
-									for (GUIParameter parameter : parameters) {
-										if (parameter.getName().equals("messages"))
-											user.setMessages(Integer.parseInt(parameter.getValue()));
-										else if (parameter.getName().equals("workflows"))
-											user.setActiveTasks(Integer.parseInt(parameter.getValue()));
-										else if (parameter.getName().equals("events"))
-											user.setUpcomingEvents(Integer.parseInt(parameter.getValue()));
-									}
+					}
+
+					@Override
+					public void onSuccess(GUIInfo info) {
+						try {
+							session.setInfo(info);
+							Session.this.session = session;
+							Session.this.info = session.getInfo();
+							I18N.init(session);
+							Menu.init(session.getUser());
+							if (session.isLoggedIn()) {
+								for (SessionObserver listener : sessionObservers) {
+									listener.onUserLoggedIn(session.getUser());
 								}
 							}
-						});
-					}
-				};
 
-				timer.scheduleRepeating(info.getSessionHeartbeat() * 1000);
-			}
-		} catch (Throwable caught) {
-			Log.serverError(caught);
-		}
+							if (info.getSessionHeartbeat() > 0) {
+								/*
+								 * Create the timer that synchronize the session
+								 * info
+								 */
+								timer = new Timer() {
+									public void run() {
+										service.getSessionInfo(Session.get().getSid(),
+												new AsyncCallback<GUIParameter[]>() {
+													@Override
+													public void onFailure(Throwable caught) {
+														if (isDevel())
+															Log.serverError(caught);
+													}
+
+													@Override
+													public void onSuccess(GUIParameter[] parameters) {
+														if (parameters.length > 0) {
+															GUIUser user = getUser();
+															for (GUIParameter parameter : parameters) {
+																if (parameter.getName().equals("messages"))
+																	user.setMessages(Integer.parseInt(parameter
+																			.getValue()));
+																else if (parameter.getName().equals("workflows"))
+																	user.setActiveTasks(Integer.parseInt(parameter
+																			.getValue()));
+																else if (parameter.getName().equals("events"))
+																	user.setUpcomingEvents(Integer.parseInt(parameter
+																			.getValue()));
+															}
+														}
+													}
+												});
+									}
+								};
+
+								timer.scheduleRepeating(info.getSessionHeartbeat() * 1000);
+							}
+						} catch (Throwable caught) {
+							Log.serverError(caught);
+						}
+					}
+				});
+
 	}
 
 	public void addSessionObserver(SessionObserver observer) {

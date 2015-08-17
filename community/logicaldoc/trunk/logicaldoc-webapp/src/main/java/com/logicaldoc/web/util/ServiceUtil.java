@@ -91,13 +91,13 @@ public class ServiceUtil {
 		if (logger != null)
 			logger.error(t.getMessage(), t);
 
-		Log lastError = session.getLastError();
-		String message = "";
-		if (lastError != null) {
-			message = lastError.getMessage();
-			session.getLogs().clear();
-		} else {
-			message = t.getMessage();
+		String message = t.getMessage();
+		if (session != null) {
+			Log lastError = session.getLastError();
+			if (lastError != null) {
+				message = lastError.getMessage();
+				session.getLogs().clear();
+			}
 		}
 
 		message = message.replaceAll("com.logicaldoc.", "").replaceAll("java.lang.", "");

@@ -74,6 +74,22 @@
   white-space: nowrap;
 }
 
+.updateavailable {
+  font-family: Arial, Bitstream Vera Sans, sans-serif; 
+  font-size: 14pt;
+  font-weight: bold;
+  white-space: nowrap;
+  color: green;
+}
+
+.updateunavailable {
+  font-family: Arial, Bitstream Vera Sans, sans-serif; 
+  font-size: 14pt;
+  font-weight: bold;
+  white-space: nowrap;
+  color: red;
+}
+
 .row {
   border-top: 1px solid #cccccc;
   margin-top: 4px;

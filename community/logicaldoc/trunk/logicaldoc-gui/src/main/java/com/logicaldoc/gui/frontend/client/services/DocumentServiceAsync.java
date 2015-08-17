@@ -17,7 +17,7 @@ public interface DocumentServiceAsync {
 
 	void save(String sid, GUIDocument document, AsyncCallback<GUIDocument> callback);
 
-	void sendAsEmail(String sid, GUIEmail email, AsyncCallback<String> callback);
+	void sendAsEmail(String sid, GUIEmail email, String locale, AsyncCallback<String> callback);
 
 	void updateLink(String sid, long id, String type, AsyncCallback<Void> callback);
 

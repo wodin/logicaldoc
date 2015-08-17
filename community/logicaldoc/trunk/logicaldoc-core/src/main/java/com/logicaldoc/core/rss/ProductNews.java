@@ -37,7 +37,7 @@ public class ProductNews extends Task {
 	private long saved = 0;
 
 	private long errors = 0;
-	
+
 	private long size = 0;
 
 	public ProductNews() {
@@ -68,19 +68,8 @@ public class ProductNews extends Task {
 			String url = config.getProperty("news.url");
 			if (StringUtils.isEmpty(url))
 				url = "http://www.logicaldoc.com/news/rss.html";
-			if (!"-".equals(url)) {
+			if (!"-".equals(url))
 				parseFeed(url);
-			}
-			
-			if (interruptRequested)
-				return;
-			
-			url = config.getProperty("news.version.url");
-			if (StringUtils.isEmpty(url))
-				url = "http://www.logicaldoc.com/version/rss.html";
-			if (!"-".equals(url)) {
-				parseFeed(url);
-			}
 		} finally {
 			log.info("Retrieving news finished");
 			log.info("Retrieved news: " + saved);

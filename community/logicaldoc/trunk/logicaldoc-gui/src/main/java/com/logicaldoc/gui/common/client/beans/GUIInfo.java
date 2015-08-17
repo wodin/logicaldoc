@@ -43,6 +43,8 @@ public class GUIInfo implements Serializable {
 
 	private String support = "support@logicaldoc.com";
 
+	private String userNo;
+
 	private String installationId;
 
 	private String licensee;
@@ -408,5 +410,13 @@ public class GUIInfo implements Serializable {
 
 	public void setTenant(GUITenant tenant) {
 		this.tenant = tenant;
+	}
+
+	public String getUserNo() {
+		return userNo;
+	}
+
+	public void setUserNo(String userNo) {
+		this.userNo = userNo;
 	}
 }

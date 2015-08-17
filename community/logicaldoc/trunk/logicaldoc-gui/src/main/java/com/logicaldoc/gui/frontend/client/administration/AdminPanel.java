@@ -26,7 +26,7 @@ public class AdminPanel extends HLayout {
 
 		// Prepare the collapsible menu
 		AdminMenu leftMenu = AdminMenu.get();
-		leftMenu.setWidth(250);
+		leftMenu.setWidth(290);
 		leftMenu.setShowResizeBar(true);
 
 		addMember(leftMenu);

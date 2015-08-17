@@ -62,6 +62,10 @@ public class Menu {
 	public static final long CLUSTERING = -1110;
 
 	public static final long SUBSCRIPTIONS = -1120;
+	
+	public static final long UPDATES = -1130;
+	
+	public static final long TENANTS = -1140;
 
 	public static final long CALENDAR_REPORT = -2060;
 
