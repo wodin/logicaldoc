@@ -171,7 +171,7 @@ public class EmailDialog extends Window {
 
 					ContactingServer.get().show();
 
-					documentService.sendAsEmail(Session.get().getSid(), mail, new AsyncCallback<String>() {
+					documentService.sendAsEmail(Session.get().getSid(), mail, Session.get().getUser().getLanguage(), new AsyncCallback<String>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							ContactingServer.get().hide();

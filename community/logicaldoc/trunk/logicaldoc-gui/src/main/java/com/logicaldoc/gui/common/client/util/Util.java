@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.smartgwt.client.data.Record;
@@ -730,5 +731,13 @@ public class Util {
 		String url = base + (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName() + ".jsp");
 		url += "?locale=" + I18N.getLocale() + "&tenant=" + Session.get().getTenantName();
 		Util.redirect(url);
+	}
+
+	public static String getValue(String name, GUIParameter[] parameters) {
+		if (parameters != null)
+			for (GUIParameter param : parameters)
+				if (name.equals(param.getName()))
+					return param.getValue();
+		return null;
 	}
 }

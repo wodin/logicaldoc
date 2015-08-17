@@ -47,7 +47,7 @@ public interface DocumentService extends RemoteService {
 	 * 
 	 * @return "ok" otherwise an error code
 	 */
-	public String sendAsEmail(String sid, GUIEmail email) throws ServerException;
+	public String sendAsEmail(String sid, GUIEmail email, String locale) throws ServerException;
 
 	/**
 	 * Updates the links type

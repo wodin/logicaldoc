@@ -3,6 +3,7 @@ package com.logicaldoc.util.io;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -98,18 +99,22 @@ public class ZipUtil {
 	 * @param entry The entry to be read
 	 * @return The stream of the entry
 	 */
-	public static InputStream getEntryStream(File zipsource, String entry) {
+	public static InputStream getEntryStream(File zip, String entry) {
 		if (entry.startsWith("/"))
 			entry = entry.substring(1);
 
 		try {
-			ZipFile zipFile = new ZipFile(zipsource);
+			ZipFile zipFile = new ZipFile(zip);
 			FileHeader header = zipFile.getFileHeader(entry);
 			return zipFile.getInputStream(header);
 		} catch (Throwable e) {
 			logError(e.getMessage());
 			return null;
 		}
+	}
+
+	public static String getEntryContent(File zip, String entry) throws FileNotFoundException, IOException {
+		return IOUtil.getStringFromInputStream(getEntryStream(zip, entry));
 	}
 
 	private static void logError(String message) {
