@@ -167,13 +167,13 @@ public interface DocumentService {
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
-	 * @return The requested document's text 
+	 * @return The requested document's text
 	 * @throws Exception
 	 */
 	@WebResult(name = "text")
 	public String getExtractedText(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
-	
+
 	/**
 	 * Gets the version content of an existing document with the given
 	 * identifier.
@@ -239,6 +239,7 @@ public interface DocumentService {
 	 * @param release True if this is a new release(eg: 2.0) rather than a
 	 *        subversion(eg: 1.1)
 	 * @param filename The document file name
+	 * @param language The language for the document
 	 * @param content The document's binary content
 	 * @return The created/updated document's ID
 	 * @throws Exception
@@ -246,8 +247,8 @@ public interface DocumentService {
 	@WebResult(name = "docId")
 	public long upload(@WebParam(name = "sid") String sid, @WebParam(name = "docId") Long docId,
 			@WebParam(name = "folderId") Long folderId, @WebParam(name = "release") boolean release,
-			@WebParam(name = "filename") String filename, @WebParam(name = "content") DataHandler content)
-			throws Exception;
+			@WebParam(name = "filename") String filename, @WebParam(name = "language") String language,
+			@WebParam(name = "content") DataHandler content) throws Exception;
 
 	/**
 	 * Uploads a new resource attached to the given document. If the resource

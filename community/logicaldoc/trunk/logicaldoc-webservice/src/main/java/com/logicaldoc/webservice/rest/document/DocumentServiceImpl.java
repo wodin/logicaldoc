@@ -100,6 +100,7 @@ public class DocumentServiceImpl extends com.logicaldoc.webservice.document.Docu
 			Long folderId = null;
 			boolean release = false;
 			String filename = null;
+			String language = null;
 
 			List<Attachment> attachments = multipartBody.getAllAttachments();
 			for (Attachment attachment : attachments) {
@@ -114,11 +115,13 @@ public class DocumentServiceImpl extends com.logicaldoc.webservice.document.Docu
 					release = Boolean.parseBoolean(getContentAsString(attachment.getDataHandler()));
 				} else if ("filename".equals(params.get("name"))) {
 					filename = getContentAsString(attachment.getDataHandler());
+				} else if ("language".equals(params.get("language"))) {
+					language = getContentAsString(attachment.getDataHandler());
 				}
 			}
 
 			long documentId = super
-					.upload(sid, docId, folderId, release, filename, attachments.get(0).getDataHandler());
+					.upload(sid, docId, folderId, release, filename, language, attachments.get(0).getDataHandler());
 			return Response.ok("" + documentId).build();
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);

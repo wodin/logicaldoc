@@ -41,7 +41,9 @@ import com.logicaldoc.core.document.pdf.PdfConverterManager;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
@@ -774,8 +776,8 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 	}
 
 	@Override
-	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, DataHandler content)
-			throws Exception {
+	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, String language,
+			DataHandler content) throws Exception {
 		validateSession(sid);
 
 		if (docId != null) {
@@ -787,6 +789,13 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 			doc.setFileName(filename);
 			doc.setTitle(FilenameUtils.getBaseName(filename));
 			doc.setFolderId(folderId);
+			if (StringUtils.isEmpty(language))
+				doc.setLanguage("en");
+			else
+				doc.setLanguage(language);
+
+			UserSession session = SessionManager.getInstance().get(sid);
+
 			return create(sid, doc, content).getId();
 		}
 
