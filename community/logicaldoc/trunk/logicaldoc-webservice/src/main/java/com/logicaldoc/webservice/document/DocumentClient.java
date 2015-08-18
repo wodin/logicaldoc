@@ -178,9 +178,9 @@ public class DocumentClient extends SoapClient<DocumentService> implements Docum
 	}
 
 	@Override
-	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, DataHandler content)
-			throws Exception {
-		return client.upload(sid, docId, folderId, release, filename, content);
+	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, String language,
+			DataHandler content) throws Exception {
+		return client.upload(sid, docId, folderId, release, filename, language, content);
 	}
 
 	@Override

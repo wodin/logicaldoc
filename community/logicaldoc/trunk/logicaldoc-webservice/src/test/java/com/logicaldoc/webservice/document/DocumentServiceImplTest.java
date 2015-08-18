@@ -129,14 +129,14 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 	@Test
 	public void testUpload() throws Exception {
 		File file = new File("pom.xml");
-		long docId = docServiceImpl.upload("xxxx", null, 4L, true, "document test.txt", new DataHandler(
+		long docId = docServiceImpl.upload("xxxx", null, 4L, true, "document test.txt", "en", new DataHandler(
 				new FileDataSource(file)));
 
 		Assert.assertTrue(docId > 0L);
-		
-		long docId2 = docServiceImpl.upload("xxxx", docId, null, true, "document test.txt", new DataHandler(
+
+		long docId2 = docServiceImpl.upload("xxxx", docId, null, true, "document test.txt", "en", new DataHandler(
 				new FileDataSource(file)));
-	
+
 		Assert.assertEquals(docId, docId2);
 		Assert.assertEquals("2.0", docDao.findById(docId2).getVersion());
 	}

@@ -155,8 +155,8 @@ public class DocumentClient extends RestClient implements DocumentService {
 	}
 
 	@Override
-	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, DataHandler content)
-			throws Exception {
+	public long upload(String sid, Long docId, Long folderId, boolean release, String filename, String language,
+			DataHandler content) throws Exception {
 		throw new UnsupportedOperationException();
 	}
 
