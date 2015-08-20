@@ -20,6 +20,7 @@ HOME=%{INSTALL_PATH}
 export CATALINA_HOME="$HOME/tomcat"
 export CATALINA_PID="$HOME/bin/pid"
 export JAVA_OPTS="-Xmx900m -XX:MaxPermSize=128m -Djava.net.preferIPv4Stack=true -Djava.awt.headless=true"
+#-Djava.security.egd=file:/dev/./urandom
 
 case $1 in
 start)   if [ -e $CATALINA_PID ]
