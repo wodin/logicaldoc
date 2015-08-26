@@ -1,5 +1,6 @@
 package com.logicaldoc.core.rss;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -83,11 +84,20 @@ public class ProductNews extends Task {
 		// First of all feed messages to be saved
 		size = feed.getMessages().size();
 
-		log.info("Found a total of " + size + " feed messages to be saved");
+		log.info("Found a total of " + size + " feed messages to be processed");
+
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.YEAR, -1);
+		Date oldestDate = cal.getTime();
 
 		for (FeedMessage message : feed.getMessages()) {
 			try {
 				log.debug("Parsing message " + message.getTitle());
+				if(message.getPubDate()==null || message.getPubDate().before(oldestDate)){
+					log.debug("Skipping old message " + message.getTitle());
+					continue;
+				}
+				
 				if (feedMessageDao.findByGuid(message.getGuid()) == null) {
 					// The parsing message is not already saved into the
 					// database, so we save it.
@@ -104,9 +114,8 @@ public class ProductNews extends Task {
 			if (interruptRequested)
 				return;
 		}
-		if (saved > 0) {
-			createMessages();
-		}
+		if (saved > 0)
+			createAlerts();
 	}
 
 	@Override
@@ -125,7 +134,7 @@ public class ProductNews extends Task {
 	/**
 	 * Creates the system message for the administrator user.
 	 */
-	private void createMessages() {
+	private void createAlerts() {
 		SystemMessageDAO systemMessageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
 		Map<Locale, Set<Recipient>> recipientsLocalesMap = new HashMap<Locale, Set<Recipient>>();
 		try {
