@@ -2,6 +2,7 @@ package com.logicaldoc.core.rss.dao;
 
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.LoggerFactory;
@@ -32,10 +33,9 @@ public class HibernateFeedMessageDAO extends HibernatePersistentObjectDAO<FeedMe
 	public FeedMessage findByGuid(String guid) {
 		FeedMessage feedMessage = null;
 		List<FeedMessage> coll = findByWhere("_entity.guid = '" + SqlUtil.doubleQuotes(guid) + "'", null, null);
-		if (coll.size() > 0) {
+		if (coll.size() > 0)
 			feedMessage = coll.iterator().next();
-		}
-		if (feedMessage != null && feedMessage.getDeleted() == 1)
+		if (feedMessage == null || feedMessage.getDeleted() == 1)
 			feedMessage = null;
 		return feedMessage;
 	}
@@ -49,12 +49,13 @@ public class HibernateFeedMessageDAO extends HibernatePersistentObjectDAO<FeedMe
 	@Override
 	public void deleteOld() {
 		Calendar cal = Calendar.getInstance();
-		cal.add(Calendar.YEAR, -1);
-		log.debug("delete all feed message before " + cal.getTime());
+		cal.add(Calendar.YEAR, -3);
+		Date oldestDate=cal.getTime();
+		log.debug("delete all feed message before " + oldestDate);
 		try {
 			Collection<FeedMessage> coll = (Collection<FeedMessage>) findByQuery(
 					"from FeedMessage _feedmessage where _feedmessage.deleted=0 and _feedmessage.pubDate < ?1",
-					new Object[] { cal.getTime() }, null);
+					new Object[] { oldestDate }, null);
 			for (FeedMessage feedMessage : coll) {
 				initialize(feedMessage);
 				feedMessage.setDeleted(1);
