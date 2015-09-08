@@ -45,7 +45,7 @@ public class TaskManager {
 	 * @param taskName The name of the new task to be registered
 	 */
 	private void registerTask(String taskName) {
-		// Add the sheduled trigger
+		// Add the scheduled trigger
 		log.info("Append the task " + taskName + " to the scheduler");
 		ContextConfigurator contextConfig = new ContextConfigurator();
 		contextConfig.addTrigger(taskName + "Trigger");

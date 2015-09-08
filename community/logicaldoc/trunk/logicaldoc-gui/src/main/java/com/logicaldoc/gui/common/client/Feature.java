@@ -160,6 +160,8 @@ public class Feature {
 	public static final int STAMP = 85;
 	
 	public static final int FORM = 86;
+	
+	public static final int REPORT = 87;
 
 	private static Set<String> features = new HashSet<String>();
 

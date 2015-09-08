@@ -494,7 +494,7 @@ public class ItemFactory {
 		String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		FormItem item = new TextItem();
 
-		if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX) {
+		if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX && templateId != null) {
 			item = new SelectItem();
 			item.setOptionDataSource(new ExtendedAttributeOptionsDS(templateId, att.getName(), !att.isMandatory()));
 
@@ -506,7 +506,10 @@ public class ItemFactory {
 		}
 
 		item.setName(itemName);
-		item.setTitle(att.getLabel());
+		if(att.getLabel()!=null)
+			item.setTitle(att.getLabel());
+		else
+			item.setTitle(att.getName());
 		item.setWrapTitle(false);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setHintStyle("hint");

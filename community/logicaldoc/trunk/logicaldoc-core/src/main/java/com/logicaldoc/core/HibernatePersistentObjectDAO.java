@@ -258,6 +258,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 		return list;
 	}
 
+	
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List queryForList(String sql, Object[] args, Class elementType, Integer maxRows) {
