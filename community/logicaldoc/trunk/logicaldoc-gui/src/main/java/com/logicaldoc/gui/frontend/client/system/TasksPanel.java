@@ -241,7 +241,6 @@ public class TasksPanel extends VLayout {
 								}
 							}
 						}
-						// list.redraw();
 					}
 				});
 			}

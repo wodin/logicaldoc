@@ -52,7 +52,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		GUIInfo info = null;
 		try {
 			info = getInfo(tenantName);
-			info.setBundle(getBundle(locale));
+			info.setBundle(getBundle(locale, tenantName));
 
 			Locale withLocale = LocaleUtil.toLocale(locale);
 			ArrayList<GUIValue> supportedLanguages = new ArrayList<GUIValue>();
@@ -204,8 +204,26 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		return info;
 	}
 
-	static protected GUIValue[] getBundle(String locale) {
+	static protected GUIValue[] getBundle(String locale, String tenantName) {
 		Locale l = LocaleUtil.toLocale(locale);
+
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+
+		/*
+		 * Check if the given locale is active and if the case peek an active
+		 * locale
+		 */
+		List<String> installedLocales = I18N.getLocales();
+
+		for (String loc : installedLocales) {
+			if ("enabled".equals(config.getProperty(tenantName + ".lang." + loc + ".gui"))) {
+				l = LocaleUtil.toLocale(loc);
+
+				if (loc.equals(locale))
+					break;
+			}
+		}
+
 		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);
 		GUIValue[] buf = new GUIValue[rb.keySet().size()];
 		int i = 0;

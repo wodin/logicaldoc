@@ -17,7 +17,7 @@ public abstract class ImportFolderDetailsTab extends HLayout {
 
 	/**
 	 * 
-	 * @param document The share this instance refers to
+	 * @param share The share this instance refers to
 	 * @param changedHandler The handler to be invoked in case of changes in the
 	 *        share
 	 */

@@ -18,20 +18,13 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.common.client.widgets.ImageLightbox;
+import com.logicaldoc.gui.common.client.widgets.PreviewTile;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
-import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.HTMLFlow;
-import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.Img;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.FormItem;
@@ -65,8 +58,6 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 	private DynamicForm form2 = new DynamicForm();
 
-	private Layout tile = null;
-
 	private VLayout container = new VLayout();
 
 	private HLayout columns = new HLayout();
@@ -76,6 +67,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 	protected DocumentObserver observer;
 
 	protected MultiComboBoxItem tagItem = null;
+
+	private Layout tile = new HLayout();
 
 	public StandardPropertiesPanel(final GUIDocument document, ChangedHandler changedHandler, DocumentObserver observer) {
 		super(document, changedHandler, null);
@@ -99,8 +92,14 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (form1 != null)
 			form1.destroy();
 
+		if (tile != null)
+			tile.destroy();
+
 		if (columns.contains(form1))
 			columns.removeMember(form1);
+
+		if (columns.contains(tile))
+			columns.removeChild(tile);
 
 		form1 = new DynamicForm();
 		form1.setNumCols(2);
@@ -168,9 +167,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		folder.setWidth(DEFAULT_ITEM_WIDTH);
 
 		String downloadUrl = Util.contextPath() + "download?" + Constants.DOC_ID + "=" + document.getId();
-		String documentUrl = Util.contextPath() + "?" + Constants.DOC_ID + "=" + document.getId();
-		String perma = "<a href='" + downloadUrl + "'>" + I18N.message("download") + "</a> | <a href='" + documentUrl
-				+ "'>" + I18N.message("details") + "</a>";
+		String perma = "<a href='" + downloadUrl + "'>" + I18N.message("download") + "</a>";
 		StaticTextItem permaLink = ItemFactory.newStaticTextItem("permalink", "permalink", perma);
 
 		if (Feature.enabled(Feature.WORKFLOW))
@@ -188,65 +185,9 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		/*
 		 * Prepare the tile
 		 */
-		if (document.getId() != 0L)
-			prepareTile();
-	}
-
-	private void prepareTile() {
-		try {
-			if (tile != null && columns.contains(tile)) {
-				columns.removeMember(tile);
-				tile.destroy();
-			}
-
-			tile = new HLayout();
-			tile.setMembersMargin(1);
-			tile.setAlign(Alignment.RIGHT);
-			tile.setOverflow(Overflow.HIDDEN);
-
-			if (Session.get().isShowThumbnail()) {
-				tile.addClickHandler(new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						ImageLightbox lightbox = new ImageLightbox(document);
-						lightbox.show();
-					}
-				});
-
-				String html = "<img border='0' alt='' title='' src='"
-						+ Util.tileUrl(Session.get().getSid(), document.getId(), null) + "' height='"
-						+ Session.get().getConfig("gui.tile.size") + "px' style='float:right;' align='right'/>";
-				HTMLFlow tileImage = new HTMLFlow(html);
-
-				Img closeTileImage = new Img("[SKIN]/headerIcons/close.gif", 16, 16);
-				closeTileImage.setShowRollOver(true);
-				closeTileImage.addClickHandler(new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						Session.get().setShowThumbnail(false);
-						prepareTile();
-					}
-				});
-
-				tile.setMembers(tileImage, closeTileImage);
-			} else {
-				IButton showThumbnail = new IButton(I18N.message("showthumbnail"));
-				showThumbnail.addClickHandler(new ClickHandler() {
-
-					@Override
-					public void onClick(ClickEvent event) {
-						Session.get().setShowThumbnail(true);
-						prepareTile();
-					}
-				});
-				tile.setMembers(showThumbnail);
-			}
-
+		if (document.getId() != 0L) {
+			tile = new PreviewTile(document.getId(), document.getTitle());
 			columns.addMember(tile);
-		} catch (Throwable t) {
-			Log.error(t.getMessage(), null, t);
 		}
 	}
 

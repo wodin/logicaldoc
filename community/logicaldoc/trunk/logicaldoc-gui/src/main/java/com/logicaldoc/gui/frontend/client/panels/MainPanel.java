@@ -28,6 +28,8 @@ import com.logicaldoc.gui.frontend.client.search.SearchPanel;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.Side;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
@@ -93,7 +95,18 @@ public class MainPanel extends VLayout implements SessionObserver {
 		administrationTab.setName("administration");
 
 		addMember(topPanel);
-		incomingMessage = new IncomingMessage("", null);
+
+		incomingMessage = new IncomingMessage(Session.get().getIncomingMessage(), new ClickHandler() {
+
+			@Override
+			public void onClick(ClickEvent event) {
+				MainPanel.this.getIncomingMessage().setVisible(false);
+			}
+		});
+
+		incomingMessage.setVisible(Session.get().getIncomingMessage() != null
+				&& !Session.get().getIncomingMessage().isEmpty());
+
 		addMember(incomingMessage);
 		MainMenu mainMenu = new MainMenu(true,
 				"embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode")));
@@ -136,12 +149,12 @@ public class MainPanel extends VLayout implements SessionObserver {
 		long welcomeScreen = Menu.DASHBOARD;
 		if (user.getWelcomeScreen() != null)
 			welcomeScreen = user.getWelcomeScreen().intValue();
-		
+
 		if (Menu.enabled(Menu.DASHBOARD)) {
 			dashboardTab.setPane(DashboardPanel.get());
 			tabSet.addTab(dashboardTab);
 		}
-		
+
 		if (Menu.enabled(Menu.DOCUMENTS)) {
 			documentsTab.setPane(DocumentsPanel.get());
 			tabSet.addTab(documentsTab);

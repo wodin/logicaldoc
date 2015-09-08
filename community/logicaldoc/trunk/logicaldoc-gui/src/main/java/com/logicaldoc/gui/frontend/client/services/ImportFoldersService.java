@@ -7,7 +7,7 @@ import com.logicaldoc.gui.common.client.beans.GUIShare;
 
 /**
  * The client side stub for the ImportFolder Service. This service gives all
- * needed methods to handle templates.
+ * needed methods to handle import folders.
  */
 @RemoteServiceRelativePath("importfolders")
 public interface ImportFoldersService extends RemoteService {

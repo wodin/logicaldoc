@@ -218,17 +218,6 @@ public class Frontend implements EntryPoint {
 	public void showMain() {
 		if (entered)
 			return;
-		if (Session.get().getIncomingMessage() != null) {
-			mainPanel.getIncomingMessage().setMessage(Session.get().getIncomingMessage());
-			mainPanel.getIncomingMessage().setClickHandler(new ClickHandler() {
-
-				@Override
-				public void onClick(ClickEvent event) {
-					mainPanel.getIncomingMessage().setVisible(false);
-				}
-			});
-			mainPanel.getIncomingMessage().setVisible(true);
-		}
 
 		mainPanel.show();
 		loginPanel.hide();

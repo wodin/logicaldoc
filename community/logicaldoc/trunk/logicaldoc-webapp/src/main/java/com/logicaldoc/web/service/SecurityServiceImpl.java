@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
@@ -697,7 +696,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		Map<String, Object> dictionary = new HashMap<String, Object>();
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 		String address = config.getProperty("server.url");
-		dictionary.put("url",address);
+		dictionary.put("url", address);
 		dictionary.put("user", user);
 		dictionary.put("password", password);
 
@@ -947,7 +946,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			email.setLocale(locale);
 			email.setSentDate(new Date());
 			email.setUserName(user.getUserName());
-			
+
 			HttpServletRequest request = this.getThreadLocalRequest();
 			String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
 					+ request.getContextPath();

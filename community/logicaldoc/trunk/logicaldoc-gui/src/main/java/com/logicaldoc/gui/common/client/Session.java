@@ -17,6 +17,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.gui.common.client.services.InfoServiceAsync;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.smartgwt.client.util.SC;
 
 /**
  * Represents a client work session
@@ -87,24 +88,25 @@ public class Session {
 	}
 
 	public void init(final GUISession session) {
-		//Retrieve again the Info from the server (may be it is enriched by the enterprise)
+		// Retrieve again the Info from the server (may be it is enriched by the
+		// enterprise)
 		service.getInfo(session.getUser().getLanguage(), session.getInfo().getTenant().getName(),
 				new AsyncCallback<GUIInfo>() {
 
 					@Override
-					public void onFailure(Throwable arg0) {
-						// TODO Auto-generated method stub
-
+					public void onFailure(Throwable caught) {
+						SC.warn(caught.getMessage());
 					}
 
 					@Override
 					public void onSuccess(GUIInfo info) {
 						try {
 							session.setInfo(info);
-							Session.this.session = session;
-							Session.this.info = session.getInfo();
+							Session.get().session = session;
+							Session.get().info = session.getInfo();
 							I18N.init(session);
 							Menu.init(session.getUser());
+							
 							if (session.isLoggedIn()) {
 								for (SessionObserver listener : sessionObservers) {
 									listener.onUserLoggedIn(session.getUser());
