@@ -1,7 +1,5 @@
 package com.logicaldoc.gui.frontend.client.reports.custom;
 
-import java.util.Date;
-
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -14,8 +12,10 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
+import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.impex.folders.ImportFolderDetailsPanel;
 import com.logicaldoc.gui.frontend.client.services.ReportService;
@@ -88,14 +88,22 @@ public class ReportsPanel extends VLayout {
 					public void onSuccess(GUIReport[] reports) {
 						for (GUIReport report : reports) {
 							for (ListGridRecord record : grid.getRecords()) {
-								String oldDocId = record.getAttributeAsString("outputDocId");
-								Date oldLastRun = record.getAttributeAsDate("lastRun");
+								if (Long.parseLong(record.getAttributeAsString("id")) != report.getId())
+									continue;
+
+								long oldVersion = record.getAttributeAsLong("recordVersion");
 
 								record.setAttribute("runningIcon", record.getAttribute("name").equals(report.getName())
 										&& report.getStatus() != GUIReport.STATUS_IDLE ? "running_task" : "idle_task");
 								record.setAttribute("status", report.getStatus());
 								record.setAttribute("lastRun", report.getLastRun());
-								record.setAttribute("outputDocId", "" + report.getOutputDocId());
+								record.setAttribute("lastModified", report.getLastModified());
+								record.setAttribute("recordVersion", report.getRecordVersion());
+
+								if (report.getOutputDocId() != null)
+									record.setAttribute("outputDocId", "" + report.getOutputDocId());
+								else
+									record.setAttribute("outputDocId", (String) null);
 								grid.refreshRow(grid.getRecordIndex(record));
 
 								boolean selected = grid.getSelectedRecord() != null ? record.equals(grid
@@ -103,12 +111,9 @@ public class ReportsPanel extends VLayout {
 
 								// Decide if we have to refresh the properties
 								// panel
-								if (selected) {
-									if ((oldDocId != null && !oldDocId.equals("" + report.getOutputDocId()))
-											|| report.getOutputDocId() != null
-											&& !report.getOutputDocId().toString().equals(oldDocId))
-										onSelectedReport();
-								}
+								if (selected && report.getRecordVersion() != oldVersion)
+									onSelectedReport();
+
 								break;
 							}
 						}
@@ -251,9 +256,9 @@ public class ReportsPanel extends VLayout {
 
 		final ListGridRecord record = grid.getSelectedRecord();
 		final long selectedId = Long.parseLong(record.getAttributeAsString("id"));
-		final Long outputDocId = record.getAttributeAsString("outputDocId") != null ? Long.parseLong(record
+		final Long outputDocId = record.getAttribute("outputDocId") != null ? Long.parseLong(record
 				.getAttributeAsString("outputDocId")) : null;
-		final long outputFolderId = Long.parseLong(record.getAttributeAsString("outputDocId"));
+		final long outputFolderId = Long.parseLong(record.getAttributeAsString("outputFolderId"));
 
 		MenuItem execute = new MenuItem();
 		execute.setTitle(I18N.message("execute"));
@@ -367,14 +372,34 @@ public class ReportsPanel extends VLayout {
 		openInFolder.setTitle(I18N.message("openinfolder"));
 		openInFolder.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				if (outputDocId != null)
-					DocumentsPanel.get().openInFolder(outputDocId);
-				else
-					DocumentsPanel.get().openInFolder(outputFolderId, null);
+				DocumentsPanel.get().openInFolder(outputFolderId, outputDocId);
 			}
 		});
 
-		contextMenu.setItems(execute, upload, enable, disable, delete, openInFolder);
+		MenuItem download = new MenuItem();
+		download.setTitle(I18N.message("download"));
+		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+						+ outputDocId);
+			}
+		});
+
+		MenuItem preview = new MenuItem();
+		preview.setTitle(I18N.message("preview"));
+		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				String filename = record.getAttributeAsString("name") + "."
+						+ record.getAttributeAsString("outputFormat");
+				PreviewPopup iv = new PreviewPopup(outputDocId, null, filename, true);
+				iv.show();
+			}
+		});
+
+		if (outputDocId != null)
+			contextMenu.setItems(execute, upload, enable, disable, delete, openInFolder, download, preview);
+		else
+			contextMenu.setItems(execute, upload, enable, disable, delete, openInFolder);
 		contextMenu.showContextMenu();
 	}
 

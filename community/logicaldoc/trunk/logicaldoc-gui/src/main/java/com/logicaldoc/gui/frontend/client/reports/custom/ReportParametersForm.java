@@ -16,10 +16,12 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.ReportService;
 import com.logicaldoc.gui.frontend.client.services.ReportServiceAsync;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.IButton;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.DateItem;
@@ -70,10 +72,7 @@ public class ReportParametersForm extends Window {
 			@Override
 			public void onSuccess(GUIExtendedAttribute[] parameters) {
 				ReportParametersForm.this.parameters = parameters;
-				if (parameters == null || parameters.length == 0)
-					onExecute();
-				else
-					init();
+				init();
 			}
 		});
 	}
@@ -139,10 +138,16 @@ public class ReportParametersForm extends Window {
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setItems(items.toArray(new FormItem[0]));
 
-		Tab tab = new Tab(I18N.message("formfields"));
-		tab.setPane(form);
+		Tab tab = new Tab(I18N.message("reportparams"));
 
-		TabSet tabSet = new TabSet();
+		if (items.isEmpty()) {
+			Label label = new Label(I18N.message("reportnoparams"));
+			label.setAlign(Alignment.CENTER);
+			tab.setPane(label);
+		} else
+			tab.setPane(form);
+
+		TabSet tabSet = new TabSet();		
 		tabSet.setTabBarPosition(Side.TOP);
 		tabSet.setTabBarAlign(Side.LEFT);
 		tabSet.setWidth100();
@@ -225,6 +230,7 @@ public class ReportParametersForm extends Window {
 					@Override
 					public void onSuccess(Void arg) {
 						destroy();
+						Log.info(I18N.message("reportinexecution"), null);
 					}
 				});
 	}

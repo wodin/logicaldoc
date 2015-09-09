@@ -18,7 +18,6 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
-import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
@@ -83,10 +82,7 @@ public class ReportStandardProperties extends ReportDetailsTab {
 
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", "id", Long.toString(report.getId()));
 
-		TextItem name = ItemFactory.newSimpleTextItem("name", "name", report.getName());
-		name.addChangedHandler(changedHandler);
-		name.setRequired(true);
-		name.setDisabled(report.getId() != 0);
+		StaticTextItem name = ItemFactory.newStaticTextItem("name", "name", report.getName());
 
 		TextAreaItem description = ItemFactory.newTextAreaItem("description", "description", report.getDescription());
 		description.setWidth(250);
@@ -115,7 +111,7 @@ public class ReportStandardProperties extends ReportDetailsTab {
 		StaticTextItem outputLink = ItemFactory.newStaticTextItem("output", "output", perma);
 
 		if (report.getOutputDocId() != null)
-			form.setItems(id, outputLink, description, name, outputFolderSelector, format, updatePolicy);
+			form.setItems(id, outputLink, name, description, outputFolderSelector, format, updatePolicy);
 		else
 			form.setItems(id, description, name, outputFolderSelector, format, updatePolicy);
 

@@ -32,8 +32,9 @@ public class ReportsDS extends DataSource {
 		DataSourceBooleanField enabled = new DataSourceBooleanField("eenabled");
 
 		DataSourceDateTimeField lastRun = new DataSourceDateTimeField("lastRun");
+		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
 
-		setFields(id, name, enabled, enabledIcon, runningIcon, status, lastRun, outputFolderId, outputDocId);
+		setFields(id, name, enabled, enabledIcon, runningIcon, status, lastRun, outputFolderId, outputDocId, lastModified);
 		setDataURL("data/reports.xml?sid=" + Session.get().getSid());
 		setClientOnly(true);
 	}
