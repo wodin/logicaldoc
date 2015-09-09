@@ -14,7 +14,7 @@ public class GUIReport implements Serializable {
 	public static int STATUS_IDLE = 0;
 
 	public static int STATUS_RUNNING = 1;
-	
+
 	private static final long serialVersionUID = 1L;
 
 	private long id = 0;
@@ -34,8 +34,12 @@ public class GUIReport implements Serializable {
 	private String outputFormat = "html";
 
 	private int updatePolicy = 0;
-	
+
 	private Date lastRun;
+
+	private Date lastModified;
+
+	private long recordVersion = 0;
 
 	public GUIReport() {
 		super();
@@ -119,5 +123,21 @@ public class GUIReport implements Serializable {
 
 	public void setLastRun(Date lastRun) {
 		this.lastRun = lastRun;
+	}
+
+	public Date getLastModified() {
+		return lastModified;
+	}
+
+	public void setLastModified(Date lastModified) {
+		this.lastModified = lastModified;
+	}
+
+	public long getRecordVersion() {
+		return recordVersion;
+	}
+
+	public void setRecordVersion(long recordVersion) {
+		this.recordVersion = recordVersion;
 	}
 }
