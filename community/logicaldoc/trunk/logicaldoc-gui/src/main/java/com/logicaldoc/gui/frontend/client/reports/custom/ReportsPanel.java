@@ -113,7 +113,6 @@ public class ReportsPanel extends VLayout {
 								// Decide if we have to refresh the properties
 								// panel
 								if (selected && report.getRecordVersion() != oldVersion){
-									SC.say(oldVersion+" "+report.getRecordVersion());
 									onSelectedReport();
 								}
 
