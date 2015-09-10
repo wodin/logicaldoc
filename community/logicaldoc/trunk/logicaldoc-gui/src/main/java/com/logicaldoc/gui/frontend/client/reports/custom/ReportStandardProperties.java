@@ -111,9 +111,9 @@ public class ReportStandardProperties extends ReportDetailsTab {
 		StaticTextItem outputLink = ItemFactory.newStaticTextItem("output", "output", perma);
 
 		if (report.getOutputDocId() != null)
-			form.setItems(id, outputLink, name, description, outputFolderSelector, format, updatePolicy);
+			form.setItems(id, outputLink, name, outputFolderSelector, format, updatePolicy, description);
 		else
-			form.setItems(id, description, name, outputFolderSelector, format, updatePolicy);
+			form.setItems(id, name, outputFolderSelector, format, updatePolicy, description);
 
 		columns.addMember(form);
 

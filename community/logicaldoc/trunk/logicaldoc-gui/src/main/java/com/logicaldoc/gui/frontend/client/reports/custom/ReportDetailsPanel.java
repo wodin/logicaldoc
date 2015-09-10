@@ -17,6 +17,7 @@ import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Img;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -39,6 +40,10 @@ public class ReportDetailsPanel extends VLayout {
 	private Layout standardTabPanel;
 
 	private ReportStandardProperties standardPanel;
+
+	private Layout logTabPanel;
+
+	private Label logLabel;
 
 	private HLayout savePanel;
 
@@ -83,7 +88,7 @@ public class ReportDetailsPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (report.getId() != 0) {
-					service.getReport(Session.get().getSid(), report.getId(), new AsyncCallback<GUIReport>() {
+					service.getReport(Session.get().getSid(), report.getId(), true, new AsyncCallback<GUIReport>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -124,6 +129,13 @@ public class ReportDetailsPanel extends VLayout {
 		propertiesTab.setPane(standardTabPanel);
 		tabSet.addTab(propertiesTab);
 
+		Tab logTab = new Tab(I18N.message("log"));
+		logTabPanel = new HLayout();
+		logTabPanel.setWidth100();
+		logTabPanel.setHeight100();
+		logTab.setPane(logTabPanel);
+		tabSet.addTab(logTab);
+
 		addMember(tabSet);
 	}
 
@@ -140,6 +152,12 @@ public class ReportDetailsPanel extends VLayout {
 				standardTabPanel.removeMember(standardPanel);
 		}
 
+		if (logLabel != null) {
+			logLabel.destroy();
+			if (logTabPanel.contains(logLabel))
+				logTabPanel.removeMember(logLabel);
+		}
+
 		ChangedHandler changeHandler = new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -148,6 +166,11 @@ public class ReportDetailsPanel extends VLayout {
 		};
 		standardPanel = new ReportStandardProperties(report, changeHandler);
 		standardTabPanel.addMember(standardPanel);
+
+		logLabel = new Label(report.getLog() != null ? report.getLog() : "");
+		logLabel.setWidth100();
+		logLabel.setHeight100();
+		logTabPanel.addMember(logLabel);
 	}
 
 	public GUIReport getReport() {

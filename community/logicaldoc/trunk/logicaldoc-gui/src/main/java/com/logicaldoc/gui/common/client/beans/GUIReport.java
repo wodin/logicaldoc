@@ -41,6 +41,8 @@ public class GUIReport implements Serializable {
 
 	private long recordVersion = 0;
 
+	private String log;
+
 	public GUIReport() {
 		super();
 	}
@@ -139,5 +141,13 @@ public class GUIReport implements Serializable {
 
 	public void setRecordVersion(long recordVersion) {
 		this.recordVersion = recordVersion;
+	}
+
+	public String getLog() {
+		return log;
+	}
+
+	public void setLog(String log) {
+		this.log = log;
 	}
 }

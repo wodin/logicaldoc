@@ -10,7 +10,7 @@ public interface ReportServiceAsync {
 
 	void delete(String sid, long id, AsyncCallback<Void> callback);
 
-	void getReport(String sid, long id, AsyncCallback<GUIReport> callback);
+	void getReport(String sid, long id, boolean withLog, AsyncCallback<GUIReport> callback);
 
 	void execute(String sid, long id, GUIExtendedAttribute[] paremeters, AsyncCallback<Void> callback);
 

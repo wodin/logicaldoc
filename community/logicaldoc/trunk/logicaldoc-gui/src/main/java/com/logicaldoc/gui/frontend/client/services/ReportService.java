@@ -35,7 +35,7 @@ public interface ReportService extends RemoteService {
 	/**
 	 * Loads a given report from the database
 	 */
-	public GUIReport getReport(String sid, long id) throws ServerException;
+	public GUIReport getReport(String sid, long id, boolean withLog) throws ServerException;
 
 	/**
 	 * Loads all the reports
