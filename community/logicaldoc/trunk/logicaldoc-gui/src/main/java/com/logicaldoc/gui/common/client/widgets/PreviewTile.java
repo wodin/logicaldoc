@@ -23,22 +23,14 @@ public class PreviewTile extends HLayout {
 
 	private long docId;
 
+	private String title;
+
 	public PreviewTile(final long docId, final String title) {
 		this.docId = docId;
+		this.title = title;
 		setMembersMargin(1);
 		setAlign(Alignment.RIGHT);
 		setOverflow(Overflow.HIDDEN);
-
-		addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				if (Session.get().isShowThumbnail()) {
-					ImageLightbox lightbox = new ImageLightbox(docId, title);
-					lightbox.show();
-				}
-			}
-		});
 
 		init();
 	}
@@ -54,6 +46,16 @@ public class PreviewTile extends HLayout {
 					+ "' height='" + Session.get().getConfig("gui.tile.size")
 					+ "px' style='float:right;' align='right'/>";
 			HTMLFlow tileImage = new HTMLFlow(html);
+			tileImage.addClickHandler(new ClickHandler() {
+
+				@Override
+				public void onClick(ClickEvent event) {
+					if (Session.get().isShowThumbnail()) {
+						ImageLightbox lightbox = new ImageLightbox(docId, title);
+						lightbox.show();
+					}
+				}
+			});
 
 			Img closeTileImage = new Img("[SKIN]/headerIcons/close.gif", 16, 16);
 			closeTileImage.setShowRollOver(true);
