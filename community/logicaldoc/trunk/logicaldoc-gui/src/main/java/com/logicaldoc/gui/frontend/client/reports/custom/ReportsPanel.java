@@ -25,6 +25,7 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -111,8 +112,10 @@ public class ReportsPanel extends VLayout {
 
 								// Decide if we have to refresh the properties
 								// panel
-								if (selected && report.getRecordVersion() != oldVersion)
+								if (selected && report.getRecordVersion() != oldVersion){
+									SC.say(oldVersion+" "+report.getRecordVersion());
 									onSelectedReport();
+								}
 
 								break;
 							}
@@ -264,7 +267,7 @@ public class ReportsPanel extends VLayout {
 		execute.setTitle(I18N.message("execute"));
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.getReport(Session.get().getSid(), selectedId, new AsyncCallback<GUIReport>() {
+				service.getReport(Session.get().getSid(), selectedId, false, new AsyncCallback<GUIReport>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -446,7 +449,7 @@ public class ReportsPanel extends VLayout {
 	private void onSelectedReport() {
 		Record record = grid.getSelectedRecord();
 		if (record != null)
-			service.getReport(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+			service.getReport(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
 					new AsyncCallback<GUIReport>() {
 
 						@Override
