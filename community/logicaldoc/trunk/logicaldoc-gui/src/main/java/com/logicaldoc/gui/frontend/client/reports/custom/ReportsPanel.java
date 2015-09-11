@@ -25,7 +25,6 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -112,7 +111,7 @@ public class ReportsPanel extends VLayout {
 
 								// Decide if we have to refresh the properties
 								// panel
-								if (selected && report.getRecordVersion() != oldVersion){
+								if (selected && report.getRecordVersion() != oldVersion) {
 									onSelectedReport();
 								}
 
