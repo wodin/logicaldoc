@@ -51,8 +51,11 @@ public class ReportParametersForm extends Window {
 
 	private GUIExtendedAttribute[] parameters;
 
-	public ReportParametersForm(GUIReport form) {
+	private ReportsPanel panel;
+
+	public ReportParametersForm(GUIReport form, ReportsPanel panel) {
 		this.report = form;
+		this.panel = panel;
 
 		setTitle(I18N.message("form") + " - " + form.getName());
 		setWidth(500);
@@ -147,7 +150,7 @@ public class ReportParametersForm extends Window {
 		} else
 			tab.setPane(form);
 
-		TabSet tabSet = new TabSet();		
+		TabSet tabSet = new TabSet();
 		tabSet.setTabBarPosition(Side.TOP);
 		tabSet.setTabBarAlign(Side.LEFT);
 		tabSet.setWidth100();
@@ -231,6 +234,7 @@ public class ReportParametersForm extends Window {
 					public void onSuccess(Void arg) {
 						destroy();
 						Log.info(I18N.message("reportinexecution"), null);
+						panel.update();
 					}
 				});
 	}

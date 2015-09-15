@@ -78,52 +78,56 @@ public class ReportsPanel extends VLayout {
 		 */
 		timer = new Timer() {
 			public void run() {
-				service.getReports(Session.get().getSid(), new AsyncCallback<GUIReport[]>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIReport[] reports) {
-						for (GUIReport report : reports) {
-							for (ListGridRecord record : grid.getRecords()) {
-								if (Long.parseLong(record.getAttributeAsString("id")) != report.getId())
-									continue;
-
-								long oldVersion = record.getAttributeAsLong("recordVersion");
-
-								record.setAttribute("runningIcon", record.getAttribute("name").equals(report.getName())
-										&& report.getStatus() != GUIReport.STATUS_IDLE ? "running_task" : "idle_task");
-								record.setAttribute("status", report.getStatus());
-								record.setAttribute("lastRun", report.getLastRun());
-								record.setAttribute("lastModified", report.getLastModified());
-								record.setAttribute("recordVersion", report.getRecordVersion());
-
-								if (report.getOutputDocId() != null)
-									record.setAttribute("outputDocId", "" + report.getOutputDocId());
-								else
-									record.setAttribute("outputDocId", (String) null);
-								grid.refreshRow(grid.getRecordIndex(record));
-
-								boolean selected = grid.getSelectedRecord() != null ? record.equals(grid
-										.getSelectedRecord()) : false;
-
-								// Decide if we have to refresh the properties
-								// panel
-								if (selected && report.getRecordVersion() != oldVersion) {
-									onSelectedReport();
-								}
-
-								break;
-							}
-						}
-					}
-				});
+				update();
 			}
 		};
 
 		timer.scheduleRepeating(5 * 1000);
+	}
+
+	public void update() {
+		service.getReports(Session.get().getSid(), new AsyncCallback<GUIReport[]>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUIReport[] reports) {
+				for (GUIReport report : reports) {
+					for (ListGridRecord record : grid.getRecords()) {
+						if (Long.parseLong(record.getAttributeAsString("id")) != report.getId())
+							continue;
+
+						long oldVersion = record.getAttributeAsLong("recordVersion");
+
+						record.setAttribute("runningIcon", record.getAttribute("name").equals(report.getName())
+								&& report.getStatus() != GUIReport.STATUS_IDLE ? "running_task" : "idle_task");
+						record.setAttribute("status", report.getStatus());
+						record.setAttribute("lastRun", report.getLastRun());
+						record.setAttribute("lastModified", report.getLastModified());
+						record.setAttribute("recordVersion", report.getRecordVersion());
+
+						if (report.getOutputDocId() != null)
+							record.setAttribute("outputDocId", "" + report.getOutputDocId());
+						else
+							record.setAttribute("outputDocId", (String) null);
+						grid.refreshRow(grid.getRecordIndex(record));
+
+						boolean selected = grid.getSelectedRecord() != null ? record.equals(grid.getSelectedRecord())
+								: false;
+
+						// Decide if we have to refresh the properties
+						// panel
+						if (selected && report.getRecordVersion() != oldVersion) {
+							onSelectedReport();
+						}
+
+						break;
+					}
+				}
+			}
+		});
 	}
 
 	public void refresh() {
@@ -273,7 +277,7 @@ public class ReportsPanel extends VLayout {
 
 					@Override
 					public void onSuccess(GUIReport report) {
-						ReportParametersForm form = new ReportParametersForm(report);
+						ReportParametersForm form = new ReportParametersForm(report, ReportsPanel.this);
 						form.show();
 					}
 				});
