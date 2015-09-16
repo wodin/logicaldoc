@@ -161,7 +161,7 @@ public class Feature {
 	
 	public static final int FORM = 86;
 	
-	public static final int REPORT = 87;
+	public static final int CUSTOM_REPORTS = 87;
 
 	private static Set<String> features = new HashSet<String>();
 

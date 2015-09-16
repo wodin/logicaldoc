@@ -121,9 +121,9 @@ public class ReportsMenu extends VLayout {
 			}
 		}
 
-		if (Feature.visible(Feature.REPORT)) {
+		if (Feature.visible(Feature.CUSTOM_REPORTS)) {
 			addMember(customreports);
-			if (!Feature.enabled(Feature.REPORT) || !Menu.enabled(Menu.CUSTOMREPORTS)) {
+			if (!Feature.enabled(Feature.CUSTOM_REPORTS) || !Menu.enabled(Menu.CUSTOMREPORTS)) {
 				customreports.setDisabled(true);
 				customreports.setTooltip(I18N.message("featuredisabled"));
 			}
