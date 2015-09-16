@@ -224,8 +224,7 @@ public class ReportsPanel extends VLayout {
 		/**
 		 * Only admin users of the default tenant can upload new reports
 		 */
-		if (Session.get().getUser().getTenantId() == Constants.TENANT_DEFAULTID
-				&& Session.get().getUser().isMemberOf("admin"))
+		if (canUploadDesign())
 			toolStrip.addButton(newReport);
 
 		detailsContainer.setAlign(Alignment.CENTER);
@@ -254,6 +253,11 @@ public class ReportsPanel extends VLayout {
 				infoPanel.setMessage(I18N.message("showreports", Integer.toString(grid.getTotalRows())));
 			}
 		});
+	}
+
+	private boolean canUploadDesign() {
+		return Session.get().getUser().getTenantId() == Constants.TENANT_DEFAULTID
+				&& Session.get().getUser().isMemberOf("admin");
 	}
 
 	private void showContextMenu() {
@@ -299,6 +303,7 @@ public class ReportsPanel extends VLayout {
 				uploader.show();
 			}
 		});
+		upload.setEnabled(canUploadDesign());
 
 		MenuItem delete = new MenuItem();
 		delete.setTitle(I18N.message("ddelete"));
