@@ -34,7 +34,7 @@ public class ApplyTemplateDialog extends Dialog {
 		super();
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("applytemplate"));
-		setWidth(420);
+		setWidth(430);
 		setHeight(135);
 		setCanDragResize(true);
 		setIsModal(true);
