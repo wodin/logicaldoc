@@ -29,6 +29,7 @@ import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.RichTextItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -76,7 +77,7 @@ public class EmailDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("sendmail"));
 		setWidth(550);
-		setHeight(430);
+		setHeight(500);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -115,10 +116,10 @@ public class EmailDialog extends Window {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if ((ticket.getValue() != null && ticket.getValueAsBoolean()) || !Feature.enabled(Feature.PDF)){
+				if ((ticket.getValue() != null && ticket.getValueAsBoolean()) || !Feature.enabled(Feature.PDF)) {
 					pdf.setValue(false);
 					pdf.hide();
-				}else{
+				} else {
 					pdf.show();
 				}
 			}
@@ -171,28 +172,30 @@ public class EmailDialog extends Window {
 
 					ContactingServer.get().show();
 
-					documentService.sendAsEmail(Session.get().getSid(), mail, Session.get().getUser().getLanguage(), new AsyncCallback<String>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							ContactingServer.get().hide();
-							Log.serverError(caught);
-							sendItem.enable();
-							destroy();
-						}
+					documentService.sendAsEmail(Session.get().getSid(), mail, Session.get().getUser().getLanguage(),
+							new AsyncCallback<String>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									ContactingServer.get().hide();
+									Log.serverError(caught);
+									sendItem.enable();
+									destroy();
+								}
 
-						@Override
-						public void onSuccess(String result) {
-							ContactingServer.get().hide();
-							sendItem.enable();
-							if ("ok".equals(result)) {
-								EventPanel.get().info(
-										I18N.message("messagesent") + ". " + I18N.message("documentcopysent"), null);
-							} else {
-								EventPanel.get().error(I18N.message("messagenotsent"), null);
-							}
-							destroy();
-						}
-					});
+								@Override
+								public void onSuccess(String result) {
+									ContactingServer.get().hide();
+									sendItem.enable();
+									if ("ok".equals(result)) {
+										EventPanel.get().info(
+												I18N.message("messagesent") + ". " + I18N.message("documentcopysent"),
+												null);
+									} else {
+										EventPanel.get().error(I18N.message("messagenotsent"), null);
+									}
+									destroy();
+								}
+							});
 				}
 			}
 		});
@@ -210,7 +213,7 @@ public class EmailDialog extends Window {
 	private SectionStack prepareRecipientsGrid() {
 		SectionStack sectionStack = new SectionStack();
 		sectionStack.setWidth100();
-		sectionStack.setHeight(130);
+		sectionStack.setHeight(200);
 		sectionStack.setMargin(6);
 		SectionStackSection section = new SectionStackSection("<b>" + I18N.message("recipients") + "</b>");
 		section.setCanCollapse(false);
@@ -219,7 +222,7 @@ public class EmailDialog extends Window {
 		ListGridField email = new ListGridField("email", I18N.message("email"));
 		email.setWidth("*");
 		email.setCanFilter(true);
-		FormItem emailItem = ItemFactory.newEmailSelector("email", "email");
+		FormItem emailItem = ItemFactory.newEmailComboSelector("email", "email");
 		emailItem.setRequired(true);
 		emailItem.setWidth("100%");
 		emailItem.addKeyPressHandler(new KeyPressHandler() {
@@ -289,8 +292,60 @@ public class EmailDialog extends Window {
 		record.setAttribute("email", "");
 		recipientsGrid.setRecords(new ListGridRecord[] { record });
 
-		section.setItems(recipientsGrid);
+		final SelectItem contactsSelector = ItemFactory.newEmailSelector("contacts", "contacts");
+		contactsSelector.setWidth(200);
+		contactsSelector.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				ListGridRecord[] newSelection = contactsSelector.getSelectedRecords();
+				if (newSelection == null || newSelection.length < 1)
+					return;
+
+				for (int i = 0; i < newSelection.length; i++) {
+					ListGridRecord newRec = new ListGridRecord();
+					newRec.setAttribute("email", newSelection[i].getAttributeAsString("email"));
+					newRec.setAttribute("type", "to");
+
+					// Iterate over the current recipients avoiding duplicates
+					boolean duplicate = false;
+					ListGridRecord[] currentRecipients = recipientsGrid.getRecords();
+					for (int j = 0; j < currentRecipients.length; j++) {
+						ListGridRecord rec = currentRecipients[j];
+						if (rec.getAttributeAsString("email").contains(newRec.getAttributeAsString("email"))) {
+							duplicate = true;
+							break;
+						}
+					}
+
+					if (!duplicate) {
+						// Iterate over the current recipients finding an empty
+						// slot
+						boolean empty = false;
+						for (int j = 0; j < currentRecipients.length; j++) {
+							if (currentRecipients[j].getAttributeAsString("email").isEmpty()) {
+								empty = true;
+								currentRecipients[j].setAttribute("email", newRec.getAttributeAsString("email"));
+								recipientsGrid.refreshRow(j);
+								break;
+							}
+						}
+
+						if (!empty)
+							recipientsGrid.addData(newRec);
+					}
+				}
+
+				contactsSelector.clearValue();
+			}
+		});
+
+		DynamicForm addressbook = new DynamicForm();
+		addressbook.setItems(contactsSelector);
+
+		section.setItems(recipientsGrid, addressbook);
 		sectionStack.setSections(section);
+
 		return sectionStack;
 	}
 
@@ -310,4 +365,5 @@ public class EmailDialog extends Window {
 		newRecords[records.length].setAttribute("email", "");
 		recipientsGrid.setRecords(newRecords);
 	}
+
 }

@@ -200,17 +200,39 @@ public class ItemFactory {
 		item.setWrapTitle(false);
 		item.setHintStyle("hint");
 		item.setWidth(180);
+
 		return item;
 	}
 
-	public static ComboBoxItem newEmailSelector(String name, String title) {
-		ComboBoxItem selector = new ComboBoxItem(filterItemName(name));
+	public static ComboBoxItem newEmailComboSelector(String name, String title) {
+		final ComboBoxItem selector = new ComboBoxItem(filterItemName(name));
 		selector.setTitle(I18N.message(title));
 		selector.setWrapTitle(false);
 		selector.setValueField("email");
 		selector.setDisplayField("email");
 		selector.setPickListWidth(350);
 		selector.setFetchDelay(2000);
+		selector.setHideEmptyPickList(true);
+		ListGridField email = new ListGridField("email", I18N.message("email"));
+		email.setWidth("*");
+		ListGridField firstName = new ListGridField("firstName", I18N.message("firstname"));
+		firstName.setWidth(90);
+		ListGridField lastName = new ListGridField("lastName", I18N.message("lastname"));
+		lastName.setWidth(90);
+		selector.setPickListFields(email, firstName, lastName);
+		selector.setOptionDataSource(new ContactsDS());
+		selector.setHintStyle("hint");
+		return selector;
+	}
+
+	public static SelectItem newEmailSelector(String name, String title) {
+		final SelectItem selector = new SelectItem(filterItemName(name));
+		selector.setTitle(I18N.message(title));
+		selector.setWrapTitle(false);
+		selector.setValueField("email");
+		selector.setDisplayField("email");
+		selector.setPickListWidth(350);
+		selector.setMultiple(true);
 		selector.setHideEmptyPickList(true);
 		ListGridField email = new ListGridField("email", I18N.message("email"));
 		email.setWidth("*");
@@ -506,7 +528,7 @@ public class ItemFactory {
 		}
 
 		item.setName(itemName);
-		if(att.getLabel()!=null)
+		if (att.getLabel() != null)
 			item.setTitle(att.getLabel());
 		else
 			item.setTitle(att.getName());
