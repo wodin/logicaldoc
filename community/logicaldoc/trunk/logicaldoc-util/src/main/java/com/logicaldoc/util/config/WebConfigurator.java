@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.jdom.Element;
+import org.jdom.Namespace;
 
 /**
  * Configurator for the web.xml file
@@ -509,5 +510,37 @@ public class WebConfigurator extends XMLBean {
 		Element element = getRootElement().getChild("description", getRootElement().getNamespace());
 		element.setText(description);
 		writeXMLDoc();
+	}
+
+	/**
+	 * Sets the given policy in the <transport-guarantee> tags
+	 * 
+	 * @return true if the XML was touched
+	 */
+	@SuppressWarnings("rawtypes")
+	public boolean setTransportGuarantee(String policy) {
+		boolean modified = false;
+		Namespace namespace = getRootElement().getNamespace();
+		List constraints = getRootElement().getChildren("security-constraint", namespace);
+		for (Iterator iterator = constraints.iterator(); iterator.hasNext();) {
+			Element constraint = (Element) iterator.next();
+			if (constraint == null)
+				continue;
+			Element userData = constraint.getChild("user-data-constraint", namespace);
+			if (userData == null)
+				continue;
+			Element transport = userData.getChild("transport-guarantee", namespace);
+			if (transport == null)
+				continue;
+			if (!transport.getText().equals(policy)) {
+				transport.setText(policy);
+				modified = true;
+			}
+		}
+
+		if (modified)
+			writeXMLDoc();
+
+		return modified;
 	}
 }
