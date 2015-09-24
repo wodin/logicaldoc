@@ -29,7 +29,10 @@ public class Tag implements Comparable<Tag>, Serializable {
 
 	@Override
 	public int compareTo(Tag o) {
-		return this.tag.compareTo(o.tag);
+		int comp = this.tag.compareTo(o.tag);
+		if (comp != 0)
+			return comp;
+		return Long.compare(this.tenantId, o.tenantId);
 	}
 
 	public String getTag() {
@@ -61,6 +64,12 @@ public class Tag implements Comparable<Tag>, Serializable {
 		if (tag == null)
 			return 0;
 		else
-			return tag.hashCode();
+			return (tag + tenantId).hashCode();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		Tag other = (Tag) o;
+		return other.tenantId == this.tenantId && this.tag != null && this.tag.equals(other.tag);
 	}
 }

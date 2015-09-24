@@ -552,6 +552,18 @@
         <auth-constraint>
             <role-name>admin</role-name>
         </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Entire Application</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
     </security-constraint>
     <security-constraint>
         <display-name>Sessions management only allowed after authentication</display-name>
@@ -563,6 +575,9 @@
         <auth-constraint>
             <role-name>admin</role-name>
         </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>        
     </security-constraint>
     <security-constraint>
         <display-name>License management only allowed after authentication</display-name>
@@ -574,6 +589,9 @@
         <auth-constraint>
             <role-name>admin</role-name>
         </auth-constraint>
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>         
     </security-constraint>
     <login-config>
         <auth-method>BASIC</auth-method>

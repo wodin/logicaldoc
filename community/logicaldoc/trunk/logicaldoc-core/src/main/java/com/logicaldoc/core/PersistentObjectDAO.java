@@ -28,7 +28,6 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 */
 	public boolean delete(long id);
 
-	
 	/**
 	 * This method deletes an entity and you can give a deletion code
 	 * 
@@ -36,7 +35,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param code Deletion code.
 	 */
 	public boolean delete(long id, int code);
-	
+
 	/**
 	 * This method finds an entity by ID.
 	 * 
@@ -44,6 +43,17 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @return Entity with given ID.
 	 */
 	public T findById(long id);
+
+	/**
+	 * This method finds an entity by ID.
+	 * 
+	 * @param doc ID of the entity.
+	 * @param initialized True if the instance's lazy collections have to be
+	 *        initialized
+	 * 
+	 * @return Entity with given ID.
+	 */
+	public T findById(long id, boolean initialize);
 
 	/**
 	 * Finds all entities in the database
@@ -241,7 +251,7 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param entities The entities to be deleted
 	 */
 	public void deleteAll(Collection<T> entities);
-	
+
 	/**
 	 * Deletes all entries form the database giving a specific deletion code
 	 * 
@@ -249,7 +259,6 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	 * @param delete The deletion code
 	 */
 	public void deleteAll(Collection<T> entities, int code);
-
 
 	/**
 	 * Executes a bulk update as specified by the given expression
