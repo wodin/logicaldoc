@@ -23,7 +23,17 @@
 		<param name="MaxBackupIndex" value="5" />
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
 	</appender>
-
+    
+    <appender name="DB" class="org.apache.log4j.RollingFileAppender">
+        <param name="File" value="D:/LogicalDOC-Devel/repository/logs/db.log" />
+        <param name="MaxFileSize" value="5MB" />
+        <param name="MaxBackupIndex" value="5" />
+        <param name="Append" value="true" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss,SSS} %-5p  (%c:%4L) -- %m%n" />
+        </layout>
+    </appender>    
+    
 	<appender name="IndexOptimizer"
 		class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
@@ -111,9 +121,10 @@
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
 	</appender>
 
-	<category name="org.hibernate.cache" additivity="true">
-		<priority value="error" />
-	</category>
+    <category name="org.hibernate" additivity="true">
+      <priority value="debug" />
+      <appender-ref ref="DB" />
+    </category>
 
 	<category name="com.logicaldoc.core" additivity="true">
 		<priority value="info" />

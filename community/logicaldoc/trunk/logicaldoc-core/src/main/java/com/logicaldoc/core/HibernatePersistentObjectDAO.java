@@ -20,7 +20,6 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
-import com.sun.source.tree.AssertTree;
 
 /**
  * Hibernate implementation of <code>PersistentObjectDAO</code>
@@ -45,8 +44,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 	}
 
 	public boolean delete(long id, int code) {
-		assert(code!=0);
-		
+		assert (code != 0);
+
 		boolean result = true;
 		try {
 			T entity = findById(id);
@@ -79,6 +78,14 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 
 	public List<Long> findAllIds(long tenantId) {
 		return findIdsByWhere(" _entity.tenantId=" + tenantId, "", null);
+	}
+
+	@Override
+	public T findById(long id, boolean initialize) {
+		T entity = findById(id);
+		if (initialize)
+			initialize(entity);
+		return entity;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -184,7 +191,8 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 
 	protected void refresh(Object entity) {
 		try {
-			sessionFactory.getCurrentSession().refresh(entity);
+			if (!sessionFactory.getCurrentSession().contains(entity))
+				sessionFactory.getCurrentSession().refresh(entity);
 		} catch (Throwable t) {
 
 		}
@@ -194,6 +202,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 		try {
 			return sessionFactory.getCurrentSession().merge(entity);
 		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
 			return null;
 		}
 	}
@@ -258,8 +267,6 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 		return list;
 	}
 
-	
-	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public List queryForList(String sql, Object[] args, Class elementType, Integer maxRows) {
