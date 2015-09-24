@@ -101,8 +101,14 @@ public class SecuritySettingsPanel extends VLayout {
 		ignorelogincase.setWrapTitle(false);
 		ignorelogincase.setRequired(true);
 
+		final RadioGroupItem forceSsl = ItemFactory.newBooleanSelector("forcessl", I18N.message("forcessl"));
+		forceSsl.setValue(settings.isForceSsl() ? "yes" : "no");
+		forceSsl.setWrapTitle(false);
+		forceSsl.setRequired(true);
+		forceSsl.setDisabled(Session.get().isDemo());
+
 		if (Session.get().isDefaultTenant())
-			pwdForm.setFields(pwdSize, pwdExp, savelogin, ignorelogincase);
+			pwdForm.setFields(pwdSize, pwdExp, savelogin, ignorelogincase, forceSsl);
 		else
 			pwdForm.setFields(pwdSize, pwdExp, savelogin);
 		password.setPane(pwdForm);
@@ -130,6 +136,8 @@ public class SecuritySettingsPanel extends VLayout {
 							: false);
 					SecuritySettingsPanel.this.settings.setEnableAnonymousLogin(values.get("enableanonymous").equals(
 							"yes") ? true : false);
+					SecuritySettingsPanel.this.settings.setForceSsl(values.get("forcessl").equals("yes") ? true
+							: false);
 					if (!SecuritySettingsPanel.this.settings.isEnableAnonymousLogin())
 						SecuritySettingsPanel.this.settings.setAnonymousUser(null);
 					else if (SecuritySettingsPanel.this.settings.getAnonymousUser() == null) {
@@ -141,7 +149,7 @@ public class SecuritySettingsPanel extends VLayout {
 								"yes") ? true : false);
 
 					service.saveSettings(Session.get().getSid(), SecuritySettingsPanel.this.settings,
-							new AsyncCallback<Void>() {
+							new AsyncCallback<Boolean>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -149,10 +157,13 @@ public class SecuritySettingsPanel extends VLayout {
 								}
 
 								@Override
-								public void onSuccess(Void ret) {
+								public void onSuccess(Boolean restartRequired) {
 									Log.info(
 											I18N.message("settingssaved") + "  "
 													+ I18N.message("settingsaffectnewsessions"), null);
+
+									if (restartRequired.booleanValue())
+										SC.warn(I18N.message("needrestart"));
 								}
 							});
 				}

@@ -137,7 +137,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("hibernate.") || name.contains(".session.") || name.contains("acmecad.")
 					|| name.contains("antivirus.") || name.startsWith("login.") || name.equals("upload.maxsize")
 					|| name.startsWith("news.") || name.equals("registry") || name.equals("searchengine")
-					|| name.equals("load"))
+					|| name.equals("load") || name.startsWith("ssl."))
 				continue;
 
 			sortedSet.add(key.toString());
