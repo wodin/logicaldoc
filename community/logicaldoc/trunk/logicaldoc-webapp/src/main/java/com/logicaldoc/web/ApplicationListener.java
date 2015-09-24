@@ -24,6 +24,7 @@ import org.springframework.util.Log4jConfigurer;
 
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.config.LoggingConfigurator;
+import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.dbinit.DBInit;
 import com.logicaldoc.util.io.ZipUtil;
 import com.logicaldoc.util.plugin.PluginRegistry;
@@ -132,6 +133,18 @@ public class ApplicationListener implements ServletContextListener, HttpSessionL
 			lconf.write();
 
 			Log4jConfigurer.initLogging(log4jPath);
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+
+		// Update the web descriptor with the correct transport guarantee
+		try {
+			ContextProperties conf = new ContextProperties();
+			String policy = "true".equals(conf.getProperty("ssl.required")) ? "CONFIDENTIAL" : "NONE";
+			WebConfigurator configurator = new WebConfigurator(context.getRealPath("/WEB-INF/web.xml"));
+			if (configurator.setTransportGuarantee(policy)) {
+				PluginRegistry.getInstance().setRestartRequired();
+			}
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}

@@ -90,8 +90,10 @@ public interface SecurityService extends RemoteService {
 
 	/**
 	 * Saves security settings
+	 * 
+	 * @return True if the application has to be restarted
 	 */
-	public void saveSettings(String sid, GUISecuritySettings settings) throws ServerException;
+	public boolean saveSettings(String sid, GUISecuritySettings settings) throws ServerException;
 
 	/**
 	 * Loads security settings

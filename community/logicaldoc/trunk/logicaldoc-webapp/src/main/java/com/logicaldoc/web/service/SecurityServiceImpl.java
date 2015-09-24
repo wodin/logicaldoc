@@ -1,5 +1,7 @@
 package com.logicaldoc.web.service;
 
+import java.io.File;
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -66,6 +69,7 @@ import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.crypt.CryptUtil;
 import com.logicaldoc.util.security.PasswordGenerator;
 import com.logicaldoc.web.SessionFilter;
@@ -771,6 +775,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				if (user != null)
 					securitySettings.setAnonymousUser(getUser(sid, user.getId()));
 			}
+			if (StringUtils.isNotEmpty(pbean.getProperty("ssl.required")))
+				securitySettings.setForceSsl("true".equals(pbean.getProperty("ssl.required")));
 
 			log.info("Security settings data loaded successfully.");
 		} catch (Exception e) {
@@ -781,8 +787,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void saveSettings(String sid, GUISecuritySettings settings) throws ServerException {
+	public boolean saveSettings(String sid, GUISecuritySettings settings) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
+
+		boolean restartRequired = false;
 
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
@@ -790,6 +798,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (session.getTenantId() == Tenant.DEFAULT_ID) {
 				conf.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));
 				conf.setProperty("login.ignorecase", Boolean.toString(settings.isIgnoreLoginCase()));
+				conf.setProperty("ssl.required", Boolean.toString(settings.isForceSsl()));
+
+				// Update the web.xml
+				ServletContext context = getServletContext();
+				String policy = "true".equals(conf.getProperty("ssl.required")) ? "CONFIDENTIAL" : "NONE";
+				WebConfigurator configurator = new WebConfigurator(context.getRealPath("/WEB-INF/web.xml"));
+				restartRequired = configurator.setTransportGuarantee(policy);
 			}
 
 			conf.setProperty(session.getTenantName() + ".password.size", Integer.toString(settings.getPwdSize()));
@@ -803,8 +818,10 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			conf.write();
 
 			log.info("Security settings data written successfully.");
-		} catch (Exception e) {
-			log.error("Exception writing Security settings data: " + e.getMessage(), e);
+
+			return restartRequired;
+		} catch (Throwable e) {
+			return (Boolean) ServiceUtil.throwServerException(session, log, e);
 		}
 	}
 
@@ -893,11 +910,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			f.setRights(rights);
 
 			return f;
-		} catch (Throwable t) {
-			log.error(t.getMessage(), t);
+		} catch (Throwable e) {
+			return (GUIMenu) ServiceUtil.throwServerException(session, log, e);
 		}
-
-		return null;
 	}
 
 	@Override
@@ -969,7 +984,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public GUIUser[] searchUsers(String sid, String username, String groupId) throws ServerException {
-		ServiceUtil.validateSession(sid);
+		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
 			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -1000,8 +1015,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			return users.toArray(new GUIUser[0]);
 		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-			return new GUIUser[0];
+			return (GUIUser[]) ServiceUtil.throwServerException(session, log, e);
 		}
 	}
 }

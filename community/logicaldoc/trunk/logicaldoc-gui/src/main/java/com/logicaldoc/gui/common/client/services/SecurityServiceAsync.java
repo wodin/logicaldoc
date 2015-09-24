@@ -34,7 +34,7 @@ public interface SecurityServiceAsync {
 
 	void loadSettings(String sid, AsyncCallback<GUISecuritySettings> callback);
 
-	void saveSettings(String sid, GUISecuritySettings settings, AsyncCallback<Void> callback);
+	void saveSettings(String sid, GUISecuritySettings settings, AsyncCallback<Boolean> callback);
 
 	void kill(String sid, AsyncCallback<Void> callback);
 

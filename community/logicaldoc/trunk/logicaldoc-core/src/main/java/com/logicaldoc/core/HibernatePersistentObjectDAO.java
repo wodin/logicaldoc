@@ -14,6 +14,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -328,6 +329,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.queryForLong(sql);
+		} catch (EmptyResultDataAccessException empty) {
 		} catch (Exception e) {
 			e.printStackTrace();
 			if (log.isErrorEnabled())

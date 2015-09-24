@@ -253,7 +253,7 @@ public abstract class PluginRegistry {
 		return restartRequired;
 	}
 
-	void setRestartRequired() {
+	public void setRestartRequired() {
 		this.restartRequired = true;
 	}
 

@@ -21,6 +21,8 @@ public class GUISecuritySettings implements Serializable {
 	private boolean ignoreLoginCase = false;
 
 	private boolean enableAnonymousLogin = false;
+	
+	private boolean forceSsl = false;
 
 	private GUIUser anonymousUser = null;
 
@@ -70,6 +72,14 @@ public class GUISecuritySettings implements Serializable {
 
 	public void setIgnoreLoginCase(boolean ignoreLoginCase) {
 		this.ignoreLoginCase = ignoreLoginCase;
+	}
+
+	public boolean isForceSsl() {
+		return forceSsl;
+	}
+
+	public void setForceSsl(boolean forceSsl) {
+		this.forceSsl = forceSsl;
 	}
 
 }
