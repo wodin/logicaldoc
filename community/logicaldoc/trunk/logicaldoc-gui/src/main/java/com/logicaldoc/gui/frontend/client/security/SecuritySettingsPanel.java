@@ -13,8 +13,10 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
@@ -163,7 +165,13 @@ public class SecuritySettingsPanel extends VLayout {
 													+ I18N.message("settingsaffectnewsessions"), null);
 
 									if (restartRequired.booleanValue())
-										SC.warn(I18N.message("needrestart"));
+										SC.warn(I18N.message("needrestart"), new BooleanCallback() {
+											
+											@Override
+											public void execute(Boolean value) {
+												WindowUtils.reload();
+											}
+										});
 								}
 							});
 				}

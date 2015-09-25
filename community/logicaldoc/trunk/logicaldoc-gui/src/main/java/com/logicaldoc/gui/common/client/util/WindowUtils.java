@@ -62,6 +62,10 @@ public class WindowUtils {
 		return $wnd.location.hash;
 	}-*/;
 
+	public static native void reload() /*-{
+		$wnd.location.reload(true);
+	}-*/;
+	
 	public static native void setTitle(String title)/*-{
 		$doc.title = title;
 		//Change also the main frame window if any
