@@ -1,7 +1,5 @@
 package com.logicaldoc.web.service;
 
-import java.io.File;
-import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -801,10 +799,14 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				conf.setProperty("ssl.required", Boolean.toString(settings.isForceSsl()));
 
 				// Update the web.xml
-				ServletContext context = getServletContext();
-				String policy = "true".equals(conf.getProperty("ssl.required")) ? "CONFIDENTIAL" : "NONE";
-				WebConfigurator configurator = new WebConfigurator(context.getRealPath("/WEB-INF/web.xml"));
-				restartRequired = configurator.setTransportGuarantee(policy);
+				try {
+					ServletContext context = getServletContext();
+					String policy = "true".equals(conf.getProperty("ssl.required")) ? "CONFIDENTIAL" : "NONE";
+					WebConfigurator configurator = new WebConfigurator(context.getRealPath("/WEB-INF/web.xml"));
+					restartRequired = configurator.setTransportGuarantee(policy);
+				} catch (Throwable t) {
+					log.error(t.getMessage(), t);
+				}
 			}
 
 			conf.setProperty(session.getTenantName() + ".password.size", Integer.toString(settings.getPwdSize()));

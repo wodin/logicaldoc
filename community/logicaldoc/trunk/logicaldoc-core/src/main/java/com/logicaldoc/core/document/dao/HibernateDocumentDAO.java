@@ -339,7 +339,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			for (DocumentListener listener : listenerManager.getListeners())
 				listener.beforeStore(doc, transaction, dictionary);
 
-			if (doc.getCustomId() == null)
+			if (StringUtils.isEmpty(doc.getCustomId()))
 				doc.setCustomId(UUID.randomUUID().toString());
 
 			// Save the document

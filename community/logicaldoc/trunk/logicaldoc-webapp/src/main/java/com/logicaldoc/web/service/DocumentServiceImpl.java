@@ -228,7 +228,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					Document doc = toDocument(metadata);
 					doc.setTenantId(session.getTenantId());
 					doc.setCreation(new Date());
-
 					doc.setFileName(filename);
 					doc.setTitle(FilenameUtils.getBaseName(filename));
 
@@ -469,7 +468,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		Document doc = docDao.findById(docId, true);
+		Document doc = docDao.findById(docId);
 
 		GUIDocument document = null;
 		GUIFolder folder = null;
@@ -482,13 +481,14 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			// Check if it is an alias
 			if (doc.getDocRef() != null) {
 				long id = doc.getDocRef();
-				doc = docDao.findById(id, true);
+				doc = docDao.findById(id);
 				aliasId = docId;
 			}
 
 			try {
 				User user = ServiceUtil.getSessionUser(sid);
 				checkPublished(user, doc);
+				docDao.initialize(doc);
 				document = fromDocument(doc, folder);
 				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 				document.setPathExtended(fdao.computePathExtended(folder.getId()));
@@ -1089,8 +1089,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				String address = urlPrefix + "/download-ticket?ticketId=" + ticketid;
 				message = email.getMessage()
 						+ "<div style='margin-top:10px; border-top:1px solid black; background-color:#CCCCCC;'><b>&nbsp;"
-						+ I18N.message("clicktodownload", LocaleUtil.toLocale(locale)) + ": <a href='" + address + "'>"
-						+ doc.getFileName() + "</a></b></div>";
+						+ I18N.message("clicktodownload", LocaleUtil.toLocale(locale)) + ": <a href='" + address + "'>" + doc.getFileName()
+						+ "</a></b></div>";
 
 				if (doc.getDocRef() != null)
 					doc = documentDao.findById(doc.getDocRef());
