@@ -49,7 +49,7 @@ public class GDriveImport extends Window {
 
 	public GDriveImport() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-		setTitle(I18N.message("importfromgdocs"));
+		setTitle(I18N.message("importfromgdrive"));
 
 		setWidth(com.google.gwt.user.client.Window.getClientWidth());
 		setHeight(com.google.gwt.user.client.Window.getClientHeight());

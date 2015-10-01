@@ -40,16 +40,4 @@ public class SnippetStripper {
 
 		return outString;
 	}
-
-	// public static void write(String str){
-	// try {
-	// OutputStreamWriter sout = new OutputStreamWriter (new
-	// FileOutputStream(new File("/C:/test.txt")),"UTF8");
-	// sout.write(str);
-	// sout.flush();
-	// sout.close();
-	// } catch (Exception e) {
-	// e.printStackTrace();
-	// }
-	// }
 }
