@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.SocketException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.zip.ZipEntry;
@@ -79,7 +80,9 @@ public class LogDownload extends HttpServlet {
 			}
 
 			is.close();
-		} catch (Exception ex) {
+		} catch (SocketException e) {
+			//Avoid to log this kind of recurrent exception
+		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
 		} finally {
 			if ("all".equals(appender) && file != null)
