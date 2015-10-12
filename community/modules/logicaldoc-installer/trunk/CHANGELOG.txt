@@ -9,6 +9,11 @@
 
                     LogicalDOC Community Edition
 
+LogicalDOC 7.4 (2015-10-30; logicaldoc-7.4)
+==============================================================
+590 - Easy the creation of folder - Improvement - User Interface 	
+592 - Correctly handle non-latin chars when sending emails - Bug - Core
+
 LogicalDOC 7.3 (2015-07-24; logicaldoc-7.3)
 ==============================================================                    
 568 - No history recorded for multiple document download - Improvement - Core
