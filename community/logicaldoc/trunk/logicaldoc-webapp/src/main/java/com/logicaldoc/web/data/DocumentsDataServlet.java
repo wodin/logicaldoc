@@ -213,7 +213,7 @@ public class DocumentsDataServlet extends HttpServlet {
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
 								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
 								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, A.source, A.sourceId, A.recipient,"
-								+ " A.object, A.coverage, B.name, A.docRefType, A.stamped "
+								+ " A.object, A.coverage, B.name, A.docRefType, A.stamped"
 								+ " from Document as A left outer join A.template as B ");
 				query.append(" where A.deleted = 0 and not A.status=" + AbstractDocument.DOC_ARCHIVED);
 				if (folderId != null)
@@ -353,6 +353,8 @@ public class DocumentsDataServlet extends HttpServlet {
 					
 					writer.print("<sourceDate>" + (doc.getSourceDate() != null ? df.format(doc.getSourceDate()) : "")
 							+ "</sourceDate>");
+					if(doc.getSourceAuthor() != null)
+						writer.print("<sourceAuthor><![CDATA[" + doc.getSourceAuthor() + "]]></sourceAuthor>");
 					writer.print("<rating>rating" + (doc.getRating() != null ? doc.getRating() : "0") + "</rating>");
 					writer.print("<fileVersion><![CDATA[" + doc.getFileVersion() + "]]></fileVersion>");
 					writer.print("<comment><![CDATA[" + (doc.getComment() != null ? doc.getComment() : "")
