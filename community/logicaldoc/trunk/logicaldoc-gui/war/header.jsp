@@ -72,6 +72,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
     <!--meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" /-->
+    <meta name="robots" content="noindex">
 		<title></title>
 		<!--CSS for loading message at application Startup-->
 		<style type="text/css">
