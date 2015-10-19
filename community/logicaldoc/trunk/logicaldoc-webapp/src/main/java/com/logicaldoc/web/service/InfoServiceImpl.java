@@ -205,7 +205,8 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	}
 
 	static protected GUIValue[] getBundle(String locale, String tenantName) {
-		Locale l = LocaleUtil.toLocale(locale);
+		Locale l = null;
+		Locale test = LocaleUtil.toLocale(locale);
 
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
@@ -216,13 +217,28 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		List<String> installedLocales = I18N.getLocales();
 
 		for (String loc : installedLocales) {
-			if ("enabled".equals(config.getProperty(tenantName + ".lang." + loc + ".gui"))) {
-				l = LocaleUtil.toLocale(loc);
-
-				if (loc.equals(locale))
+			if ("enabled".equals(config.getProperty(tenantName + ".lang." + loc + ".gui")))
+				if (loc.equals(test.toString())) {
+					l = LocaleUtil.toLocale(loc);
 					break;
-			}
+				}
 		}
+
+		if (l == null)
+			for (String loc : installedLocales) {
+				if ("enabled".equals(config.getProperty(tenantName + ".lang." + loc + ".gui"))) {
+					Locale x = LocaleUtil.toLocale(loc);
+					if (test.getLanguage().equals(x.getLanguage())) {
+						l = LocaleUtil.toLocale(loc);
+						break;
+					}
+				}
+			}
+
+		if (l == null)
+			l = Locale.ENGLISH;
+
+		System.out.println("l=" + l.toString());
 
 		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);
 		GUIValue[] buf = new GUIValue[rb.keySet().size()];

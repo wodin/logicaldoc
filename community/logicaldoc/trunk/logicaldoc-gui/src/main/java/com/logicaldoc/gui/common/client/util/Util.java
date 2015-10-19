@@ -467,7 +467,6 @@ public class Util {
 	 */
 	public static native String formatPercentage(double value, int fixed) /*-{
 		str = value.toFixed(fixed);
-
 		return str + "%";
 	}-*/;
 
@@ -477,10 +476,9 @@ public class Util {
 	 * @return The language in ISO 639 format.
 	 */
 	public static native String getBrowserLanguage() /*-{
-		var lang = navigator.language ? navigator.language
-				: navigator.userLanguage;
-
-		if (lang) {
+		var lang = window.navigator.language ? window.navigator.language
+				: window.navigator.userLanguage;
+		if (lang!=null && lang!="") {
 			return lang;
 		} else {
 			return "en";
