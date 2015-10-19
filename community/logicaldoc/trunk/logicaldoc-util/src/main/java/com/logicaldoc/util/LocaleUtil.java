@@ -23,6 +23,8 @@ public class LocaleUtil {
 		if (StringUtils.isEmpty(str))
 			return Locale.ENGLISH;
 
+		str=str.replace('-', '_');
+		
 		String lang = "";
 		String country = "";
 		String variant = "";
