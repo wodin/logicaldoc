@@ -237,9 +237,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 		if (l == null)
 			l = Locale.ENGLISH;
-
-		System.out.println("l=" + l.toString());
-
+		
 		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);
 		GUIValue[] buf = new GUIValue[rb.keySet().size()];
 		int i = 0;
