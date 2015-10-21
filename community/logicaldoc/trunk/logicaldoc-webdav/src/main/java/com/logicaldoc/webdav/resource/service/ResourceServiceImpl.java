@@ -538,12 +538,6 @@ public class ResourceServiceImpl implements ResourceService {
 		Folder folder = folderDAO.findById(Long.parseLong(resource.getID()));
 		User user = userDAO.findById(resource.getRequestedPerson());
 
-		// Add a folder history entry
-		FolderHistory transaction = new FolderHistory();
-		transaction.setUser(user);
-		transaction.setSessionId(sid);
-		transaction.setUser(user);
-
 		try {
 			if (resource.isFolder() && folder != null && (folder.getType() == Folder.TYPE_WORKSPACE)) {
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot delete a workspace.");
@@ -551,6 +545,10 @@ public class ResourceServiceImpl implements ResourceService {
 				if (!resource.isDeleteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
+				FolderHistory transaction = new FolderHistory();
+				transaction.setUser(user);
+				transaction.setSessionId(sid);
+				transaction.setUser(user);
 				transaction.setEvent(FolderEvent.DELETED.toString());
 				List<Folder> notDeletableFolders = folderDAO.deleteTree(folder, PersistentObject.DELETED_CODE_DEFAULT,
 						transaction);
@@ -563,6 +561,11 @@ public class ResourceServiceImpl implements ResourceService {
 				Resource parent = getParentResource(resource);
 				if (!parent.isDeleteEnabled())
 					throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete on parent resource.");
+
+				History transaction = new History();
+				transaction.setUser(user);
+				transaction.setSessionId(sid);
+				transaction.setUser(user);
 				transaction.setEvent(DocumentEvent.DELETED.toString());
 
 				if (documentDAO.findById(Long.parseLong(resource.getID())).getImmutable() == 1
@@ -573,9 +576,9 @@ public class ResourceServiceImpl implements ResourceService {
 				// deleting document. All the shortcuts must be deleted.
 				if (documentDAO.findAliasIds(Long.parseLong(resource.getID())).size() > 0)
 					for (Long shortcutId : documentDAO.findAliasIds(Long.parseLong(resource.getID()))) {
-						documentDAO.delete(shortcutId);
+						documentDAO.delete(shortcutId, transaction);
 					}
-				documentDAO.delete(Long.parseLong(resource.getID()));
+				documentDAO.delete(Long.parseLong(resource.getID()), transaction);
 			}
 		} catch (DavException de) {
 			throw de;
