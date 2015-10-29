@@ -7,6 +7,7 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
@@ -224,7 +226,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			archivedDocs.setLabel("archiveds");
 			archivedDocs.setValue(gen != null ? Long.toString(gen.getInteger1()) : "0");
 			parameters[1][3] = archivedDocs;
-			
+
 			/*
 			 * Folders statistics
 			 */
@@ -566,31 +568,35 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				query.append(" ) ");
 			}
 
-			// Search in the workflow history
-			query.append(" union select D.ld_username, D.ld_event, D.ld_date, null, null, null, D.ld_sessionid, D.ld_docid, D.ld_userid from ld_workflowhistory D where D.ld_tenantid = "
-					+ session.getTenantId());
-			if (userName != null && StringUtils.isNotEmpty(userName))
-				query.append(" and lower(D.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase()) + "%'");
-			if (historySid != null && StringUtils.isNotEmpty(historySid))
-				query.append(" and D.ld_sessionid='" + historySid + "' ");
-			if (from != null) {
-				query.append(" and D.ld_date > '" + new Timestamp(from.getTime()) + "'");
-			}
-			if (till != null) {
-				query.append(" and D.ld_date < '" + new Timestamp(till.getTime()) + "'");
-			}
-			if (event.length > 0) {
-				boolean first = true;
-				for (String e : event) {
-					if (first)
-						query.append(" and (");
-					else
-						query.append(" or ");
+			if (Arrays.asList(SystemInfo.get().getFeatures()).contains("Feature_19")) {
 
-					query.append(" D.ld_event = '" + SqlUtil.doubleQuotes(e.trim()) + "'");
-					first = false;
+				// Search in the workflow history
+				query.append(" union select D.ld_username, D.ld_event, D.ld_date, null, null, null, D.ld_sessionid, D.ld_docid, D.ld_userid from ld_workflowhistory D where D.ld_tenantid = "
+						+ session.getTenantId());
+				if (userName != null && StringUtils.isNotEmpty(userName))
+					query.append(" and lower(D.ld_username) like '%" + SqlUtil.doubleQuotes(userName.toLowerCase())
+							+ "%'");
+				if (historySid != null && StringUtils.isNotEmpty(historySid))
+					query.append(" and D.ld_sessionid='" + historySid + "' ");
+				if (from != null) {
+					query.append(" and D.ld_date > '" + new Timestamp(from.getTime()) + "'");
 				}
-				query.append(" ) ");
+				if (till != null) {
+					query.append(" and D.ld_date < '" + new Timestamp(till.getTime()) + "'");
+				}
+				if (event.length > 0) {
+					boolean first = true;
+					for (String e : event) {
+						if (first)
+							query.append(" and (");
+						else
+							query.append(" or ");
+
+						query.append(" D.ld_event = '" + SqlUtil.doubleQuotes(e.trim()) + "'");
+						first = false;
+					}
+					query.append(" ) ");
+				}
 			}
 
 			query.append(" order by 3 desc ");
