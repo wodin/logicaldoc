@@ -89,7 +89,7 @@
         <copy file="CHANGELOG.txt" todir="target" />
         <copy file="src/dist/LICENSE.txt" todir="target" />
         <zip destfile="${distPackage}" basedir="target"
-            includes="logicaldoc-installer.jar,INSTALL.txt,LICENSE.txt,CHANGELOG.txt,setup.exe"
+            includes="logicaldoc-installer.jar,INSTALL.txt,LICENSE.txt,CHANGELOG.txt"
             update="false" level="9" />
         <echo message="Distribution package built succesfully" />
     </target>
@@ -115,42 +115,10 @@
         <delete file="target/dist/conf/context.properties" />
         <move file="target/dist/conf/context.bak" tofile="target/dist/conf/context.properties" overwrite="true"/>
     </target>    
-    <target name="prepare-exe" depends="init-all" description="Prepares the executable artifact">
-        <artifact:pom file="pom.xml" id="pom" />
-        <copy file="launcher/launcher.xml" tofile="target/launcher.xml" overwrite="true"/>
-        <replace dir="target/" value="${pom.version}">
-            <include name="launcher.xml" />
-            <replacetoken>VERSION</replacetoken>
-        </replace>
-        <replace dir="target/" value="2006-2015">
-            <include name="launcher.xml" />
-            <replacetoken>YEAR</replacetoken>
-        </replace>        
-        
-        <java classname="net.sf.launch4j.Main">
-            <arg value="target/launcher.xml" />
-            <classpath>
-                <fileset dir="launcher">
-                    <include name="*.jar" />
-                </fileset>
-            </classpath>
-        </java>
-        
-        <echo>Signing the setup.exe file</echo>
-        <property name="keystore.path"
-            value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesigncert.p12" />
-        <exec executable="launcher/sign4j/sign4j.exe">
-            <arg
-                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll target/setup.exe" />
-        </exec>
-    </target>
-    <target name="all" depends="init-all,dist,prepare-hsqldb,installer,prepare-exe,package,prepare-exe-single"
-        description="Makes the dist and creates the installer">
-    </target>
-    <target name="prepare-exe-single" depends="init-all"
+    <target name="prepare-exe" depends="init-all"
         description="Prepares the executable artifact">
         <artifact:pom file="pom.xml" id="pom" />
-        <copy file="launcher/launcher-single.xml" tofile="target/launcher.xml" overwrite="true"/>
+        <copy file="launcher/launcher.xml" tofile="target/launcher.xml" overwrite="true"/>
         <replace dir="target/" value="${pom.version}">
             <include name="launcher.xml" />
             <replacetoken>VERSION</replacetoken>
@@ -169,13 +137,23 @@
             </classpath>
         </java>
         
+        <!-- 
+             Sign the installer
+             Some free Timestamp Authorities:
+             Starfield - http://tsa.starfieldtech.com
+             Comodo - http://timestamp.comodoca.com/rfc3161
+             Dfn - http://zeitstempel.dfn.de
+             Aloaha - http://www.aloaha.com/tsa/tsa.aspx
+        -->
         <echo>Signing the logicaldoc-installer.exe file</echo>
-        <property name="keystore.path"
-            value="${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesigncert.p12" />
         <exec executable="launcher/sign4j/sign4j.exe">
             <arg
-                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${keystore.path} -a codesigncert --storepass ${keystore.pwd} --storetype pkcs12 -t http://timestamp.verisign.com/scripts/timstamp.dll target/logicaldoc-installer.exe" />
+                line="java -jar launcher/sign4j/jsign-1.2.jar -s ${logicaldoc.devroot}/enterprise/logicaldoc/logicaldoc-certificates/codesignstore -a codesigncert --storepass logicaldoc  -t http://tsa.starfieldtech.com target/logicaldoc-installer.exe" />
         </exec>
-        <move file="target/logicaldoc-installer.exe" tofile="target/${pom.artifactId}-${pom.version}.exe" />
+        <move file="target/logicaldoc-installer.exe" tofile="target/logicaldoc-community-installer-${pom.version}.exe" overwrite="true"/>
     </target>
+    
+    <target name="all" depends="init-all,dist,prepare-hsqldb,installer,prepare-exe,package"
+        description="Makes the dist and creates the installer">
+    </target>    
 </project>
