@@ -87,7 +87,9 @@ public class RequestInfo {
 	}
 
 	protected void setProtocol(String protocol) {
-		this.protocol = protocol;
+		this.protocol = protocol.toLowerCase();
+		if(this.protocol.endsWith(":"))
+			this.protocol=this.protocol.replace(":", "");
 	}
 
 	protected void setQueryString(String queryString) {
@@ -116,4 +118,7 @@ public class RequestInfo {
 		return paramMap;
 	}
 
+	public boolean isSecure(){
+		return "https".equals(protocol.toLowerCase());
+	}
 }

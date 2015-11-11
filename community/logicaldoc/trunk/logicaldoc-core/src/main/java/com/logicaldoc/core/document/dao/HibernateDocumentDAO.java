@@ -464,10 +464,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				sb.append(" and ld_tenantid=" + tenantId);
 			}
 
-			if (firstLetter != null)
-				sb.append(" and lower(ld_tag) like '" + firstLetter.toLowerCase() + "%'");
-
-			return (List<String>) queryForList(sb.toString(), String.class);
+			List<Object> parameters = new ArrayList<Object>();
+			if (firstLetter != null) {
+				sb.append(" and lower(ld_tag) like ?1 ");
+				parameters.add(firstLetter.toLowerCase() + "%");
+			}
+			return (List<String>) queryForList(sb.toString(), parameters.toArray(new Object[0]), String.class, null);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 		}

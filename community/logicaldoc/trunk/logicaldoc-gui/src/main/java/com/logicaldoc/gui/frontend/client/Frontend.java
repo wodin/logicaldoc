@@ -26,8 +26,6 @@ import com.logicaldoc.gui.frontend.client.panels.MainPanel;
 import com.logicaldoc.gui.frontend.client.search.TagsForm;
 import com.logicaldoc.gui.frontend.client.security.LoginPanel;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 
 /**
  * The Frontend entry point
@@ -112,7 +110,8 @@ public class Frontend implements EntryPoint {
 			@Override
 			public void onSuccess(final GUIInfo info) {
 				// Store the release information
-				Cookies.setCookie(Constants.COOKIE_VERSION, info.getRelease());
+				Cookies.setCookie(Constants.COOKIE_VERSION, info.getRelease(), null, null, null, WindowUtils
+						.getRequestInfo().isSecure());
 
 				I18N.init(info);
 

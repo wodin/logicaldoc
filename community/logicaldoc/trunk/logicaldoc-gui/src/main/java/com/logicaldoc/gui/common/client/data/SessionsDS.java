@@ -29,8 +29,7 @@ public class SessionsDS extends DataSource {
 
 		setFields(sid, status, statusLabel, username, tenant, created, renew);
 		String url = "data/sessions.xml?locale=" + I18N.getLocale();
-		if (Session.get() != null && Session.get().getSid() != null)
-			url += "&sid=" + Session.get().getSid();
+		url += "&sid=" + Session.get().getSid();
 		setDataURL(url);
 		setClientOnly(true);
 	}
