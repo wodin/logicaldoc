@@ -18,6 +18,7 @@ import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.MessageLabel;
 import com.logicaldoc.gui.frontend.client.Frontend;
 import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
@@ -464,7 +465,8 @@ public class LoginPanel extends VLayout {
 
 		// In any case save the SID in the browser
 		Offline.put(Constants.COOKIE_SID, session.getSid());
-		Cookies.setCookie(Constants.COOKIE_SID, session.getSid());
+		Cookies.setCookie(Constants.COOKIE_SID, session.getSid(), null, null, null, WindowUtils.getRequestInfo()
+				.isSecure());
 
 		GUIUser user = session.getUser();
 		if (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)

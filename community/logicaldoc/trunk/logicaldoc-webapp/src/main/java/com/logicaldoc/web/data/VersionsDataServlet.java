@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
@@ -61,10 +62,12 @@ public class VersionsDataServlet extends HttpServlet {
 
 			VersionDAO dao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
 
+			List<Object> parameters = new ArrayList<Object>();
 			StringBuffer query = new StringBuffer(
 					"select A.id, A.username, A.event, A.version, A.fileVersion, A.versionDate, A.comment, A.docId, A.title, A.customId, A.fileSize, A.type, A.templateName ");
 			if (request.getParameter("docId") != null) {
-				query.append(" from Version A where A.deleted = 0 and A.docId=" + request.getParameter("docId"));
+				query.append(" from Version A where A.deleted = 0 and A.docId = ?1 ");
+				parameters.add(new Long(request.getParameter("docId")));
 			} else {
 				query.append(" from Version A, Archive B where A.deleted = 0 and A in elements(B.entries) ");
 				query.append(" and B.id =" + request.getParameter("archiveId"));
@@ -74,7 +77,8 @@ public class VersionsDataServlet extends HttpServlet {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
+			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), parameters.toArray(new Object[0]),
+					max);
 
 			/*
 			 * Iterate over records composing the response XML document

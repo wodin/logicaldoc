@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.contact.Contact;
 import com.logicaldoc.core.contact.ContactDAO;
+import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
 
@@ -32,9 +33,11 @@ public class ContactsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			ServiceUtil.validateSession(request);
+			UserSession session = ServiceUtil.validateSession(request);
+			long userId = Long.parseLong(request.getParameter("userId"));
 
-			String userId = request.getParameter("userId");
+			if (userId != session.getUserId())
+				throw new Exception("Permission denied");
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -52,7 +55,7 @@ public class ContactsDataServlet extends HttpServlet {
 			/*
 			 * Iterate over records composing the response XML document
 			 */
-			for (Contact contact : dao.findByUser(Long.parseLong(userId), null)) {
+			for (Contact contact : dao.findByUser(userId, null)) {
 				if (contact.getDeleted() == 1)
 					continue;
 

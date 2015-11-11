@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -52,7 +53,7 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 			response.setHeader("Expires", "0");
 
 			String locale = request.getParameter("locale");
-			int max = Integer.parseInt(request.getParameter("max"));
+			Integer max = request.getParameter("max") != null ? Integer.parseInt(request.getParameter("max")) : null;
 
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
@@ -62,21 +63,29 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 			// is related to a single user (for dashboard visualization)
 			Set<Long> docIds = new HashSet<Long>();
 
+			List<Object> parameters = new ArrayList<Object>();
 			HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 			StringBuffer query = new StringBuffer(
 					"select A.userName, A.event, A.version, A.date, A.comment, A.title, A.filename, A.new, A.folderId, A.docId, A.path, A.sessionId, A.userId from History A where 1=1 and A.deleted = 0 ");
-			if (request.getParameter("docId") != null)
-				query.append(" and A.docId=" + request.getParameter("docId"));
-			if (request.getParameter("userId") != null)
-				query.append(" and A.userId=" + request.getParameter("userId"));
-			if (request.getParameter("event") != null)
-				query.append(" and A.event='" + request.getParameter("event") + "' ");
+			if (request.getParameter("docId") != null) {
+				query.append(" and A.docId = ?" + (parameters.size() + 1));
+				parameters.add(new Long(request.getParameter("docId")));
+			}
+			if (request.getParameter("userId") != null) {
+				query.append(" and A.userId = ?" + (parameters.size() + 1));
+				parameters.add(new Long(request.getParameter("userId")));
+			}
+			if (request.getParameter("event") != null) {
+				query.append(" and A.event = ?" + (parameters.size() + 1));
+				parameters.add(request.getParameter("event"));
+			}
 			query.append(" order by A.date desc ");
 
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
-			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, max);
+			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), parameters.toArray(new Object[0]),
+					max);
 
 			/*
 			 * Iterate over records composing the response XML document
@@ -84,7 +93,10 @@ public class DocumentHistoryDataServlet extends HttpServlet {
 			for (Object record : records) {
 				Object[] cols = (Object[]) record;
 				if (request.getParameter("userId") != null) {
-					// Discard a record if already visited
+					/*
+					 * If the request contains the user specification, we report
+					 * just the latest event per each document
+					 */
 					if (docIds.contains(cols[9]))
 						continue;
 					else
