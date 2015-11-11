@@ -36,8 +36,9 @@ public class ServiceUtil {
 				Cookie[] cookies = request.getCookies();
 				if (cookies != null)
 					for (Cookie cookie : cookies) {
-						if ("ldoc-sid".equals(cookie.getName()))
+						if ("ldoc-sid".equals(cookie.getName())) {
 							sid = cookie.getValue();
+						}
 					}
 			}
 
