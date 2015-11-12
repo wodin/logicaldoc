@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
@@ -134,5 +135,26 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 
 	public void setStorer(Storer storer) {
 		this.storer = storer;
+	}
+
+	@Override
+	public boolean delete(long versionId, int delCode) {
+		assert (delCode != 0);
+		boolean result = true;
+		try {
+			Version ver = (Version) findById(versionId);
+			assert (ver != null);
+			if (ver != null) {
+				ver.setDeleted(delCode);
+				// TODO At the moment the version ld_version column is just 10
+				// chars, we have to change it to varchar(255)
+				ver.setVersion(StringUtils.right(versionId + "." + ver.getVersion(), 10));
+				store(ver);
+			}
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			result = false;
+		}
+		return result;
 	}
 }
