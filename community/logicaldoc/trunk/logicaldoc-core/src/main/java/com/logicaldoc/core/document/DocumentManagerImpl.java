@@ -902,6 +902,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		Version versionToDelete = versionDAO.findById(versionId);
 		assert (versionToDelete != null);
 
+		String versionToDeleteSpec = versionToDelete.getVersion();
+
 		Document document = documentDAO.findById(versionToDelete.getDocId());
 		assert (document != null);
 
@@ -935,14 +937,22 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		versions = versionDAO.findByDocId(versionToDelete.getDocId());
 
-		Version lastVersion = versions.get(0);
+		System.out.println("version to delete: " + versionToDelete.getId());
+
+		Version lastVersion = null;
+		for (Version version : versions) {
+			if (version.getDeleted() == 0 && version.getId() != versionToDelete.getId()) {
+				lastVersion = version;
+				break;
+			}
+		}
 
 		/*
 		 * Downgrade the document version in case the deleted version is the
 		 * actual one
 		 */
 		String currentVersion = document.getVersion();
-		if (currentVersion.equals(versionToDelete.getVersion())) {
+		if (currentVersion.equals(versionToDeleteSpec)) {
 			documentDAO.initialize(document);
 			document.setVersion(lastVersion.getVersion());
 			document.setFileVersion(lastVersion.getFileVersion());
