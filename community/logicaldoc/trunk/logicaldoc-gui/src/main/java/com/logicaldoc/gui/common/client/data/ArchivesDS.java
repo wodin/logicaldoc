@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
@@ -38,7 +37,7 @@ public class ArchivesDS extends DataSource {
 
 		setFields(id, name, description, size, closer, creator, ttype, typelabel, stat, statusicon, created);
 		setClientOnly(true);
-		setDataURL("data/archives.xml?sid=" + Session.get().getSid() + "&mode=" + mode + "&locale=" + I18N.getLocale()
+		setDataURL("data/archives.xml?mode=" + mode + "&locale=" + I18N.getLocale()
 				+ (status != null ? "&status=" + status : "") + (type != null ? "&type=" + type : "")
 				+ (managerId != null ? "&managerId=" + managerId : ""));
 	}

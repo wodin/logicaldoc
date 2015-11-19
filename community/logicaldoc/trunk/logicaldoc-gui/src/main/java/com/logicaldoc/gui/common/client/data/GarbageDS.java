@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceImageField;
@@ -27,9 +26,9 @@ public class GarbageDS extends DataSource {
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 		DataSourceTextField type = new DataSourceTextField("type");
 		DataSourceTextField fileName = new DataSourceTextField("fileName");
-		
+
 		setFields(id, title, fileName, customId, icon, lastModified, folderId, type);
 		setClientOnly(true);
-		setDataURL("data/garbage.xml?sid=" + Session.get().getSid());
+		setDataURL("data/garbage.xml");
 	}
 }

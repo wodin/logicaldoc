@@ -1089,12 +1089,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				String address = urlPrefix + "/download-ticket?ticketId=" + ticketid;
 				message = email.getMessage()
 						+ "<div style='margin-top:10px; border-top:1px solid black; background-color:#CCCCCC;'><b>&nbsp;"
-						+ I18N.message("clicktodownload", LocaleUtil.toLocale(locale)) + ": <a href='" + address + "'>" + doc.getFileName()
-						+ "</a></b></div>";
+						+ I18N.message("clicktodownload", LocaleUtil.toLocale(locale)) + ": <a href='" + address + "'>"
+						+ doc.getFileName() + "</a></b></div>";
 
 				if (doc.getDocRef() != null)
 					doc = documentDao.findById(doc.getDocRef());
-				String thumb = createPreview(doc, user.getId());
+				String thumb = createPreview(doc, user.getId(), sid);
 				if (thumb != null) {
 					mail.getImages().add(thumb);
 					message += "<p><img src='cid:image_1'/></p>";
@@ -1133,7 +1133,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					}
 				} else {
 					for (long id : email.getDocIds())
-						createAttachment(mail, id, email.isPdfConversion());
+						createAttachment(mail, id, email.isPdfConversion(), sid);
 				}
 			}
 
@@ -1197,7 +1197,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		}
 	}
 
-	private String createPreview(Document doc, long userId) {
+	private String createPreview(Document doc, long userId, String sid) {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		String thumbResource = storer.getResourceName(doc, doc.getFileVersion(), "thumb.jpg");
 
@@ -1205,7 +1205,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		if (!storer.exists(doc.getId(), thumbResource)) {
 			ThumbnailManager thumbManager = (ThumbnailManager) Context.getInstance().getBean(ThumbnailManager.class);
 			try {
-				thumbManager.createTumbnail(doc, doc.getFileVersion());
+				thumbManager.createTumbnail(doc, doc.getFileVersion(), sid);
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);
 			}
@@ -1225,7 +1225,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		return null;
 	}
 
-	private void createAttachment(EMail email, long docId, boolean pdfConversion) throws IOException {
+	private void createAttachment(EMail email, long docId, boolean pdfConversion, String sid) throws IOException {
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		Document doc = docDao.findById(docId);
@@ -1250,7 +1250,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			if (!"pdf".equals(FilenameUtils.getExtension(doc.getFileName().toLowerCase()))) {
 				PdfConverterManager manager = (PdfConverterManager) Context.getInstance().getBean(
 						PdfConverterManager.class);
-				manager.createPdf(doc);
+				manager.createPdf(doc, sid);
 				resource = storer.getResourceName(doc, null, "conversion.pdf");
 			}
 			att.setMimeType(MimeType.get("pdf"));

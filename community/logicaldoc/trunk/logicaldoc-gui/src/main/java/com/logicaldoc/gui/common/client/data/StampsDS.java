@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -25,8 +24,7 @@ public class StampsDS extends DataSource {
 		DataSourceImageField image = new DataSourceImageField("image");
 
 		setFields(id, name, description, text, image, enabled);
-		setDataURL("data/stamps.xml?sid=" + Session.get().getSid() + "&enabledOnly=" + enabledOnly
-				+ (userId != null ? "&userId=" + userId : ""));
+		setDataURL("data/stamps.xml?enabledOnly=" + enabledOnly + (userId != null ? "&userId=" + userId : ""));
 		setClientOnly(true);
 	}
 }

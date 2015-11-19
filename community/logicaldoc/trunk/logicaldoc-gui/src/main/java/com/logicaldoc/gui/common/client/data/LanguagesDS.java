@@ -23,8 +23,8 @@ public class LanguagesDS extends DataSource {
 		DataSourceImageField enabled = new DataSourceImageField("eenabled");
 
 		setFields(code, name, enabled);
-		setDataURL("data/languages.xml?sid=" + Session.get().getSid() + "&locale="
-				+ Session.get().getUser().getLanguage()+"&gui="+Boolean.toString(gui));
+		setDataURL("data/languages.xml?locale=" + Session.get().getUser().getLanguage() + "&gui="
+				+ Boolean.toString(gui));
 		setClientOnly(true);
 	}
 }

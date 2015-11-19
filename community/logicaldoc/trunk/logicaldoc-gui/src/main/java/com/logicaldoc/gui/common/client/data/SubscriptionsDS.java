@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceImageField;
@@ -33,7 +32,7 @@ public class SubscriptionsDS extends DataSource {
 
 		setFields(id, icon, name, created, type, objectId, events, userName, userId, folderOption);
 		setClientOnly(true);
-		String dataUrl = "data/subscriptions.xml?sid=" + Session.get().getSid();
+		String dataUrl = "data/subscriptions.xml?1=1";
 		if (folderId != null)
 			dataUrl += "&folderId=" + folderId;
 		if (docId != null)

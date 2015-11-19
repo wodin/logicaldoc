@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -30,7 +29,7 @@ public class StampUsersDS extends DataSource {
 		DataSourceTextField cell = new DataSourceTextField("cell");
 
 		setFields(id, username, label, enabled, name, firstName, email, phone, cell);
-		setDataURL("data/stampusers.xml?sid=" + Session.get().getSid() + "&stampId=" + stampId);
+		setDataURL("data/stampusers.xml?stampId=" + stampId);
 		setClientOnly(true);
 	}
 }

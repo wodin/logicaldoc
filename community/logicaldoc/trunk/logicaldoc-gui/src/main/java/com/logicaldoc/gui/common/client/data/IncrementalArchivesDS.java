@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
@@ -30,7 +29,6 @@ public class IncrementalArchivesDS extends DataSource {
 
 		setFields(id, prefix, type, typelabel, frequency);
 		setClientOnly(true);
-		setDataURL("data/incrementalarchives.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale()
-				+ "&type=" + archivesType);
+		setDataURL("data/incrementalarchives.xml?locale=" + I18N.getLocale() + "&type=" + archivesType);
 	}
 }

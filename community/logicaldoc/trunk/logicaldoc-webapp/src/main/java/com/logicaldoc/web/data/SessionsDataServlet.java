@@ -20,6 +20,7 @@ import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.i18n.I18N;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for sessions data.
@@ -55,7 +56,7 @@ public class SessionsDataServlet extends HttpServlet {
 			String tenant = null;
 
 			if (request.getServletPath().contains("data")) {
-				UserSession session = SessionManager.getInstance().get(request.getParameter("sid"));
+				UserSession session = ServiceUtil.validateSession(request);
 				if (!Tenant.DEFAULT_NAME.equals(session.getTenantName()))
 					tenant = session.getTenantName();
 			}

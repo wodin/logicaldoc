@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -21,7 +20,7 @@ public class EmailAccountsDS extends DataSource {
 		DataSourceImageField enabled = new DataSourceImageField("eenabled");
 
 		setFields(id, email, enabled);
-		setDataURL("data/emailaccounts.xml?sid=" + Session.get().getSid());
+		setDataURL("data/emailaccounts.xml");
 		setClientOnly(true);
 	}
 }

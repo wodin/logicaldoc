@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
@@ -35,10 +34,10 @@ public class VersionsDS extends DataSource {
 		DataSourceTextField template = new DataSourceTextField("template");
 		DataSourceTextField type = new DataSourceTextField("type");
 
-		setFields(id, user, event, version, fileVersion, date, comment, docid, customid, title, type, size, icon, template);
+		setFields(id, user, event, version, fileVersion, date, comment, docid, customid, title, type, size, icon,
+				template);
 		setClientOnly(true);
-		setDataURL("data/versions.xml?sid=" + Session.get().getSid()
-				+ (docId != null ? "&docId=" + docId : "&archiveId=" + archiveId) + "&locale=" + I18N.getLocale()
-				+ "&max=" + max);
+		setDataURL("data/versions.xml?max=" + max + (docId != null ? "&docId=" + docId : "&archiveId=" + archiveId)
+				+ "&locale=" + I18N.getLocale());
 	}
 }

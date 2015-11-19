@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
@@ -29,9 +28,9 @@ public class BookmarksDS extends DataSource {
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 		DataSourceIntegerField type = new DataSourceIntegerField("type");
 		type.setHidden(true);
-		
+
 		setFields(id, name, description, icon, userId, targetId, position, folderId, type);
 		setClientOnly(true);
-		setDataURL("data/bookmarks.xml?sid=" + Session.get().getSid());
+		setDataURL("data/bookmarks.xml");
 	}
 }

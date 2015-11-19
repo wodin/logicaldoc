@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
@@ -34,8 +33,9 @@ public class ReportsDS extends DataSource {
 		DataSourceDateTimeField lastRun = new DataSourceDateTimeField("lastRun");
 		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified");
 
-		setFields(id, name, enabled, enabledIcon, runningIcon, status, lastRun, outputFolderId, outputDocId, lastModified);
-		setDataURL("data/reports.xml?sid=" + Session.get().getSid());
+		setFields(id, name, enabled, enabledIcon, runningIcon, status, lastRun, outputFolderId, outputDocId,
+				lastModified);
+		setDataURL("data/reports.xml");
 		setClientOnly(true);
 	}
 }

@@ -270,7 +270,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 
 			PdfConverterManager manager = (PdfConverterManager) Context.getInstance()
 					.getBean(PdfConverterManager.class);
-			manager.createPdf(doc, fileVersion);
+			manager.createPdf(doc, fileVersion, sid);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw e;

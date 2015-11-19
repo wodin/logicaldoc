@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
@@ -27,6 +26,6 @@ public class DiscussionsDS extends DataSource {
 
 		setFields(id, title, user, posts, visits, lastPost);
 		setClientOnly(true);
-		setDataURL("data/discussions.xml?sid=" + Session.get().getSid() + "&docId=" + docId);
+		setDataURL("data/discussions.xml?docId=" + docId);
 	}
 }

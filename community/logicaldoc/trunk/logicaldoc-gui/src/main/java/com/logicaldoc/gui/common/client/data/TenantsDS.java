@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
@@ -36,7 +35,7 @@ public class TenantsDS extends DataSource {
 
 		setFields(id, name, enabledIcon, enabled, expire, displayName, email, city, country, telephone, postalCode,
 				state, address);
-		setDataURL("data/tenants.xml?sid=" + Session.get().getSid());
+		setDataURL("data/tenants.xml");
 		setClientOnly(true);
 	}
 }

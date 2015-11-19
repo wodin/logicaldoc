@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -31,6 +30,6 @@ public class SavedSearchesDS extends DataSource {
 
 		setFields(name, type, description);
 		setClientOnly(true);
-		setDataURL("data/savedsearches.xml?sid=" + Session.get().getSid() + "&locale=" + I18N.getLocale());
+		setDataURL("data/savedsearches.xml?locale=" + I18N.getLocale());
 	}
 }

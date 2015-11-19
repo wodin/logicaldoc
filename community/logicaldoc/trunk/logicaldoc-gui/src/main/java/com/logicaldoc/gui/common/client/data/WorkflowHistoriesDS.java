@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
@@ -25,10 +24,9 @@ public class WorkflowHistoriesDS extends DataSource {
 		DataSourceTextField document = new DataSourceTextField("document");
 		DataSourceTextField sessionId = new DataSourceTextField("sessionid");
 		setFields(id, name, startDate, endDate, documents, event, date, user, comment, document, sessionId);
-		setDataURL("data/workflowhistories.xml?sid=" + Session.get().getSid()
+		setDataURL("data/workflowhistories.xml?locale=" + I18N.getLocale()
 				+ (instanceId != null ? "&instanceId=" + instanceId : "")
-				+ (workflowTemplateId != null ? "&workflowTemplateId=" + workflowTemplateId : "") + "&locale="
-				+ I18N.getLocale());
+				+ (workflowTemplateId != null ? "&workflowTemplateId=" + workflowTemplateId : ""));
 		setClientOnly(true);
 	}
 }

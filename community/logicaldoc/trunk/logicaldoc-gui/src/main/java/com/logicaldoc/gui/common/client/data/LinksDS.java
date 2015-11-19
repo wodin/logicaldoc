@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -29,6 +28,6 @@ public class LinksDS extends DataSource {
 
 		setFields(id, folderId, documentId, title, icon, direction, type);
 		setClientOnly(true);
-		setDataURL("data/links.xml?sid=" + Session.get().getSid() + "&docId=" + docId);
+		setDataURL("data/links.xml?docId=" + docId);
 	}
 }

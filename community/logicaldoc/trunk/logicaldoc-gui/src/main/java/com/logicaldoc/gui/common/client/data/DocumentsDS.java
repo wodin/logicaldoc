@@ -136,12 +136,12 @@ public class DocumentsDS extends DataSource {
 		setClientOnly(true);
 
 		if (barcoded == null)
-			setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&locale="
+			setDataURL("data/documents.xml?locale="
 					+ Session.get().getUser().getLanguage() + "&folderId=" + (folderId != null ? folderId : "")
 					+ "&filename=" + (fileFilter != null ? fileFilter : "") + "&max=" + (max != null ? max : MAX)
 					+ "&indexed=" + (indexed != null ? indexed.toString() : "")+ "&page=" + page);
 		else
-			setDataURL("data/tobarcode.xml?sid=" + Session.get().getSid() + "&max=" + (max != null ? max : MAX)
+			setDataURL("data/tobarcode.xml?max=" + (max != null ? max : MAX)
 					+ "&page=" + page);
 	}
 
@@ -162,7 +162,7 @@ public class DocumentsDS extends DataSource {
 
 		setFields(id, icon, title, lastModified, folderId, version, fileVersion, filename);
 		setClientOnly(true);
-		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&docIds=" + docIds);
+		setDataURL("data/documents.xml?docIds=" + docIds);
 	}
 
 	public DocumentsDS(int status, int max) {
@@ -181,6 +181,6 @@ public class DocumentsDS extends DataSource {
 
 		setFields(id, icon, title, lastModified, folderId, version, fileVersion, filename);
 		setClientOnly(true);
-		setDataURL("data/documents.xml?sid=" + Session.get().getSid() + "&status=" + status + "&max=" + max);
+		setDataURL("data/documents.xml?status=" + status + "&max=" + max);
 	}
 }

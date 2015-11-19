@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
@@ -16,7 +15,7 @@ public class WorkflowTasksDS extends DataSource {
 		DataSourceTextField workflow = new DataSourceTextField("workflow");
 		DataSourceTextField pooledassignees = new DataSourceTextField("pooledassignees");
 		setFields(id, processId, name, workflow, pooledassignees);
-		setDataURL("data/workflowtasks.xml?sid=" + Session.get().getSid() + (type != null ? "&type=" + type : "")
+		setDataURL("data/workflowtasks.xml?1=1" + (type != null ? "&type=" + type : "")
 				+ (taskId != null ? "&taskId=" + taskId : ""));
 		setClientOnly(true);
 	}

@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceFloatField;
@@ -39,7 +38,7 @@ public class ArchivedDocsDS extends DataSource {
 		setFields(id, title, size, version, fileVersion, created, lastModified, customId, icon, filename, fid, folder, type);
 		setClientOnly(true);
 
-		String url = "data/archiveddocs.xml?sid=" + Session.get().getSid();
+		String url = "data/archiveddocs.xml?1=1";
 		if (folderId != null)
 			url += "&folderId=" + folderId;
 		if (max != null)

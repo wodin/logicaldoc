@@ -174,10 +174,6 @@
     <servlet-class>com.logicaldoc.web.data.LinksDataServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>DiscussionsData</servlet-name>
-    <servlet-class>com.logicaldoc.web.data.DiscussionsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>BookmarksData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.BookmarksDataServlet</servlet-class>
   </servlet>
@@ -642,10 +638,6 @@
     <url-pattern>/data/bookmarks.xml</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>DiscussionsData</servlet-name>
-    <url-pattern>/data/discussions.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
     <servlet-name>NotesData</servlet-name>
     <url-pattern>/data/notes.xml</url-pattern>
   </servlet-mapping>
@@ -1002,19 +994,10 @@
     <welcome-file>index.html</welcome-file>
     <welcome-file>frontend.jsp</welcome-file>
   </welcome-file-list>
-  <!-- Human readable errors -->
+  <!-- Mask errors with generic error page -->
   <error-page>
-    <exception-type>java.lang.Throwable</exception-type>
     <location>/error.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>500</error-code>
-    <location>/error.jsp</location>
-  </error-page>
-  <error-page>
-    <error-code>404</error-code>
-    <location>/error.jsp</location>
-  </error-page>
+  </error-page>  
   <jsp-config>
     <jsp-property-group>
       <url-pattern>*.jsp</url-pattern>
@@ -1047,11 +1030,28 @@
     <web-resource-collection>
       <web-resource-name>Entire Application</web-resource-name>
       <url-pattern>/*</url-pattern>
+      <http-method>GET</http-method>
+      <http-method>POST</http-method>
     </web-resource-collection>
     <user-data-constraint>
       <transport-guarantee>NONE</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>Entire Application - disallowed methods</web-resource-name>
+      <url-pattern>/*</url-pattern>
+      <http-method>PUT</http-method>
+      <http-method>HEAD</http-method>
+      <http-method>DELETE</http-method>
+      <http-method>TRACE</http-method>
+      <http-method>OPTIONS</http-method>
+    </web-resource-collection>
+    <auth-constraint />    
+    <user-data-constraint>
+      <transport-guarantee>NONE</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>   
   <security-constraint>
     <display-name>Sessions management only allowed after authentication</display-name>
     <web-resource-collection>
@@ -1082,7 +1082,7 @@
   </security-constraint>
   <login-config>
     <auth-method>BASIC</auth-method>
-    <realm-name>SETUP Login</realm-name>
+    <realm-name>Secured Area</realm-name>
   </login-config>
   <security-role>
     <role-name>admin</role-name>

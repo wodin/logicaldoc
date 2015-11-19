@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceSequenceField;
@@ -27,6 +26,6 @@ public class CalendarEventsDS extends DataSource {
 
 		setFields(id, title, description, start, end, eventWindowStyle, parentId);
 		setClientOnly(true);
-		setDataURL("data/calendarevents.xml?sid=" + Session.get().getSid() + (docId != null ? "&docId=" + docId : ""));
+		setDataURL("data/calendarevents.xml" + (docId != null ? "?docId=" + docId : ""));
 	}
 }

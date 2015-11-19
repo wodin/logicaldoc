@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceFloatField;
@@ -43,9 +42,9 @@ public class LockedDocsDS extends DataSource {
 				digest, immutable, folderId, type, locked);
 		setClientOnly(true);
 
-		String url = "data/lockeddocs.xml?sid=" + Session.get().getSid();
+		String url = "data/lockeddocs.xml";
 		if (userId != null)
-			url += "&userId=" + userId;
+			url += "?userId=" + userId;
 		setDataURL(url);
 	}
 }

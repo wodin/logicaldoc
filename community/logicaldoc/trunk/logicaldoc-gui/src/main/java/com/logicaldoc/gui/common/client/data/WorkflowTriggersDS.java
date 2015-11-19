@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceBooleanField;
@@ -29,7 +28,7 @@ public class WorkflowTriggersDS extends DataSource {
 		DataSourceBooleanField checkin = new DataSourceBooleanField("triggerAtCheckin",
 				I18N.message("triggeratcheckin"));
 		setFields(id, workflowId, templateId, workflow, template, checkin);
-		setDataURL("data/workflowtriggers.xml?sid=" + Session.get().getSid() + "&folderId=" + folderId);
+		setDataURL("data/workflowtriggers.xml?folderId=" + folderId);
 		setClientOnly(false);
 	}
 }

@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceImageField;
@@ -30,6 +29,6 @@ public class MessagesDS extends DataSource {
 
 		setFields(id, subject, text, priority, from, sent, read);
 		setClientOnly(true);
-		setDataURL("data/messages.xml?sid=" + Session.get().getSid());
+		setDataURL("data/messages.xml");
 	}
 }

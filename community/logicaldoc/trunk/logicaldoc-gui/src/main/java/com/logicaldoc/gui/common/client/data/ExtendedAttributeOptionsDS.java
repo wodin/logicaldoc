@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -20,19 +19,19 @@ public class ExtendedAttributeOptionsDS extends DataSource {
 		id.setRequired(true);
 		DataSourceTextField _attribute = new DataSourceTextField("attribute");
 		_attribute.setHidden(true);
-		
+
 		DataSourceTextField value = new DataSourceTextField("value");
-		
+
 		DataSourceIntegerField position = new DataSourceIntegerField("position");
 		position.setHidden(true);
-		
+
 		DataSourceTextField _templateId = new DataSourceTextField("templateId");
 		_templateId.setHidden(true);
 
 		setFields(id, _attribute, value, position, _templateId);
 		setClientOnly(true);
 
-		setDataURL("data/extoptions.xml?sid=" + Session.get().getSid() + "&" + "templateId=" + templateId + "&"
-				+ "attribute=" + attribute+"&withempty="+withEmpty);
+		setDataURL("data/extoptions.xml?templateId=" + templateId + "&" + "attribute=" + attribute + "&withempty="
+				+ withEmpty);
 	}
 }

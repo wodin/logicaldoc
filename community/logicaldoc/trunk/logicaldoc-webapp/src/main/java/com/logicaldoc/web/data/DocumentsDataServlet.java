@@ -71,10 +71,10 @@ public class DocumentsDataServlet extends HttpServlet {
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
 
-			// Headers required by Internet Explorer
-			response.setHeader("Pragma", "public");
-			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-			response.setHeader("Expires", "0");
+			// Avoid resource caching
+			response.setHeader("Pragma", "no-cache");
+			response.setHeader("Cache-Control", "no-store");
+			response.setDateHeader("Expires", 0);
 
 			DocumentDAO dao = (DocumentDAO) context.getBean(DocumentDAO.class);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
@@ -248,11 +248,11 @@ public class DocumentsDataServlet extends HttpServlet {
 						long aliasDocRef = doc.getDocRef();
 						String aliasDocRefType = doc.getDocRefType();
 						doc = dao.findById(aliasDocRef);
-						if(doc!=null){
+						if (doc != null) {
 							doc.setId(aliasId);
 							doc.setDocRef(aliasDocRef);
 							doc.setDocRefType(aliasDocRefType);
-						}else
+						} else
 							continue;
 					} else {
 						doc.setStartPublishing((Date) cols[25]);
@@ -350,10 +350,10 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<stamped>blank</stamped>");
 					else if (doc.getStamped() == 1)
 						writer.print("<stamped>stamp</stamped>");
-					
+
 					writer.print("<sourceDate>" + (doc.getSourceDate() != null ? df.format(doc.getSourceDate()) : "")
 							+ "</sourceDate>");
-					if(doc.getSourceAuthor() != null)
+					if (doc.getSourceAuthor() != null)
 						writer.print("<sourceAuthor><![CDATA[" + doc.getSourceAuthor() + "]]></sourceAuthor>");
 					writer.print("<rating>rating" + (doc.getRating() != null ? doc.getRating() : "0") + "</rating>");
 					writer.print("<fileVersion><![CDATA[" + doc.getFileVersion() + "]]></fileVersion>");
