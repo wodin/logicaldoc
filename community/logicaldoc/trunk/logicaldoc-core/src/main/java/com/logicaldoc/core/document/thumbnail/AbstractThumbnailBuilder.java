@@ -35,10 +35,10 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 	protected String SWF_DIRECT_CONVERSION_EXTS = "gif, png, pdf, jpeg, jpg, tif, tiff, bmp";
 
 	@Override
-	public File buildPreview(String tenant, File src, String srcFileName, File dest) throws IOException {
+	public File buildPreview(String sid, String tenant, File src, String srcFileName, File dest) throws IOException {
 		String docExtension = FilenameUtils.getExtension(srcFileName).toLowerCase();
 		if (SWF_DIRECT_CONVERSION_EXTS.contains(docExtension))
-			return document2swf(tenant, src, docExtension, dest);
+			return document2swf(sid, tenant, src, docExtension, dest);
 		else
 			return null;
 	}
@@ -47,7 +47,7 @@ public abstract class AbstractThumbnailBuilder implements ThumbnailBuilder {
 	 * Convert a generic document(image or PDF) to SWF (for document preview
 	 * feature).
 	 */
-	protected File document2swf(String tenant, File src, String extension, File root) throws IOException {
+	protected File document2swf(String sid, String tenant, File src, String extension, File root) throws IOException {
 		FileOutputStream fos = null;
 		File out = null;
 		File tmp = src;

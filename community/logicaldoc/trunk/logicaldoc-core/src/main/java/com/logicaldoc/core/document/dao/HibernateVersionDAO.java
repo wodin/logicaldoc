@@ -66,48 +66,53 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 			int maxVersions = bean.getInt("document.maxversions");
 			if (maxVersions > 0) {
 				List<Version> versions = findByDocId(version.getDocId());
-				// Order the document versions by version date and version
-				// number
+				// Inverse order the document versions
 				if (versions.size() > maxVersions) {
 					Collections.sort(versions, new Comparator<Version>() {
 						public int compare(Version v1, Version v2) {
-							if (v1.getVersionDate() != null && v2.getVersionDate() != null) {
-								int compare = v1.getVersionDate().compareTo(v2.getVersionDate());
-								if (compare != 0)
-									return compare;
-							}
-							return (v1.getVersion()).compareTo(v2.getVersion());
+							return v2.compareTo(v1);
 						}
 					});
-					// Delete the overlimit versions
-					int versionNumToBeDeleted = versions.size() - maxVersions;
 
 					// Prepare a list of files(fileVersion) that must be
 					// retained
 					Set<String> filesToBeRetained = new HashSet<String>();
-					for (int i = versionNumToBeDeleted; i < versions.size(); i++)
-						if (!filesToBeRetained.contains(versions.get(i).getFileVersion()))
-							filesToBeRetained.add(versions.get(i).getFileVersion());
+					for (int i = 0; i < versions.size(); i++) {
+						if (i < maxVersions)
+							if (!filesToBeRetained.contains(versions.get(i).getFileVersion()))
+								filesToBeRetained.add(versions.get(i).getFileVersion());
+					}
 
-					for (int i = 0; i < versionNumToBeDeleted; i++) {
-						// Delete the version
-						Version deleteVersion = versions.get(i);
-						initialize(deleteVersion);
-						deleteVersion.setDeleted(1);
-						store(deleteVersion);
-						if (!filesToBeRetained.contains(deleteVersion.getFileVersion())) {
-							List<String> resources = storer.listResources(deleteVersion.getDocId(),
-									deleteVersion.getFileVersion());
-							for (String resource : resources) {
-								storer.delete(deleteVersion.getDocId(), resource);
+					// Delete the oldest versions
+					for (int i = 0; i < versions.size(); i++) {
+						if (i >= maxVersions) {
+							// Delete the version
+							Version deleteVersion = versions.get(i);
+							initialize(deleteVersion);
+							deleteVersion.setDeleted(1);
+							store(deleteVersion);
+						}
+					}
+
+					// Clean the files no more needed
+					List<String> resources = storer.listResources(version.getDocId(), null);
+					for (String resource : resources) {
+						boolean toDelete=true;
+						for (String fileVersionToRetain : filesToBeRetained) {
+							if (resource.trim().equals(fileVersionToRetain.trim())
+									|| resource.trim().startsWith(fileVersionToRetain.trim() + "-")) {
+								toDelete=false;
+								break;
 							}
+						}
+						if(toDelete){
+							storer.delete(version.getDocId(), resource);
 						}
 					}
 				}
 			}
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			result = false;
 		}
 		return result;

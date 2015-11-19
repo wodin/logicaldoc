@@ -1,4 +1,4 @@
-package com.logicaldoc.core.store;
+ package com.logicaldoc.core.store;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

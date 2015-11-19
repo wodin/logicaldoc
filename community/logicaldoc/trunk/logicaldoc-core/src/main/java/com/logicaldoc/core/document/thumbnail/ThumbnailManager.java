@@ -48,10 +48,11 @@ public class ThumbnailManager {
 	 * 
 	 * @param document The document to be treated
 	 * @param fileVersion The file version(optional)
+	 * @param sid The session identifier(optional)
 	 * @throws IOException
 	 */
-	public void createTumbnail(Document document, String fileVersion) throws IOException {
-		createImage(document, fileVersion, "thumbnail", SUFFIX_THUMB);
+	public void createTumbnail(Document document, String fileVersion, String sid) throws IOException {
+		createImage(document, fileVersion, "thumbnail", SUFFIX_THUMB, sid);
 	}
 
 	/**
@@ -62,11 +63,12 @@ public class ThumbnailManager {
 	 * @param fileVersion The file version(optional)
 	 * @throws IOException
 	 */
-	public void createTile(Document document, String fileVersion) throws IOException {
-		createImage(document, fileVersion, "tile", SUFFIX_TILE);
+	public void createTile(Document document, String fileVersion, String sid) throws IOException {
+		createImage(document, fileVersion, "tile", SUFFIX_TILE, sid);
 	}
 
-	protected void createImage(Document document, String fileVersion, String type, String suffix) throws IOException {
+	protected void createImage(Document document, String fileVersion, String type, String suffix, String sid)
+			throws IOException {
 		ThumbnailBuilder builder = getBuilder(document);
 		if (builder == null) {
 			log.warn("No builder found for document " + document.getId());
@@ -103,7 +105,7 @@ public class ThumbnailManager {
 		try {
 			src = writeToFile(document, fileVersion);
 
-			builder.buildThumbnail(tenantName, src, document.getFileName(), dest, size, quality);
+			builder.buildThumbnail(sid, tenantName, src, document.getFileName(), dest, size, quality);
 
 			// Put the resource
 			String resource = storer.getResourceName(document.getId(), getSuitableFileVersion(document, fileVersion),
@@ -133,10 +135,11 @@ public class ThumbnailManager {
 	 * Creates the thumbnail for the specified document
 	 * 
 	 * @param document The document to be treated
+	 * @param sid The session identifier (optional)
 	 * @throws IOException
 	 */
-	public void createTumbnail(Document document) throws IOException {
-		createTumbnail(document, null);
+	public void createTumbnail(Document document, String sid) throws IOException {
+		createTumbnail(document, null, sid);
 	}
 
 	/**
@@ -166,9 +169,10 @@ public class ThumbnailManager {
 	 * 
 	 * @param document The document to be treated
 	 * @param fileVersion The file version(optional)
+	 * @param sid The session identifier(optional)
 	 * @throws IOException
 	 */
-	public void createPreview(Document document, String fileVersion) throws IOException {
+	public void createPreview(Document document, String fileVersion, String sid) throws IOException {
 		ThumbnailBuilder builder = getBuilder(document);
 		if (builder == null) {
 			log.warn("No builder found for document " + document.getId());
@@ -193,7 +197,7 @@ public class ThumbnailManager {
 
 			src = writeToFile(document, fileVersion);
 
-			previewFile = builder.buildPreview(tenantName, src, document.getFileName(), pagesRoot);
+			previewFile = builder.buildPreview(sid, tenantName, src, document.getFileName(), pagesRoot);
 
 			String fileVer = getSuitableFileVersion(document, fileVersion);
 			String resource = storer.getResourceName(document.getId(), fileVer, SUFFIX_PREVIEW);
@@ -237,10 +241,11 @@ public class ThumbnailManager {
 	 * Creates the preview for all the pages of the document
 	 * 
 	 * @param document The document to be treated
+	 * @param fileVersion The file version(optional)
 	 * @throws IOException
 	 */
-	public void createPreview(Document document) throws IOException {
-		createPreview(document, null);
+	public void createPreview(Document document, String sid) throws IOException {
+		createPreview(document, null, sid);
 	}
 
 	/**

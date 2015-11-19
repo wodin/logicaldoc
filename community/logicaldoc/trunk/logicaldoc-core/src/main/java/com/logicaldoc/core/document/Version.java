@@ -7,6 +7,7 @@ import java.util.HashMap;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.ibm.icu.util.StringTokenizer;
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.config.ContextProperties;
@@ -105,9 +106,28 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		return rel + "." + version;
 	}
 
-	/** for sorting a list of Version objects by the version number */
+	/** For sorting a list of Version objects by the version number */
 	public int compareTo(Version other) {
-		return this.getVersion().toLowerCase().compareTo(other.getVersion().toLowerCase());
+		try {
+			StringTokenizer st1 = new StringTokenizer(getVersion().trim(), ".", false);
+			StringTokenizer st2 = new StringTokenizer(other.getVersion().trim(), ".", false);
+
+			Integer num1 = Integer.parseInt(st1.nextToken());
+			Integer num2 = Integer.parseInt(st2.nextToken());
+
+			if (num1.compareTo(num2) != 0)
+				return num1.compareTo(num2);
+
+			num1 = Integer.parseInt(st1.nextToken());
+			num2 = Integer.parseInt(st2.nextToken());
+
+			return num1.compareTo(num2);
+		} catch (Throwable t) {
+			if (this.getDate() != null && other.getDate() != null)
+				return this.getDate().compareTo(other.getDate());
+			else
+				return -1;
+		}
 	}
 
 	@Override
