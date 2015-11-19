@@ -45,6 +45,11 @@ public class StatChartServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		UserSession session = ServiceUtil.validateSession(request);
 
+		// Avoid resource caching
+		response.setHeader("Pragma", "no-cache");
+		response.setHeader("Cache-Control", "no-store");
+		response.setDateHeader("Expires", 0);
+		
 		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		User user = udao.findById(session.getUserId());
 

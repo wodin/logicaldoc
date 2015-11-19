@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
@@ -20,8 +19,7 @@ public class TagsDS extends DataSource {
 		DataSourceTextField word = new DataSourceTextField("word");
 		DataSourceTextField count = new DataSourceTextField("count");
 		setFields(index, word, count);
-		setDataURL("data/tags.xml?sid=" + Session.get().getSid() + "&editing=" + editing
-				+ (firstLetter != null ? "&firstLetter=" + firstLetter : ""));
+		setDataURL("data/tags.xml?editing=" + editing + (firstLetter != null ? "&firstLetter=" + firstLetter : ""));
 		setClientOnly(true);
 	}
 }

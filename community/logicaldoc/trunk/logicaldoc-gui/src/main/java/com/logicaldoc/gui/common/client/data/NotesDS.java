@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -32,8 +31,7 @@ public class NotesDS extends DataSource {
 		setFields(id, page, userId, user, message, date, docId, docTitle, snippet);
 		setClientOnly(true);
 
-		setDataURL("data/notes.xml?sid=" + Session.get().getSid()
-				+ (userIdentifier != null ? "&" + "userId=" + userIdentifier : "")
+		setDataURL("data/notes.xml?1=1" + (userIdentifier != null ? "&" + "userId=" + userIdentifier : "")
 				+ (documentIdentifier != null ? "&" + "docId=" + documentIdentifier : "")
 				+ (pageNumber != null ? "&" + "page=" + pageNumber : ""));
 	}

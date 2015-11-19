@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -22,7 +21,7 @@ public class ImpexFoldersDS extends DataSource {
 		DataSourceDateTimeField date = new DataSourceDateTimeField("date");
 
 		setFields(name, date);
-		setDataURL("data/impexfolders.xml?sid=" + Session.get().getSid());
+		setDataURL("data/impexfolders.xml");
 		setClientOnly(true);
 	}
 }

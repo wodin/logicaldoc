@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceFloatField;
@@ -44,7 +43,7 @@ public class DeletedDocsDS extends DataSource {
 				digest, immutable, fid, deletedUserId, type, locked);
 		setClientOnly(true);
 
-		String url = "data/deleteddocs.xml?sid=" + Session.get().getSid();
+		String url = "data/deleteddocs.xml?1=1";
 		if (userId != null)
 			url += "&userId=" + userId;
 		if (folderId != null)

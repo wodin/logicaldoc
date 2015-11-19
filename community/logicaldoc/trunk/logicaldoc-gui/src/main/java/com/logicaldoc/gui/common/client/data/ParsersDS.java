@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -35,6 +34,6 @@ public class ParsersDS extends DataSource {
 
 		setFields(id, icon, extension, name, aliases);
 		setClientOnly(true);
-		setDataURL("data/parsers.xml?sid=" + Session.get().getSid());
+		setDataURL("data/parsers.xml");
 	}
 }

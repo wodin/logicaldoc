@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceFloatField;
@@ -44,6 +43,6 @@ public class DuplicatesDS extends DataSource {
 		setFields(id, title, size, publisher, version, lastModified, customId, icon, filename, digest, immutable,
 				folderId, type, locked);
 		setClientOnly(true);
-		setDataURL("data/duplicates.xml?sid=" + Session.get().getSid());
+		setDataURL("data/duplicates.xml");
 	}
 }

@@ -110,7 +110,7 @@ public class DocumentPreview extends HttpServlet {
 			// 2) the thumbnail/preview doesn't exist, create it
 			if (!storer.exists(docId, resource)) {
 				log.debug("Need for preview creation");
-				createPreviewResource(doc, fileVersion, resource);
+				createPreviewResource(session.getId(), doc, fileVersion, resource);
 			}
 
 			stream = storer.getStream(docId, resource);
@@ -137,7 +137,7 @@ public class DocumentPreview extends HttpServlet {
 	 * Creates the preview resource according to the specified format storing it
 	 * in the repository for future access.
 	 */
-	protected void createPreviewResource(Document doc, String fileVersion, String resource) {
+	protected void createPreviewResource(String sid, Document doc, String fileVersion, String resource) {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		ThumbnailManager thumbManager = (ThumbnailManager) Context.getInstance().getBean(ThumbnailManager.class);
 
@@ -145,7 +145,7 @@ public class DocumentPreview extends HttpServlet {
 		String thumbResource = storer.getResourceName(doc, fileVersion, "thumb.jpg");
 		if (!storer.exists(doc.getId(), thumbResource)) {
 			try {
-				thumbManager.createTumbnail(doc, fileVersion);
+				thumbManager.createTumbnail(doc, fileVersion, sid);
 				log.debug("Created thumbnail " + resource);
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);
@@ -159,7 +159,7 @@ public class DocumentPreview extends HttpServlet {
 			String tileResource = storer.getResourceName(doc, fileVersion, "tile.jpg");
 			if (!storer.exists(doc.getId(), tileResource)) {
 				try {
-					thumbManager.createTile(doc, fileVersion);
+					thumbManager.createTile(doc, fileVersion, sid);
 					log.debug("Created tile " + resource);
 				} catch (Throwable t) {
 					log.error(t.getMessage(), t);
@@ -175,7 +175,7 @@ public class DocumentPreview extends HttpServlet {
 		 */
 		if (!storer.exists(doc.getId(), resource) && resource.endsWith("preview.swf")) {
 			try {
-				thumbManager.createPreview(doc, fileVersion);
+				thumbManager.createPreview(doc, fileVersion, sid);
 				log.debug("Created preview " + resource);
 			} catch (Throwable t) {
 				log.error(t.getMessage(), t);

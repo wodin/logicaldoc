@@ -25,7 +25,7 @@ public class ContactsDS extends DataSource {
 		DataSourceTextField company = new DataSourceTextField("company");
 
 		setFields(id, email, firstName, lastName, company);
-		setDataURL("data/contacts.xml?sid=" + Session.get().getSid() + "&userId=" + Session.get().getUser().getId());
+		setDataURL("data/contacts.xml?userId=" + Session.get().getUser().getId());
 		setClientOnly(true);
 	}
 }

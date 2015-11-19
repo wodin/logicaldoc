@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
@@ -30,6 +29,6 @@ public class FeedMessagesDS extends DataSource {
 
 		setFields(id, guid, text, description, link, pubDate, read);
 		setClientOnly(true);
-		setDataURL("data/feedmessage.xml?sid=" + Session.get().getSid());
+		setDataURL("data/feedmessage.xml");
 	}
 }

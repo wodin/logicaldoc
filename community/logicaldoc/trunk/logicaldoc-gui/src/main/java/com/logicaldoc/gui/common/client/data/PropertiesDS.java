@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
@@ -22,7 +21,7 @@ public class PropertiesDS extends DataSource {
 		DataSourceTextField scope = new DataSourceTextField("scope");
 
 		setFields(id, username, scope);
-		setDataURL("data/properties.xml?sid=" + Session.get().getSid());
+		setDataURL("data/properties.xml");
 		setClientOnly(true);
 	}
 }

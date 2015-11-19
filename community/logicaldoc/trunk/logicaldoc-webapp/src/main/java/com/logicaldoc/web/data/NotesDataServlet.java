@@ -53,10 +53,10 @@ public class NotesDataServlet extends HttpServlet {
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
 
-			// Headers required by Internet Explorer
-			response.setHeader("Pragma", "public");
-			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
-			response.setHeader("Expires", "0");
+			// Avoid resource caching
+			response.setHeader("Pragma", "no-cache");
+			response.setHeader("Cache-Control", "no-store");
+			response.setDateHeader("Expires", 0);
 
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));

@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
@@ -24,7 +23,7 @@ public class ChannelsDS extends DataSource {
 
 		setFields(name, members);
 
-		setDataURL("data/channels.xml?sid=" + Session.get().getSid());
+		setDataURL("data/channels.xml");
 		setClientOnly(false);
 	}
 }

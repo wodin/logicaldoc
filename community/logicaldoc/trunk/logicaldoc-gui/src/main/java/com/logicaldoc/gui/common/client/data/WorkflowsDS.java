@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.data;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
@@ -14,9 +13,8 @@ public class WorkflowsDS extends DataSource {
 		DataSourceTextField name = new DataSourceTextField("name");
 		DataSourceTextField description = new DataSourceTextField("description");
 		setFields(id, name, description);
-		setDataURL("data/workflows.xml?sid=" + Session.get().getSid()
-				+ (retrieveDefinitions ? "&retrievedefinitions=true" : "") + (checkUser ? "&checkUser=true" : "")
-				+ (deployedOnly ? "&deployedOnly=true" : ""));
+		setDataURL("data/workflows.xml?1=1" + (retrieveDefinitions ? "&retrievedefinitions=true" : "")
+				+ (checkUser ? "&checkUser=true" : "") + (deployedOnly ? "&deployedOnly=true" : ""));
 		setClientOnly(true);
 	}
 }
