@@ -466,7 +466,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 			List<Object> parameters = new ArrayList<Object>();
 			if (firstLetter != null) {
-				sb.append(" and lower(ld_tag) like ?1 ");
+				sb.append(" and lower(ld_tag) like ? ");
 				parameters.add(firstLetter.toLowerCase() + "%");
 			}
 			return (List<String>) queryForList(sb.toString(), parameters.toArray(new Object[0]), String.class, null);

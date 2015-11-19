@@ -78,7 +78,7 @@ public class ZipExport {
 		zos.setUseLanguageEncodingFlag(true);
 
 		try {
-			appendChildren(folder, 0, pdfConversion);
+			appendChildren(folder, 0, pdfConversion, transaction.getSessionId());
 		} finally {
 			try {
 				zos.flush();
@@ -138,7 +138,7 @@ public class ZipExport {
 					if ("pdf".equals(doc.getDocRefType()))
 						convertToPdf = true;
 				}
-				addDocument("", doc, convertToPdf);
+				addDocument("", doc, convertToPdf, transaction.getSessionId());
 
 				if (transaction != null) {
 					try {
@@ -173,17 +173,17 @@ public class ZipExport {
 	/**
 	 * Adds all children of the specified folder up to the given level
 	 */
-	protected void appendChildren(Folder folder, int level, boolean pdfConversion) {
+	protected void appendChildren(Folder folder, int level, boolean pdfConversion, String sid) {
 		if (!allLevel && (level > 1)) {
 			return;
 		} else {
-			addFolderDocuments(folder, pdfConversion);
+			addFolderDocuments(folder, pdfConversion, sid);
 			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			Collection<Folder> children = folderDao.findByUserId(userId, folder.getId());
 			Iterator<Folder> iter = children.iterator();
 
 			while (iter.hasNext()) {
-				appendChildren(iter.next(), level + 1, pdfConversion);
+				appendChildren(iter.next(), level + 1, pdfConversion, sid);
 			}
 		}
 	}
@@ -191,7 +191,7 @@ public class ZipExport {
 	/**
 	 * Adds all folder's documents
 	 */
-	protected void addFolderDocuments(Folder folder, boolean pdfConversion) {
+	protected void addFolderDocuments(Folder folder, boolean pdfConversion, String sid) {
 		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Collection<Document> docs = ddao.findByFolder(folder.getId(), null);
 
@@ -205,14 +205,14 @@ public class ZipExport {
 					convertToPdf = true;
 			}
 
-			addDocument(getZipEntryPath(folder), doc, convertToPdf);
+			addDocument(getZipEntryPath(folder), doc, convertToPdf, sid);
 		}
 	}
 
 	/**
 	 * Adds a single document into the archive in the specified path.
 	 */
-	private void addDocument(String path, Document document, boolean pdfConversion) {
+	private void addDocument(String path, Document document, boolean pdfConversion, String sid) {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		String resource = storer.getResourceName(document, null, null);
 
@@ -220,7 +220,7 @@ public class ZipExport {
 			PdfConverterManager manager = (PdfConverterManager) Context.getInstance()
 					.getBean(PdfConverterManager.class);
 			try {
-				manager.createPdf(document);
+				manager.createPdf(document, sid);
 			} catch (IOException e) {
 				log.warn(e.getMessage(), e);
 				return;

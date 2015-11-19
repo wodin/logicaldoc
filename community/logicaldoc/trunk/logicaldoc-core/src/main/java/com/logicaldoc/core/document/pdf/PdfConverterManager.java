@@ -42,16 +42,17 @@ public class PdfConverterManager {
 	 * 
 	 * @param document The document to be processed
 	 * @param fileVersion The file version(optional)
+	 * @param sid The session identifier(optional)
 	 * @return The content of the PDF as bytes
 	 * @throws IOException
 	 */
-	public byte[] getPdfContents(Document document, String fileVersion) throws IOException {
+	public byte[] getPdfContents(Document document, String fileVersion, String sid) throws IOException {
 		String resource = storer.getResourceName(document.getId(), getSuitableFileVersion(document, fileVersion),
 				SUFFIX);
 		if ("pdf".equals(FilenameUtils.getExtension(document.getFileName()).toLowerCase()))
 			resource = storer.getResourceName(document.getId(), getSuitableFileVersion(document, fileVersion), null);
 		if (!storer.exists(document.getId(), resource))
-			createPdf(document, fileVersion);
+			createPdf(document, fileVersion, sid);
 		return storer.getBytes(document.getId(), resource);
 	}
 
@@ -61,16 +62,17 @@ public class PdfConverterManager {
 	 * 
 	 * @param document The document to be processed
 	 * @param fileVersion The file version(optional)
+	 * @param sid The session identifier(optional)
 	 * @return The content of the PDF as bytes
 	 * @throws IOException
 	 */
-	public void writePdfToFile(Document document, String fileVersion, File out) throws IOException {
+	public void writePdfToFile(Document document, String fileVersion, File out, String sid) throws IOException {
 		String resource = storer.getResourceName(document.getId(), getSuitableFileVersion(document, fileVersion),
 				SUFFIX);
 		if ("pdf".equals(FilenameUtils.getExtension(document.getFileName()).toLowerCase()))
 			resource = storer.getResourceName(document.getId(), getSuitableFileVersion(document, fileVersion), null);
 		if (!storer.exists(document.getId(), resource))
-			createPdf(document, fileVersion);
+			createPdf(document, fileVersion, sid);
 		storer.writeToFile(document.getId(), resource, out);
 	}
 
@@ -80,9 +82,11 @@ public class PdfConverterManager {
 	 * 
 	 * @param document The document to be processed
 	 * @param fileVersion The file version(optional)
+	 * @param sid Session identifier (optional)
+	 * 
 	 * @throws IOException
 	 */
-	public void createPdf(Document document, String fileVersion) throws IOException {
+	public void createPdf(Document document, String fileVersion, String sid) throws IOException {
 		if ("pdf".equals(FilenameUtils.getExtension(document.getFileName()).toLowerCase())) {
 			log.debug("Document " + document.getId() + " itself is a Pdf");
 			return;
@@ -111,7 +115,7 @@ public class PdfConverterManager {
 			if (src == null || src.length() == 0)
 				log.warn("Unexisting source file,  document: " + document.getId() + " - " + document.getTitle());
 			else {
-				converter.createPdf(getTenantName(document), src, document.getFileName(), dest);
+				converter.createPdf(sid, getTenantName(document), src, document.getFileName(), dest);
 
 				if (dest != null && dest.length() > 0)
 					storer.store(dest, document.getId(), resource);
@@ -129,10 +133,10 @@ public class PdfConverterManager {
 	}
 
 	/**
-	 * Shortcut for createPdf(document, null)
+	 * Shortcut for createPdf(document, null, sid)
 	 */
-	public void createPdf(Document document) throws IOException {
-		createPdf(document, null);
+	public void createPdf(Document document, String sid) throws IOException {
+		createPdf(document, null, sid);
 	}
 
 	protected String getTenantName(Document document) {

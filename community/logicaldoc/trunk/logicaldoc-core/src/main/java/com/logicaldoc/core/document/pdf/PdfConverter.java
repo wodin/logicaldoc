@@ -15,11 +15,12 @@ public interface PdfConverter {
 	/**
 	 * Produce the PDF
 	 * 
+	 * @param sid The actual Session ID (optional)
 	 * @param tenant The tenant name
 	 * @param src The source file
 	 * @param srcFileName The original file name
 	 * @param dest The destination thumbnail file
 	 * @throws IOException
 	 */
-	public void createPdf(String tenant, File src, String srcFileName, File dest) throws IOException;
+	public void createPdf(String sid, String tenant, File src, String srcFileName, File dest) throws IOException;
 }

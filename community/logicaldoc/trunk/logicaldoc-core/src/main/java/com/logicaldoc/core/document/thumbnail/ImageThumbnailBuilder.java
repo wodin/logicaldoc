@@ -23,7 +23,7 @@ public class ImageThumbnailBuilder extends AbstractThumbnailBuilder {
 	protected static Logger log = LoggerFactory.getLogger(AbstractThumbnailBuilder.class);
 
 	@Override
-	public synchronized void buildThumbnail(String tenant, File src, String srcFileName, File dest, int size, int quality)
+	public synchronized void buildThumbnail(String sid, String tenant, File src, String srcFileName, File dest, int size, int quality)
 			throws IOException {
 		try {
 			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
