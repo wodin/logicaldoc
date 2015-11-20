@@ -6,6 +6,10 @@ import java.util.Map;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.runtime.RuntimeConstants;
+import org.apache.velocity.runtime.log.Log4JLogChute;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.SystemInfo;
@@ -20,6 +24,8 @@ import com.logicaldoc.util.config.ContextProperties;
  * @since 6.5
  */
 public class MessageTemplate extends PersistentObject {
+
+	private static Logger log = LoggerFactory.getLogger(MessageTemplate.class);
 
 	private String name = "";
 
@@ -64,13 +70,14 @@ public class MessageTemplate extends PersistentObject {
 		// This is needed to print folder's URL
 		dictionary.put("FolderTool", new FolderTool());
 
-		VelocityContext context = new VelocityContext(dictionary);
-
 		StringWriter writer = new StringWriter();
 		try {
+			VelocityContext context = new VelocityContext(dictionary);
+			Velocity.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, Log4JLogChute.class.getName());
+			Velocity.setProperty("runtime.log.logsystem.log4j.logger", Velocity.class.getName());		
 			Velocity.evaluate(context, writer, getName(), text.replace("\n", "${nl}"));
 			return writer.toString();
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			return text;
 		}
 	}
@@ -134,5 +141,4 @@ public class MessageTemplate extends PersistentObject {
 		newTemplate.setTenantId(getTenantId());
 		return newTemplate;
 	}
-
 }
