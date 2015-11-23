@@ -75,7 +75,7 @@ public class TaskDialog extends Window {
 		setTitle(I18N.message("editworkflowstate", state.getType() == GUIWFState.TYPE_TASK ? I18N.message("task")
 				: I18N.message("endstate")));
 		setWidth(350);
-		setHeight(state.getType() == GUIWFState.TYPE_TASK ? 480 : 370);
+		setHeight(state.getType() == GUIWFState.TYPE_TASK ? 430 : 360);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -100,6 +100,7 @@ public class TaskDialog extends Window {
 			StaticTextItem escalation = ItemFactory.newStaticTextItem("escalationManagement", "",
 					"<b>" + I18N.message("escalationmanagement") + "</b>");
 			escalation.setShouldSaveValue(false);
+			escalation.setShowTitle(false);
 			escalation.setWrapTitle(false);
 			escalation.setWrap(false);
 			escalationFormItem.setItems(escalation);
@@ -143,6 +144,7 @@ public class TaskDialog extends Window {
 		StaticTextItem participantsItem = ItemFactory.newStaticTextItem("participants", "",
 				"<b>" + I18N.message("participants") + "</b>");
 		participantsItem.setShouldSaveValue(false);
+		participantsItem.setShowTitle(false);
 		participantsItem.setWrapTitle(false);
 		participantsItem.setRequired(true);
 		participantsItemForm.setItems(participantsItem);

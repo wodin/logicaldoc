@@ -103,7 +103,6 @@ public class FolderSelector extends TextItem {
 		for (FolderChangeListener listener : listeners) {
 			listener.onChanged(getFolder());
 		}
-		redraw();
 	}
 
 	public void setFolder(GUIFolder folder) {

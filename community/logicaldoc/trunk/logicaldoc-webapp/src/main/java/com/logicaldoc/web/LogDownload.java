@@ -56,7 +56,7 @@ public class LogDownload extends HttpServlet {
 			response.setHeader("Pragma", "no-cache");
 			response.setHeader("Cache-Control", "no-store");
 			response.setDateHeader("Expires", 0);
-			
+
 			file = prepareAllLogs(response);
 		} else {
 			response.setContentType("text/html");
@@ -68,8 +68,9 @@ public class LogDownload extends HttpServlet {
 			return;
 
 		response.setHeader("Content-Length", Long.toString(file.length()));
+		InputStream is = null;
 		try {
-			InputStream is = new BufferedInputStream(new FileInputStream(file));
+			is = new BufferedInputStream(new FileInputStream(file));
 			byte[] buf = new byte[1024];
 			int read = 1;
 
@@ -80,13 +81,19 @@ public class LogDownload extends HttpServlet {
 					response.getOutputStream().write(buf, 0, read);
 				}
 			}
-
-			is.close();
-		} catch (SocketException e) {
-			//Avoid to log this kind of recurrent exception
 		} catch (Throwable ex) {
-			log.error(ex.getMessage(), ex);
+			if (ex instanceof SocketException) {
+				// Avoid to log this kind of recurrent exception
+			} else
+				log.error(ex.getMessage(), ex);
 		} finally {
+			try {
+				if (is != null)
+					is.close();
+			} catch (Throwable ex) {
+				log.error(ex.getMessage(), ex);
+			}
+
 			if ("all".equals(appender) && file != null)
 				FileUtils.deleteQuietly(file);
 		}
