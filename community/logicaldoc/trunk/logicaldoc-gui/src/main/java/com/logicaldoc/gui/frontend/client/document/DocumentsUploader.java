@@ -1,11 +1,17 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import gwtupload.client.IFileInput.FileInputType;
 import gwtupload.client.IUploadStatus.Status;
 import gwtupload.client.IUploader;
 import gwtupload.client.MultiUploader;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style.BorderStyle;
+import com.google.gwt.dom.client.Style.Unit;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Widget;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -15,6 +21,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
@@ -60,12 +67,18 @@ public class DocumentsUploader extends Window {
 		centerInPage();
 		setAutoSize(true);
 
-		// Create a new uploader panel and attach it to the window
-		multiUploader = new MultiUploader();
+		Label customExternalDropZone = new Label();
+		customExternalDropZone.setText(I18N.message("dropfileshere"));
+		customExternalDropZone.setWidth((getWidth() - 5) + "px");
+		customExternalDropZone.setHeight("40px");
+		customExternalDropZone.getElement().getStyle().setBorderStyle(BorderStyle.DASHED);
+		customExternalDropZone.getElement().getStyle().setBorderWidth(1, Unit.PX);
+		customExternalDropZone.getElement().getStyle().setPadding(10, Unit.PX);
+		multiUploader = new MultiUploader(FileInputType.CUSTOM.with(
+				(Widget) new Button(I18N.message("clickmeordropfiles"))).withZone(customExternalDropZone));
+		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		multiUploader.addOnStartUploadHandler(onStartUploaderHandler);
 		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
-		multiUploader.setStyleName("upload");
-		multiUploader.setWidth("400px");
 		multiUploader.setFileInputPrefix("LDOC");
 		multiUploader.reset();
 
@@ -83,8 +96,10 @@ public class DocumentsUploader extends Window {
 		VLayout layout = new VLayout();
 		layout.setMembersMargin(5);
 		layout.setMargin(2);
+		layout.setWidth100();
 
 		layout.addMember(form);
+		layout.addMember(customExternalDropZone);
 		layout.addMember(multiUploader);
 		layout.addMember(sendButton);
 
@@ -111,6 +126,9 @@ public class DocumentsUploader extends Window {
 
 	private void prepareForm() {
 		form = new DynamicForm();
+		form.setWidth100();
+		form.setAlign(Alignment.LEFT);
+		form.setColWidths("1px, 100%");
 		vm = new ValuesManager();
 		form.setValuesManager(vm);
 
@@ -118,11 +136,13 @@ public class DocumentsUploader extends Window {
 		zipItem.setName("zip");
 		zipItem.setTitle(I18N.message("importfromzip"));
 		zipItem.setValue(!zipImport);
-
+        zipItem.setTitleAlign(Alignment.LEFT);
+		
 		final CheckboxItem immediateIndexing = new CheckboxItem();
 		immediateIndexing.setName("immediateIndexing");
 		immediateIndexing.setTitle(I18N.message("immediateindexing"));
 		immediateIndexing.setValue(false);
+		immediateIndexing.setTitleAlign(Alignment.LEFT);
 
 		if (!Session.get().getCurrentFolder().hasPermission(Constants.PERMISSION_IMPORT)) {
 			zipItem.setDisabled(true);
@@ -174,7 +194,7 @@ public class DocumentsUploader extends Window {
 		BulkUpdateDialog bulk = new BulkUpdateDialog(null, metadata, false, false);
 		bulk.setZip(getImportZip());
 		bulk.setImmediateIndexing(getImmediateIndexing());
-		
+
 		bulk.show();
 		destroy();
 	}
@@ -186,7 +206,7 @@ public class DocumentsUploader extends Window {
 	public boolean getImportZip() {
 		return "true".equals(vm.getValueAsString("zip"));
 	}
-	
+
 	public boolean getImmediateIndexing() {
 		return "true".equals(vm.getValueAsString("immediateIndexing"));
 	}
