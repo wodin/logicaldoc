@@ -58,6 +58,7 @@ public class DocumentsUploader extends Window {
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
+		setAutoSize(true);
 
 		// Create a new uploader panel and attach it to the window
 		multiUploader = new MultiUploader();
