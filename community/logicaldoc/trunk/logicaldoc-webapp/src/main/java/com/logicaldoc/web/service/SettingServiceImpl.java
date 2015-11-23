@@ -129,7 +129,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.contains(".lang.") || name.startsWith("reg.") || name.startsWith("ocr.")
 					|| name.contains(".ocr.") || name.contains("barcode") || name.startsWith("task.")
 					|| name.startsWith("quota") || name.startsWith("store") || name.startsWith("flexpaperviewer")
-					|| name.startsWith("omnipage.") || name.startsWith("command.") || name.contains(".gui.")
+					|| name.startsWith("advancedocr.") || name.startsWith("command.") || name.contains(".gui.")
 					|| name.contains(".upload.") || name.equals("userno") || name.contains(".search.")
 					|| name.startsWith("swftools.") || name.contains("password") || name.startsWith("openoffice.path")
 					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
@@ -284,7 +284,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		params[5] = new GUIParameter("ocr.timeout", conf.getProperty("ocr.timeout"));
 		params[6] = new GUIParameter("ocr.engine", conf.getProperty("ocr.engine"));
 		params[7] = new GUIParameter("command.tesseract", conf.getProperty("command.tesseract"));
-		params[8] = new GUIParameter("omnipage.path", conf.getProperty("omnipage.path"));
+		params[8] = new GUIParameter("advancedocr.path", conf.getProperty("advancedocr.path"));
 		params[9] = new GUIParameter("ocr.count", conf.getProperty("ocr.count"));
 		params[10] = new GUIParameter("ocr.rendres", conf.getProperty("ocr.rendres"));
 		params[11] = new GUIParameter("ocr.rendres.barcode", conf.getProperty("ocr.rendres.barcode"));

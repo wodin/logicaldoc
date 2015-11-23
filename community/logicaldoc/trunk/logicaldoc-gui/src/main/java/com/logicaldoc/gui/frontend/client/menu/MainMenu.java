@@ -61,12 +61,10 @@ import com.logicaldoc.gui.frontend.client.sharefile.ShareFileSettings;
 import com.logicaldoc.gui.frontend.client.subscription.PersonalSubscriptions;
 import com.logicaldoc.gui.frontend.client.webcontent.WebcontentCreate;
 import com.logicaldoc.gui.frontend.client.webcontent.WebcontentEditor;
-import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -103,25 +101,10 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 
 	protected TenantServiceAsync tenantService = (TenantServiceAsync) GWT.create(TenantService.class);
 
-	private boolean quickSearch = true;
-
-	private boolean dropSpot = false;
-
-	private HTMLFlow dropArea = new HTMLFlow();
-
-	private static final String EMPTY_DIV = "<div style=\"margin-top:3px; width=\"80\"; height=\"20\"\" />";
-
 	private ToolStripMenuButton tools;
 
 	public MainMenu(boolean quickSearch) {
-		this(quickSearch, false);
-	}
-
-	public MainMenu(boolean quickSearch, boolean dropSpot) {
 		super();
-
-		this.quickSearch = quickSearch;
-		this.dropSpot = dropSpot;
 
 		setWidth100();
 
@@ -134,18 +117,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		addMenuButton(tools);
 
 		addMenuButton(getHelpMenu());
-		addFill();
 
-		dropArea.setContents(EMPTY_DIV);
-		dropArea.setWidth(81);
-		if (dropSpot && com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DOCUMENTS)) {
-			if (Feature.enabled(Feature.DROP_SPOT))
-				dropArea.setTooltip(I18N.message("dropfiles"));
-			else
-				dropArea.setTooltip(I18N.message("featuredisabled"));
-			dropArea.setAlign(Alignment.CENTER);
-			addMember(dropArea);
-		}
 		addFill();
 
 		Label userInfo = new Label(I18N.message("loggedin") + " <b>" + Session.get().getUser().getUserName() + "</b>");
@@ -235,7 +207,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			}
 		});
 
-		if (Feature.enabled(Feature.DROP_SPOT) && !"embedded".equals(Session.get().getConfig("gui.dropspot.mode"))
+		if (Feature.enabled(Feature.DROP_SPOT)
 				&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.DOCUMENTS))
 			menu.setItems(dropSpotItem, exitItem);
 		else
@@ -956,30 +928,6 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 
 	@Override
 	public void onFolderSelected(GUIFolder folder) {
-		if (Feature.visible(Feature.DROP_SPOT)
-				&& "embedded".equals(Session.get().getInfo().getConfig("gui.dropspot.mode"))) {
-			if (folder != null && folder.hasPermission(Constants.PERMISSION_WRITE)
-					&& Feature.enabled(Feature.DROP_SPOT)) {
-				if (dropArea.getContents().equals(EMPTY_DIV)) {
-					String tmp = "<div style=\"z-index:-100;margin-top:3px; width=\"80\"; height=\"20\"\"><applet name=\"DropApplet\" archive=\""
-							+ Util.contextPath()
-							+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet2\" width=\"80\" height=\"20\" mayscript>";
-					tmp += "<param name=\"baseUrl\" value=\"" + Util.contextPath() + "\" />";
-					tmp += "<param name=\"sid\" value=\"" + Session.get().getSid() + "\" />";
-					tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
-					tmp += "<param name=\"sizeMax\" value=\""
-							+ Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize"));
-					tmp += "<param name=\"disallow\" value=\"" + Session.get().getConfig("upload.disallow") + "\" />";
-					tmp += "</applet></div>";
-					dropArea.setContents(tmp);
-				}
-			} else {
-				dropArea.setContents(EMPTY_DIV);
-			}
-		} else {
-			dropArea.setContents(EMPTY_DIV);
-		}
-
 		if (tools != null)
 			removeMember(tools);
 

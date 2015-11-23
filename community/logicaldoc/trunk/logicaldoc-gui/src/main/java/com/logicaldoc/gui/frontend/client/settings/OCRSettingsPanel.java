@@ -101,19 +101,19 @@ public class OCRSettingsPanel extends VLayout {
 
 		RadioGroupItem engine = ItemFactory.newBooleanSelector("ocr_engine", "engine");
 		engine.setRequired(true);
-		engine.setValueMap("tesseract", "omnipage");
+		engine.setValueMap("default", "advanced");
 		engine.setValue(settings[6].getValue());
 
 		TextItem tesseract = ItemFactory.newTextItem("command_tesseract", "Tesseract", settings[7].getValue());
 
-		TextItem omnipagePath = ItemFactory.newTextItem("omnipage_path", "OmniPage path", settings[8].getValue());
+		TextItem advancedOcrPath = ItemFactory.newTextItem("advancedocr_path", "Advanced OCR path", settings[8].getValue());
 
 		StaticTextItem count = ItemFactory.newStaticTextItem("ocr_count", I18N.message("monthlycounter"),
 				settings[9].getValue());
 
 		if (Session.get().isDefaultTenant())
 			form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold, ocrrendres,
-					barcoderendres, batch, engine, tesseract, omnipagePath, count);
+					barcoderendres, batch, engine, tesseract, advancedOcrPath, count);
 		else
 			form.setItems(enabled, includes, excludes, textThreshold, resolutionThreshold);
 
@@ -175,7 +175,7 @@ public class OCRSettingsPanel extends VLayout {
 
 						params[8] = new GUIParameter("ocr.engine", (String) values.get("ocr_engine"));
 						params[9] = new GUIParameter("command.tesseract", (String) values.get("command_tesseract"));
-						params[10] = new GUIParameter("omnipage.path", (String) values.get("omnipage_path"));
+						params[10] = new GUIParameter("advancedocr.path", (String) values.get("advancedocr_path"));
 					}
 
 					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
