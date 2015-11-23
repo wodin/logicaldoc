@@ -172,15 +172,24 @@ public class SystemMenu extends VLayout {
 		StaticTextItem productName = ItemFactory.newStaticTextItem("productName", "", "<b>"
 				+ Session.get().getInfo().getProductName() + "</b>");
 		productName.setShouldSaveValue(false);
+		productName.setShowTitle(false);
 		productName.setWrapTitle(false);
+		productName.setWrap(false);
+		productName.setEndRow(true);
+		
 
 		StaticTextItem version = ItemFactory.newStaticTextItem("version", "", I18N.message("version") + " "
 				+ Session.get().getInfo().getRelease());
 		version.setShouldSaveValue(false);
+		version.setShowTitle(false);
+		version.setWrap(false);
+		version.setEndRow(true);
 
 		StaticTextItem vendor = ItemFactory.newStaticTextItem("vendor", "", "&copy; "
 				+ Session.get().getInfo().getVendor());
 		vendor.setShouldSaveValue(false);
+		vendor.setShowTitle(false);
+		vendor.setEndRow(true);
 
 		String userno = Session.get().getInfo().getUserNo();
 
@@ -189,7 +198,6 @@ public class SystemMenu extends VLayout {
 		supportForm.setTitleOrientation(TitleOrientation.TOP);
 		supportForm.setColWidths(1);
 		supportForm.setWrapItemTitles(false);
-		supportForm.setMargin(8);
 		supportForm.setNumCols(1);
 
 		LinkItem support = new LinkItem();

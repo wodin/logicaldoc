@@ -74,7 +74,7 @@ public class MessageTemplate extends PersistentObject {
 		try {
 			VelocityContext context = new VelocityContext(dictionary);
 			Velocity.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, Log4JLogChute.class.getName());
-			Velocity.setProperty("runtime.log.logsystem.log4j.logger", Velocity.class.getName());		
+			Velocity.setProperty("runtime.log.logsystem.log4j.logger", Velocity.class.getName());
 			Velocity.evaluate(context, writer, getName(), text.replace("\n", "${nl}"));
 			return writer.toString();
 		} catch (Throwable e) {

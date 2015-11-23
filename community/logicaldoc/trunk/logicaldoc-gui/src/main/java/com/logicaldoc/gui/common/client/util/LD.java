@@ -61,6 +61,7 @@ public class LD {
 		text.setShouldSaveValue(false);
 		text.setWrapTitle(false);
 		text.setAlign(Alignment.CENTER);
+		text.setShowTitle(false);
 		textForm.setFields(text);
 
 		IButton yes = new IButton(I18N.message("yes"));

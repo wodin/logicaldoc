@@ -5,6 +5,7 @@ import java.util.Map;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIShare;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FolderChangeListener;
 import com.logicaldoc.gui.frontend.client.folder.FolderSelector;
@@ -32,6 +33,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		super(share, changedHandler);
 		setWidth100();
 		setHeight100();
+
 		setMembers(formsContainer);
 		targetSelector = new FolderSelector("target", false);
 		targetSelector.setRequired(true);
@@ -45,18 +47,25 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 				changedHandler.onChanged(null);
 			}
 		});
+
 		refresh();
 	}
 
 	private void refresh() {
+		Log.info("**1 " + share, null);
+
 		form.clearValues();
 		form.clearErrors(false);
 
 		if (form != null)
 			form.destroy();
 
+		Log.info("**2 ", null);
+
 		if (formsContainer.contains(form))
 			formsContainer.removeChild(form);
+
+		Log.info("**3 ", null);
 
 		form = new DynamicForm();
 		form.setNumCols(2);
@@ -80,7 +89,7 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		language.addChangedHandler(changedHandler);
 		language.setRequired(true);
 		language.setValue(share.getLanguage());
-		
+
 		TextItem include = ItemFactory.newTextItem("include", "include", share.getIncludes());
 		include.addChangedHandler(changedHandler);
 
