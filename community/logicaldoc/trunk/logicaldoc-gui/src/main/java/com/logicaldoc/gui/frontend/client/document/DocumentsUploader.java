@@ -55,6 +55,8 @@ public class DocumentsUploader extends Window {
 	private boolean zipImport = true;
 
 	private DynamicForm form;
+	
+	private Label customExternalDropZone;
 
 	public DocumentsUploader() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
@@ -67,7 +69,7 @@ public class DocumentsUploader extends Window {
 		centerInPage();
 		setAutoSize(true);
 
-		Label customExternalDropZone = new Label();
+		customExternalDropZone = new Label();
 		customExternalDropZone.setText(I18N.message("dropfileshere"));
 		customExternalDropZone.setWidth((getWidth() - 5) + "px");
 		customExternalDropZone.setHeight("40px");
@@ -78,7 +80,6 @@ public class DocumentsUploader extends Window {
 				(Widget) new Button(I18N.message("clickmeordropfiles"))).withZone(customExternalDropZone));
 		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		multiUploader.addOnStartUploadHandler(onStartUploaderHandler);
-		multiUploader.addOnFinishUploadHandler(onFinishUploaderHandler);
 		multiUploader.setFileInputPrefix("LDOC");
 		multiUploader.reset();
 
