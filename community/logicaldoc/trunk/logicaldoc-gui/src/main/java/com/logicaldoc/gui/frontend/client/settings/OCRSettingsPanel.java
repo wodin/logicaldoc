@@ -21,6 +21,8 @@ import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -37,6 +39,12 @@ public class OCRSettingsPanel extends VLayout {
 	private ValuesManager vm = new ValuesManager();
 
 	private TabSet tabs = new TabSet();
+
+	private TextItem tesseract;
+
+	private TextItem advancedOcrPath;
+
+	private StaticTextItem count;
 
 	public OCRSettingsPanel(GUIParameter[] settings) {
 		setWidth100();
@@ -99,17 +107,25 @@ public class OCRSettingsPanel extends VLayout {
 		batch.setWrapTitle(false);
 		batch.setHint("pages");
 
-		RadioGroupItem engine = ItemFactory.newBooleanSelector("ocr_engine", "engine");
+		final RadioGroupItem engine = ItemFactory.newBooleanSelector("ocr_engine", "engine");
 		engine.setRequired(true);
 		engine.setValueMap("default", "advanced");
 		engine.setValue(settings[6].getValue());
+		engine.addChangedHandler(new ChangedHandler() {
 
-		TextItem tesseract = ItemFactory.newTextItem("command_tesseract", "Tesseract", settings[7].getValue());
+			@Override
+			public void onChanged(ChangedEvent event) {
+				onEngineChanged(event.getValue().toString());
+			}
+		});
 
-		TextItem advancedOcrPath = ItemFactory.newTextItem("advancedocr_path", "Advanced OCR path", settings[8].getValue());
+		tesseract = ItemFactory.newTextItem("command_tesseract", "Tesseract", settings[7].getValue());
+		tesseract.setWidth(350);
 
-		StaticTextItem count = ItemFactory.newStaticTextItem("ocr_count", I18N.message("monthlycounter"),
-				settings[9].getValue());
+		advancedOcrPath = ItemFactory.newTextItem("advancedocr_path", "Advanced OCR path", settings[8].getValue());
+		advancedOcrPath.setWidth(350);
+
+		count = ItemFactory.newStaticTextItem("ocr_count", I18N.message("monthlycounter"), settings[9].getValue());
 
 		if (Session.get().isDefaultTenant())
 			form.setItems(enabled, timeout, includes, excludes, textThreshold, resolutionThreshold, ocrrendres,
@@ -194,11 +210,25 @@ public class OCRSettingsPanel extends VLayout {
 			}
 		});
 
+		onEngineChanged(engine.getValueAsString());
+
 		Tab ocrTab = new Tab();
 		ocrTab.setPane(form);
 		ocrTab.setTitle(I18N.message("ocr"));
 		tabs.setTabs(ocrTab);
 
 		setMembers(tabs, save);
+	}
+
+	private void onEngineChanged(String engine) {
+		if ("default".equals(engine)) {
+			tesseract.show();
+			advancedOcrPath.hide();
+			count.hide();
+		} else {
+			tesseract.hide();
+			advancedOcrPath.show();
+			count.show();
+		}
 	}
 }
