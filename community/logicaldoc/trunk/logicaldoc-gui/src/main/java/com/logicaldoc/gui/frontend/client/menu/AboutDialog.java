@@ -38,7 +38,7 @@ public class AboutDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("about") + " " + Session.get().getInfo().getProductName());
 		setWidth(400);
-		setPadding(5);
+		setPadding(2);
 		setAutoSize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -105,7 +105,6 @@ public class AboutDialog extends Window {
 		VStack content = new VStack();
 		content.setWidth("100%");
 		content.setMembersMargin(5);
-		content.setTop(20);
 		content.setMargin(4);
 		content.setAlign(Alignment.CENTER);
 		content.setDefaultLayoutAlign(Alignment.CENTER);
@@ -113,6 +112,6 @@ public class AboutDialog extends Window {
 		content.setMembers(vspacer1, logoImage, productName, version, copyright, trademark, sitelink, maillink,
 				vspacer2);
 
-		addChild(content);
+		addItem(content);
 	}
 }
