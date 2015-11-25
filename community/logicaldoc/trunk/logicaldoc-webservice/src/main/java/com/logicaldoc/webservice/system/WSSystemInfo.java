@@ -9,9 +9,9 @@ public class WSSystemInfo {
 
 	protected String product = "LogicalDOC";
 
-	protected String release = "6.8";
+	protected String release = "7.4";
 
-	protected String year = "2013";
+	protected String year = "2006-2015";
 
 	protected String help = "http://help.logicaldoc.com";
 
@@ -21,7 +21,7 @@ public class WSSystemInfo {
 
 	protected String forum = "http://forums.logicaldoc.com";
 
-	protected String vendor = "Logical Objects Srl";
+	protected String vendor = "LogicalDOC";
 
 	protected String vendorAddress = "via Aldo Moro interna, 3";
 
