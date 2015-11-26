@@ -486,6 +486,7 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	public void clearTags() {
 		tags.clear();
 		tags = new HashSet<Tag>();
+		tgs = null;
 	}
 
 	public String getFileExtension() {
