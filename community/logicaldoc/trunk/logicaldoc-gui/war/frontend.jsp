@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%! static String MODULE="frontend"; %>
 <%@ include file="header.jsp" %>
+<%@ include file="detectmobile.jsp" %>
 
 		<!--add loading indicator while the app is being loaded-->
 		<div id="loadingWrapper">

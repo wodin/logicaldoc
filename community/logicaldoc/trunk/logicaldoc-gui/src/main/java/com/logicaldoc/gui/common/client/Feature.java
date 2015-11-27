@@ -46,6 +46,8 @@ public class Feature {
 	public static final int SCAN = 16;
 
 	public static final int AUDIT = 17;
+	
+	public static final int NOTIFICATIONS = 18;
 
 	public static final int WORKFLOW = 19;
 
@@ -81,6 +83,8 @@ public class Feature {
 	
 	public static final int UPDATES = 35;
 
+	public static final int MOBILE_GUI = 36;
+	
 	public static final int SHOW_LICENSEE = 40;
 
 	public static final int SHOW_USERS_WARNING = 41;

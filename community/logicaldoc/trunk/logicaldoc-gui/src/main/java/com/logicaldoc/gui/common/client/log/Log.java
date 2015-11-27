@@ -31,46 +31,63 @@ public class Log {
 	 * @param caught The caught exception (if any)
 	 */
 	public static void serverError(String message, Throwable caught) {
-		ContactingServer.get().hide();
-		
-		// Hide download exceptions that normally are raised on double click.
-		if ("0".equals(message.trim()))
-			return;
+		try {
+			ContactingServer.get().hide();
 
-		EventPanel.get().error(I18N.message("servererror") + ": " + message, message);
-		GWT.log("Server error: " + message, caught);
+			// Hide download exceptions that normally are raised on double
+			// click.
+			if ("0".equals(message.trim()))
+				return;
 
-		if (caught instanceof InvalidSessionException) {
-			// Redirect to the module's login page
-			Session.get().close();
-			String base = GWT.getHostPageBaseURL();
-			Util.redirect(base
-					+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName() + ".jsp"));
-		} else if (caught instanceof ServerException) {
-			SC.warn(caught.getMessage());
+			EventPanel.get().error(I18N.message("servererror") + ": " + message, message);
+			GWT.log("Server error: " + message, caught);
+
+			if (caught instanceof InvalidSessionException) {
+				// Redirect to the module's login page
+				Session.get().close();
+				String base = GWT.getHostPageBaseURL();
+				Util.redirect(base
+						+ (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName() + ".jsp"));
+			} else if (caught instanceof ServerException) {
+				SC.warn(caught.getMessage());
+			}
+		} catch (Throwable t) {
 		}
 	}
 
 	public static void warn(String message, String detail) {
-		EventPanel.get().warn(message, detail);
-		GWT.log("warn: " + message, null);
+		try {
+			GWT.log("warn: " + message, null);
+			EventPanel.get().warn(message, detail);
+		} catch (Throwable t) {
+		}
 	}
 
 	public static void error(String message, String detail, Throwable caught) {
-		// Hide download exceptions that normally are raised on double click.
-		if ("0".equals(message))
-			return;
+		try {
+			// Hide download exceptions that normally are raised on double
+			// click.
+			if ("0".equals(message))
+				return;
 
-		EventPanel.get().error(message, detail);
-		GWT.log("error: " + message, caught);
+			GWT.log("error: " + message, caught);
+			EventPanel.get().error(message, detail);
+		} catch (Throwable t) {
+		}
 	}
 
 	public static void info(String message, String detail) {
-		EventPanel.get().info(message, detail);
-		GWT.log("info: " + message, null);
+		try {
+			GWT.log("info: " + message, null);
+			EventPanel.get().info(message, detail);
+		} catch (Throwable t) {
+		}
 	}
 
 	public static void debug(String message) {
-		GWT.log("debug: " + message, null);
+		try {
+			GWT.log("debug: " + message, null);
+		} catch (Throwable t) {
+		}
 	}
 }

@@ -16,7 +16,11 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.gui.common.client.services.InfoServiceAsync;
+import com.logicaldoc.gui.common.client.services.SecurityService;
+import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 
 /**
@@ -30,6 +34,8 @@ public class Session {
 
 	private InfoServiceAsync service = (InfoServiceAsync) GWT.create(InfoService.class);
 
+	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
+	
 	private GUIInfo info;
 
 	private GUISession session;
@@ -228,5 +234,26 @@ public class Session {
 
 	public void setShowThumbnail(boolean showThumbnail) {
 		this.showThumbnail = showThumbnail;
+	}
+	
+	public void logout(){
+		securityService.logout(Session.get().getSid(), new AsyncCallback<Void>() {
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+				SC.warn(caught.getMessage());
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+				try {
+					Offline.remove(Constants.COOKIE_SID);
+				} catch (Throwable t) {
+
+				}
+
+				Session.get().close();
+				Util.redirectToRoot();
+			}
+		});
 	}
 }
