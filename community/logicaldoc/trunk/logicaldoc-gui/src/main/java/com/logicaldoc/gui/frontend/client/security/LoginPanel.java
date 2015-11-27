@@ -93,7 +93,6 @@ public class LoginPanel extends VLayout {
 		setWidth100();
 		setHeight100();
 		setMembersMargin(0);
-		setStyleName("login-body");
 
 		this.info = info;
 	}

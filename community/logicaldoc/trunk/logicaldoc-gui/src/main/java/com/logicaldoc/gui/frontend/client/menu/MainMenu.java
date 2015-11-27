@@ -221,26 +221,8 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		LD.ask(I18N.message("question"), I18N.message("confirmexit"), new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
-				if (value) {
-					securityService.logout(Session.get().getSid(), new AsyncCallback<Void>() {
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-							SC.warn(caught.getMessage());
-						}
-
-						@Override
-						public void onSuccess(Void result) {
-							try {
-								Offline.remove(Constants.COOKIE_SID);
-							} catch (Throwable t) {
-
-							}
-
-							Session.get().close();
-							Util.redirectToRoot();
-						}
-					});
-				}
+				if (value)
+					Session.get().logout();
 			}
 		});
 	}
