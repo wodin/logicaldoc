@@ -17,11 +17,7 @@
 		<to type="redirect">%{context-path}/sessions.jsp</to>
 	</rule>
 	<rule>
-		<from>/basic/$</from>
-		<to type="redirect">%{context-path}/basic.jsp</to>
-	</rule>
-	<rule>
-		<from>/aos/$</from>
-		<to type="redirect">%{context-path}/aos.jsp</to>
+		<from>/mobile/$</from>
+		<to type="redirect">%{context-path}/mobile.jsp</to>
 	</rule>
 </urlrewrite>
