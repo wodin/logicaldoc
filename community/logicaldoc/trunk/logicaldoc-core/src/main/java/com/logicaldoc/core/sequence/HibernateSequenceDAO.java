@@ -79,16 +79,13 @@ public class HibernateSequenceDAO extends HibernatePersistentObjectDAO<Sequence>
 
 	@Override
 	public Sequence findByAlternateKey(String name, long objectId, long tenantId) {
-		Long id = null;
 		try {
-			id = queryForLong("select ld_id from ld_sequence where ld_deleted=0 and ld_tenantId=" + tenantId
-					+ " and ld_objectid=" + objectId + " and ld_name ='" + SqlUtil.doubleQuotes(name) + "'");
+			String query = " _entity.tenantId=" + tenantId;
+			query += " and _entity.objectId=" + objectId;
+			query += " and _entity.name = '" + SqlUtil.doubleQuotes(name) + "'";
+			return findByWhere(query, null, null).iterator().next();
 		} catch (Throwable t) {
-		}
-
-		if (id != null)
-			return findById(id);
-		else
 			return null;
+		}
 	}
 }
