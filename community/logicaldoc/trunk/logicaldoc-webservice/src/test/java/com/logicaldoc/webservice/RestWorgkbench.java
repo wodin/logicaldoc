@@ -1,5 +1,7 @@
 package com.logicaldoc.webservice;
 
+import java.io.File;
+
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.rest.auth.AuthClient;
 import com.logicaldoc.webservice.rest.document.DocumentClient;
@@ -19,11 +21,13 @@ public class RestWorgkbench {
 			System.out.println("Session is valid");
 
 		try {
-			// File file = new File("C:/tmp/logo.gif");
-			//
-			// long docId = doc.upload(sid, null, 4L, true, "testrest.gif",
-			// file);
-			// System.out.println("Crearted document " + docId);
+			File file = new File("D:/tmp/abc.odt");
+			
+		    long docId = doc.upload(sid, null, 4L, true, file.getName(), file);
+			
+		    System.out.println("created docId: "+docId);
+		    
+		    // System.out.println("Crearted document " + docId);
 			//
 			// docId = doc.upload(sid, docId, null, true, "testrest.gif", file);
 			// System.out.println("Updated document " + docId);
@@ -32,8 +36,8 @@ public class RestWorgkbench {
 			// doc.checkin(sid, 673284114L, "rest checkin", "phototest.gif",
 			// true, file);
 
-			WSDocument document = doc.getDocument(sid, 583761920L);
-			System.out.println(document);
+//			WSDocument document = doc.getDocument(sid, 583761920L);
+//			System.out.println(document);
 
 		} finally {
 			auth.logout(sid);
