@@ -18,7 +18,7 @@ public class PreviewPanel extends DocumentDetailTab {
 	}
 
 	@Override
-	protected void onTabSelected() {
+	public void onTabSelected() {
 		if (panel == null) {
 			panel = new com.logicaldoc.gui.common.client.widgets.PreviewPanel(document, 100);
 			setMembers(panel);

@@ -745,6 +745,7 @@ public class ItemFactory {
 		spinner.setStep(1);
 		spinner.setWidth(55);
 		spinner.setHintStyle("hint");
+		spinner.setWriteStackedIcons(true); 
 		return spinner;
 	}
 

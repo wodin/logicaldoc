@@ -134,7 +134,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		published.setTooltip(I18N.formatDate((Date) document.getDate()) + " " + I18N.message("by") + " "
 				+ document.getPublisher());
 
-		StaticTextItem size = ItemFactory.newStaticTextItem("size", "size", Util.formatSizeW7(document.getFileSize())
+		StaticTextItem size = ItemFactory.newStaticTextItem("size", "size", Util.formatSizeW7(document.getFileSize().doubleValue())
 				+ " (" + Util.formatSizeBytes(document.getFileSize()) + ")");
 
 		TextItem title = ItemFactory.newTextItem("title", "title", document.getTitle());

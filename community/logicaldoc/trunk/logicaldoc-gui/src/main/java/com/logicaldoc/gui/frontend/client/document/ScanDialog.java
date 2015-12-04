@@ -34,6 +34,7 @@ public class ScanDialog extends Window {
 		tmp += "<param name=\"baseUrl\" value=\"" + Util.contextPath() + "\" />";
 		tmp += "<param name=\"sid\" value=\"" + Session.get().getSid() + "\" />";
 		tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
+		tmp += "<param name=\"lang\" value=\"" + I18N.getLocale() + "\" />";
 		tmp += "</applet>";
 
 		HTMLFlow applet = new HTMLFlow();

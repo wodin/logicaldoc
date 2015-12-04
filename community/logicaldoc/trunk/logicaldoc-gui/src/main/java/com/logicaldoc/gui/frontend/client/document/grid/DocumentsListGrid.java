@@ -458,8 +458,8 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 							String fileVersion = getSelectedRecord().getAttribute("fileVersion");
 
 							if (Session.get().getCurrentFolder().isDownload())
-								WindowUtils.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid()
-										+ "&docId=" + id + "&version=" + fileVersion);
+								WindowUtils.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid="
+										+ Session.get().getSid() + "&docId=" + id + "&version=" + fileVersion);
 						}
 					}
 					event.cancel();
@@ -533,7 +533,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 
 	@Override
 	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
-		if (getFieldName(colNum).equals("title")) {
+		if (getFieldName(colNum).equals("title") || getFieldName(colNum).equals("filename")) {
 			if ("stop".equals(record.getAttribute("immutable"))
 					|| !"yes".equals(record.getAttribute("publishedStatus"))) {
 				return "color: #888888; font-style: italic;";

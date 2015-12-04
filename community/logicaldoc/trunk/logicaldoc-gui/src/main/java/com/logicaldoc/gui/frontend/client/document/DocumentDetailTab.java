@@ -60,7 +60,7 @@ public abstract class DocumentDetailTab extends HLayout {
 	/**
 	 * Place here special logic that will be invoked when the user opens the tab
 	 */
-	protected void onTabSelected() {
+	public void onTabSelected() {
 
 	}
 

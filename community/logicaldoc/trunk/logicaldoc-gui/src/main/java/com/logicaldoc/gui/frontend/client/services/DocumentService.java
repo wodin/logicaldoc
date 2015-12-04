@@ -134,11 +134,13 @@ public interface DocumentService extends RemoteService {
 	 *        documents imported
 	 * @param immediteIndexing If the documents must be immediately indexed
 	 * @param templateId The documents template
+	 * 
+	 * @return The list of created documents
 	 */
-	public void addDocuments(String sid, String language, long folderId, boolean importZip, boolean immediateIndexing,
-			Long templateId) throws ServerException;
+	public GUIDocument[] addDocuments(String sid, String language, long folderId, boolean importZip,
+			boolean immediateIndexing, Long templateId) throws ServerException;
 
-	public void addDocuments(String sid, boolean importZip, boolean immediateIndexing, GUIDocument metadata)
+	public GUIDocument[] addDocuments(String sid, boolean importZip, boolean immediateIndexing, GUIDocument metadata)
 			throws ServerException;
 
 	/**

@@ -17,14 +17,14 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
  */
 public class GridUtil {
 
-	static long[] getIds(Record[] records) {
+	static public long[] getIds(Record[] records) {
 		long[] ids = new long[records.length];
 		for (int i = 0; i < records.length; i++)
 			ids[i] = Long.parseLong(records[i].getAttributeAsString("id"));
 		return ids;
 	}
 
-	static GUIDocument[] toDocuments(Record[] records) {
+	static public GUIDocument[] toDocuments(Record[] records) {
 		ArrayList<GUIDocument> docs = new ArrayList<GUIDocument>();
 		if (records != null)
 			for (Record record : records)
@@ -32,7 +32,7 @@ public class GridUtil {
 		return docs.toArray(new GUIDocument[0]);
 	}
 
-	static GUIDocument toDocument(Record record) {
+	static public GUIDocument toDocument(Record record) {
 		GUIDocument document = null;
 		if (record != null) {
 			document = new GUIDocument();
@@ -88,7 +88,7 @@ public class GridUtil {
 		return document;
 	}
 
-	static ListGridRecord fromDocument(GUIDocument doc) {
+	static public ListGridRecord fromDocument(GUIDocument doc) {
 		ListGridRecord record = new ListGridRecord();
 		record.setAttribute("id", doc.getId());
 		record.setAttribute("docref", doc.getDocRef());
@@ -153,7 +153,7 @@ public class GridUtil {
 		return record;
 	}
 
-	static void updateRecord(GUIDocument document, Record record) {
+	static public void updateRecord(GUIDocument document, Record record) {
 		if (record == null && document == null)
 			return;
 

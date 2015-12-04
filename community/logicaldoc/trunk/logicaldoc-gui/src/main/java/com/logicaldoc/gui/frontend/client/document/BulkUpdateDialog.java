@@ -155,10 +155,10 @@ public class BulkUpdateDialog extends Window {
 					bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
 					ContactingServer.get().show();
 					documentService.addDocuments(Session.get().getSid(), zip, immediteIndexing,
-							bulkPanel.getDocument(), new AsyncCallback<Void>() {
+							bulkPanel.getDocument(), new AsyncCallback<GUIDocument[]>() {
 
 								@Override
-								public void onSuccess(Void arg0) {
+								public void onSuccess(GUIDocument[] arg0) {
 									DocumentsPanel.get().refresh();
 									documentService.cleanUploadedFileFolder(Session.get().getSid(),
 											new AsyncCallback<Void>() {

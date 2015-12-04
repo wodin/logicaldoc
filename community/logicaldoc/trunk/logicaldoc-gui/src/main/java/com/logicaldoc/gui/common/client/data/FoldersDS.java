@@ -2,6 +2,7 @@ package com.logicaldoc.gui.common.client.data;
 
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
+import com.smartgwt.client.data.fields.DataSourceFloatField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 /**
@@ -36,13 +37,15 @@ public class FoldersDS extends DataSource {
 
 		DataSourceTextField type = new DataSourceTextField("type", I18N.message("type"));
 		type.setRequired(true);
-
+		
+		DataSourceFloatField size = new DataSourceFloatField("size", I18N.message("size"));
+		
 		DataSourceTextField parent = new DataSourceTextField("parent", "Parent ID");
 		parent.setRequired(true);
 		parent.setForeignKey(dsId + ".folderId");
 		parent.setRootValue("/");
 
-		setFields(name, folderId, parent, type);
+		setFields(name, folderId, parent, type, size);
 
 		setDataURL("data/folders.xml?");
 		setClientOnly(false);

@@ -63,6 +63,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.transfer.InMemoryZipImport;
 import com.logicaldoc.core.transfer.ZipExport;
+import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
@@ -153,9 +154,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public void addDocuments(String sid, boolean importZip, boolean immediateIndexing, final GUIDocument metadata)
-			throws ServerException {
+	public GUIDocument[] addDocuments(String sid, boolean importZip, boolean immediateIndexing,
+			final GUIDocument metadata) throws ServerException {
 		final UserSession session = ServiceUtil.validateSession(sid);
+
+		List<GUIDocument> createdDocs = new ArrayList<GUIDocument>();
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 		log.debug("Uploading " + uploadedFilesMap.size() + " files");
@@ -236,6 +239,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 					if (immediateIndexing && doc.getIndexed() == Document.INDEX_TO_INDEX)
 						docsToIndex.add(doc.getId());
+
+					createdDocs.add(fromDocument(doc, metadata.getFolder()));
 				}
 			}
 			UploadServlet.cleanReceivedFiles(getThreadLocalRequest().getSession());
@@ -245,11 +250,13 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
+
+		return createdDocs.toArray(new GUIDocument[0]);
 	}
 
 	@Override
-	public void addDocuments(String sid, String language, long folderId, boolean importZip, boolean immediateIndexing,
-			final Long templateId) throws ServerException {
+	public GUIDocument[] addDocuments(String sid, String language, long folderId, boolean importZip,
+			boolean immediateIndexing, final Long templateId) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		if (folderId == fdao.findRoot(session.getTenantId()).getId())
@@ -259,7 +266,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		metadata.setLanguage(language);
 		metadata.setFolder(new GUIFolder(folderId));
 		metadata.setTemplateId(templateId);
-		addDocuments(sid, importZip, immediateIndexing, metadata);
+		return addDocuments(sid, importZip, immediateIndexing, metadata);
 	}
 
 	@Override
@@ -550,6 +557,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setPages(doc.getPages());
 		document.setNature(doc.getNature());
 		document.setFormId(doc.getFormId());
+		document.setIcon(FilenameUtils.getBaseName(IconSelector.selectIcon(FilenameUtils.getExtension(document
+				.getFileName()))));
 
 		if (doc.getRating() != null)
 			document.setRating(doc.getRating());
