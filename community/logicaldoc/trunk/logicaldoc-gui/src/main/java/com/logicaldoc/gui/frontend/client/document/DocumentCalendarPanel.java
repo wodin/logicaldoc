@@ -34,7 +34,7 @@ public class DocumentCalendarPanel extends DocumentDetailTab {
 	}
 
 	@Override
-	protected void onTabSelected() {
+	public void onTabSelected() {
 		long docId = document.getId();
 		if (document.getDocRef() != null)
 			docId = document.getDocRef();

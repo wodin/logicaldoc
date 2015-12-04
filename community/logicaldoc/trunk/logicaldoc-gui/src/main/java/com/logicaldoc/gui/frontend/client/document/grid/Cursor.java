@@ -30,7 +30,7 @@ public class Cursor extends ToolStrip {
 	public Cursor() {
 		this(null, 1, false);
 	}
-
+	
 	/**
 	 * ID of the message to be used to compose the email
 	 */
@@ -119,5 +119,14 @@ public class Cursor extends ToolStrip {
 	public void registerPageChangedHandler(ChangedHandler handler) {
 		if (pageItem != null)
 			pageItem.addChangedHandler(handler);
+	}
+
+	public void showTitle(boolean showTitle){
+		maxItem.setShowTitle(showTitle);
+		maxItem.setShowHint(showTitle);
+	}
+	
+	public void showStackedIcons(boolean stackedIcons) {
+		maxItem.setWriteStackedIcons(stackedIcons);
 	}
 }

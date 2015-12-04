@@ -3,12 +3,14 @@ package com.logicaldoc.web.data;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -18,6 +20,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
 
@@ -37,6 +40,21 @@ public class FoldersDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
+			response.setContentType("text/xml");
+			response.setCharacterEncoding("UTF-8");
+
+			// Avoid resource caching
+			response.setHeader("Pragma", "no-cache");
+			response.setHeader("Cache-Control", "no-store");
+			response.setDateHeader("Expires", 0);
+
+			if (request.getParameter("parent") != null && request.getParameter("parent").startsWith("d-")) {
+				// The user clicked on a file
+				PrintWriter writer = response.getWriter();
+				writer.write("<list></list>");
+				return;
+			}
+
 			UserSession session = ServiceUtil.validateSession(request);
 			long tenantId = session.getTenantId();
 
@@ -48,16 +66,8 @@ public class FoldersDataServlet extends HttpServlet {
 				if (root == null)
 					throw new Exception("Unable to locate the root folder for tenant " + tenantId);
 				parent = root.getId();
-			} else
+			} else if (request.getParameter("parent") != null)
 				parent = Long.parseLong(request.getParameter("parent"));
-
-			response.setContentType("text/xml");
-			response.setCharacterEncoding("UTF-8");
-
-			// Avoid resource caching
-			response.setHeader("Pragma", "no-cache");
-			response.setHeader("Cache-Control", "no-store");
-			response.setDateHeader("Expires", 0);
 
 			Context context = Context.getInstance();
 			FolderDAO dao = (FolderDAO) context.getBean(FolderDAO.class);
@@ -85,8 +95,41 @@ public class FoldersDataServlet extends HttpServlet {
 					writer.print("<parent>" + rs.getLong(2) + "</parent>");
 					writer.print("<name><![CDATA[" + rs.getString(3) + "]]></name>");
 					writer.print("<type>" + rs.getInt(4) + "</type>");
+					writer.print("<customIcon>folder</customIcon>");
+					writer.print("<publishedStatus>yes</publishedStatus>");
 					writer.print("</folder>");
 				}
+
+			if (request.getParameter("withdocs") != null) {
+				query = new StringBuffer(
+						"select ld_id, ld_filename, ld_title, ld_filesize, ld_published, ld_startpublishing, ld_stoppublishing from ld_document where ld_deleted=0 and ld_folderid=? ");
+				if (!user.isInGroup("admin") && !user.isInGroup("publisher")){
+					query.append(" and ld_published=1");
+					query.append(" and (ld_startpublishing is null or CURRENT_TIMESTAMP > ld_startpublishing) ");
+					query.append(" and (ld_stoppublishing is null or CURRENT_TIMESTAMP < ld_stoppublishing) ");
+				}
+				query.append(" order by ld_title");
+
+				rs = dao.queryForRowSet(query.toString(), new Long[] { parent }, null);
+				if (rs != null)
+					while (rs.next()) {
+						Date now = new Date();
+						boolean published = (rs.getInt(5) == 1) && (rs.getDate(6) == null || now.after(rs.getDate(6)))
+								&& (rs.getDate(7) == null || now.before(rs.getDate(7)));
+
+						writer.print("<folder>");
+						writer.print("<folderId>d-" + rs.getLong(1) + "</folderId>");
+						writer.print("<parent>" + parent + "</parent>");
+						writer.print("<name><![CDATA[" + rs.getString(2) + "]]></name>");
+						writer.print("<type>file</type>");
+						writer.print("<customIcon>"
+								+ FilenameUtils.getBaseName(IconSelector.selectIcon(FilenameUtils.getExtension(rs
+										.getString(2)))) + "</customIcon>");
+						writer.print("<size>" + rs.getInt(4) + "</size>");
+						writer.print("<publishedStatus>" + (published ? "yes" : "no") + "</publishedStatus>");
+						writer.print("</folder>");
+					}
+			}
 
 			writer.write("</list>");
 		} catch (Throwable e) {

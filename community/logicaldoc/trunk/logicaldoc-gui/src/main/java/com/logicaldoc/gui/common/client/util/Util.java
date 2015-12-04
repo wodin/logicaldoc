@@ -349,6 +349,19 @@ public class Util {
 		return str;
 	}
 
+	public static String formatSizeKB(Object value) {
+		if (value == null)
+			return null;
+		if (value instanceof Long)
+			return Util.formatSizeKB(((Long) value).doubleValue());
+		else if (value instanceof Integer)
+			return Util.formatSizeKB(((Integer) value).doubleValue());
+		if (value instanceof String)
+			return Util.formatSizeKB(new Long(value.toString()).longValue());
+		else
+			return Util.formatSizeKB(0L);
+	}
+
 	/**
 	 * Format file size in KB.
 	 * 
@@ -367,6 +380,27 @@ public class Util {
 			str = str.replace(',', I18N.groupingSepator());
 		}
 		return str;
+	}
+
+	/**
+	 * Format file size in Windows 7 Style.
+	 * 
+	 * @param size The file size in bytes.
+	 * @return The formated file size.
+	 */
+	public static String formatSizeW7(Object value) {
+		if (value == null)
+			return null;
+		if (value instanceof Long)
+			return Util.formatSizeW7(((Long) value).doubleValue());
+		else if (value instanceof Integer)
+			return Util.formatSizeW7(((Integer) value).doubleValue());
+		else if (value instanceof Float)
+			return Util.formatSizeW7(((Float) value).doubleValue());		
+		if (value instanceof String)
+			return Util.formatSizeW7(new Long(value.toString()).longValue());
+		else
+			return Util.formatSizeW7(0L);
 	}
 
 	/**
@@ -478,7 +512,7 @@ public class Util {
 	public static native String getBrowserLanguage() /*-{
 		var lang = window.navigator.language ? window.navigator.language
 				: window.navigator.userLanguage;
-		if (lang!=null && lang!="") {
+		if (lang != null && lang != "") {
 			return lang;
 		} else {
 			return "en";
@@ -725,9 +759,18 @@ public class Util {
 	}
 
 	public static void redirectToRoot() {
+		Util.redirectToRoot(null, null);
+	}
+
+	public static void redirectToRoot(String moduleName, String parameters) {
 		String base = GWT.getHostPageBaseURL();
-		String url = base + (base.endsWith("/") ? GWT.getModuleName() + ".jsp" : "/" + GWT.getModuleName() + ".jsp");
+		String module = GWT.getModuleName();
+		if (moduleName != null)
+			module = moduleName;
+		String url = base + (base.endsWith("/") ? module + ".jsp" : "/" + module + ".jsp");
 		url += "?locale=" + I18N.getLocale() + "&tenant=" + Session.get().getTenantName();
+		if (parameters != null)
+			url += "&" + parameters;
 		Util.redirect(url);
 	}
 

@@ -32,7 +32,7 @@ public interface DocumentServiceAsync {
 	void unlock(String sid, long[] ids, AsyncCallback<Void> callback);
 
 	void addDocuments(String sid, String language, long folderId, boolean importZip, boolean immediateIndexing,
-			Long templateId, AsyncCallback<Void> callback);
+			Long templateId, AsyncCallback<GUIDocument[]> callback);
 
 	void checkout(String sid, long id, AsyncCallback<Void> callback);
 
@@ -67,7 +67,7 @@ public interface DocumentServiceAsync {
 	void bulkUpdate(String sid, long[] ids, GUIDocument vo, AsyncCallback<Void> callback);
 
 	void addDocuments(String sid, boolean importZip, boolean immediateIndexing, GUIDocument metadata,
-			AsyncCallback<Void> callback);
+			AsyncCallback<GUIDocument[]> callback);
 
 	void updateNote(String sid, long docId, long noteId, String message, AsyncCallback<Void> callback);
 

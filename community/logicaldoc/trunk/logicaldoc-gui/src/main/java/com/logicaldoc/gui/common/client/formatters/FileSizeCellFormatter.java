@@ -11,15 +11,22 @@ import com.smartgwt.client.widgets.grid.ListGridRecord;
  * @since 6.0
  */
 public class FileSizeCellFormatter implements CellFormatter {
+	private boolean win7format = false;
+
+	public FileSizeCellFormatter() {
+		super();
+	}
+	
+	public FileSizeCellFormatter(boolean win7format) {
+		super();
+		this.win7format = win7format;
+	}
+
 	@Override
 	public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
-		if (value == null)
-			return null;
-		if (value instanceof Long)
-			return Util.formatSizeKB(((Long) value).doubleValue());
-		else if (value instanceof Integer)
-			return Util.formatSizeKB(((Integer) value).doubleValue());
+		if (win7format)
+			return Util.formatSizeW7(value);
 		else
-			return Util.formatSizeKB(0L);
+			return Util.formatSizeKB(value);
 	}
 }
