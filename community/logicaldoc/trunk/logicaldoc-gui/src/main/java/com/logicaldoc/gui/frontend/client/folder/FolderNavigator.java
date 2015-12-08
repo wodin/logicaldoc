@@ -747,7 +747,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 
 	private void onRename() {
 		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
-		LD.askforValue(I18N.message("rename"), I18N.message("title"), selectedNode.getAttributeAsString("name"), "200",
+		LD.askforValue(I18N.message("rename"), I18N.message("title"), selectedNode.getAttributeAsString("name"),
 				new ValueCallback() {
 					@Override
 					public void execute(final String value) {
@@ -814,7 +814,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 			docIds[i++] = doc.getId();
 
 		if (Feature.enabled(Feature.PDF))
-			LD.askforValue(I18N.message("pasteasalias"), "type", "", "250", ItemFactory.newAliasTypeSelector(),
+			LD.askforValue(I18N.message("pasteasalias"), "type", "", ItemFactory.newAliasTypeSelector(),
 					new ValueCallback() {
 
 						@Override
@@ -934,7 +934,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	}
 
 	public void onArchive(final long folderId) {
-		LD.askforValue(I18N.message("warning"), I18N.message("archiveadvice"), "", "50%", new ValueCallback() {
+		LD.askforValue(I18N.message("warning"), I18N.message("archiveadvice"), "", new ValueCallback() {
 
 			@Override
 			public void execute(String value) {

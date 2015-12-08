@@ -22,7 +22,6 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * This popup window is used to create a new document based on a selected form.
@@ -41,20 +40,14 @@ public class AddForm extends Window {
 	private SelectItem formSelector;
 
 	public AddForm() {
-		VLayout layout = new VLayout();
-		layout.setMargin(5);
-
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(I18N.message("addform"));
-		setWidth(320);
-		setHeight(120);
+		setAutoSize(true);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-
-		layout.addMember(form);
 
 		formSelector = ItemFactory.newFormSelector();
 		formSelector.setWrapTitle(false);
@@ -76,7 +69,7 @@ public class AddForm extends Window {
 		form.setNumCols(2);
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setFields(title, formSelector, save);
-		addItem(layout);
+		addItem(form);
 	}
 
 	public void onSave() {
@@ -90,7 +83,7 @@ public class AddForm extends Window {
 		frm.setFolder(Session.get().getCurrentFolder());
 		frm.setFormId(formId);
 		frm.setTitle(form.getValueAsString("title").trim());
-		frm.setFileName(frm.getTitle()+".pdf");
+		frm.setFileName(frm.getTitle() + ".pdf");
 
 		if (templateIdString != null && !templateIdString.isEmpty()) {
 			frm.setTemplateId(Long.parseLong(templateIdString));

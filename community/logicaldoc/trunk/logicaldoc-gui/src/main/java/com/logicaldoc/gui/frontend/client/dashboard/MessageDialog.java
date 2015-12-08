@@ -52,13 +52,10 @@ public class MessageDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("sendmessage"));
-		setWidth(290);
-		setHeight(280);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setPadding(5);
 		setAutoSize(true);
 
 		form.setWidth(280);
@@ -111,7 +108,7 @@ public class MessageDialog extends Window {
 					if (form.getValueAsString("validity") != null)
 						message.setValidity(Integer.parseInt(form.getValueAsString("validity")));
 					message.setPriority(Integer.parseInt(form.getValue("priority").toString()));
-					
+
 					service.save(Session.get().getSid(), message, new AsyncCallback<Void>() {
 
 						@Override

@@ -17,7 +17,6 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * This popup window is used to start a workflow on the selected documents.
@@ -34,20 +33,13 @@ public class WorkflowDialog extends Window {
 	private SelectItem workflow;
 
 	public WorkflowDialog(final long[] ids) {
-		VLayout layout = new VLayout();
-		layout.setMargin(5);
-
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-
 		setTitle(I18N.message("startworkflow"));
-		setWidth(420);
-		setHeight(115);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
+		setAutoSize(true);
 		centerInPage();
-
-		layout.addMember(form);
 
 		workflow = ItemFactory.newWorkflowSelector();
 		workflow.setTitle(I18N.message("chooseworkflow"));
@@ -66,7 +58,7 @@ public class WorkflowDialog extends Window {
 
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setFields(workflow, start);
-		addItem(layout);
+		addItem(form);
 	}
 
 	public void onStart(long[] ids) {

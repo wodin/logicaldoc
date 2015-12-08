@@ -429,17 +429,25 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static SpinnerItem newSpinnerItem(String name, String title, Integer value) {
+	public static SpinnerItem newSpinnerItem(String name, String title, Long value) {
 		SpinnerItem spinner = new SpinnerItem(name);
 		spinner.setTitle(I18N.message(title));
 		spinner.setMin(0);
 		spinner.setStep(1);
 		spinner.setWidth(50);
+		spinner.setHintStyle("hint");
 		if (value != null)
 			spinner.setValue(value.intValue());
 		else
 			spinner.setValue((Integer) null);
 		return spinner;
+	}
+
+	public static SpinnerItem newSpinnerItem(String name, String title, Integer value) {
+		if (value != null)
+			return newSpinnerItem(name, title, new Long(value));
+		else
+			return newSpinnerItem(name, title, (Long) null);
 	}
 
 	public static Img newImgIcon(String name) {
@@ -745,7 +753,7 @@ public class ItemFactory {
 		spinner.setStep(1);
 		spinner.setWidth(55);
 		spinner.setHintStyle("hint");
-		spinner.setWriteStackedIcons(true); 
+		spinner.setWriteStackedIcons(true);
 		return spinner;
 	}
 

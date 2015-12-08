@@ -15,6 +15,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -26,7 +27,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Matteo Caruso - Logical Objects
  * @since 6.0
  */
-public class SchedulingPanel extends VLayout {
+public class TaskSchedulingPanel extends VLayout {
 
 	private ValuesManager vm = new ValuesManager();
 
@@ -38,7 +39,7 @@ public class SchedulingPanel extends VLayout {
 
 	private boolean simplePolicy;
 
-	private SelectItem maxDuration;
+	private SpinnerItem maxDuration;
 
 	private IntegerItem initialDelay;
 
@@ -56,7 +57,7 @@ public class SchedulingPanel extends VLayout {
 
 	private TextItem dayWeek;
 
-	public SchedulingPanel(GUITask task, ChangedHandler changedHandler) {
+	public TaskSchedulingPanel(GUITask task, ChangedHandler changedHandler) {
 		setWidth100();
 		this.changedHandler = changedHandler;
 		this.task = task;
@@ -96,16 +97,15 @@ public class SchedulingPanel extends VLayout {
 		});
 
 		// Max Lengths
-		maxDuration = new SelectItem();
-		LinkedHashMap<String, String> opts2 = new LinkedHashMap<String, String>();
-		opts2.put("-1", I18N.message("nolimits"));
-		opts2.put(Long.toString(15 * 60L), I18N.message("_15minutes"));
-		opts2.put(Long.toString(60 * 60L), I18N.message("_1hour"));
-		opts2.put(Long.toString(5 * 60 * 60L), I18N.message("_5hours"));
-		maxDuration.setValueMap(opts2);
+		long max = 0;
+		if (task.getScheduling().getMaxLength() > 0)
+			max = task.getScheduling().getMaxLength() / 60;
+		maxDuration = ItemFactory.newSpinnerItem("maxDuration", "maxduration", max);
+		maxDuration.setWidth(80);
 		maxDuration.setName("maxDuration");
-		maxDuration.setTitle(I18N.message("maxlengths"));
-		maxDuration.setDefaultValue(Long.toString(task.getScheduling().getMaxLength()));
+		maxDuration.setHint(I18N.message("minutes").toLowerCase());
+		maxDuration.setStep(10);
+		maxDuration.setMin(0);
 		maxDuration.addChangedHandler(changedHandler);
 
 		// Initial delay
@@ -189,15 +189,15 @@ public class SchedulingPanel extends VLayout {
 		restoreDefaults.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (vm.validate()) {
-					SchedulingPanel.this.maxDuration.setValue("-1");
-					SchedulingPanel.this.initialDelay.setValue(1800);
-					SchedulingPanel.this.repeatInterval.setValue(1800);
-					SchedulingPanel.this.seconds.setValue("0");
-					SchedulingPanel.this.minutes.setValue("10");
-					SchedulingPanel.this.hours.setValue("4/4");
-					SchedulingPanel.this.dayMonth.setValue("*");
-					SchedulingPanel.this.month.setValue("*");
-					SchedulingPanel.this.dayWeek.setValue("?");
+					TaskSchedulingPanel.this.maxDuration.setValue("-1");
+					TaskSchedulingPanel.this.initialDelay.setValue(1800);
+					TaskSchedulingPanel.this.repeatInterval.setValue(1800);
+					TaskSchedulingPanel.this.seconds.setValue("0");
+					TaskSchedulingPanel.this.minutes.setValue("10");
+					TaskSchedulingPanel.this.hours.setValue("4/4");
+					TaskSchedulingPanel.this.dayMonth.setValue("*");
+					TaskSchedulingPanel.this.month.setValue("*");
+					TaskSchedulingPanel.this.dayWeek.setValue("?");
 				}
 			}
 		});
@@ -219,7 +219,12 @@ public class SchedulingPanel extends VLayout {
 				else
 					task.getScheduling().setSimple(false);
 
-				task.getScheduling().setMaxLength(Long.parseLong((String) values.get("maxDuration")));
+				long max = Long.parseLong(values.get("maxDuration").toString());
+				if (max <= 0)
+					max = -1L;
+				else
+					max = max * 60L;
+				task.getScheduling().setMaxLength(max);
 
 				if (task.getScheduling().isSimple() || ((String) values.get("simple")).equals("true")) {
 					long longValue = 0;

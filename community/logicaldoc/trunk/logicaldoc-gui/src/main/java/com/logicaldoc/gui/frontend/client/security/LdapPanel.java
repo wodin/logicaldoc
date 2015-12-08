@@ -107,7 +107,7 @@ public class LdapPanel extends VLayout {
 		// Realm
 		TextItem realm = ItemFactory.newTextItem("realm", "realm", this.ldapSettings.getRealm());
 		realm.setWidth(300);
-		
+
 		// User identifier attr.
 		TextItem userIdentifierAttr = ItemFactory.newTextItem("useridentifierattr", "useridentifierattr",
 				this.ldapSettings.getUserIdentifierAttr());
@@ -117,29 +117,29 @@ public class LdapPanel extends VLayout {
 		TextItem grpIdentifierAttr = ItemFactory.newTextItem("grpidentifierattr", "grpidentifierattr",
 				this.ldapSettings.getGrpIdentifierAttr());
 		grpIdentifierAttr.setWidth(300);
-		
+
 		// Logon attr.
 		TextItem logonAttr = ItemFactory.newTextItem("logonattr", "logonattr", this.ldapSettings.getLogonAttr());
 		logonAttr.setWidth(300);
-		
+
 		// User class
 		TextItem userClass = ItemFactory.newTextItem("userclass", "userclass", this.ldapSettings.getUserClass());
 		userClass.setWidth(300);
-		
+
 		// Group class
 		TextItem groupClass = ItemFactory.newTextItem("grpclass", "grpclass", this.ldapSettings.getGrpClass());
 		groupClass.setWidth(300);
-		
+
 		// Users base node
 		TextItem usersBaseNode = ItemFactory.newTextItem("usersbasenode", "usersbasenode",
 				this.ldapSettings.getUsersBaseNode());
 		usersBaseNode.setWidth(300);
-		
+
 		// Groups base node
 		TextItem groupsBaseNode = ItemFactory.newTextItem("grpsbasenode", "grpsbasenode",
 				this.ldapSettings.getGrpsBaseNode());
 		groupsBaseNode.setWidth(300);
-		
+
 		// Page size
 		IntegerItem pageSize = ItemFactory.newIntegerItem("pagesize", "pagesize", this.ldapSettings.getPageSize());
 		pageSize.setRequired(true);
@@ -269,27 +269,26 @@ public class LdapPanel extends VLayout {
 		activedir.setTitle(I18N.message("activedirectory"));
 		activedir.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				LD.askforValue(I18N.message("activedirectory"), I18N.message("addomain"), "", "200",
-						new ValueCallback() {
-							@Override
-							public void execute(String value) {
-								if (value == null)
-									return;
-								String node = value.replaceAll("\\.", ",DC=");
-								node = "DC=" + node;
-								vm.setValue("url", "ldap://AD_SERVER:389");
-								vm.setValue("username", "CN=Administrator,CN=Users," + node);
-								vm.setValue("useridentifierattr", "CN");
-								vm.setValue("grpidentifierattr", "CN");
-								vm.setValue("logonattr", "sAMAccountName");
-								vm.setValue("userclass", "person");
-								vm.setValue("grpclass", "group");
-								vm.setValue("userclass", "person");
-								vm.setValue("usersbasenode", "CN=Users," + node);
-								vm.setValue("grpsbasenode", "CN=Builtin," + node);
-								vm.setValue("anon", "no");
-							}
-						});
+				LD.askforValue(I18N.message("activedirectory"), I18N.message("addomain"), "", new ValueCallback() {
+					@Override
+					public void execute(String value) {
+						if (value == null)
+							return;
+						String node = value.replaceAll("\\.", ",DC=");
+						node = "DC=" + node;
+						vm.setValue("url", "ldap://AD_SERVER:389");
+						vm.setValue("username", "CN=Administrator,CN=Users," + node);
+						vm.setValue("useridentifierattr", "CN");
+						vm.setValue("grpidentifierattr", "CN");
+						vm.setValue("logonattr", "sAMAccountName");
+						vm.setValue("userclass", "person");
+						vm.setValue("grpclass", "group");
+						vm.setValue("userclass", "person");
+						vm.setValue("usersbasenode", "CN=Users," + node);
+						vm.setValue("grpsbasenode", "CN=Builtin," + node);
+						vm.setValue("anon", "no");
+					}
+				});
 			}
 		});
 
