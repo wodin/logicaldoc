@@ -144,7 +144,7 @@ public class WorkflowToolstrip extends ToolStrip {
 				FormItem workflowName = ItemFactory.newSimpleTextItem("workflowName", "workflowname", null);
 				workflowName.setRequired(true);
 
-				LD.askforValue(I18N.message("newwftemplate"), I18N.message("workflowname"), null, "200", workflowName,
+				LD.askforValue(I18N.message("newwftemplate"), I18N.message("workflowname"), null, workflowName,
 						new ValueCallback() {
 
 							@Override
@@ -160,7 +160,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			}
 		});
 		addButton(newTemplate);
-		
+
 		settings = new ToolStripButton(I18N.message("settings"));
 		settings.addClickHandler(new ClickHandler() {
 			@Override
@@ -312,7 +312,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			@Override
 			public void onClick(ClickEvent event) {
 				// Ask for new name
-				LD.askforValue(I18N.message("clone"), I18N.message("newname"), "", "200", new ValueCallback() {
+				LD.askforValue(I18N.message("clone"), I18N.message("newname"), "", new ValueCallback() {
 					@Override
 					public void execute(String value) {
 						if (value == null || "".equals(value.trim()))
@@ -393,7 +393,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		else
 			workflowSelect.setValue(I18N.message("workflowselect") + "...");
 		workflowSelect.redraw();
-		
+
 		primitives.update();
 	}
 

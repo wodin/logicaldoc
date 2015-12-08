@@ -72,14 +72,11 @@ public class AnnotationEditor extends Window {
 			setTitle(I18N.message("note"));
 		else
 			setTitle(I18N.message("annotation"));
-		setWidth(700);
-		setHeight(300);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setPadding(3);
-		setAutoSize(false);
+		setAutoSize(true);
 
 		message = new RichTextItem("name");
 		message.setTitle(I18N.message("message"));
@@ -98,7 +95,6 @@ public class AnnotationEditor extends Window {
 			}
 		});
 
-		noteForm.setMargin(3);
 		noteForm.setItems(message, save);
 		addItem(noteForm);
 	}

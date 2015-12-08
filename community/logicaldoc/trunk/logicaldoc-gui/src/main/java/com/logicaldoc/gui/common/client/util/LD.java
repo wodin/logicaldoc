@@ -4,7 +4,6 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.IButton;
@@ -29,26 +28,27 @@ public class LD {
 	/**
 	 * Show a dialog to confirm a operation.
 	 */
-	public static void ask(String title, String message, final BooleanCallback callback) {
+	public static void ask(String title, String message, Integer width, final BooleanCallback callback) {
 		final Window dialog = new Window();
+
+		dialog.setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		dialog.setAutoCenter(true);
 		dialog.setIsModal(true);
 		dialog.setShowModalMask(true);
 		dialog.setShowHeader(true);
-		dialog.setWidth(400);
-		dialog.setHeight(180);
-		dialog.setAlign(Alignment.CENTER);
-		dialog.setAlign(VerticalAlignment.CENTER);
-
-		dialog.setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
+		dialog.setAutoSize(true);
 		dialog.setCanDragResize(false);
 		dialog.setCanDrag(true);
 		dialog.centerInPage();
 		dialog.setTitle(title);
+		if (width != null)
+			dialog.setWidth(width);
+		else
+			dialog.setWidth(300);
 
 		VStack container = new VStack();
-		container.setWidth("100%");
-		container.setMembersMargin(8);
+		container.setWidth100();
+		container.setMembersMargin(5);
 		container.setMargin(3);
 		container.setAlign(Alignment.CENTER);
 		container.setDefaultLayoutAlign(Alignment.CENTER);
@@ -91,7 +91,7 @@ public class LD {
 		HLayout buttons = new HLayout();
 		buttons.setMembersMargin(10);
 		buttons.setWidth100();
-		buttons.setHeight(20);
+		buttons.setAutoHeight();
 		buttons.addMember(yes);
 		buttons.addMember(no);
 		buttons.setAlign(Alignment.CENTER);
@@ -103,44 +103,49 @@ public class LD {
 		dialog.show();
 	}
 
+	public static void ask(String title, String message, final BooleanCallback callback) {
+		ask(title, message, null, callback);
+	}
+
 	/**
 	 * Show a dialog asking for a value to complete a operation.
 	 */
-	public static void askforValue(String title, String message, String defaultValue, String width,
+	public static void askforValue(String title, String message, String defaultValue, Integer width,
 			ValueCallback callback) {
 		TextItem textItem = ItemFactory.newTextItem("value", message, defaultValue);
-		textItem.setWrapTitle(false);
-		textItem.setWidth("100%");
-		askforValue(title, message, defaultValue, width, textItem, callback);
+		askforValue(title, message, defaultValue, textItem, width, callback);
+	}
+
+	public static void askforValue(String title, String message, String defaultValue, ValueCallback callback) {
+		askforValue(title, message, defaultValue, (Integer) null, callback);
 	}
 
 	/**
 	 * Show a dialog asking for a value to complete an operation. The provided
 	 * form item will be used.
 	 */
-	public static void askforValue(String title, String message, String defaultValue, String width, FormItem item,
+	public static void askforValue(String title, String message, String defaultValue, FormItem item, Integer width,
 			final ValueCallback callback) {
 		final Window dialog = new Window();
+
+		dialog.setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		dialog.setAutoCenter(true);
+		dialog.setAutoSize(true);
 		dialog.setIsModal(true);
 		dialog.setShowModalMask(true);
 		dialog.setShowHeader(true);
-		dialog.setWidth(330);
-		dialog.setHeight(140);
-		dialog.setAlign(Alignment.CENTER);
-		dialog.setAlign(VerticalAlignment.CENTER);
-
-		dialog.setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		dialog.setCanDragResize(false);
 		dialog.setCanDrag(true);
 		dialog.centerInPage();
 		dialog.setTitle(title);
 		if (width != null)
 			dialog.setWidth(width);
+		else
+			dialog.setWidth(300);
 
 		VStack container = new VStack();
-		container.setWidth("100%");
-		container.setMembersMargin(8);
+		container.setWidth100();
+		container.setMembersMargin(5);
 		container.setMargin(3);
 		container.setAlign(Alignment.CENTER);
 		container.setDefaultLayoutAlign(Alignment.CENTER);
@@ -149,7 +154,6 @@ public class LD {
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
 
-		item.setWrapTitle(false);
 		item.setWidth("100%");
 		item.setName("value");
 		item.setTitle(I18N.message(message));
@@ -195,7 +199,7 @@ public class LD {
 		HLayout buttons = new HLayout();
 		buttons.setMembersMargin(10);
 		buttons.setWidth100();
-		buttons.setHeight(20);
+		buttons.setAutoHeight();
 		buttons.addMember(ok);
 		buttons.addMember(cancel);
 		buttons.setAlign(Alignment.CENTER);
@@ -218,5 +222,10 @@ public class LD {
 				form.focus();
 			}
 		}
+	}
+
+	public static void askforValue(String title, String message, String defaultValue, FormItem item,
+			final ValueCallback callback) {
+		askforValue(title, message, defaultValue, item, null, callback);
 	}
 }

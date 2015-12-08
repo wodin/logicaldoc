@@ -82,7 +82,7 @@ public class TagsPreset extends VLayout {
 		addTag.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
-				LD.askforValue(I18N.message("addtag"), I18N.message("tag"), "", "350", new ValueCallback() {
+				LD.askforValue(I18N.message("addtag"), I18N.message("tag"), "", new ValueCallback() {
 					@Override
 					public void execute(String value) {
 						if (value != null && !"".equals(value))

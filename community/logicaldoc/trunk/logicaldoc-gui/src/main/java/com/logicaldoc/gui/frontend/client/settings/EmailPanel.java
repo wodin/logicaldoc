@@ -80,7 +80,7 @@ public class EmailPanel extends VLayout {
 		TextItem username = ItemFactory.newTextItem("username", "username", this.emailSettings.getUsername());
 		username.setWidth(350);
 		username.setWrapTitle(false);
-		
+
 		// Password
 		PasswordItem password = new PasswordItem("password", I18N.message("password"));
 		password.setName("password");
@@ -98,7 +98,7 @@ public class EmailPanel extends VLayout {
 		connSecurity.setTitle(I18N.message("connsecurity"));
 		connSecurity.setValue(this.emailSettings.getConnSecurity());
 		connSecurity.setWrapTitle(false);
-		
+
 		// Use Secure Authentication
 		CheckboxItem secureAuth = new CheckboxItem();
 		secureAuth.setName("secureAuth");
@@ -107,13 +107,13 @@ public class EmailPanel extends VLayout {
 		secureAuth.setWidth(50);
 		secureAuth.setValue(emailSettings.isSecureAuth());
 		secureAuth.setWrapTitle(false);
-		
+
 		// Sender Email
 		TextItem senderEmail = ItemFactory.newEmailItem("senderEmail", "senderemail", false);
 		senderEmail.setValue(this.emailSettings.getSenderEmail());
 		senderEmail.setWidth(350);
 		senderEmail.setWrapTitle(false);
-		
+
 		ButtonItem save = new ButtonItem("save", I18N.message("save"));
 		save.setStartRow(true);
 		save.setEndRow(false);
@@ -160,7 +160,7 @@ public class EmailPanel extends VLayout {
 			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
 				if (vm.validate()) {
 					LD.askforValue(I18N.message("email"), I18N.message("email"),
-							(String) vm.getValueAsString("senderEmail"), "250", new ValueCallback() {
+							(String) vm.getValueAsString("senderEmail"), new ValueCallback() {
 
 								@Override
 								public void execute(String value) {

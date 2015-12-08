@@ -38,12 +38,11 @@ public class EventsWindow extends Window {
 		});
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, trash, HeaderControls.CLOSE_BUTTON);
-		setWidth("50%");
-		setHeight(200);
 		setTitle(I18N.message("lastevents"));
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
+		setAutoSize(true);
 		centerInPage();
 
 		grid = new ListGrid() {

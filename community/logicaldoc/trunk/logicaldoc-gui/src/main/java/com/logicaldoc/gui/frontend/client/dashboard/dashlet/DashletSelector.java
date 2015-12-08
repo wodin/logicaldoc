@@ -29,14 +29,12 @@ public class DashletSelector extends Window {
 
 		setTitle(I18N.message("dashletselector"));
 
-		setWidth(280);
-		setHeight(100);
-		setMembersMargin(6);
+		setAutoSize(true);
+		setMembersMargin(5);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setPadding(6);
 		setAutoSize(true);
 
 		final DynamicForm form = new DynamicForm();

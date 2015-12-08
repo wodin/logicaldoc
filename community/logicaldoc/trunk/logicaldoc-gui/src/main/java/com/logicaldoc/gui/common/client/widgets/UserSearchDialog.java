@@ -47,8 +47,7 @@ public class UserSearchDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("users"));
-		setWidth(450);
-		setHeight(300);
+		setAutoSize(true);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -58,8 +57,6 @@ public class UserSearchDialog extends Window {
 		setMembersMargin(3);
 
 		VLayout formPanel = new VLayout();
-		formPanel.setWidth100();
-		formPanel.setHeight(100);
 
 		final DynamicForm form = new DynamicForm();
 		form.setValuesManager(vm);

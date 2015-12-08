@@ -215,37 +215,36 @@ public class ContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				LD.askforValue(I18N.message("warning"), I18N.message("immutableadvice"), "", "50%",
-						new ValueCallback() {
+				LD.askforValue(I18N.message("warning"), I18N.message("immutableadvice"), "", 600, new ValueCallback() {
 
-							@Override
-							public void execute(String value) {
-								if (value == null)
-									return;
+					@Override
+					public void execute(String value) {
+						if (value == null)
+							return;
 
-								if (value.isEmpty())
-									SC.warn(I18N.message("commentrequired"));
-								else
-									documentService.makeImmutable(Session.get().getSid(), selectionIds, value,
-											new AsyncCallback<Void>() {
-												@Override
-												public void onFailure(Throwable caught) {
-													Log.serverError(caught);
-												}
+						if (value.isEmpty())
+							SC.warn(I18N.message("commentrequired"));
+						else
+							documentService.makeImmutable(Session.get().getSid(), selectionIds, value,
+									new AsyncCallback<Void>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
 
-												@Override
-												public void onSuccess(Void result) {
-													for (GUIDocument record : selection) {
-														record.setImmutable(1);
-														grid.updateDocument(record);
-													}
+										@Override
+										public void onSuccess(Void result) {
+											for (GUIDocument record : selection) {
+												record.setImmutable(1);
+												grid.updateDocument(record);
+											}
 
-													grid.selectDocument(selection[0].getId());
-												}
-											});
-							}
+											grid.selectDocument(selection[0].getId());
+										}
+									});
+					}
 
-						});
+				});
 			}
 		});
 
@@ -256,7 +255,7 @@ public class ContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				LD.askforValue(I18N.message("info"), I18N.message("lockadvice"), "", "50%", new ValueCallback() {
+				LD.askforValue(I18N.message("info"), I18N.message("lockadvice"), "", new ValueCallback() {
 
 					@Override
 					public void execute(String value) {
@@ -376,7 +375,7 @@ public class ContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				LD.askforValue(I18N.message("warning"), I18N.message("archiveadvice"), "", "50%", new ValueCallback() {
+				LD.askforValue(I18N.message("warning"), I18N.message("archiveadvice"), "", 600, new ValueCallback() {
 
 					@Override
 					public void execute(String value) {
@@ -557,12 +556,12 @@ public class ContextMenu extends Menu {
 				if (selection == null)
 					return;
 				long docId = selection.getId();
-				
-				StampDialog dialog = new StampDialog(new long[]{docId});
+
+				StampDialog dialog = new StampDialog(new long[] { docId });
 				dialog.show();
 			}
 		});
-		
+
 		MenuItem sendToExpArchive = new MenuItem(I18N.message("sendtoexparchive"));
 		sendToExpArchive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
@@ -644,8 +643,8 @@ public class ContextMenu extends Menu {
 		for (GUIDocument record : selection)
 			if (record.getStatus() != Constants.DOC_UNLOCKED || record.getImmutable() != 0) {
 				cut.setEnabled(false);
-				enableSign=false;
-				enableStamp=false;
+				enableSign = false;
+				enableStamp = false;
 				break;
 			}
 
@@ -745,7 +744,7 @@ public class ContextMenu extends Menu {
 		}
 
 		setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock, unlockItem);
-		
+
 		if (Feature.visible(Feature.ARCHIVING)) {
 			addItem(archive);
 			if (!folder.hasPermission(Constants.PERMISSION_ARCHIVE) || !Feature.enabled(Feature.ARCHIVING))
@@ -769,7 +768,7 @@ public class ContextMenu extends Menu {
 			else
 				sign.setEnabled(enableSign && selection.length > 0);
 		}
-		
+
 		if (enableStamp && Feature.visible(Feature.STAMP)) {
 			moreMenu.addItem(stamp);
 			if (!folder.hasPermission(Constants.PERMISSION_WRITE) || !Feature.enabled(Feature.STAMP))

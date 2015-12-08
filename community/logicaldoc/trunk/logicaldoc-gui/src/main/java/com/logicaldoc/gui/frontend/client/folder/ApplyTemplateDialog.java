@@ -34,19 +34,16 @@ public class ApplyTemplateDialog extends Dialog {
 		super();
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("applytemplate"));
-		setWidth(430);
-		setHeight(135);
+		setAutoSize(true);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setPadding(2);
 
 		VLayout content = new VLayout();
-		content.setTop(10);
 		content.setWidth100();
 		content.setHeight100();
-		content.setMembersMargin(3);
+		content.setMembersMargin(2);
 
 		final TreeGrid folders = new FolderTree();
 		folders.setWidth100();

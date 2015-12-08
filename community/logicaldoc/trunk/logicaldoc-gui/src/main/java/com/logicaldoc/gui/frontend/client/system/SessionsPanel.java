@@ -75,7 +75,7 @@ public class SessionsPanel extends VLayout {
 
 		ListGridField tenant = new ListGridField("tenant", I18N.message("tenant"), 80);
 		tenant.setCanFilter(true);
-		
+
 		ListGridField created = new ListGridField("created", I18N.message("createdon"), 110);
 		created.setAlign(Alignment.CENTER);
 		created.setType(ListGridFieldType.DATE);
@@ -134,7 +134,7 @@ public class SessionsPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				LD.askforValue(I18N.message("sid"), I18N.message("sid"),
-						list.getSelectedRecord().getAttributeAsString("sid"), "300", new ValueCallback() {
+						list.getSelectedRecord().getAttributeAsString("sid"), new ValueCallback() {
 							@Override
 							public void execute(final String value) {
 							}

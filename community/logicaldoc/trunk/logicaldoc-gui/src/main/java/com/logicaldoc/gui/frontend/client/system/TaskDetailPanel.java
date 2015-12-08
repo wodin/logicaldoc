@@ -49,7 +49,7 @@ public class TaskDetailPanel extends VLayout {
 
 	private GUITask task;
 
-	private SchedulingPanel schedulingPanel;
+	private TaskSchedulingPanel schedulingPanel;
 
 	private LogPanel logPanel;
 
@@ -177,7 +177,7 @@ public class TaskDetailPanel extends VLayout {
 				onModified();
 			}
 		};
-		schedulingPanel = new SchedulingPanel(task, changeHandler);
+		schedulingPanel = new TaskSchedulingPanel(task, changeHandler);
 		schedulingTabPanel.addMember(schedulingPanel);
 
 		/*

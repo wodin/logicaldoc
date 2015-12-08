@@ -63,6 +63,7 @@ public class FillForm extends Window {
 		setTitle(I18N.message("form") + " - " + frm.getTitle());
 		setWidth(500);
 		setHeight(400);
+		// setAutoSize(true);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);

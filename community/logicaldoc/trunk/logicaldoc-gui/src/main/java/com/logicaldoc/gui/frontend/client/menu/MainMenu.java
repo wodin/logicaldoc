@@ -218,7 +218,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 	}
 
 	private void onLogout() {
-		LD.ask(I18N.message("question"), I18N.message("confirmexit"), new BooleanCallback() {
+		LD.ask(I18N.message("question"), I18N.message("confirmexit"), 300, new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
 				if (value)

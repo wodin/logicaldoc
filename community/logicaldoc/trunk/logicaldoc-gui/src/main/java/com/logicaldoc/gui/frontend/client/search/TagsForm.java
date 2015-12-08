@@ -154,7 +154,7 @@ public class TagsForm extends VLayout {
 		tags.setHeight100();
 		tags.setFields(index, word, count);
 		tags.setSelectionType(SelectionStyle.SINGLE);
-		tags.setDataSource(new TagsDS(letter,false));
+		tags.setDataSource(new TagsDS(letter, false));
 		addMember(tags);
 
 		tags.addCellDoubleClickHandler(new CellDoubleClickHandler() {
@@ -197,7 +197,7 @@ public class TagsForm extends VLayout {
 			rename.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
 				public void onClick(MenuItemClickEvent event) {
-					LD.askforValue(I18N.message("rename"), I18N.message("newtag"), "", "200", new ValueCallback() {
+					LD.askforValue(I18N.message("rename"), I18N.message("newtag"), "", new ValueCallback() {
 						@Override
 						public void execute(final String value) {
 							if (value == null || "".equals(value.trim()))
@@ -275,7 +275,7 @@ public class TagsForm extends VLayout {
 		GUISearchOptions options = new GUISearchOptions();
 		options.setType(GUISearchOptions.TYPE_TAGS);
 		options.setExpression(word);
-	
+
 		String hits = Session.get().getConfig("search.hits");
 		if (hits != null)
 			options.setMaxHits(Integer.parseInt(hits));
