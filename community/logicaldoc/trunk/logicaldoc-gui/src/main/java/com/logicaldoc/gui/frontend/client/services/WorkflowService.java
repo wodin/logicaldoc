@@ -104,7 +104,7 @@ public interface WorkflowService extends RemoteService {
 	/**
 	 * Counts all the tasks assigned to the given user.
 	 */
-	public int countActiveUserTasks(String sid, String username) throws ServerException;
+	public int countActiveUserTasks(String username) throws ServerException;
 
 	/**
 	 * Appends to the workflow of the given taskId the documents with the given

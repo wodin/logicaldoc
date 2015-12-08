@@ -20,6 +20,7 @@ import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.SessionTimeout;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 
@@ -35,7 +36,7 @@ public class Session {
 	private InfoServiceAsync service = (InfoServiceAsync) GWT.create(InfoService.class);
 
 	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
-	
+
 	private GUIInfo info;
 
 	private GUISession session;
@@ -94,6 +95,7 @@ public class Session {
 	}
 
 	public void init(final GUISession session) {
+
 		// Retrieve again the Info from the server (may be it is enriched by the
 		// enterprise)
 		service.getInfo(session.getUser().getLanguage(), session.getInfo().getTenant().getName(),
@@ -112,7 +114,7 @@ public class Session {
 							Session.get().info = session.getInfo();
 							I18N.init(session);
 							Menu.init(session.getUser());
-							
+
 							if (session.isLoggedIn()) {
 								for (SessionObserver listener : sessionObservers) {
 									listener.onUserLoggedIn(session.getUser());
@@ -130,12 +132,12 @@ public class Session {
 												new AsyncCallback<GUIParameter[]>() {
 													@Override
 													public void onFailure(Throwable caught) {
-														if (isDevel())
-															Log.serverError(caught);
+														Session.get().logout();
 													}
 
 													@Override
 													public void onSuccess(GUIParameter[] parameters) {
+														boolean validSession = true;
 														if (parameters.length > 0) {
 															GUIUser user = getUser();
 															for (GUIParameter parameter : parameters) {
@@ -148,8 +150,14 @@ public class Session {
 																else if (parameter.getName().equals("events"))
 																	user.setUpcomingEvents(Integer.parseInt(parameter
 																			.getValue()));
+																else if (parameter.getName().equals("valid"))
+																	validSession = Boolean.parseBoolean(parameter
+																			.getValue());
 															}
 														}
+
+														if (!validSession)
+															onInvalidSession();
 													}
 												});
 									}
@@ -158,11 +166,16 @@ public class Session {
 								timer.scheduleRepeating(info.getSessionHeartbeat() * 1000);
 							}
 						} catch (Throwable caught) {
-							Log.serverError(caught);
+							onInvalidSession();
 						}
 					}
 				});
 
+	}
+
+	public void onInvalidSession() {
+		timer.cancel();
+		SessionTimeout.get().show();
 	}
 
 	public void addSessionObserver(SessionObserver observer) {
@@ -235,8 +248,8 @@ public class Session {
 	public void setShowThumbnail(boolean showThumbnail) {
 		this.showThumbnail = showThumbnail;
 	}
-	
-	public void logout(){
+
+	public void logout() {
 		securityService.logout(Session.get().getSid(), new AsyncCallback<Void>() {
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

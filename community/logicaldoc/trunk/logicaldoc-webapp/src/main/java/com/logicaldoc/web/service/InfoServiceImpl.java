@@ -237,7 +237,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 		if (l == null)
 			l = Locale.ENGLISH;
-		
+
 		ResourceBundle rb = ResourceBundle.getBundle("i18n.messages", l);
 		GUIValue[] buf = new GUIValue[rb.keySet().size()];
 		int i = 0;
@@ -265,15 +265,17 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 		try {
 			SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
-			GUIParameter[] parameters = new GUIParameter[1];
-
+			List<GUIParameter> parameters = new ArrayList<GUIParameter>();
+			
 			UserSession session = SessionManager.getInstance().get(sid);
 			if (session != null) {
 				GUIParameter messages = new GUIParameter("messages", ""
 						+ messageDao.getCount(session.getUserName(), SystemMessage.TYPE_SYSTEM, 0));
-				parameters[0] = messages;
+				parameters.add(messages);
 			}
-			return parameters;
+			parameters.add(new GUIParameter("valid", "" + SessionManager.getInstance().isValid(sid)));
+			
+			return parameters.toArray(new GUIParameter[0]);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);

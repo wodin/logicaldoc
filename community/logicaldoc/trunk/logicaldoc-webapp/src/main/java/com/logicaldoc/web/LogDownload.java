@@ -91,7 +91,7 @@ public class LogDownload extends HttpServlet {
 				if (is != null)
 					is.close();
 			} catch (Throwable ex) {
-				log.error(ex.getMessage(), ex);
+				
 			}
 
 			if ("all".equals(appender) && file != null)

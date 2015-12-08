@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.panels;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -8,6 +9,7 @@ import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.datepicker.client.CalendarUtil;
 import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.PanelObserver;
 import com.logicaldoc.gui.common.client.Session;
@@ -25,6 +27,8 @@ import com.logicaldoc.gui.frontend.client.menu.MainMenu;
 import com.logicaldoc.gui.frontend.client.search.Search;
 import com.logicaldoc.gui.frontend.client.search.SearchMenu;
 import com.logicaldoc.gui.frontend.client.search.SearchPanel;
+import com.logicaldoc.gui.frontend.client.services.CalendarService;
+import com.logicaldoc.gui.frontend.client.services.CalendarServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.types.Side;
@@ -186,7 +190,7 @@ public class MainPanel extends VLayout implements SessionObserver {
 		}
 
 		WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
-		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
+		service.countActiveUserTasks(user.getUserName(), new AsyncCallback<Integer>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -200,7 +204,10 @@ public class MainPanel extends VLayout implements SessionObserver {
 			}
 		});
 
-		service.countActiveUserTasks(Session.get().getSid(), user.getUserName(), new AsyncCallback<Integer>() {
+		CalendarServiceAsync cservice = (CalendarServiceAsync) GWT.create(CalendarService.class);
+		Date date = new Date();
+		CalendarUtil.addDaysToDate(date, 1);
+		cservice.countUserEvents(user.getUserName(), date, new AsyncCallback<Integer>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
