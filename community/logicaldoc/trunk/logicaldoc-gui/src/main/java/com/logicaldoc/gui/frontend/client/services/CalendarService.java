@@ -55,11 +55,11 @@ public interface CalendarService extends RemoteService {
 	/**
 	 * Counts the number of events that start from now until a given date.
 	 * 
-	 * @param sid The session identifier
+	 * @param username The user to be processed
 	 * @param end The and date
 	 * @return The number of found events
 	 * 
 	 * @throws ServerException
 	 */
-	public int countUserEvents(String sid, Date end) throws ServerException;
+	public int countUserEvents(String username, Date end) throws ServerException;
 }

@@ -12,7 +12,7 @@ public interface CalendarServiceAsync {
 
 	void deleteEvent(String sid, long eventId, AsyncCallback<Void> callback);
 
-	void countUserEvents(String sid, Date end, AsyncCallback<Integer> callback);
+	void countUserEvents(String username, Date end, AsyncCallback<Integer> callback);
 
 	void find(String sid, Date startDate, Date endDate, Date expireFrom, Date expireTo, Integer frequency,
 			String title, String type, String subtype, Integer status, Integer maxRecords, AsyncCallback<GUICalendarEvent[]> callback);

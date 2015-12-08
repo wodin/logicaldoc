@@ -31,7 +31,7 @@ public interface WorkflowServiceAsync {
 
 	void turnBackTaskToPool(String sid, String taskId, AsyncCallback<Void> callback);
 
-	void countActiveUserTasks(String sid, String username, AsyncCallback<Integer> callback);
+	void countActiveUserTasks(String username, AsyncCallback<Integer> callback);
 
 	void appendDocuments(String sid, String taskId, Long[] docIds, AsyncCallback<Void> callback);
 

@@ -57,7 +57,7 @@ public class ServiceUtil {
 		UserSession session = SessionManager.getInstance().get(sid);
 		if (session == null)
 			throw new InvalidSessionException("Invalid Session");
-		if (session.getStatus() != UserSession.STATUS_OPEN)
+		if (!SessionManager.getInstance().isValid(sid))
 			throw new InvalidSessionException("Invalid or Expired Session");
 		session.renew();
 		return session;

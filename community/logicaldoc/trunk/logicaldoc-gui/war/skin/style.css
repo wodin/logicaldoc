@@ -74,6 +74,13 @@
   white-space: nowrap;
 }
 
+.sessiontimeout {
+  font-family: Arial, Bitstream Vera Sans, sans-serif; 
+  font-size: 16pt;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
 .updateavailable {
   font-family: Arial, Bitstream Vera Sans, sans-serif; 
   font-size: 14pt;
