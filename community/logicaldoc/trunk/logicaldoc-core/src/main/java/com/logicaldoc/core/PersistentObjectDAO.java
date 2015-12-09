@@ -246,6 +246,19 @@ public interface PersistentObjectDAO<T extends PersistentObject> {
 	public long queryForLong(String sql);
 
 	/**
+	 * Execute a query that results in a Object value, given static SQL. Uses a
+	 * JDBC Statement, not a PreparedStatement. If you want to execute a static
+	 * query with a PreparedStatement. This method is useful for running static
+	 * SQL with a known outcome. The query is expected to be a single row/single
+	 * column query that results in a object value.
+	 * 
+	 * @param sql SQL query to execute
+	 * @param type The type of the returned value
+	 * @return the object value
+	 */
+	public Object queryForObject(String sql, Class type);
+
+	/**
 	 * Deletes all entries form the database
 	 * 
 	 * @param entities The entities to be deleted
