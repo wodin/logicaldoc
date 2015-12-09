@@ -87,21 +87,23 @@ public class LoggingConfigurator {
 	 * @return The log file path
 	 */
 	public String getFile(String appender, boolean replaceVariables) {
-		String result = "";
+		String result = null;
 		Element elem = xml.getChild("appender", "name", appender);
-		List childs = elem.getChildren("param");
-		Iterator children = childs.iterator();
+		if (elem != null) {
+			List childs = elem.getChildren("param");
+			Iterator children = childs.iterator();
 
-		while (children.hasNext()) {
-			Element child = (Element) children.next();
+			while (children.hasNext()) {
+				Element child = (Element) children.next();
 
-			if (child.getAttributeValue("name").equals("File")) {
-				result = child.getAttributeValue("value");
+				if (child.getAttributeValue("name").equals("File")) {
+					result = child.getAttributeValue("value");
+				}
 			}
-		}
 
-		if (replaceVariables) {
-			result = StrSubstitutor.replaceSystemProperties(result);
+			if (replaceVariables) {
+				result = StrSubstitutor.replaceSystemProperties(result);
+			}
 		}
 
 		return result;

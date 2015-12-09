@@ -2,6 +2,7 @@ package com.logicaldoc.core.stats;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -14,10 +15,12 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.document.AbstractDocument;
+import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.TenantDAO;
@@ -166,7 +169,7 @@ public class StatsCollector extends Task {
 			logdir = FileUtils.sizeOfDirectory(logsDir);
 		saveStatistic("logdir", logdir, Tenant.SYSTEM_ID);
 
-		log.debug("Saved repository statistics");
+		log.info("Saved repository statistics");
 
 		/*
 		 * Collect documents statistics
@@ -180,7 +183,7 @@ public class StatsCollector extends Task {
 		for (Tenant tenant : tenants)
 			extractDocStats(tenant.getId());
 
-		log.debug("Saved documents statistics");
+		log.info("Saved documents statistics");
 
 		/*
 		 * Collect folders statistics
@@ -193,7 +196,7 @@ public class StatsCollector extends Task {
 		for (Tenant tenant : tenants)
 			extractFldStats(tenant.getId());
 
-		log.debug("Saved folder statistics");
+		log.info("Saved folder statistics");
 
 		/*
 		 * Collect sizing statistics
@@ -273,6 +276,58 @@ public class StatsCollector extends Task {
 			post.setParameter("aliases", Long.toString(aliases));
 			post.setParameter("workflow_histories", Long.toString(workflow_histories));
 			post.setParameter("tenants", Long.toString(tenantsCount));
+
+			long templates = documentDAO.queryForLong("select count(ld_id) from ld_template where ld_deleted=0");
+			post.setParameter("templates", Long.toString(templates));
+
+			long shares = 0;
+			try {
+				shares = documentDAO.queryForLong("select count(ld_id) from ld_share where ld_deleted=0");
+			} catch (Throwable t) {
+			}
+			post.setParameter("shares", Long.toString(shares));
+
+			long stamps = 0;
+			try {
+				stamps = documentDAO.queryForLong("select count(ld_id) from ld_stamp where ld_deleted=0");
+			} catch (Throwable t) {
+			}
+			post.setParameter("stamps", Long.toString(stamps));
+
+			long forms = documentDAO
+					.queryForLong("select count(ld_id) from ld_document where ld_deleted=0 and ld_nature="
+							+ AbstractDocument.NATURE_FORM);
+			post.setParameter("forms", Long.toString(forms));
+
+			long reports = 0;
+			try {
+				reports = documentDAO.queryForLong("select count(ld_id) from ld_report where ld_deleted=0");
+				post.setParameter("reports", Long.toString(reports));
+			} catch (Throwable t) {
+			}
+
+			// General usage
+			SimpleDateFormat isoDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+
+			Date lastLogin = null;
+			try {
+				lastLogin = (Date) documentDAO.queryForObject(
+						"select max(ld_date) from ld_user_history where ld_deleted=0 and ld_event='"
+								+ UserHistory.EVENT_USER_LOGIN + "'", Date.class);
+			} catch (Throwable t) {
+				log.warn(t.getMessage());
+			}
+			post.setParameter("last_login", lastLogin != null ? isoDf.format(lastLogin) : "");
+
+			Date lastCreation = null;
+			try {
+				lastCreation = (Date) documentDAO.queryForObject(
+						"select max(ld_date) from ld_history where ld_deleted=0 and ld_event='" + DocumentEvent.STORED
+								+ "'", Date.class);
+			} catch (Throwable t) {
+				log.warn(t.getMessage());
+			}
+			post.setParameter("last_creation", lastCreation != null ? isoDf.format(lastCreation) : "");
 
 			// Quotas
 			post.setParameter("docdir", Long.toString(docdir));

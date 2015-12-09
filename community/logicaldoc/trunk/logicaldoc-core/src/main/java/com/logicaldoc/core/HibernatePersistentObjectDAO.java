@@ -338,6 +338,22 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 		return 0;
 	}
 
+	@SuppressWarnings("deprecation")
+	@Override
+	public Object queryForObject(String sql, Class type) {
+		try {
+			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+			return jdbcTemplate.queryForObject(sql, type);
+		} catch (EmptyResultDataAccessException empty) {
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+		}
+		return 0;
+	}
+
 	@Override
 	public int jdbcUpdate(String statement) {
 		try {

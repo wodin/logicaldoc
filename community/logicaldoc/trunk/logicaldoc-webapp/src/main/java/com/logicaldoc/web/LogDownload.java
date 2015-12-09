@@ -44,54 +44,63 @@ public class LogDownload extends HttpServlet {
 		String appender = request.getParameter("appender");
 		File file = null;
 
-		if ("all".equals(appender)) {
-			SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
-
-			response.setContentType("application/zip");
-			response.setHeader("Content-Disposition", "attachment; filename=\""
-					+ ("ldoc-log-" + df.format(new Date()) + ".zip") + "\"");
-
-			// Avoid resource caching
-			response.setHeader("Pragma", "no-cache");
-			response.setHeader("Cache-Control", "no-store");
-			response.setDateHeader("Expires", 0);
-
-			file = prepareAllLogs(response);
-		} else {
-			response.setContentType("text/html");
-			LoggingConfigurator conf = new LoggingConfigurator();
-			file = new File(conf.getFile(appender, true));
-		}
-
-		if (file == null)
-			return;
-
-		response.setHeader("Content-Length", Long.toString(file.length()));
-		InputStream is = null;
 		try {
-			is = new BufferedInputStream(new FileInputStream(file));
-			byte[] buf = new byte[1024];
-			int read = 1;
+			if ("all".equals(appender)) {
+				SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 
-			while (read > 0) {
-				read = is.read(buf, 0, buf.length);
+				response.setContentType("application/zip");
+				response.setHeader("Content-Disposition",
+						"attachment; filename=\"" + ("ldoc-log-" + df.format(new Date()) + ".zip") + "\"");
 
-				if (read > 0) {
-					response.getOutputStream().write(buf, 0, read);
-				}
+				// Avoid resource caching
+				response.setHeader("Pragma", "no-cache");
+				response.setHeader("Cache-Control", "no-store");
+				response.setDateHeader("Expires", 0);
+
+				file = prepareAllLogs(response);
+			} else {
+				response.setContentType("text/html");
+				LoggingConfigurator conf = new LoggingConfigurator();
+				file = new File(conf.getFile(appender, true));
 			}
-		} catch (Throwable ex) {
-			// Avoid to log this kind of recurrent exception
-		} finally {
+
+			if (file == null)
+				return;
+
+			InputStream is = null;
 			try {
-				if (is != null)
-					is.close();
+				if (file.length() > 1) {
+					response.setHeader("Content-Length", Long.toString(file.length()));
+					is = new BufferedInputStream(new FileInputStream(file));
+					byte[] buf = new byte[1024];
+					int read = 1;
+
+					while (read > 0) {
+						read = is.read(buf, 0, buf.length);
+
+						if (read > 0) {
+							response.getOutputStream().write(buf, 0, read);
+						}
+					}
+				} else {
+					response.setHeader("Content-Length", "0");
+					response.getWriter().println("");
+				}
 			} catch (Throwable ex) {
 
-			}
+			} finally {
+				try {
+					if (is != null)
+						is.close();
+				} catch (Throwable ex) {
 
-			if ("all".equals(appender) && file != null)
-				FileUtils.deleteQuietly(file);
+				}
+
+				if ("all".equals(appender) && file != null)
+					FileUtils.deleteQuietly(file);
+			}
+		} catch (Throwable ex) {
+			log.warn(ex.getMessage(), ex);
 		}
 	}
 
