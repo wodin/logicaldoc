@@ -211,12 +211,13 @@ public class DocumentManagerImpl implements DocumentManager {
 		Document document = documentDAO.findById(docId);
 
 		if (document.getStatus() == status && document.getLockUserId() == transaction.getUserId()) {
-			log.debug("Document " + docId + " already locked by user " + transaction.getUserName());
+			log.debug("Document " + document + " is already locked by user " + transaction.getUser().getFullName());
 			return;
 		}
 
 		if (document.getStatus() != Document.DOC_UNLOCKED)
-			throw new Exception("Document is locked");
+			throw new Exception("Document " + document + " is already locked by user " + document.getLockUser()
+					+ " and cannot be locked by " + transaction.getUser().getFullName());
 
 		documentDAO.initialize(document);
 		document.setLockUserId(transaction.getUser().getId());
@@ -714,13 +715,21 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		Document document = documentDAO.findById(docId);
 		documentDAO.initialize(document);
+
+		if (transaction.getUser().isInGroup("admin")) {
+			document.setImmutable(0);
+		} else {
+			if (!document.getLockUserId().equals(transaction.getUserId())) {
+				String message = "The document " + document + " is locked by " + document.getLockUser()
+						+ " and cannot be unlocked by " + transaction.getUser().getFullName();
+				throw new Exception(message);
+			}
+		}
+
 		document.setLockUserId(null);
 		document.setLockUser(null);
 		document.setExtResId(null);
 		document.setStatus(Document.DOC_UNLOCKED);
-		if (transaction.getUser().isInGroup("admin")) {
-			document.setImmutable(0);
-		}
 
 		// Modify document history entry
 		transaction.setEvent(DocumentEvent.UNLOCKED.toString());

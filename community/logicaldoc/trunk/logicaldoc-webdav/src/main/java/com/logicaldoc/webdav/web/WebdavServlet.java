@@ -176,7 +176,7 @@ public class WebdavServlet extends AbstractWebdavServlet {
 
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ContextProperties settings = getSettings();
-
+		
 		// Check if the service is enabled
 		if ("true".equals(settings.get("webdav.enabled")))
 			super.service(request, response);

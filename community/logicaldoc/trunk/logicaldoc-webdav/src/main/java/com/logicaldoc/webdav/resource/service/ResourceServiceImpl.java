@@ -104,13 +104,16 @@ public class ResourceServiceImpl implements ResourceService {
 		resource.setCreationDate(document.getCreation());
 		resource.setLastModified(document.getDate());
 		resource.isFolder(false);
-		resource.setIsCheckedOut(document.getStatus() == Document.DOC_CHECKED_OUT
+		resource.setCheckedOut(document.getStatus() == Document.DOC_CHECKED_OUT
 				|| document.getStatus() == Document.DOC_LOCKED);
 		resource.setVersionLabel(document.getVersion());
 		resource.setAuthor(document.getPublisher());
 		resource.setDocRef(document.getDocRef());
 		resource.setFolderID(new Long(document.getFolder().getId()).toString());
 		resource.setSession(session);
+		resource.setLocked(document.getStatus() == Document.DOC_LOCKED
+				|| document.getStatus() == Document.DOC_CHECKED_OUT);
+		resource.setLockUser(document.getLockUser());
 
 		if (session != null && (Long) session.getObject("id") != null) {
 			resource.setRequestedPerson((Long) session.getObject("id"));
@@ -344,7 +347,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 			if ((document.getStatus() == Document.DOC_CHECKED_OUT || document.getStatus() == Document.DOC_LOCKED)
 					&& (user.getId() != document.getLockUserId() && !"admin".equals(user.getUserName()))) {
-				throw new DavException(DavServletResponse.SC_FORBIDDEN, "User didn't locked the document");
+				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Current user didn't locked the document");
 			}
 
 			if (document.getImmutable() == 1 && !user.isInGroup("admin"))
@@ -650,7 +653,7 @@ public class ResourceServiceImpl implements ResourceService {
 	@Override
 	public InputStream streamOut(Resource resource) {
 		if (!resource.isDownloadEnabled())
-			throw new DavResourceIOException("The user dowsn't have the download permission");
+			throw new DavResourceIOException("The user doesn't have the download permission");
 
 		String version = resource.getVersionLabel();
 		Document document = documentDAO.findById(Long.parseLong(resource.getID()));
@@ -735,7 +738,7 @@ public class ResourceServiceImpl implements ResourceService {
 			res.setVersionLabel(version.getVersion());
 			res.setVersionDate(version.getDate());
 			res.setAuthor(version.getUsername());
-			res.setIsCheckedOut(true);
+			res.setCheckedOut(true);
 			resourceHistory.add(res);
 		}
 
@@ -753,7 +756,7 @@ public class ResourceServiceImpl implements ResourceService {
 
 			documentManager.unlock(Long.parseLong(resource.getID()), transaction);
 
-			resource.setIsCheckedOut(false);
+			resource.setCheckedOut(false);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);

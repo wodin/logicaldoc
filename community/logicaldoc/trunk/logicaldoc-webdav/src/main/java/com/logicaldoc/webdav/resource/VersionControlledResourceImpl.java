@@ -8,6 +8,11 @@ import org.apache.jackrabbit.webdav.DavResource;
 import org.apache.jackrabbit.webdav.DavResourceLocator;
 import org.apache.jackrabbit.webdav.DavServletResponse;
 import org.apache.jackrabbit.webdav.MultiStatus;
+import org.apache.jackrabbit.webdav.lock.DefaultActiveLock;
+import org.apache.jackrabbit.webdav.lock.Scope;
+import org.apache.jackrabbit.webdav.lock.SupportedLock;
+import org.apache.jackrabbit.webdav.lock.Type;
+import org.apache.jackrabbit.webdav.property.DavPropertyName;
 import org.apache.jackrabbit.webdav.property.DefaultDavProperty;
 import org.apache.jackrabbit.webdav.property.HrefProperty;
 import org.apache.jackrabbit.webdav.version.LabelInfo;
@@ -19,6 +24,7 @@ import org.apache.jackrabbit.webdav.version.VersionResource;
 import org.apache.jackrabbit.webdav.version.VersionableResource;
 import org.apache.jackrabbit.webdav.version.report.ReportType;
 import org.apache.jackrabbit.webdav.version.report.SupportedReportSetProperty;
+import org.apache.jackrabbit.webdav.xml.Namespace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -87,6 +93,7 @@ public class VersionControlledResourceImpl extends DeltaVResourceImpl implements
 			sb.append(", ").append(DavMethods.METHOD_CHECKOUT);
 			sb.append(", ").append(DavMethods.METHOD_UNCHECKOUT);
 			sb.append(", ").append(DavMethods.METHOD_LABEL);
+			sb.append(", ").append(DavMethods.METHOD_CHECKIN);
 		}
 		return sb.toString();
 	}
@@ -251,21 +258,29 @@ public class VersionControlledResourceImpl extends DeltaVResourceImpl implements
 			// DAV:auto-version property: there is no auto version, explicit
 			// EVENT_CHECKEDOUT is required.
 			properties.add(new DefaultDavProperty(AUTO_VERSION, null, false));
+			properties.add(new DefaultDavProperty(DavPropertyName.DISPLAYNAME, resource.getName(), false));
 
-			// if (resource.isFolder())
-			// return;
+			if (resource.isFolder())
+				return;
 
-			// String baseVHref =
-			// getLocatorFromResource(resource).getHref(false);
+			SupportedLock supportedLock = new SupportedLock();
+			supportedLock.addEntry(Type.WRITE, Scope.EXCLUSIVE);
+			properties.add(new DefaultDavProperty(DavPropertyName.SUPPORTEDLOCK, supportedLock, false));
 
-			// if (resource.getIsCheckedOut()) {
-			// properties.add(new HrefProperty(CHECKED_OUT, baseVHref, true));
-			// properties.add(new HrefProperty(VersionResource.PREDECESSOR_SET,
-			// locator.getResourcePath(), false));
-			// } else {
-			// properties.add(new HrefProperty(CHECKED_IN,
-			// locator.getResourcePath(), true));
-			// }
+			String baseVHref = getLocatorFromResource(resource).getHref(false);
+
+			if (resource.isCheckedOut() || resource.isLocked()) {
+				log.debug(resource.getName() + " is checkedout");
+				properties.add(new HrefProperty(CHECKED_OUT, baseVHref, true));
+				properties.add(new HrefProperty(VersionResource.PREDECESSOR_SET, locator.getResourcePath(), false));
+
+				DefaultActiveLock activeLock = new DefaultActiveLock();
+				activeLock.setOwner(resource.getLockUser());
+				properties.add(new DefaultDavProperty(DavPropertyName.LOCKDISCOVERY, activeLock, false));
+				properties.add(new DefaultDavProperty("activelock", activeLock, Namespace.XMLNS_NAMESPACE));
+			} else {
+				properties.add(new HrefProperty(CHECKED_IN, locator.getResourcePath(), true));
+			}
 		}
 	}
 

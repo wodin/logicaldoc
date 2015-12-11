@@ -4,6 +4,9 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.dao.FolderDAO;
@@ -17,6 +20,8 @@ import com.logicaldoc.webdav.session.DavSession;
  */
 public class ResourceImpl implements Resource {
 
+	protected static Logger log = LoggerFactory.getLogger(ResourceImpl.class);
+
 	private String id;
 
 	private String name;
@@ -27,7 +32,7 @@ public class ResourceImpl implements Resource {
 
 	private boolean isWorkspace;
 
-	private boolean isLocked;
+	private boolean isLocked = false;
 
 	private String path;
 
@@ -35,13 +40,15 @@ public class ResourceImpl implements Resource {
 
 	private long personRequest;
 
-	private boolean isCheckedOut;
+	private boolean isCheckedOut = false;
 
 	private String versionLabel;
 
 	private Date lastModified;
 
 	private Date versionDate;
+
+	private String lockUser;
 
 	private String author;
 
@@ -97,12 +104,13 @@ public class ResourceImpl implements Resource {
 		return this.isWorkspace;
 	}
 
-	public void isLocked(boolean isLocked) {
+	public void setLocked(boolean isLocked) {
 		this.isLocked = isLocked;
 	}
 
 	public boolean isLocked() {
-		return this.isLocked;
+		log.debug("isLocked(" + getName() + "): " + (this.isLocked || this.isCheckedOut));
+		return this.isLocked || this.isCheckedOut;
 	}
 
 	public String getPath() {
@@ -142,12 +150,13 @@ public class ResourceImpl implements Resource {
 	}
 
 	@Override
-	public boolean getIsCheckedOut() {
+	public boolean isCheckedOut() {
+		log.debug("isCheckedOut(" + getName() + "): " + this.isCheckedOut);
 		return this.isCheckedOut;
 	}
 
 	@Override
-	public void setIsCheckedOut(boolean isCheckedOut) {
+	public void setCheckedOut(boolean isCheckedOut) {
 		this.isCheckedOut = isCheckedOut;
 	}
 
@@ -270,14 +279,14 @@ public class ResourceImpl implements Resource {
 		Folder folder = fdao.findById(fid);
 		isWorkspace = folder.getType() == Folder.TYPE_WORKSPACE;
 
-		long rootId=fdao.findRoot(folder.getTenantId()).getId();
-		
+		long rootId = fdao.findRoot(folder.getTenantId()).getId();
+
 		if (fid == rootId) {
 			writeEnabled = false;
 			deleteEnabled = false;
 			renameEnabled = false;
 			addChildEnabled = false;
-			downloadEnabled = false;
+			downloadEnabled = true;
 		} else {
 			permissions = fdao.getEnabledPermissions(fid, personRequest);
 			writeEnabled = permissions.contains(Permission.WRITE);
@@ -315,5 +324,13 @@ public class ResourceImpl implements Resource {
 	@Override
 	public void setFolderID(String folderId) {
 		this.folderId = folderId;
+	}
+
+	public String getLockUser() {
+		return lockUser;
+	}
+
+	public void setLockUser(String lockUser) {
+		this.lockUser = lockUser;
 	}
 }
