@@ -94,6 +94,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		assert (transaction.getUser() != null);
 		assert (transaction.getComment() != null);
 
+		transaction.setEvent(DocumentEvent.CHECKEDIN.toString());
+
 		// identify the document and folder
 		Document document = documentDAO.findById(docId);
 		document.setComment(transaction.getComment());
@@ -218,6 +220,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		documentDAO.initialize(document);
 		document.setLockUserId(transaction.getUser().getId());
+		document.setLockUser(transaction.getUser().getFullName());
 		document.setStatus(status);
 		document.setFolder(document.getFolder());
 
@@ -712,6 +715,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		Document document = documentDAO.findById(docId);
 		documentDAO.initialize(document);
 		document.setLockUserId(null);
+		document.setLockUser(null);
 		document.setExtResId(null);
 		document.setStatus(Document.DOC_UNLOCKED);
 		if (transaction.getUser().isInGroup("admin")) {

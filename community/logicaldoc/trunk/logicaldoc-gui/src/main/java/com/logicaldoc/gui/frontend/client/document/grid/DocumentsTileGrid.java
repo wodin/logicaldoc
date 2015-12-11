@@ -72,9 +72,9 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 					// The title row
 					html += "<tr><td>" + Util.imageHTML(record.getAttribute("icon") + ".png") + "</td><td>" + value
 							+ "</td></tr></table>";
-					html += "<table align='center' border='0' cellspacing='0'>";
+					html += "<table align='center' border='0' cellspacing='0'><tr>";
 					// The status row
-					html += "<tr><td>" + Util.imageHTML(record.getAttribute("indexed") + ".png") + "</td><td>";
+					html += "<td>" + Util.imageHTML(record.getAttribute("indexed") + ".png") + "</td>";
 					html += "<td>" + Util.imageHTML(record.getAttribute("locked") + ".png") + "</td>";
 					html += "<td>" + Util.imageHTML(record.getAttribute("immutable") + ".png") + "</td>";
 					html += "<td>" + Util.imageHTML(record.getAttribute("signed") + ".png") + "</td>";
@@ -150,6 +150,7 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 			return null;
 		record.setAttribute("locked", "page_edit");
 		record.setAttribute("lockUserId", Session.get().getUser().getId());
+		record.setAttribute("lockUser", Session.get().getUser().getFullName());
 		record.setAttribute("status", Constants.DOC_CHECKED_OUT);
 		redraw();
 		return getSelectedDocument();
@@ -165,6 +166,8 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 		record.setAttribute("indexed", Constants.INDEX_TO_INDEX);
 		record.setAttribute("signed", "blank");
 		record.setAttribute("extResId", (String) null);
+		record.setAttribute("lockUserId", (String) null);
+		record.setAttribute("lockUser", (String) null);
 		redraw();
 
 		return getSelectedDocument();

@@ -26,6 +26,7 @@
     <property name="status" type="int" column="ld_status" />
     <property name="type" type="string" column="ld_type" length="255" />
     <property name="lockUserId" type="long" column="ld_lockuserid" />
+    <property name="lockUser" type="string" column="ld_lockuser" length="255" />
     <property name="source" type="string" column="ld_source" length="4000" />
     <property name="sourceAuthor" type="string" column="ld_sourceauthor" length="255" />
     <property name="sourceDate" type="timestamp" column="ld_sourcedate" />

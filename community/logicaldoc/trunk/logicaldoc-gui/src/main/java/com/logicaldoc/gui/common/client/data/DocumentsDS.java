@@ -60,6 +60,7 @@ public class DocumentsDS extends DataSource {
 		DataSourceImageField stamped = new DataSourceImageField("stamped");
 		DataSourceImageField locked = new DataSourceImageField("locked");
 		DataSourceTextField lockUserId = new DataSourceTextField("lockUserId");
+		DataSourceTextField lockUser = new DataSourceTextField("lockUser");
 		DataSourceTextField filename = new DataSourceTextField("filename");
 		DataSourceTextField template = new DataSourceTextField("template");
 		template.setHidden(true);
@@ -107,6 +108,7 @@ public class DocumentsDS extends DataSource {
 		fields.add(stamped);
 		fields.add(locked);
 		fields.add(lockUserId);
+		fields.add(lockUser);
 		fields.add(filename);
 		fields.add(status);
 		fields.add(rating);
@@ -136,13 +138,12 @@ public class DocumentsDS extends DataSource {
 		setClientOnly(true);
 
 		if (barcoded == null)
-			setDataURL("data/documents.xml?locale="
-					+ Session.get().getUser().getLanguage() + "&folderId=" + (folderId != null ? folderId : "")
-					+ "&filename=" + (fileFilter != null ? fileFilter : "") + "&max=" + (max != null ? max : MAX)
-					+ "&indexed=" + (indexed != null ? indexed.toString() : "")+ "&page=" + page);
-		else
-			setDataURL("data/tobarcode.xml?max=" + (max != null ? max : MAX)
+			setDataURL("data/documents.xml?locale=" + Session.get().getUser().getLanguage() + "&folderId="
+					+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "")
+					+ "&max=" + (max != null ? max : MAX) + "&indexed=" + (indexed != null ? indexed.toString() : "")
 					+ "&page=" + page);
+		else
+			setDataURL("data/tobarcode.xml?max=" + (max != null ? max : MAX) + "&page=" + page);
 	}
 
 	public DocumentsDS(String docIds) {

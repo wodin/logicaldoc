@@ -101,6 +101,8 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private String type;
 
 	private Long lockUserId;
+	
+	private String lockUser;
 
 	private String source;
 
@@ -828,5 +830,13 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public void setNature(int nature) {
 		this.nature = nature;
+	}
+
+	public String getLockUser() {
+		return lockUser;
+	}
+
+	public void setLockUser(String lockUser) {
+		this.lockUser = lockUser;
 	}
 }

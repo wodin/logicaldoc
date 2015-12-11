@@ -170,6 +170,17 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		locked.setImageURLPrefix(Util.imagePrefix());
 		locked.setImageURLSuffix(".png");
 		locked.setCanFilter(false);
+		locked.setCellFormatter(new CellFormatter() {
+
+			@Override
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				if (record.getAttributeAsString("lockUser") == null)
+					return Util.imageHTML(record.getAttributeAsString("locked") + ".png");
+				else
+					return Util.imageHTML(record.getAttributeAsString("locked") + ".png", I18N.message("lockedby")
+							+ " " + record.getAttributeAsString("lockUser"), null);
+			}
+		});
 
 		ListGridField signed = new ListGridField("signed", " ", 20);
 		signed.setType(ListGridFieldType.IMAGE);
@@ -568,6 +579,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			return null;
 		record.setAttribute("locked", "page_edit");
 		record.setAttribute("lockUserId", Session.get().getUser().getId());
+		record.setAttribute("lockUser", Session.get().getUser().getFullName());
 		record.setAttribute("status", Constants.DOC_CHECKED_OUT);
 		refreshRow(getRecordIndex(record));
 		return getSelectedDocument();
@@ -584,6 +596,8 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		record.setAttribute("signed", "blank");
 		record.setAttribute("stamped", "blank");
 		record.setAttribute("extResId", (String) null);
+		record.setAttribute("lockUserId", (String) null);
+		record.setAttribute("lockUser", (String) null);
 		refreshRow(getRecordIndex(record));
 		return getSelectedDocument();
 	}
