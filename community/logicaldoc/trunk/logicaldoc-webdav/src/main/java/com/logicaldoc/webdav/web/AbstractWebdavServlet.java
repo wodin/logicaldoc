@@ -27,6 +27,8 @@ import org.apache.jackrabbit.webdav.io.InputContext;
 import org.apache.jackrabbit.webdav.io.InputContextImpl;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.apache.jackrabbit.webdav.io.OutputContextImpl;
+import org.apache.jackrabbit.webdav.property.DavPropertyName;
+import org.apache.jackrabbit.webdav.property.DavPropertyNameIterator;
 import org.apache.jackrabbit.webdav.property.DavPropertyNameSet;
 import org.apache.jackrabbit.webdav.search.SearchConstants;
 import org.apache.jackrabbit.webdav.search.SearchResource;
@@ -127,12 +129,16 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 */
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.debug("Received WebDAV request");
+		System.out.println("received DAV request");
 		try {
 			WebdavRequest webdavRequest = new WebdavRequestImpl(request, getLocatorFactory());
 
 			// DeltaV requires 'Cache-Control' header for all methods except
 			// 'VERSION-CONTROL' and 'REPORT'.
 			int methodCode = DavMethods.getMethodCode(request.getMethod());
+
+			System.out.println("method " + request.getMethod() + " " + methodCode);
+
 			boolean noCache = DavMethods.isDeltaVMethod(webdavRequest)
 					&& !(DavMethods.DAV_VERSION_CONTROL == methodCode || DavMethods.DAV_REPORT == methodCode);
 			WebdavResponse webdavResponse = new WebdavResponseImpl(response, noCache);
@@ -402,13 +408,24 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			return;
 		}
 
-		int depth = request.getDepth(DEPTH_INFINITY);
 		DavPropertyNameSet requestProperties = request.getPropFindProperties();
+		
+		int depth = request.getDepth(DEPTH_INFINITY);
+		if (log.isDebugEnabled()) {
+			DavPropertyNameIterator iter = requestProperties.iterator();
+			StringBuffer sb = new StringBuffer("Requested properties: ");
+			while (iter.hasNext()) {
+				sb.append(((DavPropertyName) iter.next()).getName());
+				sb.append(",");
+			}
+			log.debug(sb.toString());
+		}
+
 		int propfindType = request.getPropFindType();
 
 		MultiStatus mstatus = new MultiStatus();
-
 		mstatus.addResourceProperties(resource, requestProperties, propfindType, depth);
+
 		response.sendMultiStatus(mstatus);
 	}
 
@@ -725,9 +742,8 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 
 	protected void doLock(WebdavRequest request, WebdavResponse response, DavResource resource) throws IOException,
 			DavException {
-		log.debug("doLock");
-
-		response.sendError(DavServletResponse.SC_NOT_IMPLEMENTED);
+		log.debug("doLock - interpreting as checkout");
+		doCheckout(request, response, resource);
 	}
 
 	/**
@@ -737,14 +753,11 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 * @param response
 	 * @param resource
 	 * @throws DavException
+	 * @throws IOException
 	 */
-	protected void doUnlock(WebdavRequest request, WebdavResponse response, DavResource resource) throws DavException {
-		// get lock token from header
-		try {
-			response.sendError(DavServletResponse.SC_NOT_IMPLEMENTED);
-		} catch (IOException e) {
-			throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR);
-		}
+	protected void doUnlock(WebdavRequest request, WebdavResponse response, DavResource resource) throws DavException,
+			IOException {
+		doUncheckout(request, response, resource);
 	}
 
 	/**
@@ -821,7 +834,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 */
 	protected void doUncheckout(WebdavRequest request, WebdavResponse response, DavResource resource)
 			throws DavException, IOException {
-		log.debug("doUncheckout");
+		log.debug("doUncheckout(" + resource.getDisplayName() + ")");
 		if (!(resource instanceof VersionControlledResource)) {
 			response.sendError(DavServletResponse.SC_METHOD_NOT_ALLOWED);
 			return;

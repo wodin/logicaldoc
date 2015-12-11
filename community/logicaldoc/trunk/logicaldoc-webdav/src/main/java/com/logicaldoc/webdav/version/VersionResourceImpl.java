@@ -128,7 +128,7 @@ public class VersionResourceImpl extends DeltaVResourceImpl implements VersionRe
         sb.append(", ").append(VersionableResource.METHODS);
        
 	    try {
-	        if ((resource.getIsCheckedOut())) {
+	        if ((resource.isCheckedOut())) {
 	            sb.append(", ").append(VersionControlledResource.methods_checkedOut);
 	        } else {
 	            sb.append(", ").append(VersionControlledResource.methods_checkedIn);

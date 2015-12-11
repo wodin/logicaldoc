@@ -568,7 +568,7 @@ public class DavResourceImpl implements DavResource, Serializable {
 	 *      org.apache.jackrabbit.webdav.lock.Scope)
 	 */
 	public boolean isLockable(Type type, Scope scope) {
-		return (resource.getIsCheckedOut() == false);
+		return (resource.isCheckedOut() == false);
 	}
 
 	/**
@@ -576,7 +576,7 @@ public class DavResourceImpl implements DavResource, Serializable {
 	 *      org.apache.jackrabbit.webdav.lock.Scope)
 	 */
 	public boolean hasLock(Type type, Scope scope) {
-		return resource.getIsCheckedOut() == true;
+		return resource.isCheckedOut() == true;
 	}
 
 	/**
@@ -675,7 +675,7 @@ public class DavResourceImpl implements DavResource, Serializable {
 	 * @return true if this resource cannot be modified due to a write lock
 	 */
 	private boolean isLocked(DavResource res) {
-		return (resource.getIsCheckedOut() == true);
+		return (resource.isCheckedOut() || resource.isLocked());
 	}
 
 	@Override

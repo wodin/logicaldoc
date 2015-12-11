@@ -16,7 +16,6 @@ import com.logicaldoc.webdav.session.DavSession;
  * logicalDOC. Secure handlings will be managed through this.
  * 
  * @author Sebastian Wenzky
- * 
  */
 public interface Resource {
 
@@ -33,7 +32,7 @@ public interface Resource {
 	public void setName(String name);
 
 	public boolean isFolder();
-	
+
 	public boolean isWorkspace();
 
 	public boolean isLocked();
@@ -58,10 +57,10 @@ public interface Resource {
 
 	public void setAddChildEnabled(boolean renameEnabled);
 
-	public void isLocked(boolean isLocked);
+	public void setLocked(boolean locked);
 
 	public void isFolder(boolean isFolder);
-	
+
 	public void isWorkspace(boolean isWorkspace);
 
 	public String getPath();
@@ -76,9 +75,9 @@ public interface Resource {
 
 	public long getRequestedPerson();
 
-	public boolean getIsCheckedOut();
+	public boolean isCheckedOut();
 
-	public void setIsCheckedOut(boolean isCheckedOut);
+	public void setCheckedOut(boolean checkedOut);
 
 	public void setVersionLabel(String versionLabel);
 
@@ -115,4 +114,8 @@ public interface Resource {
 	public void setFolderID(String folderID);
 
 	public String getFolderID();
+
+	public String getLockUser();
+
+	public void setLockUser(String lockUser);
 }

@@ -116,7 +116,7 @@ public class UploadServlet extends UploadAction {
 						receivedFileNames.put(item.getFieldName(),
 								URLDecoder.decode(FilenameUtils.getName(item.getName()), "UTF-8"));
 					} catch (Throwable e) {
-						e.printStackTrace();
+						log.warn(e.getMessage(), e);
 						throw new UploadActionException(e.getMessage());
 					} finally {
 						if (os != null) {
@@ -132,6 +132,7 @@ public class UploadServlet extends UploadAction {
 			}
 			removeSessionFileItems(request);
 		} catch (UploadActionException e) {
+			log.error(e.getMessage(), e);
 			removeSessionFileItems(request);
 			throw e;
 		} catch (Throwable t) {
