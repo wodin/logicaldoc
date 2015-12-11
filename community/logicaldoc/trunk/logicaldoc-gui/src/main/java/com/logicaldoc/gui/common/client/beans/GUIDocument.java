@@ -69,6 +69,8 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private String icon = "generic";
 
 	private Long lockUserId;
+	
+	private String lockUser;
 
 	private int status = 0;
 
@@ -544,5 +546,13 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	public void setFormId(Long formId) {
 		this.formId = formId;
+	}
+
+	public String getLockUser() {
+		return lockUser;
+	}
+
+	public void setLockUser(String lockUser) {
+		this.lockUser = lockUser;
 	}
 }

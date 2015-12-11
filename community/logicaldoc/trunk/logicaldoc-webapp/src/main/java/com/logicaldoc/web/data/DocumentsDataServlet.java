@@ -213,7 +213,7 @@ public class DocumentsDataServlet extends HttpServlet {
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
 								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
 								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, A.source, A.sourceId, A.recipient,"
-								+ " A.object, A.coverage, B.name, A.docRefType, A.stamped"
+								+ " A.object, A.coverage, B.name, A.docRefType, A.stamped, A.lockUser"
 								+ " from Document as A left outer join A.template as B ");
 				query.append(" where A.deleted = 0 and not A.status=" + AbstractDocument.DOC_ARCHIVED);
 				if (folderId != null)
@@ -290,6 +290,7 @@ public class DocumentsDataServlet extends HttpServlet {
 							doc.setCoverage((String) cols[33]);
 							doc.setTemplateName((String) cols[34]);
 							doc.setStamped((Integer) cols[36]);
+							doc.setLockUser((String) cols[37]);
 						}
 					}
 
@@ -339,6 +340,8 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<locked>blank</locked>");
 					if (doc.getLockUserId() != null)
 						writer.print("<lockUserId>" + doc.getLockUserId() + "</lockUserId>");
+					if (doc.getLockUser() != null)
+						writer.print("<lockUser><![CDATA[" + doc.getLockUser() + "]]></lockUser>");
 					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
 					writer.print("<type><![CDATA[" + doc.getType() + "]]></type>");
 					writer.print("<status>" + doc.getStatus() + "</status>");
