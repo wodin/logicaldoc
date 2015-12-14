@@ -49,10 +49,11 @@ public class ClipboardWindow extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, trash, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("clipboard"));
+		setWidth(255);
+		setHeight(200);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
-		setAutoSize(true);
 		centerInPage();
 
 		grid = new ListGrid();
