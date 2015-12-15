@@ -96,9 +96,9 @@ public class UsersDataServlet extends HttpServlet {
 							+ "]]></cell>");
 					writer.print("<certSubject><![CDATA["
 							+ (user.getCertSubject() == null ? "" : user.getCertSubject()) + "]]></certSubject>");
-					writer.print("<keyDigest>" + (user.getKeyDigest() == null ? "" : user.getKeyDigest())
-							+ "</keyDigest>");
-					writer.print("<usergroup>" + user.getUserGroup().getId() + "</usergroup>");
+					writer.print("<keyDigest><![CDATA[" + (user.getKeyDigest() == null ? "" : user.getKeyDigest())
+							+ "]]></keyDigest>");
+					writer.print("<usergroup><![CDATA[" + user.getUserGroup().getId() + "]]></usergroup>");
 					writer.print("</user>");
 				}
 			} else {
@@ -157,7 +157,7 @@ public class UsersDataServlet extends HttpServlet {
 							+ (user.getCertSubject() == null ? "" : user.getCertSubject()) + "]]></certSubject>");
 					writer.print("<keyDigest><![CDATA[" + (user.getKeyDigest() == null ? "" : user.getKeyDigest())
 							+ "]]></keyDigest>");
-					writer.print("<usergroup>" + user.getGroups().iterator().next().getId() + "</usergroup>");
+					writer.print("<usergroup><![CDATA[" + user.getGroups().iterator().next().getId() + "]]></usergroup>");
 					writer.print("</user>");
 				}
 			}
