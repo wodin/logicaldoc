@@ -148,6 +148,9 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		if (doc.getImmutable() == 1)
 			throw new Exception("The document is immutable");
 
+		if (doc.getStatus() != Document.DOC_UNLOCKED)
+			throw new Exception("The document is locked or already checked out");
+
 		checkWriteEnable(user, doc.getFolder().getId());
 		checkDownloadEnable(user, doc.getFolder().getId());
 		checkPublished(user, doc);
