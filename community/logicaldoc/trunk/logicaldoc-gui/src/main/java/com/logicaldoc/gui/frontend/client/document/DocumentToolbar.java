@@ -1,5 +1,8 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.logicaldoc.gui.common.client.Constants;
@@ -417,7 +420,13 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (grid.getSelectedCount() == 0)
 					return;
 
-				BulkCheckoutDialog dialog = new BulkCheckoutDialog(grid.getSelectedIds());
+				GUIDocument docs[] = grid.getSelectedDocuments();
+				List<Long> unlockedIds = new ArrayList<Long>();
+				for (GUIDocument doc : docs)
+					if (doc.getStatus() == 0 && doc.getImmutable() == 0)
+						unlockedIds.add(doc.getId());
+
+				BulkCheckoutDialog dialog = new BulkCheckoutDialog(Util.toPrimitives(unlockedIds.toArray(new Long[0])));
 				dialog.show();
 			}
 		});

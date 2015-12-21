@@ -781,4 +781,12 @@ public class Util {
 					return param.getValue();
 		return null;
 	}
+	
+	public static long[] toPrimitives(Long[] objects) {
+	    long[] primitives = new long[objects.length];
+	    for (int i = 0; i < objects.length; i++)
+	         primitives[i] = objects[i];
+
+	    return primitives;
+	}
 }

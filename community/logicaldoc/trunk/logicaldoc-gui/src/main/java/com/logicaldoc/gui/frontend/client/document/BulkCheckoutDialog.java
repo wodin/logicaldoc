@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.document;
 
+import java.util.Date;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
@@ -46,14 +48,16 @@ public class BulkCheckoutDialog extends Window {
 			docIdsStr += id;
 		}
 
-		String tmp = "<applet name=\"CheckinApplet\" archive=\""
-				+ Util.contextPath()
-				+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.checkin.CheckinApplet\" width=\""
-				+ (getWidth() - 10) + "\" height=\"" + (getHeight() - 35) + "\">";
+		long random = new Date().getTime();
+		String tmp = "<applet name=\"CheckinApplet\" archive=\"" + Util.contextPath()
+				+ "applet/logicaldoc-enterprise-core.jar?&random=" + random
+				+ "\"  code=\"com.logicaldoc.enterprise.checkin.CheckinApplet\" width=\"" + (getWidth() - 10)
+				+ "\" height=\"" + (getHeight() - 35) + "\">";
 		tmp += "<param name=\"language\" value=\"" + I18N.getLocale() + "\" />";
 		tmp += "<param name=\"sid\" value=\"" + Session.get().getSid() + "\" />";
 		tmp += "<param name=\"baseUrl\" value=\"" + Util.contextPath() + "\" />";
 		tmp += "<param name=\"documents\" value=\"" + docIdsStr + "\" />";
+		tmp += "<param name=\"random\" value=\"" + random + "\" />";
 		tmp += "</applet>";
 
 		applet.setContents(tmp);
