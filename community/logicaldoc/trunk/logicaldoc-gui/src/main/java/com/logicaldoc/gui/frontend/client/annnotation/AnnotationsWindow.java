@@ -24,6 +24,7 @@ import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.HTMLPane;
@@ -113,9 +114,7 @@ public class AnnotationsWindow extends Window {
 		addAnnotation.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				final AnnotationEditor editor = new AnnotationEditor(docId, null, null, AnnotationsWindow.this, null,
-						getSelectedText(), page);
-				editor.show();
+				addTempAnnotationToHTML();
 			}
 		});
 
@@ -133,18 +132,17 @@ public class AnnotationsWindow extends Window {
 		});
 
 		toolStrip.addFormItem(pageCursor);
-		toolStrip.addSeparator();
-		toolStrip.addButton(addAnnotation);
+
+		if (!SC.isIE()) {
+			toolStrip.addSeparator();
+			toolStrip.addButton(addAnnotation);
+		}
 
 		contentPane = new HTMLPane();
 		contentPane.setWidth100();
 		contentPane.setHeight(getHeight() - 80);
 		contentPane.setShowEdges(false);
 		contentPane.setContentsType(ContentsType.PAGE);
-		NumberFormat nb = NumberFormat.getFormat("0000");
-		contentPane.setContents("<iframe id='ann-content-panel' src='"
-				+ Util.downloadURL(docId, null, nb.format(1) + "-conversion.html", true)
-				+ "' style='width:100%;height:100%;border:none'/>");
 
 		pageContent = new VLayout();
 		pageContent.setHeight100();
@@ -176,9 +174,18 @@ public class AnnotationsWindow extends Window {
 		contentPane.setShowEdges(false);
 		contentPane.setContentsType(ContentsType.PAGE);
 		NumberFormat nb = NumberFormat.getFormat("0000");
-		contentPane.setContents("<iframe id='ann-content-panel' src='"
+
+		String contents = "<iframe id='ann-content-panel' src='"
 				+ Util.downloadURL(docId, null, nb.format(page) + "-conversion.html", true)
-				+ "' style='width:100%;height:100%;border:none'/>");
+				+ "' style='width:100%;height:100%;border:none'/>";
+		if (SC.isIE()) {
+			// In case of IE, add the Add Annotation button directly in the HTML
+			// contents
+			contents = "<button type='button' onclick='onAddAnnotation();' style='margin-top: 5px'>"
+					+ I18N.message("addannotation") + "</button><hr />" + contents;
+		}
+
+		contentPane.setContents(contents);
 		pageContent.addMember(contentPane);
 
 		if (notesGrid != null)
@@ -347,7 +354,13 @@ public class AnnotationsWindow extends Window {
 		notesGrid.collapseRecord(record);
 		notesGrid.expandRecord(record);
 	}
-	
+
+	public void onAddAnnotation() {
+		final AnnotationEditor editor = new AnnotationEditor(docId, null, null, AnnotationsWindow.this, null,
+				getSelectedText(), page);
+		editor.show();
+	}
+
 	public void onMouseOverAnnotation(String annotationId) {
 		handlingOnOver = true;
 		try {
@@ -365,10 +378,31 @@ public class AnnotationsWindow extends Window {
 		}
 	}
 
+	/**
+	 * Applies the annotation to the current selection
+	 * 
+	 * @param annotationId
+	 */
+	public native void addTempAnnotationToHTML()/*-{
+		$wnd.onAddAnnotation();
+	}-*/;
+
 	/*****************************************************************
 	 * Mini JavaScript API to handle annotations in the content pane *
 	 *****************************************************************/
 	public static native void declareAPI(AnnotationsWindow annWindow)/*-{
+
+		$wnd.onAddAnnotation = function() {
+			var userSelection = $wnd.annGetContent().getSelection().getRangeAt(
+					0);
+			var safeRanges = $wnd.annGetSafeRanges(userSelection);
+
+			for (var i = 0; i < safeRanges.length; i++) {
+				$wnd.annAddAnnotationInRange(safeRanges[i], 'newannotationid');
+			}
+
+			annWindow.@com.logicaldoc.gui.frontend.client.annnotation.AnnotationsWindow::onAddAnnotation()();
+		};
 
 		$wnd.onMouseOverAnnotation = function(annotationId) {
 			annWindow.@com.logicaldoc.gui.frontend.client.annnotation.AnnotationsWindow::onMouseOverAnnotation(Ljava/lang/String;)(annotationId);
@@ -474,7 +508,7 @@ public class AnnotationsWindow extends Window {
 		}
 
 		$wnd.annAddAnnotationInRange = function annAddAnnotationInRange(range,
-				annotationId, text) {
+				annotationId) {
 			$wnd.annRemoveAllHighlights();
 			var newNode = $wnd.annGetContent().document.createElement("span");
 			newNode.className = 'ann-highlight';
@@ -485,7 +519,7 @@ public class AnnotationsWindow extends Window {
 			range.surroundContents(newNode);
 		}
 
-		$wnd.annRemoveAnnotation = function removeAnnotation(annotationId) {
+		$wnd.annRemoveAnnotation = function annRemoveAnnotation(annotationId) {
 			$wnd.annRemoveAllHighlights();
 
 			var allElements = $wnd.annGetContent().document
@@ -509,6 +543,25 @@ public class AnnotationsWindow extends Window {
 					$wnd.annRemoveAnnotation(annotationId);
 			}
 		}
+
+		$wnd.annUpdateAnnotation = function annUpdateAnnotation(annotationId,
+				newAnnotationId) {
+			$wnd.annRemoveAllHighlights();
+			var allElements = $wnd.annGetContent().document
+					.getElementsByTagName('span');
+
+			for (var i = 0; i < allElements.length; i++) {
+				var spanElement = allElements[i];
+				var annId = spanElement.getAttribute("annotationid");
+				if (annId != null && annId == annotationId) {
+					spanElement.setAttribute("annotationid", newAnnotationId);
+					spanElement.setAttribute("onmouseover",
+							"window.parent.onMouseOverAnnotation('"
+									+ newAnnotationId + "');");
+				}
+			}
+		}
+
 	}-*/;
 
 	public native void highlightAnnotation(String annotationId)/*-{

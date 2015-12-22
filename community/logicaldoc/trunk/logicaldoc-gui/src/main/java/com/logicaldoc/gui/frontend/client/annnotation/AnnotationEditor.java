@@ -63,6 +63,10 @@ public class AnnotationEditor extends Window {
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
 			public void onCloseClick(CloseClickEvent event) {
+				try {
+					removeTempAnnotationFromHTML();
+				} catch (Throwable t) {
+				}
 				destroy();
 			}
 		});
@@ -110,34 +114,46 @@ public class AnnotationEditor extends Window {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
+						
+						try {
+							removeTempAnnotationFromHTML();
+						} catch (Throwable t) {
+						}
+						
 						destroy();
 					}
 
 					@Override
 					public void onSuccess(Long noteId) {
 						try {
-							addAnnotationToHTML("" + noteId, message.getValue().toString());
+							updateTempAnnotationToHTML("" + noteId);
 						} catch (Throwable t) {
 						}
-
+						
 						annotationsService.savePage(Session.get().getSid(), docId, page, getPageContent(),
 								new AsyncCallback<Void>() {
 
 									@Override
 									public void onFailure(Throwable caught) {
 										Log.serverError(caught);
+										
+										try {
+											removeTempAnnotationFromHTML();
+										} catch (Throwable t) {
+										}
+										
 										destroy();
 									}
 
 									@Override
 									public void onSuccess(Void arg) {
-										destroy();
 										annotationsWindow.showPage(page);
+										destroy();
 									}
 								});
 					}
 				});
-			}else{
+			} else {
 				documentService.updateNote(Session.get().getSid(), docId, noteId, message.getValue().toString(),
 						new AsyncCallback<Void>() {
 
@@ -193,18 +209,19 @@ public class AnnotationEditor extends Window {
 	}
 
 	/**
-	 * Applies the annotation to the current selection
+	 * Updates the annotation to the current selection
 	 * 
 	 * @param annotationId
-	 * @param text
 	 */
-	public native void addAnnotationToHTML(String annotationId, String text)/*-{
-		var userSelection = $wnd.annGetContent().getSelection().getRangeAt(0);
-		var safeRanges = $wnd.annGetSafeRanges(userSelection);
+	public native void updateTempAnnotationToHTML(String annotationId)/*-{
+		$wnd.annUpdateAnnotation("newannotationid", annotationId);
+	}-*/;
 
-		for (var i = 0; i < safeRanges.length; i++) {
-			$wnd.annAddAnnotationInRange(safeRanges[i], annotationId, text);
-		}
+	/**
+	 * Removes the temporary annotation from the content
+	 */
+	public native void removeTempAnnotationFromHTML()/*-{
+		$wnd.annRemoveAnnotation("newannotationid");
 	}-*/;
 
 	/**
