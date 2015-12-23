@@ -182,6 +182,7 @@ public class WorkflowDetailsDialog extends Window {
 				"<b>" + I18N.message("workflow") + "</b>");
 		workflowTitle.setShouldSaveValue(false);
 		workflowTitle.setWrapTitle(false);
+		workflowTitle.setShowTitle(false);
 
 		StaticTextItem workflowName = ItemFactory.newStaticTextItem("workflowName", I18N.message("name"),
 				workflow.getName());
@@ -209,6 +210,7 @@ public class WorkflowDetailsDialog extends Window {
 		StaticTextItem taskTitle = ItemFactory
 				.newStaticTextItem("taskTitle", "", "<b>" + I18N.message("task") + "</b>");
 		taskTitle.setWrapTitle(false);
+		taskTitle.setShowTitle(false);
 
 		StaticTextItem taskId = ItemFactory.newStaticTextItem("taskId", I18N.message("id"), workflow.getSelectedTask()
 				.getId());
