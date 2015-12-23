@@ -107,6 +107,8 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 					cursor.setMessage(I18N.message("showndocuments", Integer.toString(getCount())));
 					cursor.setTotalRecords(totalRecords);
 				}
+				
+				sortByProperty("filename", true);
 			}
 		});
 	}
