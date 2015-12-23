@@ -20,6 +20,8 @@ import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.DateItem;
@@ -51,12 +53,45 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 	private GUIExtendedAttribute[] currentExtAttributes = null;
 
+	private List<FormItem> standardItems = new ArrayList<FormItem>();
+
+	private SelectItem templateItem = null;
+
+	private List<FormItem> extendedItems = new ArrayList<FormItem>();
+
 	public ExtendedPropertiesPanel(GUIDocument document, ChangedHandler changedHandler) {
 		super(document, changedHandler, null);
 		setWidth100();
 		setHeight100();
 		setMembersMargin(20);
 		refresh();
+
+		addResizedHandler(new ResizedHandler() {
+
+			@Override
+			public void onResized(ResizedEvent event) {
+				adaptForms();
+			}
+		});
+	}
+
+	private void adaptForms() {
+		if (templateItem.getValue() != null) {
+			int maxExtCols = ((int) getWidth() - 500) / 160; // 160 = length of
+																// an item
+			int maxExtRows = (int) getHeight() / 46; // 46 = height of an item
+			if (maxExtRows < 3)
+				maxExtCols = 3;
+			
+			if (extendedItems != null) {
+				maxExtCols = extendedItems.size() / maxExtRows;
+			}
+
+			if (maxExtCols < 2)
+				maxExtCols = 2;
+
+			form2.setNumCols(maxExtCols);
+		}
 	}
 
 	private GUIExtendedAttribute getExtendedAttribute(String name) {
@@ -70,6 +105,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	private void refresh() {
 		vm.clearValues();
 		vm.clearErrors(false);
+		extendedItems.clear();
 
 		if (form1 != null)
 			form1.destroy();
@@ -80,7 +116,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
 		form1.setNumCols(3);
-		List<FormItem> items = new ArrayList<FormItem>();
+		standardItems.clear();
 
 		TextItem sourceItem = ItemFactory.newTextItem("source", "source", document.getSource());
 		sourceItem.addChangedHandler(changedHandler);
@@ -134,7 +170,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		coverageItem.addChangedHandler(changedHandler);
 		coverageItem.setDisabled(!updateEnabled);
 
-		final SelectItem templateItem = ItemFactory.newTemplateSelector(true, null);
+		templateItem = ItemFactory.newTemplateSelector(true, null);
 		templateItem.addChangedHandler(changedHandler);
 		templateItem.setMultiple(false);
 		templateItem.setDisabled(!updateEnabled || document.getFolder().getTemplateLocked() == 1);
@@ -154,24 +190,27 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			}
 		});
 
-		items.add(customId);
-		items.add(sourceItem);
-		items.add(sourceId);
-		items.add(recipientItem);
-		items.add(objectItem);
-		items.add(typeItem);
-		items.add(coverageItem);
-		items.add(sourceDate);
+		standardItems.add(customId);
+		standardItems.add(sourceItem);
+
 		if (Feature.visible(Feature.TEMPLATE)) {
-			items.add(templateItem);
+			standardItems.add(templateItem);
+
 			if (!Feature.enabled(Feature.TEMPLATE)) {
 				templateItem.setDisabled(true);
 				templateItem.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
-		items.add(authorItem);
-		form1.setItems(items.toArray(new FormItem[0]));
+		standardItems.add(sourceId);
+		standardItems.add(recipientItem);
+		standardItems.add(objectItem);
+		standardItems.add(typeItem);
+		standardItems.add(coverageItem);
+		standardItems.add(sourceDate);
+
+		standardItems.add(authorItem);
+		form1.setItems(standardItems.toArray(new FormItem[0]));
 		addMember(form1);
 
 		if (Feature.enabled(Feature.TEMPLATE))
@@ -191,7 +230,6 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form2.setTitleOrientation(TitleOrientation.TOP);
 		form2.clearValues();
 		form2.clear();
-		form2.setWidth100();
 		addMember(form2);
 
 		if (templateId == null)
@@ -206,7 +244,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			@Override
 			public void onSuccess(GUIExtendedAttribute[] result) {
 				currentExtAttributes = result;
-				List<FormItem> items = new ArrayList<FormItem>();
+				extendedItems.clear();
 				for (GUIExtendedAttribute att : result) {
 					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
 						FormItem item = ItemFactory.newStringItemForExtendedAttribute(templateId, att);
@@ -214,7 +252,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							item.setValue((String) document.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
-						items.add(item);
+						extendedItems.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
 						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(),
 								att.getLabel(), null);
@@ -223,7 +261,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
-						items.add(item);
+						extendedItems.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
 						SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(),
 								att.getLabel(), !att.isMandatory());
@@ -232,7 +270,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
-						items.add(item);
+						extendedItems.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
 						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
 								null);
@@ -241,7 +279,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
-						items.add(item);
+						extendedItems.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
 						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
 						if (document.getValue(att.getName()) != null)
@@ -262,7 +300,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							}
 						});
 						item.setDisabled(!updateEnabled);
-						items.add(item);
+						extendedItems.add(item);
 					} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
 						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(),
 								att.getLabel(),
@@ -272,10 +310,10 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
-						items.add(item);
+						extendedItems.add(item);
 					}
 				}
-				form2.setItems(items.toArray(new FormItem[0]));
+				form2.setItems(extendedItems.toArray(new FormItem[0]));
 			}
 		});
 	}
