@@ -220,6 +220,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		session.setInfo(info);
 
 		guiUser.setName(user.getName());
+		guiUser.setEmail(user.getEmail());
+		guiUser.setEmailSignature(user.getEmailSignature());
+		
 
 		GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
 		int i = 0;
@@ -471,6 +474,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				usr.setWelcomeScreen(user.getWelcomeScreen());
 				usr.setIpWhitelist(user.getIpWhiteList());
 				usr.setIpBlacklist(user.getIpBlackList());
+				usr.setEmailSignature(user.getEmailSignature());
 
 				GUIGroup[] grps = new GUIGroup[user.getGroups().size()];
 				int i = 0;
@@ -601,6 +605,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setWelcomeScreen(user.getWelcomeScreen());
 			usr.setIpWhiteList(user.getIpWhitelist());
 			usr.setIpBlackList(user.getIpBlacklist());
+			usr.setEmailSignature(user.getEmailSignature());
 
 			usr.setQuota(user.getQuota());
 
@@ -728,6 +733,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setTelephone(user.getPhone());
 			usr.setTelephone2(user.getCell());
 			usr.setWelcomeScreen(user.getWelcomeScreen());
+			usr.setEmailSignature(user.getEmailSignature());
 
 			userDao.store(usr);
 		} catch (Throwable t) {

@@ -94,6 +94,10 @@ public class Session {
 		return session.getUser();
 	}
 
+	public void setUser(GUIUser user) {
+		session.setUser(user);
+	}
+
 	public void init(final GUISession session) {
 
 		// Retrieve again the Info from the server (may be it is enriched by the

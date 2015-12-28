@@ -2,6 +2,7 @@ package com.logicaldoc.gui.common.client.widgets;
 
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.VerticalAlignment;
@@ -58,7 +59,11 @@ public class SessionTimeout extends Dialog {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				Session.get().logout();
+				try {
+					Session.get().logout();
+				} catch (Throwable t) {
+					WindowUtils.reload();
+				}
 			}
 		});
 

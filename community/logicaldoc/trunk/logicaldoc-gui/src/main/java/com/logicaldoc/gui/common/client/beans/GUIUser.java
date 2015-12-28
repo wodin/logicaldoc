@@ -64,6 +64,8 @@ public class GUIUser implements Serializable {
 	private String phone = "";
 
 	private String email = "";
+	
+	private String emailSignature = null;
 
 	private String cell = "";
 
@@ -496,5 +498,13 @@ public class GUIUser implements Serializable {
 
 	public void setKeyDigest(String keyDigest) {
 		this.keyDigest = keyDigest;
+	}
+
+	public String getEmailSignature() {
+		return emailSignature;
+	}
+
+	public void setEmailSignature(String emailSignature) {
+		this.emailSignature = emailSignature;
 	}
 }
