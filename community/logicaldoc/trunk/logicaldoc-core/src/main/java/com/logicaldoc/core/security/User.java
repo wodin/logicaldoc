@@ -59,6 +59,8 @@ public class User extends PersistentObject implements Serializable {
 	private String language = "";
 
 	private String email = "";
+	
+	private String emailSignature;
 
 	private String telephone = "";
 
@@ -488,5 +490,13 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setCertDigest(String certDigest) {
 		this.certDigest = certDigest;
+	}
+
+	public String getEmailSignature() {
+		return emailSignature;
+	}
+
+	public void setEmailSignature(String emailSignature) {
+		this.emailSignature = emailSignature;
 	}
 }

@@ -56,6 +56,8 @@ public class WSUser {
 
 	private String email = "";
 
+	private String emailSignature;
+
 	private String telephone = "";
 
 	private String telephone2 = "";
@@ -330,6 +332,7 @@ public class WSUser {
 			user.setSource(getSource());
 			user.setPassword(getPassword());
 			user.setPasswordChanged(new Date());
+			user.setEmailSignature(getEmailSignature());
 
 			if (getGroupIds().length > 0) {
 				GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
@@ -375,6 +378,7 @@ public class WSUser {
 			wsUser.setPasswordmd4(user.getPasswordmd4());
 			wsUser.setPasswordChanged(AbstractService.convertDateToString(user.getPasswordChanged()));
 			wsUser.setLastModified(AbstractService.convertDateToString(user.getLastModified()));
+			wsUser.setEmailSignature(user.getEmailSignature());
 
 			if (user.getGroups() != null && user.getGroups().size() > 0) {
 				long[] groupIds = new long[user.getGroups().size()];
@@ -400,5 +404,13 @@ public class WSUser {
 
 	public void setPasswordmd4(String passwordmd4) {
 		this.passwordmd4 = passwordmd4;
+	}
+
+	public String getEmailSignature() {
+		return emailSignature;
+	}
+
+	public void setEmailSignature(String emailSignature) {
+		this.emailSignature = emailSignature;
 	}
 }

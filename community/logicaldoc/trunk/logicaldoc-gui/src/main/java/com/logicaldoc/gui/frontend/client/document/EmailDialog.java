@@ -20,12 +20,14 @@ import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.RichTextItem;
@@ -33,8 +35,6 @@ import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.CellFormatter;
@@ -45,6 +45,7 @@ import com.smartgwt.client.widgets.grid.events.EditCompleteEvent;
 import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.grid.events.EditorExitEvent;
 import com.smartgwt.client.widgets.grid.events.EditorExitHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
 
@@ -77,7 +78,7 @@ public class EmailDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("sendmail"));
 		setWidth(550);
-		setHeight(500);
+		setHeight(550);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -91,6 +92,7 @@ public class EmailDialog extends Window {
 		form.setID("emailform");
 		form.setValuesManager(vm);
 		form.setWidth100();
+		form.setHeight100();
 		form.setMargin(5);
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
@@ -102,9 +104,11 @@ public class EmailDialog extends Window {
 		final RichTextItem message = new RichTextItem();
 		message.setName("message");
 		message.setTitle(I18N.message("message"));
-		message.setValue("");
 		message.setWidth("*");
 		message.setHeight("*");
+
+		if (Session.get().getUser().getEmailSignature() != null)
+			message.setValue("<br><br>" + Session.get().getUser().getEmailSignature());
 
 		final CheckboxItem pdf = new CheckboxItem("pdf");
 		pdf.setTitle(I18N.message("sendpdfconversion"));
@@ -129,10 +133,18 @@ public class EmailDialog extends Window {
 		zip.setName("zip");
 		zip.setTitle(I18N.message("zipattachments"));
 
-		final ButtonItem sendItem = new ButtonItem();
-		sendItem.setTitle(I18N.message("send"));
-		sendItem.setAutoFit(true);
-		sendItem.addClickHandler(new ClickHandler() {
+		// The download ticket is available on single selection only
+		if (docIds.length == 1)
+			form.setFields(subject, ticket, pdf, message);
+		else
+			form.setFields(subject, zip, pdf, message);
+
+		final IButton send = new IButton();
+		send.setTitle(I18N.message("send"));
+		send.setAutoFit(true);
+		send.setMargin(3);
+		send.setHeight(30);
+		send.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();
 				if (!vm.hasErrors()) {
@@ -165,7 +177,7 @@ public class EmailDialog extends Window {
 						return;
 					}
 
-					sendItem.disable();
+					send.disable();
 
 					mail.setRecipients(to.toString().substring(1, to.toString().length() - 1));
 					mail.setCc(cc.toString().substring(1, cc.toString().length() - 1));
@@ -178,14 +190,14 @@ public class EmailDialog extends Window {
 								public void onFailure(Throwable caught) {
 									ContactingServer.get().hide();
 									Log.serverError(caught);
-									sendItem.enable();
+									send.enable();
 									destroy();
 								}
 
 								@Override
 								public void onSuccess(String result) {
 									ContactingServer.get().hide();
-									sendItem.enable();
+									send.enable();
 									if ("ok".equals(result)) {
 										EventPanel.get().info(
 												I18N.message("messagesent") + ". " + I18N.message("documentcopysent"),
@@ -200,14 +212,12 @@ public class EmailDialog extends Window {
 			}
 		});
 
-		// The download ticket is available on single selection only
-		if (docIds.length == 1)
-			form.setFields(subject, ticket, pdf, message, sendItem);
-		else
-			form.setFields(subject, zip, pdf, message, sendItem);
+		HLayout buttons = new HLayout();
+		buttons.setMembers(send);
 
 		addItem(recipientsStack);
 		addItem(form);
+		addItem(buttons);
 	}
 
 	private SectionStack prepareRecipientsGrid() {

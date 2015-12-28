@@ -12,15 +12,19 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.ButtonItem;
+import com.smartgwt.client.widgets.form.fields.RichTextItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.tab.Tab;
+import com.smartgwt.client.widgets.tab.TabSet;
 
 /**
  * This is the form used to change file data of the current user.
@@ -32,33 +36,33 @@ public class Profile extends Window {
 
 	private SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
+	private ValuesManager vm = new ValuesManager();
+
 	public Profile(final GUIUser user) {
 		super();
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("profile"));
-		setWidth(450);
-		setHeight(270);
+		setWidth(550);
+		setHeight(300);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
 		setMembersMargin(5);
-		setAutoSize(true);
+		setCanDragResize(true);
 
-		final ValuesManager vm = new ValuesManager();
-		final DynamicForm form = new DynamicForm();
-		form.setValuesManager(vm);
-		form.setMargin(5);
-		form.setNumCols(3);
-		form.setTitleOrientation(TitleOrientation.TOP);
+		final DynamicForm detailsForm = new DynamicForm();
+		detailsForm.setHeight100();
+		detailsForm.setValuesManager(vm);
+		detailsForm.setMargin(5);
+		detailsForm.setNumCols(3);
+		detailsForm.setTitleOrientation(TitleOrientation.TOP);
 
 		TextItem firstName = ItemFactory.newTextItem("firstname", "firstname", user.getFirstName());
 		firstName.setRequired(true);
 		TextItem lastName = ItemFactory.newTextItem("lastname", "lastname", user.getName());
 		lastName.setRequired(true);
-		TextItem email = ItemFactory.newEmailItem("email", "email", false);
-		email.setRequired(true);
-		email.setValue(user.getEmail());
+
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, true);
 		language.setValue(user.getLanguage());
 		language.setDisabled(Session.get().isDemo() && Session.get().getUser().getId() == 1);
@@ -71,22 +75,61 @@ public class Profile extends Window {
 		TextItem cell = ItemFactory.newTextItem("cell", "cell", user.getCell());
 		SelectItem welcomeScreen = ItemFactory.newWelcomeScreenSelector("welcomescreen", user.getWelcomeScreen());
 
-		StaticTextItem quota = ItemFactory.newStaticTextItem("quota", "maxquota",
-				Util.formatSizeW7(user.getQuota()));
+		StaticTextItem quota = ItemFactory.newStaticTextItem("quota", "maxquota", Util.formatSizeW7(user.getQuota()));
 		quota.setWrap(false);
 
 		StaticTextItem quotaCount = ItemFactory.newStaticTextItem("quotaCount", "quota",
 				Util.formatSizeW7(user.getQuotaCount()));
 		quotaCount.setWrap(false);
 
-		ButtonItem apply = new ButtonItem();
+		detailsForm.setFields(firstName, lastName, language, address, postalCode, city, country, state, phone, cell,
+				welcomeScreen, quotaCount, quota);
+
+		final DynamicForm emailForm = new DynamicForm();
+		emailForm.setHeight100();
+		emailForm.setValuesManager(vm);
+		emailForm.setMargin(5);
+		emailForm.setTitleOrientation(TitleOrientation.TOP);
+
+		TextItem email = ItemFactory.newEmailItem("email", "email", false);
+		email.setRequired(true);
+		email.setWidth(300);
+		email.setValue(user.getEmail());
+
+		RichTextItem signature = new RichTextItem();
+		signature.setName("signature");
+		signature.setTitle(I18N.message("signature"));
+		signature.setShowTitle(true);
+		signature.setValue(user.getEmailSignature());
+		signature.setWidth("*");
+		signature.setHeight("*");
+
+		emailForm.setFields(email, signature);
+
+		final TabSet tabs = new TabSet();
+		tabs.setHeight100();
+		tabs.setWidth100();
+		Tab detailsTab = new Tab(I18N.message("details"));
+		detailsTab.setPane(detailsForm);
+		Tab emailTab = new Tab(I18N.message("email"));
+		emailTab.setPane(emailForm);
+		tabs.setTabs(detailsTab, emailTab);
+
+		IButton apply = new IButton();
 		apply.setTitle(I18N.message("apply"));
 		apply.setAutoFit(true);
+		apply.setMargin(3);
+		apply.setHeight(30);
 		apply.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				vm.validate();
-				if (!vm.hasErrors()) {
 
+				if (!detailsForm.validate())
+					tabs.selectTab(0);
+				else
+					tabs.selectTab(1);
+
+				if (!vm.hasErrors()) {
 					GUIUser u = new GUIUser();
 					u.setId(user.getId());
 					u.setFirstName(vm.getValueAsString("firstname"));
@@ -101,6 +144,7 @@ public class Profile extends Window {
 					u.setPhone(vm.getValueAsString("phone"));
 					u.setCell(vm.getValueAsString("cell"));
 					u.setWelcomeScreen(new Integer(vm.getValueAsString("welcomescreen")));
+					u.setEmailSignature(vm.getValueAsString("signature"));
 
 					securityService.saveProfile(Session.get().getSid(), u, new AsyncCallback<GUIUser>() {
 						@Override
@@ -114,6 +158,7 @@ public class Profile extends Window {
 							user.setFirstName(ret.getFirstName());
 							user.setName(ret.getName());
 							user.setEmail(ret.getEmail());
+							user.setEmailSignature(ret.getEmailSignature());
 							user.setLanguage(ret.getLanguage());
 							user.setAddress(ret.getAddress());
 							user.setPostalCode(ret.getPostalCode());
@@ -124,6 +169,8 @@ public class Profile extends Window {
 							user.setCell(ret.getCell());
 							user.setWelcomeScreen(ret.getWelcomeScreen());
 
+							Session.get().setUser(user);
+							
 							Profile.this.destroy();
 						}
 					});
@@ -131,9 +178,10 @@ public class Profile extends Window {
 			}
 		});
 
-		form.setFields(firstName, lastName, email, language, address, postalCode, city, country, state, phone, cell,
-				welcomeScreen, quotaCount, quota, apply);
+		HLayout buttons = new HLayout();
+		buttons.setMembers(apply);
 
-		addItem(form);
+		addItem(tabs);
+		addItem(buttons);
 	}
 }
