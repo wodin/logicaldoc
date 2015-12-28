@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.services;
 
+import java.util.Date;
+
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.ServerException;
@@ -143,6 +145,20 @@ public interface DocumentService extends RemoteService {
 	public GUIDocument[] addDocuments(String sid, boolean importZip, boolean immediateIndexing, GUIDocument metadata)
 			throws ServerException;
 
+	/**
+	 * Create a download link for a given document
+	 * 
+	 * @param sid The session identifier
+	 * @param docId The document's ID
+	 * @param suffix The suffix to download(optional)
+	 * @param expireHours Number of hours after which the link expires
+	 *        (optional)
+	 * @param expireDate Exact expiration date (optional)
+	 * @return The created download link
+	 * @throws ServerException
+	 */
+	public String createDownloadTicket(String sid, long docId, String suffix, Integer expireHours, Date expireDate) throws ServerException;
+	
 	/**
 	 * Indexes the gien set of documents
 	 * 

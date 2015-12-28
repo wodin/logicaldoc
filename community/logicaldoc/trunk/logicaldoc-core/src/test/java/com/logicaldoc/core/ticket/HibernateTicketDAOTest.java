@@ -1,8 +1,6 @@
-package com.logicaldoc.core.document.dao;
+package com.logicaldoc.core.ticket;
 
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -11,18 +9,19 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
-import com.logicaldoc.core.document.DownloadTicket;
+import com.logicaldoc.core.ticket.Ticket;
+import com.logicaldoc.core.ticket.TicketDAO;
 
 /**
- * Test case for <code>HibernateDownloadTicketDAO</code>
+ * Test case for <code>HibernateTicketDAO</code>
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
  */
-public class HibernateDownloadTicketDAOTest extends AbstractCoreTCase {
+public class HibernateTicketDAOTest extends AbstractCoreTCase {
 
 	// Instance under test
-	private DownloadTicketDAO dao;
+	private TicketDAO dao;
 
 	@Before
 	public void setUp() throws Exception {
@@ -30,12 +29,12 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTCase {
 
 		// Retrieve the instance under test from spring context. Make sure that
 		// it is an HibernateDownaloadTicketoDAO
-		dao = (DownloadTicketDAO) context.getBean("DownloadTicketDAO");
+		dao = (TicketDAO) context.getBean("TicketDAO");
 	}
 
 	@Test
 	public void testDelete() {
-		DownloadTicket ticket = dao.findByTicketId("1");
+		Ticket ticket = dao.findByTicketId("1");
 		Assert.assertNotNull(ticket);
 		Assert.assertTrue(dao.deleteByTicketId("1"));
 		ticket = dao.findByTicketId("1");
@@ -44,7 +43,7 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testDeleteByDocId() {
-		DownloadTicket ticket = dao.findByTicketId("1");
+		Ticket ticket = dao.findByTicketId("1");
 		Assert.assertNotNull(ticket);
 		Assert.assertEquals(1, ticket.getDocId());
 		ticket = dao.findByTicketId("3");
@@ -59,18 +58,18 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
-	public void testDeleteOlder() throws ParseException {
-		List<DownloadTicket> tickets = dao.findAll();
+	public void testDeleteExpired() throws ParseException {
+		List<Ticket> tickets = dao.findAll();
 		Assert.assertEquals(3, tickets.size());
-		DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-		dao.deleteOlder(df.parse("11/12/2008"));
+
+		dao.deleteExpired();
 		tickets = dao.findAll();
-		Assert.assertEquals(1, tickets.size());
+		Assert.assertEquals(0, tickets.size());
 	}
 
 	@Test
 	public void testFindByTicketId() {
-		DownloadTicket ticket = dao.findByTicketId("1");
+		Ticket ticket = dao.findByTicketId("1");
 		Assert.assertNotNull(ticket);
 		Assert.assertEquals(1, ticket.getUserId());
 		Assert.assertEquals(1, ticket.getDocId());
@@ -81,7 +80,7 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindById() {
-		DownloadTicket ticket = dao.findById(1);
+		Ticket ticket = dao.findById(1);
 		Assert.assertNotNull(ticket);
 		Assert.assertEquals(1, ticket.getUserId());
 		Assert.assertEquals(1, ticket.getDocId());
@@ -92,13 +91,13 @@ public class HibernateDownloadTicketDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testStore() {
-		DownloadTicket ticket = new DownloadTicket();
+		Ticket ticket = new Ticket();
 		ticket.setDocId(1);
 		ticket.setUserId(3);
 		ticket.setTicketId("5");
 		dao.store(ticket);
 
-		DownloadTicket storedTicket = dao.findByTicketId("5");
+		Ticket storedTicket = dao.findByTicketId("5");
 		Assert.assertNotNull(storedTicket);
 		Assert.assertEquals(ticket, storedTicket);
 	}

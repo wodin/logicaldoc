@@ -20,6 +20,7 @@ import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentCheckin;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.document.DownloadTicketDialog;
 import com.logicaldoc.gui.frontend.client.document.EmailDialog;
 import com.logicaldoc.gui.frontend.client.document.SendToArchiveDialog;
 import com.logicaldoc.gui.frontend.client.document.StampDialog;
@@ -40,6 +41,7 @@ import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
+import com.smartgwt.client.widgets.menu.events.ClickHandler;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
@@ -613,6 +615,18 @@ public class ContextMenu extends Menu {
 		});
 		preview.setEnabled(selection.length == 1);
 
+		MenuItem downloadTicket = new MenuItem(I18N.message("downloadticket"));
+		downloadTicket.addClickHandler(new ClickHandler() {
+
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				GUIDocument selection = grid.getSelectedDocument();
+				DownloadTicketDialog dialog = new DownloadTicketDialog(selection);
+				dialog.show();
+			}
+		});
+		downloadTicket.setEnabled(folder.isDownload() && selection != null && selection.length == 1);
+
 		MenuItem more = new MenuItem(I18N.message("more"));
 
 		MenuItem externalCall = new MenuItem();
@@ -759,7 +773,7 @@ public class ContextMenu extends Menu {
 		addItem(more);
 
 		Menu moreMenu = new Menu();
-		moreMenu.setItems(indexSelection, markIndexable, markUnindexable, immutable);
+		moreMenu.setItems(indexSelection, markIndexable, markUnindexable, immutable, downloadTicket);
 
 		if (enableSign && Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);

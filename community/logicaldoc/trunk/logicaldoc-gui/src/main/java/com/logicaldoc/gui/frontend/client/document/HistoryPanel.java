@@ -4,8 +4,12 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.DocumentHistoryDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
+import com.smartgwt.client.util.ValueCallback;
+import com.smartgwt.client.widgets.events.DoubleClickEvent;
+import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
@@ -47,6 +51,19 @@ public class HistoryPanel extends DocumentDetailTab {
 		listGrid.setDataSource(dataSource);
 		listGrid.setFields(user, event, date, comment, version, title, path, sid);
 		addMember(listGrid);
+		
+		listGrid.addDoubleClickHandler(new DoubleClickHandler() {
+			@Override
+			public void onDoubleClick(DoubleClickEvent event) {
+				LD.askforValue(I18N.message("comment"), I18N.message("comment"),
+						listGrid.getSelectedRecord().getAttributeAsString("comment"), new ValueCallback() {
+							@Override
+							public void execute(final String value) {
+							}
+						});
+				event.cancel();
+			}
+		});
 	}
 
 	@Override

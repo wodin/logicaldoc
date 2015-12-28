@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-lazy="false">
-	<class name="com.logicaldoc.core.document.DownloadTicket" table="ld_ticket" where="ld_deleted=0">
+	<class name="com.logicaldoc.core.ticket.Ticket" table="ld_ticket" where="ld_deleted=0">
 		<cache usage="read-write" />
         <id name="id" type="long" column="ld_id" unsaved-value="0">
             <generator class="hilo" />
@@ -13,6 +13,7 @@
         <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />        
 		<property name="ticketId" type="string" column="ld_ticketid" not-null="true" />
 		<property name="docId" type="long" column="ld_docid" not-null="true" />
+        <property name="suffix" type="string" column="ld_suffix" />
 		<property name="userId" type="long" column="ld_userid" not-null="true" />
 		<property name="type" type="int" column="ld_type" not-null="true"/>
 		<property name="creation" type="timestamp" column="ld_creation" not-null="true"/>

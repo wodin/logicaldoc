@@ -791,7 +791,8 @@ public class ItemFactory {
 
 	public static SelectItem newDueTimeSelector(String name, String title) {
 		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
-		select.setWidth(110);
+		select.setWidth(90);
+		select.setShowTitle(false);
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("minute", I18N.message("minutes"));
@@ -910,7 +911,7 @@ public class ItemFactory {
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("", I18N.message("document"));
-		map.put("pdf", I18N.message("pdfconversion"));
+		map.put("conversion.pdf", I18N.message("pdfconversion"));
 
 		item.setValueMap(map);
 

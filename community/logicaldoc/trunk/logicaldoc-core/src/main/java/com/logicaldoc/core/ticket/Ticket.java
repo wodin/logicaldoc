@@ -1,16 +1,16 @@
-package com.logicaldoc.core.document;
+package com.logicaldoc.core.ticket;
 
 import java.util.Date;
 
 import com.logicaldoc.core.PersistentObject;
 
 /**
- * Represents a download ticket.
+ * Represents ticket, most of the time this is used to model download tickets.
  * 
  * @author Michael Scholz
  * @author Marco Meschieri
  */
-public class DownloadTicket extends PersistentObject {
+public class Ticket extends PersistentObject {
 
 	public static final int TICKET = 0;
 
@@ -30,7 +30,9 @@ public class DownloadTicket extends PersistentObject {
 
 	private int count = 0;
 
-	public DownloadTicket() {
+	private String suffix;
+
+	public Ticket() {
 
 	}
 
@@ -98,5 +100,13 @@ public class DownloadTicket extends PersistentObject {
 
 	public boolean isTicketExpired() {
 		return new Date().getTime() > expired.getTime();
+	}
+
+	public String getSuffix() {
+		return suffix;
+	}
+
+	public void setSuffix(String suffix) {
+		this.suffix = suffix;
 	}
 }
