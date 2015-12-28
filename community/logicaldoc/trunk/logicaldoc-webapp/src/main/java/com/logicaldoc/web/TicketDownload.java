@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,14 +19,15 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
-import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
+import com.logicaldoc.core.document.pdf.PdfConverterManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.core.ticket.Ticket;
+import com.logicaldoc.core.ticket.TicketDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.web.util.ServletIOUtil;
@@ -71,21 +73,29 @@ public class TicketDownload extends HttpServlet {
 
 		try {
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
-			DownloadTicket ticket = ticketDao.findByTicketId(ticketId);
+			TicketDAO ticketDao = (TicketDAO) Context.getInstance().getBean(TicketDAO.class);
+			PdfConverterManager converter = (PdfConverterManager) Context.getInstance().getBean(
+					PdfConverterManager.class);
+			Ticket ticket = ticketDao.findByTicketId(ticketId);
+			if (ticket == null || ticket.getDocId() == 0)
+				throw new IOException("Unexisting ticket " + ticketId);
 
-			if ((ticket != null) && (ticket.getDocId() != 0)) {
-				Document doc = docDao.findById(ticket.getDocId());
-				if (doc.getDocRef() != null)
-					doc = docDao.findById(doc.getDocRef());
+			if (ticket.getExpired() != null && ticket.getExpired().before(new Date()))
+				throw new IOException("Expired ticket " + ticketId);
 
-				if (!doc.isPublishing())
-					throw new IOException("Document not published");
+			Document doc = docDao.findById(ticket.getDocId());
+			if (doc.getDocRef() != null)
+				doc = docDao.findById(doc.getDocRef());
 
-				downloadDocument(request, response, doc, null, null, null);
-				ticket.setCount(ticket.getCount() + 1);
-				ticketDao.store(ticket);
-			}
+			if (!doc.isPublishing())
+				throw new IOException("Document not published");
+
+			if ("pdf".equals(ticket.getSuffix()))
+				converter.createPdf(doc, null, null);
+
+			downloadDocument(request, response, doc, null, ticket.getSuffix(), null);
+			ticket.setCount(ticket.getCount() + 1);
+			ticketDao.store(ticket);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
 		}
@@ -125,6 +135,8 @@ public class TicketDownload extends HttpServlet {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		String resource = storer.getResourceName(doc, fileVersion, suffix);
 		String filename = doc.getFileName();
+		if (suffix!=null && suffix.contains("pdf"))
+			filename = doc.getFileName() + ".pdf";
 
 		InputStream is = null;
 		OutputStream os = null;
@@ -154,7 +166,8 @@ public class TicketDownload extends HttpServlet {
 			if (os != null)
 				os.flush();
 			os.close();
-			is.close();
+			if (is != null)
+				is.close();
 		}
 
 		if (user != null && StringUtils.isEmpty(suffix)) {

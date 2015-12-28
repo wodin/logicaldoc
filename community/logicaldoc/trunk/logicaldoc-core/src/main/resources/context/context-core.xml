@@ -82,14 +82,15 @@
             </bean>
         </property>
     </bean>
-    <bean id="DownloadTicketDAO" abstract="false" autowire="default"
+    <bean id="TicketDAO" abstract="false" autowire="default"
         dependency-check="default" lazy-init="default" parent="ApplicationBaseTransactionProxy">
         <property name="target">
             <bean abstract="false" autowire="default"
-                class="com.logicaldoc.core.document.dao.HibernateDownloadTicketDAO"
+                class="com.logicaldoc.core.ticket.HibernateTicketDAO"
                 dependency-check="default" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
                 <property name="contextProperties" ref="ContextProperties" />
+                <property name="documentDAO" ref="DocumentDAO" />
             </bean>
         </property>
     </bean>

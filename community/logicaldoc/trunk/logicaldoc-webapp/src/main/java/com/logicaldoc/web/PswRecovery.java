@@ -20,11 +20,11 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.communication.Recipient;
-import com.logicaldoc.core.document.DownloadTicket;
-import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.ticket.Ticket;
+import com.logicaldoc.core.ticket.TicketDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.security.PasswordGenerator;
@@ -77,10 +77,10 @@ public class PswRecovery extends HttpServlet {
 		log.debug("Recover password for ticket with ticketId=" + ticketId);
 
 		try {
-			DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
-			DownloadTicket ticket = ticketDao.findByTicketId(ticketId);
+			TicketDAO ticketDao = (TicketDAO) Context.getInstance().getBean(TicketDAO.class);
+			Ticket ticket = ticketDao.findByTicketId(ticketId);
 
-			if ((ticket != null) && ticket.getType() == DownloadTicket.PSW_RECOVERY) {
+			if ((ticket != null) && ticket.getType() == Ticket.PSW_RECOVERY) {
 
 				if (ticket.isTicketExpired()) {
 					response.getWriter().println("Request not valid");

@@ -1,5 +1,7 @@
 package com.logicaldoc.webservice;
 
+import java.io.File;
+
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.webservice.auth.AuthClient;
@@ -15,7 +17,7 @@ import com.logicaldoc.webservice.security.WSUser;
 import com.logicaldoc.webservice.system.SystemClient;
 
 public class SoapWorgkbench {
-	final static String BASE = "http://localhost:9080/services";
+	final static String BASE = "http://localhost:1000/services";
 
 	public static void main(String[] args) throws Exception {
 
@@ -32,9 +34,9 @@ public class SoapWorgkbench {
 		try {
 			// securityStuff(sid);
 
-			// documentStuff(sid);
-			
-			folderStuff(sid);
+			documentStuff(sid);
+
+			// folderStuff(sid);
 
 			// searchStuff(sid);
 
@@ -131,16 +133,16 @@ public class SoapWorgkbench {
 		newFolder.setParentId(4L);
 		newFolder.setTemplateId(1L);
 		newFolder.setTemplateLocked(1);
-		
-		WSAttribute[] att=new WSAttribute[1];
-		att[0]=new WSAttribute();
+
+		WSAttribute[] att = new WSAttribute[1];
+		att[0] = new WSAttribute();
 		att[0].setName("from");
 		att[0].setType(ExtendedAttribute.TYPE_STRING);
 		att[0].setStringValue("pippo");
 		newFolder.setExtendedAttributes(att);
-		
-//		newFolder = folderClient.create(sid, newFolder);
-		
+
+		// newFolder = folderClient.create(sid, newFolder);
+
 		System.out.println(folderClient.findByPath(sid, "/Default/Kofax"));
 	}
 
@@ -340,16 +342,14 @@ public class SoapWorgkbench {
 		// + " (" + lnk.getId() + ")");
 		// }
 
-		// WSDocument wsDoc = documentClient.getDocument(sid, 1);
-		// wsDoc.setId(0);
-		// wsDoc.setTitle("document test");
-		// wsDoc.setCustomId("xxxxxxx");
-		// wsDoc.setFolderId(14L);
-		// DataHandler data = documentClient.getContent(sid, 1);
-		// File file = new
-		// File("/C:/Users/Matteo/Desktop/doctest/signdoc_en.pdf");
-		// documentClient.create(sid, wsDoc, data);
-		//
+		WSDocument wsDoc = documentClient.getDocument(sid, 639L);
+		wsDoc.setId(0);
+		wsDoc.setTitle("document test");
+		wsDoc.setCustomId("xxxxxxx");
+		wsDoc.setFolderId(4L);
+		File file = new File("/D:/tmp/abc.odt");
+		documentClient.create(sid, wsDoc, file);
+
 		// WSDocument[] docs = documentClient.list(sid, 14);
 		// for (WSDocument wsDocument : docs) {
 		// System.out.println("doc id: " + wsDocument.getId());

@@ -132,7 +132,7 @@ public class Session {
 												new AsyncCallback<GUIParameter[]>() {
 													@Override
 													public void onFailure(Throwable caught) {
-														Session.get().logout();
+														onInvalidSession();
 													}
 
 													@Override

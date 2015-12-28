@@ -34,7 +34,8 @@ public enum DocumentEvent {
 	ADDED_TO_CALEVENT("event.caladd"),
 	REMOVED_FROM_CALEVENT("event.caldel"),
 	SUBSCRIBED("event.subscribed"),
-	STAMP_APPLIED("event.stampapplied");
+	STAMP_APPLIED("event.stampapplied"),
+	DTICKET_CREATED("event.dticket.created");
 
     private String event;
 

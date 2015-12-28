@@ -30,9 +30,7 @@ import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.document.AbstractDocument;
-import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.Group;
@@ -50,6 +48,8 @@ import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.sequence.SequenceDAO;
+import com.logicaldoc.core.ticket.Ticket;
+import com.logicaldoc.core.ticket.TicketDAO;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.ServerException;
@@ -941,22 +941,22 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			// Prepare a new download ticket
 			String temp = new Date().toString() + user.getId();
 			String ticketid = CryptUtil.cryptString(temp);
-			DownloadTicket ticket = new DownloadTicket();
+			Ticket ticket = new Ticket();
 			ticket.setTicketId(ticketid);
 			ticket.setDocId(0L);
 			ticket.setUserId(user.getId());
 			ticket.setTenantId(user.getTenantId());
-			ticket.setType(DownloadTicket.PSW_RECOVERY);
+			ticket.setType(Ticket.PSW_RECOVERY);
 			Calendar cal = Calendar.getInstance();
 			cal.add(Calendar.MINUTE, +5);
 			ticket.setExpired(cal.getTime());
 
 			// Store the ticket
-			DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance().getBean(DownloadTicketDAO.class);
+			TicketDAO ticketDao = (TicketDAO) Context.getInstance().getBean(TicketDAO.class);
 			ticketDao.store(ticket);
 
 			// Try to clean the DB from old tickets
-			ticketDao.deleteOlder();
+			ticketDao.deleteExpired();
 
 			Locale locale = new Locale(user.getLanguage());
 

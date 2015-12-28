@@ -10,7 +10,9 @@ import java.net.MalformedURLException;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +42,6 @@ import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.DocumentTemplate;
-import com.logicaldoc.core.document.DownloadTicket;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Rating;
 import com.logicaldoc.core.document.Version;
@@ -49,7 +50,6 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DocumentNoteDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
-import com.logicaldoc.core.document.dao.DownloadTicketDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.RatingDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
@@ -61,6 +61,8 @@ import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.core.ticket.Ticket;
+import com.logicaldoc.core.ticket.TicketDAO;
 import com.logicaldoc.core.transfer.InMemoryZipImport;
 import com.logicaldoc.core.transfer.ZipExport;
 import com.logicaldoc.core.util.IconSelector;
@@ -1076,31 +1078,21 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			if (email.isSendAsTicket()) {
 				// Prepare a new download ticket
-				String temp = new Date().toString() + user.getId();
-				String ticketid = CryptUtil.cryptString(temp);
-				DownloadTicket ticket = new DownloadTicket();
-				ticket.setTicketId(ticketid);
-				ticket.setDocId(email.getDocIds()[0]);
-				ticket.setUserId(user.getId());
+				Ticket ticket = prepareTicket(email.getDocIds()[0], user);
 
-				// Store the ticket
-				DownloadTicketDAO ticketDao = (DownloadTicketDAO) Context.getInstance()
-						.getBean(DownloadTicketDAO.class);
-				ticketDao.store(ticket);
+				History transaction = new History();
+				transaction.setSessionId(session.getId());
+				transaction.setUser(user);
 
-				// Try to clean the DB from old tickets
-				ticketDao.deleteOlder();
+				storeTicket(ticket, transaction);
 
 				Document doc = documentDao.findById(ticket.getDocId());
 
-				HttpServletRequest request = this.getThreadLocalRequest();
-				String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":"
-						+ request.getServerPort() + request.getContextPath();
-				String address = urlPrefix + "/download-ticket?ticketId=" + ticketid;
+				String ticketUrl = composeTicketUrl(ticket);
 				message = email.getMessage()
 						+ "<div style='margin-top:10px; border-top:1px solid black; background-color:#CCCCCC;'><b>&nbsp;"
-						+ I18N.message("clicktodownload", LocaleUtil.toLocale(locale)) + ": <a href='" + address + "'>"
-						+ doc.getFileName() + "</a></b></div>";
+						+ I18N.message("clicktodownload", LocaleUtil.toLocale(locale)) + ": <a href='" + ticketUrl
+						+ "'>" + doc.getFileName() + "</a></b></div>";
 
 				if (doc.getDocRef() != null)
 					doc = documentDao.findById(doc.getDocRef());
@@ -1205,6 +1197,33 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			log.warn(e.getMessage(), e);
 			return "error";
 		}
+	}
+
+	private String composeTicketUrl(Ticket ticket) {
+		HttpServletRequest request = this.getThreadLocalRequest();
+		String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+				+ request.getContextPath();
+		String address = urlPrefix + "/download-ticket?ticketId=" + ticket.getTicketId();
+		return address;
+	}
+
+	private void storeTicket(Ticket ticket, History transaction) {
+		// Store the ticket
+		TicketDAO ticketDao = (TicketDAO) Context.getInstance().getBean(TicketDAO.class);
+		ticketDao.store(ticket, transaction);
+
+		// Try to clean the DB from old tickets
+		ticketDao.deleteExpired();
+	}
+
+	private Ticket prepareTicket(long docId, User user) {
+		String temp = new Date().toString() + user.getId();
+		String ticketid = CryptUtil.cryptString(temp);
+		Ticket ticket = new Ticket();
+		ticket.setTicketId(ticketid);
+		ticket.setDocId(docId);
+		ticket.setUserId(user.getId());
+		return ticket;
 	}
 
 	private String createPreview(Document doc, long userId, String sid) {
@@ -1669,6 +1688,47 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 			return 0L;
+		}
+	}
+
+	@Override
+	public String createDownloadTicket(String sid, long docId, String suffix, Integer expireHours, Date expireDate)
+			throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+
+		try {
+			User user = ServiceUtil.getSessionUser(session.getId());
+
+			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			if (!fdao.isWriteEnable(getById(sid, docId).getFolder().getId(), user.getId())) {
+				throw new RuntimeException("You don't have the download permission");
+			}
+
+			Ticket ticket = prepareTicket(docId, ServiceUtil.getSessionUser(sid));
+			ticket.setSuffix(suffix);
+
+			Calendar cal = GregorianCalendar.getInstance();
+			if (expireDate != null) {
+				cal.setTime(expireDate);
+				cal.set(Calendar.HOUR_OF_DAY, 23);
+				cal.set(Calendar.MINUTE, 59);
+				cal.set(Calendar.SECOND, 59);
+				cal.set(Calendar.MILLISECOND, 999);
+				ticket.setExpired(cal.getTime());
+			} else if (expireHours != null) {
+				cal.add(Calendar.HOUR_OF_DAY, expireHours.intValue());
+				ticket.setExpired(cal.getTime());
+			}
+
+			History transaction = new History();
+			transaction.setSessionId(session.getId());
+			transaction.setUser(user);
+
+			storeTicket(ticket, transaction);
+
+			return composeTicketUrl(ticket);
+		} catch (Throwable t) {
+			return (String) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 }

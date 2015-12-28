@@ -1,5 +1,7 @@
 package com.logicaldoc.gui.frontend.client.services;
 
+import java.util.Date;
+
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -88,4 +90,7 @@ public interface DocumentServiceAsync {
 	void countDocuments(String sid, long folderId, int status, AsyncCallback<Long> callback);
 
 	void unarchiveDocuments(String sid, long[] docIds, AsyncCallback<Void> callback);
+
+	void createDownloadTicket(String sid, long docId, String suffix, Integer expireHours, Date expireDate,
+			AsyncCallback<String> callback);
 }
