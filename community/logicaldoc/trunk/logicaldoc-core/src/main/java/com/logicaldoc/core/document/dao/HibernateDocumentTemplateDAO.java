@@ -83,4 +83,11 @@ public class HibernateDocumentTemplateDAO extends HibernatePersistentObjectDAO<D
 		this.optionsDao = optionsDao;
 	}
 
+	@Override
+	public boolean store(DocumentTemplate template) {
+		boolean result = super.store(template);
+		optionsDao.deleteOrphaned(template.getId(), template.getAttributeNames());
+		return result;
+	}
+
 }

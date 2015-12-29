@@ -1,6 +1,7 @@
 package com.logicaldoc.core.document.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.slf4j.LoggerFactory;
@@ -72,4 +73,17 @@ public class HibernateExtendedAttributeOptionDAO extends HibernatePersistentObje
 		}
 	}
 
+	@Override
+	public void deleteOrphaned(long templateId, Collection<String> currentAttributes) {
+		try {
+			List<ExtendedAttributeOption> options = findByQuery(
+					"from ExtendedAttributeOption _opt where _opt.templateId = ?1 and _opt.attribute not in "
+							+ currentAttributes.toString().replace("[", "('").replace("]", "')").replace(",", "','"), new Object[] {
+							templateId}, null);
+			for (ExtendedAttributeOption option : options)
+				del(option, PersistentObject.DELETED_CODE_DEFAULT);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+		}
+	}
 }
