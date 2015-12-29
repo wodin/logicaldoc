@@ -1,5 +1,7 @@
 package com.logicaldoc.web.service;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -164,6 +166,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		info.setVendorCountry(inf.getVendorCountry());
 		info.setYear(inf.getYear());
 		info.setRunLevel(config.getProperty("runlevel"));
+		info.setHostName(inf.getHostName());
 
 		String tname = tenantName;
 		if (tname == null)

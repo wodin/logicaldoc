@@ -165,9 +165,9 @@ public class SystemMenu extends VLayout {
 	}
 
 	private void addInformations() {
-		DynamicForm systemForm = new DynamicForm();
-		systemForm.setWidth(300);
-		systemForm.setColWidths(1, "*");
+		DynamicForm form1 = new DynamicForm();
+		form1.setWidth(300);
+		form1.setColWidths(1, "*");
 
 		StaticTextItem productName = ItemFactory.newStaticTextItem("productName", "", "<b>"
 				+ Session.get().getInfo().getProductName() + "</b>");
@@ -176,7 +176,6 @@ public class SystemMenu extends VLayout {
 		productName.setWrapTitle(false);
 		productName.setWrap(false);
 		productName.setEndRow(true);
-		
 
 		StaticTextItem version = ItemFactory.newStaticTextItem("version", "", I18N.message("version") + " "
 				+ Session.get().getInfo().getRelease());
@@ -193,12 +192,12 @@ public class SystemMenu extends VLayout {
 
 		String userno = Session.get().getInfo().getUserNo();
 
-		DynamicForm supportForm = new DynamicForm();
-		supportForm.setAlign(Alignment.LEFT);
-		supportForm.setTitleOrientation(TitleOrientation.TOP);
-		supportForm.setColWidths(1);
-		supportForm.setWrapItemTitles(false);
-		supportForm.setNumCols(1);
+		DynamicForm form2 = new DynamicForm();
+		form2.setAlign(Alignment.LEFT);
+		form2.setTitleOrientation(TitleOrientation.TOP);
+		form2.setColWidths(1);
+		form2.setWrapItemTitles(false);
+		form2.setNumCols(1);
 
 		LinkItem support = new LinkItem();
 		support.setName(I18N.message("support"));
@@ -229,16 +228,24 @@ public class SystemMenu extends VLayout {
 		usernoItem.setWrap(true);
 		usernoItem.setWrapTitle(false);
 
-		systemForm.setItems(productName, version, vendor);
+		StaticTextItem hostName = ItemFactory.newStaticTextItem("hostname", "hostname", Session.get().getInfo()
+				.getHostName());
+		hostName.setWidth(250);
+		hostName.setRequired(true);
+		hostName.setShouldSaveValue(false);
+		hostName.setWrap(true);
+		hostName.setWrapTitle(false);
+
+		form1.setItems(productName, version, vendor);
 
 		if (userno != null)
-			supportForm.setItems(support, usernoItem);
+			form2.setItems(support, usernoItem, hostName);
 		else
-			supportForm.setItems(support, installationID);
+			form2.setItems(support, installationID, hostName);
 
 		if (!Session.get().isDemo()) {
-			addMember(systemForm);
-			addMember(supportForm);
+			addMember(form1);
+			addMember(form2);
 		}
 	}
 }
