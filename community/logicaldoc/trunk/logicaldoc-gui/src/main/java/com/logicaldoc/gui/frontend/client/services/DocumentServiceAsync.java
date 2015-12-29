@@ -87,7 +87,7 @@ public interface DocumentServiceAsync {
 
 	void archiveFolder(String sid, long folderId, String comment, AsyncCallback<Long> callback);
 
-	void countDocuments(String sid, long folderId, int status, AsyncCallback<Long> callback);
+	void countDocuments(String sid, long[] folderIds, int status, AsyncCallback<Long> callback);
 
 	void unarchiveDocuments(String sid, long[] docIds, AsyncCallback<Void> callback);
 

@@ -77,9 +77,9 @@ public interface FolderService extends RemoteService {
 	public GUIFolder getFolder(String sid, long folderId, boolean computePath) throws ServerException;
 
 	/**
-	 * Deletes the folder and the subtree
+	 * Deletes the folders and the subtrees
 	 */
-	public void delete(String sid, long folderId) throws ServerException;
+	public void delete(String sid, long[] folderIds) throws ServerException;
 
 	/**
 	 * Deletes a selection of folders from trash
@@ -92,14 +92,14 @@ public interface FolderService extends RemoteService {
 	public void restore(String sid, long folderId, long parentId) throws ServerException;
 
 	/**
-	 * Moves a folder under a target folder
+	 * Moves some folders under a target folder
 	 */
-	public void move(String sid, long folderId, long targetId) throws ServerException;
+	public void move(String sid, long[] folderIds, long targetId) throws ServerException;
 
 	/**
 	 * Copies a folder under a target folder
 	 */
-	public void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly, boolean inheritSecurity) throws ServerException;
+	public void copyFolders(String sid, long[] folderIds, long targetId, boolean foldersOnly, boolean inheritSecurity) throws ServerException;
 
 	/**
 	 * Pastes documents into the target folder.

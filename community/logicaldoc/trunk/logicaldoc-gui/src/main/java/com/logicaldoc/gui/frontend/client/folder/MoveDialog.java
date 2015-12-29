@@ -50,9 +50,13 @@ public class MoveDialog extends Dialog {
 		move.setMargin(1);
 		move.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				String shownName = FolderNavigator.get().getSelectedRecord().getAttributeAsString("name");
+				long[] selection = FolderNavigator.get().getSelectedIds();
+				if (selection.length > 1)
+					shownName = selection.length + " " + I18N.message("folders").toLowerCase();
+
 				LD.ask(I18N.message("move"),
-						I18N.message("moveask", new String[] {
-								FolderNavigator.get().getSelectedRecord().getAttributeAsString("name"),
+						I18N.message("moveask", new String[] { shownName,
 								folders.getSelectedRecord().getAttributeAsString("name") }), new BooleanCallback() {
 
 							@Override

@@ -63,10 +63,15 @@ public class CopyDialog extends Dialog {
 		copy.setMargin(1);
 		copy.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
+				long[] selectedIds = FolderNavigator.get().getSelectedIds();
+				String label = FolderNavigator.get().getSelectedRecord().getAttributeAsString("name");
+				if (selectedIds.length > 1)
+					label = selectedIds.length + " " + I18N.message("folders").toLowerCase();
+
 				LD.ask(I18N.message("copy"),
-						I18N.message("copyask", new String[] {
-								FolderNavigator.get().getSelectedRecord().getAttributeAsString("name"),
-								folders.getSelectedRecord().getAttributeAsString("name") }), new BooleanCallback() {
+						I18N.message("copyask",
+								new String[] { label, folders.getSelectedRecord().getAttributeAsString("name") }),
+						new BooleanCallback() {
 
 							@Override
 							public void execute(Boolean value) {

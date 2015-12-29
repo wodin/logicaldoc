@@ -109,6 +109,14 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public List<Folder> findByParentId(long parentId);
 
 	/**
+	 * Finds all children sds(direct and indirect) by parentId
+	 * 
+	 * @param parentId
+	 * @return
+	 */
+	public List<Long> findIdsByParentId(long parentId);
+	
+	/**
 	 * Finds direct children of a folder
 	 * 
 	 * @param parentId Folder ID of the folder which children are wanted

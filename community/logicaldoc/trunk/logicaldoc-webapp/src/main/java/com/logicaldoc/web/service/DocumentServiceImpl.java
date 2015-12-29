@@ -1671,24 +1671,33 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public long countDocuments(String sid, long folderId, int status) throws ServerException {
+	public long countDocuments(String sid, long[] folderIds, int status) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		User user = ServiceUtil.getSessionUser(sid);
+
+		long count = 0;
 		try {
-			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-
-			List<Long> accessibleIds = fdao.findIdByUserId(user.getId(), folderId);
-
-			StringBuffer query = new StringBuffer(
-					"select count(ld_id) from ld_document where ld_deleted=0 and ld_status=" + status);
-			if (!user.isInGroup("admin"))
-				query.append(" and ld_folderid in " + accessibleIds.toString().replace("[", "(").replace("]", ")"));
-			return dao.queryForLong(query.toString());
+			for (int i = 0; i < folderIds.length; i++) {
+				count += countDocuments(sid, user, folderIds[i], status);
+			}
 		} catch (Throwable t) {
-			ServiceUtil.throwServerException(session, log, t);
-			return 0L;
+			return (Long) ServiceUtil.throwServerException(session, log, t);
 		}
+		return count;
+	}
+
+	private long countDocuments(String sid, User user, long folderId, int status) throws ServerException {
+		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+		List<Long> childrenFolderIds = fdao.findIdsByParentId(folderId);
+		childrenFolderIds.add(folderId);
+
+		StringBuffer query = new StringBuffer("select count(ld_id) from ld_document where ld_deleted=0 and ld_status="
+				+ status);
+		query.append(" and ld_folderid in " + childrenFolderIds.toString().replace("[", "(").replace("]", ")"));
+
+		return dao.queryForLong(query.toString());
 	}
 
 	@Override
