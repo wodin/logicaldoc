@@ -42,7 +42,8 @@ public class EventsWindow extends Window {
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
-		setAutoSize(true);
+		setWidth(500);
+		setHeight(300);
 		centerInPage();
 
 		grid = new ListGrid() {

@@ -121,22 +121,29 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void delete(final String sid, final long folderId) throws ServerException {
+	public void delete(final String sid, final long[] folderIds) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
-		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		if (!dao.isPermissionEnabled(Permission.DELETE, folderId, session.getUserId()))
-			throw new ServerException("Permission DELETE not granted");
+		User user = ServiceUtil.getSessionUser(sid);
 
 		try {
-			// Add a folder history entry
-			FolderHistory transaction = new FolderHistory();
-			transaction.setUser(ServiceUtil.getSessionUser(sid));
-			transaction.setEvent(FolderEvent.DELETED.toString());
-			transaction.setSessionId(sid);
-			dao.deleteTree(folderId, PersistentObject.DELETED_CODE_DEFAULT, transaction);
+			for (int i = 0; i < folderIds.length; i++)
+				delete(sid, user, folderIds[i]);
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
+	}
+
+	private void delete(final String sid, User user, final long folderId) throws Exception {
+		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		if (!dao.isPermissionEnabled(Permission.DELETE, folderId, user.getId()))
+			throw new ServerException("Permission DELETE not granted");
+
+		// Add a folder history entry
+		FolderHistory transaction = new FolderHistory();
+		transaction.setUser(user);
+		transaction.setEvent(FolderEvent.DELETED.toString());
+		transaction.setSessionId(sid);
+		dao.deleteTree(folderId, PersistentObject.DELETED_CODE_DEFAULT, transaction);
 	}
 
 	public static GUIFolder getFolder(String sid, long folderId) throws ServerException {
@@ -279,97 +286,109 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly, boolean inheritSecurity)
+	public void copyFolders(String sid, long[] folderIds, long targetId, boolean foldersOnly, boolean inheritSecurity)
 			throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
-
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		User user = ServiceUtil.getSessionUser(sid);
+		
 		try {
-			Folder folderToCopy = folderDao.findById(folderId);
-			// Check destParentId MUST BE <> 0 (initial value)
-			if (targetId == 0 || folderDao.isInPath(folderToCopy.getId(), targetId)) {
-				return;
+			for (int i = 0; i < folderIds.length; i++) {
+				copyFolder(sid, user, folderIds[i], targetId, foldersOnly, inheritSecurity);
 			}
-
-			folderDao.initialize(folderToCopy);
-
-			User user = ServiceUtil.getSessionUser(sid);
-
-			Folder destParentFolder = folderDao.findById(targetId);
-			// Check destParentId: Must be different from the current folder
-			// parentId
-			if (targetId == folderToCopy.getParentId())
-				throw new SecurityException("No Changes");
-
-			// Check destParentId: Must be different from the current folderId
-			// A folder cannot be children of herself
-			if (targetId == folderToCopy.getId())
-				throw new SecurityException("Not Allowed");
-
-			// Check addChild permission on destParentFolder
-			boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(),
-					user.getId());
-			if (!addchildEnabled)
-				throw new SecurityException("Add Child right not granted to this user in the target folder");
-
-			// Add a folder history entry
-			FolderHistory transaction = new FolderHistory();
-			transaction.setSessionId(sid);
-			transaction.setUser(user);
-
-			folderDao.copy(folderToCopy, destParentFolder, foldersOnly, inheritSecurity, transaction);
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
-	@Override
-	public void move(String sid, long folderId, long targetId) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
-
+	private void copyFolder(String sid, User user, long folderId, long targetId, boolean foldersOnly,
+			boolean inheritSecurity) throws Exception {
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		try {
-			Folder folderToMove = folderDao.findById(folderId);
-			// Check destParentId MUST BE <> 0 (initial value)
-			if (targetId == 0 || folderDao.isInPath(folderToMove.getId(), targetId)) {
-				return;
-			}
+		Folder folderToCopy = folderDao.findById(folderId);
+		// Check destParentId MUST BE <> 0 (initial value)
+		if (targetId == 0 || folderDao.isInPath(folderToCopy.getId(), targetId)) {
+			return;
+		}
 
+		folderDao.initialize(folderToCopy);
+
+		Folder destParentFolder = folderDao.findById(targetId);
+		// Check destParentId: Must be different from the current folder
+		// parentId
+		if (targetId == folderToCopy.getParentId())
+			throw new SecurityException("No Changes");
+
+		// Check destParentId: Must be different from the current folderId
+		// A folder cannot be children of herself
+		if (targetId == folderToCopy.getId())
+			throw new SecurityException("Not Allowed");
+
+		// Check addChild permission on destParentFolder
+		boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(), user.getId());
+		if (!addchildEnabled)
+			throw new SecurityException("Add Child right not granted to this user in the target folder");
+
+		// Add a folder history entry
+		FolderHistory transaction = new FolderHistory();
+		transaction.setSessionId(sid);
+		transaction.setUser(user);
+
+		folderDao.copy(folderToCopy, destParentFolder, foldersOnly, inheritSecurity, transaction);
+	}
+
+	@Override
+	public void move(String sid, long[] folderIds, long targetId) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+		try {
 			User user = ServiceUtil.getSessionUser(sid);
 
-			Folder destParentFolder = folderDao.findById(targetId);
-			// Check destParentId: Must be different from the current folder
-			// parentId
-			if (targetId == folderToMove.getParentId())
-				throw new SecurityException("No Changes");
-
-			// Check destParentId: Must be different from the current folderId
-			// A folder cannot be children of herself
-			if (targetId == folderToMove.getId())
-				throw new SecurityException("Not Allowed");
-
-			// Check delete permission on the folder parent of folderToMove
-			Folder sourceParent = folderDao.findById(folderToMove.getParentId());
-			boolean sourceParentDeleteEnabled = folderDao.isPermissionEnabled(Permission.DELETE, sourceParent.getId(),
-					user.getId());
-			if (!sourceParentDeleteEnabled)
-				throw new SecurityException("No rights to delete folder");
-
-			// Check addChild permission on destParentFolder
-			boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(),
-					user.getId());
-			if (!addchildEnabled)
-				throw new SecurityException("AddChild Rights not granted to this user");
-
-			// Add a folder history entry
-			FolderHistory transaction = new FolderHistory();
-			transaction.setSessionId(sid);
-			transaction.setUser(user);
-
-			folderDao.move(folderToMove, destParentFolder, transaction);
+			for (long folderId : folderIds) {
+				move(sid, user, folderId, targetId);
+			}
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
+	}
+
+	private void move(String sid, User user, long folderId, long targetId) throws Exception {
+
+		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+		Folder folderToMove = folderDao.findById(folderId);
+		// Check destParentId MUST BE <> 0 (initial value)
+		if (targetId == 0 || folderDao.isInPath(folderToMove.getId(), targetId)) {
+			return;
+		}
+
+		Folder destParentFolder = folderDao.findById(targetId);
+		// Check destParentId: Must be different from the current folder
+		// parentId
+		if (targetId == folderToMove.getParentId())
+			throw new SecurityException("No Changes");
+
+		// Check destParentId: Must be different from the current folderId
+		// A folder cannot be children of herself
+		if (targetId == folderToMove.getId())
+			throw new SecurityException("Not Allowed");
+
+		// Check delete permission on the folder parent of folderToMove
+		Folder sourceParent = folderDao.findById(folderToMove.getParentId());
+		boolean sourceParentDeleteEnabled = folderDao.isPermissionEnabled(Permission.DELETE, sourceParent.getId(),
+				user.getId());
+		if (!sourceParentDeleteEnabled)
+			throw new SecurityException("No rights to delete folder");
+
+		// Check addChild permission on destParentFolder
+		boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(), user.getId());
+		if (!addchildEnabled)
+			throw new SecurityException("AddChild Rights not granted to this user");
+
+		// Add a folder history entry
+		FolderHistory transaction = new FolderHistory();
+		transaction.setSessionId(sid);
+		transaction.setUser(user);
+
+		folderDao.move(folderToMove, destParentFolder, transaction);
+
 	}
 
 	@Override

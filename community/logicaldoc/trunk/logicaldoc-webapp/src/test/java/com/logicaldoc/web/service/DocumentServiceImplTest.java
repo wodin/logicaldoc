@@ -340,7 +340,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testCountDocuments() throws ServerException {
-		Assert.assertEquals(4, service.countDocuments(session.getSid(), 5, 0));
-		Assert.assertEquals(0, service.countDocuments(session.getSid(), 5, 3));
+		Assert.assertEquals(4, service.countDocuments(session.getSid(), new long[] { 5 }, 0));
+		Assert.assertEquals(0, service.countDocuments(session.getSid(), new long[] { 5 }, 3));
 	}
 }

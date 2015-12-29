@@ -107,9 +107,9 @@ public interface DocumentService extends RemoteService {
 
 	/**
 	 * Counts the documents in a given status contained the specified folder's
-	 * tree
+	 * trees
 	 */
-	public long countDocuments(String sid, long folderId, int status) throws ServerException;
+	public long countDocuments(String sid, long[] folderIds, int status) throws ServerException;
 
 	/**
 	 * Unlocks a set of documents
@@ -157,8 +157,9 @@ public interface DocumentService extends RemoteService {
 	 * @return The created download link
 	 * @throws ServerException
 	 */
-	public String createDownloadTicket(String sid, long docId, String suffix, Integer expireHours, Date expireDate) throws ServerException;
-	
+	public String createDownloadTicket(String sid, long docId, String suffix, Integer expireHours, Date expireDate)
+			throws ServerException;
+
 	/**
 	 * Indexes the gien set of documents
 	 * 

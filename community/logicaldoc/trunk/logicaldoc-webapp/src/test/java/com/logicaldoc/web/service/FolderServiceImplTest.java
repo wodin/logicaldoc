@@ -112,7 +112,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 		Folder folderB = folderDao.create(docsFolder, new Folder("folderB"), true, null);
 		Folder folderC = folderDao.create(folderB, new Folder("folderC"), true, null);
 
-		service.move(session.getSid(), folderC.getId(), folderA.getId());
+		service.move(session.getSid(), new long[] { folderC.getId() }, folderA.getId());
 
 		List<Folder> folderList = folderDao.findChildren(folderA.getId(), null);
 		Assert.assertTrue(folderList.size() == 1);
@@ -133,7 +133,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 		folderDao.create(folderC, new Folder("folderD"), true, null);
 		folderDao.create(folderC, new Folder("folderE"), true, null);
 
-		service.move(session.getSid(), folderC.getId(), folderA.getId());
+		service.move(session.getSid(), new long[] { folderC.getId() }, folderA.getId());
 
 		List<Folder> folderList = folderDao.findChildren(folderA.getId(), null);
 		Assert.assertTrue(folderList.size() == 1);
@@ -152,7 +152,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 		Folder folderE = folderDao.create(folderC, new Folder("folderE"), true, null);
 		folderDao.create(folderE, new Folder("folderF"), true, null);
 
-		service.move(session.getSid(), folderE.getId(), folderD.getId());
+		service.move(session.getSid(), new long[] { folderE.getId() }, folderD.getId());
 
 		List<Folder> folderList = folderDao.findChildren(folderD.getId(), null);
 		Assert.assertTrue(folderList.size() == 1);

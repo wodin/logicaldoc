@@ -10,11 +10,11 @@ public interface FolderServiceAsync {
 
 	void applyRights(String sid, GUIFolder folder, boolean subfolders, AsyncCallback<Void> callback);
 
-	void delete(String sid, long folderId, AsyncCallback<Void> callback);
+	void delete(String sid, long[] folderIds, AsyncCallback<Void> callback);
 
 	void getFolder(String sid, long folderId, boolean computePath, AsyncCallback<GUIFolder> callback);
 
-	void move(String sid, long folderId, long targetId, AsyncCallback<Void> callback);
+	void move(String sid, long[] folderIds, long targetId, AsyncCallback<Void> callback);
 
 	void rename(String sid, long folderId, String name, AsyncCallback<Void> callback);
 
@@ -26,7 +26,7 @@ public interface FolderServiceAsync {
 
 	void saveTemplates(String sid, GUIValue[] templates, AsyncCallback<Void> callback);
 
-	void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity ,AsyncCallback<Void> callback);
+	void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity, AsyncCallback<Void> callback);
 
 	void applyMetadata(String sid, long parentId, AsyncCallback<Void> callback);
 
@@ -34,7 +34,7 @@ public interface FolderServiceAsync {
 
 	void restore(String sid, long folerId, long parentId, AsyncCallback<Void> callback);
 
-	void copyFolder(String sid, long folderId, long targetId, boolean foldersOnly, boolean inheritPermissions,
+	void copyFolders(String sid, long[] folderIds, long targetId, boolean foldersOnly, boolean inheritSecurity,
 			AsyncCallback<Void> callback);
 
 	void inheritRights(String sid, long folderId, long rightsFolderId, AsyncCallback<GUIFolder> callback);

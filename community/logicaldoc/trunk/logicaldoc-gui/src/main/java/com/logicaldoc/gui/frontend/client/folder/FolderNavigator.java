@@ -1,5 +1,8 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -110,7 +113,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 							return;
 						}
 
-						final long source = Long.parseLong(getDragData()[0].getAttributeAsString("folderId"));
+						final long[] source = getSelectedIds();
 						final long target = Long.parseLong(getDropFolder().getAttributeAsString("folderId"));
 
 						final String sourceName = getDragData()[0].getAttributeAsString("name");
@@ -132,20 +135,14 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 
 														@Override
 														public void onSuccess(Void ret) {
+															reloadParentsOfSelection();
 
+															TreeNode targetNode = getTree().find("folderId", (Object) new Long(target));
+															if (targetNode != null) {
+																getTree().reloadChildren(targetNode);
+															}
 														}
 													});
-										}
-
-										TreeNode node = getTree().find("folderId", (Object) new Long(source));
-										if (node != null) {
-											node = getTree().getParent(node);
-											if (node != null)
-												getTree().reloadChildren(node);
-										}
-										node = getTree().find("folderId", (Object) new Long(target));
-										if (node != null) {
-											getTree().reloadChildren(node);
 										}
 									}
 								});
@@ -324,6 +321,9 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		final long id = Long.parseLong(selectedNode.getAttribute("folderId"));
 		final String name = selectedNode.getAttribute("name");
 
+		final ListGridRecord[] selection = getSelectedRecords();
+		boolean multipleSelection = selection != null && selection.length > 1;
+
 		Menu contextMenu = new Menu();
 
 		MenuItem search = new MenuItem();
@@ -342,7 +342,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				onDelete(id);
+				onDelete();
 			}
 		});
 
@@ -569,11 +569,32 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		if (externalCall != null)
 			contextMenu.addItem(externalCall);
 
+		// A lot of functions are not available on a multiple selection
+		if (multipleSelection) {
+			reload.setEnabled(false);
+			search.setEnabled(false);
+			create.setEnabled(false);
+			createWorkspace.setEnabled(false);
+			rename.setEnabled(false);
+			addBookmark.setEnabled(false);
+			paste.setEnabled(false);
+			pasteAsAlias.setEnabled(false);
+			exportZip.setEnabled(false);
+			sendToExpArchive.setEnabled(false);
+			externalCall.setEnabled(false);
+			archive.setEnabled(false);
+			applyTemplate.setEnabled(false);
+			audit.setEnabled(false);
+			rss.setEnabled(false);
+		}
+
 		return contextMenu;
 	}
 
-	private void onDelete(final long folderId) {
-		documentService.countDocuments(Session.get().getSid(), folderId, Constants.DOC_ARCHIVED,
+	private void onDelete() {
+		final long[] selectedIds = getSelectedIds();
+
+		documentService.countDocuments(Session.get().getSid(), selectedIds, Constants.DOC_ARCHIVED,
 				new AsyncCallback<Long>() {
 
 					@Override
@@ -584,35 +605,33 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 					@Override
 					public void onSuccess(Long count) {
 						LD.ask(I18N.message("question"),
-								count == 0 ? I18N.message("confirmdeletefolder") : I18N
-										.message("confirmdeletefolderarchdocs"), new BooleanCallback() {
+								count.longValue() == 0L ? (I18N.message(selectedIds.length == 1 ? "confirmdeletefolder"
+										: "confirmdeletefolders")) : (I18N
+										.message(selectedIds.length == 1 ? "confirmdeletefolderarchdocs"
+												: "confirmdeletefoldersarchdocs")), new BooleanCallback() {
 									@Override
 									public void execute(Boolean value) {
 										if (value) {
-											service.delete(Session.get().getSid(), folderId, new AsyncCallback<Void>() {
-												@Override
-												public void onFailure(Throwable caught) {
-													Log.serverError(caught);
-												}
+											service.delete(Session.get().getSid(), selectedIds,
+													new AsyncCallback<Void>() {
+														@Override
+														public void onFailure(Throwable caught) {
+															Log.serverError(caught);
+														}
 
-												@Override
-												public void onSuccess(Void result) {
-													/*
-													 * This is needed because of
-													 * strange behaviours if we
-													 * directly delete the
-													 * selected node.
-													 */
-													TreeNode node = getTree().find("folderId", Long.toString(folderId));
-													TreeNode parent = getTree().find("folderId",
-															node.getAttribute("parent"));
-													getTree().closeFolder(parent);
-													getTree().remove(node);
-													getTree().openFolder(parent);
+														@Override
+														public void onSuccess(Void result) {
+															reloadParentsOfSelection();
 
-													selectFolder(Long.parseLong(node.getAttributeAsString("parent")));
-												}
-											});
+															TreeNode node = getTree().find(
+																	"folderId",
+																	(Object) getSelectedRecord().getAttributeAsString(
+																			"folderId"));
+															TreeNode parent = getTree().getParent(node);
+															selectFolder(Long.parseLong(parent
+																	.getAttributeAsString("parent")));
+														}
+													});
 										}
 									}
 								});
@@ -850,32 +869,43 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	}
 
 	/**
+	 * Gets all the IDs of the selected folders
+	 */
+	public long[] getSelectedIds() {
+		ListGridRecord[] selection = getSelectedRecords();
+		List<Long> ids = new ArrayList<Long>();
+		for (ListGridRecord record : selection)
+			ids.add(Long.parseLong(record.getAttributeAsString("folderId")));
+		long[] idsArray = new long[ids.size()];
+		for (int i = 0; i < idsArray.length; i++) {
+			idsArray[i] = ids.get(i);
+		}
+		return idsArray;
+	}
+
+	/**
 	 * Moves the currently selected folder to the new parent folder
 	 * 
 	 * @param targetFolderId The parent folder
 	 */
-	public void moveTo(long targetFolderId) {
-		final TreeNode selected = (TreeNode) getSelectedRecord();
-		final TreeNode target = getTree().findById(Long.toString(targetFolderId));
+	public void moveTo(final long targetFolderId) {
+		service.move(Session.get().getSid(), getSelectedIds(), targetFolderId, new AsyncCallback<Void>() {
 
-		Log.debug("try to move folder " + selected.getAttribute("folderId"));
-		service.move(Session.get().getSid(), Long.parseLong(selected.getAttribute("folderId")), targetFolderId,
-				new AsyncCallback<Void>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+				Log.warn(I18N.message("operationnotallowed"), null);
+			}
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-						Log.warn(I18N.message("operationnotallowed"), null);
-					}
+			@Override
+			public void onSuccess(Void ret) {
+				reloadParentsOfSelection();
 
-					@Override
-					public void onSuccess(Void ret) {
-						getTree().remove(selected);
-						if (target != null) {
-							getTree().add(selected, target);
-						}
-					}
-				});
+				TreeNode target = getTree().find("folderId", Long.toString(targetFolderId));
+				if (target != null)
+					getTree().reloadChildren(target);
+			}
+		});
 	}
 
 	/**
@@ -884,14 +914,11 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	 * @param targetFolderId The parent folder
 	 */
 	public void copyTo(long targetFolderId, boolean foldersOnly, boolean inheritPermissions) {
-		final TreeNode selected = (TreeNode) getSelectedRecord();
 		final TreeNode target = getTree().findById(Long.toString(targetFolderId));
 
-		Log.debug("try to copy folder " + selected.getAttribute("folderId"));
-
 		ContactingServer.get().show();
-		service.copyFolder(Session.get().getSid(), Long.parseLong(selected.getAttribute("folderId")), targetFolderId,
-				foldersOnly, inheritPermissions, new AsyncCallback<Void>() {
+		service.copyFolders(Session.get().getSid(), getSelectedIds(), targetFolderId, foldersOnly, inheritPermissions,
+				new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -958,5 +985,20 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 					});
 			}
 		});
+	}
+
+	private void reloadParentsOfSelection() {
+		try {
+			ListGridRecord[] selection = getSelectedRecords();
+			for (ListGridRecord record : selection) {
+				TreeNode node = getTree().find("folderId", (Object) record.getAttributeAsLong("folderId"));
+				TreeNode parentNode = getTree().getParent(node);
+				if (parentNode != null) {
+					getTree().reloadChildren(parentNode);
+				} else
+					getTree().reloadChildren(getTree().getRoot());
+			}
+		} catch (Throwable t) {
+		}
 	}
 }

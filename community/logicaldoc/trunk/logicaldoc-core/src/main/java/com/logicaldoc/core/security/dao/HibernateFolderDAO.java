@@ -341,6 +341,15 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
+	public List<Long> findIdsByParentId(long parentId) {
+		List<Folder> coll = findByParentId(parentId);
+		List<Long> ids = new ArrayList<Long>();
+		for (Folder folder : coll)
+			ids.add(folder.getId());
+		return ids;
+	}
+
+	@Override
 	public boolean isWriteEnable(long folderId, long userId) {
 		return isPermissionEnabled(Permission.WRITE, folderId, userId);
 	}
