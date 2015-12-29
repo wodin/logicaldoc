@@ -1,5 +1,6 @@
 package com.logicaldoc.core.document.dao;
 
+import java.util.Collection;
 import java.util.List;
 
 import com.logicaldoc.core.ExtendedAttributeOption;
@@ -20,6 +21,14 @@ public interface ExtendedAttributeOptionDAO extends PersistentObjectDAO<Extended
 	 * @param attribute Name of the attribute (optional)
 	 */
 	public boolean deleteByTemplateIdAndAttribute(long templateId, String attribute);
+	
+	/**
+	 * This method deletes the orphaned options of a given template
+	 * 
+	 * @param templateId ID of the template
+	 * @param currentAttributes Names of the attributes of the actual template
+	 */
+	public void deleteOrphaned(long templateId, Collection<String> currentAttributes);
 
 	/**
 	 * This finds all the options for a given attribute. The list is ordered by

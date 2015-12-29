@@ -1,5 +1,6 @@
 package com.logicaldoc.core.document.dao;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -42,6 +43,16 @@ public class HibernateExtendedAttributeOptionDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(0, options.size());
 	}
 
+	@Test
+	public void testDeleteOrphaned() {
+		List<ExtendedAttributeOption> options = dao.findByTemplateAndAttribute(1L, "att1");
+		Assert.assertEquals(2, options.size());
+
+		dao.deleteOrphaned(1L, (List<String>)Arrays.asList(new String[]{"pippo","pluto"}));
+		options = dao.findByTemplateAndAttribute(1L, "att1");
+		Assert.assertEquals(0, options.size());
+	}
+	
 	@Test
 	public void testFindByTemplateAndAttribute() {
 		List<ExtendedAttributeOption> options = dao.findByTemplateAndAttribute(1L, "att1");

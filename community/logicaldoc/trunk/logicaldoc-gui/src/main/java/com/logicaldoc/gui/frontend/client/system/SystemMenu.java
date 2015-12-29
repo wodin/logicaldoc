@@ -235,6 +235,7 @@ public class SystemMenu extends VLayout {
 		hostName.setShouldSaveValue(false);
 		hostName.setWrap(true);
 		hostName.setWrapTitle(false);
+		hostName.setVisible(!Session.get().isDemo());
 
 		form1.setItems(productName, version, vendor);
 
