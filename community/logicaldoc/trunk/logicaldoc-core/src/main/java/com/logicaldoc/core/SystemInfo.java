@@ -1,5 +1,7 @@
 package com.logicaldoc.core;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -22,9 +24,9 @@ public class SystemInfo {
 
 	protected String product = "LogicalDOC";
 
-	protected String release = "7.4";
+	protected String release = "7.4.1";
 
-	protected String year = "2006-2015";
+	protected String year = "2006-2016";
 
 	protected String help = "http://help.logicaldoc.com";
 
@@ -51,6 +53,8 @@ public class SystemInfo {
 	protected String licensee;
 
 	protected String runLevel;
+
+	protected String hostName;
 
 	protected String[] features;
 
@@ -256,6 +260,13 @@ public class SystemInfo {
 			log.error(e.getMessage());
 		}
 
+		// Get the host name
+		try {
+			info.setHostName(InetAddress.getLocalHost().getHostName());
+		} catch (UnknownHostException e) {
+
+		}
+
 		return info;
 	}
 
@@ -273,5 +284,13 @@ public class SystemInfo {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
 	}
 }

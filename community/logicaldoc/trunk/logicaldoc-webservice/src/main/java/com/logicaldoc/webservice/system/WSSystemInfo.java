@@ -9,9 +9,9 @@ public class WSSystemInfo {
 
 	protected String product = "LogicalDOC";
 
-	protected String release = "7.4";
+	protected String release = "7.4.1";
 
-	protected String year = "2006-2015";
+	protected String year = "2006-2016";
 
 	protected String help = "http://help.logicaldoc.com";
 
@@ -42,6 +42,8 @@ public class WSSystemInfo {
 	protected String[] features;
 
 	protected String date = null;
+	
+	protected String hostName;
 
 	public String getProductName() {
 		return productName;
@@ -193,5 +195,13 @@ public class WSSystemInfo {
 
 	public void setDate(String date) {
 		this.date = date;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
 	}
 }

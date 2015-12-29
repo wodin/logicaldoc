@@ -19,9 +19,9 @@ public class GUIInfo implements Serializable {
 
 	private String product = "LogicalDOC";
 
-	private String release = "7.4";
+	private String release = "7.4.1";
 
-	private String year = "2006-2015";
+	private String year = "2006-2016";
 
 	private String help = "http://help.logicaldoc.com";
 
@@ -52,6 +52,8 @@ public class GUIInfo implements Serializable {
 	private int sessionHeartbeat = -1;
 
 	private String runLevel;
+
+	private String hostName;
 
 	private Date date = new Date();
 
@@ -418,5 +420,13 @@ public class GUIInfo implements Serializable {
 
 	public void setUserNo(String userNo) {
 		this.userNo = userNo;
+	}
+
+	public String getHostName() {
+		return hostName;
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
 	}
 }
