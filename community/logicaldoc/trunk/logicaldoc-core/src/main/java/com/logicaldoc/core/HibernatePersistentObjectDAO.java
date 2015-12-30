@@ -121,8 +121,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 			Query queryObject = prepareQuery(query, values, max);
 			coll = (List<T>) queryObject.list();
 		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 		}
 		return coll;
 	}

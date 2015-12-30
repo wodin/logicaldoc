@@ -1,5 +1,6 @@
 package com.logicaldoc.core.sequence;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,10 +31,10 @@ public class HibernateSequenceDAO extends HibernatePersistentObjectDAO<Sequence>
 			Sequence seq = findByAlternateKey(sequence, objectId, tenantId);
 			if (seq == null) {
 				seq = new Sequence();
-				seq.setName(sequence);
-				seq.setObjectId(objectId);
-				seq.setTenantId(tenantId);
 			}
+			seq.setName(sequence);
+			seq.setObjectId(objectId);
+			seq.setTenantId(tenantId);
 			seq.setLastReset(new Date());
 			seq.setValue(value);
 			store(seq);
@@ -46,10 +47,11 @@ public class HibernateSequenceDAO extends HibernatePersistentObjectDAO<Sequence>
 			Sequence seq = findByAlternateKey(sequence, objectId, tenantId);
 			if (seq == null) {
 				seq = new Sequence();
-				seq.setName(sequence);
-				seq.setObjectId(objectId);
-				seq.setTenantId(tenantId);
 			}
+
+			seq.setName(sequence);
+			seq.setObjectId(objectId);
+			seq.setTenantId(tenantId);
 			seq.setValue(seq.getValue() + increment);
 			store(seq);
 			return seq.getValue();
@@ -80,11 +82,37 @@ public class HibernateSequenceDAO extends HibernatePersistentObjectDAO<Sequence>
 	@Override
 	public Sequence findByAlternateKey(String name, long objectId, long tenantId) {
 		try {
-			String query = " _entity.tenantId=" + tenantId;
-			query += " and _entity.objectId=" + objectId;
-			query += " and _entity.name = '" + SqlUtil.doubleQuotes(name) + "'";
-			return findByWhere(query, null, null).iterator().next();
+			Sequence sequence = null;
+
+			String query = " _entity.tenantId = ?1 ";
+			query += " and _entity.objectId = ?2 ";
+			query += " and _entity.name = ?3 ";
+			List<Sequence> sequences = new ArrayList<Sequence>();
+			try {
+				sequences = findByWhere(query, new Object[] { tenantId, objectId, name }, null, null);
+			} catch (Throwable t) {
+			}
+
+			// It's incredible but the findByWhere sometimes doesn't find the
+			// sequence so finding by the ID is safer
+			if (sequences.isEmpty()) {
+				query = "select ld_id from ld_sequence where ld_name='" + SqlUtil.doubleQuotes(name)
+						+ "' and ld_objectid=" + objectId + " and ld_tenantid=" + tenantId;
+				long sequenceId = queryForLong(query);
+				if (sequenceId != 0L)
+					sequence = findById(sequenceId);
+			} else {
+				sequence = sequences.get(0);
+			}
+
+			if (sequence == null)
+				log.debug("Unable to find sequence " + name + "," + objectId + "," + tenantId);
+			else
+				refresh(sequence);
+
+			return sequence;
 		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
 			return null;
 		}
 	}

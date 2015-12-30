@@ -152,6 +152,16 @@ public interface Storer {
 	public byte[] getBytes(long docId, String resource, long start, long length);
 
 	/**
+	 * Obtains the document's content as string for the specified resource
+	 * 
+	 * @param docId The document's identifier
+	 * @param resource Name of the resource
+	 * 
+	 * @return The document file's as string representation
+	 */
+	public String getString(long docId, String resource);
+	
+	/**
 	 * Computes the total size of the documents repository(in bytes)
 	 */
 	public long getTotalSize();
