@@ -551,9 +551,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			List<Long> results = (List<Long>) findByQuery(query.toString(), null, null);
 			ArrayList<Long> tmpal = new ArrayList<Long>(results);
 			List<Long> docIds = tmpal;
-
-			System.out.println("results " + results);
-
+			
 			if (docIds.isEmpty())
 				return coll;
 

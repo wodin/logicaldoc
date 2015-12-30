@@ -93,6 +93,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 		assert (transaction.getComment() != null);
+		assert (filename != null);
 
 		transaction.setEvent(DocumentEvent.CHECKEDIN.toString());
 
@@ -583,6 +584,7 @@ public class DocumentManagerImpl implements DocumentManager {
 				transaction.setFile(file.getAbsolutePath());
 
 			// Create the record
+			transaction.setEvent(DocumentEvent.STORED.toString());
 			documentSaved = documentDAO.store(docVO, transaction);
 
 			if (documentSaved) {
@@ -949,8 +951,6 @@ public class DocumentManagerImpl implements DocumentManager {
 		versionDAO.delete(versionId);
 
 		versions = versionDAO.findByDocId(versionToDelete.getDocId());
-
-		System.out.println("version to delete: " + versionToDelete.getId());
 
 		Version lastVersion = null;
 		for (Version version : versions) {

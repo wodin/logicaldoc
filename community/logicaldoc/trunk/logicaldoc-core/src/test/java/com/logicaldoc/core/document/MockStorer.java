@@ -106,4 +106,10 @@ public class MockStorer implements Storer {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String getString(long docId, String resource) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

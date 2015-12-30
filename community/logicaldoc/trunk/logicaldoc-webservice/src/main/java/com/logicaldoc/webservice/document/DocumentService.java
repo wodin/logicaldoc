@@ -120,7 +120,7 @@ public interface DocumentService {
 	 * 
 	 * @param sid Session identifier
 	 * @param docIds The documents ids
-	 * @return A value object containing the document's metadata.
+	 * @return  the list of documents
 	 * @throws Exception
 	 */
 	@WebResult(name = "documents")

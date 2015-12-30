@@ -1,4 +1,4 @@
- package com.logicaldoc.core.store;
+package com.logicaldoc.core.store;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -11,6 +11,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -305,6 +306,18 @@ public class FSStorer implements Storer {
 					is.close();
 				} catch (Throwable e) {
 				}
+		}
+	}
+
+	@Override
+	public String getString(long docId, String resource) {
+		StringWriter writer = new StringWriter();
+		try {
+			IOUtils.copy(getStream(docId, resource), writer, "UTF-8");
+			return writer.toString();
+		} catch (Throwable e) {
+			log.error(e.getMessage());
+			return null;
 		}
 	}
 }
