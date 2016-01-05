@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,10 +91,14 @@ public class TicketDownload extends HttpServlet {
 			if (!doc.isPublishing())
 				throw new IOException("Document not published");
 
-			if ("pdf".equals(ticket.getSuffix()))
+			String suffix = ticket.getSuffix();
+			if ("conversion.pdf".equals(suffix)) {
 				converter.createPdf(doc, null, null);
+				if ("pdf".equals(FilenameUtils.getExtension(doc.getFileName()).toLowerCase()))
+					suffix = null;
+			}
 
-			downloadDocument(request, response, doc, null, ticket.getSuffix(), null);
+			downloadDocument(request, response, doc, null, suffix, null);
 			ticket.setCount(ticket.getCount() + 1);
 			ticketDao.store(ticket);
 		} catch (Exception e) {
@@ -135,7 +140,7 @@ public class TicketDownload extends HttpServlet {
 		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 		String resource = storer.getResourceName(doc, fileVersion, suffix);
 		String filename = doc.getFileName();
-		if (suffix!=null && suffix.contains("pdf"))
+		if (suffix != null && suffix.contains("pdf"))
 			filename = doc.getFileName() + ".pdf";
 
 		InputStream is = null;
