@@ -54,6 +54,9 @@ public class SystemInfo {
 
 	protected String runLevel;
 
+	/**
+	 * Deducted server's host name
+	 */
 	protected String hostName;
 
 	protected String[] features;
