@@ -137,7 +137,8 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 														public void onSuccess(Void ret) {
 															reloadParentsOfSelection();
 
-															TreeNode targetNode = getTree().find("folderId", (Object) new Long(target));
+															TreeNode targetNode = getTree().find("folderId",
+																	(Object) new Long(target));
 															if (targetNode != null) {
 																getTree().reloadChildren(targetNode);
 															}
@@ -213,21 +214,26 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				service.getFolder(Session.get().getSid(),
-						Long.parseLong(event.getRecord().getAttributeAsString("folderId")), true,
-						new AsyncCallback<GUIFolder>() {
+				if (getSelectedRecord() != null && getSelectedRecords().length > 1) {
+					Menu contextMenu = prepateContextMenu();
+					contextMenu.showContextMenu();
+				} else {
+					service.getFolder(Session.get().getSid(),
+							Long.parseLong(getSelectedRecord().getAttributeAsString("folderId")), true,
+							new AsyncCallback<GUIFolder>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-							@Override
-							public void onSuccess(GUIFolder folder) {
-								Menu contextMenu = prepateContextMenu(folder);
-								contextMenu.showContextMenu();
-							}
-						});
+								@Override
+								public void onSuccess(GUIFolder folder) {
+									Menu contextMenu = prepateContextMenu(folder);
+									contextMenu.showContextMenu();
+								}
+							});
+				}
 				if (event != null)
 					event.cancel();
 			}
@@ -314,17 +320,48 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	}
 
 	/**
-	 * Prepares the context menu.
+	 * Prepares the context menu for multiple selection.
+	 */
+	private Menu prepateContextMenu() {
+		MenuItem move = new MenuItem();
+		move.setTitle(I18N.message("move"));
+		move.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				MoveDialog dialog = new MoveDialog();
+				dialog.show();
+			}
+		});
+
+		MenuItem copy = new MenuItem();
+		copy.setTitle(I18N.message("copy"));
+		copy.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				CopyDialog dialog = new CopyDialog();
+				dialog.show();
+			}
+		});
+
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.message("ddelete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				onDelete();
+			}
+		});
+
+		Menu contextMenu = new Menu();
+		contextMenu.setItems(move, copy, delete);
+
+		return contextMenu;
+	}
+
+	/**
+	 * Prepares the context menu for single selection
 	 */
 	private Menu prepateContextMenu(final GUIFolder folder) {
 		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		final long id = Long.parseLong(selectedNode.getAttribute("folderId"));
 		final String name = selectedNode.getAttribute("name");
-
-		final ListGridRecord[] selection = getSelectedRecords();
-		boolean multipleSelection = selection != null && selection.length > 1;
-
-		Menu contextMenu = new Menu();
 
 		MenuItem search = new MenuItem();
 		search.setTitle(I18N.message("search"));
@@ -525,6 +562,8 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		if (Clipboard.getInstance().getLastAction().equals(Clipboard.CUT))
 			pasteAsAlias.setEnabled(false);
 
+		Menu contextMenu = new Menu();
+
 		if (Session.get().getUser().isMemberOf("admin") && folder.getType() == 1
 				&& Feature.visible(Feature.MULTI_WORKSPACE)) {
 			delete.setEnabled(!folder.isDefaultWorkspace());
@@ -568,25 +607,6 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 
 		if (externalCall != null)
 			contextMenu.addItem(externalCall);
-
-		// A lot of functions are not available on a multiple selection
-		if (multipleSelection) {
-			reload.setEnabled(false);
-			search.setEnabled(false);
-			create.setEnabled(false);
-			createWorkspace.setEnabled(false);
-			rename.setEnabled(false);
-			addBookmark.setEnabled(false);
-			paste.setEnabled(false);
-			pasteAsAlias.setEnabled(false);
-			exportZip.setEnabled(false);
-			sendToExpArchive.setEnabled(false);
-			externalCall.setEnabled(false);
-			archive.setEnabled(false);
-			applyTemplate.setEnabled(false);
-			audit.setEnabled(false);
-			rss.setEnabled(false);
-		}
 
 		return contextMenu;
 	}
