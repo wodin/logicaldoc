@@ -1200,6 +1200,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				newDoc.setVersion(null);
 				newDoc.setFileVersion(null);
 				newDoc.setFolder(newFolder);
+				newDoc.setIndexed(0);
+				newDoc.setStatus(Document.DOC_UNLOCKED);
+				newDoc.setImmutable(0);
+				newDoc.setBarcoded(0);
+				newDoc.setRating(0);
 
 				History documentTransaction = new History();
 				documentTransaction.setSessionId(transaction.getSessionId());
