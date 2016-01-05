@@ -59,7 +59,11 @@ public class User extends PersistentObject implements Serializable {
 	private String language = "";
 
 	private String email = "";
-	
+
+	/**
+	 * A simple text to be used as a signature in the footer of the outgoing
+	 * emails
+	 */
 	private String emailSignature;
 
 	private String telephone = "";
