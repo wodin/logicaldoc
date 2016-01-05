@@ -49,11 +49,11 @@ public class DownloadTicketDialog extends Window {
 		setShowModalMask(true);
 		centerInPage();
 		setAutoSize(true);
-		setMembersMargin(5);
+		setMembersMargin(10);
 
 		this.document = document;
 
-		save = new IButton(I18N.message("send"));
+		save = new IButton(I18N.message("save"));
 		save.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
 			@Override
