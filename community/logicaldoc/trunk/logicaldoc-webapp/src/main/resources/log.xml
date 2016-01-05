@@ -122,7 +122,7 @@
 	</appender>
 
     <category name="org.hibernate" additivity="true">
-      <priority value="debug" />
+      <priority value="error" />
       <appender-ref ref="DB" />
     </category>
 

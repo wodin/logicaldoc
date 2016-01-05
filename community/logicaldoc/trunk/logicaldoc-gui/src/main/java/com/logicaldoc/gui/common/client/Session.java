@@ -268,7 +268,12 @@ public class Session {
 
 				}
 
-				Session.get().close();
+				try {
+					Session.get().close();
+				} catch (Throwable t) {
+
+				}
+				
 				Util.redirectToRoot();
 			}
 		});
