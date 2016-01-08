@@ -9,6 +9,21 @@
 
                     LogicalDOC Community Edition
 
+LogicalDOC 7.4.1 (2016-01-15; logicaldoc-7.4.1)
+==============================================================
+614 - Support for locking in WebDAV protocol - Improvement - WebDAV
+535 - Display hostname on under System information - Improvement - User Interface
+544 - Option to generate download ticket link - Improvement - Core
+547 - Ability to work on multiple folders - Improvement - User Interface
+576 - Template: Cleanup orphaned preset options - Improvement - Core
+582 - Gallery View Sort Order Change - Improvement - Core
+595 - Possibility to append Signature on function send by email - Improvement - User Interface
+600 - Ability to have Template EXT Properties arranged in more than two columns - Improvement - User Interface
+611 - HTML5 files uploader - Improvement - User Interface
+613 - Finnish localization - Improvement - User Interface
+605 - Update GWT and SmartGWT - Task - User Interface
+
+
 LogicalDOC 7.4 (2015-10-30; logicaldoc-7.4)
 ==============================================================
 590 - Easy the creation of folder - Improvement - User Interface 	
