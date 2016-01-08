@@ -157,6 +157,20 @@ public class UploadServlet extends UploadAction {
 		super.doPost(request, response);
 	}
 
+	@Override
+	protected String parsePostRequest(HttpServletRequest request, HttpServletResponse response) {
+		setUploadMax();
+		return super.parsePostRequest(request, response);
+	}
+
+	@Override
+	public void checkRequest(HttpServletRequest request) {
+		setUploadMax();
+		
+		if (super.maxFileSize > 0)
+			super.checkRequest(request);
+	}
+
 	/**
 	 * Remove a file when the user sends a delete request
 	 */
@@ -246,21 +260,11 @@ public class UploadServlet extends UploadAction {
 
 	protected void setUploadMax() {
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		int maxUploadMB = 10;
+		int maxUploadMB = 100;
 		if (config.getProperty("upload.maxsize") != null)
 			maxUploadMB = Integer.parseInt(config.getProperty("upload.maxsize"));
-		super.maxSize = maxUploadMB * 1024 * 1024;
-	}
-
-	@Override
-	public void checkRequest(HttpServletRequest request) {
-		// Load the correct max size specification
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		int max = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
-		if (max > 0) {
-			super.maxSize = Integer.parseInt(config.getProperty("upload.maxsize")) * 1024 * 1024;
-			super.checkRequest(request);
-		}
+		super.maxFileSize = maxUploadMB * 1024 * 1024;
+		super.maxSize = super.maxFileSize;
 	}
 
 	/**
