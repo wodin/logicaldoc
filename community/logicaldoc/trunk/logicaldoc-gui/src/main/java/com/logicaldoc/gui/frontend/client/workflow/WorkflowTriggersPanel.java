@@ -97,14 +97,13 @@ public class WorkflowTriggersPanel extends VLayout {
 			public void onClick(ClickEvent event) {
 				final Window window = new Window();
 				window.setTitle(I18N.message("workflowtriggertext"));
-				window.setWidth(400);
-				window.setHeight(180);
 				window.setCanDragResize(true);
 				window.setIsModal(true);
 				window.setShowModalMask(true);
 				window.centerInPage();
+				window.setAutoSize(true);
 
-				VStack layout = new VStack(10);
+				VStack layout = new VStack(5);
 
 				// Workflows list
 				DynamicForm workflowForm = new DynamicForm();
@@ -188,7 +187,7 @@ public class WorkflowTriggersPanel extends VLayout {
 			}
 		});
 
-		setMembersMargin(5);
+		setMembersMargin(4);
 		addMember(buttons);
 	}
 
