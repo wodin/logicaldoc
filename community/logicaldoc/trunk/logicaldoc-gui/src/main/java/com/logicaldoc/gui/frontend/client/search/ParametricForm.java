@@ -286,13 +286,16 @@ public class ParametricForm extends VLayout {
 			options.setLanguage(vm.getValueAsString("language"));
 		options.setExpressionLanguage(I18N.getLocale());
 
-		if (values.containsKey("template") && !((String) values.get("template")).isEmpty())
+		if (values.containsKey("template") && values.get("template") != null
+				&& !((String) values.get("template")).isEmpty())
 			options.setTemplate(new Long((String) values.get("template")));
 
 		options.setTopOperator((String) values.get("match"));
 
-		options.setFolder(folder.getFolderId());
-		options.setFolderName(folder.getFolderName());
+		if (folder != null) {
+			options.setFolder(folder.getFolderId());
+			options.setFolderName(folder.getFolderName());
+		}
 
 		options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
 
@@ -316,12 +319,11 @@ public class ParametricForm extends VLayout {
 				fieldValue = fieldValue.toString().equals("yes") ? 1L : 0L;
 			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_DATE))
 				fieldValue = (Date) fieldValue;
-			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET)){
+			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET)) {
 				fieldName = fieldName.replaceAll("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET, "type:"
 						+ GUIExtendedAttribute.TYPE_STRING);
 			}
 
-			
 			GUICriterion criterion = new GUICriterion();
 			criterion.setField(fieldName);
 
