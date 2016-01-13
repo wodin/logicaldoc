@@ -43,14 +43,12 @@ public class TransitionDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", I18N.message("transition")));
-		setWidth(340);
-		setHeight(200);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
-		centerInPage();
-		setPadding(5);
+		setAutoSize(true);
 		setMargin(3);
+		centerInPage();
 
 		form = new DynamicForm();
 		form.setTitleOrientation(TitleOrientation.TOP);

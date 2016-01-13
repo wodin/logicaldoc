@@ -37,15 +37,13 @@ public class StatusDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", I18N.message("task")));
-		setWidth(250);
-		setAutoHeight();
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
-		centerInPage();
-		setPadding(5);
 		setMargin(3);
 		setAutoSize(true);
+		setWidth(400);
+		centerInPage();
 
 		form = new DynamicForm();
 		form.setTitleOrientation(TitleOrientation.TOP);
