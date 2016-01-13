@@ -74,13 +74,13 @@ public class TaskDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("editworkflowstate", state.getType() == GUIWFState.TYPE_TASK ? I18N.message("task")
 				: I18N.message("endstate")));
-		setWidth(350);
-		setHeight(state.getType() == GUIWFState.TYPE_TASK ? 430 : 360);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
+		setAutoSize(true);
+		setMargin(3);
+		setWidth(400);
 		centerInPage();
-		setPadding(5);
 
 		DynamicForm taskForm = new DynamicForm();
 		taskForm.setTitleOrientation(TitleOrientation.TOP);
@@ -90,6 +90,7 @@ public class TaskDialog extends Window {
 		taskName.setRequired(true);
 		taskName.setWidth(250);
 		TextAreaItem taskDescr = ItemFactory.newTextAreaItem("taskDescr", "description", this.state.getDescription());
+		taskDescr.setWidth(350);
 		taskDescr.setWrapTitle(false);
 		taskForm.setFields(taskName, taskDescr);
 		addItem(taskForm);
@@ -295,7 +296,7 @@ public class TaskDialog extends Window {
 		participantsList.setShowTitle(false);
 		participantsList.setMultipleAppearance(MultipleAppearance.GRID);
 		participantsList.setMultiple(true);
-		participantsList.setWidth(200);
+		participantsList.setWidth(300);
 		participantsList.setHeight(70);
 		participantsList.setEndRow(true);
 		participantsList.setValueMap(participants);
