@@ -1,4 +1,4 @@
-package com.logicaldoc.core.communication;
+package com.logicaldoc.core.script;
 
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderHistory;
