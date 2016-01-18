@@ -1,19 +1,9 @@
 package com.logicaldoc.core.communication;
 
-import java.io.StringWriter;
-import java.util.Locale;
 import java.util.Map;
 
-import org.apache.velocity.VelocityContext;
-import org.apache.velocity.app.Velocity;
-import org.apache.velocity.runtime.RuntimeConstants;
-import org.apache.velocity.runtime.log.Log4JLogChute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.logicaldoc.core.PersistentObject;
-import com.logicaldoc.core.SystemInfo;
-import com.logicaldoc.i18n.I18N;
+import com.logicaldoc.core.script.ScriptEngine;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -24,8 +14,6 @@ import com.logicaldoc.util.config.ContextProperties;
  * @since 6.5
  */
 public class MessageTemplate extends PersistentObject {
-
-	private static Logger log = LoggerFactory.getLogger(MessageTemplate.class);
 
 	private String name = "";
 
@@ -41,45 +29,14 @@ public class MessageTemplate extends PersistentObject {
 	}
 
 	private String getFormattedContent(Map<String, Object> dictionary, String text) {
-		// This is needed to handle new lines
-		dictionary.put("nl", "\n");
-
-		// The product name
-		dictionary.put("product", SystemInfo.get().getProduct());
-
-		// This is the locale
-		Locale locale = LocaleUtil.toLocale(language);
-		dictionary.put("locale", locale);
+		ScriptEngine script = new ScriptEngine(getName(), LocaleUtil.toLocale(language));
 
 		// General configurations
 		ContextProperties config = (ContextProperties) com.logicaldoc.util.Context.getInstance().getBean(
 				ContextProperties.class);
 		dictionary.put("serverUrl", config.get("server.url"));
 
-		// This is needed to format dates
-		DateTool dateTool = new DateTool(I18N.getMessages(locale).get("format_date"), I18N.getMessages(locale).get(
-				"format_dateshort"));
-		dictionary.put("DateTool", dateTool);
-
-		// Localized messages map
-		dictionary.put("I18N", new I18NTool(I18N.getMessages(locale)));
-
-		// This is needed to print document's URL
-		dictionary.put("DocTool", new DocTool());
-
-		// This is needed to print folder's URL
-		dictionary.put("FolderTool", new FolderTool());
-
-		StringWriter writer = new StringWriter();
-		try {
-			VelocityContext context = new VelocityContext(dictionary);
-			Velocity.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, Log4JLogChute.class.getName());
-			Velocity.setProperty("runtime.log.logsystem.log4j.logger", Velocity.class.getName());
-			Velocity.evaluate(context, writer, getName(), text.replace("\n", "${nl}"));
-			return writer.toString();
-		} catch (Throwable e) {
-			return text;
-		}
+		return script.evaluate(text, dictionary);
 	}
 
 	public String getFormattedBody(Map<String, Object> dictionary) {
