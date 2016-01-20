@@ -46,7 +46,7 @@ public class Feature {
 	public static final int SCAN = 16;
 
 	public static final int AUDIT = 17;
-	
+
 	public static final int NOTIFICATIONS = 18;
 
 	public static final int WORKFLOW = 19;
@@ -80,11 +80,11 @@ public class Feature {
 	public static final int WEBCONTENT = 33;
 
 	public static final int CONTENT_DIFF = 34;
-	
+
 	public static final int UPDATES = 35;
 
 	public static final int MOBILE_GUI = 36;
-	
+
 	public static final int SHOW_LICENSEE = 40;
 
 	public static final int SHOW_USERS_WARNING = 41;
@@ -162,10 +162,14 @@ public class Feature {
 	public static final int SHAREFILE = 84;
 
 	public static final int STAMP = 85;
-	
+
 	public static final int FORM = 86;
-	
+
 	public static final int CUSTOM_REPORTS = 87;
+
+	public static final int AUTO_NAMING = 88;
+
+	public static final int AUTO_FOLDING = 89;
 
 	private static Set<String> features = new HashSet<String>();
 

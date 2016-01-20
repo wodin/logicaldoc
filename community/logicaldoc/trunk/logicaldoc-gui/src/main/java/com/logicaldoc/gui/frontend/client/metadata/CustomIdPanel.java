@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICustomId;
 import com.logicaldoc.gui.common.client.beans.GUISequence;
@@ -34,15 +35,13 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
 /**
- * Shows the set of filters associated to the curent account
+ * Shows the set of filters associated to the current account
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 6.0
  */
 public class CustomIdPanel extends VLayout {
 	private CustomIdServiceAsync service = (CustomIdServiceAsync) GWT.create(CustomIdService.class);
-
-	private ListGrid schemes;
 
 	private ListGrid sequences;
 
@@ -53,28 +52,37 @@ public class CustomIdPanel extends VLayout {
 
 		TabSet tabs = new TabSet();
 
-		Tab schemesTab = new Tab();
-		schemesTab.setTitle(I18N.message("customid"));
+		Tab customIdTab = new Tab();
+		customIdTab.setTitle(I18N.message("customid"));
+		customIdTab.setPane(setupSchemesPanel(schemesData, GUICustomId.CUSTOMID_SCHEME));
+
+		Tab autonamingTab = new Tab();
+		autonamingTab.setTitle(I18N.message("autonaming"));
+		autonamingTab.setPane(setupSchemesPanel(schemesData, GUICustomId.AUTONAMING_SCHEME));
+
+		Tab autofoldingTab = new Tab();
+		autofoldingTab.setTitle(I18N.message("autofolding"));
+		autofoldingTab.setPane(setupSchemesPanel(schemesData, GUICustomId.AUTOFOLDING_SCHEME));
+
 		Tab sequencesTab = new Tab();
 		sequencesTab.setTitle(I18N.message("sequences"));
-
-		setupSchemesPanel(schemesData);
 		setupSequencesPanel(sequencesData);
-
-		VLayout sc = new VLayout();
-		HTMLFlow hint = new HTMLFlow(I18N.message("customidhint"));
-		hint.setMargin(3);
-		sc.addMember(hint);
-		sc.addMember(schemes);
-
-		schemesTab.setPane(sc);
 		sequencesTab.setPane(sequences);
 
-		tabs.setTabs(schemesTab, sequencesTab);
+		ArrayList<Tab> tbs = new ArrayList<Tab>();
+		if (Feature.enabled(Feature.CUSTOMID))
+			tbs.add(customIdTab);
+		if (Feature.enabled(Feature.AUTO_NAMING))
+			tbs.add(autonamingTab);
+		if (Feature.enabled(Feature.AUTO_FOLDING))
+			tbs.add(autofoldingTab);
+		tbs.add(sequencesTab);
+		tabs.setTabs(tbs.toArray(new Tab[0]));
+		
 		addMember(tabs);
 	}
 
-	private void setupSchemesPanel(GUICustomId[] data) {
+	private VLayout setupSchemesPanel(GUICustomId[] data, String type) {
 		ListGridField template = new ListGridField("templateName", I18N.message("template"));
 		template.setWidth(120);
 		template.setCanEdit(false);
@@ -93,47 +101,51 @@ public class CustomIdPanel extends VLayout {
 		regenerate.setWidth(150);
 		regenerate.setType(ListGridFieldType.BOOLEAN);
 
-		schemes = new ListGrid();
-		schemes.setEmptyMessage(I18N.message("notitemstoshow"));
-		schemes.setShowAllRecords(true);
-		schemes.setCanEdit(true);
-		schemes.setWidth100();
-		schemes.setHeight100();
-		schemes.setFields(template);
-		schemes.setSelectionType(SelectionStyle.SINGLE);
-		schemes.setModalEditing(true);
+		final ListGrid customIds = new ListGrid();
+		customIds.setEmptyMessage(I18N.message("notitemstoshow"));
+		customIds.setShowAllRecords(true);
+		customIds.setCanEdit(true);
+		customIds.setWidth100();
+		customIds.setHeight100();
+		customIds.setFields(template);
+		customIds.setSelectionType(SelectionStyle.SINGLE);
+		customIds.setModalEditing(true);
 
 		List<ListGridRecord> records = new ArrayList<ListGridRecord>();
 		if (data != null)
 			for (GUICustomId cid : data) {
+				if (!type.equals(cid.getType()))
+					continue;
 				ListGridRecord record = new ListGridRecord();
 				record.setAttribute("templateId", Long.toString(cid.getTemplateId()));
 				record.setAttribute("templateName", Util.strip(cid.getTemplateName()));
 				if (cid.getScheme() != null)
 					record.setAttribute("scheme", cid.getScheme());
 				record.setAttribute("regenerate", cid.isRegenerate());
+				record.setAttribute("type", cid.getType());
 				records.add(record);
 			}
-		schemes.setData(records.toArray(new ListGridRecord[0]));
+		customIds.setData(records.toArray(new ListGridRecord[0]));
 
-		schemes.setFields(template, scheme, regenerate);
+		customIds.setFields(template, scheme, regenerate);
 
-		schemes.addCellContextClickHandler(new CellContextClickHandler() {
+		customIds.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				showCustomIdContextMenu();
+				showSchemeContextMenu(customIds);
 				event.cancel();
 			}
 		});
 
-		schemes.addEditCompleteHandler(new EditCompleteHandler() {
+		customIds.addEditCompleteHandler(new EditCompleteHandler() {
 			@Override
 			public void onEditComplete(EditCompleteEvent event) {
 				GUICustomId cid = new GUICustomId();
-				ListGridRecord record = schemes.getRecord(event.getRowNum());
+				ListGridRecord record = customIds.getRecord(event.getRowNum());
 				cid.setTemplateId(Long.parseLong(record.getAttribute("templateId")));
 				cid.setRegenerate(record.getAttributeAsBoolean("regenerate"));
 				cid.setScheme(record.getAttributeAsString("scheme"));
+				cid.setType(record.getAttributeAsString("type"));
 
 				service.save(Session.get().getSid(), cid, new AsyncCallback<Void>() {
 
@@ -148,6 +160,14 @@ public class CustomIdPanel extends VLayout {
 				});
 			}
 		});
+
+		VLayout sc = new VLayout();
+		HTMLFlow hint = new HTMLFlow(I18N.message("customidhint"));
+		hint.setMargin(3);
+		sc.addMember(hint);
+		sc.addMember(customIds);
+
+		return sc;
 	}
 
 	private void setupSequencesPanel(GUISequence[] data) {
@@ -226,7 +246,7 @@ public class CustomIdPanel extends VLayout {
 		});
 	}
 
-	private void showCustomIdContextMenu() {
+	private void showSchemeContextMenu(final ListGrid schemes) {
 		Menu contextMenu = new Menu();
 
 		MenuItem clean = new MenuItem();
@@ -240,7 +260,7 @@ public class CustomIdPanel extends VLayout {
 							final ListGridRecord record = schemes.getSelectedRecord();
 							service.delete(Session.get().getSid(),
 									Long.parseLong(record.getAttributeAsString("templateId")),
-									new AsyncCallback<Void>() {
+									record.getAttributeAsString("type"), new AsyncCallback<Void>() {
 
 										@Override
 										public void onFailure(Throwable caught) {

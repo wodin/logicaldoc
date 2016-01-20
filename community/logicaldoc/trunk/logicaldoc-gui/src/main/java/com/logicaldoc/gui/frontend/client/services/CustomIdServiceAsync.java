@@ -6,9 +6,9 @@ import com.logicaldoc.gui.common.client.beans.GUISequence;
 
 public interface CustomIdServiceAsync {
 
-	void delete(String sid, long templateId, AsyncCallback<Void> callback);
+	void delete(String sid, long templateId, String type, AsyncCallback<Void> callback);
 
-	void get(String sid, long id, AsyncCallback<GUICustomId> callback);
+	void get(String sid, long templateId, String type, AsyncCallback<GUICustomId> callback);
 
 	void load(String sid, AsyncCallback<GUICustomId[]> callback);
 
