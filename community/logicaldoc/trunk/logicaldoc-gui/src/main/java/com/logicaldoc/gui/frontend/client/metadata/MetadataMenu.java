@@ -103,19 +103,22 @@ public class MetadataMenu extends VLayout {
 			}
 		});
 
-		Button customid = new Button(I18N.message("customid"));
-		customid.setWidth100();
-		customid.setHeight(25);
+		Button customidAndAutonaming = new Button(I18N.message("customidandnaming"));
+		customidAndAutonaming.setWidth100();
+		customidAndAutonaming.setHeight(25);
 
-		if (Feature.visible(Feature.CUSTOMID) && Menu.enabled(Menu.CUSTOM_ID)) {
-			addMember(customid);
-			if (!Feature.enabled(Feature.CUSTOMID)) {
-				customid.setDisabled(true);
-				customid.setTooltip(I18N.message("featuredisabled"));
+		if (Menu.enabled(Menu.CUSTOM_ID)
+				&& (Feature.visible(Feature.CUSTOMID) || Feature.visible(Feature.AUTO_NAMING) || Feature
+						.visible(Feature.AUTO_FOLDING))) {
+			addMember(customidAndAutonaming);
+			if (!Feature.enabled(Feature.CUSTOMID) && !Feature.enabled(Feature.AUTO_NAMING)
+					&& !Feature.enabled(Feature.AUTO_FOLDING)) {
+				customidAndAutonaming.setDisabled(true);
+				customidAndAutonaming.setTooltip(I18N.message("featuredisabled"));
 			}
 		}
 
-		customid.addClickHandler(new ClickHandler() {
+		customidAndAutonaming.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				customIdService.load(Session.get().getSid(), new AsyncCallback<GUICustomId[]>() {

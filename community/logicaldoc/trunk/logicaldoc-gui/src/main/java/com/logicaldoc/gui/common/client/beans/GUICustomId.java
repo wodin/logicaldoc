@@ -4,6 +4,12 @@ import java.io.Serializable;
 
 public class GUICustomId implements Serializable, Comparable<GUICustomId> {
 
+	public static final String CUSTOMID_SCHEME = "customid-scheme";
+
+	public static final String AUTONAMING_SCHEME = "autonaming-scheme";
+
+	public static final String AUTOFOLDING_SCHEME = "autofolding-scheme";
+
 	private static final long serialVersionUID = 1L;
 
 	private long templateId;
@@ -13,6 +19,8 @@ public class GUICustomId implements Serializable, Comparable<GUICustomId> {
 	private String scheme;
 
 	private boolean regenerate = false;
+
+	private String type = CUSTOMID_SCHEME;
 
 	public long getTemplateId() {
 		return templateId;
@@ -48,6 +56,18 @@ public class GUICustomId implements Serializable, Comparable<GUICustomId> {
 
 	@Override
 	public int compareTo(GUICustomId o) {
-		return this.templateName.compareTo(o.templateName);
+		int comp = this.type.compareTo(o.getType());
+		if (comp == 0)
+			return this.templateName.compareTo(o.templateName);
+		else
+			return comp;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }
