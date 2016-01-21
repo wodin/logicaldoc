@@ -1,6 +1,5 @@
 package com.logicaldoc.webdav.session;
 
-import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.webdav.AuthenticationUtil.Credentials;
 
 /**
