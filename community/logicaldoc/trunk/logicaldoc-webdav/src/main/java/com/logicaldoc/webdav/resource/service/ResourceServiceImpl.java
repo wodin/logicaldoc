@@ -125,7 +125,7 @@ public class ResourceServiceImpl implements ResourceService {
 	public List<Resource> getChildResources(Resource parentResource) {
 		List<Resource> resourceList = new LinkedList<Resource>();
 		final Long folderID = Long.parseLong(parentResource.getID());
-		boolean hasAccess = folderDAO.isReadEnable(folderID, parentResource.getRequestedPerson());
+		boolean hasAccess = folderDAO.isReadEnabled(folderID, parentResource.getRequestedPerson());
 
 		User user = userDAO.findById(parentResource.getRequestedPerson());
 		userDAO.initialize(user);
@@ -205,7 +205,7 @@ public class ResourceServiceImpl implements ResourceService {
 		if (docs.isEmpty())
 			return null;
 		Document document = docs.iterator().next();
-		boolean hasAccess = folderDAO.isReadEnable(document.getFolder().getId(), userId);
+		boolean hasAccess = folderDAO.isReadEnabled(document.getFolder().getId(), userId);
 
 		if (hasAccess == false)
 			throw new DavException(DavServletResponse.SC_FORBIDDEN,

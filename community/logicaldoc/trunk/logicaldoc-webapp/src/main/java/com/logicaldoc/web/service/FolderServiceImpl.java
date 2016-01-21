@@ -151,7 +151,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		try {
 			FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
-			if (!dao.isReadEnable(folderId, session.getUserId()))
+			if (!dao.isReadEnabled(folderId, session.getUserId()))
 				return null;
 
 			Folder folder = dao.findById(folderId);
@@ -607,7 +607,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	public void paste(String sid, long[] docIds, long folderId, String action) throws ServerException {
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
-		if (!fdao.isWriteEnable(folderId, ServiceUtil.getSessionUser(sid).getId()))
+		if (!fdao.isWriteEnabled(folderId, ServiceUtil.getSessionUser(sid).getId()))
 			throw new RuntimeException("Cannot write in folder " + folderId);
 
 		if (action.equals(Clipboard.CUT))

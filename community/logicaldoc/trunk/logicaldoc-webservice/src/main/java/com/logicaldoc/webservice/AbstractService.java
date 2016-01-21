@@ -134,7 +134,7 @@ public class AbstractService {
 
 	protected void checkReadEnable(User user, long folderId) throws Exception {
 		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		if (!dao.isReadEnable(folderId, user.getId())) {
+		if (!dao.isReadEnabled(folderId, user.getId())) {
 			String message = "User " + user.getUserName() + " doesn't have read permission on folder " + folderId;
 			log.error(message);
 			throw new Exception(message);

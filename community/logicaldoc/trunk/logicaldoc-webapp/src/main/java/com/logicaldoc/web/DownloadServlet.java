@@ -142,7 +142,8 @@ public class DownloadServlet extends HttpServlet {
 		if (!StringUtils.isEmpty(docId)) {
 			doc = docDao.findById(Long.parseLong(docId));
 
-			if (user!=null && !folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
+			if (user != null
+					&& !folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
 				throw new IOException("You don't have the DOWNLOAD permission");
 
 			/*

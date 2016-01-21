@@ -2,9 +2,7 @@ package com.logicaldoc.web;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -28,16 +26,16 @@ import com.logicaldoc.web.util.ServiceUtil;
 import com.logicaldoc.web.util.ServletIOUtil;
 
 /**
- * This servlet is responsible for document preview. It searches for the
+ * This servlet is responsible for document thumbnail. It searches for the
  * attribute docId in any scope and extracts the proper document's content. You
- * may specify the suffix to download the thumbnail or the flash.
+ * may specify the suffix to download the thumbnail or the tile.
  * 
  * @author Alessandro Gasparini - Logical Objects
  * @since 4.5
  */
-public class DocumentPreview extends HttpServlet {
+public class ThumbnailServlet extends HttpServlet {
 
-	/** Format can be thumb.jpg or preview.swf */
+	/** Format can be tile.jpg, thumb.jpg or convert.pdf */
 	protected static final String SUFFIX = "suffix";
 
 	public static final String DOC_ID = "docId";
@@ -48,12 +46,12 @@ public class DocumentPreview extends HttpServlet {
 
 	private static final long serialVersionUID = -6956612970433309888L;
 
-	protected static Logger log = LoggerFactory.getLogger(DocumentPreview.class);
+	protected static Logger log = LoggerFactory.getLogger(ThumbnailServlet.class);
 
 	/**
 	 * Constructor of the object.
 	 */
-	public DocumentPreview() {
+	public ThumbnailServlet() {
 		super();
 	}
 
@@ -73,7 +71,6 @@ public class DocumentPreview extends HttpServlet {
 		String version = request.getParameter(VERSION);
 		String suffix = request.getParameter(SUFFIX);
 
-		InputStream stream = null;
 		try {
 			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
 
@@ -107,29 +104,18 @@ public class DocumentPreview extends HttpServlet {
 
 			String resource = storer.getResourceName(docId, fileVersion, suffix);
 
-			// 2) the thumbnail/preview doesn't exist, create it
+			// 2) the thumbnail doesn't exist, create it
 			if (!storer.exists(docId, resource)) {
 				log.debug("Need for preview creation");
 				createPreviewResource(session.getId(), doc, fileVersion, resource);
 			}
 
-			stream = storer.getStream(docId, resource);
-
-			if (stream == null) {
-				log.debug("Preview resource not available");
-				forwardPreviewNotAvailable(request, response, suffix, session.getTenantName());
-				return;
-			}
-
-			// 3) return the the thumbnail/preview resource
+			// 3) return the the thumbnail resource
 			ServletIOUtil.downloadDocument(request, response, session.getId(), docId, fileVersion,
 					storer.getResourceName(doc, fileVersion, suffix), suffix, user);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			new IOException(t.getMessage());
-		} finally {
-			if (stream != null)
-				stream.close();
 		}
 	}
 
@@ -169,29 +155,5 @@ public class DocumentPreview extends HttpServlet {
 
 		if (resource.endsWith("tile.jpg"))
 			return;
-
-		/*
-		 * We need to produce the SWF conversion
-		 */
-		if (!storer.exists(doc.getId(), resource) && resource.endsWith("preview.swf")) {
-			try {
-				thumbManager.createPreview(doc, fileVersion, sid);
-				log.debug("Created preview " + resource);
-			} catch (Throwable t) {
-				log.error(t.getMessage(), t);
-			}
-		}
-	}
-
-	protected void forwardPreviewNotAvailable(HttpServletRequest request, HttpServletResponse response, String suffix,
-			String tenant) {
-		try {
-			RequestDispatcher rd = request.getRequestDispatcher("/flash/previewnotavailable.swf");
-			if ("thumb.jpg".equals(suffix) || "tile.jpg".equals(suffix))
-				rd = request.getRequestDispatcher("/skin/images/preview_na.gif");
-			rd.forward(request, response);
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-		}
 	}
 }
