@@ -83,16 +83,9 @@ public class GUISettingsPanel extends VLayout {
 		savelogin.setHint(I18N.message("saveloginhint"));
 		savelogin.setWrapTitle(false);
 
-		TextItem previewPages = ItemFactory.newIntegerItem("previewpages", I18N.message("previewpages"), null);
-		previewPages.setRequired(true);
-
 		TextItem previewSize = ItemFactory.newIntegerItem("previewsize", I18N.message("previewwindow"), null);
 		previewSize.setHint("%");
 		previewSize.setRequired(true);
-
-		TextItem previewZoom = ItemFactory.newIntegerItem("previewzoom", I18N.message("previewzoom"), null);
-		previewZoom.setHint("%");
-		previewZoom.setRequired(true);
 
 		IntegerItem previewTimeout = ItemFactory.newIntegerItem("previewtimeout", "previewtimeout", null);
 		previewTimeout.setHint(I18N.message("seconds"));
@@ -157,21 +150,17 @@ public class GUISettingsPanel extends VLayout {
 		sessionheartbeat.setRequired(true);
 		sessionheartbeat.setWrapTitle(false);
 
-		parametersForm.setItems(welcome, previewPages, previewSize, previewZoom, previewTimeout, thumbSize,
-				thumbQuality, tileSize, tileQuality, uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr,
-				webcontentfolders, savelogin, sessiontimeout, sessionheartbeat);
+		parametersForm.setItems(welcome, previewSize, previewTimeout, thumbSize, thumbQuality, tileSize, tileQuality,
+				uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin,
+				sessiontimeout, sessionheartbeat);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().endsWith("gui.welcome"))
 				welcome.setValue(p.getValue());
 			if (p.getName().endsWith("gui.savelogin"))
 				savelogin.setValue(p.getValue().equals("true") ? "yes" : "no");
-			if (p.getName().endsWith("gui.preview.pages"))
-				previewPages.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("gui.preview.size"))
 				previewSize.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().endsWith("gui.preview.zoom"))
-				previewZoom.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("gui.preview.timeout"))
 				previewTimeout.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("gui.thumbnail.size"))
@@ -215,12 +204,8 @@ public class GUISettingsPanel extends VLayout {
 							.get("welcome")));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.savelogin", "yes".equals(values
 							.get("savelogin")) ? "true" : "false"));
-					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.pages", values.get(
-							"previewpages").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.size", values.get(
 							"previewsize").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.zoom", values.get(
-							"previewzoom").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.timeout", values.get(
 							"previewtimeout").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.thumbnail.size", values.get(

@@ -541,11 +541,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testIsWriteEnable() {
-		Assert.assertTrue(dao.isWriteEnable(Folder.ROOTID, 1));
-		Assert.assertTrue(dao.isWriteEnable(6, 1));
-		Assert.assertTrue(dao.isWriteEnable(1200, 3));
-		Assert.assertTrue(dao.isWriteEnable(Folder.ROOTID, 3));
-		Assert.assertFalse(dao.isWriteEnable(Folder.ROOTID, 999));
+		Assert.assertTrue(dao.isWriteEnabled(Folder.ROOTID, 1));
+		Assert.assertTrue(dao.isWriteEnabled(6, 1));
+		Assert.assertTrue(dao.isWriteEnabled(1200, 3));
+		Assert.assertTrue(dao.isWriteEnabled(Folder.ROOTID, 3));
+		Assert.assertFalse(dao.isWriteEnabled(Folder.ROOTID, 999));
 	}
 
 	@Test
@@ -556,11 +556,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testIsReadEnable() {
-		Assert.assertTrue(dao.isReadEnable(Folder.ROOTID, 1));
-		Assert.assertTrue(dao.isReadEnable(5, 1));
-		Assert.assertFalse(dao.isReadEnable(Folder.ROOTID, 22));
-		Assert.assertFalse(dao.isReadEnable(Folder.ROOTID, 999));
-		Assert.assertTrue(dao.isReadEnable(1200, 3));
+		Assert.assertTrue(dao.isReadEnabled(Folder.ROOTID, 1));
+		Assert.assertTrue(dao.isReadEnabled(5, 1));
+		Assert.assertFalse(dao.isReadEnabled(Folder.ROOTID, 22));
+		Assert.assertFalse(dao.isReadEnabled(Folder.ROOTID, 999));
+		Assert.assertTrue(dao.isReadEnabled(1200, 3));
 	}
 
 	@Test

@@ -101,7 +101,7 @@ public class FolderSearch extends Search {
 				query.append(" and ld_id in ");
 				query.append(accessibleIds.toString().replace('[', '(').replace(']', ')'));
 			}
-		} else if (folderDAO.isReadEnable(options.getFolderId(), options.getUserId())) {
+		} else if (folderDAO.isReadEnabled(options.getFolderId(), options.getUserId())) {
 			query.append(" and ld_id = " + options.getFolderId());
 		}
 

@@ -20,7 +20,7 @@ public class PreviewPanel extends DocumentDetailTab {
 	@Override
 	public void onTabSelected() {
 		if (panel == null) {
-			panel = new com.logicaldoc.gui.common.client.widgets.PreviewPanel(document, 100);
+			panel = new com.logicaldoc.gui.common.client.widgets.PreviewPanel(document);
 			setMembers(panel);
 		}
 	}

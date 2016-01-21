@@ -163,7 +163,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					url += "&docId=";
 					for (long id : selection)
 						url += Long.toString(id) + "|";
-					WindowUtils.openUrl(url);
+					WindowUtils.openUrl(url,"_blank",null);
 				}
 			}
 		});

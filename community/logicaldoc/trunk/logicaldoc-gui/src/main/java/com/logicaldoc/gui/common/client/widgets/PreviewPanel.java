@@ -1,13 +1,10 @@
 package com.logicaldoc.gui.common.client.widgets;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.google.gwt.core.client.GWT;
-import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.ContentsType;
@@ -20,7 +17,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 /**
  * This panel is used to show the document preview.
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 7.1.1
  */
 public class PreviewPanel extends VLayout {
@@ -36,32 +33,18 @@ public class PreviewPanel extends VLayout {
 
 	private String fileVersion;
 
-	private boolean printEnabled = false;
-
 	private String language;
 
-	private int zoom = 0;
-
-	public PreviewPanel(GUIDocument document, Integer zoom) {
-		this(document.getId(), document.getFileVersion(), document.getFileName(), false, zoom);
+	public PreviewPanel(GUIDocument document) {
+		this(document.getId(), document.getFileVersion(), document.getFileName());
 	}
 
-	public PreviewPanel(long docId, String fileVersion, String filename, boolean printEnabled, Integer zoom) {
+	public PreviewPanel(long docId, String fileVersion, String filename) {
 		this.id = docId;
 		this.fileName = filename;
 		this.fileVersion = fileVersion;
-		this.printEnabled = printEnabled;
 
 		retrieveUserInfo();
-
-		if (zoom == null)
-			try {
-				this.zoom = new Integer(Session.get().getInfo().getConfig("gui.preview.zoom"));
-			} catch (Throwable t) {
-				this.zoom = 100;
-			}
-		else
-			this.zoom = zoom;
 
 		if (Util.isMediaFile(filename.toLowerCase())) {
 			reloadMedia();
@@ -142,19 +125,12 @@ public class PreviewPanel extends VLayout {
 		String contents = "";
 
 		try {
-			if (Feature.enabled(Feature.PREVIEW)) {
-				contents = "<iframe src='" + Util.contextPath() + "/prev" + (printEnabled ? "" : "_ro")
-						+ "/index.jsp?sid=" + Session.get().getSid() + "&docId=" + id
-						+ (fileVersion != null ? "&fileVersion=" + fileVersion : "") + "&lang=" + getPreviewLanguage(language)
-						+ "&print=" + printEnabled + "&zoom=" + zoom + "&key="
-						+ Session.get().getInfo().getConfig("flexpaperviewer.key")
-						+ "' style='border:0px solid white; width:" + (getWidth() - 1) + "px; height:"
-						+ (getHeight() - 1) + "px; overflow:hidden;'  scrolling='no' seamless='seamless'></iframe>";
-			} else {
-				String url = Util.fullPreviewUrl(Session.get().getSid(), id, fileVersion);
-				contents = Util.flashPreview(getWidth() - 4, getHeight() - 4, zoom, "SwfFile=" + url, printEnabled,
-						getPreviewLanguage(language));
-			}
+			String url = Util.contextPath() + "/prev/index.jsp?sid=" + Session.get().getSid() + "&docId=" + id
+					+ (fileVersion != null ? "&fileVersion=" + fileVersion : "") + "&locale=" + I18N.getLocale();
+
+			contents = "<iframe src='" + url + "' style='border:0px solid white; width:" + (getWidth() - 1)
+					+ "px; height:" + (getHeight() - 1)
+					+ "px; overflow:hidden;'  scrolling='no' seamless='seamless'></iframe>";
 		} catch (Throwable t) {
 		}
 
@@ -169,42 +145,5 @@ public class PreviewPanel extends VLayout {
 	private void retrieveUserInfo() {
 		GUIUser user = Session.get().getUser();
 		language = user.getLanguage();
-	}
-
-	/**
-	 * Retrieves the correct language code for the preview viewer for the given
-	 * language.
-	 */
-	public static String getPreviewLanguage(String language) {
-		return getPreviewLanguageMap().get(language) != null ? getPreviewLanguageMap().get(language) : "en_US";
-	}
-
-	/**
-	 * Retrieves the correct language code for the preview viewer.
-	 */
-	private static Map<String, String> getPreviewLanguageMap() {
-		Map<String, String> languages = new HashMap<String, String>();
-		languages.put("en", "en_US");
-		languages.put("it", "it_IT");
-		languages.put("de", "de_DE");
-		languages.put("fr", "fr_FR");
-		languages.put("es", "es_ES");
-		languages.put("zh", "zh_CN");
-		languages.put("pt", "pt_BR");
-		languages.put("ru", "ru_RU");
-		languages.put("fi", "fi_FN");
-		languages.put("nl", "nl_NL");
-		languages.put("tr", "tr_TR");
-		languages.put("se", "se_SE");
-		languages.put("pt", "pt_PT");
-		languages.put("el", "el_EL");
-		languages.put("da", "da_DN");
-		languages.put("cz", "cz_CS");
-		languages.put("pl", "pl_PL");
-		languages.put("pv", "pv_FN");
-		languages.put("hu", "hu_HU");
-		languages.put("ja", "ja_JA");
-
-		return languages;
 	}
 }

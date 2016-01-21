@@ -292,15 +292,11 @@
             <bean abstract="false" autowire="default"
                 class="com.logicaldoc.core.security.SecurityManagerImpl"
                 dependency-check="default" lazy-init="default">
-                <property name="userDAO">
-                    <ref bean="UserDAO" />
-                </property>
-                <property name="groupDAO">
-                    <ref bean="GroupDAO" />
-                </property>
-                <property name="menuDAO">
-                    <ref bean="MenuDAO" />
-                </property>
+                <property name="userDAO" ref="UserDAO" />
+                <property name="groupDAO" ref="GroupDAO" />
+                <property name="menuDAO" ref="MenuDAO" />
+                <property name="folderDAO" ref="FolderDAO" />
+                <property name="documentDAO" ref="DocumentDAO" />
             </bean>
         </property>
     </bean>
