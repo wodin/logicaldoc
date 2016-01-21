@@ -3,6 +3,7 @@ package com.logicaldoc.webdav.web;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -129,7 +130,9 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	 */
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		log.debug("Received WebDAV request");
-		System.out.println("received DAV request");
+
+		Enumeration<String> headers = request.getHeaderNames();
+
 		try {
 			WebdavRequest webdavRequest = new WebdavRequestImpl(request, getLocatorFactory());
 
@@ -137,7 +140,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			// 'VERSION-CONTROL' and 'REPORT'.
 			int methodCode = DavMethods.getMethodCode(request.getMethod());
 
-			System.out.println("method " + request.getMethod() + " " + methodCode);
+			log.debug("method " + request.getMethod() + " " + methodCode);
 
 			boolean noCache = DavMethods.isDeltaVMethod(webdavRequest)
 					&& !(DavMethods.DAV_VERSION_CONTROL == methodCode || DavMethods.DAV_REPORT == methodCode);
@@ -149,12 +152,16 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 			String username = null;
 			try {
 				if (request.getHeader(DavConstants.HEADER_AUTHORIZATION) != null) {
+
+					log.debug("Authentication Header: " + request.getHeader(DavConstants.HEADER_AUTHORIZATION));
+
 					Credentials credentials = AuthenticationUtil.authenticate(webdavRequest);
 					username = credentials.getUserName();
 					String combinedUserId = request.getRemoteAddr() + "-" + credentials.getUserName();
 
 					// Check the credentials
 					if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
+						log.debug("Authentication failed. Answer again with Authorization request");
 						AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
 						return;
 					}
@@ -183,6 +190,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 						boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(),
 								credentials.getPassword(), userObject);
 						if (isLoggedOn == false) {
+							log.debug("Authentication failed. Answer again with Authorization request");
 							AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
 							return;
 						} else {
@@ -190,6 +198,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 						}
 					}
 				} else {
+					log.debug("Answer with Authorization request");
 					AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
 					return;
 				}
@@ -409,7 +418,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 		}
 
 		DavPropertyNameSet requestProperties = request.getPropFindProperties();
-		
+
 		int depth = request.getDepth(DEPTH_INFINITY);
 		if (log.isDebugEnabled()) {
 			DavPropertyNameIterator iter = requestProperties.iterator();

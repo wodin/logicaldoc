@@ -2,7 +2,6 @@ package com.logicaldoc.webdav.resource;
 
 import java.io.Serializable;
 
-import org.apache.jackrabbit.server.io.MimeResolver;
 import org.apache.jackrabbit.server.io.PropertyManager;
 import org.apache.jackrabbit.server.io.PropertyManagerImpl;
 import org.apache.jackrabbit.webdav.simple.DefaultItemFilter;
@@ -11,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webdav.io.manager.IOManager;
+
 /**
  * For more informations, please visit
  * {@link org.apache.jackrabbit.webdav.simple.ResourceConfig}
@@ -18,16 +18,17 @@ import com.logicaldoc.webdav.io.manager.IOManager;
  * @author Sebastian Wenzky
  * 
  */
-public class ResourceConfig implements Serializable{
+public class ResourceConfig implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	protected static Logger log = LoggerFactory.getLogger(ResourceConfig.class);
 
 	private ItemFilter itemFilter;
+
 	private IOManager ioManager;
+
 	private PropertyManager propManager;
-	private MimeResolver mimeResolver;
 
 	public void setIOManager(IOManager ioManager) {
 		this.ioManager = ioManager;
@@ -39,8 +40,7 @@ public class ResourceConfig implements Serializable{
 
 	public PropertyManager getPropertyManager() {
 		if (propManager == null) {
-			log.debug("ResourceConfig: missing property-manager > "
-					+ "building default.");
+			log.debug("ResourceConfig: missing property-manager > " + "building default.");
 			propManager = PropertyManagerImpl.getDefaultManager();
 		}
 		return propManager;
@@ -48,14 +48,9 @@ public class ResourceConfig implements Serializable{
 
 	public ItemFilter getItemFilter() {
 		if (itemFilter == null) {
-			log.debug("ResourceConfig: missing resource filter > "
-					+ "building DefaultItemFilter ");
+			log.debug("ResourceConfig: missing resource filter > " + "building DefaultItemFilter ");
 			itemFilter = new DefaultItemFilter();
 		}
 		return itemFilter;
-	}
-
-	public MimeResolver getMimeResolver() {
-		return mimeResolver;
 	}
 }

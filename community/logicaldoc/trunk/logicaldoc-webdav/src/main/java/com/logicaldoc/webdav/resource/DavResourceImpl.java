@@ -658,14 +658,14 @@ public class DavResourceImpl implements DavResource, Serializable {
 	 *      String)
 	 */
 	protected ImportContext getImportContext(InputContext inputCtx, String systemId) throws IOException {
-		return new ImportContextImpl(resource, systemId, inputCtx, config.getMimeResolver());
+		return new ImportContextImpl(resource, systemId, inputCtx);
 	}
 
 	/**
 	 * @see org.apache.jackrabbit.webdav.simple.DavResourceImpl#getExportContext(OutputContext)
 	 */
 	protected ExportContext getExportContext(OutputContext outputCtx) throws IOException {
-		return new ExportContextImpl(this.resource, outputCtx, config.getMimeResolver());
+		return new ExportContextImpl(this.resource, outputCtx);
 	}
 
 	/**
