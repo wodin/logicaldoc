@@ -651,7 +651,7 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 						continue;
 					}
 
-					if (doc != null && folderDao.isReadEnable(doc.getFolder().getId(), user.getId())) {
+					if (doc != null && folderDao.isReadEnabled(doc.getFolder().getId(), user.getId())) {
 						createAttachment(mail, doc);
 						docs.add(doc);
 					}

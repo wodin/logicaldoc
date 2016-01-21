@@ -136,7 +136,7 @@ public class ServletIOUtil {
 		boolean agent = request.getHeader("User-Agent") != null
 				&& request.getHeader("User-Agent").toLowerCase().contains("office");
 
-		if(!agent)
+		if (!agent)
 			return false;
 
 		/*
@@ -154,7 +154,7 @@ public class ServletIOUtil {
 				}
 			}
 		}
-		
+
 		for (String localAddr : localAddresses)
 			if (request.getRemoteAddr().equals(localAddr))
 				return true;
@@ -241,7 +241,7 @@ public class ServletIOUtil {
 		acceptsGzip = acceptsGzip
 				&& (StringUtil.isEmpty(suffix) || (!"thumb.jpg".endsWith(suffix) && !"tile.jpg".endsWith(suffix)));
 
-		if (StringUtils.isEmpty(suffix) || !suffix.contains("preview")) {
+		if (StringUtils.isEmpty(suffix) || !suffix.contains(".pdf")) {
 			response.setContentType(contentType);
 			setContentDisposition(request, response, filename);
 
@@ -406,8 +406,7 @@ public class ServletIOUtil {
 		/*
 		 * Save an history only if it is requested the first fragment
 		 */
-		boolean saveHistory = (StringUtils.isEmpty(suffix) || "preview.swf".equals(suffix) || (request.getServletPath()
-				.toLowerCase().contains("preview") && "conversion.pdf".equals(suffix)));
+		boolean saveHistory = StringUtils.isEmpty(suffix) || "conversion.pdf".equals(suffix);
 		if (!ranges.isEmpty() && saveHistory) {
 			saveHistory = false;
 			for (Range rng : ranges)
@@ -435,7 +434,7 @@ public class ServletIOUtil {
 
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
-			if (suffix != null && request.getServletPath().toLowerCase().contains("preview"))
+			if ("preview".equals(request.getParameter("control")))
 				history.setEvent(DocumentEvent.VIEWED.toString());
 			else
 				history.setEvent(DocumentEvent.DOWNLOADED.toString());

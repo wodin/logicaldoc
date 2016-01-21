@@ -131,7 +131,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("quota") || name.startsWith("store") || name.startsWith("flexpaperviewer")
 					|| name.startsWith("advancedocr.") || name.startsWith("command.") || name.contains(".gui.")
 					|| name.contains(".upload.") || name.equals("userno") || name.contains(".search.")
-					|| name.startsWith("swftools.") || name.contains("password") || name.startsWith("openoffice.path")
+                    || name.contains("password") || name.startsWith("openoffice.path")
 					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
 					|| name.startsWith("ip.") || name.contains(".extcall.") || name.contains("anonymous")
 					|| name.startsWith("hibernate.") || name.contains(".session.") || name.contains("acmecad.")
@@ -164,7 +164,6 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")
 					|| key.toString().startsWith("cmis") || key.toString().startsWith("command.")
 					|| key.toString().startsWith("acmecad.command") || key.toString().startsWith("openoffice")
-					|| key.toString().startsWith("swftools.")
 					|| key.toString().startsWith(session.getTenantName() + ".extcall.")) {
 				GUIParameter p = new GUIParameter(key.toString(), conf.getProperty(key.toString()));
 				params.add(p);
@@ -322,8 +321,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object name : conf.keySet()) {
-			if (name.toString().startsWith(session.getTenantName() + ".gui")
-					&& !name.toString().contains("dropspot.mode"))
+			if (name.toString().startsWith(session.getTenantName() + ".gui"))
 				params.add(new GUIParameter(name.toString(), conf.getProperty(name.toString())));
 		}
 		if (session.getTenantName().equals(Tenant.DEFAULT_NAME))

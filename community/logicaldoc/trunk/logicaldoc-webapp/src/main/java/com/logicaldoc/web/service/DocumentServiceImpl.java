@@ -175,7 +175,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			ServiceUtil.throwServerException(session, log, new Exception("No file uploaded"));
 
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		if (!fdao.isWriteEnable(metadata.getFolder().getId(), session.getUserId()))
+		if (!fdao.isWriteEnabled(metadata.getFolder().getId(), session.getUserId()))
 			ServiceUtil.throwServerException(session, log, new Exception(
 					"The user doesn't have the write permission on the current folder"));
 
@@ -1563,7 +1563,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
-			if (!fdao.isWriteEnable(vo.getFolder().getId(), session.getUserId())) {
+			if (!fdao.isWriteEnabled(vo.getFolder().getId(), session.getUserId())) {
 				throw new RuntimeException("The user doesn't have the write permission on the current folder");
 			}
 
@@ -1709,7 +1709,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			User user = ServiceUtil.getSessionUser(session.getId());
 
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-			if (!fdao.isWriteEnable(getById(sid, docId).getFolder().getId(), user.getId())) {
+			if (!fdao.isWriteEnabled(getById(sid, docId).getFolder().getId(), user.getId())) {
 				throw new RuntimeException("You don't have the download permission");
 			}
 

@@ -44,10 +44,6 @@
     <filter-name>SessionFilter</filter-name>
     <filter-class>com.logicaldoc.web.SessionFilter</filter-class>
   </filter>
-  <filter>
-    <filter-name>IndexRequestFilter</filter-name>
-    <filter-class>com.logicaldoc.enterprise.cluster.IndexRequestFilter</filter-class>
-  </filter>
   <filter-mapping>
     <filter-name>UrlRewriteFilter</filter-name>
     <url-pattern>/*</url-pattern>
@@ -61,10 +57,6 @@
   <filter-mapping>
     <filter-name>CharsetFilter</filter-name>
     <url-pattern>/*</url-pattern>
-  </filter-mapping>
-  <filter-mapping>
-    <filter-name>IndexRequestFilter</filter-name>
-    <url-pattern>/index/*</url-pattern>
   </filter-mapping>
   <listener>
     <listener-class>com.logicaldoc.web.ApplicationListener</listener-class>
@@ -87,7 +79,7 @@
   </servlet>
   <servlet>
     <servlet-name>SecurityService</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.EnterpriseSecurityService</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.SecurityServiceImpl</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>SystemService</servlet-name>
@@ -95,7 +87,7 @@
   </servlet>
   <servlet>
     <servlet-name>InfoService</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.EnterpriseInfoService</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.InfoServiceImpl</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>SearchEngineService</servlet-name>
@@ -111,15 +103,15 @@
   </servlet>
   <servlet>
     <servlet-name>FolderService</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.folder.EnterpriseFolderService</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.FolderServiceImpl</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>SearchService</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.search.EnterpriseSearchService</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.SearchServiceImpl</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>TagService</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.EnterpriseTagService</servlet-class>
+    <servlet-class>com.logicaldoc.web.service.TagServiceImpl</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>SettingService</servlet-name>
@@ -136,10 +128,6 @@
   <servlet>
     <servlet-name>MessageService</servlet-name>
     <servlet-class>com.logicaldoc.web.service.MessageServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>WorkflowService</servlet-name>
-    <servlet-class>com.logicaldoc.workflow.service.WorkflowServiceImpl</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>TagsData</servlet-name>
@@ -206,12 +194,8 @@
     <servlet-class>com.logicaldoc.web.data.TemplatesDataServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>SavedSearchesData</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.search.SavedSearchesDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>Preview</servlet-name>
-    <servlet-class>com.logicaldoc.web.DocumentPreview</servlet-class>
+    <servlet-name>Thumbnail</servlet-name>
+    <servlet-class>com.logicaldoc.web.ThumbnailServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>Download</servlet-name>
@@ -254,14 +238,6 @@
     <servlet-class>com.logicaldoc.web.data.FeedMessageDataServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>DuplicatesData</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.duplicate.DuplicatesDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ArchivedDocsData</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.archiving.ArchivedDocsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>ContactsData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.ContactsDataServlet</servlet-class>
   </servlet>
@@ -283,111 +259,7 @@
   </servlet>
   <servlet>
     <servlet-name>ConvertPdf</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.pdf.ConvertPdf</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ClusterService</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.cluster.ClusterServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>CSVServlet</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.csv.CSVServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>DocumentRSS</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.rss.DocumentRSS</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>FolderRSS</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.rss.FolderRSS</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>CustomIdService</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.customid.CustomIdServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>FolderTemplatesData</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.folder.FolderTemplatesDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>EditInOffice</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.office.EditInOffice</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ChannelsData</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.cluster.ChannelsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>PropertiesData</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.cluster.PropertiesDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>AuditService</servlet-name>
-    <servlet-class>com.logicaldoc.audit.AuditServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>SubscriptionsData</servlet-name>
-    <servlet-class>com.logicaldoc.audit.SubscriptionsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>WorkflowsData</servlet-name>
-    <servlet-class>com.logicaldoc.workflow.data.WorkflowsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>WorkflowTriggersData</servlet-name>
-    <servlet-class>com.logicaldoc.workflow.data.WorkflowTriggersDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>WorkflowTasksData</servlet-name>
-    <servlet-class>com.logicaldoc.workflow.data.WorkflowTasksDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>WorkflowHistoriesData</servlet-name>
-    <servlet-class>com.logicaldoc.workflow.data.WorkflowHistoriesDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>BarcodeService</servlet-name>
-    <servlet-class>com.logicaldoc.barcode.BarcodeServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ToBarcodeData</servlet-name>
-    <servlet-class>com.logicaldoc.barcode.ToBarcodeDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>BarcodeGenerator</servlet-name>
-    <servlet-class>com.logicaldoc.barcode.BarcodeGenerator</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>SignService</servlet-name>
-    <servlet-class>com.logicaldoc.sign.SignServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>EmailAccountService</servlet-name>
-    <servlet-class>com.logicaldoc.email.EmailAccountServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>EmailAccountsData</servlet-name>
-    <servlet-class>com.logicaldoc.email.EmailAccountsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>LicenseService</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.gui.license.server.LicenseServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>LdapService</servlet-name>
-    <servlet-class>com.logicaldoc.ldap.LdapServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ContactService</servlet-name>
-    <servlet-class>com.logicaldoc.web.service.ContactServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>TenantService</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.tenant.TenantServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>TenantsData</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.tenant.TenantsDataServlet</servlet-class>
+    <servlet-class>com.logicaldoc.web.ConvertPdf</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>Webdav</servlet-name>
@@ -410,48 +282,12 @@
     </init-param>
   </servlet>
   <servlet>
-    <servlet-name>ImpexService</servlet-name>
-    <servlet-class>com.logicaldoc.impex.ImpexServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ArchivesData</servlet-name>
-    <servlet-class>com.logicaldoc.impex.ArchivesDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>IncrementalArchivesData</servlet-name>
-    <servlet-class>com.logicaldoc.impex.IncrementalArchivesDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ImpexFoldersData</servlet-name>
-    <servlet-class>com.logicaldoc.impex.ImpexFoldersDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ImportFoldersService</servlet-name>
-    <servlet-class>com.logicaldoc.share.ImportFoldersServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ImportFoldersData</servlet-name>
-    <servlet-class>com.logicaldoc.share.ImportFoldersDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>CalendarService</servlet-name>
-    <servlet-class>com.logicaldoc.calendar.CalendarServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>CalendarEventsData</servlet-name>
-    <servlet-class>com.logicaldoc.calendar.CalendarEventsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>LockedDocsData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.LockedDocsDataServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>DeletedDocsData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.DeletedDocsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>GDriveService</servlet-name>
-    <servlet-class>com.logicaldoc.gdrive.GDriveServiceImpl</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>DropboxService</servlet-name>
@@ -461,70 +297,7 @@
     <servlet-name>StatChart</servlet-name>
     <servlet-class>com.logicaldoc.web.stat.StatChartServlet</servlet-class>
   </servlet>
-  <servlet>
-    <servlet-name>AnnotationsService</servlet-name>
-    <servlet-class>com.logicaldoc.annotations.AnnotationsServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>RetentionPoliciesService</servlet-name>
-    <servlet-class>com.logicaldoc.retention.RetentionPoliciesServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>RetentionPoliciesData</servlet-name>
-    <servlet-class>com.logicaldoc.retention.RetentionPoliciesDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ShareFileService</servlet-name>
-    <servlet-class>com.logicaldoc.sharefile.ShareFileServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ShareFileData</servlet-name>
-    <servlet-class>com.logicaldoc.sharefile.ShareFileDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>StampService</servlet-name>
-    <servlet-class>com.logicaldoc.stamp.StampServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>StampsData</servlet-name>
-    <servlet-class>com.logicaldoc.stamp.StampsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>StampUsersData</servlet-name>
-    <servlet-class>com.logicaldoc.stamp.StampUsersDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>StampImage</servlet-name>
-    <servlet-class>com.logicaldoc.stamp.StampImageServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>FormService</servlet-name>
-    <servlet-class>com.logicaldoc.form.FormServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>FormsData</servlet-name>
-    <servlet-class>com.logicaldoc.form.FormsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>WorkflowsController</servlet-name>
-    <servlet-class>com.logicaldoc.workflow.WorkflowControllerServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>GDriveAuthCallback</servlet-name>
-    <servlet-class>com.logicaldoc.gdrive.GDriveAuthCallbackServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>UpdateService</servlet-name>
-    <servlet-class>com.logicaldoc.enterprise.update.UpdateServiceImpl</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ReportsData</servlet-name>
-    <servlet-class>com.logicaldoc.report.ReportsDataServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <servlet-name>ReportService</servlet-name>
-    <servlet-class>com.logicaldoc.report.ReportServiceImpl</servlet-class>
-  </servlet>
+
   <servlet-mapping>
     <servlet-name>UploadServlet</servlet-name>
     <url-pattern>*.gupld</url-pattern>
@@ -588,10 +361,6 @@
   <servlet-mapping>
     <servlet-name>MessageService</servlet-name>
     <url-pattern>/frontend/message</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>WorkflowService</servlet-name>
-    <url-pattern>/frontend/workflow</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>ContactService</servlet-name>
@@ -690,14 +459,6 @@
     <url-pattern>/data/feedmessage.xml</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>DuplicatesData</servlet-name>
-    <url-pattern>/data/duplicates.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ArchivedDocsData</servlet-name>
-    <url-pattern>/data/archiveddocs.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
     <servlet-name>ContactsData</servlet-name>
     <url-pattern>/data/contacts.xml</url-pattern>
   </servlet-mapping>
@@ -718,8 +479,8 @@
     <url-pattern>/data/extoptions.xml</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>Preview</servlet-name>
-    <url-pattern>/preview</url-pattern>
+    <servlet-name>Thumbnail</servlet-name>
+    <url-pattern>/thumbnail</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Download</servlet-name>
@@ -758,112 +519,12 @@
     <url-pattern>/convertpdf/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>ClusterService</servlet-name>
-    <url-pattern>/frontend/cluster</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>CSVServlet</servlet-name>
-    <url-pattern>/csv</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>DocumentRSS</servlet-name>
-    <url-pattern>/doc_rss</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>FolderRSS</servlet-name>
-    <url-pattern>/folder_rss</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>CustomIdService</servlet-name>
-    <url-pattern>/frontend/customid</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SavedSearchesData</servlet-name>
-    <url-pattern>/data/savedsearches.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>FolderTemplatesData</servlet-name>
-    <url-pattern>/data/foldertemplates.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>EditInOffice</servlet-name>
-    <url-pattern>/ldedit</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ChannelsData</servlet-name>
-    <url-pattern>/data/channels.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>PropertiesData</servlet-name>
-    <url-pattern>/data/properties.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>AuditService</servlet-name>
-    <url-pattern>/frontend/audit</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SubscriptionsData</servlet-name>
-    <url-pattern>/data/subscriptions.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>WorkflowsData</servlet-name>
-    <url-pattern>/data/workflows.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>WorkflowTriggersData</servlet-name>
-    <url-pattern>/data/workflowtriggers.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>WorkflowTasksData</servlet-name>
-    <url-pattern>/data/workflowtasks.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>WorkflowHistoriesData</servlet-name>
-    <url-pattern>/data/workflowhistories.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>BarcodeService</servlet-name>
-    <url-pattern>/frontend/barcode</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ToBarcodeData</servlet-name>
-    <url-pattern>/data/tobarcode.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>BarcodeGenerator</servlet-name>
-    <url-pattern>/barcode</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SignService</servlet-name>
-    <url-pattern>/frontend/sign</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>EmailAccountService</servlet-name>
-    <url-pattern>/frontend/emailaccount</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>EmailAccountsData</servlet-name>
-    <url-pattern>/data/emailaccounts.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>LicenseService</servlet-name>
-    <url-pattern>/license/license</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>SettingService</servlet-name>
-    <url-pattern>/license/setting</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
     <servlet-name>SecurityService</servlet-name>
     <url-pattern>/sessions/security</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>InfoService</servlet-name>
     <url-pattern>/sessions/info</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>LdapService</servlet-name>
-    <url-pattern>/frontend/ldap</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Webdav</servlet-name>
@@ -874,121 +535,10 @@
     <url-pattern>/service/cmis/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>ImpexService</servlet-name>
-    <url-pattern>/frontend/impex</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ArchivesData</servlet-name>
-    <url-pattern>/data/archives.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>IncrementalArchivesData</servlet-name>
-    <url-pattern>/data/incrementalarchives.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ImpexFoldersData</servlet-name>
-    <url-pattern>/data/impexfolders.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ImportFoldersService</servlet-name>
-    <url-pattern>/frontend/importfolders</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ImportFoldersData</servlet-name>
-    <url-pattern>/data/importfolders.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>CalendarService</servlet-name>
-    <url-pattern>/frontend/calendar</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>CalendarEventsData</servlet-name>
-    <url-pattern>/data/calendarevents.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>GDriveService</servlet-name>
-    <url-pattern>/frontend/gddrive</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
     <servlet-name>DropboxService</servlet-name>
     <url-pattern>/frontend/dropbox</url-pattern>
   </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>TenantService</servlet-name>
-    <url-pattern>/frontend/tenant</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>TenantsData</servlet-name>
-    <url-pattern>/data/tenants.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>AnnotationsService</servlet-name>
-    <url-pattern>/frontend/annotations</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>RetentionPoliciesService</servlet-name>
-    <url-pattern>/frontend/retentionpolicies</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>RetentionPoliciesData</servlet-name>
-    <url-pattern>/data/retentionpolicies.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShareFileService</servlet-name>
-    <url-pattern>/frontend/sharefile</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ShareFileData</servlet-name>
-    <url-pattern>/data/sharefile.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>StampService</servlet-name>
-    <url-pattern>/frontend/stamp</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>StampsData</servlet-name>
-    <url-pattern>/data/stamps.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>StampUsersData</servlet-name>
-    <url-pattern>/data/stampusers.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>StampImage</servlet-name>
-    <url-pattern>/stampimage/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>FormService</servlet-name>
-    <url-pattern>/frontend/form</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>FormsData</servlet-name>
-    <url-pattern>/data/forms.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>WorkflowsController</servlet-name>
-    <url-pattern>/workflow/controller</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>GDriveService</servlet-name>
-    <url-pattern>/frontend/gdrive</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>GDriveAuthCallback</servlet-name>
-    <url-pattern>/gdrive/oauth2callback</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>UpdateService</servlet-name>
-    <url-pattern>/frontend/update</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ReportsData</servlet-name>
-    <url-pattern>/data/reports.xml</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ReportService</servlet-name>
-    <url-pattern>/frontend/report</url-pattern>
-  </servlet-mapping>
+
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
     <welcome-file>index.html</welcome-file>
