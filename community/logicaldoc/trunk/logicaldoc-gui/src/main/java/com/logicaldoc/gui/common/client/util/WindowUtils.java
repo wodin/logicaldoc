@@ -104,6 +104,10 @@ public class WindowUtils {
 		$wnd.location = url;
 	}-*/;
 
+	public static native void openUrl(String url, String window)/*-{
+	    $wnd.open(url, window, null);
+	}-*/;
+	
 	public static native void openUrl(String url, String window, String specs)/*-{
 		$wnd.open(url, window, specs);
 	}-*/;
