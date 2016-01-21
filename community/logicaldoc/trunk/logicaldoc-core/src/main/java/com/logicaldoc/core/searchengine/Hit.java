@@ -45,10 +45,14 @@ public class Hit extends Document implements Comparable<Hit> {
 		if (other == null)
 			return -1;
 		if (other.score == this.score) {
-			if (this.getTitle() != null)
-				return this.getTitle().compareToIgnoreCase(other.getTitle());
-			else
+			try {
+				if (this.getTitle() != null)
+					return this.getTitle().compareToIgnoreCase(other.getTitle());
+				else
+					return 0;
+			} catch (Throwable t) {
 				return 0;
+			}
 		} else
 			return -1 * (new Integer(this.score).compareTo(new Integer(other.score)));
 	}
