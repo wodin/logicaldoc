@@ -414,7 +414,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					break;
 				if (docid != null) {
 					Document document = findById(docid);
-					if (folderDAO.isReadEnable(document.getFolder().getId(), userId))
+					if (folderDAO.isReadEnabled(document.getFolder().getId(), userId))
 						coll.add(document);
 				}
 			}

@@ -60,8 +60,6 @@ public class ExternalAppsPanel extends VLayout {
 
 	private GUIParameter openofficePath = null;
 
-	private GUIParameter swftoolsPath = null;
-
 	private GUIParameter acmecad = null;
 
 	private CheckboxItem extCallParamUser;
@@ -101,8 +99,6 @@ public class ExternalAppsPanel extends VLayout {
 				pdftohtml = parameter;
 			else if (parameter.getName().equals("openoffice.path"))
 				openofficePath = parameter;
-			else if (parameter.getName().equals("swftools.path"))
-				swftoolsPath = parameter;
 			else if (parameter.getName().equals("acmecad.command"))
 				acmecad = parameter;
 		}
@@ -207,8 +203,6 @@ public class ExternalAppsPanel extends VLayout {
 		tesseractCommand.setWidth(400);
 		TextItem openOffice = ItemFactory.newTextItem("openOffice", "OpenOffice path", openofficePath.getValue());
 		openOffice.setWidth(400);
-		TextItem swftools = ItemFactory.newTextItem("swftools", "SWFTools path", swftoolsPath.getValue());
-		swftools.setWidth(400);
 		TextItem acmecadCommand = ItemFactory.newTextItem("acmecadCommand", "AcmeCADConverter", acmecad.getValue());
 		acmecadCommand.setWidth(400);
 		TextItem pdftohtmlCommand = ItemFactory.newTextItem("pdftohtmlCommand", "Pdftohtml", pdftohtml.getValue());
@@ -216,7 +210,7 @@ public class ExternalAppsPanel extends VLayout {
 		TextItem opensslCommand = ItemFactory.newTextItem("opensslCommand", "OpenSSL", openssl.getValue());
 		opensslCommand.setWidth(400);
 
-		extAppForm.setItems(convertCommand, ghostCommand, tesseractCommand, swftools, openOffice, pdftohtmlCommand,
+		extAppForm.setItems(convertCommand, ghostCommand, tesseractCommand, openOffice, pdftohtmlCommand,
 				acmecadCommand, opensslCommand);
 		extApps.setPane(extAppForm);
 
@@ -272,26 +266,24 @@ public class ExternalAppsPanel extends VLayout {
 						ExternalAppsPanel.this.convert.setValue(values.get("convertCommand").toString());
 						ExternalAppsPanel.this.ghost.setValue(values.get("ghostCommand").toString());
 						ExternalAppsPanel.this.tesseract.setValue(values.get("tesseractCommand").toString());
-						ExternalAppsPanel.this.swftoolsPath.setValue(values.get("swftools").toString());
 						ExternalAppsPanel.this.openofficePath.setValue(values.get("openOffice").toString());
 						ExternalAppsPanel.this.acmecad.setValue(values.get("acmecadCommand").toString());
 						ExternalAppsPanel.this.openssl.setValue(values.get("opensslCommand").toString());
 						ExternalAppsPanel.this.pdftohtml.setValue(values.get("pdftohtmlCommand").toString());
 					}
 
-					GUIParameter[] params = new GUIParameter[18];
+					GUIParameter[] params = new GUIParameter[17];
 					params[0] = ExternalAppsPanel.this.wsSettings;
 					params[1] = ExternalAppsPanel.this.wdSettings;
 					params[2] = ExternalAppsPanel.this.wdCache;
 					params[3] = ExternalAppsPanel.this.convert;
-					params[4] = ExternalAppsPanel.this.swftoolsPath;
-					params[5] = ExternalAppsPanel.this.ghost;
-					params[6] = ExternalAppsPanel.this.tesseract;
-					params[7] = ExternalAppsPanel.this.openofficePath;
-					params[8] = ExternalAppsPanel.this.acmecad;
-					params[9] = ExternalAppsPanel.this.openssl;
-					params[10] = ExternalAppsPanel.this.pdftohtml;
-					params[11] = ExternalAppsPanel.this.cmisSettings;
+					params[4] = ExternalAppsPanel.this.ghost;
+					params[5] = ExternalAppsPanel.this.tesseract;
+					params[6] = ExternalAppsPanel.this.openofficePath;
+					params[7] = ExternalAppsPanel.this.acmecad;
+					params[8] = ExternalAppsPanel.this.openssl;
+					params[9] = ExternalAppsPanel.this.pdftohtml;
+					params[10] = ExternalAppsPanel.this.cmisSettings;
 
 					// External Call
 					try {
@@ -309,12 +301,12 @@ public class ExternalAppsPanel extends VLayout {
 							Session.get().getSession().setExternalCall(null);
 
 						String tenant = Session.get().getTenantName();
-						params[12] = new GUIParameter(tenant + ".extcall.enabled", "yes".equals(values
+						params[11] = new GUIParameter(tenant + ".extcall.enabled", "yes".equals(values
 								.get("extCallEnabled")) ? "true" : "false");
-						params[13] = new GUIParameter(tenant + ".extcall.name", extCall.getName());
-						params[14] = new GUIParameter(tenant + ".extcall.baseurl", extCall.getBaseUrl());
-						params[15] = new GUIParameter(tenant + ".extcall.suffix", extCall.getSuffix());
-						params[16] = new GUIParameter(tenant + ".extcall.window", extCall.getTargetWindow());
+						params[12] = new GUIParameter(tenant + ".extcall.name", extCall.getName());
+						params[13] = new GUIParameter(tenant + ".extcall.baseurl", extCall.getBaseUrl());
+						params[14] = new GUIParameter(tenant + ".extcall.suffix", extCall.getSuffix());
+						params[15] = new GUIParameter(tenant + ".extcall.window", extCall.getTargetWindow());
 
 						ArrayList<String> buf = new ArrayList<String>();
 						if (extCallParamUser.getValueAsBoolean() != null
@@ -326,7 +318,7 @@ public class ExternalAppsPanel extends VLayout {
 						String paramsStr = buf.toString().substring(1, buf.toString().length() - 1);
 
 						extCall.setParametersStr(paramsStr);
-						params[17] = new GUIParameter(tenant + ".extcall.params", buf.isEmpty() ? "" : paramsStr);
+						params[16] = new GUIParameter(tenant + ".extcall.params", buf.isEmpty() ? "" : paramsStr);
 					} catch (Throwable t) {
 					}
 

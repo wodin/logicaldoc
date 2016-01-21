@@ -138,31 +138,33 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	/**
 	 * This method is looking up for writing rights for a folder and an user.
 	 * 
-	 * @param id ID of the folder
+	 * @param folderId ID of the folder
 	 * @param userId ID of the user
 	 */
-	public boolean isWriteEnable(long id, long userId);
+	public boolean isWriteEnabled(long folderId, long userId);
 
-	public boolean isReadEnable(long id, long userId);
+	public boolean isReadEnabled(long folderId, long userId);
+	
+	public boolean isDownloadEnabled(long folderId, long userId);
 
 	/**
 	 * This method checks if the given permission is enabled for a folder and an
 	 * user.
 	 * 
 	 * @param permission the permission to check
-	 * @param id ID of the folder
+	 * @param folderId ID of the folder
 	 * @param userId ID of the user
 	 */
-	public boolean isPermissionEnabled(Permission permission, long id, long userId);
+	public boolean isPermissionEnabled(Permission permission, long folderId, long userId);
 
 	/**
 	 * Finds all permissions of a user enabled on the specified folder
 	 * 
-	 * @param id ID of the folder
+	 * @param folderId ID of the folder
 	 * @param userId ID of the user
 	 * @return Collection of enabled permissions
 	 */
-	public Set<Permission> getEnabledPermissions(long id, long userId);
+	public Set<Permission> getEnabledPermissions(long folderId, long userId);
 
 	/**
 	 * This method selects only the folder ID from the folders for which a user

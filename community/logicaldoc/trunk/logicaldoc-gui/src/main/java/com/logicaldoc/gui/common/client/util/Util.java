@@ -109,46 +109,6 @@ public class Util {
 	}
 
 	/**
-	 * Generates Flash code for Preview
-	 */
-	public static String flashPreview(int width, int height, int zoom, String flashvars, boolean printEnabled,
-			String language) {
-		String key = Session.get().getInfo().getConfig("flexpaperviewer.key");
-		Float fzoom = new Float(1.0F);
-		try {
-			fzoom = new Float(((float) zoom) / 100);
-		} catch (Throwable t) {
-
-		}
-
-		String vars = flashvars + "&Scale=" + (zoom > 0 ? fzoom.toString() : "1.0") + "&FitPageOnLoad="
-				+ (zoom <= 0 ? "true" : "false") + "&FitWidthOnLoad=false&PrintEnabled=" + printEnabled
-				+ "&ProgressiveLoading=true" + "&ViewModeToolsVisible=true" + "&ZoomToolsVisible=true"
-				+ "&NavToolsVisible=true&CursorToolsVisible=true&SearchToolsVisible=true&MaxZoomSize=20";
-
-		if (key != null) {
-			vars += "&key=" + key;
-		}
-		String tmp = "<div align='center' style='overflow:hidden;' >";
-		tmp += "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" id=\"FlexPaperViewer\" width=\"" + width
-				+ "\" height=\"" + height
-				+ "\" codebase=\"http://fpdownload.macromedia.com/get/flashplayer/current/swflash.cab\">\n";
-		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
-		tmp += " <param name=\"allowFullScreen\" value=\"true\" />\n";
-		tmp += " <param name=\"movie\" value=\"" + Util.flashUrl("flexpaperviewer.swf") + "\" />\n";
-		tmp += " <param name=\"quality\" value=\"high\" />\n";
-		tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
-		tmp += " <param name=\"flashvars\" value=\"" + vars + "\" />\n";
-		tmp += " 	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl("flexpaperviewer.swf")
-				+ "\" height=\"" + height + "\" width=\"" + width + "\" name=\"FlexPaperViewer\""
-				+ " bgcolor=\"#ffffff\" quality=\"high\" allowFullScreen=\"true\" flashvars=\"" + vars + "\">\n";
-		tmp += "</embed>\n";
-		tmp += "</object></div>\n";
-
-		return tmp;
-	}
-
-	/**
 	 * Generates HTML code for reproducing video files
 	 */
 	public static String videoHTML(String mediaUrl, String width, String height) {
@@ -173,16 +133,8 @@ public class Util {
 		return tmp;
 	}
 
-	public static String fullPreviewUrl(String sid, long docId, String fileVersion) {
-		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "%26docId=" + docId
-				+ "%26suffix=preview.swf";
-		if (fileVersion != null)
-			url += "%26fileVersion=" + fileVersion;
-		return url;
-	}
-
 	public static String thumbnailUrl(String sid, long docId, String fileVersion) {
-		String url = GWT.getHostPageBaseURL() + "preview?sid=" + Session.get().getSid() + "&docId=" + docId
+		String url = GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "&docId=" + docId
 				+ "&random=" + new Date().getTime();
 		if (fileVersion != null)
 			url += "&fileVersion=" + fileVersion;

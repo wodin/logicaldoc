@@ -38,7 +38,7 @@ public class PreviewPopup extends Window {
 		centerInPage();
 		setMargin(2);
 
-		previewPanel = new PreviewPanel(docId, fileVersion, filename, printEnabled, null);
+		previewPanel = new PreviewPanel(docId, fileVersion, filename);
 		previewPanel.setWidth100();
 		previewPanel.setHeight100();
 

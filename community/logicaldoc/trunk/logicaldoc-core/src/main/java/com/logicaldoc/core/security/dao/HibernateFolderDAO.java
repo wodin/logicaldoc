@@ -350,13 +350,18 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public boolean isWriteEnable(long folderId, long userId) {
+	public boolean isWriteEnabled(long folderId, long userId) {
 		return isPermissionEnabled(Permission.WRITE, folderId, userId);
+	}
+	
+	@Override
+	public boolean isDownloadEnabled(long id, long userId) {
+		return isPermissionEnabled(Permission.DOWNLOAD, id, userId);
 	}
 
 	@Override
 	@SuppressWarnings("rawtypes")
-	public boolean isReadEnable(long folderId, long userId) {
+	public boolean isReadEnabled(long folderId, long userId) {
 		boolean result = true;
 		try {
 			User user = userDAO.findById(userId);
@@ -410,7 +415,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public boolean hasWriteAccess(Folder folder, long userId) {
-		if (isWriteEnable(folder.getId(), userId) == false) {
+		if (isWriteEnabled(folder.getId(), userId) == false) {
 			return false;
 		}
 

@@ -9,6 +9,9 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -16,7 +19,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 /**
  * Basic implementation of <code>SecurityManager</code>
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 3.0
  */
 public class SecurityManagerImpl implements SecurityManager {
@@ -28,6 +31,10 @@ public class SecurityManagerImpl implements SecurityManager {
 	protected GroupDAO groupDAO;
 
 	protected MenuDAO menuDAO;
+
+	protected FolderDAO folderDAO;
+
+	protected DocumentDAO documentDAO;
 
 	private SecurityManagerImpl() {
 	}
@@ -50,7 +57,7 @@ public class SecurityManagerImpl implements SecurityManager {
 	 */
 	public void assignUsersToGroup(Collection<User> users, Group group) {
 		groupDAO.initialize(group);
-		
+
 		for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
 			User user = iter.next();
 			if (!group.getUsers().contains(user)) {
@@ -96,8 +103,7 @@ public class SecurityManagerImpl implements SecurityManager {
 			groupDAO.initialize(group);
 			Set<User> oldUsers = group.getUsers();
 			for (User user : users) {
-				if (oldUsers.contains(user)
-						&& !group.getName().equals(user.getUserGroupName())) {
+				if (oldUsers.contains(user) && !group.getName().equals(user.getUserGroupName())) {
 					user.getGroups().remove(group);
 				}
 			}
@@ -191,7 +197,8 @@ public class SecurityManagerImpl implements SecurityManager {
 
 	@Override
 	public boolean isMemberOf(long userId, long groupId) {
-		return userDAO.queryForInt("select count(*) from ld_usergroup where ld_userid="+userId+ " and ld_groupid="+groupId) > 0;
+		return userDAO.queryForInt("select count(*) from ld_usergroup where ld_userid=" + userId + " and ld_groupid="
+				+ groupId) > 0;
 	}
 
 	@Override
@@ -204,4 +211,58 @@ public class SecurityManagerImpl implements SecurityManager {
 				return true;
 		return false;
 	}
+
+	@Override
+	public boolean isWriteEnabled(long docId, long userId) {
+		Document doc = documentDAO.findById(docId);
+		if (doc == null)
+			return false;
+		else
+			return folderDAO.isWriteEnabled(doc.getFolder().getId(), userId);
+	}
+
+	@Override
+	public boolean isReadEnabled(long docId, long userId) {
+		Document doc = documentDAO.findById(docId);
+		if (doc == null)
+			return false;
+		else
+			return folderDAO.isReadEnabled(doc.getFolder().getId(), userId);
+	}
+
+	@Override
+	public boolean isDownloadEnabled(long docId, long userId) {
+		Document doc = documentDAO.findById(docId);
+		if (doc == null)
+			return false;
+		else
+			return folderDAO.isDownloadEnabled(doc.getFolder().getId(), userId);
+	}
+
+	@Override
+	public boolean isPermissionEnabled(Permission permission, long docId, long userId) {
+		Document doc = documentDAO.findById(docId);
+		if (doc == null)
+			return false;
+		else
+			return folderDAO.isPermissionEnabled(permission, doc.getFolder().getId(), userId);
+	}
+
+	@Override
+	public Set<Permission> getEnabledPermissions(long docId, long userId) {
+		Document doc = documentDAO.findById(docId);
+		if (doc == null)
+			return new HashSet<Permission>();
+		else
+			return folderDAO.getEnabledPermissions(doc.getFolder().getId(), userId);
+	}
+
+	public void setFolderDAO(FolderDAO folderDAO) {
+		this.folderDAO = folderDAO;
+	}
+
+	public void setDocumentDAO(DocumentDAO documentDAO) {
+		this.documentDAO = documentDAO;
+	}
+
 }

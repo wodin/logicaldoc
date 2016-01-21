@@ -27,7 +27,7 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @since 4.5
  */
 public class ThumbnailManager {
-	public static final String SUFFIX_PREVIEW = "preview.swf";
+	public static final String SUFFIX_PREVIEW = "conversion.pdf";
 
 	public static final String SUFFIX_TILE = "tile.jpg";
 
@@ -165,55 +165,6 @@ public class ThumbnailManager {
 	}
 
 	/**
-	 * Creates the preview for all the pages of the document.
-	 * 
-	 * @param document The document to be treated
-	 * @param fileVersion The file version(optional)
-	 * @param sid The session identifier(optional)
-	 * @throws IOException
-	 */
-	public void createPreview(Document document, String fileVersion, String sid) throws IOException {
-		ThumbnailBuilder builder = getBuilder(document);
-		if (builder == null) {
-			log.warn("No builder found for document " + document.getId());
-			return;
-		}
-
-		String tenantName = getTenantName(document);
-
-		/*
-		 * We need to produce the SWF conversion
-		 */
-
-		// Prepare I/O resources
-		File src = null;
-		File pagesRoot = null;
-		File previewFile = null;
-
-		try {
-			pagesRoot = File.createTempFile("preview", "");
-			pagesRoot.delete();
-			pagesRoot.mkdir();
-
-			src = writeToFile(document, fileVersion);
-
-			previewFile = builder.buildPreview(sid, tenantName, src, document.getFileName(), pagesRoot);
-
-			String fileVer = getSuitableFileVersion(document, fileVersion);
-			String resource = storer.getResourceName(document.getId(), fileVer, SUFFIX_PREVIEW);
-			storer.store(previewFile, document.getId(), resource);
-			log.debug("Stored preview for " + document.getFileName());
-		} catch (Throwable e) {
-			log.warn("Error creating preview for document: " + document.getId() + " " + document.getTitle(), e);
-		} finally {
-			if (pagesRoot != null)
-				FileUtil.strongDelete(pagesRoot);
-			if (src != null)
-				FileUtil.strongDelete(src);
-		}
-	}
-
-	/**
 	 * Write a document into a temporary file.
 	 * 
 	 * @throws IOException
@@ -238,17 +189,6 @@ public class ThumbnailManager {
 	}
 
 	/**
-	 * Creates the preview for all the pages of the document
-	 * 
-	 * @param document The document to be treated
-	 * @param fileVersion The file version(optional)
-	 * @throws IOException
-	 */
-	public void createPreview(Document document, String sid) throws IOException {
-		createPreview(document, null, sid);
-	}
-
-	/**
 	 * Initializes the builders map
 	 */
 	private void initBuilders() {
@@ -261,6 +201,7 @@ public class ThumbnailManager {
 			String className = ext.getParameter("class").valueAsString();
 			String extension = ext.getParameter("extension").valueAsString().toLowerCase();
 			try {
+				@SuppressWarnings("rawtypes")
 				Class clazz = Class.forName(className);
 				// Try to instantiate the builder
 				Object builder = clazz.newInstance();
