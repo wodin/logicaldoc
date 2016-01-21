@@ -88,12 +88,7 @@ public abstract class FolderSearchForm extends VLayout {
 		folder.setWidth(200);
 
 		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders"));
-		subfolders.setColSpan(3);
-		subfolders.setShowIfCondition(new FormItemIfFunction() {
-			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return folder.getValue() != null && !"".equals(folder.getValue());
-			}
-		});
+		subfolders.setEndRow(true);
 
 		IButton search = new IButton(I18N.message("search"));
 		search.setAutoFit(true);
