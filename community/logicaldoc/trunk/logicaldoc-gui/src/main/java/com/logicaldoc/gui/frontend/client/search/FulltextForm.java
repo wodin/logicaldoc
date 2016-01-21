@@ -21,11 +21,9 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
@@ -138,17 +136,13 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		});
 
+		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders"));
+		subfolders.setEndRow(true);
+		
 		folder = new FolderSelector(null, true);
 		folder.setColSpan(3);
 		folder.setWidth(200);
 
-		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders"));
-		subfolders.setColSpan(3);
-		subfolders.setShowIfCondition(new FormItemIfFunction() {
-			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return folder.getValue() != null && !"".equals(folder.getValue());
-			}
-		});
 		form1.setItems(expression, language, searchinhits, folder, subfolders, template);
 		addMember(form1);
 

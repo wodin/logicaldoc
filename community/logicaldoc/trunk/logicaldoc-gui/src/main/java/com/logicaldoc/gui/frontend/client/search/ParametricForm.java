@@ -123,11 +123,6 @@ public class ParametricForm extends VLayout {
 		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders2"));
 		subfolders.setColSpan(2);
 		subfolders.setEndRow(true);
-		subfolders.setShowIfCondition(new FormItemIfFunction() {
-			public boolean execute(FormItem item, Object value, DynamicForm form) {
-				return folder.getValue() != null && !"".equals(folder.getValue());
-			}
-		});
 
 		CheckboxItem searchinhits = new CheckboxItem(SEARCHINHITS, I18N.message(SEARCHINHITS));
 
