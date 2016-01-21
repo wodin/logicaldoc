@@ -8,7 +8,6 @@ import java.util.Date;
 
 import org.apache.jackrabbit.server.io.IOListener;
 import org.apache.jackrabbit.server.io.IOUtil;
-import org.apache.jackrabbit.server.io.MimeResolver;
 import org.apache.jackrabbit.webdav.io.InputContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,42 +26,28 @@ public class ImportContextImpl implements ImportContext {
 	protected static Logger log = LoggerFactory.getLogger(ImportContextImpl.class);
 
 	private final Resource resource;
+
 	private final String systemId;
+
 	private final File inputFile;
-	private final MimeResolver mimeResolver;
 
 	private InputContext inputCtx;
+
 	private boolean completed;
 
-	public ImportContextImpl(Resource resource, String systemId,
-			InputContext inputCtx) throws IOException {
-		this(resource, systemId, inputCtx, null);
-	}
-
-	public ImportContextImpl(Resource resource, String systemId,
-			InputContext inputCtx, MimeResolver mimeResolver)
-			throws IOException {
-		this(resource, systemId, (inputCtx != null) ? inputCtx.getInputStream()
-				: null, mimeResolver);
+	public ImportContextImpl(Resource resource, String systemId, InputContext inputCtx) throws IOException {
+		this(resource, systemId, (inputCtx != null) ? inputCtx.getInputStream() : null);
 		this.inputCtx = inputCtx;
 	}
 
-	public ImportContextImpl(Resource resource, String systemId,
-			InputStream in, MimeResolver mimeResolver) throws IOException {
+	public ImportContextImpl(Resource resource, String systemId, InputStream in) throws IOException {
 		this.resource = resource;
 		this.systemId = systemId;
 		this.inputFile = IOUtil.getTempFile(in);
-
-		this.mimeResolver = (mimeResolver == null) ? IOUtil.MIME_RESOLVER
-				: mimeResolver;
 	}
 
 	public IOListener getIOListener() {
 		return null;
-	}
-
-	public MimeResolver getMimeResolver() {
-		return mimeResolver;
 	}
 
 	public boolean hasStream() {
@@ -87,8 +72,7 @@ public class ImportContextImpl implements ImportContext {
 	}
 
 	public long getModificationTime() {
-		return (inputCtx != null) ? inputCtx.getModificationTime() : new Date()
-				.getTime();
+		return (inputCtx != null) ? inputCtx.getModificationTime() : new Date().getTime();
 	}
 
 	public String getContentLanguage() {
@@ -101,8 +85,7 @@ public class ImportContextImpl implements ImportContext {
 		} else if (inputFile != null) {
 			return inputFile.length();
 		} else {
-			log.debug("Unable to determine content length -> default value = "
-					+ IOUtil.UNDEFINED_LENGTH);
+			log.debug("Unable to determine content length -> default value = " + IOUtil.UNDEFINED_LENGTH);
 			return IOUtil.UNDEFINED_LENGTH;
 		}
 	}
@@ -113,13 +96,7 @@ public class ImportContextImpl implements ImportContext {
 
 	public String getMimeType() {
 		String contentType = getContentType();
-		String mimeType = null;
-		if (contentType != null) {
-			mimeType = IOUtil.getMimeType(contentType);
-		} else if (getSystemId() != null) {
-			mimeType = mimeResolver.getMimeType(getSystemId());
-		}
-		return mimeType;
+		return IOUtil.getMimeType(contentType);
 	}
 
 	public String getEncoding() {
@@ -128,8 +105,7 @@ public class ImportContextImpl implements ImportContext {
 	}
 
 	public Object getProperty(Object propertyName) {
-		return (inputCtx != null) ? inputCtx.getProperty(propertyName
-				.toString()) : null;
+		return (inputCtx != null) ? inputCtx.getProperty(propertyName.toString()) : null;
 	}
 
 	public void informCompleted(boolean success) {
@@ -146,8 +122,7 @@ public class ImportContextImpl implements ImportContext {
 
 	private void checkCompleted() {
 		if (completed) {
-			throw new IllegalStateException(
-					"ImportContext has already been consumed.");
+			throw new IllegalStateException("ImportContext has already been consumed.");
 		}
 	}
 

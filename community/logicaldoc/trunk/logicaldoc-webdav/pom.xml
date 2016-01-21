@@ -17,29 +17,42 @@
 			<scope>provided</scope>
 		</dependency>  
 		
-		<dependency>
+		<!--dependency>
 			<groupId>javax.jcr</groupId>
 			<artifactId>jcr</artifactId>
 			<version>1.0.1</version>
-		</dependency>
+		</dependency-->
 
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
 			<artifactId>jackrabbit-webapp</artifactId>
-			<version>1.6.4</version>
-			<scope>runtime</scope>
+			<version>2.11.3</version>
 		</dependency> 
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
-			<artifactId>jackrabbit-jcr-server</artifactId>
-			<version>1.6.4</version>
+			<artifactId>jackrabbit-api</artifactId>
+			<version>2.11.3</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.jackrabbit</groupId>
-			<artifactId>jackrabbit-webdav</artifactId>
-			<version>1.6.4</version>
-			<scope>compile</scope>
+			<artifactId>jackrabbit-jcr-commons</artifactId>
+			<version>2.11.3</version>
 		</dependency>
+    <dependency>
+			<groupId>org.apache.jackrabbit</groupId>
+			<artifactId>jackrabbit-webdav</artifactId>
+			<version>2.11.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jackrabbit</groupId>
+			<artifactId>jackrabbit-jcr-server</artifactId>
+			<version>2.11.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.jackrabbit</groupId>
+			<artifactId>jackrabbit-webapp</artifactId>
+			<version>2.11.3</version>
+		</dependency>    
 		
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -53,11 +66,11 @@
 			<scope>compile</scope>
 		</dependency>
         
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context-support</artifactId>
-            <scope>provided</scope>
-        </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context-support</artifactId>
+      <scope>provided</scope>
+    </dependency>
                 
 		<dependency>
 			<groupId>com.logicaldoc</groupId>
@@ -134,10 +147,10 @@
 								<delete>
 									<fileset dir="target/plugin/WEB-INF/lib">
 										<exclude name="jackrabbit-web*" />
-										<exclude name="jackrabbit-web*" />
-										<exclude name="jackrabbit-jcr-server*" />
-										<exclude name="jackrabbit-jcr-commons*" />
-										<exclude name="jackrabbit-text*" />
+										<exclude name="jackrabbit-jcr-*" />
+										<exclude name="jackrabbit-core*" />
+                                        <exclude name="jackrabbit-api*" />
+                                        <exclude name="jackrabbit-data*" />
 										<exclude name="jcr*" />
 										<include name="*.jar" />
 									</fileset>

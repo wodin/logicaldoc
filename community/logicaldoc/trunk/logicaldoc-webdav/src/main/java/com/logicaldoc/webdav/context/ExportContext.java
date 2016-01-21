@@ -3,7 +3,6 @@ package com.logicaldoc.webdav.context;
 import java.io.OutputStream;
 
 import org.apache.jackrabbit.server.io.IOContext;
-import org.apache.jackrabbit.server.io.MimeResolver;
 
 import com.logicaldoc.webdav.resource.model.Resource;
 
@@ -19,8 +18,6 @@ public interface ExportContext extends IOContext {
 	public Resource getResource();
 
 	public OutputStream getOutputStream();
-
-	public MimeResolver getMimeResolver();
 
 	public void setContentType(String mimeType, String encoding);
 

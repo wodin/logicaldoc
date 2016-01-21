@@ -11,7 +11,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.jackrabbit.server.io.IOUtil;
-import org.apache.jackrabbit.server.io.MimeResolver;
 import org.apache.jackrabbit.webdav.DavConstants;
 import org.apache.jackrabbit.webdav.io.OutputContext;
 import org.slf4j.Logger;
@@ -32,20 +31,15 @@ public class ExportContextImpl extends AbstractExportContext {
 
 	@SuppressWarnings("rawtypes")
 	private final Map properties = new HashMap();
+
 	private final OutputContext outputCtx;
 
 	private File outFile;
+
 	private OutputStream outStream;
 
-	public ExportContextImpl(Resource resource, OutputContext outputCtx)
-			throws IOException {
-		this(resource, outputCtx, null);
-	}
-
-	public ExportContextImpl(Resource resource, OutputContext outputCtx,
-			MimeResolver mimeResolver) throws IOException {
-		super(resource, (outputCtx != null) ? outputCtx.hasStream() : false,
-				mimeResolver);
+	public ExportContextImpl(Resource resource, OutputContext outputCtx) throws IOException {
+		super(resource, (outputCtx != null) ? outputCtx.hasStream() : false);
 		this.outputCtx = outputCtx;
 		if (hasStream()) {
 			// we need a tmp file, since the export could fail
@@ -85,8 +79,7 @@ public class ExportContextImpl extends AbstractExportContext {
 
 	@SuppressWarnings("unchecked")
 	public void setContentType(String mimeType, String encoding) {
-		properties.put(DavConstants.HEADER_CONTENT_TYPE, IOUtil
-				.buildContentType(mimeType, encoding));
+		properties.put(DavConstants.HEADER_CONTENT_TYPE, IOUtil.buildContentType(mimeType, encoding));
 	}
 
 	public void setCreationTime(long creationTime) {
@@ -134,11 +127,9 @@ public class ExportContextImpl extends AbstractExportContext {
 					Object name = it.next();
 					Object value = properties.get(name);
 					if (name != null && value != null) {
-						outputCtx
-								.setProperty(name.toString(), value.toString());
+						outputCtx.setProperty(name.toString(), value.toString());
 						// check for content-length
-						hasContentLength = DavConstants.HEADER_CONTENT_LENGTH
-								.equals(name.toString());
+						hasContentLength = DavConstants.HEADER_CONTENT_LENGTH.equals(name.toString());
 					}
 				}
 
