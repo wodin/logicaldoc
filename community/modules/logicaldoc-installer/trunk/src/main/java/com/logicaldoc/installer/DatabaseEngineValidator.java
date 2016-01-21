@@ -70,14 +70,12 @@ public class DatabaseEngineValidator implements DataValidator {
 			data.setVariable(Constants.CONVERT, root + "imagemagick\\convert.exe");
 			data.setVariable(Constants.GHOSTSCRIPT, root + "ghostscript\\bin\\gs.exe");
 			data.setVariable(Constants.TESSERACT, root + "tesseract\\tesseract.exe");
-			data.setVariable(Constants.SWFTOOLS, root + "swftools");
 			data.setVariable(Constants.CLAMSCAN, root + "clamav\\clamscan.exe");
 			data.setVariable(Constants.OPENSSL, root + "openssl\\bin\\openssl.exe");
 		} else {
 			data.setVariable(Constants.CONVERT, "/usr/bin/convert");
 			data.setVariable(Constants.GHOSTSCRIPT, "/usr/bin/gs");
 			data.setVariable(Constants.TESSERACT, "/usr/local/bin/tesseract");
-			data.setVariable(Constants.SWFTOOLS, "/usr/local/bin");
 			data.setVariable(Constants.CLAMSCAN, "/usr/bin/clamscan");
 			data.setVariable(Constants.OPENSSL, "/usr/bin/openssl");
 		}

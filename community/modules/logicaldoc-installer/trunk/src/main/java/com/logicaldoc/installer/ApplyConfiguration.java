@@ -55,18 +55,17 @@ public class ApplyConfiguration {
 			String openoffice = args[22].trim();
 			String convert = args[23].trim();
 			String ghostscript = args[24].trim();
-			String swftools = args[25].trim();
-			String tesseract = args[26].trim();
-			String clamscan = args[27].trim();
-			String openssl = args[28].trim();
+			String tesseract = args[25].trim();
+			String clamscan = args[26].trim();
+			String openssl = args[27].trim();
 
 			String lang = "en";
-			if (args[29] != null && !args[29].contains("$"))
+			if (args[29] != null && !args[28].contains("$"))
 				lang = args[29].trim();
 
 			String setuppassword = "admin";
-			if (args[30] != null && !args[30].contains("$"))
-				setuppassword = args[30].trim();
+			if (args[30] != null && !args[29].contains("$"))
+				setuppassword = args[29].trim();
 
 			/*
 			 * Save the configuration in the context.properties
@@ -105,7 +104,6 @@ public class ApplyConfiguration {
 			config.setProperty("conf.userdir", repoDir + "users/");
 			config.setProperty("store.1.dir", repoDir + "docs/");
 
-			config.setProperty("swftools.path", swftools);
 			config.setProperty("command.convert", convert);
 			config.setProperty("command.gs", ghostscript);
 			config.setProperty("command.tesseract", tesseract);
