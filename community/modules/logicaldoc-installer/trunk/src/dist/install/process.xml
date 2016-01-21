@@ -31,7 +31,6 @@
         <arg>${openoffice}</arg>
         <arg>${convert}</arg>
         <arg>${ghostscript}</arg>
-        <arg>${swftools}</arg>
         <arg>${tesseract}</arg>
         <arg>${clamscan}</arg>
         <arg>${openssl}</arg>

@@ -21,7 +21,6 @@ public interface Constants {
 	public final static String CONVERT = "convert";
 	public final static String GHOSTSCRIPT = "ghostscript";
 	public final static String TESSERACT = "tesseract";
-	public final static String SWFTOOLS = "swftools";
 	public final static String CLAMSCAN = "clamscan";
 	public final static String OPENSSL = "openssl";
 }
