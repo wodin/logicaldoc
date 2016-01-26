@@ -70,6 +70,7 @@ import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.crypt.CryptUtil;
 import com.logicaldoc.util.security.PasswordGenerator;
+import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.SessionFilter;
 import com.logicaldoc.web.util.ServiceUtil;
 
@@ -222,7 +223,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		guiUser.setName(user.getName());
 		guiUser.setEmail(user.getEmail());
 		guiUser.setEmailSignature(user.getEmailSignature());
-		
 
 		GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
 		int i = 0;
@@ -1003,9 +1003,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				query.append(", ld_usergroup B");
 			query.append(" where A.ld_deleted=0 and A.ld_type=" + User.TYPE_DEFAULT);
 			if (StringUtils.isNotEmpty(username))
-				query.append(" and A.ld_username like '%" + username + "%'");
+				query.append(" and A.ld_username like '%" + SqlUtil.doubleQuotes(username) + "%'");
 			if (StringUtils.isNotEmpty(groupId))
-				query.append(" and A.ld_id=B.ld_userid and B.ld_groupid=" + groupId);
+				query.append(" and A.ld_id=B.ld_userid and B.ld_groupid=" + Long.parseLong(groupId));
 
 			@SuppressWarnings("unchecked")
 			List<GUIUser> users = (List<GUIUser>) userDao.query(query.toString(), null, new RowMapper<GUIUser>() {

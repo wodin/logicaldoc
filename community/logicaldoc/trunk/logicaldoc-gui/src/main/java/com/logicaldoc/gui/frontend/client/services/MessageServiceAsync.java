@@ -10,7 +10,7 @@ public interface MessageServiceAsync {
 
 	void getMessage(String sid, long messageId, boolean markAsRead, AsyncCallback<GUIMessage> callback);
 
-	void save(String sid, GUIMessage message, AsyncCallback<Void> callback);
+	void save(String sid, GUIMessage message, long[] recipientIds, AsyncCallback<Void> callback);
 
 	void loadTemplates(String sid, String language, AsyncCallback<GUIMessageTemplate[]> callback);
 

@@ -17,7 +17,9 @@ import com.logicaldoc.core.communication.MessageTemplateDAO;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.SystemMessageDAO;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIMessageTemplate;
@@ -103,40 +105,46 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	}
 
 	@Override
-	public void save(String sid, GUIMessage message) throws ServerException {
+	public void save(String sid, GUIMessage message, long[] recipientIds) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
-			Context context = Context.getInstance();
-			SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
-
-			SystemMessage m = new SystemMessage();
-			m.setTenantId(session.getTenantId());
-			m.setAuthor(session.getUserName());
-			m.setSentDate(new Date());
-			m.setStatus(SystemMessage.STATUS_NEW);
-			m.setType(SystemMessage.TYPE_SYSTEM);
-			m.setLastNotified(new Date());
-			m.setMessageText(message.getMessage());
-			m.setSubject(message.getSubject());
-			Recipient recipient = new Recipient();
-			recipient.setName(message.getRecipient());
-			recipient.setAddress(message.getRecipient());
-			recipient.setType(Recipient.TYPE_SYSTEM);
-			recipient.setMode("message");
-			Set<Recipient> recipients = new HashSet<Recipient>();
-			recipients.add(recipient);
-			m.setRecipients(recipients);
-			m.setDateScope(message.getValidity());
-			m.setPrio(message.getPriority());
-			if (message.isConfirmation())
-				m.setConfirmation(1);
-			else
-				m.setConfirmation(0);
-			dao.store(m);
+			for (long id : recipientIds)
+				saveMessage(message, session, id);
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
+	}
+
+	private void saveMessage(GUIMessage message, UserSession session, long recipientId) {
+		Context context = Context.getInstance();
+		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
+		UserDAO uDao = (UserDAO) context.getBean(UserDAO.class);
+
+		User user = uDao.findById(recipientId);
+
+		SystemMessage m = new SystemMessage();
+		m.setTenantId(session.getTenantId());
+		m.setAuthor(session.getUserName());
+		m.setSentDate(new Date());
+		m.setStatus(SystemMessage.STATUS_NEW);
+		m.setType(SystemMessage.TYPE_SYSTEM);
+		m.setLastNotified(new Date());
+		m.setMessageText(message.getMessage());
+		m.setSubject(message.getSubject());
+		Recipient recipient = new Recipient();
+		recipient.setName(user.getUserName());
+		recipient.setAddress(user.getUserName());
+		recipient.setType(Recipient.TYPE_SYSTEM);
+		recipient.setMode("message");
+		Set<Recipient> recipients = new HashSet<Recipient>();
+		recipients.add(recipient);
+		m.setRecipients(recipients);
+		m.setDateScope(message.getValidity());
+		m.setPrio(message.getPriority());
+		m.setConfirmation(message.isConfirmation() ? 1 : 0);
+
+		dao.store(m);
 	}
 
 	@Override
