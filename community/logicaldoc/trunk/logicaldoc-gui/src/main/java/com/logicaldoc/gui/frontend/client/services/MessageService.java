@@ -26,10 +26,7 @@ public interface MessageService extends RemoteService {
 	 */
 	public void delete(String sid, long[] ids) throws ServerException;
 
-	/**
-	 * Stores a new Message
-	 */
-	public void save(String sid, GUIMessage message) throws ServerException;
+	void save(String sid, GUIMessage message, long[] recipientIds) throws ServerException;
 
 	/**
 	 * Loads the templates configured for a given language.
