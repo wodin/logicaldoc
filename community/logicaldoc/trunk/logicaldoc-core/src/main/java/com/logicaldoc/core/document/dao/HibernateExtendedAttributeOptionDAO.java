@@ -47,11 +47,11 @@ public class HibernateExtendedAttributeOptionDAO extends HibernatePersistentObje
 		try {
 			if (StringUtils.isEmpty(attribute))
 				coll = (List<ExtendedAttributeOption>) findByQuery(
-						"from ExtendedAttributeOption _opt where _opt.templateId = ?1 order by _opt.position asc",
+						"from ExtendedAttributeOption _opt where _opt.deleted=0 and _opt.templateId = ?1 order by _opt.position asc",
 						new Object[] { new Long(templateId) }, null);
 			else
 				coll = (List<ExtendedAttributeOption>) findByQuery(
-						"from ExtendedAttributeOption _opt where _opt.templateId = ?1 and _opt.attribute = ?2 order by _opt.position asc",
+						"from ExtendedAttributeOption _opt where _opt.deleted=0 and _opt.templateId = ?1 and _opt.attribute = ?2 order by _opt.position asc",
 						new Object[] { new Long(templateId), attribute }, null);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -79,7 +79,7 @@ public class HibernateExtendedAttributeOptionDAO extends HibernatePersistentObje
 		try {
 			if (currentAttributes == null || currentAttributes.isEmpty())
 				return;
-			StringBuffer buf = new StringBuffer(" ('");
+			StringBuffer buf = new StringBuffer();
 			for (String name : currentAttributes) {
 				if (buf.length() == 0)
 					buf.append("('");
@@ -88,7 +88,7 @@ public class HibernateExtendedAttributeOptionDAO extends HibernatePersistentObje
 				buf.append(SqlUtil.doubleQuotes(name));
 				buf.append("'");
 			}
-			buf.append(") ");
+			buf.append(")");
 
 			List<ExtendedAttributeOption> options = findByQuery(
 					"from ExtendedAttributeOption _opt where _opt.templateId = ?1 and _opt.attribute not in "
