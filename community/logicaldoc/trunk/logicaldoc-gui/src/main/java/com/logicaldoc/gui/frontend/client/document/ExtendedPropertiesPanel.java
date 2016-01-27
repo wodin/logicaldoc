@@ -19,7 +19,6 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ResizedEvent;
 import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -82,7 +81,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			int maxExtRows = (int) getHeight() / 46; // 46 = height of an item
 			if (maxExtRows < 3)
 				maxExtCols = 3;
-			
+
 			if (extendedItems != null) {
 				maxExtCols = extendedItems.size() / maxExtRows;
 			}
@@ -231,6 +230,8 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form2.clearValues();
 		form2.clear();
 		addMember(form2);
+		currentExtAttributes = null;
+		extendedItems.clear();
 
 		if (templateId == null)
 			return;
@@ -322,6 +323,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	public boolean validate() {
 		Map<String, Object> values = (Map<String, Object>) vm.getValues();
 		vm.validate();
+
 		if (!vm.hasErrors()) {
 			document.setSource((String) values.get("source"));
 			document.setSourceId((String) values.get("sourceid"));
@@ -333,20 +335,28 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			document.setObject((String) values.get("object"));
 			document.setCoverage((String) values.get("coverage"));
 
-			try {
-				if (Feature.enabled(Feature.TEMPLATE)) {
-					if (values.get("template") == null || "".equals(values.get("template").toString()))
-						document.setTemplateId(null);
-					else {
-						document.setTemplateId(Long.parseLong(values.get("template").toString()));
-					}
-					for (String name : values.keySet()) {
-						if (name.startsWith("_")) {
-							Object val = values.get(name);
+			if (Feature.enabled(Feature.TEMPLATE)) {
+				if (values.get("template") == null || "".equals(values.get("template").toString()))
+					document.setTemplateId(null);
+				else {
+					document.setTemplateId(Long.parseLong(values.get("template").toString()));
+				}
+
+				if (extendedItems != null && !extendedItems.isEmpty())
+					for (FormItem item : extendedItems) {
+						String name = item.getName();
+						try {
 							String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
+							Object val = null;
+							try {
+								val = item.getValue();
+							} catch (Throwable t) {
+							}
+
 							GUIExtendedAttribute att = getExtendedAttribute(nm);
-							if (att == null)
+							if (att == null) {
 								continue;
+							}
 
 							if (val != null) {
 								if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
@@ -380,36 +390,32 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 									document.setValue(nm, val);
 							} else {
 								if (att != null) {
-									if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
-										document.getExtendedAttribute(nm).setIntValue(null);
-										break;
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
-										document.getExtendedAttribute(nm).setBooleanValue(null);
-										break;
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
-										document.getExtendedAttribute(nm).setDoubleValue(null);
-										break;
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
-										document.getExtendedAttribute(nm).setDateValue(null);
-										break;
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
-										GUIExtendedAttribute at = document.getExtendedAttribute(nm);
-										at.setIntValue(null);
-										at.setStringValue(null);
-										at.setType(GUIExtendedAttribute.TYPE_USER);
-										break;
-									} else {
-										document.setValue(nm, "");
-										break;
+									GUIExtendedAttribute documentAttribute = document.getExtendedAttribute(nm);
+									if (documentAttribute != null) {
+										if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+											documentAttribute.setIntValue(null);
+										} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+											documentAttribute.setBooleanValue(null);
+										} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+											documentAttribute.setDoubleValue(null);
+										} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+											documentAttribute.setDateValue(null);
+										} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
+											documentAttribute.setIntValue(null);
+											documentAttribute.setStringValue(null);
+											documentAttribute.setType(GUIExtendedAttribute.TYPE_USER);
+										} else {
+											documentAttribute.setStringValue(null);
+										}
 									}
 								}
 							}
+						} catch (Throwable t) {
+							Log.error(name + " " + t.getMessage(), null, null);
 						}
 					}
-				}
-			} catch (Throwable t) {
-				SC.warn(t.getMessage());
 			}
+
 		}
 		return !vm.hasErrors();
 	}
