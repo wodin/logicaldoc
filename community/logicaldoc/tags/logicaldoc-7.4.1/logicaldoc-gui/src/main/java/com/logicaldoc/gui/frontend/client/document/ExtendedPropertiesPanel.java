@@ -19,6 +19,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.events.ResizedEvent;
 import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -230,8 +231,6 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form2.clearValues();
 		form2.clear();
 		addMember(form2);
-		currentExtAttributes = null;
-		extendedItems.clear();
 
 		if (templateId == null)
 			return;
@@ -323,7 +322,6 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	public boolean validate() {
 		Map<String, Object> values = (Map<String, Object>) vm.getValues();
 		vm.validate();
-
 		if (!vm.hasErrors()) {
 			document.setSource((String) values.get("source"));
 			document.setSourceId((String) values.get("sourceid"));
@@ -341,22 +339,14 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 				else {
 					document.setTemplateId(Long.parseLong(values.get("template").toString()));
 				}
-
-				if (extendedItems != null && !extendedItems.isEmpty())
-					for (FormItem item : extendedItems) {
-						String name = item.getName();
-						try {
+				for (String name : values.keySet()) {
+					try {
+						if (name.startsWith("_")) {
+							Object val = values.get(name);
 							String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-							Object val = null;
-							try {
-								val = item.getValue();
-							} catch (Throwable t) {
-							}
-
 							GUIExtendedAttribute att = getExtendedAttribute(nm);
-							if (att == null) {
+							if (att == null)
 								continue;
-							}
 
 							if (val != null) {
 								if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
@@ -390,32 +380,30 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 									document.setValue(nm, val);
 							} else {
 								if (att != null) {
-									GUIExtendedAttribute documentAttribute = document.getExtendedAttribute(nm);
-									if (documentAttribute != null) {
-										if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
-											documentAttribute.setIntValue(null);
-										} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
-											documentAttribute.setBooleanValue(null);
-										} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
-											documentAttribute.setDoubleValue(null);
-										} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
-											documentAttribute.setDateValue(null);
-										} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
-											documentAttribute.setIntValue(null);
-											documentAttribute.setStringValue(null);
-											documentAttribute.setType(GUIExtendedAttribute.TYPE_USER);
-										} else {
-											documentAttribute.setStringValue(null);
-										}
+									if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+										document.getExtendedAttribute(nm).setIntValue(null);
+									} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+										document.getExtendedAttribute(nm).setBooleanValue(null);
+									} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+										document.getExtendedAttribute(nm).setDoubleValue(null);
+									} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+										document.getExtendedAttribute(nm).setDateValue(null);
+									} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
+										GUIExtendedAttribute at = document.getExtendedAttribute(nm);
+										at.setIntValue(null);
+										at.setStringValue(null);
+										at.setType(GUIExtendedAttribute.TYPE_USER);
+									} else {
+										document.setValue(nm, (String)null);
 									}
 								}
 							}
-						} catch (Throwable t) {
-							Log.error(name + " " + t.getMessage(), null, null);
 						}
+					} catch (Throwable t) {
+						
 					}
+				}
 			}
-
 		}
 		return !vm.hasErrors();
 	}
