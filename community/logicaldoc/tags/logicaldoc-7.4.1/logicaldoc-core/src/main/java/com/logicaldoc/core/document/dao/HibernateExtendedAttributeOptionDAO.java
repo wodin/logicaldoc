@@ -76,10 +76,23 @@ public class HibernateExtendedAttributeOptionDAO extends HibernatePersistentObje
 	@Override
 	public void deleteOrphaned(long templateId, Collection<String> currentAttributes) {
 		try {
+			if (currentAttributes == null || currentAttributes.isEmpty())
+				return;
+			StringBuffer buf = new StringBuffer();
+			for (String name : currentAttributes) {
+				if (buf.length() == 0)
+					buf.append("('");
+				else
+					buf.append(",'");
+				buf.append(SqlUtil.doubleQuotes(name));
+				buf.append("'");
+			}
+			buf.append(")");
+
 			List<ExtendedAttributeOption> options = findByQuery(
 					"from ExtendedAttributeOption _opt where _opt.templateId = ?1 and _opt.attribute not in "
-							+ currentAttributes.toString().replace("[", "('").replace("]", "')").replace(",", "','"), new Object[] {
-							templateId}, null);
+							+ buf.toString(), new Object[] { templateId }, null);
+
 			for (ExtendedAttributeOption option : options)
 				del(option, PersistentObject.DELETED_CODE_DEFAULT);
 		} catch (Throwable e) {
