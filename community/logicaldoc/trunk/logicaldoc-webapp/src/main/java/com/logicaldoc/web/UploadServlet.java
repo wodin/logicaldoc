@@ -266,7 +266,8 @@ public class UploadServlet extends UploadAction {
 
 		if (maxUploadMB > 0)
 			super.maxFileSize = maxUploadMB * 1024 * 1024;
-
+		else
+			super.maxFileSize = -1;
 		super.maxSize = super.maxFileSize;
 	}
 
