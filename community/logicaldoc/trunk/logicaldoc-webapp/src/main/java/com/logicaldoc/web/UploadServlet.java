@@ -166,7 +166,7 @@ public class UploadServlet extends UploadAction {
 	@Override
 	public void checkRequest(HttpServletRequest request) {
 		setUploadMax();
-		
+
 		if (super.maxFileSize > 0)
 			super.checkRequest(request);
 	}
@@ -263,7 +263,10 @@ public class UploadServlet extends UploadAction {
 		int maxUploadMB = 100;
 		if (config.getProperty("upload.maxsize") != null)
 			maxUploadMB = Integer.parseInt(config.getProperty("upload.maxsize"));
-		super.maxFileSize = maxUploadMB * 1024 * 1024;
+
+		if (maxUploadMB > 0)
+			super.maxFileSize = maxUploadMB * 1024 * 1024;
+
 		super.maxSize = super.maxFileSize;
 	}
 
