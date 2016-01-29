@@ -17,7 +17,7 @@ import com.logicaldoc.webservice.security.WSUser;
 import com.logicaldoc.webservice.system.SystemClient;
 
 public class SoapWorgkbench {
-	final static String BASE = "http://localhost:1000/services";
+	final static String BASE = "http://localhost:9080/services";
 
 	public static void main(String[] args) throws Exception {
 
@@ -34,11 +34,11 @@ public class SoapWorgkbench {
 		try {
 			// securityStuff(sid);
 
-			documentStuff(sid);
+			// documentStuff(sid);
 
 			// folderStuff(sid);
 
-			// searchStuff(sid);
+			searchStuff(sid);
 
 			// WSFolder newFolder = new WSFolder();
 			// newFolder.setName("ddddd");
@@ -309,16 +309,20 @@ public class SoapWorgkbench {
 		//
 		WSSearchOptions opt = new WSSearchOptions();
 		opt.setLanguage("en");
-		opt.setExpression("paper");
+		opt.setExpression("\"Fwd: liquid paper\"");
 		opt.setExpressionLanguage("en");
 		opt.setType(SearchOptions.TYPE_FULLTEXT);
-		opt.setMaxHits(10);
-		opt.setFolderId(4L);
-		opt.setSearchInSubPath(1);
+		opt.setMaxHits(900);
+//		opt.setFolderId(4L);
+//		opt.setSearchInSubPath(1);
+		opt.setRetrieveAliases(1);
+		
 		WSSearchResult result = searchClient.find(sid, opt);
 		System.out.println("---- " + result.getHits().length);
 		for (WSDocument hit : result.getHits()) {
 			System.out.println("hit customid: " + hit.getCustomId());
+			if(hit.getDocRef()!=null)
+                System.out.print(" THIS IS AN ALIAS ");
 			System.out.println("hit score: " + hit.getScore());
 			System.out.println("hit folderid: " + hit.getFolderId());
 			System.out.println("hit title: " + hit.getTitle());
@@ -326,6 +330,7 @@ public class SoapWorgkbench {
 			System.out.println("hit summary: " + hit.getSummary());
 			System.out.println("************************");
 		}
+		
 	}
 
 	private static void documentStuff(String sid) throws Exception {
