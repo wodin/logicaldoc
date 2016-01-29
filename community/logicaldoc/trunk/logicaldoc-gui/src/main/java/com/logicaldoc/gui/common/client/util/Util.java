@@ -90,6 +90,7 @@ public class Util {
 	/**
 	 * Generates Flash code
 	 */
+	@Deprecated
 	public static String flashHTML(String flashName, int width, int height, String flashvars) {
 		String tmp = "<div align=\"center\"><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\"  width=\""
 				+ width + "\" height=\"" + height + "\" align=\"middle\">\n";
