@@ -77,27 +77,6 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals("pluto", folder.getName());
 		folder = dao.findById(folder.getParentId());
 		Assert.assertEquals("pippo", folder.getName());
-
-		// Try the fallback to Default workspace
-		folder = dao.createPath(dao.findRoot(1L), "/pippo/pluto/paperino", true, null);
-		Assert.assertEquals("paperino", folder.getName());
-		folder = dao.findById(folder.getParentId());
-		Assert.assertEquals("pluto", folder.getName());
-		folder = dao.findById(folder.getParentId());
-		Assert.assertEquals("pippo", folder.getName());
-		folder = dao.findById(folder.getParentId());
-		Assert.assertEquals("Default", folder.getName());
-		
-		folder = dao.createPath(dao.findRoot(1L), "/Default/pippo/pluto/paperino", true, null);
-		Assert.assertEquals("paperino", folder.getName());
-		folder = dao.findById(folder.getParentId());
-		Assert.assertEquals("pluto", folder.getName());
-		folder = dao.findById(folder.getParentId());
-		Assert.assertEquals("pippo", folder.getName());
-		folder = dao.findById(folder.getParentId());
-		Assert.assertEquals("Default", folder.getName());
-
-
 	}
 
 	@Test
@@ -136,7 +115,8 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		 * Create a tree and populate it
 		 */
 		Folder defaultWorkspace = dao.findById(Folder.DEFAULTWORKSPACEID);
-		Assert.assertNotNull(dao.createPath(defaultWorkspace, "pippo/pluto", true, null));
+		Folder newFolder = dao.createPath(defaultWorkspace, "pippo/pluto", true, null);
+		Assert.assertNotNull(newFolder);
 
 		Folder source = dao.findByPath("/Default/pippo", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(source);
