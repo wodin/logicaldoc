@@ -353,7 +353,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public boolean isWriteEnabled(long folderId, long userId) {
 		return isPermissionEnabled(Permission.WRITE, folderId, userId);
 	}
-	
+
 	@Override
 	public boolean isDownloadEnabled(long id, long userId) {
 		return isPermissionEnabled(Permission.DOWNLOAD, id, userId);
@@ -1117,9 +1117,27 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public Folder createPath(Folder parent, String path, boolean inheritSecurity, FolderHistory transaction) {
+
+		// Check if the given path starts with a workspace
+		List<Folder> workspaces = findWorkspaces(parent.getTenantId());
+		boolean isInWorkspace = false;
+		for (Folder ws : workspaces) {
+			if (path.startsWith(ws.getName() + "/") || path.startsWith("/" + ws.getName() + "/")
+					|| path.equals(ws.getName()) || path.equals("/" + ws.getName())) {
+				isInWorkspace = true;
+				break;
+			}
+		}
+
+		// If not, add it
+		if (!isInWorkspace)
+			path = "/" + findDefaultWorkspace(parent.getTenantId()).getName()
+					+ (path.startsWith("/") ? path : "/" + path);
+
 		StringTokenizer st = new StringTokenizer(path, "/", false);
 
 		Folder folder = parent;
+
 		while (st.hasMoreTokens()) {
 			initialize(folder);
 
@@ -1127,7 +1145,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 			List<Folder> childs = findByName(folder, name, folder.getTenantId(), true);
 			Folder dir = null;
-			if (childs.isEmpty())
+			if (childs.isEmpty()) {
 				try {
 					Folder folderVO = new Folder();
 					folderVO.setName(name);
@@ -1136,7 +1154,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 							transaction != null ? (FolderHistory) transaction.clone() : null);
 				} catch (CloneNotSupportedException e) {
 				}
-			else {
+			} else {
 				dir = childs.iterator().next();
 				initialize(dir);
 			}

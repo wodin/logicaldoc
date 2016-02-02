@@ -115,7 +115,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @return
 	 */
 	public List<Long> findIdsByParentId(long parentId);
-	
+
 	/**
 	 * Finds direct children of a folder
 	 * 
@@ -144,7 +144,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public boolean isWriteEnabled(long folderId, long userId);
 
 	public boolean isReadEnabled(long folderId, long userId);
-	
+
 	public boolean isDownloadEnabled(long folderId, long userId);
 
 	/**
@@ -268,7 +268,8 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 
 	/**
 	 * Creates the folder for the specified path. All unexisting nodes specified
-	 * in the path will be created.
+	 * in the path will be created. The path must be in any case inside a
+	 * workspace, if not, the Default one will be used.
 	 * 
 	 * @param parent The parent folder
 	 * @param path The folder path(for example /dog/cat/mouse)
@@ -318,7 +319,8 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * @param transaction entry to log the event (set the user)
 	 * @throws Exception
 	 */
-	public void copy(Folder source, Folder target, boolean foldersOnly,  boolean inheritSecurity, FolderHistory transaction) throws Exception;
+	public void copy(Folder source, Folder target, boolean foldersOnly, boolean inheritSecurity,
+			FolderHistory transaction) throws Exception;
 
 	/**
 	 * Delete a folder and all its sub-folders that a user can delete. After
