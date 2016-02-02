@@ -1117,23 +1117,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public Folder createPath(Folder parent, String path, boolean inheritSecurity, FolderHistory transaction) {
-
-		// Check if the given path starts with a workspace
-		List<Folder> workspaces = findWorkspaces(parent.getTenantId());
-		boolean isInWorkspace = false;
-		for (Folder ws : workspaces) {
-			if (path.startsWith(ws.getName() + "/") || path.startsWith("/" + ws.getName() + "/")
-					|| path.equals(ws.getName()) || path.equals("/" + ws.getName())) {
-				isInWorkspace = true;
-				break;
-			}
-		}
-
-		// If not, add it
-		if (!isInWorkspace)
-			path = "/" + findDefaultWorkspace(parent.getTenantId()).getName()
-					+ (path.startsWith("/") ? path : "/" + path);
-
 		StringTokenizer st = new StringTokenizer(path, "/", false);
 
 		Folder folder = parent;
