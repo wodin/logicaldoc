@@ -147,6 +147,8 @@ public class WorkflowHistoryDialog extends Window {
 				"<b>" + I18N.message("workflowinstances") + "</b>");
 		workflowTitle.setShouldSaveValue(false);
 		workflowTitle.setWrapTitle(false);
+		workflowTitle.setShowTitle(false);
+		workflowTitle.setWrap(false);
 
 		workflowInstancesForm.setItems(workflowTitle);
 		workflowInstancesLayout.addMember(workflowInstancesForm);

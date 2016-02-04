@@ -12,7 +12,6 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
-import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * This popup window is used to view signatures.
@@ -21,21 +20,14 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.0
  */
 public class SignatureViewer extends Window {
-	private VLayout layout = new VLayout();
-
 	public SignatureViewer(String docId, String fileName, String[] signers) {
-		layout.setMargin(25);
-		layout.setMembersMargin(5);
-		layout.setTop(10);
-
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("signature"));
-		setWidth(380);
-		setHeight(110);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
+		setAutoSize(true);
 
 		DynamicForm signatureForm = new DynamicForm();
 		SelectItem certificates = ItemFactory.newSelectItem("certificates", I18N.message("signer"));
@@ -50,7 +42,6 @@ public class SignatureViewer extends Window {
 		if (!map.isEmpty())
 			certificates.setValue(map.keySet().iterator().next());
 		signatureForm.setItems(certificates);
-		layout.addMember(signatureForm, 0);
 
 		DynamicForm urlForm = new DynamicForm();
 		urlForm.setMargin(3);
@@ -62,8 +53,8 @@ public class SignatureViewer extends Window {
 		downloadUrl.setLinkTitle(fileName);
 
 		urlForm.setItems(downloadUrl);
-		layout.addMember(urlForm, 1);
 
-		addChild(layout);
+		addItem(signatureForm);
+		addItem(urlForm);
 	}
 }
