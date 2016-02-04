@@ -73,6 +73,7 @@ public class DuplicatesPanel extends VLayout {
 
 		ListGridField title = new ListGridField("title", I18N.message("title"), 200);
 		title.setCanFilter(true);
+		title.setHidden(true);
 
 		ListGridField size = new ListGridField("size", I18N.message("size"), 70);
 		size.setAlign(Alignment.RIGHT);
@@ -121,6 +122,9 @@ public class DuplicatesPanel extends VLayout {
 		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setCanFilter(true);
 
+		ListGridField folderName = new ListGridField("foldername", I18N.message("folder"), 200);
+		folderName.setCanFilter(true);
+
 		ListGridField type = new ListGridField("type", I18N.message("type"), 55);
 		type.setType(ListGridFieldType.TEXT);
 		type.setAlign(Alignment.CENTER);
@@ -130,7 +134,7 @@ public class DuplicatesPanel extends VLayout {
 		list = new ListGrid() {
 			@Override
 			protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
-				if (getFieldName(colNum).equals("title")) {
+				if (getFieldName(colNum).equals("title") || getFieldName(colNum).equals("filename")) {
 					if ("stop".equals(record.getAttribute("immutable"))
 							|| !"blank".equals(record.getAttribute("locked"))) {
 						return "color: #888888; font-style: italic;";
@@ -163,14 +167,6 @@ public class DuplicatesPanel extends VLayout {
 			}
 		});
 
-		title.setGroupTitleRenderer(new GroupTitleRenderer() {
-			public String getGroupTitle(Object groupValue, GroupNode groupNode, ListGridField field, String fieldName,
-					ListGrid grid) {
-				String baseTitle = I18N.message("title") + ": " + groupValue.toString();
-				return baseTitle;
-			}
-		});
-
 		digest.setGroupTitleRenderer(new GroupTitleRenderer() {
 			public String getGroupTitle(Object groupValue, GroupNode groupNode, ListGridField field, String fieldName,
 					ListGrid grid) {
@@ -182,7 +178,8 @@ public class DuplicatesPanel extends VLayout {
 		list.setCanDrag(true);
 		list.setCanDragRecordsOut(true);
 
-		list.setFields(icon, filename, title, lastModified, size, version, publisher, customId, digest, type);
+		list.setFields(icon, filename, title, folderName, lastModified, size, version, publisher, customId, digest,
+				type);
 
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.setHeight(20);
@@ -194,7 +191,6 @@ public class DuplicatesPanel extends VLayout {
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("", " ");
 		map.put("filename", I18N.message("filename"));
-		map.put("title", I18N.message("title"));
 		map.put("digest", I18N.message("digest"));
 		groupBy.setValueMap(map);
 		groupBy.setPickListWidth(100);
