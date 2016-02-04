@@ -39,9 +39,10 @@ public class DuplicatesDS extends DataSource {
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 		DataSourceTextField type = new DataSourceTextField("type");
 		DataSourceImageField locked = new DataSourceImageField("locked");
+		DataSourceTextField folderName = new DataSourceTextField("foldername");
 
 		setFields(id, title, size, publisher, version, lastModified, customId, icon, filename, digest, immutable,
-				folderId, type, locked);
+				folderId, folderName, type, locked);
 		setClientOnly(true);
 		setDataURL("data/duplicates.xml");
 	}
