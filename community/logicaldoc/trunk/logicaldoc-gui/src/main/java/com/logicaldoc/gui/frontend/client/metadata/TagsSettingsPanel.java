@@ -57,6 +57,7 @@ public class TagsSettingsPanel extends VLayout {
 
 		TextItem vocabulary = ItemFactory.newTextItem("vocabulary", I18N.message("vocabulary"), null);
 		vocabulary.setRequired(true);
+		vocabulary.setWidth(300);
 
 		parametersForm.setItems(mode, maxsize, minsize, vocabulary);
 		addMember(parametersForm);
