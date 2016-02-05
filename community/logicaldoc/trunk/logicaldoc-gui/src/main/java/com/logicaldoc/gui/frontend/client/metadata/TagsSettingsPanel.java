@@ -35,10 +35,8 @@ public class TagsSettingsPanel extends VLayout {
 	private ValuesManager vm = new ValuesManager();
 
 	public TagsSettingsPanel(GUIParameter[] settings) {
-		setWidth100();
-		setHeight(370);
-		setMembersMargin(10);
-		setMargin(30);
+		setMembersMargin(5);
+		setMargin(5);
 
 		DynamicForm parametersForm = new DynamicForm();
 		parametersForm.setValuesManager(vm);

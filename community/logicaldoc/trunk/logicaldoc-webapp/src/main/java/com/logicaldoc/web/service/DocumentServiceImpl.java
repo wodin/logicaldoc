@@ -16,6 +16,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,6 +57,7 @@ import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.document.pdf.PdfConverterManager;
 import com.logicaldoc.core.document.thumbnail.ThumbnailManager;
 import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
@@ -503,6 +505,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				document.setPathExtended(fdao.computePathExtended(folder.getId()));
 				if (aliasId != null)
 					document.setDocRef(aliasId);
+
+				Set<Permission> permissions = fdao.getEnabledPermissions(doc.getFolder().getId(), session.getUserId());
+				List<String> permissionsList = new ArrayList<String>();
+				for (Permission permission : permissions)
+					permissionsList.add(permission.toString());
+				folder.setPermissions(permissionsList.toArray(new String[permissionsList.size()]));
 			} catch (Throwable t) {
 				ServiceUtil.throwServerException(session, log, t);
 			}

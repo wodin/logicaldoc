@@ -628,7 +628,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		return gdocsItem;
 	}
 
-	private MenuItem getOfficeMenuItem(final GUIDocument document) {
+	private MenuItem getOfficeMenuItem(GUIFolder folder, final GUIDocument document) {
 		Menu menu = new Menu();
 		menu.setShowShadow(true);
 		menu.setShadowDepth(3);
@@ -647,9 +647,8 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 
 		menu.setItems(edit);
 
-		edit.setEnabled(document != null && document.getImmutable() == 0 && document.getFolder() != null
-				&& document.getFolder().isDownload() && document.getFolder().isWrite()
-				&& Feature.enabled(Feature.OFFICE) && Util.isOfficeFile(document.getFileName()));
+		edit.setEnabled(document != null && document.getImmutable() == 0 && folder != null && folder.isDownload()
+				&& folder.isWrite() && Feature.enabled(Feature.OFFICE));
 
 		MenuItem officeItem = new MenuItem(I18N.message("microsoftoffice"));
 		officeItem.setSubmenu(menu);
@@ -710,7 +709,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 				menu.addItem(getGDriveMenuItem(folder, document));
 			if (Feature.enabled(Feature.OFFICE)
 					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.OFFICE))
-				menu.addItem(getOfficeMenuItem(document));
+				menu.addItem(getOfficeMenuItem(folder, document));
 			if (Feature.enabled(Feature.WEBCONTENT)
 					&& com.logicaldoc.gui.common.client.Menu.enabled(com.logicaldoc.gui.common.client.Menu.WEBCONTENT))
 				menu.addItem(getWebContentMenuItem(folder, document));
