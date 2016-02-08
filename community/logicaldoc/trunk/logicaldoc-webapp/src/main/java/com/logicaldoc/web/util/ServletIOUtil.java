@@ -537,6 +537,9 @@ public class ServletIOUtil {
 		} else if (userAgent.contains("safari") && !userAgent.contains("chrome")) {
 			// Safari User-Agent contains "chrome"
 			encodedFileName = filename;
+		} else if (userAgent.contains("safari") && userAgent.contains("chrome") && userAgent.contains("android")) {
+			// Used by some LG phones
+			encodedFileName = filename;
 		} else {
 			encodedFileName = "=?UTF-8?B?" + new String(Base64.encodeBase64(filename.getBytes("UTF-8")), "UTF-8")
 					+ "?=";
