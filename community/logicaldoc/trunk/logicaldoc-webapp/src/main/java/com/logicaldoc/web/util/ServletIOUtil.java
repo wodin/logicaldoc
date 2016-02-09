@@ -406,7 +406,8 @@ public class ServletIOUtil {
 		/*
 		 * Save an history only if it is requested the first fragment
 		 */
-		boolean saveHistory = StringUtils.isEmpty(suffix) && !"preview".equals(request.getParameter("control"));
+		boolean saveHistory = StringUtils.isEmpty(suffix)
+				|| ("conversion.pdf".equals(suffix) && "preview".equals(request.getParameter("control")));
 		if (!ranges.isEmpty() && saveHistory) {
 			saveHistory = false;
 			for (Range rng : ranges)
