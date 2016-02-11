@@ -371,6 +371,6 @@ public class LDCmisService extends AbstractCmisService {
 		validateSession();
 		checkOut(repositoryId, objectId, extension, new Holder(false));
 		checkIn(repositoryId, objectId, false, null, contentStream, "", null, null, null, extension);
-		checkOut(repositoryId, objectId, extension, new Holder(false));
+		//checkOut(repositoryId, objectId, extension, new Holder(false));
 	}
 }
