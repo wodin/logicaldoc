@@ -13,7 +13,7 @@ For a complete installation quide, please go here: http://docs.logicaldoc.com
 
 
 Prerequisites:
-Java SE 7 (Java JDK 1.7)
+Java SE 8 (Java JDK 1.8)
 A database engine up and running (recommended choice is MySQL 5.6)
 
 ________________________________________________________________________________

@@ -8,6 +8,13 @@
                       http://www.logicaldoc.com                    
 
                     LogicalDOC Community Edition
+                    
+LogicalDOC 7.4.2 (2016-02-10; logicaldoc-7.4.2)
+==============================================================
+619 - Full HTML5 preview - Improvement - User Interface
+367 - Ability to send messages to groups of users - New FeaturevCore
+456 - Update WebDAV API - Task - WebDAV
+620 - Removed the support for Internet Explorer 8 - Deprecation - User Interface 
 
 LogicalDOC 7.4.1 (2016-01-15; logicaldoc-7.4.1)
 ==============================================================
