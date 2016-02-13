@@ -1,6 +1,8 @@
 package com.logicaldoc.cmis;
 
 import java.math.BigInteger;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -28,6 +30,7 @@ import org.apache.chemistry.opencmis.commons.enums.VersioningState;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisBaseException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisObjectNotFoundException;
 import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedException;
+import org.apache.chemistry.opencmis.commons.exceptions.CmisRuntimeException;
 import org.apache.chemistry.opencmis.commons.impl.server.AbstractCmisService;
 import org.apache.chemistry.opencmis.commons.server.CallContext;
 import org.apache.chemistry.opencmis.commons.server.ObjectInfo;
@@ -36,11 +39,14 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.document.DocumentEvent;
+import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * LogicalDOC implementation of the CMIS service
@@ -61,6 +67,11 @@ public class LDCmisService extends AbstractCmisService {
 
 	private String sessionId = null;
 
+	private HistoryDAO historyDao = null;
+
+	/* To avoid refetching it several times per session. */
+	protected String cachedChangeLogToken;
+
 	/**
 	 * Constructor.
 	 */
@@ -69,9 +80,12 @@ public class LDCmisService extends AbstractCmisService {
 		this.sessionId = sessionId;
 
 		try {
+			historyDao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+
 			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			UserSession session = SessionManager.getInstance().get(sessionId);
 			Folder root = fdao.findRoot(session.getTenantId());
+
 			repositories.put(Long.toString(root.getId()), new LDRepository(root, sessionId));
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
@@ -84,10 +98,21 @@ public class LDCmisService extends AbstractCmisService {
 
 	@Override
 	public RepositoryInfo getRepositoryInfo(String repositoryId, ExtensionsData extension) {
+		log.debug("** getRepositoryInfo");
+
 		validateSession();
+
+		String latestChangeLogToken;
+		if (cachedChangeLogToken != null) {
+			latestChangeLogToken = cachedChangeLogToken;
+		} else {
+			latestChangeLogToken = getLatestChangeLogToken(repositoryId);
+			cachedChangeLogToken = latestChangeLogToken;
+		}
+
 		for (LDRepository repo : repositories.values()) {
 			if (repo.getId().equals(repositoryId)) {
-				return repo.getRepositoryInfo(getCallContext());
+				return repo.getRepositoryInfo(getCallContext(), latestChangeLogToken);
 			}
 		}
 
@@ -96,14 +121,58 @@ public class LDCmisService extends AbstractCmisService {
 
 	@Override
 	public List<RepositoryInfo> getRepositoryInfos(ExtensionsData extension) {
+		log.debug("** getRepositoryInfos");
+
 		validateSession();
+
 		List<RepositoryInfo> result = new ArrayList<RepositoryInfo>();
 
 		for (LDRepository repo : repositories.values()) {
-			result.add(repo.getRepositoryInfo(getCallContext()));
+			String latestChangeLogToken = getLatestChangeLogToken(repo.getId());
+			result.add(repo.getRepositoryInfo(getCallContext(), latestChangeLogToken));
 		}
 
 		return result;
+	}
+
+	/**
+	 * Return the most recent events regarding a document
+	 * 
+	 * @param repositoryId
+	 * @return The getTime() of the latest date
+	 */
+	protected String getLatestChangeLogToken(String repositoryId) {
+		try {
+			ContextProperties settings = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			if (!"true".equals(settings.getProperty("cmis.changelog")))
+				return null;
+
+			LDRepository repo = repositories.get(repositoryId);
+
+			StringBuffer query = new StringBuffer(
+					"select max(ld_date) from ld_history where ld_deleted=0 and ld_tenantid=");
+			query.append(Long.toString(repo.getRoot().getTenantId()));
+			query.append(" and ld_event in ('");
+			query.append(DocumentEvent.STORED);
+			query.append("','");
+			query.append(DocumentEvent.CHECKEDIN);
+			query.append("','");
+			query.append(DocumentEvent.CHANGED);
+			query.append("','");
+			query.append(DocumentEvent.RENAMED);
+			query.append("','");
+			query.append(DocumentEvent.DELETED);
+			query.append("')");
+
+			Timestamp latestDate = (Timestamp) historyDao.queryForObject(query.toString(), Timestamp.class);
+			if (latestDate == null)
+				return "0";
+			else
+				return Long.toString(latestDate.getTime());
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
+			throw new CmisRuntimeException(e.toString(), e);
+		}
 	}
 
 	@Override
@@ -371,6 +440,27 @@ public class LDCmisService extends AbstractCmisService {
 		validateSession();
 		checkOut(repositoryId, objectId, extension, new Holder(false));
 		checkIn(repositoryId, objectId, false, null, contentStream, "", null, null, null, extension);
-		//checkOut(repositoryId, objectId, extension, new Holder(false));
+		// checkOut(repositoryId, objectId, extension, new Holder(false));
 	}
+
+	@Override
+	public ObjectList getContentChanges(String repositoryId, Holder<String> changeLogToken, Boolean includeProperties,
+			String filter, Boolean includePolicyIds, Boolean includeAcl, BigInteger maxItems, ExtensionsData extension) {
+		log.debug("** getContentChanges " + changeLogToken.getValue() + "|" + filter + " | "
+				+ new Date(Long.parseLong(changeLogToken.getValue())));
+
+		validateSession();
+
+		try {
+			ObjectList ret = getRepository().getContentChanges(changeLogToken,
+					maxItems != null ? (int) maxItems.doubleValue() : 2000);
+			log.warn("getContentChanges " + ret.getObjects().size());
+			return ret;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw t;
+		}
+	}
+	
+	
 }

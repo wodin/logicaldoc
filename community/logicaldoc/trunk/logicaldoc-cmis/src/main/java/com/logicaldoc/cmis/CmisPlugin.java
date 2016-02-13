@@ -48,6 +48,7 @@ public class CmisPlugin extends LogicalDOCPlugin {
 
 		ContextProperties pbean = new ContextProperties();
 		pbean.setProperty("cmis.enabled", "true");
+		pbean.setProperty("cmis.changelog", "true");
 		pbean.write();
 
 		setRestartRequired();
