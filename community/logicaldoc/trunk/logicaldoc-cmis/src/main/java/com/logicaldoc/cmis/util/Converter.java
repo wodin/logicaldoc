@@ -1672,6 +1672,9 @@ public final class Converter {
 
         Set<Action> set = EnumSet.noneOf(Action.class);
 
+        if (Boolean.TRUE.equals(allowableActions.isCanSetContentStream())) {
+            set.add(Action.CAN_SET_CONTENT_STREAM);
+        }
         if (Boolean.TRUE.equals(allowableActions.isCanAddObjectToFolder())) {
             set.add(Action.CAN_ADD_OBJECT_TO_FOLDER);
         }

@@ -8,6 +8,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -22,6 +23,7 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.chemistry.opencmis.client.api.ObjectType;
 import org.apache.chemistry.opencmis.commons.PropertyIds;
 import org.apache.chemistry.opencmis.commons.data.Ace;
 import org.apache.chemistry.opencmis.commons.data.Acl;
@@ -55,6 +57,8 @@ import org.apache.chemistry.opencmis.commons.enums.CapabilityContentStreamUpdate
 import org.apache.chemistry.opencmis.commons.enums.CapabilityJoin;
 import org.apache.chemistry.opencmis.commons.enums.CapabilityQuery;
 import org.apache.chemistry.opencmis.commons.enums.CapabilityRenditions;
+import org.apache.chemistry.opencmis.commons.enums.ChangeType;
+import org.apache.chemistry.opencmis.commons.enums.CmisVersion;
 import org.apache.chemistry.opencmis.commons.enums.IncludeRelationships;
 import org.apache.chemistry.opencmis.commons.enums.SupportedPermissions;
 import org.apache.chemistry.opencmis.commons.enums.Updatability;
@@ -73,6 +77,7 @@ import org.apache.chemistry.opencmis.commons.impl.dataobjects.AccessControlListI
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.AccessControlPrincipalDataImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.AclCapabilitiesDataImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.AllowableActionsImpl;
+import org.apache.chemistry.opencmis.commons.impl.dataobjects.ChangeEventInfoDataImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.CmisExtensionElementImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.ContentStreamImpl;
 import org.apache.chemistry.opencmis.commons.impl.dataobjects.FailedToDeleteDataImpl;
@@ -184,6 +189,8 @@ public class LDRepository {
 
 	private DocumentDAO documentDao;
 
+	private HistoryDAO historyDao;
+
 	private DocumentTemplateDAO templateDao;
 
 	private VersionDAO versionDao;
@@ -197,7 +204,6 @@ public class LDRepository {
 	 * 
 	 * @param id CMIS repository id
 	 * @param root root folder
-	 * @param types type manager object
 	 */
 	public LDRepository(Folder root, String sid) {
 		// check root folder
@@ -211,6 +217,7 @@ public class LDRepository {
 		documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
 		versionDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+		historyDao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
 
 		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
 
@@ -235,11 +242,12 @@ public class LDRepository {
 			repositoryInfo.setDescription(root.getDescription());
 		}
 
-		repositoryInfo.setCmisVersionSupported("1.0");
+		repositoryInfo.setCmisVersion(CmisVersion.CMIS_1_1);
+		repositoryInfo.setCmisVersionSupported("1.1");
 
 		repositoryInfo.setProductName("LogicalDOC");
 		repositoryInfo.setProductVersion(config.getProperty("product.release"));
-		repositoryInfo.setVendorName("Logical Objects");
+		repositoryInfo.setVendorName("LogicalDOC");
 
 		repositoryInfo.setRootFolder(getId(root));
 
@@ -255,11 +263,15 @@ public class LDRepository {
 		capabilities.setIsPwcSearchable(Boolean.TRUE);
 		capabilities.setIsPwcUpdatable(Boolean.TRUE);
 		capabilities.setCapabilityQuery(CapabilityQuery.FULLTEXTONLY);
-		capabilities.setCapabilityChanges(CapabilityChanges.NONE);
 		capabilities.setCapabilityContentStreamUpdates(CapabilityContentStreamUpdates.PWCONLY);
 		capabilities.setSupportsGetDescendants(true);
 		capabilities.setSupportsGetFolderTree(true);
 		capabilities.setCapabilityRendition(CapabilityRenditions.READ);
+
+		ContextProperties settings = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		capabilities.setCapabilityChanges("true".equals(settings.getProperty("cmis.changelog")) ? CapabilityChanges.ALL
+				: CapabilityChanges.NONE);
+
 		repositoryInfo.setCapabilities(capabilities);
 
 		AclCapabilitiesDataImpl aclCapability = new AclCapabilitiesDataImpl();
@@ -293,7 +305,6 @@ public class LDRepository {
 		list.add(createMapping(PermissionMapping.CAN_SET_CONTENT_DOCUMENT, CMIS_WRITE));
 		list.add(createMapping(PermissionMapping.CAN_UPDATE_PROPERTIES_OBJECT, CMIS_WRITE));
 		list.add(createMapping(PermissionMapping.CAN_VIEW_CONTENT_OBJECT, CMIS_READ));
-		list.add(createMapping(PermissionMapping.CAN_GET_ALL_VERSIONS_VERSION_SERIES, CMIS_READ));
 
 		Map<String, PermissionMapping> map = new LinkedHashMap<String, PermissionMapping>();
 		for (PermissionMapping pm : list) {
@@ -362,9 +373,11 @@ public class LDRepository {
 	/**
 	 * CMIS getRepositoryInfo.
 	 */
-	public RepositoryInfo getRepositoryInfo(CallContext context) {
+	public RepositoryInfo getRepositoryInfo(CallContext context, String latestChangeLogToken) {
 		debug("getRepositoryInfo");
 		validatePermission(context.getRepositoryId(), context, null);
+		if (latestChangeLogToken != null)
+			repositoryInfo.setLatestChangeLogToken(latestChangeLogToken);
 
 		return repositoryInfo;
 	}
@@ -2348,6 +2361,7 @@ public class LDRepository {
 			addAction(aas, Action.CAN_GET_FOLDER_TREE, true);
 			addAction(aas, Action.CAN_CREATE_DOCUMENT, write);
 			addAction(aas, Action.CAN_CREATE_FOLDER, write);
+			addAction(aas, Action.CAN_ADD_OBJECT_TO_FOLDER, write);
 
 			addAction(aas, Action.CAN_UPDATE_PROPERTIES, write && !isWorkspace);
 			addAction(aas, Action.CAN_MOVE_OBJECT, write && download && !isWorkspace);
@@ -2361,6 +2375,7 @@ public class LDRepository {
 			addAction(aas, Action.CAN_DELETE_OBJECT, write);
 			addAction(aas, Action.CAN_GET_CONTENT_STREAM, true);
 			addAction(aas, Action.CAN_GET_ALL_VERSIONS, true);
+			addAction(aas, Action.CAN_SET_CONTENT_STREAM, write);
 			addAction(aas, Action.CAN_CHECK_OUT, doc.getStatus() == Document.DOC_UNLOCKED && write);
 			addAction(aas, Action.CAN_CHECK_IN, doc.getStatus() == Document.DOC_CHECKED_OUT
 					&& doc.getLockUserId().longValue() == getSessionUser().getId() && write);
@@ -2624,5 +2639,91 @@ public class LDRepository {
 
 	public void setTemplateDao(DocumentTemplateDAO templateDao) {
 		this.templateDao = templateDao;
+	}
+
+	public ObjectList getContentChanges(Holder<String> changeLogToken, int max) throws CmisPermissionDeniedException {
+		if (changeLogToken == null)
+			throw new CmisInvalidArgumentException("Missing change log token holder");
+		long minDate;
+		if (changeLogToken == null) {
+			minDate = 0;
+		} else {
+			try {
+				minDate = Long.parseLong(changeLogToken.getValue());
+			} catch (NumberFormatException e) {
+				throw new CmisInvalidArgumentException("Invalid change log token");
+			}
+		}
+
+		StringBuffer query = new StringBuffer(" _entity.tenantId=?1 and _entity.date >= ?2 ");
+		query.append(" and _entity.event in ('");
+		query.append(DocumentEvent.STORED);
+		query.append("','");
+		query.append(DocumentEvent.CHECKEDIN);
+		query.append("','");
+		query.append(DocumentEvent.CHANGED);
+		query.append("','");
+		query.append(DocumentEvent.RENAMED);
+		query.append("','");
+		query.append(DocumentEvent.DELETED);
+		query.append("')");
+		List<History> entries = historyDao.findByWhere(query.toString(), new Object[] { getRoot().getTenantId(),
+				new Date(minDate) }, "order by _entity.date", max);
+
+		ObjectListImpl ol = new ObjectListImpl();
+		boolean hasMoreItems = entries.size() > max;
+		ol.setHasMoreItems(Boolean.valueOf(hasMoreItems));
+		if (hasMoreItems)
+			entries = entries.subList(0, max);
+
+		List<ObjectData> ods = new ArrayList<ObjectData>(entries.size());
+		Date date = null;
+		for (History logEntry : entries) {
+			ObjectDataImpl od = new ObjectDataImpl();
+			ChangeEventInfoDataImpl cei = new ChangeEventInfoDataImpl();
+			// change type
+			String eventId = logEntry.getEvent();
+			ChangeType changeType;
+			if (DocumentEvent.STORED.toString().equals(eventId)) {
+				changeType = ChangeType.CREATED;
+			} else if (DocumentEvent.CHANGED.toString().equals(eventId)
+					|| DocumentEvent.CHECKEDIN.toString().equals(eventId)
+					|| DocumentEvent.RENAMED.toString().equals(eventId)) {
+				changeType = ChangeType.UPDATED;
+			} else if (DocumentEvent.DELETED.toString().equals(eventId)) {
+				changeType = ChangeType.DELETED;
+			} else {
+				continue;
+			}
+			cei.setChangeType(changeType);
+			// change time
+			GregorianCalendar changeTime = (GregorianCalendar) Calendar.getInstance();
+			date = logEntry.getDate();
+			changeTime.setTime(date);
+			cei.setChangeTime(changeTime);
+			od.setChangeEventInfo(cei);
+			// properties: id, doc type
+			PropertiesImpl properties = new PropertiesImpl();
+			properties.addProperty(new PropertyIdImpl(PropertyIds.OBJECT_ID, ID_PREFIX_DOC + logEntry.getDocId()));
+			properties.addProperty(new PropertyIdImpl(PropertyIds.OBJECT_TYPE_ID, ObjectType.DOCUMENT_BASETYPE_ID));
+			od.setProperties(properties);
+			ods.add(od);
+		}
+		ol.setObjects(ods);
+		ol.setNumItems(BigInteger.valueOf(-1));
+		// BigInteger.valueOf(ods.size()));
+		// BigInteger.valueOf(-1));
+		String latestChangeLogToken = date == null ? null : String.valueOf(date.getTime());
+		changeLogToken.setValue(latestChangeLogToken);
+
+		return ol;
+	}
+
+	public Folder getRoot() {
+		return root;
+	}
+
+	public void setHistoryDao(HistoryDAO historyDao) {
+		this.historyDao = historyDao;
 	}
 }

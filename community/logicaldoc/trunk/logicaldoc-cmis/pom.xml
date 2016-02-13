@@ -62,19 +62,16 @@
             <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-client-bindings</artifactId>
             <version>0.10.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-client-api</artifactId>
             <version>0.10.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.chemistry.opencmis</groupId>
             <artifactId>chemistry-opencmis-client-impl</artifactId>
             <version>0.10.0</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
 			<groupId>net.sf.jpf</groupId>
