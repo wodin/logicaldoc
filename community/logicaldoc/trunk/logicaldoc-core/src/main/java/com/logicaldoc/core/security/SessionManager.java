@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.time.TimeDiff;
+import com.logicaldoc.util.time.TimeDiff.TimeField;
 
 /**
  * Repository of all current user sessions.
@@ -87,7 +89,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 */
 	public boolean isValid(String sessionId) {
 		UserSession session = get(sessionId);
-		return session!=null && !isExpired(session) && session.getStatus() == UserSession.STATUS_OPEN;
+		return session != null && !isExpired(session) && session.getStatus() == UserSession.STATUS_OPEN;
 	}
 
 	/**
@@ -107,8 +109,13 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 		} catch (IOException e) {
 		}
 		Date now = new Date();
-		long offset = now.getTime() - lastRenew.getTime();
-		boolean expired = offset > (timeout * 60 * 1000);
+
+		// long offset = now.getTime() - lastRenew.getTime();
+		long offset = Math.abs(TimeDiff.getTimeDifference(lastRenew, now, TimeField.MINUTE));
+
+		System.out.println(lastRenew.toString() + " - " + now.toString() + ": " + offset);
+
+		boolean expired = offset > timeout;
 		if (expired)
 			session.setExpired();
 		return expired;
