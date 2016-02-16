@@ -113,8 +113,6 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 		// long offset = now.getTime() - lastRenew.getTime();
 		long offset = Math.abs(TimeDiff.getTimeDifference(lastRenew, now, TimeField.MINUTE));
 
-		System.out.println(lastRenew.toString() + " - " + now.toString() + ": " + offset);
-
 		boolean expired = offset > timeout;
 		if (expired)
 			session.setExpired();
