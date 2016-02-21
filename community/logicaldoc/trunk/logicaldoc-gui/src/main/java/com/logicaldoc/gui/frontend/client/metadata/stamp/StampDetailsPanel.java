@@ -246,6 +246,7 @@ public class StampDetailsPanel extends VLayout {
 		// not be refreshed
 		vm.setValue("rotation", stamp.getRotation());
 		vm.setValue("opacity", stamp.getOpacity());
+		vm.setValue("page", stamp.getPage());
 
 		propertiesTabPanel.setMembers(form1, form2, image);
 
@@ -301,6 +302,7 @@ public class StampDetailsPanel extends VLayout {
 			stamp.setRotation(Integer.parseInt(vm.getValueAsString("rotation")));
 			stamp.setOpacity(Integer.parseInt(vm.getValueAsString("opacity")));
 			stamp.setSize(Integer.parseInt(vm.getValueAsString("size")));
+			stamp.setPage(Integer.parseInt(vm.getValueAsString("page")));
 			
 			stamp.setDescription(vm.getValueAsString("description"));
 			stamp.setColor(vm.getValueAsString("color"));
