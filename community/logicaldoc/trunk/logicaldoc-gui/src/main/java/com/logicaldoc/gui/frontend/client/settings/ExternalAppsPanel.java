@@ -46,7 +46,9 @@ public class ExternalAppsPanel extends VLayout {
 
 	private GUIParameter wsSettings = null;
 
-	private GUIParameter cmisSettings = null;
+	private GUIParameter cmisEnabled = null;
+
+	private GUIParameter cmisChangelog = null;
 
 	private GUIParameter wdSettings = null;
 
@@ -81,8 +83,10 @@ public class ExternalAppsPanel extends VLayout {
 		for (GUIParameter parameter : settings) {
 			if (parameter.getName().startsWith("webservice"))
 				wsSettings = parameter;
-			else if (parameter.getName().startsWith("cmis"))
-				cmisSettings = parameter;
+			else if (parameter.getName().equals("cmis.enabled"))
+				cmisEnabled = parameter;
+			else if (parameter.getName().equals("cmis.changelog"))
+				cmisChangelog = parameter;
 			else if (parameter.getName().equals("webdav.enabled"))
 				wdSettings = parameter;
 			else if (parameter.getName().equals("webdav.usecache"))
@@ -102,7 +106,7 @@ public class ExternalAppsPanel extends VLayout {
 			else if (parameter.getName().equals("acmecad.command"))
 				acmecad = parameter;
 		}
-
+	
 		Tab webService = new Tab();
 		webService.setTitle(I18N.message("webservice"));
 
@@ -143,14 +147,20 @@ public class ExternalAppsPanel extends VLayout {
 		StaticTextItem cmisUrl = ItemFactory.newStaticTextItem("cmisUrl", I18N.message("url"), GWT.getHostPageBaseURL()
 				+ "service/cmis");
 
-		// Web Service Enabled
-		RadioGroupItem cmisEnabled = ItemFactory.newBooleanSelector("cmisEnabled", "enabled");
-		cmisEnabled.setName("cmisEnabled");
-		cmisEnabled.setRequired(true);
-		cmisEnabled.setValue(cmisSettings.getValue().equals("true") ? "yes" : "no");
+		// CMIS Service Enabled
+		RadioGroupItem cmisEnabledItem = ItemFactory.newBooleanSelector("cmisEnabled", "enabled");
+		cmisEnabledItem.setRequired(true);
+		cmisEnabledItem.setWrapTitle(false);
+		cmisEnabledItem.setValue(cmisEnabled.getValue().equals("true") ? "yes" : "no");
 
+		// CMIS Changelog
+		RadioGroupItem cmisChangelogItem = ItemFactory.newBooleanSelector("cmisChangelog", "changelog");
+		cmisChangelogItem.setRequired(true);
+		cmisChangelogItem.setWrapTitle(false);
+		cmisChangelogItem.setValue(cmisChangelog.getValue().equals("true") ? "yes" : "no");
+		
 		if (Session.get().isDefaultTenant())
-			cmisForm.setItems(cmisUrl, cmisEnabled);
+			cmisForm.setItems(cmisUrl, cmisEnabledItem, cmisChangelogItem);
 		else
 			cmisForm.setItems(cmisUrl);
 		cmis.setPane(cmisForm);
@@ -256,7 +266,10 @@ public class ExternalAppsPanel extends VLayout {
 						ExternalAppsPanel.this.wsSettings.setValue(values.get("wsEnabled").equals("yes") ? "true"
 								: "false");
 
-						ExternalAppsPanel.this.cmisSettings.setValue(values.get("cmisEnabled").equals("yes") ? "true"
+						ExternalAppsPanel.this.cmisEnabled.setValue(values.get("cmisEnabled").equals("yes") ? "true"
+								: "false");
+						
+						ExternalAppsPanel.this.cmisChangelog.setValue(values.get("cmisChangelog").equals("yes") ? "true"
 								: "false");
 
 						ExternalAppsPanel.this.wdSettings.setValue(values.get("wdEnabled").equals("yes") ? "true"
@@ -272,7 +285,7 @@ public class ExternalAppsPanel extends VLayout {
 						ExternalAppsPanel.this.pdftohtml.setValue(values.get("pdftohtmlCommand").toString());
 					}
 
-					GUIParameter[] params = new GUIParameter[17];
+					GUIParameter[] params = new GUIParameter[18];
 					params[0] = ExternalAppsPanel.this.wsSettings;
 					params[1] = ExternalAppsPanel.this.wdSettings;
 					params[2] = ExternalAppsPanel.this.wdCache;
@@ -283,7 +296,8 @@ public class ExternalAppsPanel extends VLayout {
 					params[7] = ExternalAppsPanel.this.acmecad;
 					params[8] = ExternalAppsPanel.this.openssl;
 					params[9] = ExternalAppsPanel.this.pdftohtml;
-					params[10] = ExternalAppsPanel.this.cmisSettings;
+					params[10] = ExternalAppsPanel.this.cmisEnabled;
+					params[11] = ExternalAppsPanel.this.cmisChangelog;
 
 					// External Call
 					try {
@@ -301,12 +315,12 @@ public class ExternalAppsPanel extends VLayout {
 							Session.get().getSession().setExternalCall(null);
 
 						String tenant = Session.get().getTenantName();
-						params[11] = new GUIParameter(tenant + ".extcall.enabled", "yes".equals(values
+						params[12] = new GUIParameter(tenant + ".extcall.enabled", "yes".equals(values
 								.get("extCallEnabled")) ? "true" : "false");
-						params[12] = new GUIParameter(tenant + ".extcall.name", extCall.getName());
-						params[13] = new GUIParameter(tenant + ".extcall.baseurl", extCall.getBaseUrl());
-						params[14] = new GUIParameter(tenant + ".extcall.suffix", extCall.getSuffix());
-						params[15] = new GUIParameter(tenant + ".extcall.window", extCall.getTargetWindow());
+						params[13] = new GUIParameter(tenant + ".extcall.name", extCall.getName());
+						params[14] = new GUIParameter(tenant + ".extcall.baseurl", extCall.getBaseUrl());
+						params[15] = new GUIParameter(tenant + ".extcall.suffix", extCall.getSuffix());
+						params[16] = new GUIParameter(tenant + ".extcall.window", extCall.getTargetWindow());
 
 						ArrayList<String> buf = new ArrayList<String>();
 						if (extCallParamUser.getValueAsBoolean() != null
@@ -318,7 +332,7 @@ public class ExternalAppsPanel extends VLayout {
 						String paramsStr = buf.toString().substring(1, buf.toString().length() - 1);
 
 						extCall.setParametersStr(paramsStr);
-						params[16] = new GUIParameter(tenant + ".extcall.params", buf.isEmpty() ? "" : paramsStr);
+						params[17] = new GUIParameter(tenant + ".extcall.params", buf.isEmpty() ? "" : paramsStr);
 					} catch (Throwable t) {
 					}
 
