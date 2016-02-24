@@ -20,7 +20,7 @@
         <value name="Publisher"
                keypath="SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$APP_NAME"
                root="HKLM"
-               string="Logical Objects"/>
+               string="LogicalDOC"/>
         <value name="HelpLink"
                keypath="SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\$APP_NAME"
                root="HKLM"
