@@ -175,11 +175,7 @@
         </field>
         <field type="space" />
         <field type="text" variable="ghostscript">
-            <spec txt="Ghostscripy" id="ghostscript" size="50" set="${ghostscript}" />
-        </field>
-        <field type="space" />
-        <field type="text" variable="swftools">
-            <spec txt="SWF Tools" id="swftools" size="50" set="${swftools}" />
+            <spec txt="Ghostscript" id="ghostscript" size="50" set="${ghostscript}" />
         </field>
         <field type="space" />
         <field type="text" variable="tesseract">
