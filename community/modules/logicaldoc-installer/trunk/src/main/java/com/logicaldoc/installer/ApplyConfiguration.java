@@ -60,11 +60,13 @@ public class ApplyConfiguration {
 			String openssl = args[27].trim();
 
 			String lang = "en";
-			if (args[29] != null && !args[28].contains("$"))
-				lang = args[29].trim();
+			//if (args[29] != null && !args[28].contains("$"))
+      if (args[28] != null && !args[28].contains("$"))
+				lang = args[28].trim();
 
 			String setuppassword = "admin";
-			if (args[30] != null && !args[29].contains("$"))
+			//if (args[30] != null && !args[29].contains("$"))
+      if (args[29] != null && !args[29].contains("$"))
 				setuppassword = args[29].trim();
 
 			/*
