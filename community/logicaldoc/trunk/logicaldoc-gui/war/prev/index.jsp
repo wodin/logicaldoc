@@ -32,7 +32,7 @@
     <script src="compatibility.js"></script>
   
     <link rel="resource" type="application/l10n" href="locale/locale.properties"/>
-    <script src="l10n.js"></script>
+    <script src="./l10n.js"></script>
     <script src="./pdf.js"></script>
 
     <script>
