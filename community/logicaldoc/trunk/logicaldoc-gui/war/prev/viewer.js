@@ -1,5 +1,3 @@
-/* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-/* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
 /* Copyright 2012 Mozilla Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +25,7 @@
 
 'use strict';
 
-//var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
+var DEFAULT_URL = 'compressed.tracemonkey-pldi-09.pdf';
 var DEFAULT_SCALE_DELTA = 1.1;
 var MIN_SCALE = 0.25;
 var MAX_SCALE = 10.0;
@@ -37,7 +35,7 @@ var PAGE_NUMBER_LOADING_INDICATOR = 'visiblePageIsLoading';
 var DISABLE_AUTO_FETCH_LOADING_BAR_TIMEOUT = 5000;
 
 PDFJS.imageResourcesPath = './images/';
-  PDFJS.workerSrc = './pdf.worker.js';
+  PDFJS.workerSrc = '../build/pdf.worker.js';
   PDFJS.cMapUrl = '../web/cmaps/';
   PDFJS.cMapPacked = true;
 
@@ -51,57 +49,6 @@ var UNKNOWN_SCALE = 0;
 var MAX_AUTO_SCALE = 1.25;
 var SCROLLBAR_PADDING = 40;
 var VERTICAL_PADDING = 5;
-
-// optimised CSS custom property getter/setter
-var CustomStyle = (function CustomStyleClosure() {
-
-  // As noted on: http://www.zachstronaut.com/posts/2009/02/17/
-  //              animate-css-transforms-firefox-webkit.html
-  // in some versions of IE9 it is critical that ms appear in this list
-  // before Moz
-  var prefixes = ['ms', 'Moz', 'Webkit', 'O'];
-  var _cache = {};
-
-  function CustomStyle() {}
-
-  CustomStyle.getProp = function get(propName, element) {
-    // check cache only when no element is given
-    if (arguments.length === 1 && typeof _cache[propName] === 'string') {
-      return _cache[propName];
-    }
-
-    element = element || document.documentElement;
-    var style = element.style, prefixed, uPropName;
-
-    // test standard property first
-    if (typeof style[propName] === 'string') {
-      return (_cache[propName] = propName);
-    }
-
-    // capitalize
-    uPropName = propName.charAt(0).toUpperCase() + propName.slice(1);
-
-    // test vendor specific properties
-    for (var i = 0, l = prefixes.length; i < l; i++) {
-      prefixed = prefixes[i] + uPropName;
-      if (typeof style[prefixed] === 'string') {
-        return (_cache[propName] = prefixed);
-      }
-    }
-
-    //if all fails then set to undefined
-    return (_cache[propName] = 'undefined');
-  };
-
-  CustomStyle.setProp = function set(propName, element, str) {
-    var prop = this.getProp(propName);
-    if (prop !== 'undefined') {
-      element.style[prop] = str;
-    }
-  };
-
-  return CustomStyle;
-})();
 
 var NullCharactersRegExp = /\x00/g;
 
@@ -1197,7 +1144,6 @@ var PDFFindController = (function PDFFindControllerClosure() {
       '\u00BC': '1/4', // Vulgar fraction one quarter
       '\u00BD': '1/2', // Vulgar fraction one half
       '\u00BE': '3/4', // Vulgar fraction three quarters
-      '\u00A0': ' ' // No-break space
     };
     this.findBar = options.findBar || null;
 
@@ -1689,7 +1635,7 @@ var PDFLinkService = (function () {
           return pdfOpenParams;
         }
       }
-      return '';
+      return this.getAnchorUrl('');
     },
 
     /**
@@ -2751,23 +2697,6 @@ var PDFPresentationMode = (function PDFPresentationModeClosure() {
 })();
 
 
-/* Copyright 2013 Rob Wu <gwnRob@gmail.com>
- * https://github.com/Rob--W/grab-to-pan.js
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-'use strict';
 
 var GrabToPan = (function GrabToPanClosure() {
   /**
@@ -3630,6 +3559,8 @@ var TEXT_LAYER_RENDER_DELAY = 200; // ms
  * @implements {IRenderableView}
  */
 var PDFPageView = (function PDFPageViewClosure() {
+  var CustomStyle = PDFJS.CustomStyle;
+
   /**
    * @constructs PDFPageView
    * @param {PDFPageViewOptions} options
@@ -3647,7 +3578,7 @@ var PDFPageView = (function PDFPageViewClosure() {
     this.renderingId = 'page' + id;
 
     this.rotation = 0;
-    this.scale = scale || 1.0;
+    this.scale = scale || DEFAULT_SCALE;
     this.viewport = defaultViewport;
     this.pdfPageRotate = defaultViewport.rotation;
     this.hasRestrictedScaling = false;
@@ -3758,8 +3689,7 @@ var PDFPageView = (function PDFPageViewClosure() {
 
       var isScalingRestricted = false;
       if (this.canvas && PDFJS.maxCanvasPixels > 0) {
-        var ctx = this.canvas.getContext('2d');
-        var outputScale = getOutputScale(ctx);
+        var outputScale = this.outputScale;
         var pixelsInViewport = this.viewport.width * this.viewport.height;
         var maxScale = Math.sqrt(PDFJS.maxCanvasPixels / pixelsInViewport);
         if (((Math.floor(this.viewport.width) * outputScale.sx) | 0) *
@@ -3868,7 +3798,7 @@ var PDFPageView = (function PDFPageViewClosure() {
       }
 
       if (redrawAnnotations && this.annotationLayer) {
-        this.annotationLayer.setupAnnotations(this.viewport);
+        this.annotationLayer.render(this.viewport, 'display');
       }
     },
 
@@ -3903,6 +3833,11 @@ var PDFPageView = (function PDFPageViewClosure() {
 
       var canvas = document.createElement('canvas');
       canvas.id = 'page' + this.id;
+      // Keep the canvas hidden until the first draw callback, or until drawing
+      // is complete when `!this.renderingQueue`, to prevent black flickering.
+      canvas.setAttribute('hidden', 'hidden');
+      var isCanvasHidden = true;
+
       canvasWrapper.appendChild(canvas);
       if (this.annotationLayer && this.annotationLayer.div) {
         // annotationLayer needs to stay on top
@@ -3912,8 +3847,10 @@ var PDFPageView = (function PDFPageViewClosure() {
       }
       this.canvas = canvas;
 
-      var ctx = canvas.getContext('2d');
+      canvas.mozOpaque = true;
+      var ctx = canvas.getContext('2d', {alpha: false});
       var outputScale = getOutputScale(ctx);
+      this.outputScale = outputScale;
 
       if (PDFJS.useOnlyCssZoom) {
         var actualSizeViewport = viewport.clone({scale: CSS_UNITS});
@@ -3966,12 +3903,6 @@ var PDFPageView = (function PDFPageViewClosure() {
       }
       this.textLayer = textLayer;
 
-      if (outputScale.scaled) {
-        // Used by the mozCurrentTransform polyfill in src/display/canvas.js.
-        ctx._transformMatrix = [outputScale.sx, 0, 0, outputScale.sy, 0, 0];
-        ctx.scale(outputScale.sx, outputScale.sy);
-      }
-
       var resolveRenderPromise, rejectRenderPromise;
       var promise = new Promise(function (resolve, reject) {
         resolveRenderPromise = resolve;
@@ -3995,6 +3926,11 @@ var PDFPageView = (function PDFPageViewClosure() {
         }
 
         self.renderingState = RenderingStates.FINISHED;
+
+        if (isCanvasHidden) {
+          self.canvas.removeAttribute('hidden');
+          isCanvasHidden = false;
+        }
 
         if (self.loadingIconDiv) {
           div.removeChild(self.loadingIconDiv);
@@ -4049,12 +3985,19 @@ var PDFPageView = (function PDFPageViewClosure() {
             };
             return;
           }
+          if (isCanvasHidden) {
+            self.canvas.removeAttribute('hidden');
+            isCanvasHidden = false;
+          }
           cont();
         };
       }
 
+      var transform = !outputScale.scaled ? null :
+        [outputScale.sx, 0, 0, outputScale.sy, 0, 0];
       var renderContext = {
         canvasContext: ctx,
+        transform: transform,
         viewport: this.viewport,
         // intent: 'default', // === 'display'
       };
@@ -4065,7 +4008,7 @@ var PDFPageView = (function PDFPageViewClosure() {
         function pdfPageRenderCallback() {
           pageViewDrawCallback(null);
           if (textLayer) {
-            self.pdfPage.getTextContent().then(
+            self.pdfPage.getTextContent({ normalizeWhitespace: true }).then(
               function textContentResolved(textContent) {
                 textLayer.setTextContent(textContent);
                 textLayer.render(TEXT_LAYER_RENDER_DELAY);
@@ -4083,7 +4026,7 @@ var PDFPageView = (function PDFPageViewClosure() {
           this.annotationLayer = this.annotationsLayerFactory.
             createAnnotationsLayerBuilder(div, this.pdfPage);
         }
-        this.annotationLayer.setupAnnotations(this.viewport);
+        this.annotationLayer.render(this.viewport, 'display');
       }
       div.setAttribute('data-loaded', true);
 
@@ -4161,14 +4104,6 @@ var PDFPageView = (function PDFPageViewClosure() {
 })();
 
 
-var MAX_TEXT_DIVS_TO_RENDER = 100000;
-
-var NonWhitespaceRegexp = /\S/;
-
-function isAllWhitespace(str) {
-  return !NonWhitespaceRegexp.test(str);
-}
-
 /**
  * @typedef {Object} TextLayerBuilderOptions
  * @property {HTMLDivElement} textLayerDiv - The text layer container.
@@ -4195,6 +4130,7 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
     this.viewport = options.viewport;
     this.textDivs = [];
     this.findController = options.findController || null;
+    this.textLayerRenderTask = null;
     this._bindMouse();
   }
 
@@ -4213,64 +4149,6 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
       this.textLayerDiv.dispatchEvent(event);
     },
 
-    renderLayer: function TextLayerBuilder_renderLayer() {
-      var textLayerFrag = document.createDocumentFragment();
-      var textDivs = this.textDivs;
-      var textDivsLength = textDivs.length;
-      var canvas = document.createElement('canvas');
-      var ctx = canvas.getContext('2d');
-
-      // No point in rendering many divs as it would make the browser
-      // unusable even after the divs are rendered.
-      if (textDivsLength > MAX_TEXT_DIVS_TO_RENDER) {
-        this._finishRendering();
-        return;
-      }
-
-      var lastFontSize;
-      var lastFontFamily;
-      for (var i = 0; i < textDivsLength; i++) {
-        var textDiv = textDivs[i];
-        if (textDiv.dataset.isWhitespace !== undefined) {
-          continue;
-        }
-
-        var fontSize = textDiv.style.fontSize;
-        var fontFamily = textDiv.style.fontFamily;
-
-        // Only build font string and set to context if different from last.
-        if (fontSize !== lastFontSize || fontFamily !== lastFontFamily) {
-          ctx.font = fontSize + ' ' + fontFamily;
-          lastFontSize = fontSize;
-          lastFontFamily = fontFamily;
-        }
-
-        var width = ctx.measureText(textDiv.textContent).width;
-        if (width > 0) {
-          textLayerFrag.appendChild(textDiv);
-          var transform;
-          if (textDiv.dataset.canvasWidth !== undefined) {
-            // Dataset values come of type string.
-            var textScale = textDiv.dataset.canvasWidth / width;
-            transform = 'scaleX(' + textScale + ')';
-          } else {
-            transform = '';
-          }
-          var rotation = textDiv.dataset.angle;
-          if (rotation) {
-            transform = 'rotate(' + rotation + 'deg) ' + transform;
-          }
-          if (transform) {
-            CustomStyle.setProp('transform' , textDiv, transform);
-          }
-        }
-      }
-
-      this.textLayerDiv.appendChild(textLayerFrag);
-      this._finishRendering();
-      this.updateMatches();
-    },
-
     /**
      * Renders the text layer.
      * @param {number} timeout (optional) if specified, the rendering waits
@@ -4281,87 +4159,35 @@ var TextLayerBuilder = (function TextLayerBuilderClosure() {
         return;
       }
 
-      if (this.renderTimer) {
-        clearTimeout(this.renderTimer);
-        this.renderTimer = null;
+      if (this.textLayerRenderTask) {
+        this.textLayerRenderTask.cancel();
+        this.textLayerRenderTask = null;
       }
 
-      if (!timeout) { // Render right away
-        this.renderLayer();
-      } else { // Schedule
-        var self = this;
-        this.renderTimer = setTimeout(function() {
-          self.renderLayer();
-          self.renderTimer = null;
-        }, timeout);
-      }
-    },
-
-    appendText: function TextLayerBuilder_appendText(geom, styles) {
-      var style = styles[geom.fontName];
-      var textDiv = document.createElement('div');
-      this.textDivs.push(textDiv);
-      if (isAllWhitespace(geom.str)) {
-        textDiv.dataset.isWhitespace = true;
-        return;
-      }
-      var tx = PDFJS.Util.transform(this.viewport.transform, geom.transform);
-      var angle = Math.atan2(tx[1], tx[0]);
-      if (style.vertical) {
-        angle += Math.PI / 2;
-      }
-      var fontHeight = Math.sqrt((tx[2] * tx[2]) + (tx[3] * tx[3]));
-      var fontAscent = fontHeight;
-      if (style.ascent) {
-        fontAscent = style.ascent * fontAscent;
-      } else if (style.descent) {
-        fontAscent = (1 + style.descent) * fontAscent;
-      }
-
-      var left;
-      var top;
-      if (angle === 0) {
-        left = tx[4];
-        top = tx[5] - fontAscent;
-      } else {
-        left = tx[4] + (fontAscent * Math.sin(angle));
-        top = tx[5] - (fontAscent * Math.cos(angle));
-      }
-      textDiv.style.left = left + 'px';
-      textDiv.style.top = top + 'px';
-      textDiv.style.fontSize = fontHeight + 'px';
-      textDiv.style.fontFamily = style.fontFamily;
-
-      textDiv.textContent = geom.str;
-      // |fontName| is only used by the Font Inspector. This test will succeed
-      // when e.g. the Font Inspector is off but the Stepper is on, but it's
-      // not worth the effort to do a more accurate test.
-      if (PDFJS.pdfBug) {
-        textDiv.dataset.fontName = geom.fontName;
-      }
-      // Storing into dataset will convert number into string.
-      if (angle !== 0) {
-        textDiv.dataset.angle = angle * (180 / Math.PI);
-      }
-      // We don't bother scaling single-char text divs, because it has very
-      // little effect on text highlighting. This makes scrolling on docs with
-      // lots of such divs a lot faster.
-      if (geom.str.length > 1) {
-        if (style.vertical) {
-          textDiv.dataset.canvasWidth = geom.height * this.viewport.scale;
-        } else {
-          textDiv.dataset.canvasWidth = geom.width * this.viewport.scale;
-        }
-      }
+      this.textDivs = [];
+      var textLayerFrag = document.createDocumentFragment();
+      this.textLayerRenderTask = PDFJS.renderTextLayer({
+        textContent: this.textContent,
+        container: textLayerFrag,
+        viewport: this.viewport,
+        textDivs: this.textDivs,
+        timeout: timeout
+      });
+      this.textLayerRenderTask.promise.then(function () {
+        this.textLayerDiv.appendChild(textLayerFrag);
+        this._finishRendering();
+        this.updateMatches();
+      }.bind(this), function (reason) {
+        // canceled or failed to render text layer -- skipping errors
+      });
     },
 
     setTextContent: function TextLayerBuilder_setTextContent(textContent) {
-      this.textContent = textContent;
-
-      var textItems = textContent.items;
-      for (var i = 0, len = textItems.length; i < len; i++) {
-        this.appendText(textItems[i], textContent.styles);
+      if (this.textLayerRenderTask) {
+        this.textLayerRenderTask.cancel();
+        this.textLayerRenderTask = null;
       }
+      this.textContent = textContent;
       this.divContentDone = true;
     },
 
@@ -4626,120 +4452,55 @@ var AnnotationsLayerBuilder = (function AnnotationsLayerBuilderClosure() {
 
     this.div = null;
   }
+
   AnnotationsLayerBuilder.prototype =
       /** @lends AnnotationsLayerBuilder.prototype */ {
 
     /**
      * @param {PageViewport} viewport
+     * @param {string} intent (default value is 'display')
      */
-    setupAnnotations:
-        function AnnotationsLayerBuilder_setupAnnotations(viewport) {
-      function bindLink(link, dest) {
-        link.href = linkService.getDestinationHash(dest);
-        link.onclick = function annotationsLayerBuilderLinksOnclick() {
-          if (dest) {
-            linkService.navigateTo(dest);
-          }
-          return false;
-        };
-        if (dest) {
-          link.className = 'internalLink';
-        }
-      }
-
-      function bindNamedAction(link, action) {
-        link.href = linkService.getAnchorUrl('');
-        link.onclick = function annotationsLayerBuilderNamedActionOnClick() {
-          linkService.executeNamedAction(action);
-          return false;
-        };
-        link.className = 'internalLink';
-      }
-
-      var linkService = this.linkService;
-      var pdfPage = this.pdfPage;
+    render: function AnnotationsLayerBuilder_render(viewport, intent) {
       var self = this;
+      var parameters = {
+        intent: (intent === undefined ? 'display' : intent),
+      };
 
-      pdfPage.getAnnotations().then(function (annotationsData) {
+      this.pdfPage.getAnnotations(parameters).then(function (annotations) {
         viewport = viewport.clone({ dontFlip: true });
-        var transform = viewport.transform;
-        var transformStr = 'matrix(' + transform.join(',') + ')';
-        var data, element, i, ii;
 
         if (self.div) {
           // If an annotationLayer already exists, refresh its children's
-          // transformation matrices
-          for (i = 0, ii = annotationsData.length; i < ii; i++) {
-            data = annotationsData[i];
-            element = self.div.querySelector(
-                '[data-annotation-id="' + data.id + '"]');
-            if (element) {
-              CustomStyle.setProp('transform', element, transformStr);
-            }
-          }
-          // See PDFPageView.reset()
-          self.div.removeAttribute('hidden');
+          // transformation matrices.
+          PDFJS.AnnotationLayer.update(viewport, self.div, annotations);
         } else {
-          for (i = 0, ii = annotationsData.length; i < ii; i++) {
-            data = annotationsData[i];
-            if (!data || !data.hasHtml) {
-              continue;
-            }
+          // Create an annotation layer div and render the annotations
+          // if there is at least one annotation.
+          if (annotations.length === 0) {
+            return;
+          }
 
-            element = PDFJS.AnnotationUtils.getHtmlElement(data,
-              pdfPage.commonObjs);
-            element.setAttribute('data-annotation-id', data.id);
-            if (typeof mozL10n !== 'undefined') {
-              mozL10n.translate(element);
-            }
+          self.div = document.createElement('div');
+          self.div.className = 'annotationLayer';
+          self.pageDiv.appendChild(self.div);
 
-            var rect = data.rect;
-            var view = pdfPage.view;
-            rect = PDFJS.Util.normalizeRect([
-              rect[0],
-                view[3] - rect[1] + view[1],
-              rect[2],
-                view[3] - rect[3] + view[1]
-            ]);
-            element.style.left = rect[0] + 'px';
-            element.style.top = rect[1] + 'px';
-            element.style.position = 'absolute';
-
-            CustomStyle.setProp('transform', element, transformStr);
-            var transformOriginStr = -rect[0] + 'px ' + -rect[1] + 'px';
-            CustomStyle.setProp('transformOrigin', element, transformOriginStr);
-
-            if (data.subtype === 'Link' && !data.url) {
-              var link = element.getElementsByTagName('a')[0];
-              if (link) {
-                if (data.action) {
-                  bindNamedAction(link, data.action);
-                } else {
-                  bindLink(link, ('dest' in data) ? data.dest : null);
-                }
-              }
-            }
-
-            if (!self.div) {
-              var annotationLayerDiv = document.createElement('div');
-              annotationLayerDiv.className = 'annotationLayer';
-              self.pageDiv.appendChild(annotationLayerDiv);
-              self.div = annotationLayerDiv;
-            }
-
-            self.div.appendChild(element);
+          PDFJS.AnnotationLayer.render(viewport, self.div, annotations,
+                                       self.pdfPage, self.linkService);
+          if (typeof mozL10n !== 'undefined') {
+            mozL10n.translate(self.div);
           }
         }
       });
     },
 
-    hide: function () {
+    hide: function AnnotationsLayerBuilder_hide() {
       if (!this.div) {
         return;
       }
       this.div.setAttribute('hidden', 'true');
     }
   };
+
   return AnnotationsLayerBuilder;
 })();
 
@@ -5200,7 +4961,7 @@ var PDFViewer = (function pdfViewer() {
       if (!this.pdfDocument) {
         return;
       }
-      
+
       var pageView = this._pages[pageNumber - 1];
 
       if (this.isInPresentationMode) {
@@ -5458,7 +5219,7 @@ var PDFViewer = (function pdfViewer() {
 
     getPageTextContent: function (pageIndex) {
       return this.pdfDocument.getPage(pageIndex + 1).then(function (page) {
-        return page.getTextContent();
+        return page.getTextContent({ normalizeWhitespace: true });
       });
     },
 
@@ -5579,7 +5340,8 @@ var PDFThumbnailView = (function PDFThumbnailViewClosure() {
 
     // Since this is a temporary canvas, we need to fill the canvas with a white
     // background ourselves. |_getPageDrawContext| uses CSS rules for this.
-    var ctx = tempCanvas.getContext('2d');
+    tempCanvas.mozOpaque = true;
+    var ctx = tempCanvas.getContext('2d', {alpha: false});
     ctx.save();
     ctx.fillStyle = 'rgb(255, 255, 255)';
     ctx.fillRect(0, 0, width, height);
@@ -5719,7 +5481,8 @@ var PDFThumbnailView = (function PDFThumbnailViewClosure() {
       var canvas = document.createElement('canvas');
       this.canvas = canvas;
 
-      var ctx = canvas.getContext('2d');
+      canvas.mozOpaque = true;
+      var ctx = canvas.getContext('2d', {alpha: false});
       var outputScale = getOutputScale(ctx);
 
       canvas.width = (this.canvasWidth * outputScale.sx) | 0;
@@ -6743,6 +6506,9 @@ var PDFViewerApplication = {
       self.progress(progressData.loaded / progressData.total);
     };
 
+    // Listen for unsupported features to trigger the fallback UI.
+    loadingTask.onUnsupportedFeature = this.fallback.bind(this);
+
     var result = loadingTask.promise.then(
       function getDocumentCallback(pdfDocument) {
         self.load(pdfDocument, scale);
@@ -7375,6 +7141,35 @@ var PDFViewerApplication = {
 window.PDFView = PDFViewerApplication; // obsolete name, using it as an alias
 
 
+var HOSTED_VIEWER_ORIGINS = ['null',
+  'http://mozilla.github.io', 'https://mozilla.github.io'];
+function validateFileURL(file) {
+  try {
+    var viewerOrigin = new URL(window.location.href).origin || 'null';
+    if (HOSTED_VIEWER_ORIGINS.indexOf(viewerOrigin) >= 0) {
+      // Hosted or local viewer, allow for any file locations
+      return;
+    }
+    var fileOrigin = new URL(file, window.location.href).origin;
+    // Removing of the following line will not guarantee that the viewer will
+    // start accepting URLs from foreign origin -- CORS headers on the remote
+    // server must be properly configured.
+    if (fileOrigin !== viewerOrigin) {
+      throw new Error('file origin does not match viewer\'s');
+    }
+  } catch (e) {
+    var message = e && e.message;
+    var loadingErrorMessage = mozL10n.get('loading_error', null,
+      'An error occurred while loading the PDF.');
+
+    var moreInfo = {
+      message: message
+    };
+    PDFViewerApplication.error(loadingErrorMessage, moreInfo);
+    throw e;
+  }
+}
+
 function webViewerLoad(evt) {
   PDFViewerApplication.initialize().then(webViewerInitialized);
 }
@@ -7383,6 +7178,7 @@ function webViewerInitialized() {
   var queryString = document.location.search.substring(1);
   var params = parseQueryString(queryString);
   var file = 'file' in params ? params.file : DEFAULT_URL;
+  validateFileURL(file);
 
   var fileInput = document.createElement('input');
   fileInput.id = 'fileInput';
@@ -7477,10 +7273,6 @@ function webViewerInitialized() {
   if (PDFViewerApplication.supportsIntegratedFind) {
     document.getElementById('viewFind').classList.add('hidden');
   }
-
-  // Listen for unsupported features to trigger the fallback UI.
-  PDFJS.UnsupportedManager.listen(
-    PDFViewerApplication.fallback.bind(PDFViewerApplication));
 
   // Suppress context menus for some controls
   document.getElementById('scaleSelect').oncontextmenu = noContextMenuHandler;
