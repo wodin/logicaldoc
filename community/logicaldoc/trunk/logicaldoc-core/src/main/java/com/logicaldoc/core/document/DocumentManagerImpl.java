@@ -716,12 +716,16 @@ public class DocumentManagerImpl implements DocumentManager {
 		assert (transaction.getUser() != null);
 
 		Document document = documentDAO.findById(docId);
+		if(document.getLockUserId()==null){
+			log.debug("The document " + document + " is already unlocked ");
+			return;
+		}
+		
 		documentDAO.initialize(document);
 
 		if (transaction.getUser().isInGroup("admin")) {
 			document.setImmutable(0);
-		} else {
-			if (!document.getLockUserId().equals(transaction.getUserId())) {
+		} else if (transaction.getUserId() != document.getLockUserId()) {
 				String message = "The document " + document + " is locked by " + document.getLockUser()
 						+ " and cannot be unlocked by " + transaction.getUser().getFullName();
 				throw new Exception(message);
