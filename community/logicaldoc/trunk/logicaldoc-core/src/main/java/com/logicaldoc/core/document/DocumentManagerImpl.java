@@ -729,7 +729,6 @@ public class DocumentManagerImpl implements DocumentManager {
 				String message = "The document " + document + " is locked by " + document.getLockUser()
 						+ " and cannot be unlocked by " + transaction.getUser().getFullName();
 				throw new Exception(message);
-			}
 		}
 
 		document.setLockUserId(null);
