@@ -717,7 +717,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		Document document = documentDAO.findById(docId);
 		if (document.getLockUserId() == null) {
-			log.debug("The document " + document + " is already unlocked ");
+			log.debug("The document " + document + " is already unlocked");
 			return;
 		}
 
