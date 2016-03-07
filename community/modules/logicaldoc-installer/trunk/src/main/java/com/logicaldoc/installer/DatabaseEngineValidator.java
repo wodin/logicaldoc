@@ -6,6 +6,7 @@ import com.izforge.izpack.api.data.InstallData;
 import com.izforge.izpack.api.installer.DataValidator;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.installer.util.FileUtil;
+import com.logicaldoc.installer.util.JavaUtil;
 import com.logicaldoc.installer.util.Log;
 import com.logicaldoc.installer.util.ServiceUtil;
 import com.logicaldoc.installer.util.WindowsReqistry;
@@ -79,6 +80,9 @@ public class DatabaseEngineValidator implements DataValidator {
 			data.setVariable(Constants.CLAMSCAN, "/usr/bin/clamscan");
 			data.setVariable(Constants.OPENSSL, "/usr/bin/openssl");
 		}
+
+		// Detect the default architecture
+		data.setVariable(Constants.ARCHITECTURE, JavaUtil.is64Bit() ? "64bit" : "32bit");
 
 		return Status.OK;
 	}
