@@ -31,6 +31,7 @@ import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.sequence.SequenceDAO;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
@@ -170,6 +171,14 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setCreatorId(folder.getCreatorId());
 			f.setType(folder.getType());
 			f.setPosition(folder.getPosition());
+			f.setQuotaDocs(folder.getQuotaDocs());
+			f.setQuotaSize(folder.getQuotaSize());
+
+			if (f.isWorkspace()) {
+				SequenceDAO seqDao = (SequenceDAO) Context.getInstance().getBean(SequenceDAO.class);
+				f.setDocumentsTotal(seqDao.getCurrentValue("wsdocs", folderId, folder.getTenantId()));
+				f.setSizeTotal(seqDao.getCurrentValue("wssize", folderId, folder.getTenantId()));
+			}
 
 			if (folder.getSecurityRef() != null) {
 				GUIFolder secRef = new GUIFolder();
@@ -290,7 +299,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		User user = ServiceUtil.getSessionUser(sid);
-		
+
 		try {
 			for (int i = 0; i < folderIds.length; i++) {
 				copyFolder(sid, user, folderIds[i], targetId, foldersOnly, inheritSecurity);
@@ -443,6 +452,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setType(folder.getType());
 			f.setTemplateLocked(folder.getTemplateLocked());
 			f.setPosition(folder.getPosition());
+			f.setQuotaDocs(folder.getQuotaDocs());
+			f.setQuotaSize(folder.getQuotaSize());
+
 			if (f.getName().trim().equals(folderName)) {
 				f.setName(folderName.trim());
 				transaction.setEvent(FolderEvent.CHANGED.toString());

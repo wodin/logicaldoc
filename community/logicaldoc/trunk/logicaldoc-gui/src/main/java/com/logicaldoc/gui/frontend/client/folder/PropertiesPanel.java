@@ -21,9 +21,9 @@ import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.validator.DoesntContainValidator;
 
 /**
- * Shows document's standard properties and read-only data
+ * Shows folder's standard properties and read-only data
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 6.0
  */
 public class PropertiesPanel extends FolderDetailTab {

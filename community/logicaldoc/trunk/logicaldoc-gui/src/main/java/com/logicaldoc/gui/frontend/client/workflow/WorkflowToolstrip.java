@@ -261,16 +261,24 @@ public class WorkflowToolstrip extends ToolStrip {
 				if (currentWorkflow == null || currentWorkflow.getName() == null)
 					return;
 
-				workflowService.undeploy(Session.get().getSid(), currentWorkflow.getName(), new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+				LD.ask(I18N.message("undeploy"), I18N.message("undeploywarn"), new BooleanCallback() {
 
 					@Override
-					public void onSuccess(Void result) {
-						SC.say(I18N.message("workflowundeployed", currentWorkflow.getName()));
-						update();
+					public void execute(Boolean value) {
+						if (value.booleanValue())
+							workflowService.undeploy(Session.get().getSid(), currentWorkflow.getName(),
+									new AsyncCallback<Void>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
+
+										@Override
+										public void onSuccess(Void result) {
+											SC.say(I18N.message("workflowundeployed", currentWorkflow.getName()));
+											update();
+										}
+									});
 					}
 				});
 			}
