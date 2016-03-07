@@ -661,6 +661,21 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
+	public Folder findWorkspace(long folderId) {
+		Folder folder = findById(folderId);
+		if (folder.isWorkspace())
+			return folder;
+		else {
+			List<Folder> parents = findParents(folderId);
+			for (Folder parent : parents) {
+				if (!"/".equals(parent.getName()) && parent.isWorkspace())
+					return parent;
+			}
+		}
+		return null;
+	}
+
+	@Override
 	public boolean isPermissionEnabled(Permission permission, long folderId, long userId) {
 		Set<Permission> permissions = getEnabledPermissions(folderId, userId);
 		return permissions.contains(permission);
@@ -1059,6 +1074,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		if (folderVO.getAttributes() != null && !folderVO.getAttributes().isEmpty())
 			for (String name : folderVO.getAttributes().keySet())
 				folder.getAttributes().put(name, folderVO.getAttributes().get(name));
+
+		folder.setQuotaDocs(folderVO.getQuotaDocs());
+		folder.setQuotaSize(folderVO.getQuotaSize());
 
 		if (inheritSecurity) {
 			if (parent.getSecurityRef() != null)
@@ -1492,5 +1510,25 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		}
 
 		return result;
+	}
+
+	@Override
+	public long countDocsInTree(long rootId) {
+		Collection<Long> folderIds = findFolderIdInTree(rootId, false);
+
+		String query = "select count(*) from ld_document where ld_deleted = 0 ";
+		query += " and ld_folderid in " + folderIds.toString().replace('[', '(').replace(']', ')');
+
+		return queryForLong(query);
+	}
+
+	@Override
+	public long computeTreeSize(long rootId) {
+		Collection<Long> folderIds = findFolderIdInTree(rootId, false);
+
+		String query = "select sum(A.ld_filesize) from ld_version A where A.ld_deleted = 0 and A.ld_version = A.ld_fileversion ";
+		query += " and A.ld_folderid in " + folderIds.toString().replace('[', '(').replace(']', ')');
+
+		return queryForLong(query);
 	}
 }

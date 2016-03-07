@@ -195,9 +195,16 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * ordered starting from the root of folders. The list doesn't include the
 	 * given folder.
 	 * 
-	 * @param id
+	 * @param id ID of the folder
 	 */
 	public List<Folder> findParents(long id);
+
+	/**
+	 * Returns the workspace that contains the given folder
+	 * 
+	 * @param folderId ID of the folder
+	 */
+	public Folder findWorkspace(long folderId);
 
 	/**
 	 * Restores a previously deleted folder
@@ -435,4 +442,14 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * passed folder. The transaction must be provided with userId and userName.
 	 */
 	public void saveFolderHistory(Folder folder, FolderHistory transaction);
+
+	/**
+	 * Counts the number of documents inside a given folder's tree (direct and indirect children)
+	 */
+	public long countDocsInTree(long rootId);
+	
+	/**
+	 * Computes the size of a tree (all versions included)
+	 */
+	public long computeTreeSize(long rootId);
 }
