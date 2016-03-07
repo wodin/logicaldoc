@@ -150,15 +150,15 @@
         <field type="space" />
         <field type="radio" variable="architecture">
             <description align="left" txt="Architecture" id="architecture"/>
-            <spec>
+            <spec set="${architecture}">
                 <choice txt="32bit" id="32bit" value="32bit" />
-                <choice txt="64bit" id="64bit" value="64bit" set="true" />
+                <choice txt="64bit" id="64bit" value="64bit" />
             </spec>
-        </field>
+        </field>    
         
         <field type="space" />
         <field type="text" variable="maxmemory">
-            <spec txt="Max. memory(MB)" id="maxmemory" layout="N" size="10" set="1300" />
+            <spec txt="Max. memory(MB)" id="maxmemory" layout="N" size="10" set="1400" />
         </field>
     </panel>
     

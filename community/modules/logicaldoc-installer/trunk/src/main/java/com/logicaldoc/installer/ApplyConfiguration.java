@@ -46,10 +46,8 @@ public class ApplyConfiguration {
 			String shutdownPort = args[18].trim();
 			String architecture = args[19].trim();
 			int memory = Integer.parseInt(args[20].trim());
-			if (memory > 8000)
-				memory = 8000;
-			if ("32bit".equals(architecture) && memory > 1200)
-				memory = 1200;
+			if ("32bit".equals(architecture) && memory > 1400)
+				memory = 1400;
 
 			String servicename = args[21].trim();
 			String openoffice = args[22].trim();
