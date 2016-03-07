@@ -50,7 +50,7 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	private Long creatorId;
 
 	private int position = 1;
-	
+
 	private int hidden = 0;
 
 	protected Set<FolderGroup> folderGroups = new HashSet<FolderGroup>();
@@ -67,11 +67,19 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	private Long deleteUserId;
 
+	private Long quotaDocs = null;
+
+	private Long quotaSize = null;
+
 	public Folder(String name) {
 		this.name = name;
 	}
 
 	public Folder() {
+	}
+
+	public boolean isWorkspace() {
+		return type == TYPE_WORKSPACE;
 	}
 
 	public long getId() {
@@ -251,6 +259,22 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	public void setHidden(int hidden) {
 		this.hidden = hidden;
+	}
+
+	public Long getQuotaDocs() {
+		return quotaDocs;
+	}
+
+	public void setQuotaDocs(Long quotaDocs) {
+		this.quotaDocs = quotaDocs;
+	}
+
+	public Long getQuotaSize() {
+		return quotaSize;
+	}
+
+	public void setQuotaSize(Long quotaSize) {
+		this.quotaSize = quotaSize;
 	}
 
 }

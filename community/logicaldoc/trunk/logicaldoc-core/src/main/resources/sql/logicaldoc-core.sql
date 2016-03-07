@@ -95,8 +95,8 @@ create table ld_folder(ld_id bigint not null, ld_lastmodified timestamp not null
                        ld_deleted int not null, ld_tenantid bigint not null, ld_name varchar(255), 
                        ld_parentid bigint not null, ld_securityref bigint, ld_description varchar(4000), 
                        ld_type int not null, ld_creation timestamp, ld_creator varchar(255), ld_creatorid bigint, 
-                       ld_templateid bigint, ld_templocked int not null, ld_deleteuserid bigint, ld_position int not null, 
-                       ld_hidden int not null, primary key (ld_id));
+                       ld_templateid bigint, ld_templocked int not null, ld_deleteuserid bigint, ld_position int not null,
+                       ld_quotadocs bigint, ld_quotasize bigint, ld_hidden int not null, primary key (ld_id));
 create table ld_folder_ext (ld_folderid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null, ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, ld_datevalue timestamp null, ld_name varchar(255) not null, ld_label varchar(255), primary key (ld_folderid, ld_name));
 create table ld_folder_history (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
                                 ld_deleted int not null, ld_tenantid bigint not null, ld_docid bigint, 

@@ -23,6 +23,8 @@
 	<property name="templateLocked" type="int" column="ld_templocked" not-null="true" />
     <property name="deleteUserId" type="long" column="ld_deleteuserid" />
     <property name="hidden" type="int" column="ld_hidden" not-null="true" />
+    <property name="quotaDocs" type="long" column="ld_quotadocs" />
+    <property name="quotaSize" type="long" column="ld_quotasize" />
 		
     <set name="folderGroups" table="ld_foldergroup" cascade="all">
       <key column="ld_folderid" />

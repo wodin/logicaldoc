@@ -96,6 +96,25 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testCountDocuments() {
+		long count = dao.countDocsInTree(5L);
+		Assert.assertEquals(3, count);
+		
+		count = dao.countDocsInTree(4L);
+		Assert.assertEquals(0, count);
+	}
+	
+	@Test
+	public void testComputeTreeSize() {
+		long size = dao.computeTreeSize(5L);
+		Assert.assertEquals(22658L, size);
+		
+		size = dao.computeTreeSize(4L);
+		Assert.assertEquals(0, size);
+	}
+	
+	
+	@Test
 	public void testDeleteTree() throws Exception {
 		Assert.assertNotNull(dao.findById(1200));
 		Assert.assertNotNull(dao.findById(1202));
@@ -510,7 +529,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	public void testFindByUserId() {
 		List<Folder> folders = dao.findByUserId(1, Folder.ROOTID);
 		Assert.assertNotNull(folders);
-		Assert.assertEquals(5, folders.size());
+		Assert.assertEquals(3, folders.size());
 
 		// Try with unexisting user and folders
 		folders = dao.findByUserId(1, 70);
@@ -525,7 +544,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		System.out.println(folders);
 
 		Assert.assertNotNull(folders);
-		Assert.assertEquals(3, folders.size());
+		Assert.assertEquals(1, folders.size());
 	}
 
 	@Test
@@ -649,6 +668,17 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testFindWorkspace() {
+		Folder folder = dao.findWorkspace(Folder.DEFAULTWORKSPACEID);
+		Assert.assertTrue(folder.isWorkspace());
+		Assert.assertEquals("Default", folder.getName());
+		
+		folder = dao.findWorkspace(6L);
+		Assert.assertTrue(folder.isWorkspace());
+		Assert.assertEquals("Workspace X", folder.getName());
+	}
+	
+	@Test
 	public void testRestore() {
 		Folder folder = dao.findById(1204);
 		Assert.assertNull(folder);
@@ -660,7 +690,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByNameAndParentId() {
-		List<Folder> folders = dao.findByNameAndParentId("%folder%", 5);
+		List<Folder> folders = dao.findByNameAndParentId("%folder%", 3000L);
 		Assert.assertEquals(2, folders.size());
 		Assert.assertFalse(folders.contains(dao.findById(99)));
 		Assert.assertTrue(folders.contains(dao.findById(7)));
