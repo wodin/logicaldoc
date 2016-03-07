@@ -42,9 +42,9 @@ import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 /**
- * Shows document's standard properties and read-only data
+ * Shows folder's optional template metadata
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 6.0
  */
 public class ExtendedPropertiesPanel extends FolderDetailTab {

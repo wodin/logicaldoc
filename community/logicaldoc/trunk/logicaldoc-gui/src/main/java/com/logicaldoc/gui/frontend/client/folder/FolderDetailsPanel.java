@@ -55,6 +55,8 @@ public class FolderDetailsPanel extends VLayout {
 
 	private Layout subscriptionsTabPanel;
 
+	private Layout quotaTabPanel;
+
 	private PropertiesPanel propertiesPanel;
 
 	private ExtendedPropertiesPanel extendedPropertiesPanel;
@@ -67,6 +69,8 @@ public class FolderDetailsPanel extends VLayout {
 
 	private FolderSubscriptionsPanel subscriptionsPanel;
 
+	private FolderQuotaPanel quotaPanel;
+
 	private HLayout savePanel;
 
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
@@ -76,6 +80,8 @@ public class FolderDetailsPanel extends VLayout {
 	private Tab workflowTab = null;
 
 	private Tab subscriptionsTab = null;
+
+	private Tab quotaTab = null;
 
 	private FolderObserver listener = null;
 
@@ -203,6 +209,20 @@ public class FolderDetailsPanel extends VLayout {
 				tabSet.addTab(subscriptionsTab);
 			}
 
+		quotaTab = new Tab(I18N.message("quota"));
+		if (folder.isWorkspace() && folder.hasPermission(Constants.PERMISSION_WRITE))
+			if (Feature.visible(Feature.QUOTAS)) {
+				if (Feature.enabled(Feature.QUOTAS)) {
+					quotaTabPanel = new HLayout();
+					quotaTabPanel.setWidth100();
+					quotaTabPanel.setHeight100();
+				} else {
+					quotaTabPanel = new FeatureDisabled();
+				}
+				quotaTab.setPane(quotaTabPanel);
+				tabSet.addTab(quotaTab);
+			}
+
 		addMember(tabSet);
 		refresh();
 	}
@@ -286,6 +306,20 @@ public class FolderDetailsPanel extends VLayout {
 				subscriptionsPanel = new FolderSubscriptionsPanel(folder);
 				subscriptionsTabPanel.addMember(subscriptionsPanel);
 			}
+
+			if (Feature.enabled(Feature.QUOTAS) && folder.isWorkspace()
+					&& folder.hasPermission(Constants.PERMISSION_WRITE)) {
+				/*
+				 * Prepare the subscriptions tab
+				 */
+				if (quotaPanel != null) {
+					quotaPanel.destroy();
+					quotaTabPanel.removeMember(quotaPanel);
+				}
+
+				quotaPanel = new FolderQuotaPanel(folder, changeHandler);
+				quotaTabPanel.addMember(quotaPanel);
+			}
 		} catch (Throwable r) {
 			SC.warn(r.getMessage());
 		}
@@ -305,16 +339,23 @@ public class FolderDetailsPanel extends VLayout {
 	}
 
 	private boolean validate() {
-		boolean propValid = propertiesPanel.validate();
-		if (!propValid)
+		boolean valid = propertiesPanel.validate();
+		if (!valid)
 			tabSet.selectTab(0);
-		if (propValid && Feature.enabled(Feature.TEMPLATE)) {
-			propValid = extendedPropertiesPanel.validate();
-			if (!propValid)
+
+		if (valid && Feature.enabled(Feature.TEMPLATE)) {
+			valid = extendedPropertiesPanel.validate();
+			if (!valid)
 				tabSet.selectTab(1);
 		}
 
-		return propValid;
+		if (valid && Feature.enabled(Feature.QUOTAS)) {
+			valid = quotaPanel.validate();
+			if (!valid)
+				tabSet.selectTab(quotaTab);
+		}
+
+		return valid;
 	}
 
 	public void onSave() {

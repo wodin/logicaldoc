@@ -49,8 +49,22 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	private int position = 1;
 
+	private Long quotaDocs = null;
+
+	private Long quotaSize = null;
+
+	// Total number of documents inside the folder's tree
+	private long documentsTotal = 0L;
+
+	// Total size of the folder's tree
+	private long sizeTotal = 0L;
+
 	public GUIFolder() {
 
+	}
+
+	public boolean isWorkspace() {
+		return type == 1;
 	}
 
 	public boolean isDefaultWorkspace() {
@@ -234,5 +248,37 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	public void setPosition(int position) {
 		this.position = position;
+	}
+
+	public Long getQuotaDocs() {
+		return quotaDocs;
+	}
+
+	public void setQuotaDocs(Long quotaDocs) {
+		this.quotaDocs = quotaDocs;
+	}
+
+	public Long getQuotaSize() {
+		return quotaSize;
+	}
+
+	public void setQuotaSize(Long quotaSize) {
+		this.quotaSize = quotaSize;
+	}
+
+	public long getDocumentsTotal() {
+		return documentsTotal;
+	}
+
+	public void setDocumentsTotal(long documentsTotal) {
+		this.documentsTotal = documentsTotal;
+	}
+
+	public long getSizeTotal() {
+		return sizeTotal;
+	}
+
+	public void setSizeTotal(long sizeTotal) {
+		this.sizeTotal = sizeTotal;
 	}
 }
