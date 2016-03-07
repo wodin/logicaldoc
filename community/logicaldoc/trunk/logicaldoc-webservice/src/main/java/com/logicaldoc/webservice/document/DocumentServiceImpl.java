@@ -457,6 +457,10 @@ public class DocumentServiceImpl extends AbstractService implements DocumentServ
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		checkLocked(user, doc);
+    
+    // Document is already unlocked, no need to do anything else
+    if (doc.getStatus() == Document.DOC_UNLOCKED)
+        return;    
 
 		// Create the document history event
 		History transaction = new History();
