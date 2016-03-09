@@ -92,7 +92,7 @@ public class IndexerTask extends Task {
 					+ " and _entity.transactionId is null and not _entity.status=" + AbstractDocument.DOC_ARCHIVED,
 					"order by _entity.date asc", max);
 			size = ids.size();
-			log.info("Found a total of " + size + " documents to be indexed");
+			log.info("Found a total of " + size + " documents to be processed");
 
 			// Must take into account start and end of the transaction
 			size += 2;
