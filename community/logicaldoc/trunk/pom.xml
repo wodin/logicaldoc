@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc-parent-pom</artifactId>
-    <version>76</version>
+    <version>77</version>
   </parent>
 	<groupId>com.logicaldoc</groupId>
 	<artifactId>logicaldoc</artifactId>
@@ -18,8 +18,8 @@
     Logical Objects Srl, based on the Java Platform.
   </description>
   <organization>
-		<name>Logical Objects</name>
-		<url>http://www.logicalobjects.it</url>
+		<name>LogicalDOC</name>
+		<url>http://www.logicaldoc.com</url>
 	</organization>
   <url>http://www.logicaldoc.com</url>
   <issueManagement>
