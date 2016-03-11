@@ -19,6 +19,8 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -65,6 +67,8 @@ import com.smartgwt.client.widgets.tab.TabSet;
 public class WorkflowDetailsDialog extends Window {
 
 	private WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
+
+	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private GUIWorkflow workflow = null;
 
@@ -246,9 +250,9 @@ public class WorkflowDetailsDialog extends Window {
 
 		sxLayout.addMember(taskForm);
 
-		HLayout spacer=new HLayout();
+		HLayout spacer = new HLayout();
 		spacer.setHeight(5);
-		
+
 		Button reassignButton = new Button(I18N.message("workflowtaskreassign"));
 		reassignButton.setAutoFit(true);
 		reassignButton.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -433,7 +437,7 @@ public class WorkflowDetailsDialog extends Window {
 			taskEndedTitle.setWrapTitle(false);
 
 			taskEndedForm.setItems(taskEndedTitle);
-			
+
 			buttonsPanel.addMember(spacer);
 			buttonsPanel.addMember(taskEndedForm);
 		}
@@ -575,16 +579,21 @@ public class WorkflowDetailsDialog extends Window {
 			public void onClick(MenuItemClickEvent event) {
 				// Detect the two selected records
 				ListGridRecord selection = appendedDocs.getSelectedRecord();
-
 				long id = Long.parseLong(selection.getAttribute("id"));
-				String filename = selection.getAttribute("filename");
-				String fileVersion = selection.getAttribute("fileVersion");
 
-				if (filename == null)
-					filename = selection.getAttribute("title") + "." + selection.getAttribute("type");
+				documentService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
 
-				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, true);
-				iv.show();
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIDocument doc) {
+						PreviewPopup iv = new PreviewPopup(doc);
+						iv.show();
+					}
+				});
 			}
 		});
 

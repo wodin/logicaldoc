@@ -114,7 +114,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		}
 
 		if (document.getDocRef() != null)
-			id.setTooltip(I18N.message("thisisalias"));
+			id.setTooltip(I18N.message("thisisalias") + ": " + document.getDocRef());
 
 		StaticTextItem creation = ItemFactory.newStaticTextItem(
 				"creation",
@@ -134,8 +134,11 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		published.setTooltip(I18N.formatDate((Date) document.getDate()) + " " + I18N.message("by") + " "
 				+ document.getPublisher());
 
-		StaticTextItem size = ItemFactory.newStaticTextItem("size", "size", Util.formatSizeW7(document.getFileSize().doubleValue())
-				+ " (" + Util.formatSizeBytes(document.getFileSize()) + ")");
+		StaticTextItem size = ItemFactory.newStaticTextItem(
+				"size",
+				"size",
+				Util.formatSizeW7(document.getFileSize().doubleValue()) + " ("
+						+ Util.formatSizeBytes(document.getFileSize()) + ")");
 
 		TextItem title = ItemFactory.newTextItem("title", "title", document.getTitle());
 		title.addChangedHandler(changedHandler);
@@ -168,9 +171,9 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		String downloadUrl = Util.contextPath() + "download?" + Constants.DOC_ID + "=" + document.getId();
 		String detailsUrl = Util.contextPath() + "?" + Constants.DOC_ID + "=" + document.getId();
-		String perma = "<a href='" + downloadUrl + "'>" + I18N.message("download") + "</a> | "+
-				"<a href='" + detailsUrl + "'>" + I18N.message("details") + "</a>";
-		
+		String perma = "<a href='" + downloadUrl + "'>" + I18N.message("download") + "</a> | " + "<a href='"
+				+ detailsUrl + "'>" + I18N.message("details") + "</a>";
+
 		StaticTextItem permaLink = ItemFactory.newStaticTextItem("permalink", "permalink", perma);
 
 		if (Feature.enabled(Feature.WORKFLOW))

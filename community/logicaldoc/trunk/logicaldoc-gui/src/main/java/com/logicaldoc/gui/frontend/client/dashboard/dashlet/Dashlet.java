@@ -113,12 +113,7 @@ public class Dashlet extends Portlet {
 		preview.setTitle(I18N.message("preview"));
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				long id = document.getId();
-				String filename = document.getFileName();
-				String fileVersion = document.getFileVersion();
-
-				GUIFolder folder = document.getFolder();
-				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
+				PreviewPopup iv = new PreviewPopup(document);
 				iv.show();
 			}
 		});

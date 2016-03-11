@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.widgets;
 
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Window;
@@ -17,7 +18,7 @@ public class PreviewPopup extends Window {
 
 	private PreviewPanel previewPanel = null;
 
-	public PreviewPopup(long docId, String fileVersion, String filename, boolean printEnabled) {
+	public PreviewPopup(GUIDocument doc) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("preview"));
 
@@ -38,7 +39,7 @@ public class PreviewPopup extends Window {
 		centerInPage();
 		setMargin(2);
 
-		previewPanel = new PreviewPanel(docId, fileVersion, filename);
+		previewPanel = new PreviewPanel(doc);
 		previewPanel.setWidth100();
 		previewPanel.setHeight100();
 

@@ -551,7 +551,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			List<Long> results = (List<Long>) findByQuery(query.toString(), null, null);
 			ArrayList<Long> tmpal = new ArrayList<Long>(results);
 			List<Long> docIds = tmpal;
-			
+
 			if (docIds.isEmpty())
 				return coll;
 
@@ -671,13 +671,16 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public void initialize(Document doc) {
-		refresh(doc);
+		try {
+			refresh(doc);
 
-		if (doc.getAttributes() != null)
-			doc.getAttributes().keySet().size();
+			if (doc.getAttributes() != null)
+				doc.getAttributes().keySet().size();
 
-		if (doc.getTags() != null)
-			doc.getTags().size();
+			if (doc.getTags() != null)
+				doc.getTags().size();
+		} catch (Throwable t) {
+		}
 	}
 
 	@Override

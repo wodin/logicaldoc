@@ -103,7 +103,7 @@ public class DocumentsListPanel extends VLayout {
 					}
 				else {
 					GUIFolder folder = Session.get().getCurrentFolder();
-					PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
+					PreviewPopup iv = new PreviewPopup(doc);
 					iv.show();
 				}
 

@@ -5,6 +5,7 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIReport;
 import com.logicaldoc.gui.common.client.data.ReportsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -18,6 +19,8 @@ import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.impex.folders.ImportFolderDetailsPanel;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.ReportService;
 import com.logicaldoc.gui.frontend.client.services.ReportServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -53,6 +56,8 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  */
 public class ReportsPanel extends VLayout {
 	private ReportServiceAsync service = (ReportServiceAsync) GWT.create(ReportService.class);
+	
+	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private Layout listing = new VLayout();
 
@@ -399,10 +404,19 @@ public class ReportsPanel extends VLayout {
 		preview.setTitle(I18N.message("preview"));
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				String filename = record.getAttributeAsString("name") + "."
-						+ record.getAttributeAsString("outputFormat");
-				PreviewPopup iv = new PreviewPopup(outputDocId, null, filename, true);
-				iv.show();
+				documentService.getById(Session.get().getSid(), outputDocId, new AsyncCallback<GUIDocument>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIDocument doc) {
+						PreviewPopup iv = new PreviewPopup(doc);
+						iv.show();
+					}
+				});
 			}
 		});
 

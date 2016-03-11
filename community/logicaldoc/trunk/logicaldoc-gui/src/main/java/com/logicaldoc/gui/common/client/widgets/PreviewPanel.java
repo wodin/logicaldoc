@@ -36,7 +36,8 @@ public class PreviewPanel extends VLayout {
 	private String language;
 
 	public PreviewPanel(GUIDocument document) {
-		this(document.getId(), document.getFileVersion(), document.getFileName());
+		this(document.getDocRef() != null ? document.getDocRef() : document.getId(), document.getFileVersion(),
+				document.getFileName());
 	}
 
 	public PreviewPanel(long docId, String fileVersion, String filename) {
