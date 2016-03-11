@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>76</version>
+  <version>77</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -82,6 +82,11 @@
   </properties>
   <dependencyManagement>
     <dependencies>
+		  <dependency>
+			  <groupId>org.apache.pdfbox</groupId>
+			  <artifactId>pdfbox</artifactId>
+			  <version>1.8.11</version>
+		  </dependency>    
       <dependency>
         <groupId>javax.activation</groupId>
         <artifactId>activation</artifactId>
