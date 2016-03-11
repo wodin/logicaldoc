@@ -156,13 +156,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 										Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
 												+ "&docId=" + doc.getId(), "_blank", "");
 									else {
-										String filename = doc.getFileName();
-										String fileVersion = doc.getFileVersion();
-
-										if (filename == null)
-											filename = doc.getTitle() + "." + doc.getType();
-										PreviewPopup iv = new PreviewPopup(doc.getId(), fileVersion, filename,
-												folder != null && folder.isDownload());
+										PreviewPopup iv = new PreviewPopup(doc);
 										iv.show();
 									}
 								}

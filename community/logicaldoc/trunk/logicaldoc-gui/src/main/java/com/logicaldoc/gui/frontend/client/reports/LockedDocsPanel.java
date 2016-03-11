@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.LockedDocsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
@@ -291,11 +292,19 @@ public class LockedDocsPanel extends VLayout {
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
-				String filename = list.getSelectedRecord().getAttribute("filename");
-				String fileVersion = list.getSelectedRecord().getAttribute("fileVersion");
+				docService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
 
-				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, false);
-				iv.show();
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIDocument doc) {
+						PreviewPopup iv = new PreviewPopup(doc);
+						iv.show();
+					}
+				});
 			}
 		});
 

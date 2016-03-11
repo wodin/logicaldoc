@@ -207,10 +207,19 @@ public class LinksPanel extends DocumentDetailTab {
 
 	protected void onPreview(ListGridRecord record) {
 		long id = Long.parseLong(record.getAttribute("documentId"));
-		String filename = record.getAttribute("title") + "." + record.getAttribute("type");
 
-		GUIFolder folder = document.getFolder();
-		PreviewPopup iv = new PreviewPopup(id, null, filename, folder != null && folder.isDownload());
-		iv.show();
+		documentService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught.getMessage(), caught);
+			}
+
+			@Override
+			public void onSuccess(GUIDocument document) {
+				PreviewPopup iv = new PreviewPopup(document);
+				iv.show();
+			}
+		});
 	}
 }

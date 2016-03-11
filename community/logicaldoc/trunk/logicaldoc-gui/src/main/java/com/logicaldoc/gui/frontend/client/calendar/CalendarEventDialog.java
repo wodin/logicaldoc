@@ -21,6 +21,8 @@ import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.CalendarService;
 import com.logicaldoc.gui.frontend.client.services.CalendarServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
@@ -65,6 +67,8 @@ import com.smartgwt.client.widgets.tab.TabSet;
 public class CalendarEventDialog extends Window {
 
 	protected CalendarServiceAsync service = (CalendarServiceAsync) GWT.create(CalendarService.class);
+
+	protected DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private ValuesManager vm = new ValuesManager();
 
@@ -271,16 +275,23 @@ public class CalendarEventDialog extends Window {
 				ListGridRecord selection = list.getSelectedRecord();
 
 				long id = Long.parseLong(selection.getAttribute("id"));
-				String filename = selection.getAttribute("filename");
-				String fileVersion = selection.getAttribute("fileVersion");
 
-				if (filename == null)
-					filename = selection.getAttribute("title") + "." + selection.getAttribute("type");
+				docService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
 
-				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, false);
-				iv.show();
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught.getMessage(), caught);
+					}
+
+					@Override
+					public void onSuccess(GUIDocument doc) {
+						PreviewPopup iv = new PreviewPopup(doc);
+						iv.show();
+					}
+				});
 			}
 		});
+
 		MenuItem delete = new MenuItem();
 		delete.setTitle(I18N.message("ddelete"));
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -363,6 +374,7 @@ public class CalendarEventDialog extends Window {
 			records[i].setAttribute("fileVersion", calendarEvent.getDocuments()[i].getFileVersion());
 			records[i].setAttribute("fileName", calendarEvent.getDocuments()[i].getFileName());
 			records[i].setAttribute("lastModified", calendarEvent.getDocuments()[i].getLastModified());
+			records[i].setAttribute("docRef", calendarEvent.getDocuments()[i].getDocRef());
 		}
 		list.setRecords(records);
 	}

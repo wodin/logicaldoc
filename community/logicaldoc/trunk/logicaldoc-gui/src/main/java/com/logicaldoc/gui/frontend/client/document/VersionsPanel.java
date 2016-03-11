@@ -7,7 +7,6 @@ import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.common.client.data.VersionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -105,15 +104,7 @@ public class VersionsPanel extends DocumentDetailTab {
 	}
 
 	protected void onPreview(final GUIDocument document, ListGridRecord record) {
-		long id = document.getId();
-		String filename = document.getFileName();
-		String version = record.getAttribute("version");
-
-		if (filename == null)
-			filename = record.getAttribute("title") + "." + record.getAttribute("type");
-
-		GUIFolder folder = document.getFolder();
-		PreviewPopup iv = new PreviewPopup(id, version, filename, folder != null && folder.isDownload());
+		PreviewPopup iv = new PreviewPopup(document);
 		iv.show();
 	}
 

@@ -600,16 +600,7 @@ public class ContextMenu extends Menu {
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				GUIDocument selection = grid.getSelectedDocument();
-				long id = selection.getId();
-				String filename = selection.getFileName();
-				String fileVersion = selection.getFileVersion();
-
-				// In the search hitlist we don't have the filename
-				if (filename == null)
-					filename = selection.getTitle() + "." + selection.getType();
-
-				GUIFolder folder = Session.get().getCurrentFolder();
-				PreviewPopup iv = new PreviewPopup(id, fileVersion, filename, folder != null && folder.isDownload());
+				PreviewPopup iv = new PreviewPopup(selection);
 				iv.show();
 			}
 		});

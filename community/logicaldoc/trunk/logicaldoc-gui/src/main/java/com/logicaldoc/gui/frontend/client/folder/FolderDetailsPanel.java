@@ -349,7 +349,7 @@ public class FolderDetailsPanel extends VLayout {
 				tabSet.selectTab(1);
 		}
 
-		if (valid && Feature.enabled(Feature.QUOTAS)) {
+		if (valid && quotaPanel != null && folder.isWorkspace() && Feature.enabled(Feature.QUOTAS)) {
 			valid = quotaPanel.validate();
 			if (!valid)
 				tabSet.selectTab(quotaTab);
