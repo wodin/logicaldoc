@@ -603,7 +603,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<Document> findByFolder(long folderId, Integer max) {
-		return findByWhere("_entity.folder.id = " + Long.toString(folderId), null, max);
+		return findByWhere("_entity.folder.id = ?1 ", new Object[] { new Long(folderId) }, null, max);
 	}
 
 	@Override
