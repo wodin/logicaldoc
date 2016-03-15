@@ -347,6 +347,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			for (long id : ids) {
 				try {
 					Document doc = dao.findById(id);
+					if (doc == null)
+						continue;
 
 					// Create the document history event
 					History transaction = new History();

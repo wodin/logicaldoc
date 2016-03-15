@@ -162,7 +162,7 @@ public class SecurityManagerImpl implements SecurityManager {
 	 *      long[])
 	 */
 	public void assignUserToGroups(User user, long[] groupIds) {
-		if (groupIds == null)
+		if (groupIds == null || user == null)
 			return;
 		ArrayList<Group> groups = new ArrayList<Group>();
 		for (int i = 0; i < groupIds.length; i++)

@@ -310,7 +310,11 @@ public class FulltextSearch extends Search {
 
 		// Now sort the hits by score desc
 		List<Hit> sortedHitsList = new ArrayList<Hit>(hitsMap.values());
-		Collections.sort(sortedHitsList);
+		try {
+			Collections.sort(sortedHitsList);
+		} catch (Throwable t) {
+			log.warn(t.getMessage());
+		}
 
 		// Populate the hits list discarding unexisting documents
 		Iterator<Hit> iter = sortedHitsList.iterator();
