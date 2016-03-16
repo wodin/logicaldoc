@@ -80,8 +80,9 @@ public class SampleClient {
 //		Folder newFolder = (Folder)session.getObjectByPath("/Default");
 //		createDocument(newFolder, TEST_DOCUMENT_NAME_1);
 		
-		session.getObjectByPath("/Default/collo/pollo/pippo.pdf");
+		CmisObject obj = session.getObjectByPath("/Default/Sync/prova2/test1/textAAA.pdf");
 		
+		System.out.println(obj.getId());
 	}
 
 	private static void checkoutCheckin() throws IOException {

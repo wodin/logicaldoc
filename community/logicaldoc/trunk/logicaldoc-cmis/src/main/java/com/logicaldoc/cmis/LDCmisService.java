@@ -423,7 +423,6 @@ public class LDCmisService extends AbstractCmisService {
 		validateSession();
 		return getRepository().getObjectByPath(getCallContext(), path, filter, includeAllowableActions,
 				includeRelationships, renditionFilter, includePolicyIds, includeAcl, extension);
-
 	}
 
 	@Override
@@ -446,7 +445,7 @@ public class LDCmisService extends AbstractCmisService {
 	@Override
 	public ObjectList getContentChanges(String repositoryId, Holder<String> changeLogToken, Boolean includeProperties,
 			String filter, Boolean includePolicyIds, Boolean includeAcl, BigInteger maxItems, ExtensionsData extension) {
-		log.debug("** getContentChanges " + changeLogToken.getValue() + "|" + filter + " | "
+		log.debug("getContentChanges " + changeLogToken.getValue() + "|" + filter + " | "
 				+ new Date(Long.parseLong(changeLogToken.getValue())));
 
 		validateSession();
@@ -454,7 +453,6 @@ public class LDCmisService extends AbstractCmisService {
 		try {
 			ObjectList ret = getRepository().getContentChanges(changeLogToken,
 					maxItems != null ? (int) maxItems.doubleValue() : 2000);
-			log.warn("getContentChanges " + ret.getObjects().size());
 			return ret;
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
