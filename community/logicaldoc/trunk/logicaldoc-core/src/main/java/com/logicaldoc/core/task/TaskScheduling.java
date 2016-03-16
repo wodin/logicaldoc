@@ -226,9 +226,14 @@ public class TaskScheduling {
 			return false;
 		else {
 			Date now = new Date();
-			long elapsedTime = now.getTime() - previousFireTime.getTime();
-			elapsedTime = (long) elapsedTime / 1000;
-			return elapsedTime > getMaxLength();
+
+			// Get msec from each, and subtract.
+			long diff = now.getTime() - previousFireTime.getTime();
+			if (diff < 0)
+				diff = -diff;
+			long diffSeconds = diff / 1000;
+
+			return diffSeconds > getMaxLength();
 		}
 	}
 
