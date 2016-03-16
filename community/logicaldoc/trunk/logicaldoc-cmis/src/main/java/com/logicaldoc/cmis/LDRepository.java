@@ -929,9 +929,10 @@ public class LDRepository {
 	public ObjectData getObject(CallContext context, String objectId, String versionServicesId, String filter,
 			Boolean includeAllowableActions, Boolean includeAcl, ObjectInfoHandler objectInfos) {
 		debug("getObject " + objectId);
-		validatePermission(objectId, context, null);
 
 		try {
+			validatePermission(objectId, context, null);
+
 			if (objectId == null) {
 				// this works only because there are no versions in a file
 				// system
@@ -953,6 +954,7 @@ public class LDRepository {
 			// gather properties
 			return compileObjectType(context, obj, filterCollection, iaa, iacl, objectInfos);
 		} catch (Throwable t) {
+			t.printStackTrace();
 			return (ObjectData) catchError(t);
 		}
 	}
@@ -986,25 +988,28 @@ public class LDRepository {
 				// Not a folder, probably a file
 				String parentPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
 				folder = folderDao.findByPath(parentPath, getSessionUser().getTenantId());
-				if (folder == null)
+				if (folder == null) {
 					out = null;
+				}
 
 				if (folder != null) {
 					String fileName = fullPath.substring(fullPath.lastIndexOf('/') + 1);
+
 					List<Document> docs = documentDao.findByFileNameAndParentFolderId(folder.getId(), fileName, null,
 							getSessionUser().getTenantId(), null);
 
-					if (docs == null || docs.isEmpty())
+					if (docs == null || docs.isEmpty()) {
 						out = null;
-					else
+					} else {
 						out = getObject(context, ID_PREFIX_DOC + Long.toString(docs.get(0).getId()), null, filter,
 								includeAllowableActions, includeAcl, null);
+					}
 				}
 			}
 
-			if (out == null)
+			if (out == null) {
 				throw new CmisObjectNotFoundException("Object not found!");
-			else
+			} else
 				return out;
 		} catch (Throwable t) {
 			return (ObjectData) catchError(t);
@@ -1115,8 +1120,11 @@ public class LDRepository {
 	// }
 
 	private Object catchError(Throwable t) {
-		t.printStackTrace();
-		log.error(t.getMessage(), t);
+		if (t instanceof CmisObjectNotFoundException)
+			log.debug(t.getMessage());
+		else
+			log.error(t.getMessage(), t);
+
 		if (t instanceof CmisBaseException)
 			throw (CmisBaseException) t;
 		else
@@ -1916,9 +1924,10 @@ public class LDRepository {
 			}
 
 			if ((p.getId().equals(PropertyIds.CONTENT_STREAM_FILE_NAME) || p.getId().equals(PropertyIds.NAME))
-					&& StringUtils.isNotEmpty((String) p.getFirstValue()))
+					&& StringUtils.isNotEmpty((String) p.getFirstValue())) {
 				doc.setFileName((String) p.getFirstValue());
-			else if (p.getId().equals(TypeManager.PROP_TITLE) && StringUtils.isNotEmpty((String) p.getFirstValue()))
+				doc.setTitle(FilenameUtils.getBaseName(doc.getFileName()));
+			} else if (p.getId().equals(TypeManager.PROP_TITLE) && StringUtils.isNotEmpty((String) p.getFirstValue()))
 				doc.setTitle((String) p.getFirstValue());
 			else if (p.getId().equals(TypeManager.PROP_COVERAGE))
 				doc.setCoverage((String) p.getFirstValue());
@@ -2132,10 +2141,12 @@ public class LDRepository {
 			History transaction = new History();
 			transaction.setUser(getSessionUser());
 			transaction.setSessionId(sid);
+			transaction.setEvent(DocumentEvent.CHANGED.toString());
 			Document actualDoc = documentDao.findById(doc.getId());
 			documentDao.initialize(actualDoc);
 			doc.setId(0);
 			try {
+				doc.setTitle(FilenameUtils.getBaseName(doc.getFileName()));
 				documentManager.update(actualDoc, doc, transaction);
 			} catch (Throwable e) {
 				throw new CmisStorageException("Storage error during update", e);
@@ -2144,6 +2155,7 @@ public class LDRepository {
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(getSessionUser());
 			transaction.setSessionId(sid);
+			transaction.setEvent(FolderEvent.CHANGED.toString());
 			folderDao.store(folder, transaction);
 		}
 
