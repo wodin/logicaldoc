@@ -121,6 +121,27 @@
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
 	</appender>
 
+    <appender name="DigestProcessor" class="org.apache.log4j.RollingFileAppender">
+        <param name="File"
+            value="${logicaldoc.repository}/logs/digestprocessor.log" />
+        <param name="MaxFileSize" value="5MB" />
+        <param name="MaxBackupIndex" value="5" />
+        <param name="Append" value="true" />
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="%d{dd.MM.yyyy HH:mm:ss,SSS} %-5p  (%c:%4L) -- %m%n" />
+        </layout>
+    </appender>
+
+    <appender name="DigestProcessor_WEB"
+        class="org.apache.log4j.RollingFileAppender">
+        <param name="File"
+            value="${logicaldoc.repository}/logs/digestprocessor.log.html" />
+        <param name="MaxFileSize" value="5MB" />
+        <param name="MaxBackupIndex" value="5" />
+        <layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
+    </appender>
+    
     <category name="org.hibernate" additivity="true">
       <priority value="error" />
       <appender-ref ref="DB" />
@@ -166,6 +187,13 @@
 		<appender-ref ref="ProductNews_WEB" />
 	</category>
 
+    <category name="com.logicaldoc.core.document.DigestProcessor"
+        additivity="false">
+        <priority value="info" />
+        <appender-ref ref="DigestProcessor" />
+        <appender-ref ref="DigestProcessor_WEB" />
+    </category>
+    
 	<root>
 		<priority value="info" />
 		<appender-ref ref="DMS" />
