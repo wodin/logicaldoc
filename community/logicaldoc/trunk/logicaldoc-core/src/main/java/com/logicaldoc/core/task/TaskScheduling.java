@@ -41,7 +41,7 @@ public class TaskScheduling {
 
 	private Date previousFireTime;
 
-	// Maximum execution length expressed in seconds
+	// Maximum duration expressed in seconds
 	private long maxLength = -1;
 
 	private boolean enabled = true;
