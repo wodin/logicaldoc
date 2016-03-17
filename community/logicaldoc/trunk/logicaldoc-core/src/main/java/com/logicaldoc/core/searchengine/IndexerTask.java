@@ -68,9 +68,10 @@ public class IndexerTask extends Task {
 		}
 
 		log.info("Start indexing of all documents");
+
 		errors = 0;
 		indexed = 0;
-		try {
+		try {	
 			/*
 			 * Cleanup all references to expired transactions
 			 */

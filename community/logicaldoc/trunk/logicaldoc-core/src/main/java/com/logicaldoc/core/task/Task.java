@@ -129,7 +129,6 @@ public abstract class Task implements Runnable {
 				try {
 					Thread.sleep((1 + random.nextInt(20)) * 1000);
 				} catch (Throwable e) {
-					e.printStackTrace();
 				}
 			}
 
@@ -173,9 +172,9 @@ public abstract class Task implements Runnable {
 		log.info("Task " + getName() + " started");
 		interruptRequested = false;
 		setStatus(STATUS_RUNNING);
+		getScheduling().setPreviousFireTime(new Date());
 		setProgress(0);
 		lastRunError = null;
-		getScheduling().setPreviousFireTime(new Date());
 
 		try {
 			/*
