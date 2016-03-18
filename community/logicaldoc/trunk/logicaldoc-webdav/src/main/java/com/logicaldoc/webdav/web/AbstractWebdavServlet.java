@@ -157,7 +157,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 					String combinedUserId = request.getRemoteAddr() + "-" + credentials.getUserName();
 
 					// Check the credentials
-					if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
+					if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword(), null)) {
 						log.debug("Authentication failed. Answer again with Authorization request");
 						AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
 						return;
@@ -185,7 +185,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 						userObject[2] = combinedUserId;
 
 						boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(),
-								credentials.getPassword(), userObject);
+								credentials.getPassword(), null, userObject);
 						if (isLoggedOn == false) {
 							log.debug("Authentication failed. Answer again with Authorization request");
 							AuthenticationUtil.sendAuthorisationCommand(webdavResponse);

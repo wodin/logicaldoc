@@ -156,7 +156,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 										@Override
 										public void onSuccess(GUITenant tenant) {
 											Session.get().getInfo().setTenant(tenant);
-											Util.redirectToRoot();
+											Util.reload();
 										}
 
 										@Override

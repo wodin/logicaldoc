@@ -39,17 +39,24 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	}
 
 	/**
+	 * Creates a new session and stores it in the pool of opened sessions
+	 */
+	public synchronized String newSession(String username, String password, String key, Object userObject) {
+		UserSession session = new UserSession(username, password, key, userObject);
+		put(session.getId(), session);
+		log.warn("Created new session " + session.getId() + " for user '" + username + "'");
+		cleanClosedSessions();
+		return session.getId();
+	}
+
+	/**
 	 * Creates a new session and stores it in the pool of opened sessions.
 	 * 
 	 * @param username
 	 * @return
 	 */
 	public synchronized String newSession(String username, String password, Object userObject) {
-		UserSession session = new UserSession(username, password, userObject);
-		put(session.getId(), session);
-		log.warn("Created new session " + session.getId() + " for user '" + username + "'");
-		cleanClosedSessions();
-		return session.getId();
+		return newSession(username, password, null, userObject);
 	}
 
 	/**

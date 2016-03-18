@@ -40,7 +40,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		userDAO = (UserDAO) context.getBean("UserDAO");
 		groupDAO = (GroupDAO) context.getBean("GroupDAO");
 
-		session = service.login("admin", "admin", null, null);
+		session = service.login("admin", "admin", null, null, null);
 		Assert.assertNotNull(session);
 		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}
@@ -65,9 +65,9 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		SessionManager.getInstance().get(session.getSid()).setClosed();
 		Assert.assertEquals(sessions - 1, SessionManager.getInstance().countOpened());
 
-		session = service.login("admin", "password", null, null);
+		session = service.login("admin", "password", null, null, null);
 		Assert.assertFalse(session.isLoggedIn());
-		session = service.login("unexisting", "admin", null, null);
+		session = service.login("unexisting", "admin", null, null, null);
 		Assert.assertFalse(session.isLoggedIn());
 	}
 
@@ -151,7 +151,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		GUIGroup group = service.getGroup(session.getSid(), 10);
 		Assert.assertNotNull(group);
 		Assert.assertEquals("testGroup", group.getName());
-		
+
 		// Try with unexisting id
 		group = service.getGroup(session.getSid(), 999);
 		Assert.assertNull(group);
@@ -224,6 +224,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		securitySettings.setPwdExpiration(30);
 		securitySettings.setPwdSize(6);
+		securitySettings.setAnonymousKey("xxx");
 		service.saveSettings(session.getSid(), securitySettings);
 	}
 }

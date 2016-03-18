@@ -141,6 +141,8 @@ public final class Constants {
 	public static final String COOKIE_SID = "ldoc-sid";
 
 	public static final String SID = "sid";
+	
+	public static final String KEY = "key";
 
 	public static final String DOC_ID = "docId";
 

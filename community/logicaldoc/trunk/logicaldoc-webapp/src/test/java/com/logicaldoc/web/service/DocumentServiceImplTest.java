@@ -60,7 +60,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		historyDao = (HistoryDAO) context.getBean("HistoryDAO");
 
 		SecurityServiceImpl securityService = new SecurityServiceImpl();
-		session = securityService.login("admin", "admin", null, null);
+		session = securityService.login("admin", "admin",null, null, null);
 		Assert.assertNotNull(session);
 		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}

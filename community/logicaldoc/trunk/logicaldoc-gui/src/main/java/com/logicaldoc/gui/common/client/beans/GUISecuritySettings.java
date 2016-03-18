@@ -25,6 +25,8 @@ public class GUISecuritySettings implements Serializable {
 	private boolean forceSsl = false;
 
 	private GUIUser anonymousUser = null;
+	
+	private String anonymousKey = null;
 
 	public int getPwdSize() {
 		return pwdSize;
@@ -80,6 +82,14 @@ public class GUISecuritySettings implements Serializable {
 
 	public void setForceSsl(boolean forceSsl) {
 		this.forceSsl = forceSsl;
+	}
+
+	public String getAnonymousKey() {
+		return anonymousKey;
+	}
+
+	public void setAnonymousKey(String anonymousKey) {
+		this.anonymousKey = anonymousKey;
 	}
 
 }

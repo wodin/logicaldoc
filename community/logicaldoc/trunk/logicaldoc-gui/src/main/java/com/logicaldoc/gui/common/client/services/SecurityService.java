@@ -16,7 +16,7 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
  */
 @RemoteServiceRelativePath("security")
 public interface SecurityService extends RemoteService {
-	public GUISession login(String username, String password, String locale, String tenant);
+	public GUISession login(String username, String password, String key, String locale, String tenant);
 
 	/**
 	 * Logs-in a user by an existing session ID (session reuse)
@@ -24,7 +24,6 @@ public interface SecurityService extends RemoteService {
 	 */
 	public GUISession login(String sid);
 
-	
 	/**
 	 * Changes the password of a user
 	 * 

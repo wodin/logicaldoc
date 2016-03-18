@@ -38,7 +38,7 @@ public class AuthServiceImpl extends AbstractService implements AuthService {
 		if (request == null)
 			request = messageContext.getHttpServletRequest();
 
-		if (authenticationChain.authenticate(username, password,
+		if (authenticationChain.authenticate(username, password, null,
 				new String[] { request.getRemoteAddr(), request.getRemoteHost() }))
 			return AuthenticationChain.getSessionId();
 		else
