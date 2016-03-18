@@ -77,7 +77,9 @@ public class ClusteringPanel extends HLayout {
 				parameters[6].getValue());
 
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", I18N.message("nodeid"), parameters[7].getValue());
-
+		id.setWrap(false);
+		id.setWrapTitle(false);
+		
 		ButtonItem save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
