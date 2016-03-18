@@ -9,7 +9,8 @@ import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 
 public interface SecurityServiceAsync {
-	void login(String username, String password, String locale, String tenant, AsyncCallback<GUISession> callback);
+	void login(String username, String password, String key, String locale, String tenant,
+			AsyncCallback<GUISession> callback);
 
 	void logout(String sid, AsyncCallback<Void> callback);
 

@@ -124,6 +124,8 @@ public class Frontend implements EntryPoint {
 
 				String sid = Util.detectSid();
 
+				final String key = Util.detectKey();
+
 				final boolean anonymousLogin = request.getParameter(Constants.ANONYMOUS) != null
 						&& "true".equals(info.getConfig("anonymous.enabled"));
 
@@ -133,7 +135,7 @@ public class Frontend implements EntryPoint {
 						/*
 						 * Simulate a login with the anonymous user
 						 */
-						anonymousLogin(lang, info);
+						anonymousLogin(lang, info, key);
 					} else
 						Frontend.this.showInitialLogin();
 				} else {
@@ -151,7 +153,7 @@ public class Frontend implements EntryPoint {
 									/*
 									 * Simulate a login with the anonymous user
 									 */
-									anonymousLogin(lang, info);
+									anonymousLogin(lang, info, key);
 								} else
 									Frontend.this.showInitialLogin();
 							} else {
@@ -167,8 +169,8 @@ public class Frontend implements EntryPoint {
 				}
 			}
 
-			private void anonymousLogin(final String lang, final GUIInfo info) {
-				securityService.login(info.getConfig("anonymous.user"), "", lang, tenant,
+			private void anonymousLogin(final String lang, final GUIInfo info, String key) {
+				securityService.login(info.getConfig("anonymous.user"), "", key, lang, tenant,
 						new AsyncCallback<GUISession>() {
 
 							@Override

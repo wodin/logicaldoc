@@ -87,7 +87,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	private static Logger log = LoggerFactory.getLogger(SecurityServiceImpl.class);
 
 	@Override
-	public GUISession login(String username, String password, String locale, String tenant) {
+	public GUISession login(String username, String password, String key, String locale, String tenant) {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 
 		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
@@ -97,13 +97,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUIUser guiUser = new GUIUser();
 
 		try {
-			String[] remoteAddress = new String[] { null, null };
+			String[] remoteAddressAndKey = new String[] { null, null, key };
 			if (getThreadLocalRequest() != null) {
-				remoteAddress = new String[] { getThreadLocalRequest().getRemoteAddr(),
+				remoteAddressAndKey = new String[] { getThreadLocalRequest().getRemoteAddr(),
 						getThreadLocalRequest().getRemoteHost() };
 			}
 
-			if (authenticationChain.authenticate(username, password, remoteAddress)) {
+			if (authenticationChain.authenticate(username, password, key, remoteAddressAndKey)) {
 				User user = userDao.findByUserNameIgnoreCase(username);
 				userDao.initialize(user);
 				session = internalLogin(AuthenticationChain.getSessionId(), user, locale);
@@ -774,6 +774,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".anonymous.enabled")))
 				securitySettings.setEnableAnonymousLogin("true".equals(pbean.getProperty(session.getTenantName()
 						+ ".anonymous.enabled")));
+			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".anonymous.key")))
+				securitySettings.setAnonymousKey(pbean.getProperty(session.getTenantName() + ".anonymous.key"));
 			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".anonymous.user"))) {
 				User user = userDao.findByUserName(pbean.getProperty(session.getTenantName() + ".anonymous.user"));
 				if (user != null)
@@ -782,7 +784,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (StringUtils.isNotEmpty(pbean.getProperty("ssl.required")))
 				securitySettings.setForceSsl("true".equals(pbean.getProperty("ssl.required")));
 
-			log.info("Security settings data loaded successfully.");
+			log.debug("Security settings data loaded successfully.");
 		} catch (Exception e) {
 			log.error("Exception loading Security settings data: " + e.getMessage(), e);
 		}
@@ -819,6 +821,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			conf.setProperty(session.getTenantName() + ".gui.savelogin", Boolean.toString(settings.isSaveLogin()));
 			conf.setProperty(session.getTenantName() + ".anonymous.enabled",
 					Boolean.toString(settings.isEnableAnonymousLogin()));
+			conf.setProperty(session.getTenantName() + ".anonymous.key", settings.getAnonymousKey().trim());
 
 			if (settings.getAnonymousUser() != null)
 				conf.setProperty(session.getTenantName() + ".anonymous.user", settings.getAnonymousUser().getUserName());

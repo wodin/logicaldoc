@@ -349,7 +349,7 @@ public class Util {
 		else if (value instanceof Integer)
 			return Util.formatSizeW7(((Integer) value).doubleValue());
 		else if (value instanceof Float)
-			return Util.formatSizeW7(((Float) value).doubleValue());		
+			return Util.formatSizeW7(((Float) value).doubleValue());
 		if (value instanceof String)
 			return Util.formatSizeW7(new Long(value.toString()).longValue());
 		else
@@ -684,6 +684,22 @@ public class Util {
 	}
 
 	/**
+	 * Detect KEY specification from the request
+	 */
+	public static String detectKey() {
+		String key = null;
+
+		try {
+			RequestInfo request = WindowUtils.getRequestInfo();
+			key = request.getParameter(Constants.KEY);
+		} catch (Throwable t) {
+		}
+
+		return key;
+
+	}
+
+	/**
 	 * Detect SID specification from the request and then from the cookie
 	 */
 	public static String detectSid() {
@@ -715,6 +731,10 @@ public class Util {
 		Util.redirectToRoot(null, null);
 	}
 
+	public static void reload() {
+		Util.redirectToRoot(null, "sid=" + Session.get().getSid());
+	}
+
 	public static void redirectToRoot(String moduleName, String parameters) {
 		String base = GWT.getHostPageBaseURL();
 		String module = GWT.getModuleName();
@@ -734,12 +754,12 @@ public class Util {
 					return param.getValue();
 		return null;
 	}
-	
-	public static long[] toPrimitives(Long[] objects) {
-	    long[] primitives = new long[objects.length];
-	    for (int i = 0; i < objects.length; i++)
-	         primitives[i] = objects[i];
 
-	    return primitives;
+	public static long[] toPrimitives(Long[] objects) {
+		long[] primitives = new long[objects.length];
+		for (int i = 0; i < objects.length; i++)
+			primitives[i] = objects[i];
+
+		return primitives;
 	}
 }

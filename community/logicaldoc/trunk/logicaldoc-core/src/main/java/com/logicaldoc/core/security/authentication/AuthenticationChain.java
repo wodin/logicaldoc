@@ -49,13 +49,18 @@ public class AuthenticationChain implements AuthenticationProvider {
 	}
 
 	@Override
-	public final boolean authenticate(String username, String password) {
-		return authenticate(username, password, null);
+	public final boolean authenticate(String username, String password, String key) {
+		return authenticate(username, password, key, null);
 	}
 
 	@Override
-	public final boolean authenticate(String username, String password, Object userObject) {
-		boolean loggedIn = validate(username, password);
+	public final boolean authenticate(String username, String password) {
+		return authenticate(username, password, null, null);
+	}
+
+	@Override
+	public final boolean authenticate(String username, String password, String key, Object userObject) {
+		boolean loggedIn = validate(username, password, key);
 
 		if (loggedIn) {
 			// Create a new session and store if into the current thread
@@ -66,14 +71,19 @@ public class AuthenticationChain implements AuthenticationProvider {
 		return loggedIn;
 	}
 
+	public boolean validate(String username, String password) {
+		return validate(username, password, null);
+	}
+
 	/**
 	 * Try to authenticate the user without creating a new session
 	 * 
 	 * @param username
 	 * @param password
+	 * @param key Optional authentication parameter
 	 * @return True only on successful authentication
 	 */
-	public boolean validate(String username, String password) {
+	public boolean validate(String username, String password, String key) {
 		if (providers == null || providers.isEmpty())
 			init();
 
@@ -97,10 +107,13 @@ public class AuthenticationChain implements AuthenticationProvider {
 					tenant = t.getName();
 			}
 
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-			if ("true".equals(config.getProperty(tenant + ".anonymous.enabled"))
-					&& username.equals(config.getProperty(tenant + ".anonymous.user")))
-				return true;
+			if (key != null) {
+				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+				if ("true".equals(config.getProperty(tenant + ".anonymous.enabled"))
+						&& username.equals(config.getProperty(tenant + ".anonymous.user"))
+						&& key.equals(config.getProperty(tenant + ".anonymous.key")))
+					return true;
+			}
 		}
 
 		boolean loggedIn = false;

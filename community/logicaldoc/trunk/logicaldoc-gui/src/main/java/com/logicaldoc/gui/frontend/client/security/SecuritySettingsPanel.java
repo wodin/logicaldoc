@@ -27,6 +27,7 @@ import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -49,6 +50,8 @@ public class SecuritySettingsPanel extends VLayout {
 	private GUISecuritySettings settings;
 
 	private DynamicForm anonymousForm;
+
+	private SelectItem anonymousUser;
 
 	private FiltersPanel filtersPanel = new FiltersPanel();
 
@@ -136,19 +139,24 @@ public class SecuritySettingsPanel extends VLayout {
 					SecuritySettingsPanel.this.settings.setPwdSize((Integer) values.get("pwdSize"));
 					SecuritySettingsPanel.this.settings.setSaveLogin(values.get("savelogin").equals("yes") ? true
 							: false);
+
 					SecuritySettingsPanel.this.settings.setEnableAnonymousLogin(values.get("enableanonymous").equals(
 							"yes") ? true : false);
-					SecuritySettingsPanel.this.settings.setForceSsl(values.get("forcessl").equals("yes") ? true
-							: false);
-					if (!SecuritySettingsPanel.this.settings.isEnableAnonymousLogin())
+
+					if (!SecuritySettingsPanel.this.settings.isEnableAnonymousLogin()) {
 						SecuritySettingsPanel.this.settings.setAnonymousUser(null);
-					else if (SecuritySettingsPanel.this.settings.getAnonymousUser() == null) {
+						anonymousUser.setValue((Long) null);
+					} else if (SecuritySettingsPanel.this.settings.getAnonymousUser() == null) {
 						SC.warn(I18N.message("selectanonymoususer"));
 						return;
 					}
-					if (Session.get().isDefaultTenant())
+
+					if (Session.get().isDefaultTenant()) {
 						SecuritySettingsPanel.this.settings.setIgnoreLoginCase(values.get("ignorelogincase").equals(
 								"yes") ? true : false);
+						SecuritySettingsPanel.this.settings.setForceSsl(values.get("forcessl").equals("yes") ? true
+								: false);
+					}
 
 					service.saveSettings(Session.get().getSid(), SecuritySettingsPanel.this.settings,
 							new AsyncCallback<Boolean>() {
@@ -166,7 +174,7 @@ public class SecuritySettingsPanel extends VLayout {
 
 									if (restartRequired.booleanValue())
 										SC.warn(I18N.message("needrestart"), new BooleanCallback() {
-											
+
 											@Override
 											public void execute(Boolean value) {
 												WindowUtils.reload();
@@ -176,7 +184,7 @@ public class SecuritySettingsPanel extends VLayout {
 							});
 				}
 
-				if (Feature.enabled(Feature.IP_FILTERS)) {
+				if (Feature.enabled(Feature.IP_FILTERS) && Session.get().isDefaultTenant()) {
 					filtersPanel.save();
 				}
 			}
@@ -198,29 +206,42 @@ public class SecuritySettingsPanel extends VLayout {
 		enableAnonymous.setWrapTitle(false);
 		enableAnonymous.setRequired(true);
 
-		StaticTextItem url = ItemFactory.newStaticTextItem("anonUrl", I18N.message("url"), GWT.getHostPageBaseURL()
-				+ "?anonymous=login&tenant=" + Session.get().getTenantName());
+		final StaticTextItem url = ItemFactory.newStaticTextItem("anonUrl", I18N.message("url"),
+				GWT.getHostPageBaseURL() + "?anonymous=login&tenant=" + Session.get().getTenantName() + "&key="
+						+ settings.getAnonymousKey());
 
-		final SelectItem user = ItemFactory.newUserSelector("anonymousUser", "user", null, false);
-		user.setHint(I18N.message("anonymoususerhint"));
-		user.setHintStyle("hint");
-		user.addChangedHandler(new ChangedHandler() {
+		TextItem anonymousKey = ItemFactory.newSimpleTextItem("anonymousKey", "key", settings.getAnonymousKey());
+		anonymousKey.setHintStyle("hint");
+		anonymousKey.setRequired(true);
+		anonymousKey.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
-				if (user.getSelectedRecord() == null) {
+				if (event.getValue() != null)
+					url.setValue(GWT.getHostPageBaseURL() + "?anonymous=login&tenant=" + Session.get().getTenantName()
+							+ "&key=" + event.getValue().toString());
+			}
+		});
+
+		anonymousUser = ItemFactory.newUserSelector("anonymousUser", "user", null, false);
+		anonymousUser.setHint(I18N.message("anonymoususerhint"));
+		anonymousUser.setHintStyle("hint");
+		anonymousUser.addChangedHandler(new ChangedHandler() {
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (anonymousUser.getSelectedRecord() == null) {
 					SecuritySettingsPanel.this.settings.setAnonymousUser(null);
 				} else {
 					GUIUser u = new GUIUser();
-					u.setId(Long.parseLong(user.getSelectedRecord().getAttribute("id")));
-					u.setUserName(user.getSelectedRecord().getAttribute("username"));
+					u.setId(Long.parseLong(anonymousUser.getSelectedRecord().getAttribute("id")));
+					u.setUserName(anonymousUser.getSelectedRecord().getAttribute("username"));
 					SecuritySettingsPanel.this.settings.setAnonymousUser(u);
 				}
 			}
 		});
 		if (SecuritySettingsPanel.this.settings.getAnonymousUser() != null)
-			user.setValue(Long.toString(SecuritySettingsPanel.this.settings.getAnonymousUser().getId()));
+			anonymousUser.setValue(Long.toString(SecuritySettingsPanel.this.settings.getAnonymousUser().getId()));
 
-		anonymousForm.setItems(enableAnonymous, user, url);
+		anonymousForm.setItems(enableAnonymous, anonymousUser, anonymousKey, url);
 		anonymous.setPane(anonymousForm);
 		return anonymous;
 	}

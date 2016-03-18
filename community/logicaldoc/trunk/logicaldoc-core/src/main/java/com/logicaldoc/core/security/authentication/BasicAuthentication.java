@@ -28,12 +28,17 @@ public class BasicAuthentication implements AuthenticationProvider {
 	}
 
 	@Override
-	public boolean authenticate(String username, String password, Object userObject) {
-		return authenticate(username, password);
+	public boolean authenticate(String username, String password, String key, Object userObject) {
+		return authenticate(username, password, key);
 	}
 
 	@Override
 	public boolean authenticate(String username, String password) {
+		return this.authenticate(username, password, null);
+	}
+
+	@Override
+	public boolean authenticate(String username, String password, String key) {
 		return userDAO.validateUser(username, password);
 	}
 }

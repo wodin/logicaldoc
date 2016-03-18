@@ -413,8 +413,8 @@ public class LoginPanel extends VLayout {
 		else
 			loggingIn = true;
 
-		securityService.login((String) username.getValue(), (String) password.getValue(), (String) language.getValue(),
-				Util.detectTenant(), new AsyncCallback<GUISession>() {
+		securityService.login((String) username.getValue(), (String) password.getValue(), null,
+				(String) language.getValue(), Util.detectTenant(), new AsyncCallback<GUISession>() {
 					public void onFailure(Throwable caught) {
 						loggingIn = false;
 						Log.serverError(caught);

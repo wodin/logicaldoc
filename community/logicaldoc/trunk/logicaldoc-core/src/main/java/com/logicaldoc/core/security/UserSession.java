@@ -37,6 +37,8 @@ public class UserSession implements Comparable<UserSession> {
 
 	private String userName;
 
+	private String key;
+
 	private long userId;
 
 	private long tenantId;
@@ -112,11 +114,12 @@ public class UserSession implements Comparable<UserSession> {
 		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGOUT, "", id);
 	}
 
-	UserSession(String userName, String password, Object userObject) {
+	UserSession(String userName, String password, String key, Object userObject) {
 		super();
 		this.id = UUID.randomUUID().toString();
 		this.userName = userName;
 		this.password = password;
+		this.key = key;
 		this.userObject = userObject;
 
 		// Set the user's id
@@ -312,5 +315,13 @@ public class UserSession implements Comparable<UserSession> {
 		public String getMessage() {
 			return message;
 		}
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 }

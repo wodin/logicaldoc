@@ -18,7 +18,7 @@ public interface AuthenticationProvider {
 	 * @param userObject Opaque object that will be associated to the session
 	 * @return True only on successful authentication
 	 */
-	public boolean authenticate(String username, String password, Object userObject);
+	public boolean authenticate(String username, String password);
 
 	/**
 	 * Authenticates the user using the given credentials, if successful a new
@@ -26,10 +26,22 @@ public interface AuthenticationProvider {
 	 * 
 	 * @param username
 	 * @param password
+	 * @param key Optional third authentication parameter
+	 * @param userObject Opaque object that will be associated to the session
 	 * @return True only on successful authentication
 	 */
-	public boolean authenticate(String username, String password);
+	public boolean authenticate(String username, String password, String key, Object userObject);
 
+	/**
+	 * Authenticates the user using the given credentials, if successful a new
+	 * session will be created.
+	 * 
+	 * @param username
+	 * @param password
+	 * @param key Optional third authentication parameter
+	 * @return True only on successful authentication
+	 */
+	public boolean authenticate(String username, String password, String key);
 
 	public boolean validateOnUser(String user);
 

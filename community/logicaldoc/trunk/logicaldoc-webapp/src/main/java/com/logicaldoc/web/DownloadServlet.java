@@ -78,7 +78,7 @@ public class DownloadServlet extends HttpServlet {
 					}
 
 					// Check the credentials
-					if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword())) {
+					if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword(), null)) {
 						AuthenticationUtil.sendAuthorisationCommand(response);
 						return;
 					}

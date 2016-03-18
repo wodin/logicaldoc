@@ -26,7 +26,7 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 		super.setUp();
 
 		SecurityServiceImpl securityService = new SecurityServiceImpl();
-		session = securityService.login("admin", "admin", null, null);
+		session = securityService.login("admin", "admin", null, null, null);
 		Assert.assertNotNull(session);
 		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}
