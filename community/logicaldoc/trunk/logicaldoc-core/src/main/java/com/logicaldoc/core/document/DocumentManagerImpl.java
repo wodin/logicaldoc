@@ -894,12 +894,11 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		if (status == AbstractDocument.INDEX_SKIP && doc.getIndexed() == AbstractDocument.INDEX_SKIP)
 			return;
-		if (status == AbstractDocument.INDEX_TO_INDEX
-				&& (doc.getIndexed() == AbstractDocument.INDEX_TO_INDEX || doc.getIndexed() == AbstractDocument.INDEX_INDEXED))
+		if (status == AbstractDocument.INDEX_TO_INDEX && doc.getIndexed() == AbstractDocument.INDEX_TO_INDEX)
 			return;
 
 		documentDAO.initialize(doc);
-		if (status == AbstractDocument.INDEX_SKIP && doc.getIndexed() == AbstractDocument.INDEX_INDEXED)
+		if (doc.getIndexed() == AbstractDocument.INDEX_INDEXED)
 			deleteFromIndex(doc);
 		doc.setIndexed(status);
 		documentDAO.store(doc);
