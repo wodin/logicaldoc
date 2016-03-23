@@ -87,26 +87,9 @@ public class Util {
 		return url;
 	}
 
-	/**
-	 * Generates Flash code
-	 */
-	@Deprecated
-	public static String flashHTML(String flashName, int width, int height, String flashvars) {
-		String tmp = "<div align=\"center\"><object classid=\"clsid:d27cdb6e-ae6d-11cf-96b8-444553540000\"  width=\""
-				+ width + "\" height=\"" + height + "\" align=\"middle\">\n";
-		tmp += " <param name=\"allowScriptAccess\" value=\"always\" />\n";
-		tmp += " <param name=\"allowFullScreen\" value=\"false\" />\n";
-		tmp += " <param name=\"movie\" value=\"" + Util.flashUrl(flashName) + "\" />\n";
-		tmp += " <param name=\"quality\" value=\"high\" />\n";
-		tmp += " <param name=\"bgcolor\" value=\"#ffffff\" />\n";
-		tmp += " <param name=\"wmode\" value=\"transparent\" />\n";
-		tmp += " <param name=\"flashvars\" value=\"" + flashvars + "\" />";
-		tmp += "	<embed type=\"application/x-shockwave-flash\" src=\"" + Util.flashUrl(flashName) + "\" height=\""
-				+ height + "\" width=\"" + width
-				+ "\" id=\"tagcloud\" name=\"tagcloud\" bgcolor=\"#ffffff\" quality=\"high\" flashvars=\"" + flashvars
-				+ "\" />";
-		tmp += "</object></div>\n";
-		return tmp;
+	public static String webstartURL(String appName) {
+		String url = GWT.getHostPageBaseURL() + "webstart/" + appName + ".jsp?sid=" + Session.get().getSid();
+		return url;
 	}
 
 	/**
