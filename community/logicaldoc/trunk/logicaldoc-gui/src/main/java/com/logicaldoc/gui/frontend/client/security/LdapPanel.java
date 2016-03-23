@@ -11,6 +11,8 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.LdapService;
 import com.logicaldoc.gui.frontend.client.services.LdapServiceAsync;
@@ -249,11 +251,8 @@ public class LdapPanel extends VLayout {
 												+ ".\n" + I18N.message("openldapexplorer"), new BooleanCallback() {
 											@Override
 											public void execute(Boolean value) {
-												if (value) {
-													LdapExplorer explorer = new LdapExplorer(
-															LdapPanel.this.ldapSettings);
-													explorer.show();
-												}
+												if (value)
+													WindowUtils.openUrl(Util.webstartURL("ldap-explorer"), "_blank");
 											}
 										});
 									} else
