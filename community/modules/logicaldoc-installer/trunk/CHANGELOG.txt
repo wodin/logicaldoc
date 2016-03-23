@@ -9,6 +9,10 @@
 
                     LogicalDOC Community Edition
                     
+LogicalDOC 7.4.3 (2016-03-31; logicaldoc-7.4.3)
+==============================================================
+629 - Removed support for Internet Explorer 9 - deprecation - User Interface                     
+                    
 LogicalDOC 7.4.2 (2016-02-10; logicaldoc-7.4.2)
 ==============================================================
 619 - Full HTML5 preview - Improvement - User Interface
