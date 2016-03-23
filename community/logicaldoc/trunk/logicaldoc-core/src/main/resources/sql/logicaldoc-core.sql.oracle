@@ -1,4 +1,5 @@
 -- bigint -> number(19,0)
+-- datetime -> timestamp
 -- to insert a date -> to_date('2008-10-22', 'yyyy-mm-dd')
 
 create table ld_bookmark (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_recordversion number(19,0) not null,
