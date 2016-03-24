@@ -142,6 +142,7 @@ public class SecuritySettingsPanel extends VLayout {
 
 					SecuritySettingsPanel.this.settings.setEnableAnonymousLogin(values.get("enableanonymous").equals(
 							"yes") ? true : false);
+					SecuritySettingsPanel.this.settings.setAnonymousKey((String) values.get("anonymousKey"));
 
 					if (!SecuritySettingsPanel.this.settings.isEnableAnonymousLogin()) {
 						SecuritySettingsPanel.this.settings.setAnonymousUser(null);
