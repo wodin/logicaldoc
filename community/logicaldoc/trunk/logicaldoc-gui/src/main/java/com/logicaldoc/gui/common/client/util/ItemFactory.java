@@ -807,7 +807,7 @@ public class ItemFactory {
 	public static TimeItem newTimeItem(String name, String title) {
 		TimeItem item = new TimeItem(name, I18N.message(title));
 		item.setHintStyle("hint");
-		item.setWidth(40);
+		item.setWidth(50);
 		return item;
 	}
 
