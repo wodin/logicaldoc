@@ -42,6 +42,7 @@ public class GridUtil {
 				document.setDocRefType(record.getAttribute("docrefType"));
 			}
 			document.setExtResId(record.getAttributeAsString("extResId"));
+			document.setCustomId(record.getAttributeAsString("customId"));
 			document.setTitle(record.getAttribute("title"));
 			document.setType(record.getAttribute("type"));
 			document.setFileName(record.getAttribute("filename"));
@@ -49,6 +50,10 @@ public class GridUtil {
 			document.setVersion(record.getAttribute("version"));
 			document.setFileVersion(record.getAttribute("fileVersion"));
 			document.setImmutable("blank".equals(record.getAttributeAsString("immutable")) ? 0 : 1);
+			document.setPublisher(record.getAttributeAsString("publisher"));
+			
+			if (record.getAttributeAsFloat("size") != null)
+				document.setFileSize(record.getAttributeAsFloat("size"));
 			
 			if ("indexed".equals(record.getAttributeAsString("indexed")))
 				document.setIndexed(Constants.INDEX_INDEXED);
@@ -72,6 +77,11 @@ public class GridUtil {
 			document.setIcon(record.getAttribute("icon"));
 			if (record.getAttributeAsDate("lastModified") != null)
 				document.setLastModified(record.getAttributeAsDate("lastModified"));
+			if (record.getAttributeAsDate("published") != null)
+				document.setDate(record.getAttributeAsDate("published"));
+			if (record.getAttributeAsDate("created") != null)
+				document.setCreation(record.getAttributeAsDate("created"));
+
 
 			GUIFolder folder = new GUIFolder();
 			if ("folder".equals(document.getType())) {
