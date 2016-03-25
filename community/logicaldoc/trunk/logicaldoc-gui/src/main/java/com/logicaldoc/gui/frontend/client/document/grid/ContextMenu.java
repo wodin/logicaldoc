@@ -100,6 +100,7 @@ public class ContextMenu extends Menu {
 					document.setTitle(selection[i].getTitle());
 					document.setIcon(selection[i].getIcon());
 					document.setLastModified(selection[i].getLastModified());
+					document.setDate(selection[i].getDate());
 					document.setVersion(selection[i].getVersion());
 					document.setFileVersion(selection[i].getFileVersion());
 					document.setFileName(selection[i].getFileName());
@@ -127,6 +128,7 @@ public class ContextMenu extends Menu {
 					document.setTitle(selection[i].getTitle());
 					document.setIcon(selection[i].getIcon());
 					document.setLastModified(selection[i].getLastModified());
+					document.setDate(selection[i].getDate());
 					document.setVersion(selection[i].getVersion());
 					document.setFileVersion(selection[i].getFileVersion());
 					document.setFileName(selection[i].getFileName());
