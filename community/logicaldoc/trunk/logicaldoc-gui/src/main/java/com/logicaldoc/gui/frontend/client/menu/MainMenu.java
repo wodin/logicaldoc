@@ -259,7 +259,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 							Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
 							Log.info(I18N.message("documentcheckedout"), null);
 
-							WebcontentEditor popup = new WebcontentEditor(document, grid);
+							WebcontentEditor popup = new WebcontentEditor(document);
 							popup.show();
 						}
 					});
@@ -273,13 +273,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		create.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				final DocumentsGrid grid;
-				if (MainPanel.get().isOnSearchTab())
-					grid = SearchPanel.get().getDocumentsGrid();
-				else
-					grid = DocumentsPanel.get().getDocumentsGrid();
-
-				WebcontentCreate wcCreate = new WebcontentCreate(grid);
+				WebcontentCreate wcCreate = new WebcontentCreate();
 				wcCreate.show();
 			}
 		});

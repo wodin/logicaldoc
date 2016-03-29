@@ -8,7 +8,6 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
-import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -33,13 +32,9 @@ public class WebcontentCreate extends Window {
 
 	private ValuesManager vm;
 
-	private DocumentsGrid grid;
-
 	protected DocumentServiceAsync service = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	public WebcontentCreate(DocumentsGrid grid) {
-		this.grid = grid;
-
+	public WebcontentCreate() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("createwebcontent"));
 		setWidth(270);
@@ -87,15 +82,16 @@ public class WebcontentCreate extends Window {
 		else {
 			vo.setTemplateId(Long.parseLong(vm.getValueAsString("template").toString()));
 		}
-		
+
 		if (vo.getTitle().lastIndexOf('.') != -1) {
 			vo.setTitle(vo.getTitle().substring(0, vo.getTitle().lastIndexOf('.')));
 		}
 		vo.setType("html");
 		vo.setFileName(vo.getTitle() + ".html");
 		vo.setStatus(1);
+		vo.setLanguage(I18N.getDefaultLocaleForDoc());
 		vo.setFolder(Session.get().getCurrentFolder());
-		
+
 		service.createEmpty(Session.get().getSid(), vo, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -113,7 +109,7 @@ public class WebcontentCreate extends Window {
 
 				destroy();
 
-				WebcontentEditor popup = new WebcontentEditor(document, grid);
+				WebcontentEditor popup = new WebcontentEditor(document);
 				popup.show();
 			}
 		});

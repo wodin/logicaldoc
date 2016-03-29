@@ -8,7 +8,6 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
-import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -40,9 +39,7 @@ public class WebcontentEditor extends Window {
 
 	private GUIDocument document;
 
-	private DocumentsGrid grid;
-
-	public WebcontentEditor(final GUIDocument document, final DocumentsGrid grid) {
+	public WebcontentEditor(final GUIDocument document) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		if (document.getId() > 0)
 			setTitle(I18N.message("editdoc") + ": " + document.getTitle());
@@ -50,7 +47,6 @@ public class WebcontentEditor extends Window {
 			setTitle(I18N.message("createdoc") + ": " + document.getTitle());
 
 		this.document = document;
-		this.grid = grid;
 
 		setWidth(com.google.gwt.user.client.Window.getClientWidth());
 		setHeight(com.google.gwt.user.client.Window.getClientHeight());
@@ -70,7 +66,7 @@ public class WebcontentEditor extends Window {
 		layout.setWidth100();
 
 		prepareBody();
-		
+
 		addItem(layout);
 	}
 

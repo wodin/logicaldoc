@@ -84,6 +84,7 @@ public class AddForm extends Window {
 		frm.setFormId(formId);
 		frm.setTitle(form.getValueAsString("title").trim());
 		frm.setFileName(frm.getTitle() + ".pdf");
+		frm.setLanguage(I18N.getDefaultLocaleForDoc());
 
 		if (templateIdString != null && !templateIdString.isEmpty()) {
 			frm.setTemplateId(Long.parseLong(templateIdString));
