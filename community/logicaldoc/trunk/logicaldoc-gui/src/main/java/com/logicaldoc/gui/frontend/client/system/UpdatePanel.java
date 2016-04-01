@@ -87,7 +87,7 @@ public class UpdatePanel extends HLayout {
 							date.setRequired(true);
 
 							StaticTextItem size = ItemFactory.newStaticTextItem("size", "size",
-									Util.getValue("size", parameters) + " MB");
+									Util.formatSize(Long.parseLong(Util.getValue("size", parameters))));
 							size.setRequired(true);
 
 							StaticTextItem target = ItemFactory.newStaticTextItem("target", "updatesto",
