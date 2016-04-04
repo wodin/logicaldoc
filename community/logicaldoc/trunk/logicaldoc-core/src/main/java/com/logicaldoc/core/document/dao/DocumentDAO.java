@@ -7,6 +7,7 @@ import java.util.Map;
 import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.TagCloud;
 
 /**
  * This class is a DAO-service for documents.
@@ -94,7 +95,7 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	/**
 	 * This method selects all tags and counts the occurrences.
 	 */
-	public Map<String, Integer> findTags(String firstLetter, Long tenantId);
+	public Map<String, Long> findTags(String firstLetter, Long tenantId);
 
 	/**
 	 * Searches for all tags,
@@ -352,4 +353,29 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * Saves a document's history
 	 */
 	public void saveDocumentHistory(Document doc, History transaction);
+
+	/**
+	 * Cleans the ld_uniquetag table removing no more used tags
+	 */
+	public void cleanUnexistingUniqueTags();
+
+	/**
+	 * Puts into ld_uniquetag the new unique tags
+	 */
+	public void insertNewUniqueTags();
+
+	/**
+	 * Updates the count of the unique tags
+	 */
+	public void updateCountUniqueTags();
+
+	/**
+	 * Gets the tag cloud for the given tenant
+	 */
+	public List<TagCloud> getTagCloud(long tenantId, int maxTags);
+
+	/**
+	 * Gets the tag cloud for the given tenant
+	 */
+	public List<TagCloud> getTagCloud(String sid);
 }

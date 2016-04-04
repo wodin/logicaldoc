@@ -63,12 +63,12 @@ public class TagCloud extends VLayout {
 
 		for (GUITag tag : tags) {
 			WordTag word = new WordTag(tag.getTag(), "javascript:searchTag(\"" + tag.getTag() + "\");");
-			word.setNumberOfOccurences(tag.getCount());
+			word.setNumberOfOccurences(Integer.parseInt(Long.toString(tag.getCount())));
 			tagCloud.addWord(word);
 		}
 
 		tagCloud.setPixelSize(getWidth() - 20, getHeight() - 2);
-		
+
 		layout = new HLayout();
 		layout.setWidth100();
 		layout.setHeight100();

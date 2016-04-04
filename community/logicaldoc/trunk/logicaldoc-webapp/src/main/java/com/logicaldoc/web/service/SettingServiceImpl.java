@@ -131,13 +131,13 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 					|| name.startsWith("quota") || name.startsWith("store") || name.startsWith("flexpaperviewer")
 					|| name.startsWith("advancedocr.") || name.startsWith("command.") || name.contains(".gui.")
 					|| name.contains(".upload.") || name.equals("userno") || name.contains(".search.")
-                    || name.contains("password") || name.startsWith("openoffice.path")
-					|| name.contains("tag.") || name.startsWith("jdbc.") || name.startsWith("cluster")
-					|| name.startsWith("ip.") || name.contains(".extcall.") || name.contains("anonymous")
-					|| name.startsWith("hibernate.") || name.contains(".session.") || name.contains("acmecad.")
-					|| name.contains("antivirus.") || name.startsWith("login.") || name.equals("upload.maxsize")
-					|| name.startsWith("news.") || name.equals("registry") || name.equals("searchengine")
-					|| name.equals("load") || name.startsWith("ssl."))
+					|| name.contains("password") || name.startsWith("openoffice.path") || name.contains("tag.")
+					|| name.startsWith("jdbc.") || name.startsWith("cluster") || name.startsWith("ip.")
+					|| name.contains(".extcall.") || name.contains("anonymous") || name.startsWith("hibernate.")
+					|| name.contains(".session.") || name.contains("acmecad.") || name.contains("antivirus.")
+					|| name.startsWith("login.") || name.equals("upload.maxsize") || name.startsWith("news.")
+					|| name.equals("registry") || name.equals("searchengine") || name.equals("load")
+					|| name.startsWith("ssl.") || name.contains(".tagcloud."))
 				continue;
 
 			sortedSet.add(key.toString());

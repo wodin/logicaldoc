@@ -148,7 +148,7 @@ create table ld_extoption (ld_id bigint not null, ld_lastmodified timestamp not 
                           ld_label varchar(1000), ld_position int not null,
                           primary key (ld_id));
 create table ld_temp (ld_int bigint, ld_date timestamp, ld_string varchar(4000));
-
+create table ld_uniquetag(ld_tag varchar(255), ld_tenantid bigint, ld_count bigint, primary key (ld_tag, ld_tenantid));
 
 create table hibernate_unique_key (tablename varchar(40) NOT NULL, next_hi bigint NOT NULL);
 

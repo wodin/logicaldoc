@@ -56,10 +56,10 @@
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
 	</appender>
 
-	<appender name="TagCloudGenerator"
+	<appender name="TagsProcessor"
 		class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
-			value="${logicaldoc.repository}/logs/tagcloudgenerator.log" />
+			value="${logicaldoc.repository}/logs/tagsprocessor.log" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<param name="Append" value="true" />
@@ -69,10 +69,10 @@
 		</layout>
 	</appender>
 
-	<appender name="TagCloudGenerator_WEB"
+	<appender name="TagsProcessor_WEB"
 		class="org.apache.log4j.RollingFileAppender">
 		<param name="File"
-			value="${logicaldoc.repository}/logs/tagcloudgenerator.log.html" />
+			value="${logicaldoc.repository}/logs/tagsprocessor.log.html" />
 		<param name="MaxFileSize" value="5MB" />
 		<param name="MaxBackupIndex" value="5" />
 		<layout class="com.logicaldoc.web.util.HTMLLayout"></layout>
@@ -166,11 +166,11 @@
 		<appender-ref ref="IndexOptimizer_WEB" />
 	</category>
 
-	<category name="com.logicaldoc.core.document.TagCloudGenerator"
+	<category name="com.logicaldoc.core.document.TagsProcessor"
 		additivity="false">
 		<priority value="info" />
-		<appender-ref ref="TagCloudGenerator" />
-		<appender-ref ref="TagCloudGenerator_WEB" />
+		<appender-ref ref="TagsProcessor" />
+		<appender-ref ref="TagsProcessor_WEB" />
 	</category>
 
 	<category name="com.logicaldoc.core.searchengine.IndexerTask"

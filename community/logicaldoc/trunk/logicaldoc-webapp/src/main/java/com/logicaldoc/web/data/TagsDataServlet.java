@@ -56,21 +56,19 @@ public class TagsDataServlet extends HttpServlet {
 			String firstLetter = request.getParameter("firstLetter");
 			String editing = request.getParameter("editing");
 
-			HashMap<String, Integer> tgs = new HashMap<String, Integer>();
+			HashMap<String, Long> tgs = new HashMap<String, Long>();
 
-			if (("preset".equals(firstLetter) ||"preset".equals(mode)) && "true".equals(editing)) {
-				// We have to return the preset only, since the user is editing a document
+			if (("preset".equals(firstLetter) || "preset".equals(mode)) && "true".equals(editing)) {
+				// We have to return the preset only, since the user is editing
+				// a document
 				GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
 				List<Generic> buf = gDao.findByTypeAndSubtype("tag", null, null, session.getTenantId());
 				for (Generic generic : buf)
-					tgs.put(generic.getSubtype(), 0);
+					tgs.put(generic.getSubtype(), 0L);
 			} else if (org.apache.commons.lang.StringUtils.isNotEmpty(firstLetter)) {
-				tgs = (HashMap<String, Integer>) docDao.findTags(firstLetter, session.getTenantId());
+				tgs = (HashMap<String, Long>) docDao.findTags(firstLetter, session.getTenantId());
 			} else {
-				List<String> buf = docDao.findAllTags(null, session.getTenantId());
-				for (String tag : buf) {
-					tgs.put(tag, 0);
-				}
+				tgs = (HashMap<String, Long>) docDao.findTags(null, session.getTenantId());
 			}
 
 			PrintWriter writer = response.getWriter();

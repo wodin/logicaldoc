@@ -53,6 +53,10 @@ public class TagsSettingsPanel extends VLayout {
 		TextItem minsize = ItemFactory.newIntegerItem("minsize", I18N.message("minsize"), null);
 		minsize.setRequired(true);
 
+		TextItem cloudElements = ItemFactory.newIntegerItem("cloudElements", I18N.message("tagcloudelements"), null);
+		cloudElements.setRequired(true);
+		cloudElements.setWrapTitle(false);		
+		
 		TextItem vocabulary = ItemFactory.newTextItem("vocabulary", I18N.message("vocabulary"), null);
 		vocabulary.setRequired(true);
 		vocabulary.setWidth(300);
@@ -69,6 +73,8 @@ public class TagsSettingsPanel extends VLayout {
 				minsize.setValue(p.getValue());
 			if (p.getName().endsWith("tag.vocabulary"))
 				vocabulary.setValue(p.getValue());
+			if (p.getName().endsWith("tagcloud.maxtags"))
+				cloudElements.setValue(p.getValue());
 		}
 		
 		IButton save = new IButton();
@@ -84,6 +90,7 @@ public class TagsSettingsPanel extends VLayout {
 					params.add(new GUIParameter(Session.get().getTenantName()+".tag.maxsize", values.get("maxsize").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName()+".tag.minsize", values.get("minsize").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName()+".tag.vocabulary", values.get("vocabulary").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName()+".tagcloud.maxtags", values.get("cloudElements").toString()));
 
 					settingService.saveSettings(Session.get().getSid(), params.toArray(new GUIParameter[0]),
 							new AsyncCallback<Void>() {
@@ -96,6 +103,7 @@ public class TagsSettingsPanel extends VLayout {
 								@Override
 								public void onSuccess(Void ret) {
 									Session.get().getInfo().setConfig(Session.get().getTenantName()+".tag.mode", values.get("mode").toString());
+									Session.get().getInfo().setConfig(Session.get().getTenantName()+".tagcloud.maxtags", values.get("cloudElements").toString());
 									Log.info(I18N.message("settingssaved"), null);
 								}
 							});

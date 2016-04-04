@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,7 +33,9 @@ import com.logicaldoc.core.document.DocumentListenerManager;
 import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Tag;
+import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
@@ -42,6 +45,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.util.sql.SqlUtil;
@@ -426,18 +430,16 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return coll;
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
-	public Map<String, Integer> findTags(String firstLetter, Long tenantId) {
-		final Map<String, Integer> map = new HashMap<String, Integer>();
+	public Map<String, Long> findTags(String firstLetter, Long tenantId) {
+		final Map<String, Long> map = new HashMap<String, Long>();
 
 		try {
-			StringBuilder query = new StringBuilder("SELECT COUNT(ld_tag), ld_tag from ld_tag where 1=1 ");
+			StringBuilder query = new StringBuilder("SELECT ld_count, ld_tag from ld_uniquetag where 1=1 ");
 			if (StringUtils.isNotEmpty(firstLetter))
 				query.append(" and lower(ld_tag) like '" + firstLetter.toLowerCase() + "%' ");
 			if (tenantId != null)
 				query.append(" and ld_tenantid=" + tenantId);
-			query.append(" GROUP BY ld_tag");
 
 			query(query.toString(), null, new RowMapper<Object>() {
 
@@ -445,7 +447,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				public Object mapRow(ResultSet rs, int rowNumber) throws SQLException {
 					Long value = (Long) rs.getLong(1);
 					String key = (String) rs.getString(2);
-					map.put(key, value.intValue());
+					map.put(key, value);
 					return null;
 				}
 
@@ -459,7 +461,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public List<String> findAllTags(String firstLetter, Long tenantId) {
 		try {
-			StringBuilder sb = new StringBuilder("select distinct(ld_tag) from ld_tag where 1=1 ");
+			StringBuilder sb = new StringBuilder("select ld_tag from ld_uniquetag where 1=1 ");
 			if (tenantId != null) {
 				sb.append(" and ld_tenantid=" + tenantId);
 			}
@@ -967,5 +969,77 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	public void setTenantDAO(TenantDAO tenantDAO) {
 		this.tenantDAO = tenantDAO;
+	}
+
+	@Override
+	public void cleanUnexistingUniqueTags() {
+		StringBuffer deleteStatement = new StringBuffer("delete from ld_uniquetag where not exists(");
+		deleteStatement.append(" select B.ld_tag ");
+		deleteStatement.append(" from ld_tag B ");
+		deleteStatement.append(" where ld_tenantid=B.ld_tenantid and ld_tag=B.ld_tag) ");
+
+		jdbcUpdate(deleteStatement.toString());
+	}
+
+	@Override
+	public void insertNewUniqueTags() {
+		StringBuffer insertStatement = new StringBuffer("insert into ld_uniquetag(ld_tag, ld_tenantid, ld_count) ");
+		insertStatement.append(" select distinct(B.ld_tag), B.ld_tenantid, 0 from ld_tag B ");
+		insertStatement
+				.append(" where B.ld_tag not in (select A.ld_tag from ld_uniquetag A where A.ld_tenantid=B.ld_tenantid) ");
+
+		jdbcUpdate(insertStatement.toString());
+	}
+
+	@Override
+	public void updateCountUniqueTags() {
+		StringBuffer updateStatement = new StringBuffer(
+				"update ld_uniquetag A set A.ld_count = (select count(B.ld_tag) from ld_tag B where B.ld_tag=A.ld_tag and A.ld_tenantid=B.ld_tenantid) ");
+		jdbcUpdate(updateStatement.toString());
+	}
+
+	@Override
+	public List<TagCloud> getTagCloud(long tenantId, int maxTags) {
+		GenericDAO gendao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+
+		List<TagCloud> list = (List<TagCloud>) gendao.query(
+				"select ld_tag, ld_count from ld_uniquetag where ld_tenantid=" + tenantId + " order by ld_count desc",
+				null, new RowMapper<TagCloud>() {
+
+					@Override
+					public TagCloud mapRow(ResultSet rs, int arg1) throws SQLException {
+						return new TagCloud(rs.getString(1), rs.getLong(2));
+					}
+				}, null);
+
+		/**
+		 * Get the most used tags
+		 */
+		List<TagCloud> mostUsedTags = list;
+		if (maxTags > 0 && mostUsedTags.size() > maxTags)
+			mostUsedTags = new ArrayList<TagCloud>(list.subList(0, maxTags));
+
+		// Find the Max frequency
+		long maxValue = mostUsedTags.get(0).getCount();
+
+		for (TagCloud cloud : mostUsedTags) {
+			double scale = ((double) cloud.getCount()) / maxValue;
+			int scaleInt = (int) Math.ceil(scale * 10);
+			cloud.setScale(scaleInt);
+		}
+
+		// Sort the tags collection by name
+		Collections.sort(mostUsedTags);
+
+		return mostUsedTags;
+	}
+
+	@Override
+	public List<TagCloud> getTagCloud(String sid) {
+		UserSession session = SessionManager.getInstance().get(sid);
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+
+		int maxTags = config.getInt(session.getTenantName() + ".tagcloud.maxtags", 30);
+		return getTagCloud(session.getTenantId(), maxTags);
 	}
 }
