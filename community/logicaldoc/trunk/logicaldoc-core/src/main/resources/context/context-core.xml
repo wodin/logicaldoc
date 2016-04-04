@@ -365,25 +365,23 @@
         <property name="jobDetail" ref="IndexOptimizerJob" />
         <property name="config" ref="ContextProperties" />
     </bean>
-    <bean id="TagCloudGenerator" class="com.logicaldoc.core.document.TagCloudGenerator">
-        <property name="documentDao" ref="DocumentDAO" />
-        <property name="genericDao" ref="GenericDAO" />
-        <property name="tenantDao" ref="TenantDAO" />
+    <bean id="TagsProcessor" class="com.logicaldoc.core.document.TagsProcessor">
         <property name="config" ref="ContextProperties" />
-        <property name="sender" ref="EMailSender" />
         <property name="userDao" ref="UserDAO" />
         <property name="lockManager" ref="LockManager" />
         <property name="systemLoadMonitor" ref="SystemLoadMonitor" />
+        <property name="sender" ref="EMailSender" />
+        <property name="documentDao" ref="DocumentDAO" />
     </bean>
-    <bean id="TagCloudGeneratorJob"
+    <bean id="TagsProcessorJob"
         class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="TagCloudGenerator" />
+        <property name="targetObject" ref="TagsProcessor" />
         <property name="targetMethod" value="run" />
         <property name="concurrent" value="false" />
     </bean>
-    <bean id="TagCloudGeneratorTrigger" class="com.logicaldoc.core.task.TaskTrigger">
-        <property name="task" ref="TagCloudGenerator" />
-        <property name="jobDetail" ref="TagCloudGeneratorJob" />
+    <bean id="TagsProcessorTrigger" class="com.logicaldoc.core.task.TaskTrigger">
+        <property name="task" ref="TagsProcessor" />
+        <property name="jobDetail" ref="TagsProcessorJob" />
         <property name="config" ref="ContextProperties" />
     </bean>
     <bean id="IndexerTask" class="com.logicaldoc.core.searchengine.IndexerTask">

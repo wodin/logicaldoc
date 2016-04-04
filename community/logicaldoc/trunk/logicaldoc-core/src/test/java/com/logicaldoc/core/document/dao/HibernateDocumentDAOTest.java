@@ -23,6 +23,7 @@ import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.TagsProcessor;
 import com.logicaldoc.core.lock.LockManager;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Tenant;
@@ -328,6 +329,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindTags() {
+		TagsProcessor processor = (TagsProcessor) context.getBean("TagCloudGenerator");
+		processor.run();
+		
 		Collection<String> tags = dao.findTags("a", 1L).keySet();
 		Assert.assertNotNull(tags);
 		Assert.assertEquals(2, tags.size());
@@ -344,6 +348,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindAllTags() {
+		TagsProcessor processor = (TagsProcessor) context.getBean("TagCloudGenerator");
+		processor.run();
+		
 		Collection<String> tags = dao.findAllTags("a", 1L);
 		Assert.assertNotNull(tags);
 		Assert.assertEquals(2, tags.size());

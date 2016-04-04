@@ -6,11 +6,11 @@ package com.logicaldoc.core.document;
  * @author Alessandro Gasparini - Logical Objects
  * @since 4.0
  */
-public class TagCloud {
+public class TagCloud implements Comparable<TagCloud> {
 
 	private String tag;
 
-	private int count;
+	private long count;
 
 	private int scale;
 
@@ -18,7 +18,7 @@ public class TagCloud {
 		this.tag = tag;
 	}
 
-	public TagCloud(String tag, int count) {
+	public TagCloud(String tag, long count) {
 		this.tag = tag;
 		this.count = count;
 	}
@@ -34,11 +34,11 @@ public class TagCloud {
 		this.tag = tag;
 	}
 
-	public int getCount() {
+	public long getCount() {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(long count) {
 		this.count = count;
 	}
 
@@ -48,5 +48,10 @@ public class TagCloud {
 
 	public void setScale(int scale) {
 		this.scale = scale;
+	}
+
+	@Override
+	public int compareTo(TagCloud o) {
+		return getTag().compareTo(o.getTag());
 	}
 }

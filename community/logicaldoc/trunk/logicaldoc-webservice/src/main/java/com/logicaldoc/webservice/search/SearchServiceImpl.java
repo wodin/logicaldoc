@@ -2,7 +2,6 @@ package com.logicaldoc.webservice.search;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +9,6 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.generic.Generic;
-import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
@@ -69,7 +66,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	@Override
 	public WSDocument[] findByFilename(String sid, String filename) throws Exception {
 		User user = validateSession(sid);
-		
+
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, user.getTenantId(), null);
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
@@ -91,7 +88,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	@Override
 	public WSDocument[] findByTag(String sid, String tag) throws Exception {
 		User user = validateSession(sid);
-		
+
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		List<Document> docs = docDao.findByUserIdAndTag(user.getId(), tag, null);
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
@@ -131,22 +128,15 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 
 	@Override
 	public WSTagCloud[] getTagCloud(String sid) throws Exception {
-		User user = validateSession(sid);
+		validateSession(sid);
 
-		GenericDAO genericDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
-		Generic generic = genericDao.findByAlternateKey("tagcloud", "-", null, user.getTenantId());
-		if (generic == null)
-			return null;
+		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		List<TagCloud> list = dao.getTagCloud(sid);
 
-		genericDao.initialize(generic);
-		WSTagCloud[] tagClouds = new WSTagCloud[generic.getAttributeNames().size()];
+		WSTagCloud[] tagClouds = new WSTagCloud[list.size()];
 		int i = 0;
-		for (String tag : generic.getAttributeNames()) {
-			TagCloud tc = new TagCloud(tag);
-			StringTokenizer st = new StringTokenizer(generic.getValue(tag).toString(), "|", false);
-			tc.setCount(Integer.parseInt(st.nextToken()));
-			tc.setScale(Integer.parseInt(st.nextToken()));
-			tagClouds[i] = WSTagCloud.fromTagCloud(tc);
+		for (TagCloud tag : list) {
+			tagClouds[i] = WSTagCloud.fromTagCloud(tag);
 			i++;
 		}
 

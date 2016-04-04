@@ -14,10 +14,10 @@ public class GUITag implements Serializable {
 
 	private String tag;
 
-	private int count;
+	private long count;
 
 	private int scale;
-	
+
 	private String link;
 
 	public String getTag() {
@@ -28,11 +28,11 @@ public class GUITag implements Serializable {
 		this.tag = tag;
 	}
 
-	public int getCount() {
+	public long getCount() {
 		return count;
 	}
 
-	public void setCount(int count) {
+	public void setCount(long count) {
 		this.count = count;
 	}
 
