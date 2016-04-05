@@ -65,7 +65,7 @@ public class WindowUtils {
 	public static native void reload() /*-{
 		$wnd.location.reload(true);
 	}-*/;
-	
+
 	public static native void setTitle(String title)/*-{
 		$doc.title = title;
 		//Change also the main frame window if any
@@ -105,9 +105,9 @@ public class WindowUtils {
 	}-*/;
 
 	public static native void openUrl(String url, String window)/*-{
-	    $wnd.open(url, window, null);
+		$wnd.open(url, window, null);
 	}-*/;
-	
+
 	public static native void openUrl(String url, String window, String specs)/*-{
 		$wnd.open(url, window, specs);
 	}-*/;

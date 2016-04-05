@@ -1,7 +1,9 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
@@ -157,14 +159,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				long[] selection = grid.getSelectedIds();
 				if (selection.length == 1) {
 					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid()
-							+ "&docId=" + document.getId() + "&version=" + document.getVersion()+"&open=true", "_blank");
+							+ "&docId=" + document.getId() + "&version=" + document.getVersion() + "&open=true",
+							"_blank");
 				} else {
 					String url = GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid();
 					url += "&open=true";
 					url += "&docId=";
 					for (long id : selection)
 						url += Long.toString(id) + "|";
-					WindowUtils.openUrl(url,"_blank");
+					WindowUtils.openUrl(url, "_blank");
 				}
 			}
 		});
@@ -220,8 +223,15 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 		scan.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ScanDialog scanner = new ScanDialog();
-				scanner.show();
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("targetFolderId", "" + Session.get().getCurrentFolder().getId());
+				params.put("language", I18N.getLocale());
+				params.put("baseUrl", GWT.getHostPageBaseURL());
+
+				WindowUtils.openUrl(Util.webstartURL("scan", params), "_blank");
+
+				// ScanDialog scanner = new ScanDialog();
+				// scanner.show();
 			}
 		});
 

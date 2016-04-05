@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.util;
 
 import java.util.Date;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.Request;
@@ -8,6 +9,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -87,9 +89,20 @@ public class Util {
 		return url;
 	}
 
-	public static String webstartURL(String appName) {
-		String url = GWT.getHostPageBaseURL() + "webstart/" + appName + ".jsp?sid=" + Session.get().getSid();
-		return url;
+	public static String webstartURL(String appName, Map<String, String> params) {
+		StringBuffer url = new StringBuffer(GWT.getHostPageBaseURL());
+		url.append("webstart/");
+		url.append(appName);
+		url.append(".jsp?sid=");
+		url.append(Session.get().getSid());
+		if (params != null)
+			for (String p : params.keySet()) {
+				url.append("&");
+				url.append(p);
+				url.append("=");
+				url.append(URL.encode(params.get(p)));
+			}
+		return url.toString();
 	}
 
 	/**
