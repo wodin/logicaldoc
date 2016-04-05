@@ -229,9 +229,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				params.put("baseUrl", GWT.getHostPageBaseURL());
 
 				WindowUtils.openUrl(Util.webstartURL("scan", params), "_blank");
-
-				// ScanDialog scanner = new ScanDialog();
-				// scanner.show();
 			}
 		});
 
