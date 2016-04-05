@@ -252,7 +252,8 @@ public class LdapPanel extends VLayout {
 											@Override
 											public void execute(Boolean value) {
 												if (value)
-													WindowUtils.openUrl(Util.webstartURL("ldap-explorer"), "_blank");
+													WindowUtils.openUrl(Util.webstartURL("ldap-explorer", null),
+															"_blank");
 											}
 										});
 									} else

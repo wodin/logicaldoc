@@ -47,9 +47,9 @@
                pdfUrl=pdfUrl+'&version='+version;
         }
     
-       var DEFAULT_URL = pdfUrl;    
+        var DEFAULT_URL = pdfUrl;    
        
-       PDFJS.locale = '<%=request.getParameter("locale")!=null ? request.getParameter("locale").replace("_", "-") : ""%>';
+        PDFJS.locale = '<%=request.getParameter("locale")!=null ? request.getParameter("locale").replace("_", "-") : ""%>';
     </script>
 
     <script src="debugger.js"></script>
