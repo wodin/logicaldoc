@@ -104,7 +104,15 @@ public class VersionsPanel extends DocumentDetailTab {
 	}
 
 	protected void onPreview(final GUIDocument document, ListGridRecord record) {
-		PreviewPopup iv = new PreviewPopup(document);
+		GUIVersion version = new GUIVersion();
+		version.setFolder(document.getFolder());
+		version.setDocId(document.getId());
+		version.setId(document.getId());
+		version.setTitle(document.getTitle());
+		version.setFileName(document.getFileName());
+		version.setVersion(record.getAttribute("version"));
+		version.setFileVersion(record.getAttribute("fileVersion"));
+		PreviewPopup iv = new PreviewPopup(version);
 		iv.show();
 	}
 
