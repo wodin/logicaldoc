@@ -317,7 +317,6 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public void reindex(long docId, String content) throws Exception {
 		Document doc = documentDAO.findById(docId);
-
 		if (doc == null) {
 			log.warn("Unexisting document with ID: " + docId);
 			return;
@@ -325,20 +324,26 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		log.debug("Reindexing document " + docId + " - " + doc.getTitle());
 
-		String cont = content;
-		if (StringUtils.isEmpty(cont)) {
-			// Extract the content from the file. This may take very long time.
-			cont = parseDocument(doc, null);
+		try {
+			String cont = content;
+			if (StringUtils.isEmpty(cont)) {
+				// Extract the content from the file. This may take very long
+				// time.
+				cont = parseDocument(doc, null);
+			}
+
+			// This may take time
+			indexer.addHit(doc, cont);
+
+			// For additional safety update the DB directly
+			doc.setIndexed(AbstractDocument.INDEX_INDEXED);
+			documentDAO.store(doc);
+
+			markAliasesToIndex(docId);
+		} catch (Exception e) {
+			log.error("Error reindexing document " + docId + " - " + doc.getTitle());
+			throw e;
 		}
-
-		// This may take time
-		indexer.addHit(doc, cont);
-
-		// For additional safety update the DB directly
-		doc.setIndexed(AbstractDocument.INDEX_INDEXED);
-		documentDAO.store(doc);
-
-		markAliasesToIndex(docId);
 	}
 
 	private void markAliasesToIndex(long referencedDocId) {
