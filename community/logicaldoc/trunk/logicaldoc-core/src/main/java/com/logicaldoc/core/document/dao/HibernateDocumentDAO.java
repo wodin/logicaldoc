@@ -756,7 +756,9 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		if (doc != null && transaction != null) {
 			transaction.setDocId(docId);
 			transaction.setEvent(DocumentEvent.RESTORED.toString());
-			saveDocumentHistory(doc, transaction);
+
+			initialize(doc);
+			store(doc, transaction);
 		}
 	}
 
