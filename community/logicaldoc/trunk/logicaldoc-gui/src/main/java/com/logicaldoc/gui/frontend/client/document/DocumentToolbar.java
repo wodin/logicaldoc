@@ -225,8 +225,6 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			public void onClick(ClickEvent event) {
 				Map<String, String> params = new HashMap<String, String>();
 				params.put("targetFolderId", "" + Session.get().getCurrentFolder().getId());
-				params.put("language", I18N.getLocale());
-				params.put("baseUrl", GWT.getHostPageBaseURL());
 
 				WindowUtils.openUrl(Util.webstartURL("scan", params), "_blank");
 			}
@@ -434,8 +432,11 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 					if (doc.getStatus() == 0 && doc.getImmutable() == 0)
 						unlockedIds.add(doc.getId());
 
-				BulkCheckoutDialog dialog = new BulkCheckoutDialog(Util.toPrimitives(unlockedIds.toArray(new Long[0])));
-				dialog.show();
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("folderId", "" + Session.get().getCurrentFolder().getId());
+				params.put("docIds", unlockedIds.toString().replace('[', ' ').replace(']', ' ').trim());
+
+				WindowUtils.openUrl(Util.webstartURL("bulk-checkout", params), "_blank");
 			}
 		});
 
