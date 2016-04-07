@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.common.client.util;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
@@ -93,7 +94,15 @@ public class Util {
 		StringBuffer url = new StringBuffer(GWT.getHostPageBaseURL());
 		url.append("webstart/");
 		url.append(appName);
-		url.append(".jsp?sid=");
+		url.append(".jsp?random=");
+		url.append(new Date().getTime());
+		url.append("&language=");
+		url.append(I18N.getLocale());
+		url.append("&docLanguage=");
+		url.append(I18N.getDefaultLocaleForDoc());
+		url.append("&baseUrl=");
+		url.append(URL.encode(GWT.getHostPageBaseURL()));
+		url.append("&sid=");
 		url.append(Session.get().getSid());
 		if (params != null)
 			for (String p : params.keySet()) {
@@ -513,19 +522,12 @@ public class Util {
 	}
 
 	public static void openDropSpot() {
-		Widget dropSpotApplet = RootPanel.get("DropSpot");
-		dropSpotApplet.setSize("1", "1");
-		String tmp = "<applet name=\"DropApplet\" archive=\""
-				+ Util.contextPath()
-				+ "applet/logicaldoc-enterprise-core.jar\"  code=\"com.logicaldoc.enterprise.upload.DropApplet\" width=\"1\" height=\"1\" mayscript>";
-		tmp += "<param name=\"baseUrl\" value=\"" + Util.contextPath() + "\" />";
-		tmp += "<param name=\"sid\" value=\"" + Session.get().getSid() + "\" />";
-		tmp += "<param name=\"language\" value=\"" + I18N.getDefaultLocaleForDoc() + "\" />";
-		tmp += "<param name=\"sizeMax\" value=\"" + Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize"))
-				* 1024 * 1024 + "\" />";
-		tmp += "<param name=\"disallow\" value=\"" + Session.get().getInfo().getConfig("upload.disallow") + "\" />";
-		tmp += "</applet>";
-		dropSpotApplet.getElement().setInnerHTML(tmp);
+		Map<String, String> params = new HashMap<String, String>();
+		params.put("folderId", "" + Session.get().getCurrentFolder().getId());
+		params.put("disallow", Session.get().getInfo().getConfig("upload.disallow"));
+		params.put("sizeMax", ""
+				+ (Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize")) * 1024 * 1024));
+		WindowUtils.openUrl(Util.webstartURL("dropspot", params), "_blank");
 	}
 
 	/**
