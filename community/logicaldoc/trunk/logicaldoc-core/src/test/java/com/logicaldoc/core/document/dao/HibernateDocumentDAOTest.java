@@ -329,7 +329,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindTags() {
-		TagsProcessor processor = (TagsProcessor) context.getBean("TagCloudGenerator");
+		TagsProcessor processor = (TagsProcessor) context.getBean("TagsProcessor");
 		processor.run();
 		
 		Collection<String> tags = dao.findTags("a", 1L).keySet();
@@ -348,7 +348,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindAllTags() {
-		TagsProcessor processor = (TagsProcessor) context.getBean("TagCloudGenerator");
+		TagsProcessor processor = (TagsProcessor) context.getBean("TagsProcessor");
 		processor.run();
 		
 		Collection<String> tags = dao.findAllTags("a", 1L);
