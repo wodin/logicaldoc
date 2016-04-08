@@ -311,8 +311,12 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 				if (result != null) {
 					if (result.getId() == Constants.DOCUMENTS_FOLDERID)
 						result.setPathExtended("/");
-					else
-						result.setPathExtended(getPath(result.getId()));
+					else {
+						if (result.getFoldRef() != null)
+							result.setPathExtended(getPath(result.getFoldRef()));
+						else
+							result.setPathExtended(getPath(result.getId()));
+					}
 					Session.get().setCurrentFolder(result);
 				}
 			}
@@ -390,6 +394,16 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 				onCreate(folder.getId());
 			}
 		});
+
+		MenuItem createAlias = new MenuItem();
+		createAlias.setTitle(I18N.message("createalias"));
+		createAlias.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				CreateAliasDialog dialog = new CreateAliasDialog();
+				dialog.show();
+			}
+		});
+		createAlias.setEnabled(getSelectedRecord().getAttributeAsString("foldRef") == null);
 
 		MenuItem rename = new MenuItem();
 		rename.setTitle(I18N.message("rename"));
@@ -570,11 +584,11 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 			move.setEnabled(false);
 			rename.setEnabled(!folder.isDefaultWorkspace());
 			createWorkspace.setEnabled(Feature.enabled(Feature.MULTI_WORKSPACE));
-			contextMenu.setItems(reload, search, create, rename, createWorkspace, delete, addBookmark, paste,
-					pasteAsAlias, move, copy, exportZip);
+			contextMenu.setItems(reload, search, create, createAlias, rename, createWorkspace, delete, addBookmark,
+					paste, pasteAsAlias, move, copy, exportZip);
 		} else {
-			contextMenu.setItems(reload, search, create, rename, delete, addBookmark, paste, pasteAsAlias, move, copy,
-					exportZip);
+			contextMenu.setItems(reload, search, create, createAlias, rename, delete, addBookmark, paste, pasteAsAlias,
+					move, copy, exportZip);
 		}
 
 		if (Feature.visible(Feature.AUDIT)) {
@@ -951,6 +965,30 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 						ContactingServer.get().hide();
 						if (target != null)
 							getTree().reloadChildren(target);
+					}
+				});
+	}
+
+	/**
+	 * Creates an alias in the currently selected folder
+	 * 
+	 * @param referencedFolderId The original folder to reference
+	 */
+	public void createAlias(long referencedFolderId) {
+		final TreeNode parent = getSelectedRecord();
+
+		service.createAlias(Session.get().getSid(), parent.getAttributeAsLong("folderId"), referencedFolderId,
+				new AsyncCallback<GUIFolder>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(GUIFolder ret) {
+						if (parent != null)
+							getTree().reloadChildren(parent);
 					}
 				});
 	}

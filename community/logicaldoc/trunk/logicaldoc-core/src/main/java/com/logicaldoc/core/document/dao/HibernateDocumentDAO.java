@@ -151,19 +151,19 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					|| (doc != null && doc.getImmutable() == 1 && transaction.getUser().isInGroup("admin"))) {
 				// Remove versions
 				for (Version version : versionDAO.findByDocId(docId)) {
-					version.setDeleted(1);
+					version.setDeleted(delCode);
 					saveOrUpdate(version);
 				}
 
 				// Remove notes
 				for (DocumentNote note : noteDAO.findByDocId(docId)) {
-					note.setDeleted(1);
+					note.setDeleted(delCode);
 					saveOrUpdate(note);
 				}
 
 				// Remove links
 				for (DocumentLink link : linkDAO.findByDocId(docId)) {
-					link.setDeleted(1);
+					link.setDeleted(delCode);
 					saveOrUpdate(link);
 				}
 

@@ -18,6 +18,14 @@ import com.logicaldoc.core.security.Permission;
 public interface FolderDAO extends PersistentObjectDAO<Folder> {
 
 	/**
+	 * Gets a folder by a given ID if it is an alias, the referenced folder is returned.
+	 * 
+	 * @param folderId The ID
+	 * @return A real folder that is referenced by the given ID
+	 */
+	public Folder findFolder(long folderId);
+	
+	/**
 	 * Finds all folders by folder name
 	 * 
 	 * @param name name of the folder
@@ -274,6 +282,25 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public Folder create(Folder parent, Folder folderVO, boolean inheritSecurity, FolderHistory transaction);
 
 	/**
+	 * Creates a new folder folder alias
+	 * 
+	 * @param parentId The parent folder
+	 * @param folderRef The referenced folder
+	 * @transaction optional transaction entry to log the event
+	 * @return The newly created alias
+	 */
+	public Folder createAlias(long parentId, long folderRef, FolderHistory transaction);
+
+	/**
+	 * Finds all the aliases
+	 * 
+	 * @param folderRef The referenced folder
+	 * @param tenantId The tenant
+	 * @return Collection of aliases
+	 */
+	public List<Folder> findAliases(Long folderRef, long tenantId);
+
+	/**
 	 * Creates the folder for the specified path. All unexisting nodes specified
 	 * in the path will be created. The path must be in any case inside a
 	 * workspace, if not, the Default one will be used.
@@ -444,10 +471,11 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public void saveFolderHistory(Folder folder, FolderHistory transaction);
 
 	/**
-	 * Counts the number of documents inside a given folder's tree (direct and indirect children)
+	 * Counts the number of documents inside a given folder's tree (direct and
+	 * indirect children)
 	 */
 	public long countDocsInTree(long rootId);
-	
+
 	/**
 	 * Computes the size of a tree (all versions included)
 	 */

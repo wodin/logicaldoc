@@ -155,15 +155,28 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			if (!dao.isReadEnabled(folderId, session.getUserId()))
 				return null;
 
-			Folder folder = dao.findById(folderId);
-			if (folder == null)
+			Folder folder = null;
+			Folder test = dao.findById(folderId);
+			if (test == null)
 				return null;
 
-			dao.initialize(folder);
+			dao.initialize(test);
+
+			// Check if it is an alias
+			if (test.getFoldRef() != null) {
+				folder = dao.findById(test.getFoldRef());
+				// The alias rewrite some properties
+				folder.setName(test.getName());
+				folder.setDescription(test.getDescription());
+				folder.setPosition(test.getPosition());
+				folder.setFoldRef(test.getId());
+			} else {
+				folder = test;
+			}
 
 			GUIFolder f = new GUIFolder();
-			f.setId(folderId);
-			f.setName(folderId != Constants.DOCUMENTS_FOLDERID ? folder.getName() : "/");
+			f.setId(folder.getId());
+			f.setName(folder.getId() != Constants.DOCUMENTS_FOLDERID ? folder.getName() : "/");
 			f.setParentId(folder.getParentId());
 			f.setDescription(folder.getDescription());
 			f.setCreation(folder.getCreation());
@@ -173,11 +186,12 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setPosition(folder.getPosition());
 			f.setQuotaDocs(folder.getQuotaDocs());
 			f.setQuotaSize(folder.getQuotaSize());
+			f.setFoldRef(folder.getFoldRef());
 
 			if (f.isWorkspace()) {
 				SequenceDAO seqDao = (SequenceDAO) Context.getInstance().getBean(SequenceDAO.class);
-				f.setDocumentsTotal(seqDao.getCurrentValue("wsdocs", folderId, folder.getTenantId()));
-				f.setSizeTotal(seqDao.getCurrentValue("wssize", folderId, folder.getTenantId()));
+				f.setDocumentsTotal(seqDao.getCurrentValue("wsdocs", folder.getId(), folder.getTenantId()));
+				f.setSizeTotal(seqDao.getCurrentValue("wssize", folder.getId(), folder.getTenantId()));
 			}
 
 			if (folder.getSecurityRef() != null) {
@@ -200,12 +214,13 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			 * Count the children
 			 */
 			f.setDocumentCount(dao
-					.queryForInt("select count(ld_id) from ld_document where ld_deleted=0 and ld_folderid=" + folderId));
+					.queryForInt("select count(ld_id) from ld_document where ld_deleted=0 and ld_folderid="
+							+ folder.getId()));
 			f.setSubfolderCount(dao
 					.queryForInt("select count(ld_id) from ld_folder where not ld_id=ld_parentid and ld_deleted=0 and ld_parentid="
-							+ folderId));
+							+ folder.getId()));
 
-			Set<Permission> permissions = dao.getEnabledPermissions(folderId, session.getUserId());
+			Set<Permission> permissions = dao.getEnabledPermissions(folder.getId(), session.getUserId());
 			List<String> permissionsList = new ArrayList<String>();
 			for (Permission permission : permissions)
 				permissionsList.add(permission.toString());
@@ -313,22 +328,24 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			boolean inheritSecurity) throws Exception {
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folderToCopy = folderDao.findById(folderId);
+		
+		Folder destParentFolder = folderDao.findFolder(targetId);
+		
 		// Check destParentId MUST BE <> 0 (initial value)
-		if (targetId == 0 || folderDao.isInPath(folderToCopy.getId(), targetId)) {
+		if (targetId == 0 || folderDao.isInPath(folderToCopy.getId(), destParentFolder.getId())) {
 			return;
 		}
 
 		folderDao.initialize(folderToCopy);
 
-		Folder destParentFolder = folderDao.findById(targetId);
 		// Check destParentId: Must be different from the current folder
 		// parentId
-		if (targetId == folderToCopy.getParentId())
+		if (destParentFolder.getId() == folderToCopy.getParentId())
 			throw new SecurityException("No Changes");
 
 		// Check destParentId: Must be different from the current folderId
 		// A folder cannot be children of herself
-		if (targetId == folderToCopy.getId())
+		if (destParentFolder.getId() == folderToCopy.getId())
 			throw new SecurityException("Not Allowed");
 
 		// Check addChild permission on destParentFolder
@@ -359,16 +376,17 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	private void move(String sid, User user, long folderId, long targetId) throws Exception {
-
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
 		Folder folderToMove = folderDao.findById(folderId);
+
 		// Check destParentId MUST BE <> 0 (initial value)
 		if (targetId == 0 || folderDao.isInPath(folderToMove.getId(), targetId)) {
 			return;
 		}
 
-		Folder destParentFolder = folderDao.findById(targetId);
+		Folder destParentFolder = folderDao.findFolder(targetId);
+
 		// Check destParentId: Must be different from the current folder
 		// parentId
 		if (targetId == folderToMove.getParentId())
@@ -397,7 +415,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		transaction.setUser(user);
 
 		folderDao.move(folderToMove, destParentFolder, transaction);
-
 	}
 
 	@Override
@@ -435,41 +452,46 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		try {
-			Folder f;
-			String folderName = folder.getName().replace("/", "");
+			Folder f = folderDao.findById(folder.getId());
+			folderDao.initialize(f);
 
 			FolderHistory transaction = new FolderHistory();
 			transaction.setUser(ServiceUtil.getSessionUser(sid));
 			transaction.setTenantId(session.getTenantId());
 			transaction.setSessionId(sid);
 
-			f = folderDao.findById(folder.getId());
-			if (f == null)
-				throw new Exception("Unexisting folder " + folder.getId());
+			String folderName = folder.getName().replace("/", "");
 
-			folderDao.initialize(f);
-			f.setDescription(folder.getDescription());
+			if (folder.getFoldRef() != null) {
+				// The user is editing an alias
+				Folder alias = folderDao.findById(folder.getFoldRef());
+				folderDao.initialize(alias);
+				alias.setDescription(folder.getDescription());
+				alias.setPosition(folder.getPosition());
+				alias.setName(folderName);
+				folderDao.store(alias);
+			} else {
+				// The user is editing a real folder
+				f.setDescription(folder.getDescription());
+				f.setPosition(folder.getPosition());
+
+				if (f.getName().trim().equals(folderName)) {
+					f.setName(folderName.trim());
+					transaction.setEvent(FolderEvent.CHANGED.toString());
+				} else {
+					f.setName(folderName.trim());
+					transaction.setEvent(FolderEvent.RENAMED.toString());
+				}
+			}
+
 			f.setType(folder.getType());
 			f.setTemplateLocked(folder.getTemplateLocked());
-			f.setPosition(folder.getPosition());
 			f.setQuotaDocs(folder.getQuotaDocs());
 			f.setQuotaSize(folder.getQuotaSize());
-
-			if (f.getName().trim().equals(folderName)) {
-				f.setName(folderName.trim());
-				transaction.setEvent(FolderEvent.CHANGED.toString());
-			} else {
-				f.setName(folderName.trim());
-				transaction.setEvent(FolderEvent.RENAMED.toString());
-			}
 
 			updateExtendedAttributes(f, folder);
 
 			folderDao.store(f, transaction);
-
-			folder.setId(f.getId());
-			folder.setName(f.getName());
-			folder.setPosition(f.getPosition());
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
@@ -496,6 +518,10 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			folderVO.setType(newFolder.getType());
 			folderVO.setTenantId(session.getTenantId());
 
+			Folder parent = folderDao.findById(newFolder.getParentId());
+			if (parent.getFoldRef() != null)
+				folderVO.setParentId(parent.getFoldRef());
+
 			Folder f = null;
 			if (newFolder.getType() == Folder.TYPE_DEFAULT)
 				f = folderDao.create(folderDao.findById(newFolder.getParentId()), folderVO, inheritSecurity,
@@ -503,6 +529,29 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			else
 				f = folderDao.create(folderDao.findByName("/", session.getTenantId()).get(0), folderVO,
 						inheritSecurity, transaction);
+
+			return getFolder(sid, f.getId());
+		} catch (Throwable t) {
+			return (GUIFolder) ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public GUIFolder createAlias(String sid, long parentId, long folderRef) throws ServerException {
+		UserSession session = ServiceUtil.validateSession(sid);
+
+		try {
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+
+			// Prepare the transaction
+			FolderHistory transaction = new FolderHistory();
+			transaction.setUser(ServiceUtil.getSessionUser(sid));
+			transaction.setSessionId(sid);
+			transaction.setTenantId(session.getTenantId());
+			transaction.setEvent(FolderEvent.CREATED.toString());
+
+			// Finally create the alias
+			Folder f = folderDao.createAlias(parentId, folderRef, transaction);
 
 			return getFolder(sid, f.getId());
 		} catch (Throwable t) {
@@ -619,13 +668,15 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	public void paste(String sid, long[] docIds, long folderId, String action) throws ServerException {
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
-		if (!fdao.isWriteEnabled(folderId, ServiceUtil.getSessionUser(sid).getId()))
+		Folder folder=fdao.findFolder(folderId);
+		
+		if (!fdao.isWriteEnabled(folder.getId(), ServiceUtil.getSessionUser(sid).getId()))
 			throw new RuntimeException("Cannot write in folder " + folderId);
 
 		if (action.equals(Clipboard.CUT))
-			cut(sid, docIds, folderId);
+			cut(sid, docIds, folder.getId());
 		else if (action.equals(Clipboard.COPY))
-			copy(sid, docIds, folderId);
+			copy(sid, docIds, folder.getId());
 	}
 
 	private void cut(String sid, long[] docIds, long folderId) throws ServerException {
@@ -711,7 +762,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Folder selectedFolderFolder = folderDao.findById(folderId);
+		Folder selectedFolderFolder = folderDao.findFolder(folderId);
 		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		try {

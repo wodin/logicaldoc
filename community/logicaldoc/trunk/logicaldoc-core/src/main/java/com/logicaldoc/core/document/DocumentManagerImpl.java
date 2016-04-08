@@ -994,9 +994,10 @@ public class DocumentManagerImpl implements DocumentManager {
 	@Override
 	public long archiveFolder(long folderId, History transaction) throws Exception {
 		List<Long> docIds = new ArrayList<Long>();
+		Folder root = folderDAO.findFolder(folderId);
 
 		Collection<Long> folderIds = folderDAO.findFolderIdByUserIdAndPermission(transaction.getUserId(),
-				Permission.ARCHIVE, folderId, true);
+				Permission.ARCHIVE, root.getId(), true);
 		for (Long fid : folderIds) {
 			String where = " where ld_deleted=0 and not ld_status=" + AbstractDocument.DOC_ARCHIVED
 					+ " and ld_folderid=" + fid;

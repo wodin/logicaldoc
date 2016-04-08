@@ -35,17 +35,20 @@ public class FoldersDS extends DataSource {
 		folderId.setPrimaryKey(true);
 		folderId.setRequired(true);
 
+		DataSourceTextField folderRef = new DataSourceTextField("foldRef");
+		folderRef.setHidden(true);
+
 		DataSourceTextField type = new DataSourceTextField("type", I18N.message("type"));
 		type.setRequired(true);
-		
+
 		DataSourceFloatField size = new DataSourceFloatField("size", I18N.message("size"));
-		
+
 		DataSourceTextField parent = new DataSourceTextField("parent", "Parent ID");
 		parent.setRequired(true);
 		parent.setForeignKey(dsId + ".folderId");
 		parent.setRootValue("/");
 
-		setFields(name, folderId, parent, type, size);
+		setFields(name, folderId, folderRef, parent, type, size);
 
 		setDataURL("data/folders.xml?");
 		setClientOnly(false);
