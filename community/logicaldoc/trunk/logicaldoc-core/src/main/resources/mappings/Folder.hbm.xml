@@ -14,6 +14,7 @@
     <property name="position" type="int" column="ld_position" not-null="true" />
     <property name="tenantId" type="long" column="ld_tenantid" not-null="true" />
     <property name="parentId" type="long" column="ld_parentid" not-null="true" />
+    <property name="foldRef" type="long" column="ld_foldref" />
     <property name="securityRef" type="long" column="ld_securityref" />
     <property name="description" type="string" column="ld_description" length="4000" />
     <property name="type" type="int" column="ld_type" not-null="true" />

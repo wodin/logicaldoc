@@ -59,6 +59,8 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 	// Total size of the folder's tree
 	private long sizeTotal = 0L;
 
+	private Long foldRef = null;
+	
 	public GUIFolder() {
 
 	}
@@ -280,5 +282,13 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	public void setSizeTotal(long sizeTotal) {
 		this.sizeTotal = sizeTotal;
+	}
+
+	public Long getFoldRef() {
+		return foldRef;
+	}
+
+	public void setFoldRef(Long foldRef) {
+		this.foldRef = foldRef;
 	}
 }

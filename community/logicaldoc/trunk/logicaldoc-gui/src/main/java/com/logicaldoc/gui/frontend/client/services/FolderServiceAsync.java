@@ -40,4 +40,6 @@ public interface FolderServiceAsync {
 	void inheritRights(String sid, long folderId, long rightsFolderId, AsyncCallback<GUIFolder> callback);
 
 	void deleteFromTrash(String sid, Long[] ids, AsyncCallback<Void> callback);
+
+	void createAlias(String sid, long parentId, long folderRef, AsyncCallback<GUIFolder> callback);
 }

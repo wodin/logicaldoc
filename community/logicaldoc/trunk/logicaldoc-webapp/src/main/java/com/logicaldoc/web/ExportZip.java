@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
@@ -46,8 +47,16 @@ public class ExportZip extends HttpServlet {
 		UserSession session = ServiceUtil.validateSession(request);
 
 		try {
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+
 			Long userId = session.getUserId();
 			String folderId = request.getParameter("folderId");
+			if (folderId != null) {
+				Folder folder = folderDao.findFolder(Long.parseLong(folderId));
+				folderId = "" + folder.getId();
+			}
+
 			String level = request.getParameter("level");
 
 			if (level == null) {
@@ -68,9 +77,6 @@ public class ExportZip extends HttpServlet {
 			if (level.equals("all")) {
 				exporter.setAllLevel(true);
 			}
-
-			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 
 			User user = userDao.findById(userId.longValue());
 

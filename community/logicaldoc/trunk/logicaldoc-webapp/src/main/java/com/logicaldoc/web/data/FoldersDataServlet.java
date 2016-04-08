@@ -69,8 +69,9 @@ public class FoldersDataServlet extends HttpServlet {
 			} else if (request.getParameter("parent") != null)
 				parent = Long.parseLong(request.getParameter("parent"));
 
+			Folder parentFolder = folderDao.findFolder(parent);
+			
 			Context context = Context.getInstance();
-			FolderDAO dao = (FolderDAO) context.getBean(FolderDAO.class);
 			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());
 			udao.initialize(user);
@@ -79,22 +80,24 @@ public class FoldersDataServlet extends HttpServlet {
 			writer.write("<list>");
 
 			StringBuffer query = new StringBuffer(
-					"select ld_id, ld_parentid, ld_name, ld_type from ld_folder where ld_deleted=0 and ld_hidden=0 and not ld_id=ld_parentid and ld_parentid = ? and ld_tenantid = ? ");
+					"select ld_id, ld_parentid, ld_name, ld_type, ld_foldref from ld_folder where ld_deleted=0 and ld_hidden=0 and not ld_id=ld_parentid and ld_parentid = ? and ld_tenantid = ? ");
 			if (!user.isInGroup("admin")) {
-				Collection<Long> accessibleIds = dao.findFolderIdByUserId(session.getUserId(), parent, false);
+				Collection<Long> accessibleIds = folderDao.findFolderIdByUserId(session.getUserId(), parentFolder.getId(), false);
 				String idsStr = accessibleIds.toString().replace('[', '(').replace(']', ')');
 				query.append(" and ld_id in " + idsStr);
 			}
 			query.append(" order by ld_position asc, ld_name asc");
 
-			SqlRowSet rs = dao.queryForRowSet(query.toString(), new Long[] { parent, tenantId }, null);
+			SqlRowSet rs = folderDao.queryForRowSet(query.toString(), new Long[] { parentFolder.getId(), tenantId }, null);
 			if (rs != null)
 				while (rs.next()) {
 					writer.print("<folder>");
 					writer.print("<folderId>" + rs.getLong(1) + "</folderId>");
-					writer.print("<parent>" + rs.getLong(2) + "</parent>");
+					writer.print("<parent>" + parent + "</parent>");
 					writer.print("<name><![CDATA[" + rs.getString(3) + "]]></name>");
 					writer.print("<type>" + rs.getInt(4) + "</type>");
+					if (rs.getObject(5) != null)
+						writer.print("<foldRef>" + rs.getLong(5) + "</foldRef>");
 					writer.print("<customIcon>folder</customIcon>");
 					writer.print("<publishedStatus>yes</publishedStatus>");
 					writer.print("</folder>");
@@ -103,14 +106,14 @@ public class FoldersDataServlet extends HttpServlet {
 			if (request.getParameter("withdocs") != null) {
 				query = new StringBuffer(
 						"select ld_id, ld_filename, ld_title, ld_filesize, ld_published, ld_startpublishing, ld_stoppublishing from ld_document where ld_deleted=0 and ld_folderid=? ");
-				if (!user.isInGroup("admin") && !user.isInGroup("publisher")){
+				if (!user.isInGroup("admin") && !user.isInGroup("publisher")) {
 					query.append(" and ld_published=1");
 					query.append(" and (ld_startpublishing is null or CURRENT_TIMESTAMP > ld_startpublishing) ");
 					query.append(" and (ld_stoppublishing is null or CURRENT_TIMESTAMP < ld_stoppublishing) ");
 				}
 				query.append(" order by ld_title");
 
-				rs = dao.queryForRowSet(query.toString(), new Long[] { parent }, null);
+				rs = folderDao.queryForRowSet(query.toString(), new Long[] { parentFolder.getId() }, null);
 				if (rs != null)
 					while (rs.next()) {
 						Date now = new Date();

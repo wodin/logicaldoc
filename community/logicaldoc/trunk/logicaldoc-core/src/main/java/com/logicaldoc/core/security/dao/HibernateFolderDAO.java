@@ -81,14 +81,27 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		boolean result = true;
 
 		try {
-			if (folder.getSecurityRef() != null)
-				folder.getFolderGroups().clear();
+			if (folder.getFoldRef() == null) {
+				if (folder.getSecurityRef() != null)
+					folder.getFolderGroups().clear();
 
-			if (transaction != null) {
-				folder.setCreator(transaction.getUser().getFullName());
-				folder.setCreatorId(transaction.getUserId());
-				if (folder.getId() == 0 && transaction.getEvent() == null)
-					transaction.setEvent(FolderEvent.CREATED.toString());
+				if (transaction != null) {
+					folder.setCreator(transaction.getUser().getFullName());
+					folder.setCreatorId(transaction.getUserId());
+					if (folder.getId() == 0 && transaction.getEvent() == null)
+						transaction.setEvent(FolderEvent.CREATED.toString());
+				}
+
+				List<Folder> aliases = findAliases(folder.getId(), folder.getTenantId());
+				for (Folder alias : aliases) {
+					alias.setDeleted(folder.getDeleted());
+					alias.setDeleteUserId(folder.getDeleteUserId());
+					if (folder.getSecurityRef() != null)
+						alias.setSecurityRef(folder.getSecurityRef());
+					else
+						alias.setSecurityRef(folder.getId());
+					saveOrUpdate(alias);
+				}
 			}
 
 			saveOrUpdate(folder);
@@ -246,7 +259,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public List<Folder> findChildren(long parentId, Integer max) {
-		return findByWhere("_entity.parentId = ?1 and _entity.id!=_entity.parentId", new Object[] { parentId },
+		Folder parent = findFolder(parentId);
+		return findByWhere("_entity.parentId = ?1 and _entity.id!=_entity.parentId", new Object[] { parent.getId() },
 				"order by _entity.name", max);
 	}
 
@@ -255,9 +269,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public List<Folder> findChildren(long parentId, long userId) {
 		List<Folder> coll = new ArrayList<Folder>();
 		try {
+			Folder parent = findFolder(parentId);
+			
 			User user = userDAO.findById(userId);
 			if (user.isInGroup("admin"))
-				return findChildren(parentId, null);
+				return findChildren(parent.getId(), null);
 
 			Set<Group> groups = user.getGroups();
 			if (groups.isEmpty())
@@ -279,8 +295,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				query1.append(Long.toString(ug.getId()));
 				first = false;
 			}
-			query1.append(") and _entity.parentId=" + parentId);
-			query1.append(" and not(_entity.id=" + parentId + ")");
+			query1.append(") and _entity.parentId=" + parent.getId());
+			query1.append(" and not(_entity.id=" + parent.getId() + ")");
 
 			coll = (List<Folder>) findByQuery(query1.toString(), null, null);
 
@@ -305,9 +321,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				first = false;
 			}
 			query2.append("))");
-			query2.append(" and not(_entity.id=" + parentId + ")");
+			query2.append(" and not(_entity.id=" + parent.getId() + ")");
 
-			List<Folder> coll2 = (List<Folder>) findByQuery(query2.toString(), new Long[] { parentId }, null);
+			List<Folder> coll2 = (List<Folder>) findByQuery(query2.toString(), new Long[] { parent.getId() }, null);
 			for (Folder folder : coll2) {
 				if (!coll.contains(folder))
 					coll.add(folder);
@@ -323,7 +339,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	@Override
 	public List<Folder> findByParentId(long parentId) {
 		List<Folder> coll = new ArrayList<Folder>();
-		List<Folder> temp = findChildren(parentId, null);
+		Folder parent = findFolder(parentId);
+		List<Folder> temp = findChildren(parent.getId(), null);
 		Iterator<Folder> iter = temp.iterator();
 
 		while (iter.hasNext()) {
@@ -683,10 +700,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public void restore(long folderId, long parentId, FolderHistory transaction) {
-		bulkUpdate("set ld_deleted=0, ld_parentid=" + parentId + ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id="
-				+ folderId, null);
+		Folder parent = findFolder(parentId);
+		bulkUpdate("set ld_deleted=0, ld_parentid=" + parent.getId()
+				+ ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id=" + folderId, null);
 
-		Folder fld = findById(folderId);
+		Folder fld = findFolder(folderId);
 		if (fld != null && transaction != null) {
 			transaction.setEvent(FolderEvent.RESTORED.toString());
 			saveFolderHistory(fld, transaction);
@@ -1054,6 +1072,35 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
+	public Folder createAlias(long parentId, long folderRef, FolderHistory transaction) {
+		Folder targetFolder = findFolder(folderRef);
+		assert (targetFolder != null);
+
+		Folder parentFolder = findFolder(parentId);
+		assert (parentFolder != null);
+
+		// Prepare the transaction
+		if (transaction != null) {
+			transaction.setTenantId(targetFolder.getTenantId());
+			transaction.setEvent(FolderEvent.CREATED.toString());
+		}
+
+		Folder folderVO = new Folder();
+		folderVO.setName(targetFolder.getName());
+		folderVO.setDescription(targetFolder.getDescription());
+		folderVO.setTenantId(targetFolder.getTenantId());
+		folderVO.setType(Folder.TYPE_ALIAS);
+		if (targetFolder.getSecurityRef() != null)
+			folderVO.setSecurityRef(targetFolder.getSecurityRef());
+		else
+			folderVO.setSecurityRef(targetFolder.getId());
+		folderVO.setFoldRef(targetFolder.getId());
+
+		// Finally create
+		return create(parentFolder, folderVO, false, transaction);
+	}
+
+	@Override
 	public Folder create(Folder parent, Folder folderVO, boolean inheritSecurity, FolderHistory transaction) {
 		Folder folder = new Folder();
 		folder.setName(folderVO.getName());
@@ -1078,7 +1125,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		folder.setQuotaDocs(folderVO.getQuotaDocs());
 		folder.setQuotaSize(folderVO.getQuotaSize());
 
-		if (inheritSecurity) {
+		if (folderVO.getFoldRef() != null) {
+			folder.setFoldRef(folderVO.getFoldRef());
+			folder.setSecurityRef(folderVO.getSecurityRef());
+		} else if (inheritSecurity) {
 			if (parent.getSecurityRef() != null)
 				folder.setSecurityRef(parent.getSecurityRef());
 			else
@@ -1110,7 +1160,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		/*
 		 * Replicate the parent's metadata
 		 */
-		if (parent.getTemplate() != null && folderVO.getTemplate() == null) {
+		if (parent.getTemplate() != null && folderVO.getTemplate() == null && folderVO.getFoldRef() == null) {
 			initialize(parent);
 			folder.setTemplate(parent.getTemplate());
 			try {
@@ -1137,7 +1187,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public Folder createPath(Folder parent, String path, boolean inheritSecurity, FolderHistory transaction) {
 		StringTokenizer st = new StringTokenizer(path, "/", false);
 
-		Folder folder = parent;
+		Folder folder = findFolder(parent.getId());
 
 		while (st.hasMoreTokens()) {
 			initialize(folder);
@@ -1204,11 +1254,14 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
+		target = findFolder(target.getId());
+
 		if (isInPath(source.getId(), target.getId()))
 			throw new IllegalArgumentException("Cannot copy a folder inside the same path");
 
 		// Create the same folder in the target
 		Folder newFolder = createPath(target, source.getName(), inheritSecurity, (FolderHistory) transaction.clone());
+		newFolder.setFoldRef(source.getFoldRef());
 
 		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 		DocumentManager docMan = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
@@ -1263,7 +1316,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
-		if (isInPath(source.getId(), target.getId()))
+		Folder targetFolder=findFolder(target.getId());
+		
+		if (isInPath(source.getId(), targetFolder.getId()))
 			throw new IllegalArgumentException("Cannot move a folder inside the same path");
 
 		initialize(source);
@@ -1273,7 +1328,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		transaction.setPathOld(pathOld);
 
 		// Change the parent folder
-		source.setParentId(target.getId());
+		source.setParentId(targetFolder.getId());
 
 		// Ensure unique folder name in a folder
 		setUniqueName(source);
@@ -1530,5 +1585,21 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		query += " and A.ld_folderid in " + folderIds.toString().replace('[', '(').replace(']', ')');
 
 		return queryForLong(query);
+	}
+
+	@Override
+	public List<Folder> findAliases(Long folderRef, long tenantId) {
+		String query = " _entity.tenantId=" + tenantId;
+		if (folderRef != null)
+			query += " and _entity.folderRef=" + folderRef;
+		return findByWhere(query, null, null);
+	}
+
+	@Override
+	public Folder findFolder(long folderId) {
+		Folder f = findById(folderId);
+		if (f != null && f.getFoldRef() != null)
+			f = findById(f.getFoldRef());
+		return f;
 	}
 }

@@ -58,6 +58,8 @@ public class PropertiesPanel extends FolderDetailTab {
 		form.setTitleOrientation(TitleOrientation.LEFT);
 
 		StaticTextItem idItem = ItemFactory.newStaticTextItem("id", "id", Long.toString(folder.getId()));
+		if (folder.getFoldRef() != null)
+			idItem.setTooltip(I18N.message("thisisalias") + ": " + folder.getFoldRef());
 
 		TextItem name = ItemFactory.newTextItem("name", "name", folder.getName());
 		name.setWidth(200);
@@ -119,17 +121,19 @@ public class PropertiesPanel extends FolderDetailTab {
 			form.setItems(idItem, pathItem, name, position, description, creation, documents, subfolders, barcode);
 		else
 			form.setItems(idItem, pathItem, name, position, description, creation, documents, subfolders);
+
 		addMember(form);
+
 	}
 
 	boolean validate() {
 		vm.validate();
 		folder.setPosition(Integer.parseInt(vm.getValueAsString("position")));
-		
+
 		if (!folder.isDefaultWorkspace()) {
 			folder.setName(vm.getValueAsString("name").replaceAll("/", ""));
 			folder.setDescription(vm.getValueAsString("description"));
-		}	
+		}
 		return !vm.hasErrors();
 	}
 }

@@ -99,21 +99,20 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	public void testCountDocuments() {
 		long count = dao.countDocsInTree(5L);
 		Assert.assertEquals(3, count);
-		
+
 		count = dao.countDocsInTree(4L);
 		Assert.assertEquals(0, count);
 	}
-	
+
 	@Test
 	public void testComputeTreeSize() {
 		long size = dao.computeTreeSize(5L);
 		Assert.assertEquals(22658L, size);
-		
+
 		size = dao.computeTreeSize(4L);
 		Assert.assertEquals(0, size);
 	}
-	
-	
+
 	@Test
 	public void testDeleteTree() throws Exception {
 		Assert.assertNotNull(dao.findById(1200));
@@ -448,6 +447,27 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testCreateAlias() {
+		Folder alias = dao.createAlias(4L, 3000L, null);
+		Assert.assertNotNull(alias);
+		Assert.assertTrue(3000L == alias.getFoldRef());
+		Assert.assertTrue(3000L == alias.getSecurityRef());
+	}
+
+	@Test
+	public void testFindAliases() {
+		List<Folder> aliases = dao.findAliases(3000L, 1L);
+		Assert.assertTrue(aliases.isEmpty());
+
+		Folder alias = dao.createAlias(4L, 3000L, null);
+		Assert.assertNotNull(alias);
+
+		aliases = dao.findAliases(3000L, 1L);
+		Assert.assertEquals(1, aliases.size());
+		Assert.assertEquals(alias, aliases.iterator().next());
+	}
+
+	@Test
 	public void testDelete() {
 		Assert.assertTrue(dao.delete(1202));
 		Folder folder = dao.findById(12012);
@@ -672,12 +692,12 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Folder folder = dao.findWorkspace(Folder.DEFAULTWORKSPACEID);
 		Assert.assertTrue(folder.isWorkspace());
 		Assert.assertEquals("Default", folder.getName());
-		
+
 		folder = dao.findWorkspace(6L);
 		Assert.assertTrue(folder.isWorkspace());
 		Assert.assertEquals("Workspace X", folder.getName());
 	}
-	
+
 	@Test
 	public void testRestore() {
 		Folder folder = dao.findById(1204);

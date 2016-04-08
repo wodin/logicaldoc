@@ -26,12 +26,23 @@ public interface FolderService extends RemoteService {
 	/**
 	 * Creates a new folder
 	 * 
+	 * @param sid The session ID
 	 * @param newFolder The folder to be created
 	 * @param inheritSecurity True if the new folder has to inherit the security
 	 *        policies from the parent
 	 * @return The saved folder
 	 */
 	public GUIFolder create(String sid, GUIFolder newFolder, boolean inheritSecurity) throws ServerException;
+
+	/**
+	 * Creates a new folder alias
+	 * 
+	 * @param sid The session ID
+	 * @param parentId The folder in which the alias must be created
+	 * @param folderRef The original folder
+	 * @return The created alias
+	 */
+	public GUIFolder createAlias(String sid, long parentId, long folderRef) throws ServerException;
 
 	/**
 	 * Renames the given folder
@@ -85,7 +96,7 @@ public interface FolderService extends RemoteService {
 	 * Deletes a selection of folders from trash
 	 */
 	public void deleteFromTrash(String sid, Long[] ids) throws ServerException;
-	
+
 	/**
 	 * Restores a given folder
 	 */
@@ -99,7 +110,8 @@ public interface FolderService extends RemoteService {
 	/**
 	 * Copies a folder under a target folder
 	 */
-	public void copyFolders(String sid, long[] folderIds, long targetId, boolean foldersOnly, boolean inheritSecurity) throws ServerException;
+	public void copyFolders(String sid, long[] folderIds, long targetId, boolean foldersOnly, boolean inheritSecurity)
+			throws ServerException;
 
 	/**
 	 * Pastes documents into the target folder.
@@ -110,7 +122,7 @@ public interface FolderService extends RemoteService {
 	 */
 	public void paste(String sid, long[] docIds, long folderId, String action) throws ServerException;
 
-	void pasteAsAlias(String sid, long[] docIds, long folderId, String type) throws ServerException;
+	public void pasteAsAlias(String sid, long[] docIds, long folderId, String type) throws ServerException;
 
 	/**
 	 * Loads the folders templates
@@ -125,5 +137,6 @@ public interface FolderService extends RemoteService {
 	/**
 	 * Applies a template to a folder
 	 */
-	public void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity) throws ServerException;
+	public void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity)
+			throws ServerException;
 }
