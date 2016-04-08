@@ -81,6 +81,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		boolean result = true;
 
 		try {
+			Folder parent = findFolder(folder.getParentId());
+			folder.setParentId(parent.getId());
+
 			if (folder.getFoldRef() == null) {
 				if (folder.getSecurityRef() != null)
 					folder.getFolderGroups().clear();
@@ -270,7 +273,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		List<Folder> coll = new ArrayList<Folder>();
 		try {
 			Folder parent = findFolder(parentId);
-			
+
 			User user = userDAO.findById(userId);
 			if (user.isInGroup("admin"))
 				return findChildren(parent.getId(), null);
@@ -1102,6 +1105,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public Folder create(Folder parent, Folder folderVO, boolean inheritSecurity, FolderHistory transaction) {
+		if (parent.getFoldRef() != null)
+			parent = findFolder(parent);
+
 		Folder folder = new Folder();
 		folder.setName(folderVO.getName());
 		folder.setType(folderVO.getType());
@@ -1235,6 +1241,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	@Override
 	public void setUniqueName(Folder folder) {
 		int counter = 1;
+
+		folder = findFolder(folder);
 		String folderName = folder.getName();
 
 		List<String> collisions = (List<String>) queryForList(
@@ -1254,7 +1262,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
-		target = findFolder(target.getId());
+		target = findFolder(target);
 
 		if (isInPath(source.getId(), target.getId()))
 			throw new IllegalArgumentException("Cannot copy a folder inside the same path");
@@ -1316,8 +1324,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		assert (transaction != null);
 		assert (transaction.getUser() != null);
 
-		Folder targetFolder=findFolder(target.getId());
-		
+		Folder targetFolder = findFolder(target.getId());
+
 		if (isInPath(source.getId(), targetFolder.getId()))
 			throw new IllegalArgumentException("Cannot move a folder inside the same path");
 
@@ -1601,5 +1609,12 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		if (f != null && f.getFoldRef() != null)
 			f = findById(f.getFoldRef());
 		return f;
+	}
+
+	private Folder findFolder(Folder folder) {
+		if (folder.getFoldRef() != null)
+			return findById(folder.getFoldRef());
+		else
+			return folder;
 	}
 }

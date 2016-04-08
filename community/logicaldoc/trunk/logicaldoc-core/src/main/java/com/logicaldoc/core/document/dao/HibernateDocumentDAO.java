@@ -298,6 +298,16 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			}
 
 			/*
+			 * Avoid documents inside folder alias
+			 */
+			if (doc.getFolder().getFoldRef() != null) {
+				Folder fld = folderDAO.findById(doc.getFolder().getFoldRef());
+				if (fld == null)
+					throw new Exception("Unable to find refrenced folder " + doc.getFolder().getFoldRef());
+				doc.setFolder(fld);
+			}
+
+			/*
 			 * Check for attributes defaults
 			 */
 			if (doc.getFolder().getTemplate() != null) {
