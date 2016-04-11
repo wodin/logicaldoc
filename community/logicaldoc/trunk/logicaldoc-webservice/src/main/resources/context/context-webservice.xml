@@ -8,6 +8,8 @@
 	                http://cxf.apache.org/schemas/core.xsd
 	                http://www.springframework.org/schema/beans
  					http://www.springframework.org/schema/beans/spring-beans.xsd
+ 					http://www.springframework.org/schema/aop     
+ 					http://www.springframework.org/schema/aop/spring-aop-3.2.xsd          
  					http://cxf.apache.org/jaxws
  					http://cxf.apache.org/schemas/jaxws.xsd
                     http://cxf.apache.org/jaxrs
@@ -96,27 +98,6 @@
     <!-- ############################## -->
     <bean id="JacksonJsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
     
-    <jaxrs:server id="rest-auth" address="/rest/auth">
-        <jaxrs:serviceBeans>
-           <bean class="com.logicaldoc.webservice.rest.auth.AuthServiceImpl" />
-        </jaxrs:serviceBeans>
-    </jaxrs:server>
-    
-    <jaxrs:server id="rest-document" address="/rest/document">
-        <jaxrs:serviceBeans>
-           <bean class="com.logicaldoc.webservice.rest.document.DocumentServiceImpl" />
-        </jaxrs:serviceBeans>
-        <jaxrs:providers>
-            <ref bean="JacksonJsonProvider"/>
-        </jaxrs:providers>   
-    </jaxrs:server>
-    
-    <jaxrs:server id="rest-folder" address="/rest/folder">
-        <jaxrs:serviceBeans>
-           <bean class="com.logicaldoc.webservice.rest.folder.FolderServiceImpl" />
-        </jaxrs:serviceBeans>
-    </jaxrs:server>
-    
     <jaxrs:server id="commentservice" address="/mobile/comments">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.mobile.CommentService"/>
@@ -125,4 +106,33 @@
             <ref bean="JacksonJsonProvider"/>
         </jaxrs:providers>        
     </jaxrs:server>
+    
+    
+    <!-- New REST Web-services (beta) -->
+    <jaxrs:server id="restAuth" address="/rest/auth">
+        <jaxrs:serviceBeans>
+            <bean class="com.logicaldoc.webservice.rest.RestAuthService">
+               <aop:scoped-proxy />
+         	</bean>
+        </jaxrs:serviceBeans>
+    </jaxrs:server>
+            
+    <jaxrs:server id="restDocument" address="/rest/document">
+        <jaxrs:serviceBeans>
+            <bean class="com.logicaldoc.webservice.rest.RestDocumentService"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+            <ref bean="JacksonJsonProvider"/>
+        </jaxrs:providers> 
+    </jaxrs:server>
+    
+    <jaxrs:server id="restFolder" address="/rest/folder">
+        <jaxrs:serviceBeans>
+            <bean class="com.logicaldoc.webservice.rest.RestFolderService"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+       		<ref bean="JacksonJsonProvider"/>
+    	</jaxrs:providers>
+    </jaxrs:server>
+        
 </beans>
