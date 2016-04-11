@@ -1,9 +1,9 @@
 package com.logicaldoc.bm;
 
-import com.logicaldoc.webservice.auth.AuthClient;
-import com.logicaldoc.webservice.document.DocumentClient;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.search.SearchClient;
+import com.logicaldoc.webservice.soap.client.AuthClient;
+import com.logicaldoc.webservice.soap.client.DocumentClient;
 import com.logicaldoc.webservice.system.SystemClient;
 
 /**
