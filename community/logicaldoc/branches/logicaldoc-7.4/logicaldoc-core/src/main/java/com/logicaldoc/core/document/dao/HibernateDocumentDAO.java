@@ -750,11 +750,16 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		bulkUpdate("set ld_deleted=0, ld_folderid=" + folderId + ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id="
 				+ docId, null);
 
+		jdbcUpdate("update ld_version set ld_deleted=0, ld_folderid=" + folderId
+				+ ", ld_lastmodified=CURRENT_TIMESTAMP where ld_documentid=" + docId, null);
+
 		Document doc = findById(docId);
 		if (doc != null && transaction != null) {
 			transaction.setDocId(docId);
 			transaction.setEvent(DocumentEvent.RESTORED.toString());
-			saveDocumentHistory(doc, transaction);
+
+			initialize(doc);
+			store(doc, transaction);
 		}
 	}
 
