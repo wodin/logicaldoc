@@ -172,7 +172,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		DocumentManager documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
 
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		final Folder parent = folderDao.findById(metadata.getFolder().getId());
+		final Folder parent = folderDao.findFolder(metadata.getFolder().getId());
 		if (uploadedFilesMap.isEmpty())
 			ServiceUtil.throwServerException(session, log, new Exception("No file uploaded"));
 

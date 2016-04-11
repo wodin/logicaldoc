@@ -4,6 +4,8 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
+import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.webservice.auth.Right;
 
 /**
@@ -27,7 +29,18 @@ public interface FolderService {
 	@WebResult(name = "folder")
 	public WSFolder create(@WebParam(name = "sid") String sid, @WebParam(name = "folder") WSFolder folder)
 			throws Exception;
-
+	
+	/**
+	 * Creates a new folder alias
+	 * 
+	 * @param sid Session identifier
+	 * @param parentId The parent folder
+	 * @param foldRef The referenced folder
+	 * @return The newly created alias
+	 */
+	@WebResult(name = "folder")
+	public WSFolder createAlias(@WebParam(name = "sid") String sid, long parentId, long foldRef)throws Exception;
+	
 	/**
 	 * Create a new folder.
 	 * 
