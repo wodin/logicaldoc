@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>77</version>
+  <version>78</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -76,7 +76,7 @@
     <solr.version>4.9.0</solr.version>
     <gwt.version>2.6.1</gwt.version>
     <smartgwt.version>5.0p</smartgwt.version>
-    <cxf.version>2.7.11</cxf.version>
+    <cxf.version>3.1.6</cxf.version>
     <slf4j.version>1.7.7</slf4j.version>
     <ant.version>1.8.2</ant.version>
   </properties>
@@ -577,15 +577,14 @@
         <version>${smartgwt.version}</version>
       </dependency>
       <dependency>
-        <groupId>org.apache.cxf</groupId>
-        <artifactId>cxf-bundle</artifactId>
-        <version>${cxf.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>rhino</groupId>
-            <artifactId>js</artifactId>
-          </exclusion>
-        </exclusions>
+         <groupId>org.apache.cxf</groupId>
+         <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+         <version>${cxf.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.apache.cxf</groupId>
+         <artifactId>cxf-rt-frontend-jaxws</artifactId>
+         <version>${cxf.version}</version>
       </dependency>
       <!-- Javax Media image processing -->
       <dependency>
