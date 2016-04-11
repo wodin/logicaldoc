@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.rest.document;
+package com.logicaldoc.webservice.rest.client;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,9 +20,9 @@ import com.logicaldoc.webservice.auth.AuthServiceImpl;
 import com.logicaldoc.webservice.document.DocumentService;
 import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.document.WSLink;
-import com.logicaldoc.webservice.rest.RestClient;
+import com.logicaldoc.webservice.rest.AbstractRestClient;
 
-public class DocumentClient extends RestClient implements DocumentService {
+public class DocumentClient extends AbstractRestClient implements DocumentService {
 
 	protected static Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 

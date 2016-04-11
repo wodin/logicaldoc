@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.rest.auth;
+package com.logicaldoc.webservice.rest.client;
 
 import javax.ws.rs.core.MediaType;
 
@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webservice.auth.AuthService;
 import com.logicaldoc.webservice.auth.AuthServiceImpl;
-import com.logicaldoc.webservice.rest.RestClient;
+import com.logicaldoc.webservice.rest.AbstractRestClient;
 
 /**
  * Auth Web Service client (RESTful).
@@ -19,7 +19,7 @@ import com.logicaldoc.webservice.rest.RestClient;
  * @author Marco Meschieri - Logical Objects
  * @since 6.9
  */
-public class AuthClient extends RestClient implements AuthService {
+public class AuthClient extends AbstractRestClient implements AuthService {
 
 	protected static Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 

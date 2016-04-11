@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.rest.folder;
+package com.logicaldoc.webservice.rest.client;
 
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.webservice.auth.Right;
 import com.logicaldoc.webservice.folder.FolderService;
 import com.logicaldoc.webservice.folder.WSFolder;
-import com.logicaldoc.webservice.rest.RestClient;
+import com.logicaldoc.webservice.rest.AbstractRestClient;
 
-public class FolderClient extends RestClient implements FolderService {
+public class FolderClient extends AbstractRestClient implements FolderService {
 
 	protected static Logger log = LoggerFactory.getLogger(FolderClient.class);
 
