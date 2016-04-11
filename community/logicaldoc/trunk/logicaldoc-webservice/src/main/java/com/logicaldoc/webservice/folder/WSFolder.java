@@ -53,6 +53,8 @@ public class WSFolder implements Serializable {
 
 	private int hidden = 0;
 
+	private Long foldRef = null;
+
 	private WSAttribute[] extendedAttributes = new WSAttribute[0];
 
 	public void addExtendedAttribute(WSAttribute att) {
@@ -251,5 +253,13 @@ public class WSFolder implements Serializable {
 
 	public void setHidden(int hidden) {
 		this.hidden = hidden;
+	}
+
+	public Long getFoldRef() {
+		return foldRef;
+	}
+
+	public void setFoldRef(Long foldRef) {
+		this.foldRef = foldRef;
 	}
 }

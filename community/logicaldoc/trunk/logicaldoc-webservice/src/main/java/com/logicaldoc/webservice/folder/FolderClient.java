@@ -131,4 +131,9 @@ public class FolderClient extends SoapClient<FolderService> implements FolderSer
 	public boolean isGranted(String sid, long folderId, int permission) throws Exception {
 		return client.isGranted(sid, folderId, permission);
 	}
+
+	@Override
+	public WSFolder createAlias(String sid, long parentId, long foldRef) throws Exception {
+		return client.createAlias(sid, parentId, foldRef);
+	}
 }

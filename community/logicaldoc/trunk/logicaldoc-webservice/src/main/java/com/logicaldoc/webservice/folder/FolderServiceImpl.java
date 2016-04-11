@@ -56,6 +56,7 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			folderVO.setPosition(folder.getPosition());
 			folderVO.setTemplateLocked(folder.getTemplateLocked());
 			folderVO.setHidden(folder.getHidden());
+			folderVO.setFoldRef(folder.getFoldRef());
 			folder.updateExtendedAttributes(folderVO);
 
 			Folder f = folderDao.create(parentFolder, folderVO, true, transaction);
@@ -73,6 +74,34 @@ public class FolderServiceImpl extends AbstractService implements FolderService 
 			throw new RuntimeException(t.getMessage(), t);
 		}
 	}
+	
+	@Override
+	public WSFolder createAlias(String sid, long parentId, long foldRef) throws Exception {
+		User user = validateSession(sid);
+
+		try {
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			Folder parentFolder = folderDao.findFolder(parentId);
+			if (parentFolder == null)
+				throw new Exception("A parent folder with id " + parentId + " was not found.");
+			checkPermission(Permission.ADD, user, parentFolder.getId());
+			
+			// Add a folder history entry
+			FolderHistory transaction = new FolderHistory();
+			transaction.setUser(user);
+			transaction.setSessionId(sid);
+
+			Folder f = folderDao.createAlias(parentFolder.getId(), foldRef, transaction);
+
+			WSFolder createdFolder = WSFolder.fromFolder(f);
+			log.info("Created folder " + createdFolder.getName());
+			return createdFolder;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
+		}
+	}
+	
 
 	@Override
 	public long createFolder(String sid, long parentId, String name) throws Exception {

@@ -172,4 +172,10 @@ public class FolderClient extends RestClient implements FolderService {
 		return null;
 	}
 
+	@Override
+	public WSFolder createAlias(String sid, long parentId, long foldRef) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
