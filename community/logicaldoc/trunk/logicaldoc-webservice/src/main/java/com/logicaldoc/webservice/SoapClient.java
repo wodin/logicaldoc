@@ -1,8 +1,5 @@
 package com.logicaldoc.webservice;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.net.ssl.TrustManager;
 
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
