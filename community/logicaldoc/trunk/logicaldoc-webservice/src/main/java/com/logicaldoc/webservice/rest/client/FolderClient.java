@@ -6,10 +6,9 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.webservice.auth.Right;
 import com.logicaldoc.webservice.folder.FolderService;
 import com.logicaldoc.webservice.folder.WSFolder;
-import com.logicaldoc.webservice.rest.AbstractRestClient;
+import com.logicaldoc.webservice.model.Right;
 
 public class FolderClient extends AbstractRestClient implements FolderService {
 

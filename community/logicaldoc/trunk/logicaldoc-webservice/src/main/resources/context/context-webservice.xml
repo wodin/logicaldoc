@@ -27,14 +27,14 @@
     <!-- ####### JAX-WS (SOAP) ######## -->
     <!-- ############################## -->
 	<jaxws:endpoint id="auth"
-		implementor="com.logicaldoc.webservice.auth.AuthServiceImpl" address="/Auth">
+		implementor="com.logicaldoc.webservice.soap.SoapAuthService" address="/Auth">
 		<jaxws:properties>
 			<entry key="mtom-enabled" value="${webservice.mtom}" />
 		</jaxws:properties>
 	</jaxws:endpoint>
 
 	<jaxws:endpoint id="document"
-		implementor="com.logicaldoc.webservice.document.DocumentServiceImpl"
+		implementor="com.logicaldoc.webservice.soap.SoapDocumentService"
 		address="/Document">
 		<jaxws:inInterceptors>
 			<ref bean="GZIPInInterceptor" />

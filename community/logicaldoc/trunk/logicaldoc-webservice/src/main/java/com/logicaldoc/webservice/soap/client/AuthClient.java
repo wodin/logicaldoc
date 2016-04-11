@@ -1,8 +1,9 @@
-package com.logicaldoc.webservice.auth;
+package com.logicaldoc.webservice.soap.client;
 
 import java.io.IOException;
 
 import com.logicaldoc.webservice.SoapClient;
+import com.logicaldoc.webservice.services.AuthService;
 
 /**
  * Auth Web Service client (SOAP).

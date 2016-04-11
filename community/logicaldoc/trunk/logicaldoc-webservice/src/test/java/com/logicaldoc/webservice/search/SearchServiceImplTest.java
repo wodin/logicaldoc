@@ -10,8 +10,8 @@ import org.junit.Test;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
-import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
+import com.logicaldoc.webservice.model.WSDocument;
 
 public class SearchServiceImplTest extends AbstractWebServiceTestCase {
 

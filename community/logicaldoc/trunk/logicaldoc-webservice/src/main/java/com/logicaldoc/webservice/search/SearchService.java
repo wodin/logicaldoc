@@ -4,8 +4,8 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
-import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
+import com.logicaldoc.webservice.model.WSDocument;
 
 /**
  * Search Web Service definition interface

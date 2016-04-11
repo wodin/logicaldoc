@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.auth;
+package com.logicaldoc.webservice.services;
 
 import javax.jws.WebParam;
 import javax.jws.WebService;

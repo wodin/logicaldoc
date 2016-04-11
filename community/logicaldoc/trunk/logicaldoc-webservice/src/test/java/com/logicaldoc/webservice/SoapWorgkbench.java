@@ -4,16 +4,16 @@ import java.io.File;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.searchengine.SearchOptions;
-import com.logicaldoc.webservice.auth.AuthClient;
-import com.logicaldoc.webservice.document.DocumentClient;
-import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.FolderClient;
 import com.logicaldoc.webservice.folder.WSFolder;
+import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.search.SearchClient;
 import com.logicaldoc.webservice.search.WSSearchOptions;
 import com.logicaldoc.webservice.search.WSSearchResult;
 import com.logicaldoc.webservice.security.SecurityClient;
 import com.logicaldoc.webservice.security.WSUser;
+import com.logicaldoc.webservice.soap.client.AuthClient;
+import com.logicaldoc.webservice.soap.client.DocumentClient;
 import com.logicaldoc.webservice.system.SystemClient;
 
 public class SoapWorgkbench {

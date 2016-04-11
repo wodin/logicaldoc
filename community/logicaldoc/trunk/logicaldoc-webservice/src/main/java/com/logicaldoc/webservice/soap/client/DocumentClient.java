@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.document;
+package com.logicaldoc.webservice.soap.client;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -10,6 +10,9 @@ import javax.activation.FileDataSource;
 import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.webservice.SoapClient;
+import com.logicaldoc.webservice.model.WSDocument;
+import com.logicaldoc.webservice.model.WSLink;
+import com.logicaldoc.webservice.services.DocumentService;
 
 /**
  * Document Web Service client.

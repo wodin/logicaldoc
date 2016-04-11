@@ -4,8 +4,8 @@ import java.io.IOException;
 
 import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.webservice.SoapClient;
-import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
+import com.logicaldoc.webservice.model.WSDocument;
 
 /**
  * Search Web Service client.

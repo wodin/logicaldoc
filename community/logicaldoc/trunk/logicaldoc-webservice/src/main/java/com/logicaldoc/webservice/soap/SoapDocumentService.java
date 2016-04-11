@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.document;
+package com.logicaldoc.webservice.soap;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.activation.DataHandler;
+import javax.jws.WebService;
 import javax.mail.util.ByteArrayDataSource;
 
 import net.sf.jmimemagic.Magic;
@@ -50,6 +51,9 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.webservice.AbstractService;
+import com.logicaldoc.webservice.model.WSDocument;
+import com.logicaldoc.webservice.model.WSLink;
+import com.logicaldoc.webservice.services.DocumentService;
 
 /**
  * Document Web Service Implementation (SOAP)
@@ -57,9 +61,9 @@ import com.logicaldoc.webservice.AbstractService;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class DocumentServiceImpl extends AbstractService implements DocumentService {
+public class SoapDocumentService extends AbstractService implements DocumentService {
 
-	protected static Logger log = LoggerFactory.getLogger(DocumentServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(SoapDocumentService.class);
 
 	@Override
 	public WSDocument create(String sid, WSDocument document, DataHandler content) throws Exception {

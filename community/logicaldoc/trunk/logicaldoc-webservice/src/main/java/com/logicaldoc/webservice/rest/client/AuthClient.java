@@ -9,9 +9,8 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.webservice.auth.AuthService;
-import com.logicaldoc.webservice.auth.AuthServiceImpl;
-import com.logicaldoc.webservice.rest.AbstractRestClient;
+import com.logicaldoc.webservice.services.AuthService;
+import com.logicaldoc.webservice.soap.SoapAuthService;
 
 /**
  * Auth Web Service client (RESTful).
@@ -21,7 +20,7 @@ import com.logicaldoc.webservice.rest.AbstractRestClient;
  */
 public class AuthClient extends AbstractRestClient implements AuthService {
 
-	protected static Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(SoapAuthService.class);
 
 	public AuthClient(String endpoint) {
 		super(endpoint);

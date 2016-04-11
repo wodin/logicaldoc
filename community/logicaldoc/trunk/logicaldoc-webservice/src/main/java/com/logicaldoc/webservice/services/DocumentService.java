@@ -1,9 +1,12 @@
-package com.logicaldoc.webservice.document;
+package com.logicaldoc.webservice.services;
 
 import javax.activation.DataHandler;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
+
+import com.logicaldoc.webservice.model.WSDocument;
+import com.logicaldoc.webservice.model.WSLink;
 
 /**
  * Document Web Service definition interface

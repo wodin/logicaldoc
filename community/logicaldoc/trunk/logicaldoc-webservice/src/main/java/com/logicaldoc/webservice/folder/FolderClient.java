@@ -3,7 +3,7 @@ package com.logicaldoc.webservice.folder;
 import java.io.IOException;
 
 import com.logicaldoc.webservice.SoapClient;
-import com.logicaldoc.webservice.auth.Right;
+import com.logicaldoc.webservice.model.Right;
 
 /**
  * Folder Web Service client.
