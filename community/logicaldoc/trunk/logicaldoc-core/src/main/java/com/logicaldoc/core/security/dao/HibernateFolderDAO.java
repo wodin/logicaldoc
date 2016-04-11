@@ -1605,16 +1605,26 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public Folder findFolder(long folderId) {
+
 		Folder f = findById(folderId);
-		if (f != null && f.getFoldRef() != null)
-			f = findById(f.getFoldRef());
+//		try {
+//			if (f != null && f.getFoldRef() != null)
+//				f = findById(f.getFoldRef());
+//		} catch (Throwable t) {
+//
+//		}
 		return f;
 	}
 
 	private Folder findFolder(Folder folder) {
-		if (folder.getFoldRef() != null)
-			return findById(folder.getFoldRef());
-		else
-			return folder;
+//		try {
+//			if (folder.getFoldRef() != null)
+//				return findById(folder.getFoldRef());
+//			else
+//				return folder;
+//		} catch (Throwable t) {
+//			return folder;
+//		}
+		return folder;
 	}
 }
