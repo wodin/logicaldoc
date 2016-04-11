@@ -1299,7 +1299,7 @@ public class LDRepository {
 			if (object instanceof AbstractDocument)
 				parent = ((AbstractDocument) object).getFolder();
 			else
-				parent = folderDao.findById(((Folder) object).getParentId());
+				parent = folderDao.findFolder(((Folder) object).getParentId());
 
 			// get parent folder
 			ObjectData obj = compileObjectType(context, parent, filterCollection, iaa, false, objectInfos);
@@ -2631,7 +2631,7 @@ public class LDRepository {
 			out = doc;
 		} else if (objectId.startsWith(ID_PREFIX_FLD)) {
 			Long id = Long.parseLong(objectId.substring(4));
-			Folder f = folderDao.findById(id);
+			Folder f = folderDao.findFolder(id);
 			folderDao.initialize(f);
 			out = f;
 		} else if (objectId.startsWith(ID_PREFIX_VER)) {
@@ -2641,7 +2641,7 @@ public class LDRepository {
 			out = v;
 		} else {
 			Long id = Long.parseLong(objectId);
-			Folder f = folderDao.findById(id);
+			Folder f = folderDao.findFolder(id);
 			folderDao.initialize(f);
 			out = f;
 		}

@@ -67,7 +67,7 @@ public class ZipExport {
 	 */
 	public ByteArrayOutputStream process(FolderHistory transaction, boolean pdfConversion) {
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		Folder folder = folderDao.findById(transaction.getFolderId());
+		Folder folder = folderDao.findFolder(transaction.getFolderId());
 		this.userId = transaction.getUserId();
 		this.startFolderId = folder.getId();
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
