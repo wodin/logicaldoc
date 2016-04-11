@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.rest;
+package com.logicaldoc.webservice.rest.client;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -19,7 +19,7 @@ import com.logicaldoc.webservice.auth.AuthServiceImpl;
  * @author Marco Meschieri - Logical Objects
  * @since 6.9
  */
-public abstract class RestClient {
+public abstract class AbstractRestClient {
 
 	protected static Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
 
@@ -32,7 +32,7 @@ public abstract class RestClient {
 	 * 
 	 * @param endpoint Connection URL
 	 */
-	public RestClient(String endpoint) {
+	public AbstractRestClient(String endpoint) {
 		this.endpoint = endpoint;
 		configureSSL();
 	}
@@ -43,7 +43,7 @@ public abstract class RestClient {
 	 * @param endpoint Connection URL
 	 * @param timeout Timeout for the RESTful requests
 	 */
-	public RestClient(String endpoint, int timeout) {
+	public AbstractRestClient(String endpoint, int timeout) {
 		this(endpoint);
 		configureTimeout(timeout);
 	}
