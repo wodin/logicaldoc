@@ -24,7 +24,7 @@ public interface SequenceDAO extends PersistentObjectDAO<Sequence> {
 	 * 
 	 * @return The next value
 	 */
-	public long next(String sequence, Long objectId, long tenantId);
+	public long next(String sequence, long objectId, long tenantId);
 
 	/**
 	 * Returns the next value of the sequence by incrementing by the given
@@ -37,7 +37,7 @@ public interface SequenceDAO extends PersistentObjectDAO<Sequence> {
 	 * 
 	 * @return The next value
 	 */
-	public long next(String sequence, Long objectId, long tenantId, long increment);
+	public long next(String sequence, long objectId, long tenantId, long increment);
 
 	/**
 	 * Initializes the sequence value
@@ -49,7 +49,7 @@ public interface SequenceDAO extends PersistentObjectDAO<Sequence> {
 	 * 
 	 * @param value The initial value
 	 */
-	public void reset(String sequence, Long objectId, long tenantId, long value);
+	public void reset(String sequence, long objectId, long tenantId, long value);
 
 	/**
 	 * Finds all sequences whose name starts with the passed name
@@ -59,10 +59,10 @@ public interface SequenceDAO extends PersistentObjectDAO<Sequence> {
 	/**
 	 * Finds the sequence by the given alternate key
 	 */
-	public Sequence findByAlternateKey(String name, Long objectId, long tenantId);
+	public Sequence findByAlternateKey(String name, long objectId, long tenantId);
 
 	/**
 	 * Gets the current value
 	 */
-	long getCurrentValue(String sequence, Long objectId, long tenantId);
+	long getCurrentValue(String sequence, long objectId, long tenantId);
 }
