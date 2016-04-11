@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.auth;
+package com.logicaldoc.webservice.soap;
 
 import javax.jws.WebService;
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +12,7 @@ import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
+import com.logicaldoc.webservice.services.AuthService;
 
 /**
  * Auth Web Service Implementation (SOAP)
@@ -19,9 +20,8 @@ import com.logicaldoc.webservice.AbstractService;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-@WebService(endpointInterface = "com.logicaldoc.webservice.auth.AuthService", serviceName = "AuthService")
-public class AuthServiceImpl extends AbstractService implements AuthService {
-	protected static Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
+public class SoapAuthService extends AbstractService implements AuthService {
+	protected static Logger log = LoggerFactory.getLogger(SoapAuthService.class);
 
 	@Override
 	public String login(String username, String password) throws Exception {

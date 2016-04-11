@@ -16,7 +16,7 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
-import com.logicaldoc.webservice.auth.Right;
+import com.logicaldoc.webservice.model.Right;
 
 /**
  * Test case for <code>FolderServiceImpl</code>

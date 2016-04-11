@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.document;
+package com.logicaldoc.webservice.soap;
 
 import java.io.File;
 import java.util.Arrays;
@@ -17,6 +17,7 @@ import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
+import com.logicaldoc.webservice.model.WSDocument;
 
 /**
  * Test case for <code>DocumentServiceImpl</code>
@@ -24,14 +25,14 @@ import com.logicaldoc.webservice.AbstractWebServiceTestCase;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
+public class SoapDocumentServiceTest extends AbstractWebServiceTestCase {
 
 	private DocumentDAO docDao;
 
 	private FolderDAO folderDao;
 
 	// Instance under test
-	private DocumentServiceImpl docServiceImpl;
+	private SoapDocumentService docServiceImpl;
 
 	@Override
 	public void setUp() throws Exception {
@@ -40,7 +41,7 @@ public class DocumentServiceImplTest extends AbstractWebServiceTestCase {
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
 
 		// Make sure that this is a DocumentServiceImpl instance
-		docServiceImpl = new DocumentServiceImpl();
+		docServiceImpl = new SoapDocumentService();
 		docServiceImpl.setValidateSession(false);
 	}
 

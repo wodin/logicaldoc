@@ -20,7 +20,7 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
-import com.logicaldoc.webservice.auth.Right;
+import com.logicaldoc.webservice.model.Right;
 
 /**
  * Folder Web Service Implementation

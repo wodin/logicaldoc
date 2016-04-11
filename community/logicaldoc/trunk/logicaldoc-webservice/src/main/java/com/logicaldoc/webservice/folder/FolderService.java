@@ -6,7 +6,7 @@ import javax.jws.WebService;
 
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.FolderHistory;
-import com.logicaldoc.webservice.auth.Right;
+import com.logicaldoc.webservice.model.Right;
 
 /**
  * Folder Web Service definition interface

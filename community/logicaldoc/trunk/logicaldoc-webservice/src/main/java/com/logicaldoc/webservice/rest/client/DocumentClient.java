@@ -16,15 +16,14 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.webservice.auth.AuthServiceImpl;
-import com.logicaldoc.webservice.document.DocumentService;
-import com.logicaldoc.webservice.document.WSDocument;
-import com.logicaldoc.webservice.document.WSLink;
-import com.logicaldoc.webservice.rest.AbstractRestClient;
+import com.logicaldoc.webservice.model.WSDocument;
+import com.logicaldoc.webservice.model.WSLink;
+import com.logicaldoc.webservice.services.DocumentService;
+import com.logicaldoc.webservice.soap.SoapAuthService;
 
 public class DocumentClient extends AbstractRestClient implements DocumentService {
 
-	protected static Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(SoapAuthService.class);
 
 	public DocumentClient(String endpoint) {
 		super(endpoint);

@@ -1,7 +1,7 @@
 package com.logicaldoc.webservice.search;
 
 import com.logicaldoc.util.SnippetStripper;
-import com.logicaldoc.webservice.document.WSDocument;
+import com.logicaldoc.webservice.model.WSDocument;
 
 /**
  * Represents a web service search result

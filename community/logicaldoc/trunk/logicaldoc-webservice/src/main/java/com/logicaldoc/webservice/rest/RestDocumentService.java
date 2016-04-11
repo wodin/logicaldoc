@@ -19,12 +19,12 @@ import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.webservice.document.DocumentServiceImpl;
-import com.logicaldoc.webservice.document.WSDocument;
+import com.logicaldoc.webservice.model.WSDocument;
+import com.logicaldoc.webservice.soap.SoapDocumentService;
 
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-public class RestDocumentService extends DocumentServiceImpl {
+public class RestDocumentService extends SoapDocumentService {
 	
 	private static Logger log = LoggerFactory.getLogger(RestDocumentService.class);
 	

@@ -18,11 +18,11 @@ import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.webservice.auth.AuthServiceImpl;
+import com.logicaldoc.webservice.soap.SoapAuthService;
 
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-public class RestAuthService extends AuthServiceImpl {
+public class RestAuthService extends SoapAuthService {
 	
 	private static Logger log = LoggerFactory.getLogger(RestAuthService.class);
 	

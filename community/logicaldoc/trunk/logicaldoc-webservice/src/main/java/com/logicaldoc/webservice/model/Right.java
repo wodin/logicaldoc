@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.auth;
+package com.logicaldoc.webservice.model;
 
 /**
  * Useful class to associate a user or a group to a permission integer

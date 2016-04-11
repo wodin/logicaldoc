@@ -17,8 +17,8 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
-import com.logicaldoc.webservice.document.WSDocument;
 import com.logicaldoc.webservice.folder.WSFolder;
+import com.logicaldoc.webservice.model.WSDocument;
 
 /**
  * Search Web Service Implementation

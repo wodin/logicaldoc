@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.io.EasySSLProtocolSocketFactory;
-import com.logicaldoc.webservice.auth.AuthServiceImpl;
+import com.logicaldoc.webservice.soap.SoapAuthService;
 
 /**
  * Parent for all RESTful clients
@@ -21,7 +21,7 @@ import com.logicaldoc.webservice.auth.AuthServiceImpl;
  */
 public abstract class AbstractRestClient {
 
-	protected static Logger log = LoggerFactory.getLogger(AuthServiceImpl.class);
+	protected static Logger log = LoggerFactory.getLogger(SoapAuthService.class);
 
 	protected String endpoint;
 
