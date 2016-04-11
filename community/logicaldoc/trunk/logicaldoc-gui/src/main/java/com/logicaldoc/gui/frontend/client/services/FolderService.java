@@ -39,10 +39,10 @@ public interface FolderService extends RemoteService {
 	 * 
 	 * @param sid The session ID
 	 * @param parentId The folder in which the alias must be created
-	 * @param folderRef The original folder
+	 * @param foldRef The original folder
 	 * @return The created alias
 	 */
-	public GUIFolder createAlias(String sid, long parentId, long folderRef) throws ServerException;
+	public GUIFolder createAlias(String sid, long parentId, long foldRef) throws ServerException;
 
 	/**
 	 * Renames the given folder
