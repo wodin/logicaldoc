@@ -342,7 +342,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	@Override
 	public List<Folder> findByParentId(long parentId) {
 		List<Folder> coll = new ArrayList<Folder>();
+
 		Folder parent = findFolder(parentId);
+		if (parent == null)
+			return coll;
+
 		List<Folder> temp = findChildren(parent.getId(), null);
 		Iterator<Folder> iter = temp.iterator();
 
@@ -1075,8 +1079,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public Folder createAlias(long parentId, long folderRef, FolderHistory transaction) {
-		Folder targetFolder = findFolder(folderRef);
+	public Folder createAlias(long parentId, long foldRef, FolderHistory transaction) {
+		Folder targetFolder = findFolder(foldRef);
 		assert (targetFolder != null);
 
 		Folder parentFolder = findFolder(parentId);
@@ -1596,10 +1600,10 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public List<Folder> findAliases(Long folderRef, long tenantId) {
+	public List<Folder> findAliases(Long foldRef, long tenantId) {
 		String query = " _entity.tenantId=" + tenantId;
-		if (folderRef != null)
-			query += " and _entity.folderRef=" + folderRef;
+		if (foldRef != null)
+			query += " and _entity.foldRef=" + foldRef;
 		return findByWhere(query, null, null);
 	}
 

@@ -295,11 +295,11 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	/**
 	 * Finds all the aliases
 	 * 
-	 * @param folderRef The referenced folder
+	 * @param foldRef The referenced folder
 	 * @param tenantId The tenant
 	 * @return Collection of aliases
 	 */
-	public List<Folder> findAliases(Long folderRef, long tenantId);
+	public List<Folder> findAliases(Long foldRef, long tenantId);
 
 	/**
 	 * Creates the folder for the specified path. All unexisting nodes specified

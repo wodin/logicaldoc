@@ -41,5 +41,5 @@ public interface FolderServiceAsync {
 
 	void deleteFromTrash(String sid, Long[] ids, AsyncCallback<Void> callback);
 
-	void createAlias(String sid, long parentId, long folderRef, AsyncCallback<GUIFolder> callback);
+	void createAlias(String sid, long parentId, long foldRef, AsyncCallback<GUIFolder> callback);
 }

@@ -537,7 +537,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	@Override
-	public GUIFolder createAlias(String sid, long parentId, long folderRef) throws ServerException {
+	public GUIFolder createAlias(String sid, long parentId, long foldRef) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
@@ -551,7 +551,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			transaction.setEvent(FolderEvent.CREATED.toString());
 
 			// Finally create the alias
-			Folder f = folderDao.createAlias(parentId, folderRef, transaction);
+			Folder f = folderDao.createAlias(parentId, foldRef, transaction);
 
 			return getFolder(sid, f.getId());
 		} catch (Throwable t) {
