@@ -18,13 +18,14 @@ import com.logicaldoc.core.security.Permission;
 public interface FolderDAO extends PersistentObjectDAO<Folder> {
 
 	/**
-	 * Gets a folder by a given ID if it is an alias, the referenced folder is returned.
+	 * Gets a folder by a given ID if it is an alias, the referenced folder is
+	 * returned.
 	 * 
 	 * @param folderId The ID
 	 * @return A real folder that is referenced by the given ID
 	 */
 	public Folder findFolder(long folderId);
-	
+
 	/**
 	 * Finds all folders by folder name
 	 * 
@@ -285,11 +286,11 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 * Creates a new folder folder alias
 	 * 
 	 * @param parentId The parent folder
-	 * @param folderRef The referenced folder
+	 * @param foldRef The referenced folder
 	 * @transaction optional transaction entry to log the event
 	 * @return The newly created alias
 	 */
-	public Folder createAlias(long parentId, long folderRef, FolderHistory transaction);
+	public Folder createAlias(long parentId, long foldRef, FolderHistory transaction);
 
 	/**
 	 * Finds all the aliases

@@ -143,7 +143,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 			if (!targetPath.endsWith("/"))
 				targetPath += "/";
 
-			FolderDAO fDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
 
 			// Prepare a map docId-path
@@ -164,11 +164,11 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 			// Prepare a map folderId-basepath
 			Map<Long, String> folders = new HashMap<Long, String>();
 			for (long folderId : folderIds) {
-				Folder folder = fDao.findById(folderId);
-				if (folder == null || !fDao.isPermissionEnabled(Permission.DOWNLOAD, folderId, user.getId()))
+				Folder folder = folderDao.findFolder(folderId);
+				if (folder == null || !folderDao.isPermissionEnabled(Permission.DOWNLOAD, folder.getId(), user.getId()))
 					continue;
 
-				loadFoldersTree(folderId, folder.getName() + "/", user.getId(), folders);
+				loadFoldersTree(folder.getId(), folder.getName() + "/", user.getId(), folders);
 			}
 			for (Long folderId : folders.keySet()) {
 				List<Document> folderDocs = docDao.findByFolder(folderId, null);
