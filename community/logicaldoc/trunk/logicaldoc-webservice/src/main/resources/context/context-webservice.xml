@@ -96,14 +96,16 @@
     <!-- ############################## -->
     <!-- ###### JAX-RS (RESTful) ###### -->
     <!-- ############################## -->
-    <bean id="JacksonJsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+    
+    <!-- to support Java-to-JSON and vice-versa conversion -->
+    <bean id="jsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
     
     <jaxrs:server id="commentservice" address="/mobile/comments">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.mobile.CommentService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-            <ref bean="JacksonJsonProvider"/>
+            <ref bean="jsonProvider"/>
         </jaxrs:providers>        
     </jaxrs:server>
     
@@ -122,7 +124,7 @@
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestDocumentService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-            <ref bean="JacksonJsonProvider"/>
+            <ref bean="jsonProvider"/>
         </jaxrs:providers> 
     </jaxrs:server>
     
@@ -131,7 +133,7 @@
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestFolderService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-       		<ref bean="JacksonJsonProvider"/>
+       		<ref bean="jsonProvider"/>
     	</jaxrs:providers>
     </jaxrs:server>
         

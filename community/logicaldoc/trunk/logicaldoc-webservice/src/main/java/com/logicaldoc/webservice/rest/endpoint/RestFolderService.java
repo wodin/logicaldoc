@@ -1,6 +1,7 @@
 
 package com.logicaldoc.webservice.rest.endpoint;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -23,8 +24,8 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.soap.endpoint.SoapFolderService;
 
-@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+@Consumes({ MediaType.APPLICATION_JSON })
+@Produces({ MediaType.APPLICATION_JSON })
 public class RestFolderService extends SoapFolderService {
 	
 	private static Logger log = LoggerFactory.getLogger(RestFolderService.class);
@@ -118,7 +119,15 @@ public class RestFolderService extends SoapFolderService {
 	@GET
 	@Path("/listChildren")
 	public WSFolder[] listChildren(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
-		return super.listChildren(sid, folderId);
+		log.debug("listChildren()");
+		log.debug("sid: {}", sid);
+		log.debug("folderId: {}", folderId);
+		
+		WSFolder[] fchildren = super.listChildren(sid, folderId);
+		log.debug("fchildren: {}", (Object)fchildren);
+		log.debug("fchildren.length: {}", fchildren.length);
+
+		return fchildren;
 	}
 	
 	@GET
