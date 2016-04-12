@@ -23,8 +23,7 @@ import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.webservice.AbstractService;
-import com.logicaldoc.webservice.WSAttribute;
+import com.logicaldoc.webservice.services.AbstractService;
 
 /**
  * Web Service Document. Useful class to create repository Documents.

@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.io.EasySSLProtocolSocketFactory;
-import com.logicaldoc.webservice.soap.SoapAuthService;
+import com.logicaldoc.webservice.soap.endpoint.SoapAuthService;
 
 /**
  * Parent for all RESTful clients

@@ -4,27 +4,28 @@ import java.io.File;
 
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.searchengine.SearchOptions;
-import com.logicaldoc.webservice.folder.FolderClient;
-import com.logicaldoc.webservice.folder.WSFolder;
+import com.logicaldoc.webservice.model.WSAttribute;
 import com.logicaldoc.webservice.model.WSDocument;
-import com.logicaldoc.webservice.search.SearchClient;
-import com.logicaldoc.webservice.search.WSSearchOptions;
-import com.logicaldoc.webservice.search.WSSearchResult;
-import com.logicaldoc.webservice.security.SecurityClient;
-import com.logicaldoc.webservice.security.WSUser;
-import com.logicaldoc.webservice.soap.client.AuthClient;
-import com.logicaldoc.webservice.soap.client.DocumentClient;
-import com.logicaldoc.webservice.system.SystemClient;
+import com.logicaldoc.webservice.model.WSFolder;
+import com.logicaldoc.webservice.model.WSSearchOptions;
+import com.logicaldoc.webservice.model.WSSearchResult;
+import com.logicaldoc.webservice.model.WSUser;
+import com.logicaldoc.webservice.soap.client.SoapAuthClient;
+import com.logicaldoc.webservice.soap.client.SoapDocumentClient;
+import com.logicaldoc.webservice.soap.client.SoapFolderClient;
+import com.logicaldoc.webservice.soap.client.SoapSearchClient;
+import com.logicaldoc.webservice.soap.client.SoapSecurityClient;
+import com.logicaldoc.webservice.soap.client.SoapSystemClient;
 
 public class SoapWorgkbench {
 	final static String BASE = "http://localhost:9080/services";
 
 	public static void main(String[] args) throws Exception {
 
-		AuthClient auth = new AuthClient(BASE + "/Auth");
+		SoapAuthClient auth = new SoapAuthClient(BASE + "/Auth");
 
-		SystemClient systemClient = new SystemClient(BASE + "/System");
-		SecurityClient securityClient = new SecurityClient(BASE + "/Security");
+		SoapSystemClient systemClient = new SoapSystemClient(BASE + "/System");
+		SoapSecurityClient securityClient = new SoapSecurityClient(BASE + "/Security");
 
 		// Open a session
 		String sid = auth.login("admin", "12345678");
@@ -126,7 +127,7 @@ public class SoapWorgkbench {
 	}
 
 	private static void folderStuff(String sid) throws Exception {
-		FolderClient folderClient = new FolderClient(BASE + "/Folder", 1, false, 50);
+		SoapFolderClient folderClient = new SoapFolderClient(BASE + "/Folder", 1, false, 50);
 
 		WSFolder newFolder = new WSFolder();
 		newFolder.setName("ddddd");
@@ -147,7 +148,7 @@ public class SoapWorgkbench {
 	}
 
 	private static void securityStuff(String sid) throws Exception {
-		SecurityClient securityClient = new SecurityClient(BASE + "/Security");
+		SoapSecurityClient securityClient = new SoapSecurityClient(BASE + "/Security");
 
 		WSUser wsUserTest = new WSUser();
 		wsUserTest.setName("marco2");
@@ -258,7 +259,7 @@ public class SoapWorgkbench {
 	}
 
 	private static void searchStuff(String sid) throws Exception {
-		SearchClient searchClient = new SearchClient(BASE + "/Search");
+		SoapSearchClient searchClient = new SoapSearchClient(BASE + "/Search");
 
 		// WSDocument[] documents = searchClient.findByFilename(sid,
 		// "pizzo.ods");
@@ -334,7 +335,7 @@ public class SoapWorgkbench {
 	}
 
 	private static void documentStuff(String sid) throws Exception {
-		DocumentClient documentClient = new DocumentClient(BASE + "/Document");
+		SoapDocumentClient documentClient = new SoapDocumentClient(BASE + "/Document");
 
 		// WSLink link = documentClient.link(sid, 3621L, 3176L, "testws");
 		// System.out.println("Created link "+link.getId());
