@@ -139,8 +139,8 @@ public class DownloadServlet extends HttpServlet {
 		Version version = null;
 		Document doc = null;
 
-		if (!StringUtils.isEmpty(docId)) {
-			doc = docDao.findById(Long.parseLong(docId));
+		if (StringUtils.isNotEmpty(docId)) {
+			doc = docDao.findDocument(Long.parseLong(docId));
 
 			if (user != null
 					&& !folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
@@ -166,19 +166,13 @@ public class DownloadServlet extends HttpServlet {
 				doc = docDao.findById(doc.getDocRef());
 		}
 
-		if (!StringUtils.isEmpty(versionId)) {
+		if (StringUtils.isNotEmpty(versionId)) {
 			version = versDao.findById(Long.parseLong(versionId));
 			if (doc == null) {
-				doc = docDao.findById(version.getDocId());
+				doc = docDao.findDocument(version.getDocId());
 
 				if (!folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
 					throw new IOException("You don't have the DOWNLOAD permission");
-
-				/*
-				 * In case of alias we have to work on the real document
-				 */
-				if (doc.getDocRef() != null)
-					doc = docDao.findById(doc.getDocRef());
 			}
 		}
 
@@ -186,7 +180,7 @@ public class DownloadServlet extends HttpServlet {
 			filename = version.getFileName();
 		else
 			filename = doc.getFileName();
-
+		
 		ServletIOUtil.setContentDisposition(request, response, filename);
 
 		if (StringUtils.isEmpty(fileVersion)) {
@@ -195,7 +189,7 @@ public class DownloadServlet extends HttpServlet {
 			else
 				fileVersion = doc.getFileVersion();
 		}
-
+		
 		String suffix = request.getParameter("suffix");
 		if (StringUtils.isEmpty(suffix)) {
 			suffix = "";

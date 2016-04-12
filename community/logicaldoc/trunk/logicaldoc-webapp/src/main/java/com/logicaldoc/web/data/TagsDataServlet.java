@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.Tag;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
@@ -56,6 +58,13 @@ public class TagsDataServlet extends HttpServlet {
 			String firstLetter = request.getParameter("firstLetter");
 			String editing = request.getParameter("editing");
 
+			// Check if the data must be collected for a specific document
+			Document doc = null;
+			if (request.getParameter("docId") != null){
+				doc = docDao.findDocument(Long.parseLong(request.getParameter("docId")));
+				docDao.initialize(doc);
+			}
+
 			HashMap<String, Long> tgs = new HashMap<String, Long>();
 
 			if (("preset".equals(firstLetter) || "preset".equals(mode)) && "true".equals(editing)) {
@@ -69,6 +78,17 @@ public class TagsDataServlet extends HttpServlet {
 				tgs = (HashMap<String, Long>) docDao.findTags(firstLetter, session.getTenantId());
 			} else {
 				tgs = (HashMap<String, Long>) docDao.findTags(null, session.getTenantId());
+			}
+
+			if (doc != null) {
+		
+				/*
+				 * In case a document was specified we have to enrich the list
+				 * with the document's tags
+				 */
+				for (Tag tag : doc.getTags())
+					if (!tgs.containsKey(tag.getTag()))
+						tgs.put(tag.getTag(), 1L);
 			}
 
 			PrintWriter writer = response.getWriter();
