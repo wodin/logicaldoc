@@ -25,21 +25,21 @@ import com.logicaldoc.webservice.soap.endpoint.SoapDocumentService;
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 public class RestDocumentService extends SoapDocumentService {
-	
+
 	private static Logger log = LoggerFactory.getLogger(RestDocumentService.class);
-	
+
 	@POST
 	@Path("/create")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	// The "doc" and "content" parameters comes in the POST request body (encoded as XML or JSON).
+	// The "doc" and "content" parameters comes in the POST request body
+	// (encoded as XML or JSON).
 	public WSDocument create(List<Attachment> atts) throws Exception {
-		
 		log.debug("create()");
-		
+
 		String sid = null;
 		WSDocument document = null;
 		DataHandler content = null;
-		
+
 		for (Attachment att : atts) {
 			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
 				sid = att.getObject(String.class);
@@ -49,20 +49,19 @@ public class RestDocumentService extends SoapDocumentService {
 				content = att.getDataHandler();
 			}
 		}
-		
+
 		log.debug("document: {}", document);
 		log.debug("content: {}", content);
 
 		return super.create(sid, document, content);
-	}	
-	
-	
+	}
+
 	@GET
-	@Path("/getDocument")	
-	public WSDocument getDocument(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception  {
+	@Path("/getDocument")
+	public WSDocument getDocument(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
 		return super.getDocument(sid, docId);
 	}
-	
+
 	@POST
 	@Path("/checkout")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
@@ -70,7 +69,7 @@ public class RestDocumentService extends SoapDocumentService {
 	public void checkout(@FormParam("sid") String sid, @FormParam("docId") long docId) throws Exception {
 		super.checkout(sid, docId);
 	}
-	
+
 	@POST
 	@Path("/checkin")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -96,7 +95,7 @@ public class RestDocumentService extends SoapDocumentService {
 					release = Boolean.parseBoolean(att.getObject(String.class));
 				} else if ("filename".equals(params.get("name"))) {
 					filename = att.getObject(String.class);
-				} else if ("filedata".equals(params.get("name"))) { 
+				} else if ("filedata".equals(params.get("name"))) {
 					datah = att.getDataHandler();
 				}
 			}
@@ -108,7 +107,7 @@ public class RestDocumentService extends SoapDocumentService {
 			return Response.serverError().build();
 		}
 	}
-	
+
 	@POST
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -139,21 +138,21 @@ public class RestDocumentService extends SoapDocumentService {
 					language = att.getObject(String.class);
 				} else if ("filedata".equals(params.get("language"))) {
 					datah = att.getDataHandler();
-				} 
+				}
 			}
 
 			long documentId = super.upload(sid, docId, folderId, release, filename, language, datah);
-			return Response.ok("" +documentId).build();
+			return Response.ok("" + documentId).build();
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			return Response.serverError().build();
 		}
 	}
-	
+
 	@DELETE
 	@Path("/delete")
 	public void delete(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
 		super.delete(sid, docId);
-	}	
+	}
 
 }
