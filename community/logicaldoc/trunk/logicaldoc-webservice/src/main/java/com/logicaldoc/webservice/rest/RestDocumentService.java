@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -15,7 +16,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
-import org.apache.cxf.jaxrs.ext.multipart.MultipartBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,5 +144,11 @@ public class RestDocumentService extends SoapDocumentService {
 			return Response.serverError().build();
 		}
 	}
+	
+	@DELETE
+	@Path("/delete")
+	public void delete(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
+		super.delete(sid, docId);
+	}	
 
 }
