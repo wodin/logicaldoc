@@ -24,8 +24,8 @@ import com.logicaldoc.bm.cache.EhCacheAdapter;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.webservice.folder.WSFolder;
 import com.logicaldoc.webservice.model.WSDocument;
+import com.logicaldoc.webservice.model.WSFolder;
 
 /**
  * Loader thread that puts documents to the remote repository.

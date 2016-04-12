@@ -1,10 +1,10 @@
 package com.logicaldoc.bm;
 
-import com.logicaldoc.webservice.folder.FolderClient;
-import com.logicaldoc.webservice.search.SearchClient;
-import com.logicaldoc.webservice.soap.client.AuthClient;
-import com.logicaldoc.webservice.soap.client.DocumentClient;
-import com.logicaldoc.webservice.system.SystemClient;
+import com.logicaldoc.webservice.soap.client.SoapSearchClient;
+import com.logicaldoc.webservice.soap.client.SoapFolderClient;
+import com.logicaldoc.webservice.soap.client.SoapAuthClient;
+import com.logicaldoc.webservice.soap.client.SoapDocumentClient;
+import com.logicaldoc.webservice.soap.client.SoapSystemClient;
 
 /**
  * Helper class to store remote service connections.
@@ -18,18 +18,18 @@ public class ServerProxy {
 
 	public String sid;
 
-	public AuthClient authClient;
+	public SoapAuthClient authClient;
 
-	public final DocumentClient documentClient;
+	public final SoapDocumentClient documentClient;
 
-	public final FolderClient folderClient;
+	public final SoapFolderClient folderClient;
 
-	public final SystemClient systemClient;
+	public final SoapSystemClient systemClient;
 
-	public final SearchClient searchClient;
+	public final SoapSearchClient searchClient;
 
-	public ServerProxy(String url, AuthClient authClient, FolderClient folderClient,
-			DocumentClient documentClient, SystemClient systemClient, SearchClient searchClient) {
+	public ServerProxy(String url, SoapAuthClient authClient, SoapFolderClient folderClient,
+			SoapDocumentClient documentClient, SoapSystemClient systemClient, SoapSearchClient searchClient) {
 		this.url = url;
 		this.authClient = authClient;
 		this.folderClient = folderClient;

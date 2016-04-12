@@ -14,8 +14,8 @@ import org.apache.commons.logging.LogFactory;
 import com.logicaldoc.bm.AbstractLoader;
 import com.logicaldoc.bm.ServerProxy;
 import com.logicaldoc.webservice.model.WSDocument;
-import com.logicaldoc.webservice.search.WSSearchOptions;
-import com.logicaldoc.webservice.search.WSSearchResult;
+import com.logicaldoc.webservice.model.WSSearchOptions;
+import com.logicaldoc.webservice.model.WSSearchResult;
 
 /**
  * Executes a random selection of full-text queries from /expressions.txt
