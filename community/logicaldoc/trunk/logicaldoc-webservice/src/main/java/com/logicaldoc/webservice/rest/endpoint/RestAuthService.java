@@ -11,8 +11,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.cxf.jaxrs.ext.MessageContext;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
@@ -20,11 +22,20 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webservice.soap.endpoint.SoapAuthService;
 
+
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class RestAuthService extends SoapAuthService {
 	
 	private static Logger log = LoggerFactory.getLogger(RestAuthService.class);
+	
+	@Context
+	public void setMessageContext(MessageContext messageContext) {
+		// https://docs.oracle.com/cd/E13222_01/wls/docs92/webserv/annotations.html
+		// https://jersey.java.net/documentation/latest/jaxrs-resources.html#d0e2790
+		// https://jersey.java.net/apidocs-javax.jax-rs/2.0.1/javax/ws/rs/core/Context.html
+		super.messageContext = messageContext;
+	}	
 	
 	@GET
 	@Path("/login")

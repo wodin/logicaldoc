@@ -45,22 +45,7 @@ public class AlfRest {
   
        //replace the host name and port with the your host and port.
   	    PostMethod method = new PostMethod(BASE_PATH +"/services/rest/document/create");
-  	    method.setRequestHeader("Accept", "application/json");
-  	  
-  	    /*
-  	    String folderPath = "/LogicalDOC/USA/NJ/Fair Lawn/createSimple";
-  	    String input = "{ \"sid\" : \"" + sid +"\", \"folderPath\" : \"" + folderPath +"\" }";  	      	
-  	    System.out.println(input);  	  
-  	    
-  	    method.setRequestEntity(new StringRequestEntity(input, "application/json", null));
-  	    method.setRequestHeader("Accept", "application/json");
-  	    
-  	    method.setRequestHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
-  	    method.setRequestHeader("Accept", "application/json");
-  	    method.setParameter("sid", sid);
-  	    method.setParameter("folderPath", "/LogicalDOC/USA/NJ/Fair Lawn/createSimple"); 
-  	    */
-  	    
+  	    method.setRequestHeader("Accept", "application/json");	    
 
   	    ArrayList<Part> mparts = new ArrayList<Part>();
   	    StringPart part1 = new StringPart("sid", sid);
@@ -76,7 +61,8 @@ public class AlfRest {
 		WSDocument wsDoc = new WSDocument();
 		wsDoc.setId(0);
 		wsDoc.setTitle("document test");
-		wsDoc.setCustomId("xxxxxxx");
+		wsDoc.setCustomId("xxxxx4444");
+		wsDoc.setTags(new String[]{"Invoice", "Processing", "workflow"});
 		wsDoc.setFolderId(4L);
 		wsDoc.setFileName(f.getName());  	      	      	
 		

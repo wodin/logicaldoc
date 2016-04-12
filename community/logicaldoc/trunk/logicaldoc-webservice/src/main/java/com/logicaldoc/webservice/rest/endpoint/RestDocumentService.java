@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.activation.DataHandler;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -33,6 +34,8 @@ public class RestDocumentService extends SoapDocumentService {
 	// The "doc" and "content" parameters comes in the POST request body (encoded as XML or JSON).
 	public WSDocument create(List<Attachment> atts) throws Exception {
 		
+		log.debug("create()");
+		
 		String sid = null;
 		WSDocument document = null;
 		DataHandler content = null;
@@ -45,7 +48,10 @@ public class RestDocumentService extends SoapDocumentService {
 			} else if ("content".equals(att.getContentDisposition().getParameter("name"))) {
 				content = att.getDataHandler();
 			}
-		}	
+		}
+		
+		log.debug("document: {}", document);
+		log.debug("content: {}", content);
 
 		return super.create(sid, document, content);
 	}	
@@ -143,5 +149,11 @@ public class RestDocumentService extends SoapDocumentService {
 			return Response.serverError().build();
 		}
 	}
+	
+	@DELETE
+	@Path("/delete")
+	public void delete(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
+		super.delete(sid, docId);
+	}	
 
 }
