@@ -17,6 +17,8 @@ import javax.ws.rs.core.MediaType;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.soap.endpoint.SoapFolderService;
@@ -24,6 +26,8 @@ import com.logicaldoc.webservice.soap.endpoint.SoapFolderService;
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 public class RestFolderService extends SoapFolderService {
+	
+	private static Logger log = LoggerFactory.getLogger(RestFolderService.class);
 	
 	@POST
 	@Path("/create")
