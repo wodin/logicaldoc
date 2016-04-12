@@ -17,6 +17,17 @@ import com.logicaldoc.core.document.TagCloud;
  * @version 1.0
  */
 public interface DocumentDAO extends PersistentObjectDAO<Document> {
+
+	/**
+	 * This method finds a document by the ID and if it is an alias the
+	 * referenced document is returned instead.
+	 * 
+	 * @param docId ID of the document(or the alias)
+	 * 
+	 * @return Document with given ID.
+	 */
+	public Document findDocument(long docId);
+
 	/**
 	 * This method finds a document by the custom ID.
 	 * 

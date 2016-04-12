@@ -762,7 +762,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		bulkUpdate("set ld_deleted=0, ld_folderid=" + folderId + ", ld_lastmodified=CURRENT_TIMESTAMP where ld_id="
 				+ docId, null);
 
-		jdbcUpdate("update ld_version set ld_deleted=0, ld_folderid=" + folderId
+		versionDAO.bulkUpdate("set ld_deleted=0, ld_folderid=" + folderId
 				+ ", ld_lastmodified=CURRENT_TIMESTAMP where ld_documentid=" + docId, null);
 
 		Document doc = findById(docId);
@@ -1034,17 +1034,19 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		if (maxTags > 0 && mostUsedTags.size() > maxTags)
 			mostUsedTags = new ArrayList<TagCloud>(list.subList(0, maxTags));
 
-		// Find the Max frequency
-		long maxValue = mostUsedTags.get(0).getCount();
+		if (mostUsedTags != null && !mostUsedTags.isEmpty()) {
+			// Find the Max frequency
+			long maxValue = mostUsedTags.get(0).getCount();
 
-		for (TagCloud cloud : mostUsedTags) {
-			double scale = ((double) cloud.getCount()) / maxValue;
-			int scaleInt = (int) Math.ceil(scale * 10);
-			cloud.setScale(scaleInt);
+			for (TagCloud cloud : mostUsedTags) {
+				double scale = ((double) cloud.getCount()) / maxValue;
+				int scaleInt = (int) Math.ceil(scale * 10);
+				cloud.setScale(scaleInt);
+			}
+
+			// Sort the tags collection by name
+			Collections.sort(mostUsedTags);
 		}
-
-		// Sort the tags collection by name
-		Collections.sort(mostUsedTags);
 
 		return mostUsedTags;
 	}
@@ -1056,5 +1058,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 		int maxTags = config.getInt(session.getTenantName() + ".tagcloud.maxtags", 30);
 		return getTagCloud(session.getTenantId(), maxTags);
+	}
+
+	@Override
+	public Document findDocument(long docId) {
+		Document doc = findById(docId);
+		if (doc != null && doc.getDocRef() != null)
+			doc = findById(doc.getDocRef());
+		return doc;
 	}
 }
