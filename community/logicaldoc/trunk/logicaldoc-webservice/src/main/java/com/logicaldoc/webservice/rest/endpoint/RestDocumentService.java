@@ -1,5 +1,8 @@
 package com.logicaldoc.webservice.rest.endpoint;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +22,11 @@ import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.soap.endpoint.SoapDocumentService;
 
@@ -31,8 +39,7 @@ public class RestDocumentService extends SoapDocumentService {
 	@POST
 	@Path("/create")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	// The "doc" and "content" parameters comes in the POST request body
-	// (encoded as XML or JSON).
+	// The "document" comes in the POST request body (encoded as JSON).
 	public WSDocument create(List<Attachment> atts) throws Exception {
 		log.debug("create()");
 
@@ -154,5 +161,19 @@ public class RestDocumentService extends SoapDocumentService {
 	public void delete(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
 		super.delete(sid, docId);
 	}
+	
+	@GET
+	@Path("/list")
+	@Override
+	public WSDocument[] list(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
+		return super.listDocuments(sid, folderId, null);
+	}	
+	
+	@GET
+	@Path("/listDocuments")
+	@Override
+	public WSDocument[] listDocuments(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId, @QueryParam("fileName") String fileName) throws Exception {
+		return super.listDocuments(sid, folderId, fileName);
+	}	
 
 }
