@@ -24,30 +24,31 @@ public class HibernateSequenceDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testReset() {
-		dao.reset("test", null, Tenant.DEFAULT_ID, 5);
+		dao.reset("test", 0L, Tenant.DEFAULT_ID, 5);
 		for (int i = 1; i <= 20; i++) {
-			Assert.assertEquals(i + 5, dao.next("test", null, Tenant.DEFAULT_ID));
+			Assert.assertEquals(i + 5, dao.next("test", 0L, Tenant.DEFAULT_ID));
 		}
-		dao.reset("test", null, Tenant.DEFAULT_ID, 100);
+		dao.reset("test", 0L, Tenant.DEFAULT_ID, 100);
 		for (int i = 1; i <= 20; i++) {
-			Assert.assertEquals(i + 100, dao.next("test", null, Tenant.DEFAULT_ID));
+			Assert.assertEquals(i + 100, dao.next("test", 0L, Tenant.DEFAULT_ID));
 		}
-		dao.reset("test2", null, Tenant.DEFAULT_ID, 30);
+		dao.reset("test2", 0L, Tenant.DEFAULT_ID, 30);
 		for (int i = 1; i <= 20; i++) {
-			Assert.assertEquals(i + 30, dao.next("test2", null, Tenant.DEFAULT_ID));
+			Assert.assertEquals(i + 30, dao.next("test2", 0L, Tenant.DEFAULT_ID));
 		}
+		System.out.println("modificatio");
 	}
 
 	@Test
 	public void testNext() {
 		for (int i = 1; i <= 20; i++) {
-			Assert.assertEquals(i, dao.next("test", null, Tenant.DEFAULT_ID));
+			Assert.assertEquals(i, dao.next("test", 0L, Tenant.DEFAULT_ID));
 		}
 		for (int i = 1; i <= 20; i++) {
-			Assert.assertEquals(i, dao.next("test2", null, Tenant.DEFAULT_ID));
+			Assert.assertEquals(i, dao.next("test2", 0L, Tenant.DEFAULT_ID));
 		}
-		Assert.assertEquals(25L, dao.next("test2", null, Tenant.DEFAULT_ID, 5L));
-		Assert.assertEquals(23L, dao.next("test2", null, Tenant.DEFAULT_ID, -2L));
+		Assert.assertEquals(25L, dao.next("test2", 0L, Tenant.DEFAULT_ID, 5L));
+		Assert.assertEquals(23L, dao.next("test2", 0L, Tenant.DEFAULT_ID, -2L));
 	}
 
 	@Test
