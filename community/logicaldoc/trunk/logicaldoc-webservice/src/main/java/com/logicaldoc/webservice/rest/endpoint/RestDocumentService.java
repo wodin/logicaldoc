@@ -23,7 +23,7 @@ import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.soap.endpoint.SoapDocumentService;
 
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
-@Produces({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+@Produces({ MediaType.APPLICATION_JSON })
 public class RestDocumentService extends SoapDocumentService {
 	
 	private static Logger log = LoggerFactory.getLogger(RestDocumentService.class);
