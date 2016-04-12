@@ -24,6 +24,8 @@ import com.logicaldoc.webservice.model.WSDocument;
 
 public class AlfRest {
 
+	public static String BASE_PATH = "http://localhost:8080/logicaldoc";
+	
 	public static void main(String[] args) throws HttpException, IOException {
 
 		String sid = loginJSON();
@@ -32,7 +34,7 @@ public class AlfRest {
 		//createFolderSimpleJSON(sid);
 		
 		//createDocumentJSON(sid);
-		createDocumentJSON("gggg");
+		createDocumentJSON( sid);
 	}
 	
 	private static void createDocumentJSON(String sid) throws HttpException, IOException {
@@ -42,7 +44,7 @@ public class AlfRest {
 		params.setSoTimeout(20 * 1000);
   
        //replace the host name and port with the your host and port.
-  	    PostMethod method = new PostMethod("http://localhost:8080/services/rest/document/create");
+  	    PostMethod method = new PostMethod(BASE_PATH +"/services/rest/document/create");
   	    method.setRequestHeader("Accept", "application/json");
   	  
   	    /*
@@ -62,30 +64,38 @@ public class AlfRest {
 
   	    ArrayList<Part> mparts = new ArrayList<Part>();
   	    StringPart part1 = new StringPart("sid", sid);
+  	    part1.setContentType("plain/text");
   	    
+  	    File f = new File("C:/tmp/InvoiceProcessing01-workflow.png");
+  	    System.out.println(f.getName());
+  	  
+  	    //FilePart part3 = new FilePart(f.getName(), f);
+  	    FilePart part2 = new FilePart("content", f.getName(), f);  	    
+  	 	part2.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+  	 	
 		WSDocument wsDoc = new WSDocument();
 		wsDoc.setId(0);
 		wsDoc.setTitle("document test");
 		wsDoc.setCustomId("xxxxxxx");
 		wsDoc.setFolderId(4L);
-  	    
-  	    //String jsonStr = "{ \"sid\" : \"" + sid +"\", \"folderPath\" : \"" + folderPath +"\" }";  	      	
+		wsDoc.setFileName(f.getName());  	      	      	
 		
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String jsonStr = ow.writeValueAsString(wsDoc);
 		
+		// Alternatively you can just write your piece of simple json
+  	    //String jsonStr = "{ \"sid\" : \"" + sid +"\", \"folderPath\" : \"" + folderPath +"\" }";		
+		
   	    System.out.println(jsonStr);
-  	    StringPart part2 = new StringPart("document", jsonStr);
-  	    part2.setContentType("application/json");
-  	    
-  	    File f = new File("C:/tmp/InvoiceProcessing01-workflow.png");
-  	    FilePart part3 = new FilePart(f.getName(), f);
+  	    StringPart part3 = new StringPart("document", jsonStr);
+  	    part3.setContentType("application/json");  	 	
   	    
   	    mparts.add(part1);
   	    mparts.add(part2);
   	    mparts.add(part3);
   	    
-  	    Part[] parts = (Part[])mparts.toArray();  	  
+  	    Part[] parts = new Part[0];
+  	    parts = mparts.toArray(parts);
   	    
   	  	method.setRequestEntity(new MultipartRequestEntity(parts, method.getParams()));	    
   	   
@@ -106,7 +116,7 @@ public class AlfRest {
 		params.setSoTimeout(20 * 1000);
   
        //replace the host name and port with the your host and port.
-  	    PostMethod method = new PostMethod("http://localhost:8080/services/rest/folder/createSimple");
+  	    PostMethod method = new PostMethod(BASE_PATH +"/services/rest/folder/createSimple");
   	  
   	    method.setRequestHeader("Content-Type", MediaType.APPLICATION_FORM_URLENCODED);
   	    method.setRequestHeader("Accept", "application/json");
@@ -130,7 +140,7 @@ public class AlfRest {
 		params.setSoTimeout(20 * 1000);
   
        //replace the host name and port with the your host and port.
-  	    PostMethod method = new PostMethod("http://localhost:8080/services/rest/folder/createSimple");
+  	    PostMethod method = new PostMethod(BASE_PATH +"/services/rest/folder/createSimple");
   	  
   	    String folderPath = "/LogicalDOC/USA/NJ/Fair Lawn/createSimple";
   	    String input = "{ \"sid\" : \"" + sid +"\", \"folderPath\" : \"" + folderPath +"\" }";  	      	
@@ -149,6 +159,7 @@ public class AlfRest {
 	}	
 	
 	private static String loginJSON() throws UnsupportedEncodingException, IOException, HttpException {
+		
 		HttpClient client = new HttpClient();
 		HttpConnectionParams params = client.getHttpConnectionManager().getParams();
 		params.setConnectionTimeout(30 * 1000);
@@ -158,7 +169,8 @@ public class AlfRest {
 		params.setParameter("password", "admin");
   
        //replace the host name and port with the your host and port.
-  	    PostMethod method = new PostMethod("http://localhost:8080/services/rest/auth/login");
+  	    PostMethod method = new PostMethod(BASE_PATH +"/services/rest/auth/login");
+  	    method.setRequestHeader("Accept", "application/json");
   		
   	    String input = "{ \"username\" : \"" + params.getParameter("username") +"\", \"password\" : \"" + params.getParameter("password") +"\" }";  	      	
   	    System.out.println(input);
