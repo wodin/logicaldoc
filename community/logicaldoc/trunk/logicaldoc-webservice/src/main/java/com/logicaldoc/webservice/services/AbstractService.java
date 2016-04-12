@@ -156,10 +156,10 @@ public class AbstractService {
 	}
 
 	protected void checkArchived(Document doc) throws Exception {
-		if (doc.getStatus()==AbstractDocument.DOC_ARCHIVED)
+		if (doc.getStatus() == AbstractDocument.DOC_ARCHIVED)
 			throw new FileNotFoundException("Document is archived");
 	}
-	
+
 	public static String convertDateToString(Date date) {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
 		try {
@@ -211,7 +211,11 @@ public class AbstractService {
 		return messageContext;
 	}
 
+	@javax.ws.rs.core.Context
 	public void setMessageContext(MessageContext messageContext) {
+		// https://docs.oracle.com/cd/E13222_01/wls/docs92/webserv/annotations.html
+		// https://jersey.java.net/documentation/latest/jaxrs-resources.html#d0e2790
+		// https://jersey.java.net/apidocs-javax.jax-rs/2.0.1/javax/ws/rs/core/Context.html
 		this.messageContext = messageContext;
 	}
 }
