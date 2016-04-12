@@ -7,7 +7,7 @@ import com.logicaldoc.bm.AbstractLoader;
 import com.logicaldoc.bm.ServerProxy;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.webservice.folder.WSFolder;
+import com.logicaldoc.webservice.model.WSFolder;
 
 /**
  * A loader thread that retrieves the folders beneath each directory from the

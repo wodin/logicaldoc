@@ -15,11 +15,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.webservice.folder.FolderClient;
-import com.logicaldoc.webservice.search.SearchClient;
-import com.logicaldoc.webservice.soap.client.AuthClient;
-import com.logicaldoc.webservice.soap.client.DocumentClient;
-import com.logicaldoc.webservice.system.SystemClient;
+import com.logicaldoc.webservice.soap.client.SoapSearchClient;
+import com.logicaldoc.webservice.soap.client.SoapFolderClient;
+import com.logicaldoc.webservice.soap.client.SoapAuthClient;
+import com.logicaldoc.webservice.soap.client.SoapDocumentClient;
+import com.logicaldoc.webservice.soap.client.SoapSystemClient;
 
 /**
  * Models a load session during which the LogicalDOC server will be heavy
@@ -107,13 +107,13 @@ public class LoadSession {
 		try {
 			ContextProperties config = new ContextProperties();
 
-			AuthClient auth = new AuthClient(url + "/services/Auth");
-			DocumentClient documentClient = new DocumentClient(url + "/services/Document",
+			SoapAuthClient auth = new SoapAuthClient(url + "/services/Auth");
+			SoapDocumentClient documentClient = new SoapDocumentClient(url + "/services/Document",
 					config.getInt("webservice.gzip"), false, 40);
-			FolderClient folderClient = new FolderClient(url + "/services/Folder", config.getInt("webservice.gzip"),
+			SoapFolderClient folderClient = new SoapFolderClient(url + "/services/Folder", config.getInt("webservice.gzip"),
 					false, 40);
-			SystemClient systemClient = new SystemClient(url + "/services/System");
-			SearchClient searchClient = new SearchClient(url + "/services/Search", config.getInt("webservice.gzip"),
+			SoapSystemClient systemClient = new SoapSystemClient(url + "/services/System");
+			SoapSearchClient searchClient = new SoapSearchClient(url + "/services/Search", config.getInt("webservice.gzip"),
 					false, 40);
 
 			// Store the service references
