@@ -9,7 +9,7 @@ import javax.jws.WebService;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-@WebService
+@WebService(name="Auth", serviceName="Auth", targetNamespace = "http://ws.logicaldoc.com")
 public interface AuthService {
 	/**
 	 * Starts a new user session.

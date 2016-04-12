@@ -25,7 +25,7 @@ import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.webservice.AbstractService;
+import com.logicaldoc.webservice.services.AbstractService;
 
 /**
  * Adds new comments on a document.

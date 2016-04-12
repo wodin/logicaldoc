@@ -27,14 +27,14 @@
     <!-- ####### JAX-WS (SOAP) ######## -->
     <!-- ############################## -->
 	<jaxws:endpoint id="auth"
-		implementor="com.logicaldoc.webservice.soap.SoapAuthService" address="/Auth">
+		implementor="com.logicaldoc.webservice.soap.endpoint.SoapAuthService" address="/Auth">
 		<jaxws:properties>
 			<entry key="mtom-enabled" value="${webservice.mtom}" />
 		</jaxws:properties>
 	</jaxws:endpoint>
 
 	<jaxws:endpoint id="document"
-		implementor="com.logicaldoc.webservice.soap.SoapDocumentService"
+		implementor="com.logicaldoc.webservice.soap.endpoint.SoapDocumentService"
 		address="/Document">
 		<jaxws:inInterceptors>
 			<ref bean="GZIPInInterceptor" />
@@ -48,7 +48,7 @@
 	</jaxws:endpoint>
 
 	<jaxws:endpoint id="folder"
-		implementor="com.logicaldoc.webservice.folder.FolderServiceImpl"
+		implementor="com.logicaldoc.webservice.soap.endpoint.SoapFolderService"
 		address="/Folder">
 		<jaxws:inInterceptors>
 			<ref bean="GZIPInInterceptor" />
@@ -62,7 +62,7 @@
 	</jaxws:endpoint>
 
 	<jaxws:endpoint id="search"
-		implementor="com.logicaldoc.webservice.search.SearchServiceImpl"
+		implementor="com.logicaldoc.webservice.soap.endpoint.SoapSearchService"
 		address="/Search">
 		<jaxws:inInterceptors>
 			<ref bean="GZIPInInterceptor" />
@@ -76,7 +76,7 @@
 	</jaxws:endpoint>
 
 	<jaxws:endpoint id="system"
-		implementor="com.logicaldoc.webservice.system.SystemServiceImpl"
+		implementor="com.logicaldoc.webservice.soap.endpoint.SoapSystemService"
 		address="/System">
 		<jaxws:properties>
 			<entry key="mtom-enabled" value="${webservice.mtom}" />
@@ -84,7 +84,7 @@
 	</jaxws:endpoint>
 
 	<jaxws:endpoint id="security"
-		implementor="com.logicaldoc.webservice.security.SecurityServiceImpl"
+		implementor="com.logicaldoc.webservice.soap.endpoint.SoapSecurityService"
 		address="/Security">
 		<jaxws:properties>
 			<entry key="mtom-enabled" value="${webservice.mtom}" />
@@ -111,7 +111,7 @@
     <!-- New REST Web-services (beta) -->
     <jaxrs:server id="restAuth" address="/rest/auth">
         <jaxrs:serviceBeans>
-            <bean class="com.logicaldoc.webservice.rest.RestAuthService">
+            <bean class="com.logicaldoc.webservice.rest.endpoint.RestAuthService">
                <aop:scoped-proxy />
          	</bean>
         </jaxrs:serviceBeans>
@@ -119,7 +119,7 @@
             
     <jaxrs:server id="restDocument" address="/rest/document">
         <jaxrs:serviceBeans>
-            <bean class="com.logicaldoc.webservice.rest.RestDocumentService"/>
+            <bean class="com.logicaldoc.webservice.rest.endpoint.RestDocumentService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="JacksonJsonProvider"/>
@@ -128,7 +128,7 @@
     
     <jaxrs:server id="restFolder" address="/rest/folder">
         <jaxrs:serviceBeans>
-            <bean class="com.logicaldoc.webservice.rest.RestFolderService"/>
+            <bean class="com.logicaldoc.webservice.rest.endpoint.RestFolderService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
        		<ref bean="JacksonJsonProvider"/>

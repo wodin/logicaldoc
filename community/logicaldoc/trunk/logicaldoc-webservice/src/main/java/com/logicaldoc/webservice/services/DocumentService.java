@@ -14,7 +14,7 @@ import com.logicaldoc.webservice.model.WSLink;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-@WebService
+@WebService(name="Document", serviceName="Document", targetNamespace = "http://ws.logicaldoc.com")
 public interface DocumentService {
 
 	/**
