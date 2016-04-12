@@ -17,6 +17,7 @@ import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
 import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.StampsDS;
+import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.TenantsDS;
 import com.logicaldoc.gui.common.client.data.UsersDS;
@@ -339,6 +340,15 @@ public class ItemFactory {
 
 		if (values != null)
 			item.setValue(values);
+
+		return item;
+	}
+
+	public static MultiComboBoxItem newTagsComboBoxItem(String name, String title, TagsDS options, Object[] tags) {
+		MultiComboBoxItem item = newMultiComboBoxItem(name, title, options, tags);
+		item.setPrompt(I18N.message("typeatag"));
+		item.setValueField("word");
+		item.setDisplayField("word");
 		return item;
 	}
 

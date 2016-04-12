@@ -21,7 +21,6 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.PreviewTile;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
@@ -242,12 +241,9 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		if (Feature.enabled(Feature.TAGS)) {
 			String mode = Session.get().getConfig("tag.mode");
-			final DataSource ds = new TagsDS(null, true);
+			final TagsDS ds = new TagsDS(null, true, document.getId());
 
-			tagItem = ItemFactory.newMultiComboBoxItem("tag", "tag", ds, (Object[]) document.getTags());
-			tagItem.setPrompt(I18N.message("typeatag"));
-			tagItem.setValueField("word");
-			tagItem.setDisplayField("word");
+			tagItem = ItemFactory.newTagsComboBoxItem("tag", "tag", ds, (Object[]) document.getTags());
 			tagItem.setDisabled(!updateEnabled);
 			tagItem.addChangedHandler(changedHandler);
 
@@ -278,22 +274,22 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 								tags.add(t);
 
-								// Put the new tag in the options
-								Record record = new Record();
-								record.setAttribute("index", t);
-								record.setAttribute("word", t);
-								ds.addData(record);
-
 								// Add the old tags to the new ones
 								String[] oldVal = tagItem.getValues();
 								for (int i = 0; i < oldVal.length; i++)
 									if (!tags.contains(oldVal[i]))
 										tags.add(oldVal[i]);
 
-								// Update the tag item and trigger the change
-								tagItem.setValues((Object[]) tags.toArray(new String[0]));
-								changedHandler.onChanged(null);
+								// Put the new tag in the options
+								Record record = new Record();
+								record.setAttribute("index", t);
+								record.setAttribute("word", t);
+								ds.addData(record);
 							}
+
+							// Update the tag item and trigger the change
+							tagItem.setValues((Object[]) tags.toArray(new String[0]));
+							changedHandler.onChanged(null);
 
 							if (containsInvalid)
 								SC.warn(I18N.message("sometagaddedbecauseinvalid"));

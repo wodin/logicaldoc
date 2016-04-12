@@ -89,14 +89,14 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 
 		if (Feature.enabled(Feature.TAGS)) {
 			String mode = Session.get().getConfig("tag.mode");
-			final DataSource ds = new TagsDS(null, true);
+			final DataSource ds = new TagsDS(null, true, document.getId());
 
 			tagItem = ItemFactory.newMultiComboBoxItem("tag", "tag", ds, (Object[]) document.getTags());
 			tagItem.setPrompt(I18N.message("typeatag"));
 			tagItem.setValueField("word");
 			tagItem.setDisplayField("word");
 			tagItem.setDisabled(!updateEnabled);
-			
+
 			final TextItem newTagItem = ItemFactory.newTextItem("newtag", "newtag", null);
 			newTagItem.setRequired(false);
 			newTagItem.addKeyPressHandler(new KeyPressHandler() {
