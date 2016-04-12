@@ -242,6 +242,10 @@
     <servlet-class>com.logicaldoc.web.data.ContactsDataServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>ContactService</servlet-name>
+    <servlet-class>com.logicaldoc.web.service.ContactServiceImpl</servlet-class>
+  </servlet>  
+  <servlet>
     <servlet-name>DropboxData</servlet-name>
     <servlet-class>com.logicaldoc.dropbox.DropboxDataServlet</servlet-class>
   </servlet>
@@ -546,6 +550,7 @@
   </welcome-file-list>
   <!-- Mask errors with generic error page -->
   <error-page>
+    <exception-type>java.lang.Throwable</exception-type>
     <location>/error.jsp</location>
   </error-page>  
   <jsp-config>
@@ -576,17 +581,17 @@
       <transport-guarantee>NONE</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
-  <security-constraint>
+  <!-- security-constraint>
     <web-resource-collection>
       <web-resource-name>Entire Application</web-resource-name>
-      <!-- url-pattern>/*</url-pattern>
+      <url-pattern>/*</url-pattern>
       <http-method>GET</http-method>
-      <http-method>POST</http-method-->
+      <http-method>POST</http-method>
     </web-resource-collection>
     <user-data-constraint>
       <transport-guarantee>NONE</transport-guarantee>
     </user-data-constraint>
-  </security-constraint>  
+  </security-constraint-->  
   <security-constraint>
     <display-name>Sessions management only allowed after authentication</display-name>
     <web-resource-collection>
