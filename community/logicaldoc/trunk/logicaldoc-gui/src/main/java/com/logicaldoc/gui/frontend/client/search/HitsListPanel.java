@@ -109,8 +109,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 				final String type = doc.getType();
 				long id = doc.getFolder().getId();
 
-				if (!"folder".equals(type) && Session.get().getCurrentDocument() != null
-						&& Session.get().getCurrentDocument().getId() == id) {
+				if (type == null || (!type.contains("folder") && Session.get().getCurrentDocument() != null
+						&& Session.get().getCurrentDocument().getId() == id)) {
 					Menu contextMenu = prepareContextMenu(Session.get().getCurrentDocument().getFolder(), true);
 					contextMenu.showContextMenu();
 				} else {
@@ -126,7 +126,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 
 						@Override
 						public void onSuccess(GUIFolder folder) {
-							Menu contextMenu = prepareContextMenu(folder, !"folder".equals(type));
+							Menu contextMenu = prepareContextMenu(folder, !type.contains("folder"));
 							contextMenu.showContextMenu();
 						}
 					});

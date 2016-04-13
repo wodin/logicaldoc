@@ -10,7 +10,6 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Dialog;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -115,13 +114,13 @@ public class CreateDialog extends Dialog {
 							newNode.setAttribute("folderId", Long.toString(newFolder.getId()));
 							newNode.setAttribute("type", Long.toString(newFolder.getType()));
 
-							if (newFolder.getType() == 0) {
+							if (newFolder.getType() == 1) {
+								FolderNavigator.get().getTree().add(newNode, FolderNavigator.get().getTree().getRoot());
+							} else {
 								TreeNode selectedNode = (TreeNode) FolderNavigator.get().getSelectedRecord();
 								if (!FolderNavigator.get().getTree().isOpen(selectedNode))
 									FolderNavigator.get().getTree().openFolder(selectedNode);
 								FolderNavigator.get().getTree().add(newNode, selectedNode);
-							} else {
-								FolderNavigator.get().getTree().add(newNode, FolderNavigator.get().getTree().getRoot());
 							}
 
 							destroy();

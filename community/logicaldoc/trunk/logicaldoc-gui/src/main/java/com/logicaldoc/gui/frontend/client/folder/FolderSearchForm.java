@@ -15,11 +15,9 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
@@ -48,7 +46,7 @@ public abstract class FolderSearchForm extends VLayout {
 		setMembersMargin(5);
 		setAlign(Alignment.LEFT);
 		setOverflow(Overflow.AUTO);
-		
+
 		DynamicForm form = new DynamicForm();
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.LEFT);
