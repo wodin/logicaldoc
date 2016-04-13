@@ -70,7 +70,7 @@ public class FoldersDataServlet extends HttpServlet {
 				parent = Long.parseLong(request.getParameter("parent"));
 
 			Folder parentFolder = folderDao.findFolder(parent);
-			
+
 			Context context = Context.getInstance();
 			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());
@@ -82,13 +82,15 @@ public class FoldersDataServlet extends HttpServlet {
 			StringBuffer query = new StringBuffer(
 					"select ld_id, ld_parentid, ld_name, ld_type, ld_foldref from ld_folder where ld_deleted=0 and ld_hidden=0 and not ld_id=ld_parentid and ld_parentid = ? and ld_tenantid = ? ");
 			if (!user.isInGroup("admin")) {
-				Collection<Long> accessibleIds = folderDao.findFolderIdByUserId(session.getUserId(), parentFolder.getId(), false);
+				Collection<Long> accessibleIds = folderDao.findFolderIdByUserId(session.getUserId(),
+						parentFolder.getId(), false);
 				String idsStr = accessibleIds.toString().replace('[', '(').replace(']', ')');
 				query.append(" and ld_id in " + idsStr);
 			}
 			query.append(" order by ld_position asc, ld_name asc");
 
-			SqlRowSet rs = folderDao.queryForRowSet(query.toString(), new Long[] { parentFolder.getId(), tenantId }, null);
+			SqlRowSet rs = folderDao.queryForRowSet(query.toString(), new Long[] { parentFolder.getId(), tenantId },
+					null);
 			if (rs != null)
 				while (rs.next()) {
 					writer.print("<folder>");
@@ -98,7 +100,8 @@ public class FoldersDataServlet extends HttpServlet {
 					writer.print("<type>" + rs.getInt(4) + "</type>");
 					if (rs.getObject(5) != null)
 						writer.print("<foldRef>" + rs.getLong(5) + "</foldRef>");
-					writer.print("<customIcon>folder</customIcon>");
+					writer.print("<customIcon>" + (rs.getInt(4) == Folder.TYPE_ALIAS ? "folder_alias" : "folder")
+							+ "</customIcon>");
 					writer.print("<publishedStatus>yes</publishedStatus>");
 					writer.print("</folder>");
 				}

@@ -133,7 +133,7 @@ public class DeletedDocsDataServlet extends HttpServlet {
 					writer.print("<customId><![CDATA[" + doc.getCustomId() + "]]></customId>");
 				else
 					writer.print("<customId> </customId>");
-				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType())) + "</icon>");
+				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType(), doc.getDocRef()!=null)) + "</icon>");
 				writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 				writer.print("<version>" + doc.getVersion() + "</version>");
 				writer.print("<fileVersion>" + doc.getFileVersion() + "</fileVersion>");

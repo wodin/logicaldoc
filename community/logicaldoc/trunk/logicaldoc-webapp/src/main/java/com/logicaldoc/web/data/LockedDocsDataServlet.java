@@ -72,7 +72,7 @@ public class LockedDocsDataServlet extends HttpServlet {
 			query.append(" B.ld_firstname, B.ld_name, A.ld_fileversion ");
 			query.append(" from ld_document A ");
 			query.append(" left outer join ld_user B on A.ld_lockuserid=B.ld_id ");
-			query.append(" where A.ld_deleted = 0 and not A.ld_status="+AbstractDocument.DOC_ARCHIVED);
+			query.append(" where A.ld_deleted = 0 and not A.ld_status=" + AbstractDocument.DOC_ARCHIVED);
 			query.append(" and A.ld_tenantid=");
 			query.append(Long.toString(session.getTenantId()));
 			query.append(" and A.ld_docref is null ");
@@ -124,7 +124,9 @@ public class LockedDocsDataServlet extends HttpServlet {
 					writer.print("<customId><![CDATA[" + doc.getCustomId() + "]]></customId>");
 				else
 					writer.print("<customId> </customId>");
-				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType())) + "</icon>");
+				writer.print("<icon>"
+						+ FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType(), doc.getDocRef() != null))
+						+ "</icon>");
 				writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 				writer.print("<version>" + doc.getVersion() + "</version>");
 				writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
@@ -143,7 +145,7 @@ public class LockedDocsDataServlet extends HttpServlet {
 				else
 					writer.print("<locked>blank</locked>");
 				writer.print("<userId>" + doc.getLockUserId() + "</userId>");
-				if(doc.getComment()!=null)
+				if (doc.getComment() != null)
 					writer.print("<username>" + doc.getComment() + "</username>");
 				writer.print("</document>");
 			}

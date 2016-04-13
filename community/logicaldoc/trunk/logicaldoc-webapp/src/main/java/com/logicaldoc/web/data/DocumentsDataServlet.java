@@ -103,7 +103,7 @@ public class DocumentsDataServlet extends HttpServlet {
 					Document doc = docs.get(i);
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
-					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension()))
+					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension(),doc.getDocRef()!=null))
 							+ "</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
@@ -121,7 +121,7 @@ public class DocumentsDataServlet extends HttpServlet {
 						continue;
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
-					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension()))
+					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension(),doc.getDocRef()!=null))
 							+ "</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
@@ -310,9 +310,9 @@ public class DocumentsDataServlet extends HttpServlet {
 					}
 
 					if ("pdf".equals(doc.getDocRefType()))
-						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon("pdf")) + "</icon>");
+						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon("pdf",doc.getDocRef()!=null)) + "</icon>");
 					else
-						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType()))
+						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType(),doc.getDocRef()!=null))
 								+ "</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
