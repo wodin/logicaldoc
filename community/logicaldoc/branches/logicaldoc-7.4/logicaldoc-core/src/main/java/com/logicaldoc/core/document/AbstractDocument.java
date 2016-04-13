@@ -446,10 +446,10 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	 * The icon for this document, it may be kept from file name extension
 	 */
 	public String getIcon() {
-		String icon = IconSelector.selectIcon("");
+		String icon = IconSelector.selectIcon("", docRef != null);
 		try {
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-			icon = IconSelector.selectIcon(extension);
+			icon = IconSelector.selectIcon(extension, docRef != null);
 		} catch (Exception e) {
 		}
 		return icon;
