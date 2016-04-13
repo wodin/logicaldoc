@@ -1011,8 +1011,8 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		if ("1".equals(record.getAttribute("type"))) {
 			return Util.imageUrl("cube_blue16.png");
 		} else if ("2".equals(record.getAttribute("type"))) {
-			return defaultIcon.contains("closed") ? Util.imageUrl("folder_alias_closed.gif") : Util
-					.imageUrl("folder_alias_open.gif");
+			return defaultIcon.contains("closed") ? Util.imageUrl("folder_alias_closed.png") : Util
+					.imageUrl("folder_alias_open.png");
 		}
 		return defaultIcon;
 	}
