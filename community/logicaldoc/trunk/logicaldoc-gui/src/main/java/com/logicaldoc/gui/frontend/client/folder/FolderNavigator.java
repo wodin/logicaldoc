@@ -1007,10 +1007,14 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 
 	@Override
 	protected String getIcon(Record record, boolean defaultState) {
+		String defaultIcon = super.getIcon(record, defaultState);
 		if ("1".equals(record.getAttribute("type"))) {
-			setCustomNodeIcon(record, Util.imageUrl("cube_blue16.png"));
+			return Util.imageUrl("cube_blue16.png");
+		} else if ("2".equals(record.getAttribute("type"))) {
+			return defaultIcon.contains("closed") ? Util.imageUrl("folder_alias_closed.gif") : Util
+					.imageUrl("folder_alias_open.gif");
 		}
-		return super.getIcon(record, defaultState);
+		return defaultIcon;
 	}
 
 	@Override
