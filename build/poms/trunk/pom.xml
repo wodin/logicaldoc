@@ -204,11 +204,6 @@
         <version>1.4</version>
       </dependency>
       <dependency>
-        <groupId>commons-httpclient</groupId>
-        <artifactId>commons-httpclient</artifactId>
-        <version>3.1</version>
-      </dependency>
-      <dependency>
         <groupId>commons-codec</groupId>
         <artifactId>commons-codec</artifactId>
         <version>1.6</version>
@@ -530,6 +525,11 @@
         <groupId>org.quartz-scheduler</groupId>
         <artifactId>quartz</artifactId>
         <version>1.8.5</version>
+      </dependency>      
+      <dependency>
+        <groupId>org.quartz-scheduler</groupId>
+        <artifactId>quartz</artifactId>
+        <version>1.8.5</version>
       </dependency>
       <dependency>
         <groupId>com.google.gwt</groupId>
@@ -636,7 +636,12 @@
         <artifactId>bcprov-jdk15on</artifactId>
         <version>1.51</version>
       </dependency>
-    </dependencies>
+      <dependency>
+	      <groupId>org.apache.httpcomponents</groupId>
+	      <artifactId>httpclient</artifactId>
+	      <version>4.3.1</version>
+      </dependency>      
+    </dependencies>    
   </dependencyManagement>
   <repositories>
     <repository>
