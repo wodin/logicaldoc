@@ -61,7 +61,7 @@ public class GarbageDataServlet extends HttpServlet {
 			for (Document doc : documentDAO.findDeleted(session.getUserId(), 100)) {
 				writer.print("<entry>");
 				writer.print("<id>" + doc.getId() + "</id>");
-				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension()))
+				writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension(), doc.getDocRef()!=null))
 						+ "</icon>");
 				writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 				writer.print("<fileName><![CDATA[" + doc.getFileName() + "]]></fileName>");
