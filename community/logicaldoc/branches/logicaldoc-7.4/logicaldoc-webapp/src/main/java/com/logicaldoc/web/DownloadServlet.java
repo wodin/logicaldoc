@@ -18,6 +18,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
+import com.logicaldoc.core.document.pdf.PdfConverterManager;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
@@ -135,11 +136,12 @@ public class DownloadServlet extends HttpServlet {
 		String versionId = request.getParameter("versionId");
 		String fileVersion = request.getParameter("fileVersion");
 		String filename = "";
+		String suffix = request.getParameter("suffix");
 
 		Version version = null;
 		Document doc = null;
 
-		if (!StringUtils.isEmpty(docId)) {
+		if (StringUtils.isNotEmpty(docId)) {
 			doc = docDao.findById(Long.parseLong(docId));
 
 			if (user != null
@@ -147,16 +149,18 @@ public class DownloadServlet extends HttpServlet {
 				throw new IOException("You don't have the DOWNLOAD permission");
 
 			/*
-			 * In case of alias to PDF, we have to redirect to PDF conversion
+			 * In case of alias to PDF, we have to serve the PDF conversion
 			 */
-			if (doc.getDocRef() != null && StringUtil.isEmpty(downloadText) && "pdf".equals(doc.getDocRefType())) {
-				String redirectUrl = "/convertpdf?sid=" + sid + "&docId=" + doc.getDocRef();
-				if (versionId != null)
-					redirectUrl += "&versionId=" + versionId;
-				if (fileVersion != null)
-					redirectUrl += "&fileVersion=" + fileVersion;
-				response.sendRedirect(redirectUrl);
-				return;
+			if (doc.getDocRef() != null && StringUtil.isEmpty(downloadText)
+					&& (doc.getDocRefType() != null && doc.getDocRefType().contains("pdf"))
+					&& !doc.getFileName().toLowerCase().endsWith(".pdf")) {
+				
+				// Generate the PDF conversion
+				PdfConverterManager manager = (PdfConverterManager) Context.getInstance().getBean(
+						PdfConverterManager.class);
+				manager.createPdf(doc, fileVersion, sid);
+
+				suffix = PdfConverterManager.SUFFIX;
 			}
 
 			/*
@@ -166,19 +170,13 @@ public class DownloadServlet extends HttpServlet {
 				doc = docDao.findById(doc.getDocRef());
 		}
 
-		if (!StringUtils.isEmpty(versionId)) {
+		if (StringUtils.isNotEmpty(versionId)) {
 			version = versDao.findById(Long.parseLong(versionId));
 			if (doc == null) {
 				doc = docDao.findById(version.getDocId());
 
 				if (!folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
 					throw new IOException("You don't have the DOWNLOAD permission");
-
-				/*
-				 * In case of alias we have to work on the real document
-				 */
-				if (doc.getDocRef() != null)
-					doc = docDao.findById(doc.getDocRef());
 			}
 		}
 
@@ -196,7 +194,6 @@ public class DownloadServlet extends HttpServlet {
 				fileVersion = doc.getFileVersion();
 		}
 
-		String suffix = request.getParameter("suffix");
 		if (StringUtils.isEmpty(suffix)) {
 			suffix = "";
 		}
