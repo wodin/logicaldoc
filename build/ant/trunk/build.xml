@@ -66,7 +66,8 @@
         <exclude name="**/war/frontend/**" />
         <exclude name="**/war/common/**" />
         <exclude name="**/war/setup/**" />
-        <exclude name="**/war/applet/**" />
+        <exclude name="**/war/webstart/**" />
+        <exclude name="**/war/gwt-*" />
         <exclude name="**/.*/**" />
         <exclude name="**/checkout.bat" />
         <exclude name="**/checkout.sh" />
