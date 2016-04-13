@@ -136,6 +136,7 @@ public class FolderSearch extends Search {
 			hit.setSource(null);
 			hit.setComment(rs.getString(4));
 			hit.setPublished(1);
+
 			return hit;
 		}
 	};
