@@ -56,8 +56,9 @@ public class FolderSearch extends Search {
 	private void prepareExpression() {
 		// Find all real documents
 		StringBuffer query = new StringBuffer(
-				"select A.ld_id, A.ld_parentid, A.ld_name, A.ld_description, A.ld_creation, A.ld_lastmodified from ld_folder A ");
-		query.append(" where A.ld_deleted=0 and A.ld_type=0 and A.ld_hidden=0 ");
+				"select A.ld_id, A.ld_parentid, A.ld_name, A.ld_description, A.ld_creation, A.ld_lastmodified, A.ld_type, A.ld_foldref from ld_folder A ");
+		query.append(" where A.ld_deleted=0 and (A.ld_type=" + Folder.TYPE_DEFAULT + " or A.ld_type="
+				+ Folder.TYPE_ALIAS + ") and A.ld_hidden=0 ");
 
 		long tenantId = Tenant.DEFAULT_ID;
 		if (options.getTenantId() != null)
@@ -119,9 +120,16 @@ public class FolderSearch extends Search {
 			Folder folder = new Folder();
 			folder.setId(rs.getLong(2));
 			folder.setName(rs.getString(3));
+			folder.setType(rs.getInt(7));
 			hit.setFolder(folder);
 			hit.setTitle(rs.getString(3));
-			hit.setType("folder");
+			if (rs.getLong(8) != 0) {
+				hit.setDocRef(rs.getLong(8));
+				folder.setFoldRef(rs.getLong(8));
+				hit.setType("folderalias");
+			} else {
+				hit.setType("folder");
+			}
 			hit.setCustomId(Long.toString(rs.getLong(1)));
 			hit.setDate(rs.getTimestamp(6));
 			hit.setCreation(rs.getTimestamp(5));

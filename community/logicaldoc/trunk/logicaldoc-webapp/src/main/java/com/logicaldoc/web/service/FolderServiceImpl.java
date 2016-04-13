@@ -328,9 +328,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			boolean inheritSecurity) throws Exception {
 		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 		Folder folderToCopy = folderDao.findById(folderId);
-		
+
 		Folder destParentFolder = folderDao.findFolder(targetId);
-		
+
 		// Check destParentId MUST BE <> 0 (initial value)
 		if (targetId == 0 || folderDao.isInPath(folderToCopy.getId(), destParentFolder.getId())) {
 			return;
@@ -518,17 +518,23 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			folderVO.setType(newFolder.getType());
 			folderVO.setTenantId(session.getTenantId());
 
+			Folder root = folderDao.findRoot(session.getTenantId());
+
+			if (newFolder.getType() == Folder.TYPE_WORKSPACE)
+				newFolder.setParentId(root.getId());
+
 			Folder parent = folderDao.findById(newFolder.getParentId());
 			if (parent.getFoldRef() != null)
 				folderVO.setParentId(parent.getFoldRef());
 
 			Folder f = null;
-			if (newFolder.getType() == Folder.TYPE_DEFAULT)
+			if (newFolder.getType() == Folder.TYPE_WORKSPACE)
+				f = folderDao.create(root, folderVO,
+						inheritSecurity, transaction);
+			else
 				f = folderDao.create(folderDao.findById(newFolder.getParentId()), folderVO, inheritSecurity,
 						transaction);
-			else
-				f = folderDao.create(folderDao.findByName("/", session.getTenantId()).get(0), folderVO,
-						inheritSecurity, transaction);
+				
 
 			return getFolder(sid, f.getId());
 		} catch (Throwable t) {
@@ -668,8 +674,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	public void paste(String sid, long[] docIds, long folderId, String action) throws ServerException {
 		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
 
-		Folder folder=fdao.findFolder(folderId);
-		
+		Folder folder = fdao.findFolder(folderId);
+
 		if (!fdao.isWriteEnabled(folder.getId(), ServiceUtil.getSessionUser(sid).getId()))
 			throw new RuntimeException("Cannot write in folder " + folderId);
 

@@ -115,6 +115,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 				if ("folder".equals(hit.getType()))
 					h.setIcon("folder_closed");
+				else if("folderalias".equals(hit.getType()))
+					h.setIcon("folder_alias_closed");
 				else if ("pdf".equals(hit.getDocRefType()))
 					h.setIcon("pdf");
 				else

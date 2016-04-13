@@ -570,8 +570,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setPages(doc.getPages());
 		document.setNature(doc.getNature());
 		document.setFormId(doc.getFormId());
-		document.setIcon(FilenameUtils.getBaseName(IconSelector.selectIcon(FilenameUtils.getExtension(document
-				.getFileName()))));
+		document.setIcon(FilenameUtils.getBaseName(IconSelector.selectIcon(
+				FilenameUtils.getExtension(document.getFileName()), document.getDocRef() != null)));
 
 		if (doc.getRating() != null)
 			document.setRating(doc.getRating());
