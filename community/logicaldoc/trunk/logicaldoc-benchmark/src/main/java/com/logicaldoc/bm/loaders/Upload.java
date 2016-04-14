@@ -9,9 +9,6 @@ import java.util.StringTokenizer;
 import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
 
-import net.sf.ehcache.Cache;
-import net.sf.ehcache.CacheManager;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,6 +23,9 @@ import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSFolder;
+
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.CacheManager;
 
 /**
  * Loader thread that puts documents to the remote repository.
