@@ -1,8 +1,5 @@
 package com.logicaldoc.bm;
 
-import com.logicaldoc.webservice.soap.client.SoapSearchClient;
-import com.logicaldoc.webservice.soap.client.SoapFolderClient;
-
 import java.io.File;
 import java.io.IOException;
 
@@ -15,7 +12,8 @@ import com.logicaldoc.webservice.model.WSSearchOptions;
 import com.logicaldoc.webservice.model.WSSearchResult;
 import com.logicaldoc.webservice.soap.client.SoapAuthClient;
 import com.logicaldoc.webservice.soap.client.SoapDocumentClient;
-import com.logicaldoc.webservice.soap.client.SoapSystemClient;
+import com.logicaldoc.webservice.soap.client.SoapFolderClient;
+import com.logicaldoc.webservice.soap.client.SoapSearchClient;
 
 /**
  * Helper class to store remote service connections.
@@ -37,7 +35,6 @@ public class SoapServerProxy extends AbstractServerProxy {
 				config.getInt("webservice.gzip"), false, 40);
 		SoapFolderClient folderClient = new SoapFolderClient(url + "/services/Folder", config.getInt("webservice.gzip"),
 				false, 40);
-		SoapSystemClient systemClient = new SoapSystemClient(url + "/services/System");
 		SoapSearchClient searchClient = new SoapSearchClient(url + "/services/Search", config.getInt("webservice.gzip"),
 				false, 40);		
 		

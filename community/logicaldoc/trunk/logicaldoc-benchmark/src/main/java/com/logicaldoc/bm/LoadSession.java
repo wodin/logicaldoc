@@ -15,11 +15,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.webservice.soap.client.SoapSearchClient;
-import com.logicaldoc.webservice.soap.client.SoapFolderClient;
-import com.logicaldoc.webservice.soap.client.SoapAuthClient;
-import com.logicaldoc.webservice.soap.client.SoapDocumentClient;
-import com.logicaldoc.webservice.soap.client.SoapSystemClient;
 
 /**
  * Models a load session during which the LogicalDOC server will be heavy
