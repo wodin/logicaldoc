@@ -1,7 +1,7 @@
 package com.logicaldoc.webservice.rest.client;
 
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.PostMethod;
+//import org.apache.commons.httpclient.HttpStatus;
+//import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,9 +14,9 @@ public class RestFolderClient extends AbstractRestClient implements FolderServic
 
 	protected static Logger log = LoggerFactory.getLogger(RestFolderClient.class);
 
-	public RestFolderClient(String endpoint) {
-		super(endpoint);
-	}
+//	public RestFolderClient(String endpoint) {
+//		super(endpoint);
+//	}
 
 	public RestFolderClient(String endpoint, int timeout) {
 		super(endpoint, timeout);
@@ -32,21 +32,21 @@ public class RestFolderClient extends AbstractRestClient implements FolderServic
 	public long createFolder(String sid, long parentId, String name) throws Exception {
 		String url = endpoint + "/createFolder";
 		String output = null;
-		PostMethod post = preparePostMethod(url);
-		try {
-			post.setParameter("sid", sid);
-			post.setParameter("parentId", Long.toString(parentId));
-			post.setParameter("name", name);
-
-			int statusCode = client.executeMethod(post);
-
-			if (statusCode == HttpStatus.SC_OK)
-				output = post.getResponseBodyAsString();
-			else
-				throw new Exception("Server Error");
-		} finally {
-			post.releaseConnection();
-		}
+//		PostMethod post = preparePostMethod(url);
+//		try {
+//			post.setParameter("sid", sid);
+//			post.setParameter("parentId", Long.toString(parentId));
+//			post.setParameter("name", name);
+//
+//			int statusCode = client.executeMethod(post);
+//
+//			if (statusCode == HttpStatus.SC_OK)
+//				output = post.getResponseBodyAsString();
+//			else
+//				throw new Exception("Server Error");
+//		} finally {
+//			post.releaseConnection();
+//		}
 
 		if (StringUtils.isEmpty(output))
 			throw new Exception("Error in folder creation");
