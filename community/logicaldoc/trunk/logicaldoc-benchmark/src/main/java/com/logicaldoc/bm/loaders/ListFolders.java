@@ -4,7 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
-import com.logicaldoc.bm.ServerProxy;
+import com.logicaldoc.bm.AbstractServerProxy;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.model.WSFolder;
@@ -14,10 +14,12 @@ import com.logicaldoc.webservice.model.WSFolder;
  * root. This is an expensive process but should reach a stable execution time
  * once the folders in the profile have all been created.
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
+ * @author Alessandro Gasparini - LogicalDOC
  * @since 6.5
  */
 public class ListFolders extends AbstractLoader {
+	
 	private static Log log = LogFactory.getLog(ListFolders.class);
 
 	private String messageRecord;
@@ -36,7 +38,7 @@ public class ListFolders extends AbstractLoader {
 	 * Go to a directory and get a listing of the folders beneath it.
 	 */
 	@Override
-	protected String doLoading(ServerProxy serverProxy) throws Exception {
+	protected String doLoading(AbstractServerProxy serverProxy) throws Exception {
 		totalFolders = 0;
 		listFoldersRecursive(serverProxy, rootFolder);
 
@@ -54,11 +56,11 @@ public class ListFolders extends AbstractLoader {
 	/**
 	 * Recursive method to list all folders in the hierarchy.
 	 */
-	private void listFoldersRecursive(ServerProxy serverProxy, long parentFolder) {
+	private void listFoldersRecursive(AbstractServerProxy serverProxy, long parentFolder) {
 
 		WSFolder[] folders = new WSFolder[0];
 		try {
-			folders = serverProxy.folderClient.listChildren(serverProxy.sid, parentFolder);
+			folders = serverProxy.listChildren(serverProxy.sid, parentFolder);
 		} catch (Exception e) {
 			log.warn("listFoldersRecursive(): ", e);
 		}

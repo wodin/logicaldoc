@@ -12,7 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
-import com.logicaldoc.bm.ServerProxy;
+import com.logicaldoc.bm.AbstractServerProxy;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSSearchOptions;
 import com.logicaldoc.webservice.model.WSSearchResult;
@@ -20,7 +20,7 @@ import com.logicaldoc.webservice.model.WSSearchResult;
 /**
  * Executes a random selection of full-text queries from /expressions.txt
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 6.5
  */
 public class Search extends AbstractLoader {
@@ -38,7 +38,7 @@ public class Search extends AbstractLoader {
 	}
 
 	@Override
-	protected String doLoading(ServerProxy serverProxy) throws Exception {
+	protected String doLoading(AbstractServerProxy serverProxy) throws Exception {
 		String query = getRandomQuery();
 		int results = performFullTextSearch(serverProxy, query);
 		String msg = String.format("%d hits for query \"%s\"", results, query);
@@ -59,7 +59,7 @@ public class Search extends AbstractLoader {
 		return null;
 	}
 
-	private int performFullTextSearch(ServerProxy serverProxy, String query) throws Exception {
+	private int performFullTextSearch(AbstractServerProxy serverProxy, String query) throws Exception {
 		int results = 0;
 
 		WSSearchOptions options = new WSSearchOptions();
@@ -79,7 +79,7 @@ public class Search extends AbstractLoader {
 		// for this search
 		options.setMaxHits(50);
 
-		WSSearchResult sr = serverProxy.searchClient.find(serverProxy.sid, options);
+		WSSearchResult sr = serverProxy.find(serverProxy.sid, options);
 
 		// System.out.println("HITS: " + sr.getTotalHits());
 		// System.out.println("search completed in ms: " + sr.getTime());

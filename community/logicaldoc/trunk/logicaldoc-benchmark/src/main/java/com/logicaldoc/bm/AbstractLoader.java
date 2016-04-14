@@ -72,7 +72,7 @@ public abstract class AbstractLoader extends Thread {
 					// int serverIndex = random.nextInt(serverCount);
 					// LoaderServerProxy serverProxy =
 					// session.getRemoteServers().get(serverIndex);
-					ServerProxy serverProxy = session.getRemoteServer();
+					AbstractServerProxy serverProxy = session.getRemoteServer();
 
 					doLoading(serverProxy);
 					statCount++;
@@ -118,7 +118,7 @@ public abstract class AbstractLoader extends Thread {
 	 * @return a brief description of the loading
 	 * @throws Exception any exception will be handled
 	 */
-	protected abstract String doLoading(ServerProxy serverProxy) throws Exception;
+	protected abstract String doLoading(AbstractServerProxy serverProxy) throws Exception;
 
 	public boolean isFinished() {
 		return loaderCount >= iterations;
