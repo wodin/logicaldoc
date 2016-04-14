@@ -12,7 +12,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
-import com.logicaldoc.bm.ServerProxy;
+import com.logicaldoc.bm.AbstractServerProxy;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.config.ContextProperties;
@@ -52,7 +52,7 @@ public class Update extends AbstractLoader {
 	}
 
 	@Override
-	protected String doLoading(ServerProxy serverProxy) throws Exception {
+	protected String doLoading(AbstractServerProxy serverProxy) throws Exception {
 		synchronized (folders) {
 			if (folders.isEmpty()) {
 				prepareFolders(serverProxy, rootFolder, 1);
@@ -68,7 +68,7 @@ public class Update extends AbstractLoader {
 			long folderId = chooseFolder();
 
 			// List all the documents
-			WSDocument[] docs = serverProxy.documentClient.list(serverProxy.sid, folderId);
+			WSDocument[] docs = serverProxy.list(serverProxy.sid, folderId);
 			if (docs != null)
 				for (WSDocument doc : docs) {
 					updateDocument(serverProxy, doc);
@@ -81,7 +81,7 @@ public class Update extends AbstractLoader {
 		return null;
 	}
 
-	private void updateDocument(ServerProxy serverProxy, WSDocument doc) throws Exception {
+	private void updateDocument(AbstractServerProxy serverProxy, WSDocument doc) throws Exception {
 		/*
 		 * Edit the title
 		 */
@@ -112,7 +112,7 @@ public class Update extends AbstractLoader {
 		/*
 		 * Request the update
 		 */
-		serverProxy.documentClient.update(serverProxy.sid, doc);
+		serverProxy.update(serverProxy.sid, doc);
 	}
 
 	protected long chooseFolder() {
@@ -137,8 +137,8 @@ public class Update extends AbstractLoader {
 		}
 	}
 
-	private void prepareFolders(ServerProxy serverProxy, long parent, int level) throws Exception {
-		WSFolder[] ret = serverProxy.folderClient.listChildren(serverProxy.sid, parent);
+	private void prepareFolders(AbstractServerProxy serverProxy, long parent, int level) throws Exception {
+		WSFolder[] ret = serverProxy.listChildren(serverProxy.sid, parent);
 		if (ret != null)
 			for (WSFolder wsFolder : ret) {
 				folders.add(wsFolder.getId());

@@ -17,8 +17,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
+import com.logicaldoc.bm.AbstractServerProxy;
 import com.logicaldoc.bm.RandomFile;
-import com.logicaldoc.bm.ServerProxy;
 import com.logicaldoc.bm.SourceFile;
 import com.logicaldoc.bm.cache.EhCacheAdapter;
 import com.logicaldoc.util.Context;
@@ -94,7 +94,7 @@ public class Upload extends AbstractLoader {
 	}
 
 	@Override
-	protected String doLoading(ServerProxy serverProxy) throws Exception {
+	protected String doLoading(AbstractServerProxy serverProxy) throws Exception {
 		synchronized (tags) {
 			if (tags.isEmpty()) {
 				prepareTags();
@@ -121,7 +121,7 @@ public class Upload extends AbstractLoader {
 		return null;
 	}
 
-	private Long createDocument(String ticket, ServerProxy serverProxy, long folderId, String title, SourceFile sfile) {
+	private Long createDocument(String ticket, AbstractServerProxy serverProxy, long folderId, String title, SourceFile sfile) {
 
 		String fileName = sfile.getFile().getName();
 
@@ -147,14 +147,16 @@ public class Upload extends AbstractLoader {
 		}
 
 		try {
-			if (sfile.getContent() != null)
-				doc = serverProxy.documentClient.create(ticket, doc, new DataHandler(new ByteArrayDataSource(sfile
+			if (sfile.getContent() != null) {
+				doc = serverProxy.create(ticket, doc, new DataHandler(new ByteArrayDataSource(sfile
 						.getContent().getBytes(), "application/octet-stream")));
-			else
-				doc = serverProxy.documentClient.create(ticket, doc, sfile.getFile());
+			} else {
+				doc = serverProxy.create(ticket, doc, sfile.getFile());
+			}
 
-			if (doc != null)
+			if (doc != null) {
 				log.debug("Created document " + fileName);
+			}
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
 		}
@@ -180,7 +182,7 @@ public class Upload extends AbstractLoader {
 	/**
 	 * Creates or find the folders based on caching.
 	 */
-	protected Long makeFolders(String ticket, ServerProxy serverProxy, Long rootFolder, List<String> folderPath)
+	protected Long makeFolders(String ticket, AbstractServerProxy serverProxy, Long rootFolder, List<String> folderPath)
 			throws Exception {
 
 		// Iterate down the path, checking the cache and populating it as
@@ -204,7 +206,7 @@ public class Upload extends AbstractLoader {
 				WSFolder newFolder = new WSFolder();
 				newFolder.setName(aFolderPath);
 				newFolder.setParentId(currentParentFolderID);
-				WSFolder folder = serverProxy.folderClient.create(ticket, newFolder);
+				WSFolder folder = serverProxy.create(ticket, newFolder);
 
 				currentParentFolderID = folder.getId();
 			} catch (Exception e) {
@@ -223,7 +225,7 @@ public class Upload extends AbstractLoader {
 	/**
 	 * Creates or find the folders based on caching.
 	 */
-	protected Long makeFoldersFromPath(String ticket, ServerProxy serverProxy, Long rootFolder, List<String> folderPath)
+	protected Long makeFoldersFromPath(String ticket, AbstractServerProxy serverProxy, Long rootFolder, List<String> folderPath)
 			throws Exception {
 
 		// Iterate down the path, checking the cache and populating it as
@@ -238,7 +240,7 @@ public class Upload extends AbstractLoader {
 
 		// It is not there, so create it
 		if (folderID == null) {
-			WSFolder folder = serverProxy.folderClient.createPath(ticket, rootFolder, currentKey);
+			WSFolder folder = serverProxy.createPath(ticket, rootFolder, currentKey);
 
 			folderID = folder.getId();
 			// Cache the new node

@@ -50,13 +50,13 @@ public class LoadSession {
 
 	private Random random = new Random();
 
-	private List<ServerProxy> servers = new ArrayList<ServerProxy>();
+	private List<AbstractServerProxy> servers = new ArrayList<AbstractServerProxy>();
 
 	public LoadSession() {
 
 	}
 
-	public ServerProxy getRemoteServer() {
+	public AbstractServerProxy getRemoteServer() {
 		if (servers != null && servers.size() > 0) {
 			int idx = random.nextInt(servers.size());
 			return servers.get(idx);
@@ -71,7 +71,7 @@ public class LoadSession {
 		StringTokenizer tokenizer = new StringTokenizer(url, ",", false);
 		while (tokenizer.hasMoreTokens()) {
 			String s = tokenizer.nextToken().trim();
-			ServerProxy server = LoadSession.connect(s, username, password);
+			AbstractServerProxy server = LoadSession.connect(s, username, password);
 			servers.add(server);
 			log.info("Connected to server " + s);
 		}
@@ -91,7 +91,7 @@ public class LoadSession {
 	public synchronized void close() {
 		System.out.println("LoadSession.close");
 		int counter = 0;
-		for (ServerProxy server : servers) {
+		for (AbstractServerProxy server : servers) {
 			counter++;
 			System.out.println("logout server: " + counter);
 			server.logout();
@@ -99,25 +99,16 @@ public class LoadSession {
 		}
 	}
 
-	private static ServerProxy connect(String url, String username, String password) throws Exception {
+	private static AbstractServerProxy connect(String url, String username, String password) throws Exception {
 		log.info("Connect to the server");
 
-		ServerProxy remoteServer = null;
+		AbstractServerProxy remoteServer = null;
 
 		try {
 			ContextProperties config = new ContextProperties();
 
-			SoapAuthClient auth = new SoapAuthClient(url + "/services/Auth");
-			SoapDocumentClient documentClient = new SoapDocumentClient(url + "/services/Document",
-					config.getInt("webservice.gzip"), false, 40);
-			SoapFolderClient folderClient = new SoapFolderClient(url + "/services/Folder", config.getInt("webservice.gzip"),
-					false, 40);
-			SoapSystemClient systemClient = new SoapSystemClient(url + "/services/System");
-			SoapSearchClient searchClient = new SoapSearchClient(url + "/services/Search", config.getInt("webservice.gzip"),
-					false, 40);
-
 			// Store the service references
-			ServerProxy lsp = new ServerProxy(url, auth, folderClient, documentClient, systemClient, searchClient);
+			AbstractServerProxy lsp = new SoapServerProxy(url, config);
 
 			// Authenticate
 			String ticket = lsp.login(username, password);
