@@ -3,14 +3,18 @@ package com.logicaldoc.core.stats;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.UsernamePasswordCredentials;
-import org.apache.commons.httpclient.auth.AuthScope;
-import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.io.FileUtils;
+import org.apache.http.Consts;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.communication.EMailSender;
@@ -27,6 +31,7 @@ import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.http.HttpUtil;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
@@ -235,74 +240,77 @@ public class StatsCollector extends Task {
 
 		try {
 			log.debug("Package collected statistics");
-			// Prepare HTTP post
-			PostMethod post = new PostMethod("http://stat.logicaldoc.com/stats/collect");
+
+			// Prepare the post parameters
+			List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 
 			// Add all statistics as parameters
-			post.setParameter("id", id != null ? id : "");
-			post.setParameter("userno", userno != null ? userno : "");
-			post.setParameter("product_release", release != null ? release : "");
-			post.setParameter("email", email != null ? email : "");
-			post.setParameter("product", StatsCollector.product != null ? StatsCollector.product : "");
-			post.setParameter("product_name", StatsCollector.productName != null ? StatsCollector.productName : "");
+			postParams.add(new BasicNameValuePair("sid", id != null ? id : ""));
+			postParams.add(new BasicNameValuePair("userno", userno != null ? userno : ""));
+			postParams.add(new BasicNameValuePair("product_release", release != null ? release : ""));
+			postParams.add(new BasicNameValuePair("email", email != null ? email : ""));
+			postParams.add(new BasicNameValuePair("product", StatsCollector.product != null ? StatsCollector.product
+					: ""));
+			postParams.add(new BasicNameValuePair("product_name",
+					StatsCollector.productName != null ? StatsCollector.productName : ""));
 
-			post.setParameter("java_version", javaversion != null ? javaversion : "");
-			post.setParameter("java_vendor", javavendor != null ? javavendor : "");
-			post.setParameter("java_arch", javaarch != null ? javaarch : "");
-			post.setParameter("dbms", dbms != null ? dbms : "");
+			postParams.add(new BasicNameValuePair("java_version", javaversion != null ? javaversion : ""));
+			postParams.add(new BasicNameValuePair("java_vendor", javavendor != null ? javavendor : ""));
+			postParams.add(new BasicNameValuePair("java_arch", javaarch != null ? javaarch : ""));
+			postParams.add(new BasicNameValuePair("dbms", dbms != null ? dbms : ""));
 
-			post.setParameter("os_name", osname != null ? osname : "");
-			post.setParameter("os_version", osversion != null ? osversion : "");
-			post.setParameter("file_encoding", fileencoding != null ? fileencoding : "");
+			postParams.add(new BasicNameValuePair("os_name", osname != null ? osname : ""));
+			postParams.add(new BasicNameValuePair("os_version", osversion != null ? osversion : ""));
+			postParams.add(new BasicNameValuePair("file_encoding", fileencoding != null ? fileencoding : ""));
 
-			post.setParameter("user_language", userlanguage != null ? userlanguage : "");
-			post.setParameter("user_country", usercountry != null ? usercountry : "");
+			postParams.add(new BasicNameValuePair("user_language", userlanguage != null ? userlanguage : ""));
+			postParams.add(new BasicNameValuePair("user_country", usercountry != null ? usercountry : ""));
 
 			// Sizing
-			post.setParameter("users", Integer.toString(users));
-			post.setParameter("groups", Integer.toString(groups));
-			post.setParameter("docs", Long.toString(totaldocs));
-			post.setParameter("archived_docs", Long.toString(archiveddocs));
-			post.setParameter("folders", Long.toString(withdocs + empty + deletedfolders));
-			post.setParameter("tags", Long.toString(tags));
-			post.setParameter("versions", Long.toString(versions));
-			post.setParameter("histories", Long.toString(histories));
-			post.setParameter("user_histories", Long.toString(user_histories));
+			postParams.add(new BasicNameValuePair("users", Integer.toString(users)));
+			postParams.add(new BasicNameValuePair("groups", Integer.toString(groups)));
+			postParams.add(new BasicNameValuePair("docs", Long.toString(totaldocs)));
+			postParams.add(new BasicNameValuePair("archived_docs", Long.toString(archiveddocs)));
+			postParams.add(new BasicNameValuePair("folders", Long.toString(withdocs + empty + deletedfolders)));
+			postParams.add(new BasicNameValuePair("tags", Long.toString(tags)));
+			postParams.add(new BasicNameValuePair("versions", Long.toString(versions)));
+			postParams.add(new BasicNameValuePair("histories", Long.toString(histories)));
+			postParams.add(new BasicNameValuePair("user_histories", Long.toString(user_histories)));
 
 			// Features usage
-			post.setParameter("bookmarks", Long.toString(bookmarks));
-			post.setParameter("notes", Long.toString(notes));
-			post.setParameter("links", Long.toString(links));
-			post.setParameter("aliases", Long.toString(aliases));
-			post.setParameter("workflow_histories", Long.toString(workflow_histories));
-			post.setParameter("tenants", Long.toString(tenantsCount));
+			postParams.add(new BasicNameValuePair("bookmarks", Long.toString(bookmarks)));
+			postParams.add(new BasicNameValuePair("notes", Long.toString(notes)));
+			postParams.add(new BasicNameValuePair("links", Long.toString(links)));
+			postParams.add(new BasicNameValuePair("aliases", Long.toString(aliases)));
+			postParams.add(new BasicNameValuePair("workflow_histories", Long.toString(workflow_histories)));
+			postParams.add(new BasicNameValuePair("tenants", Long.toString(tenantsCount)));
 
 			long templates = documentDAO.queryForLong("select count(ld_id) from ld_template where ld_deleted=0");
-			post.setParameter("templates", Long.toString(templates));
+			postParams.add(new BasicNameValuePair("templates", Long.toString(templates)));
 
 			long shares = 0;
 			try {
 				shares = documentDAO.queryForLong("select count(ld_id) from ld_share where ld_deleted=0");
 			} catch (Throwable t) {
 			}
-			post.setParameter("shares", Long.toString(shares));
+			postParams.add(new BasicNameValuePair("shares", Long.toString(shares)));
 
 			long stamps = 0;
 			try {
 				stamps = documentDAO.queryForLong("select count(ld_id) from ld_stamp where ld_deleted=0");
 			} catch (Throwable t) {
 			}
-			post.setParameter("stamps", Long.toString(stamps));
+			postParams.add(new BasicNameValuePair("stamps", Long.toString(stamps)));
 
 			long forms = documentDAO
 					.queryForLong("select count(ld_id) from ld_document where ld_deleted=0 and ld_nature="
 							+ AbstractDocument.NATURE_FORM);
-			post.setParameter("forms", Long.toString(forms));
+			postParams.add(new BasicNameValuePair("forms", Long.toString(forms)));
 
 			long reports = 0;
 			try {
 				reports = documentDAO.queryForLong("select count(ld_id) from ld_report where ld_deleted=0");
-				post.setParameter("reports", Long.toString(reports));
+				postParams.add(new BasicNameValuePair("reports", Long.toString(reports)));
 			} catch (Throwable t) {
 			}
 
@@ -317,7 +325,7 @@ public class StatsCollector extends Task {
 			} catch (Throwable t) {
 				log.warn(t.getMessage());
 			}
-			post.setParameter("last_login", lastLogin != null ? isoDf.format(lastLogin) : "");
+			postParams.add(new BasicNameValuePair("last_login", lastLogin != null ? isoDf.format(lastLogin) : ""));
 
 			Date lastCreation = null;
 			try {
@@ -327,50 +335,43 @@ public class StatsCollector extends Task {
 			} catch (Throwable t) {
 				log.warn(t.getMessage());
 			}
-			post.setParameter("last_creation", lastCreation != null ? isoDf.format(lastCreation) : "");
+			postParams.add(new BasicNameValuePair("last_creation", lastCreation != null ? isoDf.format(lastCreation)
+					: ""));
 
 			// Quotas
-			post.setParameter("docdir", Long.toString(docdir));
-			post.setParameter("indexdir", Long.toString(indexdir));
-			post.setParameter("quota",
-					Long.toString(docdir + indexdir + userdir + importdir + exportdir + plugindir + dbdir + logdir));
+			postParams.add(new BasicNameValuePair("docdir", Long.toString(docdir)));
+			postParams.add(new BasicNameValuePair("indexdir", Long.toString(indexdir)));
+			postParams.add(new BasicNameValuePair("quota", Long.toString(docdir + indexdir + userdir + importdir
+					+ exportdir + plugindir + dbdir + logdir)));
 
 			// Registration
-			post.setParameter("reg_name", regName != null ? regName : "");
-			post.setParameter("reg_email", regEmail != null ? regEmail : "");
-			post.setParameter("reg_organization", regOrganization != null ? regOrganization : "");
-			post.setParameter("reg_website", regWebsite != null ? regWebsite : "");
+			postParams.add(new BasicNameValuePair("reg_name", regName != null ? regName : ""));
+			postParams.add(new BasicNameValuePair("reg_email", regEmail != null ? regEmail : ""));
+			postParams.add(new BasicNameValuePair("reg_organization", regOrganization != null ? regOrganization : ""));
+			postParams.add(new BasicNameValuePair("reg_website", regWebsite != null ? regWebsite : ""));
 
-			// Get HTTP client
-			HttpClient httpclient = new HttpClient();
+			HttpPost post = new HttpPost("http://stat.logicaldoc.com/stats/collect");
+			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(postParams, Consts.UTF_8);
+			post.setEntity(entity);
 
-			// Setup Proxy configuration
-			String proxyHost = config.getProperty("proxy.host");
-			String proxyPort = config.getProperty("proxy.port");
-			String proxyUsername = config.getProperty("proxy.username");
-			String proxyPassword = config.getProperty("proxy.password");
-
-			if (proxyHost != null && !"".equals(proxyHost.trim())) {
-				log.debug("Use proxy " + proxyHost);
-				httpclient.getHostConfiguration().setProxy(proxyHost, Integer.parseInt(proxyPort));
-				if (proxyUsername != null && !"".equals(proxyUsername)) {
-					httpclient.getState().setCredentials(AuthScope.ANY,
-							new UsernamePasswordCredentials(proxyUsername, proxyPassword));
-				}
-			}
+			CloseableHttpClient httpclient = HttpUtil.getNotValidatingClient(60);
 
 			// Execute request
+			CloseableHttpResponse response = null;
 			try {
-				int responseStatusCode = httpclient.executeMethod(post);
+				response = httpclient.execute(post);
+				int responseStatusCode = response.getStatusLine().getStatusCode();
 				// log status code
 				log.debug("Response status code: " + responseStatusCode);
 				if (responseStatusCode != 200) {
-					throw new IOException(post.getResponseBodyAsString());
+					throw new IOException(HttpUtil.getBodyString(response));
 				}
 			} finally {
-				// Release current connection to the connection pool once you
-				// have done
-				post.releaseConnection();
+				if (response != null)
+					try {
+						response.close();
+					} catch (IOException e) {
+					}
 			}
 
 			log.info("Statistics packaged");
