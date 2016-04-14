@@ -17,8 +17,8 @@ import com.logicaldoc.util.io.EasySSLProtocolSocketFactory;
 /**
  * Parent for all SOAP clients
  * 
- * @author Marco Meschieri - Logical Objects
- * @since 6.5.1
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.5
  */
 public abstract class SoapClient<T> {
 

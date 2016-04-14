@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.services;
+package com.logicaldoc.webservice;
 
 import java.io.FileNotFoundException;
 import java.text.DateFormat;

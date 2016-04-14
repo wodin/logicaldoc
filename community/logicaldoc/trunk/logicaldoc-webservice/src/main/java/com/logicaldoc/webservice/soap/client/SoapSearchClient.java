@@ -7,13 +7,13 @@ import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.model.WSSearchOptions;
 import com.logicaldoc.webservice.model.WSSearchResult;
 import com.logicaldoc.webservice.model.WSTagCloud;
-import com.logicaldoc.webservice.services.SearchService;
+import com.logicaldoc.webservice.soap.SearchService;
 
 /**
  * Search Web Service client.
  * 
- * @author Matteo Caruso - Logical Objects
- * @since 5.2
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.5
  */
 public class SoapSearchClient extends SoapClient<SearchService> implements SearchService {
 

@@ -12,13 +12,13 @@ import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSLink;
-import com.logicaldoc.webservice.services.DocumentService;
+import com.logicaldoc.webservice.soap.DocumentService;
 
 /**
  * Document Web Service client.
  * 
- * @author Matteo Caruso - Logical Objects
- * @since 5.2
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.5
  */
 @WebService(name="Document", serviceName="Document")
 public class SoapDocumentClient extends SoapClient<DocumentService> implements DocumentService {

@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import com.logicaldoc.webservice.model.WSGroup;
 import com.logicaldoc.webservice.model.WSUser;
-import com.logicaldoc.webservice.services.SecurityService;
+import com.logicaldoc.webservice.soap.SecurityService;
 
 /**
  * Security Web Service client.
  * 
- * @author Matteo Caruso - Logical Objects
- * @since 6.1
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.5
  */
 public class SoapSecurityClient extends SoapClient<SecurityService> implements SecurityService {
 

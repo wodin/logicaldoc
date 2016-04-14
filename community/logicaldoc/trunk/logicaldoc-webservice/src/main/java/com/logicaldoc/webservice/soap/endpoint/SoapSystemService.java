@@ -19,10 +19,10 @@ import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.model.WSParameter;
 import com.logicaldoc.webservice.model.WSSystemInfo;
-import com.logicaldoc.webservice.services.AbstractService;
-import com.logicaldoc.webservice.services.SystemService;
+import com.logicaldoc.webservice.soap.SystemService;
 
 /**
  * System Web Service Implementation

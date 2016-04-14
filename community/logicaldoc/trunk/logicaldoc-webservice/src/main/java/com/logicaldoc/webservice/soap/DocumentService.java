@@ -1,4 +1,4 @@
-package com.logicaldoc.webservice.services;
+package com.logicaldoc.webservice.soap;
 
 import javax.activation.DataHandler;
 import javax.jws.WebParam;

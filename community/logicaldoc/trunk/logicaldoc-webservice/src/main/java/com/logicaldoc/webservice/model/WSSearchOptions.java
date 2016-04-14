@@ -4,7 +4,7 @@ import java.util.Locale;
 
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.SearchOptions;
-import com.logicaldoc.webservice.services.AbstractService;
+import com.logicaldoc.webservice.AbstractService;
 
 /**
  * Search options through Web Services.

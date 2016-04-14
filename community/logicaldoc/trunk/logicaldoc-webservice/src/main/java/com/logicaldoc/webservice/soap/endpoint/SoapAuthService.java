@@ -10,8 +10,8 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.webservice.services.AbstractService;
-import com.logicaldoc.webservice.services.AuthService;
+import com.logicaldoc.webservice.AbstractService;
+import com.logicaldoc.webservice.soap.AuthService;
 
 /**
  * Auth Web Service Implementation (SOAP)

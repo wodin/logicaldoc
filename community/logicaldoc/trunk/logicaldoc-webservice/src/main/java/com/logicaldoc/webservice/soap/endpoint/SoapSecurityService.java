@@ -16,10 +16,10 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.crypt.CryptUtil;
+import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.model.WSGroup;
 import com.logicaldoc.webservice.model.WSUser;
-import com.logicaldoc.webservice.services.AbstractService;
-import com.logicaldoc.webservice.services.SecurityService;
+import com.logicaldoc.webservice.soap.SecurityService;
 
 /**
  * Security Web Service Implementation

@@ -49,10 +49,10 @@ import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.io.FileUtil;
+import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSLink;
-import com.logicaldoc.webservice.services.AbstractService;
-import com.logicaldoc.webservice.services.DocumentService;
+import com.logicaldoc.webservice.soap.DocumentService;
 
 /**
  * Document Web Service Implementation (SOAP)

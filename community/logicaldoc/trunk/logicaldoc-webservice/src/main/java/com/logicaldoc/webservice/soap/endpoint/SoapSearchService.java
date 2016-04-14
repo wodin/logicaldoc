@@ -16,13 +16,13 @@ import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.model.WSSearchOptions;
 import com.logicaldoc.webservice.model.WSSearchResult;
 import com.logicaldoc.webservice.model.WSTagCloud;
-import com.logicaldoc.webservice.services.AbstractService;
-import com.logicaldoc.webservice.services.SearchService;
+import com.logicaldoc.webservice.soap.SearchService;
 
 /**
  * Search Web Service Implementation

@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import com.logicaldoc.webservice.services.AbstractService;
+import com.logicaldoc.webservice.AbstractService;
 
 /**
  * Extended attribute of a document

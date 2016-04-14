@@ -14,7 +14,7 @@ import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.webservice.services.AbstractService;
+import com.logicaldoc.webservice.AbstractService;
 
 /**
  * Web Service Folder. Useful class to create repository Folders.
