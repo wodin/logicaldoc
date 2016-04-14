@@ -7,6 +7,7 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.params.HttpConnectionParams;
 import org.apache.commons.httpclient.protocol.Protocol;
+import org.apache.cxf.jaxrs.client.WebClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,7 @@ public abstract class AbstractRestClient {
 	protected String endpoint;
 
 	protected HttpClient client = new HttpClient();
+	protected WebClient wclient = null;
 
 	/**
 	 * Constructor
@@ -34,7 +36,8 @@ public abstract class AbstractRestClient {
 	 */
 	public AbstractRestClient(String endpoint) {
 		this.endpoint = endpoint;
-		configureSSL();
+		wclient = WebClient.create(endpoint +"/login");
+		//configureSSL();
 	}
 
 	/**
@@ -45,7 +48,7 @@ public abstract class AbstractRestClient {
 	 */
 	public AbstractRestClient(String endpoint, int timeout) {
 		this(endpoint);
-		configureTimeout(timeout);
+		//configureTimeout(timeout);
 	}
 
 	/**

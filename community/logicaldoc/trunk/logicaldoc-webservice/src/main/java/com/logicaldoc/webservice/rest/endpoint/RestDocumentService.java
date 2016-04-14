@@ -1,8 +1,5 @@
 package com.logicaldoc.webservice.rest.endpoint;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -22,11 +19,6 @@ import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.User;
-import com.logicaldoc.util.Context;
-import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.soap.endpoint.SoapDocumentService;
 

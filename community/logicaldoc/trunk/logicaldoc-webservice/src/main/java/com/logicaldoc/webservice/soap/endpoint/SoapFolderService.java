@@ -19,10 +19,10 @@ import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.model.Right;
 import com.logicaldoc.webservice.model.WSFolder;
-import com.logicaldoc.webservice.services.AbstractService;
-import com.logicaldoc.webservice.services.FolderService;
+import com.logicaldoc.webservice.soap.FolderService;
 
 /**
  * Folder Web Service Implementation

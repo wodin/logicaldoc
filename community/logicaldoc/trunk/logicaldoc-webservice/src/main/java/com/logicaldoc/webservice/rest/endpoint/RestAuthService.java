@@ -20,12 +20,13 @@ import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.webservice.rest.AuthService;
 import com.logicaldoc.webservice.soap.endpoint.SoapAuthService;
 
 
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
-public class RestAuthService extends SoapAuthService {
+public class RestAuthService extends SoapAuthService implements AuthService {
 	
 	private static Logger log = LoggerFactory.getLogger(RestAuthService.class);
 	

@@ -7,7 +7,7 @@ import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.webservice.services.AbstractService;
+import com.logicaldoc.webservice.AbstractService;
 
 /**
  * Web Service Group. Useful class to create repository Groups.

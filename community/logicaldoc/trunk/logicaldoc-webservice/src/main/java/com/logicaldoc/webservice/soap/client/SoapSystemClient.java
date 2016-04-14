@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import com.logicaldoc.webservice.model.WSParameter;
 import com.logicaldoc.webservice.model.WSSystemInfo;
-import com.logicaldoc.webservice.services.SystemService;
+import com.logicaldoc.webservice.soap.SystemService;
 
 /**
  * System Web Service client.
  * 
- * @author Matteo Caruso - Logical Objects
- * @since 6.1
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.5
  */
 public class SoapSystemClient extends SoapClient<SystemService> implements SystemService {
 

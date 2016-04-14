@@ -18,15 +18,18 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSLink;
-import com.logicaldoc.webservice.services.DocumentService;
-import com.logicaldoc.webservice.soap.endpoint.SoapAuthService;
+import com.logicaldoc.webservice.soap.DocumentService;
 
 public class RestDocumentClient extends AbstractRestClient implements DocumentService {
 
-	protected static Logger log = LoggerFactory.getLogger(SoapAuthService.class);
+	protected static Logger log = LoggerFactory.getLogger(RestDocumentClient.class);
 
 	public RestDocumentClient(String endpoint) {
 		super(endpoint);
+	}
+	
+	public RestDocumentClient(String endpoint, int timeout) {
+		super(endpoint, timeout);
 	}
 
 	@Override
@@ -311,6 +314,11 @@ public class RestDocumentClient extends AbstractRestClient implements DocumentSe
 
 	@Override
 	public String getExtractedText(String sid, long docId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public WSDocument create(String ticket, WSDocument doc, File file) {
 		// TODO Auto-generated method stub
 		return null;
 	}

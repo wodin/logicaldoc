@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.commons.httpclient.HttpException;
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -35,7 +34,7 @@ public class AlfRest {
 
 	public static String BASE_PATH = "http://localhost:8080/logicaldoc";
 
-	public static void main(String[] args) throws HttpException, IOException {
+	public static void main(String[] args) throws IOException {
 
 		String sid = loginJSON();
 
@@ -82,7 +81,7 @@ public class AlfRest {
 		}
 	}
 
-	private static void createDocument(String sid) throws HttpException, IOException {
+	private static void createDocument(String sid) throws IOException {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		
@@ -127,7 +126,7 @@ public class AlfRest {
 		}
 	}
 
-	private static void createFolderSimple(String sid) throws UnsupportedEncodingException, IOException, HttpException {
+	private static void createFolderSimple(String sid) throws UnsupportedEncodingException, IOException {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		
@@ -151,7 +150,7 @@ public class AlfRest {
 	}
 
 	private static void createFolderSimpleJSON(String sid)
-			throws UnsupportedEncodingException, IOException, HttpException {
+			throws UnsupportedEncodingException, IOException {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 
@@ -175,7 +174,7 @@ public class AlfRest {
 		}
 	}
 
-	private static String loginJSON() throws UnsupportedEncodingException, IOException, HttpException {
+	private static String loginJSON() throws UnsupportedEncodingException, IOException {
 
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 

@@ -9,7 +9,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.crypt.CryptUtil;
-import com.logicaldoc.webservice.services.AbstractService;
+import com.logicaldoc.webservice.AbstractService;
 
 /**
  * Web Service User. Useful class to create repository Users.

@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import com.logicaldoc.webservice.model.Right;
 import com.logicaldoc.webservice.model.WSFolder;
-import com.logicaldoc.webservice.services.FolderService;
+import com.logicaldoc.webservice.soap.FolderService;
 
 /**
  * Folder Web Service client.
  * 
- * @author Matteo Caruso - Logical Objects
- * @since 5.2
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.5
  */
 public class SoapFolderClient extends SoapClient<FolderService> implements FolderService {
 

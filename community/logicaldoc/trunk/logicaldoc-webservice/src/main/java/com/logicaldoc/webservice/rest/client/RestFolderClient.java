@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webservice.model.Right;
 import com.logicaldoc.webservice.model.WSFolder;
-import com.logicaldoc.webservice.services.FolderService;
+import com.logicaldoc.webservice.soap.FolderService;
 
 public class RestFolderClient extends AbstractRestClient implements FolderService {
 
@@ -16,6 +16,10 @@ public class RestFolderClient extends AbstractRestClient implements FolderServic
 
 	public RestFolderClient(String endpoint) {
 		super(endpoint);
+	}
+
+	public RestFolderClient(String endpoint, int timeout) {
+		super(endpoint, timeout);
 	}
 
 	@Override

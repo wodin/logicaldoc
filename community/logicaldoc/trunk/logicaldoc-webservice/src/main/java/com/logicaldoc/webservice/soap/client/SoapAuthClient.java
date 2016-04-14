@@ -4,13 +4,13 @@ import java.io.IOException;
 
 import javax.jws.WebService;
 
-import com.logicaldoc.webservice.services.AuthService;
+import com.logicaldoc.webservice.soap.AuthService;
 
 /**
  * Auth Web Service client (SOAP).
  * 
- * @author Matteo Caruso - Logical Objects
- * @since 5.2
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.5
  */
 @WebService(name="Auth", serviceName="Auth")
 public class SoapAuthClient extends SoapClient<AuthService> implements AuthService {
