@@ -12,7 +12,7 @@ import org.apache.cxf.transport.common.gzip.GZIPOutInterceptor;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 
-import com.logicaldoc.util.io.EasySSLProtocolSocketFactory;
+import com.logicaldoc.util.http.EasyX509TrustManager;
 
 /**
  * Parent for all SOAP clients
@@ -52,7 +52,8 @@ public abstract class SoapClient<T> {
 	 */
 	@SuppressWarnings("unchecked")
 	protected void initClient(Class<T> serviceClass, int gzipThreshold, boolean log) {
-		//Needed to get rig of CXF exception "Cannot create a secure XMLInputFactory"
+		// Needed to get rig of CXF exception
+		// "Cannot create a secure XMLInputFactory"
 		System.setProperty("org.apache.cxf.stax.allowInsecureParser", "true");
 
 		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
@@ -77,7 +78,7 @@ public abstract class SoapClient<T> {
 	protected void configureSSL() {
 		TLSClientParameters tlsParams = new TLSClientParameters();
 		tlsParams.setDisableCNCheck(true);
-		tlsParams.setTrustManagers(new TrustManager[] { new EasySSLProtocolSocketFactory.EasyX509TrustManager() });
+		tlsParams.setTrustManagers(new TrustManager[] { new EasyX509TrustManager() });
 
 		org.apache.cxf.endpoint.Client cl = ClientProxy.getClient(client);
 		HTTPConduit httpConduit = (HTTPConduit) cl.getConduit();

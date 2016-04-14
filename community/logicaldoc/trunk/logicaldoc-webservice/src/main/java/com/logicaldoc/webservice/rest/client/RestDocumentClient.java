@@ -6,12 +6,12 @@ import java.util.List;
 
 import javax.activation.DataHandler;
 
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.FilePart;
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
-import org.apache.commons.httpclient.methods.multipart.Part;
-import org.apache.commons.httpclient.methods.multipart.StringPart;
+//import org.apache.commons.httpclient.HttpStatus;
+//import org.apache.commons.httpclient.methods.PostMethod;
+//import org.apache.commons.httpclient.methods.multipart.FilePart;
+//import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
+//import org.apache.commons.httpclient.methods.multipart.Part;
+//import org.apache.commons.httpclient.methods.multipart.StringPart;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +24,9 @@ public class RestDocumentClient extends AbstractRestClient implements DocumentSe
 
 	protected static Logger log = LoggerFactory.getLogger(RestDocumentClient.class);
 
-	public RestDocumentClient(String endpoint) {
-		super(endpoint);
-	}
+//	public RestDocumentClient(String endpoint) {
+//		super(endpoint);
+//	}
 	
 	public RestDocumentClient(String endpoint, int timeout) {
 		super(endpoint, timeout);
@@ -78,21 +78,23 @@ public class RestDocumentClient extends AbstractRestClient implements DocumentSe
 	public WSDocument getDocument(String sid, long docId) throws Exception {
 		String url = endpoint + "/getDocument";
 
-		PostMethod post = preparePostMethod(url);
-		try {
-			post.setParameter("sid", sid);
-			post.setParameter("docId", Long.toString(docId));
-
-			try {
-				client.executeMethod(post);
-				System.out.println(post.getResponseBodyAsString());
-			} catch (Throwable e) {
-				log.error(e.getMessage(), e);
-			}
-			return null;
-		} finally {
-			post.releaseConnection();
-		}
+//		PostMethod post = preparePostMethod(url);
+//		try {
+//			post.setParameter("sid", sid);
+//			post.setParameter("docId", Long.toString(docId));
+//
+//			try {
+//				client.executeMethod(post);
+//				System.out.println(post.getResponseBodyAsString());
+//			} catch (Throwable e) {
+//				log.error(e.getMessage(), e);
+//			}
+//			return null;
+//		} finally {
+//			post.releaseConnection();
+//		}
+		
+		return null;
 	}
 
 	@Override
@@ -135,19 +137,19 @@ public class RestDocumentClient extends AbstractRestClient implements DocumentSe
 	public void checkout(String sid, long docId) throws Exception {
 		String url = endpoint + "/checkout";
 
-		PostMethod post = preparePostMethod(url);
-		try {
-			post.setParameter("sid", sid);
-			post.setParameter("docId", Long.toString(docId));
-
-			try {
-				client.executeMethod(post);
-			} catch (Throwable e) {
-				log.error(e.getMessage(), e);
-			}
-		} finally {
-			post.releaseConnection();
-		}
+//		PostMethod post = preparePostMethod(url);
+//		try {
+//			post.setParameter("sid", sid);
+//			post.setParameter("docId", Long.toString(docId));
+//
+//			try {
+//				client.executeMethod(post);
+//			} catch (Throwable e) {
+//				log.error(e.getMessage(), e);
+//			}
+//		} finally {
+//			post.releaseConnection();
+//		}
 	}
 
 	@Override
@@ -221,22 +223,22 @@ public class RestDocumentClient extends AbstractRestClient implements DocumentSe
 		String output = null;
 		String url = endpoint + "/checkin";
 
-		PostMethod post = preparePostMethod(url);
-		try {
-			Part[] parts = { new FilePart("filedata", filename, file, null, null), new StringPart("sid", sid),
-					new StringPart("docId", "" + docId), new StringPart("comment", comment),
-					new StringPart("filename", filename), new StringPart("release", "" + release) };
-
-			post.setRequestEntity(new MultipartRequestEntity(parts, post.getParams()));
-			int statusCode = client.executeMethod(post);
-
-			if (statusCode == HttpStatus.SC_OK)
-				output = post.getResponseBodyAsString();
-			else
-				throw new Exception("Server Error");
-		} finally {
-			post.releaseConnection();
-		}
+//		PostMethod post = preparePostMethod(url);
+//		try {
+//			Part[] parts = { new FilePart("filedata", filename, file, null, null), new StringPart("sid", sid),
+//					new StringPart("docId", "" + docId), new StringPart("comment", comment),
+//					new StringPart("filename", filename), new StringPart("release", "" + release) };
+//
+//			post.setRequestEntity(new MultipartRequestEntity(parts, post.getParams()));
+//			int statusCode = client.executeMethod(post);
+//
+//			if (statusCode == HttpStatus.SC_OK)
+//				output = post.getResponseBodyAsString();
+//			else
+//				throw new Exception("Server Error");
+//		} finally {
+//			post.releaseConnection();
+//		}
 
 		if (StringUtils.isEmpty(output))
 			throw new Exception("Invalid checkin");
@@ -247,28 +249,28 @@ public class RestDocumentClient extends AbstractRestClient implements DocumentSe
 		String output = null;
 		String url = endpoint + "/upload";
 
-		PostMethod post = preparePostMethod(url);
-		try {
-			List<Part> parts = new ArrayList<Part>();
-			parts.add(new FilePart("filedata", filename, file, null, null));
-			parts.add(new StringPart("sid", sid));
-			if (docId != null)
-				parts.add(new StringPart("docId", "" + docId));
-			if (folderId != null)
-				parts.add(new StringPart("folderId", "" + folderId));
-			parts.add(new StringPart("filename", filename));
-			parts.add(new StringPart("release", "" + release));
-
-			post.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[0]), post.getParams()));
-			int statusCode = client.executeMethod(post);
-
-			if (statusCode == HttpStatus.SC_OK)
-				output = post.getResponseBodyAsString();
-			else
-				throw new Exception("Server Error");
-		} finally {
-			post.releaseConnection();
-		}
+//		PostMethod post = preparePostMethod(url);
+//		try {
+//			List<Part> parts = new ArrayList<Part>();
+//			parts.add(new FilePart("filedata", filename, file, null, null));
+//			parts.add(new StringPart("sid", sid));
+//			if (docId != null)
+//				parts.add(new StringPart("docId", "" + docId));
+//			if (folderId != null)
+//				parts.add(new StringPart("folderId", "" + folderId));
+//			parts.add(new StringPart("filename", filename));
+//			parts.add(new StringPart("release", "" + release));
+//
+//			post.setRequestEntity(new MultipartRequestEntity(parts.toArray(new Part[0]), post.getParams()));
+//			int statusCode = client.executeMethod(post);
+//
+//			if (statusCode == HttpStatus.SC_OK)
+//				output = post.getResponseBodyAsString();
+//			else
+//				throw new Exception("Server Error");
+//		} finally {
+//			post.releaseConnection();
+//		}
 
 		if (StringUtils.isEmpty(output))
 			throw new Exception("Invalid checkin");
