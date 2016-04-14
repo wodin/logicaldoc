@@ -82,11 +82,11 @@
   </properties>
   <dependencyManagement>
     <dependencies>
-		  <dependency>
-			  <groupId>org.apache.pdfbox</groupId>
-			  <artifactId>pdfbox</artifactId>
-			  <version>1.8.11</version>
-		  </dependency>    
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>pdfbox</artifactId>
+        <version>1.8.11</version>
+      </dependency>
       <dependency>
         <groupId>javax.activation</groupId>
         <artifactId>activation</artifactId>
@@ -525,7 +525,7 @@
         <groupId>org.quartz-scheduler</groupId>
         <artifactId>quartz</artifactId>
         <version>1.8.5</version>
-      </dependency>      
+      </dependency>
       <dependency>
         <groupId>org.quartz-scheduler</groupId>
         <artifactId>quartz</artifactId>
@@ -577,14 +577,24 @@
         <version>${smartgwt.version}</version>
       </dependency>
       <dependency>
-         <groupId>org.apache.cxf</groupId>
-         <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-         <version>${cxf.version}</version>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+        <version>${cxf.version}</version>
       </dependency>
       <dependency>
-         <groupId>org.apache.cxf</groupId>
-         <artifactId>cxf-rt-frontend-jaxws</artifactId>
-         <version>${cxf.version}</version>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-frontend-jaxws</artifactId>
+        <version>${cxf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-rs-service-description</artifactId>
+        <version>${cxf.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-rs-client</artifactId>
+        <version>${cxf.version}</version>
       </dependency>
       <!-- Javax Media image processing -->
       <dependency>
@@ -637,16 +647,16 @@
         <version>1.51</version>
       </dependency>
       <dependency>
-	      <groupId>org.apache.httpcomponents</groupId>
-	      <artifactId>httpclient</artifactId>
-	      <version>4.3.1</version>
-      </dependency>      
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <version>4.3.1</version>
+      </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpmime</artifactId>
         <version>4.3.1</version>
-      </dependency>      
-    </dependencies>    
+      </dependency>
+    </dependencies>
   </dependencyManagement>
   <repositories>
     <repository>
