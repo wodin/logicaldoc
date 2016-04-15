@@ -45,7 +45,9 @@ import com.smartgwt.client.widgets.tab.events.TabSelectedHandler;
  * @since 6.0
  */
 public class DocumentDetailsPanel extends VLayout {
-	private static final String TAB_SUBSCRIPTIONS = "TabSubscriptions";
+	private static final String ID_TAB_ALIASES = "tab-aliases";
+
+	private static final String ID_TAB_SUBSCRIPTIONS = "tab-subscriptions";
 
 	protected GUIDocument document;
 
@@ -56,6 +58,8 @@ public class DocumentDetailsPanel extends VLayout {
 	protected Layout versionsTabPanel;
 
 	protected Layout historyTabPanel;
+
+	protected Layout aliasesTabPanel;
 
 	protected Layout linksTabPanel;
 
@@ -76,6 +80,8 @@ public class DocumentDetailsPanel extends VLayout {
 	protected VersionsPanel versionsPanel;
 
 	protected HistoryPanel historyPanel;
+
+	protected AliasesPanel aliasesPanel;
 
 	protected LinksPanel linksPanel;
 
@@ -110,6 +116,8 @@ public class DocumentDetailsPanel extends VLayout {
 	protected Tab versionsTab;
 
 	protected Tab historyTab;
+
+	protected Tab aliasesTab;
 
 	protected Tab previewTab;
 
@@ -184,10 +192,16 @@ public class DocumentDetailsPanel extends VLayout {
 		prepareTabs();
 		prepareTabset();
 
-		if ("preview".equals(Session.get().getInfo().getConfig("gui.document.tab")))
-			tabSet.selectTab(previewTab);
+		
 	}
 
+	public void selectDeafultTab(){
+		if ("preview".equals(Session.get().getInfo().getConfig("gui.document.tab")))
+			tabSet.selectTab(previewTab);
+		else
+			tabSet.selectTab(propertiesTab);
+	}
+	
 	protected void prepareTabs() {
 		propertiesTab = new Tab(I18N.message("properties"));
 		propertiesTabPanel = new HLayout();
@@ -225,6 +239,13 @@ public class DocumentDetailsPanel extends VLayout {
 		historyTabPanel.setHeight100();
 		historyTab.setPane(historyTabPanel);
 
+		aliasesTab = new Tab(I18N.message("aliases"));
+		aliasesTab.setID(ID_TAB_ALIASES);
+		aliasesTabPanel = new HLayout();
+		aliasesTabPanel.setWidth100();
+		aliasesTabPanel.setHeight100();
+		aliasesTab.setPane(aliasesTabPanel);
+
 		previewTab = new Tab(I18N.message("preview"));
 		previewTabPanel = new HLayout();
 		previewTabPanel.setWidth100();
@@ -244,7 +265,7 @@ public class DocumentDetailsPanel extends VLayout {
 		calendarTab.setPane(calendarTabPanel);
 
 		subscriptionsTab = new Tab(I18N.message("subscriptions"));
-		subscriptionsTab.setID(TAB_SUBSCRIPTIONS);
+		subscriptionsTab.setID(ID_TAB_SUBSCRIPTIONS);
 		subscriptionsTabPanel = new HLayout();
 		subscriptionsTabPanel.setWidth100();
 		subscriptionsTabPanel.setHeight100();
@@ -340,10 +361,21 @@ public class DocumentDetailsPanel extends VLayout {
 		}
 
 		if (Feature.visible(Feature.AUDIT)) {
+			tabSet.addTab(subscriptionsTab);
 			subscriptionsTab.addTabSelectedHandler(new TabSelectedHandler() {
 				@Override
 				public void onTabSelected(TabSelectedEvent event) {
 					subscriptionsPanel.onTabSelected();
+				}
+			});
+		}
+
+		if (Menu.enabled(Menu.ALIASES)) {
+			tabSet.addTab(aliasesTab);
+			aliasesTab.addTabSelectedHandler(new TabSelectedHandler() {
+				@Override
+				public void onTabSelected(TabSelectedEvent event) {
+					aliasesPanel.onTabSelected();
 				}
 			});
 		}
@@ -422,6 +454,24 @@ public class DocumentDetailsPanel extends VLayout {
 		historyTabPanel.addMember(historyPanel);
 
 		/*
+		 * Prepare the aliases tab
+		 */
+		if (aliasesPanel != null) {
+			aliasesPanel.destroy();
+			if (aliasesTabPanel.contains(aliasesPanel))
+				aliasesTabPanel.removeMember(aliasesPanel);
+		}
+		
+
+		if (document.getDocRef()==null && Menu.enabled(Menu.ALIASES)) {
+			aliasesPanel = new AliasesPanel(document);
+			aliasesTabPanel.addMember(aliasesPanel);
+			if (tabSet.getTab(ID_TAB_ALIASES) == null)
+				tabSet.addTab(aliasesTab);
+		} else
+			tabSet.removeTab(aliasesTab);
+
+		/*
 		 * Prepare the links tab
 		 */
 		if (linksPanel != null) {
@@ -478,7 +528,7 @@ public class DocumentDetailsPanel extends VLayout {
 			if (document.getFolder().hasPermission(Constants.PERMISSION_SUBSCRIPTION)) {
 				subscriptionsPanel = new DocumentSubscriptionsPanel(document);
 				subscriptionsTabPanel.addMember(subscriptionsPanel);
-				if (tabSet.getTab(TAB_SUBSCRIPTIONS) == null)
+				if (tabSet.getTab(ID_TAB_SUBSCRIPTIONS) == null)
 					tabSet.addTab(subscriptionsTab);
 			} else
 				tabSet.removeTab(subscriptionsTab);

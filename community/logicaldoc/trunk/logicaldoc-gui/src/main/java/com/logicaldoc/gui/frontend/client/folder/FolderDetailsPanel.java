@@ -57,6 +57,8 @@ public class FolderDetailsPanel extends VLayout {
 
 	private Layout quotaTabPanel;
 
+	private Layout aliasesTabPanel;
+
 	private PropertiesPanel propertiesPanel;
 
 	private ExtendedPropertiesPanel extendedPropertiesPanel;
@@ -64,6 +66,8 @@ public class FolderDetailsPanel extends VLayout {
 	private SecurityPanel securityPanel;
 
 	private HistoryPanel historyPanel;
+
+	private AliasesPanel aliasesPanel;
 
 	private WorkflowTriggersPanel workflowsPanel;
 
@@ -223,6 +227,14 @@ public class FolderDetailsPanel extends VLayout {
 				tabSet.addTab(quotaTab);
 			}
 
+		Tab aliasesTab = new Tab(I18N.message("aliases"));
+		aliasesTabPanel = new HLayout();
+		aliasesTabPanel.setWidth100();
+		aliasesTabPanel.setHeight100();
+		aliasesTab.setPane(aliasesTabPanel);
+		if (Menu.enabled(Menu.ALIASES) && folder.getFoldRef() == null)
+			tabSet.addTab(aliasesTab);
+
 		addMember(tabSet);
 		refresh();
 	}
@@ -270,6 +282,16 @@ public class FolderDetailsPanel extends VLayout {
 			}
 			securityPanel = new SecurityPanel(folder);
 			securityTabPanel.addMember(securityPanel);
+
+			/*
+			 * Prepare the aliases tab
+			 */
+			if (aliasesPanel != null) {
+				aliasesPanel.destroy();
+				aliasesTabPanel.removeMember(aliasesPanel);
+			}
+			aliasesPanel = new AliasesPanel(folder);
+			aliasesTabPanel.addMember(aliasesPanel);
 
 			/*
 			 * Prepare the history tab

@@ -162,6 +162,14 @@
     <servlet-class>com.logicaldoc.web.data.LinksDataServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>FolderAliasesData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.FolderAliasesDataServlet</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>DocumentAliasesData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.DocumentAliasesDataServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>BookmarksData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.BookmarksDataServlet</servlet-class>
   </servlet>
@@ -405,6 +413,14 @@
   <servlet-mapping>
     <servlet-name>LinksData</servlet-name>
     <url-pattern>/data/links.xml</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>FolderAliasesData</servlet-name>
+    <url-pattern>/data/folderaliases.xml</url-pattern>
+  </servlet-mapping>  
+  <servlet-mapping>
+    <servlet-name>DocumentAliasesData</servlet-name>
+    <url-pattern>/data/documentaliases.xml</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>BookmarksData</servlet-name>
