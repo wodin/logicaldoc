@@ -20,14 +20,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webservice.model.WSFolder;
+import com.logicaldoc.webservice.rest.FolderService;
 import com.logicaldoc.webservice.soap.endpoint.SoapFolderService;
 
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
-public class RestFolderService extends SoapFolderService {
+public class RestFolderService extends SoapFolderService implements FolderService {
 
 	private static Logger log = LoggerFactory.getLogger(RestFolderService.class);
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#create(java.util.List)
+	 */
 	@POST
 	@Path("/create")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -54,6 +58,9 @@ public class RestFolderService extends SoapFolderService {
 		return super.create(sid, folder);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#createSimpleForm(java.lang.String, java.lang.String)
+	 */
 	@POST
 	@Path("/createSimple")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
@@ -65,6 +72,9 @@ public class RestFolderService extends SoapFolderService {
 		return super.createPath(sid, root.getId(), folderPath);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#createSimpleJSON(java.lang.String)
+	 */
 	@POST
 	@Path("/createSimple")
 	@Consumes({ MediaType.APPLICATION_JSON })
@@ -84,15 +94,22 @@ public class RestFolderService extends SoapFolderService {
 		return super.createPath(sid, root.getId(), folderPath);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#createPath(java.lang.String, long, java.lang.String)
+	 * The parameters come in the POST request body.
+	 */
 	@POST
 	@Path("/createPath")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-	// The parameters come in the POST request body.
 	public WSFolder createPath(@FormParam("sid") String sid, @FormParam("parentId") long parentId,
 			@FormParam("path") String path) throws Exception {
+
 		return super.createPath(sid, parentId, path);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#createFolder(java.lang.String, long, java.lang.String)
+	 */
 	@POST
 	@Path("/createFolder")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
@@ -104,18 +121,27 @@ public class RestFolderService extends SoapFolderService {
 		return super.createFolder(sid, parentId, name);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#getFolder(java.lang.String, long)
+	 */
 	@GET
 	@Path("/getFolder")
 	public WSFolder getFolder(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
 		return super.getFolder(sid, folderId);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#delete(java.lang.String, long)
+	 */
 	@DELETE
 	@Path("/delete")
 	public void delete(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
 		super.delete(sid, folderId);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#listChildren(java.lang.String, long)
+	 */
 	@GET
 	@Path("/listChildren")
 	public WSFolder[] listChildren(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId)
@@ -131,12 +157,18 @@ public class RestFolderService extends SoapFolderService {
 		return fchildren;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#getPath(java.lang.String, long)
+	 */
 	@GET
 	@Path("/getPath")
 	public WSFolder[] getPath(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
 		return super.getPath(sid, folderId);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#getPathString(java.lang.String, long)
+	 */
 	@GET
 	@Path("/getPathString")
 	public String getPathString(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {

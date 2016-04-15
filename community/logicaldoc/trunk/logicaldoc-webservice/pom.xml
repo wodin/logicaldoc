@@ -124,7 +124,7 @@
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
             <scope>provided</scope>
-        </dependency>
+        </dependency>        
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>sqltool</artifactId>
@@ -144,6 +144,23 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
         </dependency>
+        
+        <!-- Added by Alle (temporarily) -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+        </dependency>        
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>jmimemagic</groupId>
+			<artifactId>jmimemagic</artifactId>
+			<version>0.1.2</version>
+		</dependency> 		
+		        
     </dependencies>
     <build>
         <plugins>

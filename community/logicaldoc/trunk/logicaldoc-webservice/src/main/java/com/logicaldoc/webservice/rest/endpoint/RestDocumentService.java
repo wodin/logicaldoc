@@ -20,14 +20,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webservice.model.WSDocument;
+import com.logicaldoc.webservice.rest.DocumentService;
 import com.logicaldoc.webservice.soap.endpoint.SoapDocumentService;
 
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
-public class RestDocumentService extends SoapDocumentService {
+public class RestDocumentService extends SoapDocumentService implements DocumentService {
 
 	private static Logger log = LoggerFactory.getLogger(RestDocumentService.class);
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.RestDocument#create(java.util.List)
+	 */
+	@Override
 	@POST
 	@Path("/create")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -55,20 +60,31 @@ public class RestDocumentService extends SoapDocumentService {
 		return super.create(sid, document, content);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.RestDocument#getDocument(java.lang.String, long)
+	 */
+	@Override
 	@GET
 	@Path("/getDocument")
 	public WSDocument getDocument(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
 		return super.getDocument(sid, docId);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.RestDocument#checkout(java.lang.String, long)
+	 */
+	@Override
 	@POST
 	@Path("/checkout")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-	@Override
 	public void checkout(@FormParam("sid") String sid, @FormParam("docId") long docId) throws Exception {
 		super.checkout(sid, docId);
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.RestDocument#checkin(java.util.List)
+	 */
+	@Override
 	@POST
 	@Path("/checkin")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -107,6 +123,10 @@ public class RestDocumentService extends SoapDocumentService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.RestDocument#upload(java.util.List)
+	 */
+	@Override
 	@POST
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -148,24 +168,59 @@ public class RestDocumentService extends SoapDocumentService {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.RestDocument#delete(java.lang.String, long)
+	 */
+	@Override
 	@DELETE
 	@Path("/delete")
 	public void delete(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
 		super.delete(sid, docId);
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.RestDocument#list(java.lang.String, long)
+	 */
+	@Override
 	@GET
 	@Path("/list")
-	@Override
-	public WSDocument[] list(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
+	@Produces({ MediaType.APPLICATION_JSON })
+	public WSDocument[] list(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {		
 		return super.listDocuments(sid, folderId, null);
 	}	
 	
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.RestDocument#listDocuments(java.lang.String, long, java.lang.String)
+	 */
+	@Override
 	@GET
 	@Path("/listDocuments")
-	@Override
 	public WSDocument[] listDocuments(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId, @QueryParam("fileName") String fileName) throws Exception {
 		return super.listDocuments(sid, folderId, fileName);
+	}
+
+	@Override
+	@POST
+	@Path("/update")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	// The "document" comes in the POST request body (encoded as JSON).
+	public void update(List<Attachment> atts) throws Exception {
+		log.debug("update()");
+
+		String sid = null;
+		WSDocument document = null;
+
+		for (Attachment att : atts) {
+			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
+				sid = att.getObject(String.class);
+			} else if ("document".equals(att.getContentDisposition().getParameter("name"))) {
+				document = att.getObject(WSDocument.class);
+			} 
+		}
+
+		log.debug("document: {}", document);
+
+		super.update(sid, document);
 	}	
 
 }

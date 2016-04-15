@@ -17,26 +17,26 @@ import javax.ws.rs.core.MediaType;
  * @author Alessandro Gasparini - LogicalDOC
  * @since 7.5
  */
+@Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
+@Produces({ MediaType.APPLICATION_JSON })
 public interface AuthService {
 	
 	@GET
 	@Path("/login")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public String login(@QueryParam("u") String username, @QueryParam("pw") String password) throws Exception;
+	String login(@QueryParam("u") String username, @QueryParam("pw") String password) throws Exception;
 	
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public String loginPost(@FormParam("username") String username, @FormParam("password") String password) throws Exception;
+	String loginPost(@FormParam("username") String username, @FormParam("password") String password) throws Exception;
 	
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String loginPostJSON(String jsonstr) throws Exception;		
+	String loginPostJSON(String jsonstr) throws Exception;		
 	
 	@DELETE
 	@Path("/logout/{sid}")
-	@Produces({ MediaType.APPLICATION_JSON })
-	public void logout(@PathParam("sid") String sid);
+	void logout(@PathParam("sid") String sid);
 
 }
