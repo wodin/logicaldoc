@@ -1,184 +1,81 @@
 package com.logicaldoc.webservice.rest.client;
 
-//import org.apache.commons.httpclient.HttpStatus;
-//import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.lang.StringUtils;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.ws.rs.core.MediaType;
+
+import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
+import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.apache.cxf.jaxrs.ext.multipart.Attachment;
+import org.apache.cxf.jaxrs.ext.multipart.AttachmentBuilder;
+import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
+import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.webservice.model.Right;
+import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSFolder;
-import com.logicaldoc.webservice.soap.FolderService;
+import com.logicaldoc.webservice.rest.FolderService;
+import com.logicaldoc.webservice.rest.endpoint.RestFolderService;
 
-public class RestFolderClient extends AbstractRestClient implements FolderService {
+public class RestFolderClient extends AbstractRestClient {
 
 	protected static Logger log = LoggerFactory.getLogger(RestFolderClient.class);
 
-//	public RestFolderClient(String endpoint) {
-//		super(endpoint);
-//	}
-
+	public RestFolderClient(String endpoint) {
+		super(endpoint);
+	}
+	
 	public RestFolderClient(String endpoint, int timeout) {
 		super(endpoint, timeout);
 	}
-
-	@Override
-	public WSFolder create(String sid, WSFolder folder) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public long createFolder(String sid, long parentId, String name) throws Exception {
-		String url = endpoint + "/createFolder";
-		String output = null;
-//		PostMethod post = preparePostMethod(url);
-//		try {
-//			post.setParameter("sid", sid);
-//			post.setParameter("parentId", Long.toString(parentId));
-//			post.setParameter("name", name);
-//
-//			int statusCode = client.executeMethod(post);
-//
-//			if (statusCode == HttpStatus.SC_OK)
-//				output = post.getResponseBodyAsString();
-//			else
-//				throw new Exception("Server Error");
-//		} finally {
-//			post.releaseConnection();
-//		}
-
-		if (StringUtils.isEmpty(output))
-			throw new Exception("Error in folder creation");
-		else
-			return Long.parseLong(output);
-	}
-
-	@Override
-	public void delete(String sid, long folderId) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void rename(String sid, long folderId, String name) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void update(String sid, WSFolder folder) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void move(String sid, long folderId, long parentId) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void copy(String sid, long folderId, long targetId, int foldersOnly, int inheritSecurity) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public WSFolder getFolder(String sid, long folderId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSFolder getRootFolder(String sid) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSFolder getDefaultWorkspace(String sid) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isReadable(String sid, long folderId) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isWriteable(String sid, long folderId) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isGranted(String sid, long folderId, int permission) throws Exception {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
+	
 	public WSFolder[] listChildren(String sid, long folderId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+
+        JacksonJsonProvider provider = new JacksonJsonProvider();
+        
+        FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
+        WebClient.client(proxy).type("*/*");
+        //WebClient.client(proxy).accept("application/json");
+        
+		return proxy.listChildren(sid, folderId);
 	}
-
-	@Override
-	public WSFolder[] getPath(String sid, long folderId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public WSFolder create(String sid, WSFolder folder) throws Exception {
+				
+        JacksonJsonProvider provider = new JacksonJsonProvider();	
+        
+        FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
+		WebClient.client(proxy).type(MediaType.MULTIPART_FORM_DATA);
+		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
+        
+		ObjectWriter ow = new ObjectMapper().writer();
+		String jsonStr = ow.writeValueAsString(folder);		      
+        
+        Attachment sidAttachment = new AttachmentBuilder().id("sid").object(sid).contentDisposition(new ContentDisposition("form-data; name=\"sid\"")).build();
+		Attachment fldAttachment = new AttachmentBuilder().id("folder").object(jsonStr).mediaType("application/json").contentDisposition(new ContentDisposition("form-data; name=\"folder\"")).build();
+		
+		List<Attachment> atts = new LinkedList<Attachment>();
+		atts.add(sidAttachment);
+		atts.add(fldAttachment);
+        
+		return proxy.create(atts);
 	}
-
-	@Override
-	public void grantUser(String sid, long folderId, long userId, int permissions, boolean recursive) throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void grantGroup(String sid, long folderId, long groupId, int permissions, boolean recursive)
-			throws Exception {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public Right[] getGrantedUsers(String sid, long folderId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Right[] getGrantedGroups(String sid, long folderId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSFolder createPath(String sid, long parentId, String path) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSFolder findByPath(String sid, String path) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSFolder[] listWorkspaces(String sid) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public WSFolder createAlias(String sid, long parentId, long foldRef) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	public WSFolder createPath(String sid, long rootFolder, String path) throws Exception {
+		
+        JacksonJsonProvider provider = new JacksonJsonProvider();
+        
+        FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
+        WebClient.client(proxy).type(MediaType.APPLICATION_FORM_URLENCODED);
+        WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);      
+        
+		return proxy.createPath(sid, rootFolder, path);	
+	}	
 
 }

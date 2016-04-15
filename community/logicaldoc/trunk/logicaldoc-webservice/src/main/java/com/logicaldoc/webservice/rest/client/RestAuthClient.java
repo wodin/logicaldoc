@@ -9,10 +9,11 @@ import com.logicaldoc.webservice.rest.AuthService;
 /**
  * Auth Web Service client (RESTful).
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
+ * @author Alessandro Gasparini - LogicalDOC
  * @since 6.9
  */
-public class RestAuthClient extends AbstractRestClient {
+public class RestAuthClient extends AbstractRestClient implements AuthService {
 	
 	protected static Logger log = LoggerFactory.getLogger(RestAuthClient.class);
 
@@ -31,6 +32,18 @@ public class RestAuthClient extends AbstractRestClient {
 	public void logout(String sid) {
         AuthService proxy = JAXRSClientFactory.create(endpoint, AuthService.class);
 		proxy.logout(sid);
+	}
+
+	@Override
+	public String loginPost(String username, String password) throws Exception {
+        AuthService proxy = JAXRSClientFactory.create(endpoint, AuthService.class);
+		return proxy.loginPost(username, password);
+	}
+
+	@Override
+	public String loginPostJSON(String jsonstr) throws Exception {
+        AuthService proxy = JAXRSClientFactory.create(endpoint, AuthService.class);
+		return proxy.loginPostJSON(jsonstr);
 	}
 
 }

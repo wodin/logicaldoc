@@ -14,16 +14,20 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.webservice.model.WSSearchOptions;
 import com.logicaldoc.webservice.model.WSSearchResult;
+import com.logicaldoc.webservice.rest.SearchService;
 import com.logicaldoc.webservice.soap.endpoint.SoapSearchService;
 
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
-public class RestSearchService extends SoapSearchService {
+public class RestSearchService extends SoapSearchService implements SearchService {
 
 	protected static Logger log = LoggerFactory.getLogger(RestSearchService.class);
 
+	/* (non-Javadoc)
+	 * @see com.logicaldoc.webservice.rest.endpoint.SearchService#find(java.util.List)
+	 */
 	@POST
-	@Path("/create")
+	@Path("/find")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public WSSearchResult find(List<Attachment> atts) throws Exception {
 		
@@ -33,6 +37,10 @@ public class RestSearchService extends SoapSearchService {
 		WSSearchOptions opt = null;
 
 		for (Attachment att : atts) {
+			
+			log.debug("attName: " +att.getContentDisposition().getParameter("name"));
+			log.debug("attType: " +att.getContentType());
+			
 			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
 				sid = att.getObject(String.class);
 			} else if ("opt".equals(att.getContentDisposition().getParameter("name"))) {

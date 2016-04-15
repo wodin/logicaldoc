@@ -136,5 +136,14 @@
        		<ref bean="jsonProvider"/>
     	</jaxrs:providers>
     </jaxrs:server>
+    
+    <jaxrs:server id="restSearch" address="/rest/search">
+        <jaxrs:serviceBeans>
+            <bean class="com.logicaldoc.webservice.rest.endpoint.RestSearchService"/>
+        </jaxrs:serviceBeans>
+        <jaxrs:providers>
+       		<ref bean="jsonProvider"/>
+    	</jaxrs:providers>
+    </jaxrs:server>    
         
 </beans>
