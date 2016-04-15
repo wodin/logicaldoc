@@ -170,6 +170,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				folder.setDescription(test.getDescription());
 				folder.setPosition(test.getPosition());
 				folder.setFoldRef(test.getId());
+				folder.setType(Folder.TYPE_ALIAS);
 			} else {
 				folder = test;
 			}

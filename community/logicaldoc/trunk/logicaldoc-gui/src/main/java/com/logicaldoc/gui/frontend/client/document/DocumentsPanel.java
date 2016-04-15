@@ -172,6 +172,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		documentsMenu.openFolder(folderId);
 		documentsMenu.expandSection(0);
 		MainPanel.get().selectDocumentsTab();
+		if (detailPanel != null && detailPanel instanceof DocumentDetailsPanel)
+			((DocumentDetailsPanel) detailPanel).selectDeafultTab();
 	}
 
 	public void openInFolder(long docId) {

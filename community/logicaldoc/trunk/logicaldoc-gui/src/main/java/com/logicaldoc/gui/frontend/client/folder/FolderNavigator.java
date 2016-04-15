@@ -721,12 +721,29 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 			@Override
 			public void onSuccess(GUIFolder folder) {
 				TreeNode parent = getTree().getRoot();
+
+				long folderId = folder.getId();
+				Long folderRef = folder.getFoldRef();
+				if (folder.getFoldRef() != null) {
+					folderId = folder.getFoldRef();
+					folderRef = folder.getId();
+				}
+
 				for (GUIFolder fld : folder.getPath()) {
 					if (fld.getId() == Constants.DOCUMENTS_FOLDERID)
 						continue;
+
+					long fldId = fld.getId();
+					Long fldRef = fld.getFoldRef();
+					if (fld.getFoldRef() != null) {
+						fldId = fld.getFoldRef();
+						fldRef = fld.getId();
+					}
+
 					TreeNode node = new TreeNode(fld.getName());
-					node.setAttribute("folderId", Long.toString(fld.getId()));
+					node.setAttribute("folderId", Long.toString(fldId));
 					node.setAttribute("type", Integer.toString(fld.getType()));
+					node.setAttribute("foldRef", fldRef != null ? Long.toString(fldRef) : null);
 					node.setAttribute(Constants.PERMISSION_ADD, fld.hasPermission(Constants.PERMISSION_ADD));
 					node.setAttribute(Constants.PERMISSION_DELETE, fld.hasPermission(Constants.PERMISSION_DELETE));
 					node.setAttribute(Constants.PERMISSION_RENAME, fld.hasPermission(Constants.PERMISSION_RENAME));
@@ -735,8 +752,9 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 					parent = node;
 				}
 				TreeNode node = new TreeNode(folder.getName());
-				node.setAttribute("folderId", Long.toString(folder.getId()));
+				node.setAttribute("folderId", Long.toString(folderId));
 				node.setAttribute("type", Integer.toString(folder.getType()));
+				node.setAttribute("foldRef", folderRef != null ? Long.toString(folderRef) : null);
 				node.setAttribute(Constants.PERMISSION_ADD,
 						Boolean.toString(folder.hasPermission(Constants.PERMISSION_ADD)));
 				node.setAttribute(Constants.PERMISSION_DELETE,
