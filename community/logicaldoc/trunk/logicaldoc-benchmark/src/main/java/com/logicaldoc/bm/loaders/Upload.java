@@ -203,12 +203,16 @@ public class Upload extends AbstractLoader {
 
 			// It is not there, so create it
 			try {
-				WSFolder newFolder = new WSFolder();
-				newFolder.setName(aFolderPath);
-				newFolder.setParentId(currentParentFolderID);
-				WSFolder folder = serverProxy.create(ticket, newFolder);
-
-				currentParentFolderID = folder.getId();
+				// TODO - this can be optimized, it is a waste to encode and then decode WSFolder object just to get the xxx in the end
+				// we can replace all this by invoking folder.createFolder
+//				WSFolder newFolder = new WSFolder();
+//				newFolder.setName(aFolderPath);
+//				newFolder.setParentId(currentParentFolderID);
+//				WSFolder folder = serverProxy.create(ticket, newFolder);
+//
+//				currentParentFolderID = folder.getId();
+				
+				currentParentFolderID = serverProxy.create(ticket, currentParentFolderID, aFolderPath);
 			} catch (Exception e) {
 				currentParentFolderID = pathCache.get(currentKey);
 			}
