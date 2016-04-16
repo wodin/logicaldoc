@@ -83,8 +83,7 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 		log.debug("createSimpleJSON()");
 
 		ObjectMapper mapper = new ObjectMapper();
-		TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
-		};
+		TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
 		HashMap<String, String> hm = mapper.readValue(jsonstr, typeRef);
 
 		String sid = hm.get("sid");
@@ -126,6 +125,7 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	 */
 	@GET
 	@Path("/getFolder")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public WSFolder getFolder(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
 		return super.getFolder(sid, folderId);
 	}
@@ -144,6 +144,7 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	 */
 	@GET
 	@Path("/listChildren")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public WSFolder[] listChildren(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId)
 			throws Exception {
 		log.debug("listChildren()");

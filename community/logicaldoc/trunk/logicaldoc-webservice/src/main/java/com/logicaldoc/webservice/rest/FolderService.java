@@ -20,13 +20,23 @@ import com.logicaldoc.webservice.model.WSFolder;
 @Produces({ MediaType.APPLICATION_JSON })
 public interface FolderService {
 
-	// The "folder" parameter comes in the POST request body (encoded as XML or
-	// JSON).
+
+	@POST
+	@Path("/create")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	// The "folder" parameter comes in the POST request body (encoded as XML or JSON).	
 	WSFolder create(List<Attachment> atts) throws Exception;
 
+	@POST
+	@Path("/createSimple")
+	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })	
 	// The "folderPath" parameter comes in the POST request body.
-	WSFolder createSimpleForm(String sid, String folderPath) throws Exception;
+	WSFolder createSimpleForm(@FormParam("sid") String sid, @FormParam("folderPath") String folderPath)
+			throws Exception;
 
+	@POST
+	@Path("/createSimple")
+	@Consumes({ MediaType.APPLICATION_JSON })
 	// The "folderPath" parameter comes in the POST request body.
 	WSFolder createSimpleJSON(String jsonstr) throws Exception;
 
@@ -38,19 +48,34 @@ public interface FolderService {
 	WSFolder createPath(@FormParam("sid") String sid, @FormParam("parentId") long parentId,
 			@FormParam("path") String path) throws Exception;
 
+	@POST
+	@Path("/createFolder")
+	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	// The parameters come in the POST request body.
-	long createFolder(String sid, long parentId, String name) throws Exception;
+	long createFolder(@FormParam("sid") String sid, @FormParam("parentId") long parentId,
+			@FormParam("name") String name) throws Exception;
 
-	WSFolder getFolder(String sid, long folderId) throws Exception;
+	@GET
+	@Path("/getFolder")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	WSFolder getFolder(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception;
 
-	void delete(String sid, long folderId) throws Exception;
+	@DELETE
+	@Path("/delete")
+	void delete(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception;
 
 	@GET
 	@Path("/listChildren")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	WSFolder[] listChildren(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception;	
 
-	WSFolder[] getPath(String sid, long folderId) throws Exception;
+	@GET
+	@Path("/getPath")
+	WSFolder[] getPath(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception;
 
-	String getPathString(String sid, long folderId) throws Exception;
+	@GET
+	@Path("/getPathString")
+	String getPathString(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception;
 
 }

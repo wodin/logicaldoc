@@ -1,9 +1,12 @@
 package com.logicaldoc.webservice.rest.client;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.activation.DataHandler;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
@@ -31,6 +34,52 @@ public class RestDocumentClient extends AbstractRestClient {
 	public RestDocumentClient(String endpoint, int timeout) {
 		super(endpoint, timeout);
 	}
+	
+	public WSDocument create(String sid, WSDocument document, File packageFile) throws Exception {
+		
+        JacksonJsonProvider provider = new JacksonJsonProvider();	
+        
+        DocumentService proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider));
+		WebClient.client(proxy).type(MediaType.MULTIPART_FORM_DATA);
+		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
+        
+		ObjectWriter ow = new ObjectMapper().writer();
+		String jsonStr = ow.writeValueAsString(document);		      
+        
+        Attachment sidAttachment = new AttachmentBuilder().id("sid").object(sid).contentDisposition(new ContentDisposition("form-data; name=\"sid\"")).build();
+		Attachment docAttachment = new AttachmentBuilder().id("document").object(jsonStr).mediaType("application/json").contentDisposition(new ContentDisposition("form-data; name=\"document\"")).build();
+		Attachment fileAttachment = new Attachment("content", new FileInputStream(packageFile), new ContentDisposition("form-data; name=\"content\"; filename=\"" + packageFile.getName() + "\""));
+		
+		List<Attachment> atts = new LinkedList<Attachment>();
+		atts.add(sidAttachment);
+		atts.add(docAttachment);
+		atts.add(fileAttachment);
+        
+		return proxy.create(atts);
+	}
+	
+	public WSDocument create(String sid, WSDocument document, DataHandler dataHandler) throws Exception {
+		
+        JacksonJsonProvider provider = new JacksonJsonProvider();	
+        
+        DocumentService proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider));
+		WebClient.client(proxy).type(MediaType.MULTIPART_FORM_DATA);
+		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
+        
+		ObjectWriter ow = new ObjectMapper().writer();
+		String jsonStr = ow.writeValueAsString(document);		      
+        
+        Attachment sidAttachment = new AttachmentBuilder().id("sid").object(sid).contentDisposition(new ContentDisposition("form-data; name=\"sid\"")).build();
+		Attachment docAttachment = new AttachmentBuilder().id("document").object(jsonStr).mediaType("application/json").contentDisposition(new ContentDisposition("form-data; name=\"document\"")).build();
+		Attachment fileAttachment = new AttachmentBuilder().id("document").dataHandler(dataHandler).mediaType("application/octet-stream").contentDisposition(new ContentDisposition("form-data; name=\"document\"")).build();
+		
+		List<Attachment> atts = new LinkedList<Attachment>();
+		atts.add(sidAttachment);
+		atts.add(docAttachment);
+		atts.add(fileAttachment);
+        
+		return proxy.create(atts);
+	}	
 
 	public WSDocument[] list(String sid, long folderId) throws Exception {
 				
@@ -75,12 +124,24 @@ public class RestDocumentClient extends AbstractRestClient {
 		String jsonStr = ow.writeValueAsString(document);		      
         
         Attachment sidAttachment = new AttachmentBuilder().id("sid").object(sid).contentDisposition(new ContentDisposition("form-data; name=\"sid\"")).build();
-		Attachment fldAttachment = new AttachmentBuilder().id("document").object(jsonStr).mediaType("application/json").contentDisposition(new ContentDisposition("form-data; name=\"folder\"")).build();
+		Attachment fldAttachment = new AttachmentBuilder().id("document").object(jsonStr).mediaType("application/json").contentDisposition(new ContentDisposition("form-data; name=\"document\"")).build();
 		
 		List<Attachment> atts = new LinkedList<Attachment>();
 		atts.add(sidAttachment);
 		atts.add(fldAttachment);
         
 		proxy.update(atts);
+	}
+
+	public WSDocument getDocument(String sid, long docId) throws Exception {
+		
+		JacksonJsonProvider provider = new JacksonJsonProvider();	
+		
+		DocumentService proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider));
+		WebClient.client(proxy).type("*/*");
+		//WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
+		WebClient.client(proxy).accept(MediaType.APPLICATION_XML);
+		
+		return proxy.getDocument(sid, docId);
 	}	
 }

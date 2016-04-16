@@ -1,5 +1,9 @@
 package com.logicaldoc.webservice;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
@@ -37,7 +41,22 @@ public class XtestRestClients {
 		//listFolders(sid, 04L);
 		
 		//createPath(sid, 04L, "/sgsgsgs/Barisoni/rurururu");
-		createPath(sid, 04L, "/La zanzara/Cruciani/coloqui via Sky");
+		//createPath(sid, 04L, "/La zanzara/Cruciani/coloqui via Sky");
+		
+		//getFolder(sid, 04L);
+		
+//		WSDocument myDoc = getDocument(sid, 3375109L);
+//		
+//		Calendar cal = Calendar.getInstance();
+//        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+////        System.out.println( sdf.format(cal.getTime()) );
+//        
+//		myDoc.setTitle("document test(" +sdf.format(cal.getTime()) +")");
+//		
+//		updateDocument(sid, myDoc);
+		
+		//createDocument(sid);
+		createFolder(sid, 04L, "DJ KATCH");
 		
 		long start_time = System.nanoTime();
 		
@@ -81,7 +100,7 @@ public class XtestRestClients {
 		
 			long end_time = System.nanoTime();
 			double difference = (end_time - start_time)/1e6;
-			System.out.println("Total Exec. time (ms): " +difference);
+			//System.out.println("Total Exec. time (ms): " +difference);
 		
 		// HttpRestWb - (Apache HttpClient 4.5.2)	
 		// Total Exec. time (ms): 988.231266 
@@ -127,6 +146,47 @@ public class XtestRestClients {
         // Total Exec. time (ms): 918.054599
 	}
 	
+	private static void createFolder(String sid, long parentId, String fname) throws Exception {
+		long fldId = fldClient.createFolder(sid, parentId, fname);
+		System.out.println("fldId: "+ fldId);
+	}
+
+	private static void createDocument(String sid) throws Exception {
+				
+		File xxxx = new File("C:\\tmp\\InvoiceProcessing02-dashboard.png");
+		WSDocument document = new WSDocument();
+		document.setFolderId(04L);
+		document.setFileName(xxxx.getName());
+		docClient.create(sid, document, xxxx);
+	}
+
+	private static void updateDocument(String sid, WSDocument document) throws Exception {
+
+		docClient.update(sid, document);
+	}
+
+	private static WSDocument getDocument(String sid, long docId) throws Exception {
+		
+		WSDocument myDoc = docClient.getDocument(sid, docId);
+		
+		//Object to JSON in String
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = mapper.writeValueAsString(myDoc);
+		System.out.println(jsonInString);
+		
+		return myDoc;
+	}
+
+	private static void getFolder(String sid, long fldId) throws Exception {
+
+		WSFolder sss = fldClient.getFolder(sid, fldId);
+		
+		//Object to JSON in String
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonInString = mapper.writeValueAsString(sss);
+		System.out.println(jsonInString);
+	}
+
 	private static void createPath(String sid, long rootFolder, String path) throws Exception {
 		
 		WSFolder sss = fldClient.createPath(sid, rootFolder, path);

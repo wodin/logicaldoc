@@ -2,7 +2,6 @@ package com.logicaldoc.webservice.rest;
 
 import java.util.List;
 
-import javax.jws.WebParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -29,7 +28,8 @@ public interface DocumentService {
 	WSDocument create(List<Attachment> atts) throws Exception;
 
 	@GET
-	@Path("/getDocument")	
+	@Path("/getDocument")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	WSDocument getDocument(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception;
 
 	@POST
