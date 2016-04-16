@@ -40,6 +40,8 @@ public abstract class AbstractServerProxy {
 	public abstract WSFolder create(String ticket, WSFolder newFolder) throws Exception;
 
 	public abstract WSFolder createPath(String ticket, Long rootFolder, String currentKey) throws Exception;
+
+	public abstract long create(String ticket, long parentFolder, String fname) throws Exception;
 	
 
 }

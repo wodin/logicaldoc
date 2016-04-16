@@ -93,5 +93,10 @@ public class SoapServerProxy extends AbstractServerProxy {
 	@Override
 	public WSFolder createPath(String ticket, Long rootFolder, String currentKey) throws Exception {
 		return folderClient.createPath(ticket, rootFolder, currentKey);
+	}
+
+	@Override
+	public long create(String ticket, long parentFolder, String fname) throws Exception {
+		return folderClient.createFolder(ticket, parentFolder, fname);
 	}	
 }

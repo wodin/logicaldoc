@@ -13,7 +13,7 @@ import com.logicaldoc.webservice.model.WSSearchResult;
 import com.logicaldoc.webservice.rest.client.RestAuthClient;
 import com.logicaldoc.webservice.rest.client.RestDocumentClient;
 import com.logicaldoc.webservice.rest.client.RestFolderClient;
-import com.logicaldoc.webservice.soap.client.SoapSearchClient;
+import com.logicaldoc.webservice.rest.client.RestSearchClient;
 
 /**
  * Helper class to store remote service connections.
@@ -26,18 +26,15 @@ public class RestServerProxy extends AbstractServerProxy {
 	public RestAuthClient authClient;
 	public RestDocumentClient documentClient;
 	public RestFolderClient folderClient;
-	public SoapSearchClient searchClient;
+	public RestSearchClient searchClient;
 	
 	public RestServerProxy(String url, ContextProperties config) throws IOException {
-		
-		SoapSearchClient searchClient = new SoapSearchClient(url + "/services/Search", config.getInt("webservice.gzip"),
-				false, 40);		
 		
 		this.url = url;
 		this.authClient = new RestAuthClient(url + "/services/rest/auth");
 		this.folderClient = new RestFolderClient(url + "/services/rest/folder", 40);
 		this.documentClient = new RestDocumentClient(url + "/services/rest/document", 40);
-		this.searchClient = searchClient;
+		this.searchClient = new RestSearchClient(url + "/services/rest/search", 40);		
 	}
 
 	public void logout() {
@@ -88,5 +85,10 @@ public class RestServerProxy extends AbstractServerProxy {
 	@Override
 	public WSFolder createPath(String ticket, Long rootFolder, String currentKey) throws Exception {
 		return folderClient.createPath(ticket, rootFolder, currentKey);
+	}
+
+	@Override
+	public long create(String ticket, long parentFolder, String fname) throws Exception {
+		return folderClient.createFolder(ticket, parentFolder, fname);
 	}	
 }
