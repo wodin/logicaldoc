@@ -7,7 +7,6 @@ import java.util.List;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
-import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.AttachmentBuilder;
@@ -18,10 +17,8 @@ import org.codehaus.jackson.map.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.rest.FolderService;
-import com.logicaldoc.webservice.rest.endpoint.RestFolderService;
 
 public class RestFolderClient extends AbstractRestClient {
 
@@ -41,7 +38,8 @@ public class RestFolderClient extends AbstractRestClient {
         
         FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
         WebClient.client(proxy).type("*/*");
-        //WebClient.client(proxy).accept("application/json");
+        WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
+        //WebClient.client(proxy).accept(MediaType.APPLICATION_XML);
         
 		return proxy.listChildren(sid, folderId);
 	}
@@ -77,5 +75,27 @@ public class RestFolderClient extends AbstractRestClient {
         
 		return proxy.createPath(sid, rootFolder, path);	
 	}	
+	
+	public WSFolder getFolder(String sid, long folderId) throws Exception {
+		
+		JacksonJsonProvider provider = new JacksonJsonProvider();
+		
+        FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
+        //WebClient.client(proxy).accept(MediaType.APPLICATION_XML);
+        WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
+        
+		return proxy.getFolder(sid, folderId);
+	}
+	
+	public long createFolder(String sid, long parentId, String folderName) throws Exception {
+		
+		JacksonJsonProvider provider = new JacksonJsonProvider();
+		
+        FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
+        WebClient.client(proxy).accept(MediaType.TEXT_PLAIN);
+        
+		return proxy.createFolder(sid, parentId, folderName);
+	}
+
 
 }

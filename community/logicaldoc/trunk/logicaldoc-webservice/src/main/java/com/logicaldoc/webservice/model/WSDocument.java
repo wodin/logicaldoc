@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +33,7 @@ import com.logicaldoc.webservice.AbstractService;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
+@XmlRootElement(name = "document")
 public class WSDocument implements Serializable {
 
 	private static final long serialVersionUID = 1L;

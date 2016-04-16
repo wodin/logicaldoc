@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,6 +24,7 @@ import com.logicaldoc.webservice.AbstractService;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
+@XmlRootElement(name = "folder")
 public class WSFolder implements Serializable {
 
 	private static final long serialVersionUID = 1L;

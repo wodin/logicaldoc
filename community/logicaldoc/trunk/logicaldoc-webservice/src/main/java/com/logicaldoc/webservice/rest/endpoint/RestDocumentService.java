@@ -66,6 +66,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Override
 	@GET
 	@Path("/getDocument")
+	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public WSDocument getDocument(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
 		return super.getDocument(sid, docId);
 	}
