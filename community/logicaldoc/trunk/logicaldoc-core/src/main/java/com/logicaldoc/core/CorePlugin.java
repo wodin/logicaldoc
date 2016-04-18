@@ -23,13 +23,17 @@ public class CorePlugin extends LogicalDOCPlugin {
 	@Override
 	protected void doStart() throws Exception {
 		ContextProperties pbean = new ContextProperties();
-		if (StringUtils.isEmpty(pbean.getProperty("id"))){
+		if (StringUtils.isEmpty(pbean.getProperty("id"))) {
 			pbean.setProperty("id", UUID.randomUUID().toString());
 			pbean.write();
 		}
-		
-		// Register scheduled tasks
-		TaskManager manager = new TaskManager();
-		manager.registerTasks();
+
+		try {
+			// Register scheduled tasks
+			TaskManager manager = new TaskManager();
+			manager.registerTasks();
+		} catch (Throwable t) {
+			log.error("Unable to register some tasks", t);
+		}
 	}
 }

@@ -43,10 +43,10 @@ public class XMLBean {
 	/**
 	 * Creates new XMLBean.
 	 * 
-	 * @param docname Path of xml-file.
+	 * @param docPath Path of xml-file.
 	 */
-	public XMLBean(String docname) {
-		docPath = docname;
+	public XMLBean(String docPath) {
+		this.docPath = docPath;
 		docInputStream = null;
 		initDocument();
 	}
@@ -80,7 +80,7 @@ public class XMLBean {
 	private void initDocument() {
 
 		try {
-			SAXBuilder builder = new SAXBuilder();
+			SAXBuilder builder = new SAXBuilder(false);
 
 			if (docPath != null) {
 
@@ -149,7 +149,7 @@ public class XMLBean {
 			return null;
 		} else {
 			Element temp = null;
-			List list = root.getChildren(elemname);
+			List list = root.getChildren(elemname, getRootElement().getNamespace());
 			Iterator iter = list.iterator();
 			String val = "";
 
