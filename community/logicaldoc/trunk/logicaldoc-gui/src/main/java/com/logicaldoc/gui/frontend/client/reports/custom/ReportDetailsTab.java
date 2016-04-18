@@ -19,7 +19,7 @@ public abstract class ReportDetailsTab extends HLayout {
 	 * 
 	 * @param report The report this instance refers to
 	 * @param changedHandler The handler to be invoked in case of changes in the
-	 *        share
+	 *        importFolder
 	 */
 	public ReportDetailsTab(GUIReport report, ChangedHandler changedHandler) {
 		super();

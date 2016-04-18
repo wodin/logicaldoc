@@ -1,19 +1,19 @@
 package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.beans.GUIShare;
+import com.logicaldoc.gui.common.client.beans.GUIImportFolder;
 
-public interface ImportFoldersServiceAsync {
+public interface ImportFolderServiceAsync {
 
 	void delete(String sid, long id, AsyncCallback<Void> callback);
 
-	void getShare(String sid, long id, AsyncCallback<GUIShare> callback);
-
-	void save(String sid, GUIShare share, AsyncCallback<GUIShare> callback);
+	void save(String sid, GUIImportFolder share, AsyncCallback<GUIImportFolder> callback);
 
 	void test(String sid, long id, AsyncCallback<Boolean> callback);
 
 	void changeStatus(String sid, long id, boolean enabled, AsyncCallback<Void> callback);
 
 	void resetCache(String sid, long id, AsyncCallback<Void> callback);
+
+	void getImportFolder(String sid, long id, AsyncCallback<GUIImportFolder> callback);
 }

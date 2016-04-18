@@ -17,9 +17,9 @@ public abstract class AccountDetailsTab extends VLayout {
 
 	/**
 	 * 
-	 * @param document The share this instance refers to
+	 * @param document The importFolder this instance refers to
 	 * @param changedHandler The handler to be invoked in case of changes in the
-	 *        share
+	 *        importFolder
 	 */
 	public AccountDetailsTab(GUIEmailAccount account, ChangedHandler changedHandler) {
 		super();

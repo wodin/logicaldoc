@@ -3,9 +3,8 @@ package com.logicaldoc.gui.frontend.client.impex.folders;
 import java.util.Map;
 
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
-import com.logicaldoc.gui.common.client.beans.GUIShare;
+import com.logicaldoc.gui.common.client.beans.GUIImportFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FolderChangeListener;
 import com.logicaldoc.gui.frontend.client.folder.FolderSelector;
@@ -29,8 +28,8 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 
 	private FolderSelector targetSelector;
 
-	public ImportFolderStandardProperties(GUIShare share, final ChangedHandler changedHandler) {
-		super(share, changedHandler);
+	public ImportFolderStandardProperties(GUIImportFolder importFolder, final ChangedHandler changedHandler) {
+		super(importFolder, changedHandler);
 		setWidth100();
 		setHeight100();
 
@@ -39,8 +38,8 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		targetSelector.setRequired(true);
 		targetSelector.setWidth(250);
 		targetSelector.setTitle(I18N.message("target"));
-		if (share.getTarget() != null)
-			targetSelector.setFolder(share.getTarget());
+		if (importFolder.getTarget() != null)
+			targetSelector.setFolder(importFolder.getTarget());
 		targetSelector.addFolderChangeListener(new FolderChangeListener() {
 			@Override
 			public void onChanged(GUIFolder folder) {
@@ -52,51 +51,45 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 	}
 
 	private void refresh() {
-		Log.info("**1 " + share, null);
-
 		form.clearValues();
 		form.clearErrors(false);
 
 		if (form != null)
 			form.destroy();
 
-		Log.info("**2 ", null);
-
 		if (formsContainer.contains(form))
 			formsContainer.removeChild(form);
-
-		Log.info("**3 ", null);
 
 		form = new DynamicForm();
 		form.setNumCols(2);
 		form.setTitleOrientation(TitleOrientation.TOP);
 
-		TextItem path = ItemFactory.newTextItem("path", "path", share.getPath());
+		TextItem path = ItemFactory.newTextItem("path", "path", importFolder.getPath());
 		path.addChangedHandler(changedHandler);
 		path.setWidth(250);
 		path.setRequired(true);
 
-		TextItem domain = ItemFactory.newTextItem("domain", "domain", share.getDomain());
+		TextItem domain = ItemFactory.newTextItem("domain", "domain", importFolder.getDomain());
 		domain.addChangedHandler(changedHandler);
 
-		TextItem username = ItemFactory.newTextItem("username", "username", share.getUsername());
+		TextItem username = ItemFactory.newTextItem("username", "username", importFolder.getUsername());
 		username.addChangedHandler(changedHandler);
 
-		TextItem password = ItemFactory.newPasswordItem("password", "password", share.getPassword());
+		TextItem password = ItemFactory.newPasswordItem("password", "password", importFolder.getPassword());
 		password.addChangedHandler(changedHandler);
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", false, false);
 		language.addChangedHandler(changedHandler);
 		language.setRequired(true);
-		language.setValue(share.getLanguage());
+		language.setValue(importFolder.getLanguage());
 
-		TextItem include = ItemFactory.newTextItem("include", "include", share.getIncludes());
+		TextItem include = ItemFactory.newTextItem("include", "include", importFolder.getIncludes());
 		include.addChangedHandler(changedHandler);
 
-		TextItem exclude = ItemFactory.newTextItem("exclude", "exclude", share.getExcludes());
+		TextItem exclude = ItemFactory.newTextItem("exclude", "exclude", importFolder.getExcludes());
 		exclude.addChangedHandler(changedHandler);
 
-		if ("smb".equals(share.getProvider()))
+		if ("smb".equals(importFolder.getProvider()))
 			form.setItems(path, targetSelector, language, domain, username, password, include, exclude);
 		else
 			form.setItems(path, targetSelector, language, include, exclude);
@@ -109,14 +102,14 @@ public class ImportFolderStandardProperties extends ImportFolderDetailsTab {
 		Map<String, Object> values = (Map<String, Object>) form.getValues();
 		form.validate();
 		if (!form.hasErrors()) {
-			share.setPath((String) values.get("path"));
-			share.setUsername((String) values.get("username"));
-			share.setPassword((String) values.get("password"));
-			share.setDomain((String) values.get("domain"));
-			share.setTarget(targetSelector.getFolder());
-			share.setLanguage((String) values.get("language"));
-			share.setIncludes((String) values.get("include"));
-			share.setExcludes((String) values.get("exclude"));
+			importFolder.setPath((String) values.get("path"));
+			importFolder.setUsername((String) values.get("username"));
+			importFolder.setPassword((String) values.get("password"));
+			importFolder.setDomain((String) values.get("domain"));
+			importFolder.setTarget(targetSelector.getFolder());
+			importFolder.setLanguage((String) values.get("language"));
+			importFolder.setIncludes((String) values.get("include"));
+			importFolder.setExcludes((String) values.get("exclude"));
 		}
 		return !form.hasErrors();
 	}
