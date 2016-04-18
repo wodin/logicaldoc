@@ -3,12 +3,12 @@ package com.logicaldoc.gui.frontend.client.impex.folders;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIShare;
+import com.logicaldoc.gui.common.client.beans.GUIImportFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.services.ImportFoldersService;
-import com.logicaldoc.gui.frontend.client.services.ImportFoldersServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ImportFolderService;
+import com.logicaldoc.gui.frontend.client.services.ImportFolderServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.Overflow;
@@ -34,7 +34,7 @@ import com.smartgwt.client.widgets.tab.TabSet;
  * @since 6.0
  */
 public class ImportFolderDetailsPanel extends VLayout {
-	private GUIShare share;
+	private GUIImportFolder importFolder;
 
 	private Layout standardTabPanel;
 
@@ -46,7 +46,7 @@ public class ImportFolderDetailsPanel extends VLayout {
 
 	private HLayout savePanel;
 
-	private ImportFoldersServiceAsync service = (ImportFoldersServiceAsync) GWT.create(ImportFoldersService.class);
+	private ImportFolderServiceAsync service = (ImportFolderServiceAsync) GWT.create(ImportFolderService.class);
 
 	private TabSet tabSet = new TabSet();
 
@@ -86,21 +86,21 @@ public class ImportFolderDetailsPanel extends VLayout {
 		closeImage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (share.getId() != 0) {
-					service.getShare(Session.get().getSid(), share.getId(), new AsyncCallback<GUIShare>() {
+				if (importFolder.getId() != 0) {
+					service.getImportFolder(Session.get().getSid(), importFolder.getId(), new AsyncCallback<GUIImportFolder>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
 						}
 
 						@Override
-						public void onSuccess(GUIShare share) {
+						public void onSuccess(GUIImportFolder share) {
 							setShare(share);
 						}
 					});
 				} else {
-					GUIShare newshare = new GUIShare();
-					newshare.setProvider(share.getProvider());
+					GUIImportFolder newshare = new GUIImportFolder();
+					newshare.setProvider(importFolder.getProvider());
 					setShare(newshare);
 				}
 				savePanel.setVisible(false);
@@ -158,7 +158,7 @@ public class ImportFolderDetailsPanel extends VLayout {
 				onModified();
 			}
 		};
-		standardPanel = new ImportFolderStandardProperties(share, changeHandler);
+		standardPanel = new ImportFolderStandardProperties(importFolder, changeHandler);
 		standardTabPanel.addMember(standardPanel);
 
 		/*
@@ -169,16 +169,16 @@ public class ImportFolderDetailsPanel extends VLayout {
 			if (advancedTabPanel.contains(advancedPanel))
 				advancedTabPanel.removeMember(advancedPanel);
 		}
-		advancedPanel = new ImportFolderAdvancedProperties(share, changeHandler);
+		advancedPanel = new ImportFolderAdvancedProperties(importFolder, changeHandler);
 		advancedTabPanel.addMember(advancedPanel);
 	}
 
-	public GUIShare getShare() {
-		return share;
+	public GUIImportFolder getShare() {
+		return importFolder;
 	}
 
-	public void setShare(GUIShare share) {
-		this.share = share;
+	public void setShare(GUIImportFolder share) {
+		this.importFolder = share;
 		refresh();
 	}
 
@@ -198,14 +198,14 @@ public class ImportFolderDetailsPanel extends VLayout {
 
 	public void onSave() {
 		if (validate()) {
-			service.save(Session.get().getSid(), share, new AsyncCallback<GUIShare>() {
+			service.save(Session.get().getSid(), importFolder, new AsyncCallback<GUIImportFolder>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);
 				}
 
 				@Override
-				public void onSuccess(GUIShare share) {
+				public void onSuccess(GUIImportFolder share) {
 					savePanel.setVisible(false);
 					if (share != null) {
 						foldersPanel.updateRecord(share);

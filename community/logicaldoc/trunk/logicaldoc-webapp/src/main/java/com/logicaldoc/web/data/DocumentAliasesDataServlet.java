@@ -80,7 +80,7 @@ public class DocumentAliasesDataServlet extends HttpServlet {
 						+ FilenameUtils.getBaseName(IconSelector.selectIcon(FilenameUtils
 								.getExtension((String) cols[2]))) + "</icon>");
 				writer.print("<path><![CDATA[" + folderDAO.computePathExtended((Long) cols[3]) + "/" + cols[2]
-						+ "]]></path>");
+						+ "-sc]]></path>");
 				writer.print("</alias>");
 			}
 			writer.write("</list>");

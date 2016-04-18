@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIShare;
+import com.logicaldoc.gui.common.client.beans.GUIImportFolder;
 import com.logicaldoc.gui.common.client.data.ImportFoldersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -12,8 +12,8 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
-import com.logicaldoc.gui.frontend.client.services.ImportFoldersService;
-import com.logicaldoc.gui.frontend.client.services.ImportFoldersServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.ImportFolderService;
+import com.logicaldoc.gui.frontend.client.services.ImportFolderServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
@@ -47,7 +47,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 6.0
  */
 public class ImportFoldersPanel extends VLayout {
-	private ImportFoldersServiceAsync service = (ImportFoldersServiceAsync) GWT.create(ImportFoldersService.class);
+	private ImportFolderServiceAsync service = (ImportFolderServiceAsync) GWT.create(ImportFolderService.class);
 
 	private Layout listing = new VLayout();
 
@@ -138,7 +138,7 @@ public class ImportFoldersPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				list.deselectAllRecords();
-				GUIShare share = new GUIShare();
+				GUIImportFolder share = new GUIImportFolder();
 				share.setProvider("file");
 				showShareDetails(share);
 			}
@@ -157,7 +157,7 @@ public class ImportFoldersPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				list.deselectAllRecords();
-				GUIShare share = new GUIShare();
+				GUIImportFolder share = new GUIImportFolder();
 				share.setProvider("smb");
 				showShareDetails(share);
 			}
@@ -183,8 +183,8 @@ public class ImportFoldersPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.getShare(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-							new AsyncCallback<GUIShare>() {
+					service.getImportFolder(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+							new AsyncCallback<GUIImportFolder>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -192,7 +192,7 @@ public class ImportFoldersPanel extends VLayout {
 								}
 
 								@Override
-								public void onSuccess(GUIShare share) {
+								public void onSuccess(GUIImportFolder share) {
 									showShareDetails(share);
 								}
 							});
@@ -342,7 +342,7 @@ public class ImportFoldersPanel extends VLayout {
 		contextMenu.showContextMenu();
 	}
 
-	public void showShareDetails(GUIShare share) {
+	public void showShareDetails(GUIImportFolder share) {
 		if (!(details instanceof ImportFolderDetailsPanel)) {
 			detailsContainer.removeMember(details);
 			details = new ImportFolderDetailsPanel(this);
@@ -358,7 +358,7 @@ public class ImportFoldersPanel extends VLayout {
 	/**
 	 * Updates the selected record with new data
 	 */
-	public void updateRecord(GUIShare share) {
+	public void updateRecord(GUIImportFolder share) {
 		ListGridRecord record = list.getSelectedRecord();
 		if (record == null)
 			record = new ListGridRecord();

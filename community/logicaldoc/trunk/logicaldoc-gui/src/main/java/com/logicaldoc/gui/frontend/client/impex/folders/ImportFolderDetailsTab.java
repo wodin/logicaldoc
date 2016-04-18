@@ -1,6 +1,6 @@
 package com.logicaldoc.gui.frontend.client.impex.folders;
 
-import com.logicaldoc.gui.common.client.beans.GUIShare;
+import com.logicaldoc.gui.common.client.beans.GUIImportFolder;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 
@@ -11,24 +11,24 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @since 6.0
  */
 public abstract class ImportFolderDetailsTab extends HLayout {
-	protected GUIShare share;
+	protected GUIImportFolder importFolder;
 
 	protected ChangedHandler changedHandler;
 
 	/**
 	 * 
-	 * @param share The share this instance refers to
+	 * @param importFolder The importFolder this instance refers to
 	 * @param changedHandler The handler to be invoked in case of changes in the
-	 *        share
+	 *        importFolder
 	 */
-	public ImportFolderDetailsTab(GUIShare share, ChangedHandler changedHandler) {
+	public ImportFolderDetailsTab(GUIImportFolder importFolder, ChangedHandler changedHandler) {
 		super();
-		this.share = share;
+		this.importFolder = importFolder;
 		this.changedHandler = changedHandler;
 	}
 
-	public GUIShare getShare() {
-		return share;
+	public GUIImportFolder getImportFolder() {
+		return importFolder;
 	}
 
 	public ChangedHandler getChangedHandler() {

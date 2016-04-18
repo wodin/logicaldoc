@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * A Share(Import Folder) representation
+ * An Import Folder representation
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
  */
-public class GUIShare implements Serializable {
+public class GUIImportFolder implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -52,8 +52,10 @@ public class GUIShare implements Serializable {
 	private Date startDate;
 
 	private int updatePolicy = 0;
+	
+	private boolean inheritRights = true;
 
-	public GUIShare() {
+	public GUIImportFolder() {
 		super();
 	}
 
@@ -215,5 +217,13 @@ public class GUIShare implements Serializable {
 
 	public void setImportEmpty(boolean importEmpty) {
 		this.importEmpty = importEmpty;
+	}
+
+	public boolean isInheritRights() {
+		return inheritRights;
+	}
+
+	public void setInheritRights(boolean inheritRights) {
+		this.inheritRights = inheritRights;
 	}
 }
