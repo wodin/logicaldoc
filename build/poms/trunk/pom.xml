@@ -69,7 +69,7 @@
     </plugins>
   </build>
   <properties>
-    <spring.version>3.2.3.RELEASE</spring.version>
+    <spring.version>3.2.16.RELEASE</spring.version>
     <hibernate.version>4.1.12.Final</hibernate.version>
     <ehcache.version>2.6.6</ehcache.version>
     <lucene.version>4.9.0</lucene.version>
