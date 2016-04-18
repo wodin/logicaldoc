@@ -20,7 +20,10 @@ public class ContextConfigurator {
 	protected XMLBean xml;
 
 	public ContextConfigurator(String resource) {
-		xml = new XMLBean(getClass().getClassLoader().getResource(resource));
+		if (getClass().getClassLoader().getResource(resource) != null)
+			xml = new XMLBean(getClass().getClassLoader().getResource(resource));
+		else
+			xml = new XMLBean(resource);
 	}
 
 	public ContextConfigurator() {
@@ -29,7 +32,7 @@ public class ContextConfigurator {
 
 	public void setProperty(String id, String propertyName, String value) {
 		Element element = xml.getChild("bean", "id", id);
-		List poperties = element.getChildren("property");
+		List poperties = element.getChildren("property", element.getNamespace());
 		for (Iterator iter = poperties.iterator(); iter.hasNext();) {
 			Element property = (Element) iter.next();
 			if (propertyName.equals(property.getAttribute("name").getValue())) {
@@ -43,7 +46,7 @@ public class ContextConfigurator {
 		Element element = xml.getChild("bean", "id", id);
 		if (element == null)
 			return;
-		List poperties = element.getChildren("property");
+		List poperties = element.getChildren("property", element.getNamespace());
 		for (Iterator iter = poperties.iterator(); iter.hasNext();) {
 			Element property = (Element) iter.next();
 			if (propertyName.equals(property.getAttribute("name").getValue())) {
@@ -57,13 +60,13 @@ public class ContextConfigurator {
 		Element element = xml.getChild("bean", "id", id);
 		if (element == null)
 			return;
-		List poperties = element.getChildren("property");
+		List poperties = element.getChildren("property", element.getNamespace());
 		for (Iterator iter = poperties.iterator(); iter.hasNext();) {
 			Element property = (Element) iter.next();
 
 			if (propertyName.equals(property.getAttribute("name").getValue())) {
 				Collection<Element> beanRefChildren = new LinkedList<Element>();
-				Element listElement = property.getChild("list");
+				Element listElement = property.getChild("list", property.getNamespace());
 				if (listElement != null) {
 					List<Element> elms = listElement.getChildren();
 					for (Element elm : elms) {
@@ -130,7 +133,7 @@ public class ContextConfigurator {
 	 */
 	protected Element getPropElement(String id, String propertyName, String key) {
 		Element element = getPropertyElement(id, propertyName);
-		Element props = element.getChild("props");
+		Element props = element.getChild("props", element.getNamespace());
 		for (Iterator iter = props.getChildren().iterator(); iter.hasNext();) {
 			Element prop = (Element) iter.next();
 			if (key.equals(prop.getAttributeValue("key")))
@@ -161,10 +164,11 @@ public class ContextConfigurator {
 		Element element = xml.getChild("bean", "id", id);
 		if (element == null)
 			return null;
-		List poperties = element.getChildren("property");
-		for (Iterator iter = poperties.iterator(); iter.hasNext();) {
+		List properties = element.getChildren("property", element.getNamespace());
+		for (Iterator iter = properties.iterator(); iter.hasNext();) {
 			Element property = (Element) iter.next();
-			if (propertyName.equals(property.getAttribute("name").getValue())) {
+			Attribute nameAttribute = property.getAttribute("name");
+			if (nameAttribute != null && propertyName.equals(nameAttribute.getValue())) {
 				return property;
 			}
 		}
@@ -186,15 +190,15 @@ public class ContextConfigurator {
 	 */
 	public void addTrigger(String triggerId) {
 		Element element = getPropertyElement("Scheduler", "triggers");
-		Element list = element.getChild("list");
-		List refs = list.getChildren("ref");
+		Element list = element.getChild("list", element.getNamespace());
+		List refs = list.getChildren("ref", element.getNamespace());
 		for (Iterator iterator = refs.iterator(); iterator.hasNext();) {
 			Element ref = (Element) iterator.next();
 			if (triggerId.equals(ref.getAttribute("bean").getValue()))
 				return;
 		}
 
-		Element ref = new Element("ref", list.getNamespace());
+		Element ref = new Element("ref", element.getNamespace());
 		ref.setAttribute("bean", triggerId);
 		list.addContent(ref);
 
