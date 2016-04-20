@@ -27,12 +27,14 @@ public class RestSearchClient extends AbstractRestClient {
 	
 	public RestSearchClient(String endpoint) {
 		super(endpoint);
+		
         JacksonJsonProvider provider = new JacksonJsonProvider();	
 		proxy = JAXRSClientFactory.create(endpoint, SearchService.class, Arrays.asList(provider));
 	}
 	
 	public RestSearchClient(String endpoint, int timeout) {
 		super(endpoint, timeout);
+		
         JacksonJsonProvider provider = new JacksonJsonProvider();	
 		proxy = JAXRSClientFactory.create(endpoint, SearchService.class, Arrays.asList(provider));		
 	}
@@ -40,9 +42,7 @@ public class RestSearchClient extends AbstractRestClient {
 
 	public WSSearchResult find(String sid, WSSearchOptions owd) throws Exception {
 			
-        //JacksonJsonProvider provider = new JacksonJsonProvider();	
-		//SearchService proxy = JAXRSClientFactory.create(endpoint, SearchService.class, Arrays.asList(provider));
-		WebClient.client(proxy).type("multipart/form-data");
+        WebClient.client(proxy).type("multipart/form-data");
 		WebClient.client(proxy).accept("application/json");
 		//WebClient.client(proxy).accept("*/*"); // This also works
         

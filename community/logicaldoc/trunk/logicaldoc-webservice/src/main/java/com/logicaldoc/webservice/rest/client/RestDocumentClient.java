@@ -84,28 +84,14 @@ public class RestDocumentClient extends AbstractRestClient {
 	}	
 
 	public WSDocument[] list(String sid, long folderId) throws Exception {
-				
-        System.out.println("Sending request to the service");
-        System.out.println("endpoint: " +endpoint);
 
-        JacksonJsonProvider provider = new JacksonJsonProvider();
-        provider.addUntouchable(WSDocument.class);
-        
-        DocumentService proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider));
         WebClient.client(proxy).type("*/*");
         
 		return proxy.list(sid, folderId);
 	}
 	
 	public WSDocument[] listDocuments(String sid, long folderId, String fileName) throws Exception {
-		
-        System.out.println("Sending request to the service");
-        System.out.println("endpoint: " +endpoint);
 
-        JacksonJsonProvider provider = new JacksonJsonProvider();
-        provider.addUntouchable(WSDocument.class);
-        
-        DocumentService proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider));
         WebClient.client(proxy).type("*/*");
         //WebClient.client(proxy).header("Content-Type", "*/*");
         //WebClient.client(proxy).accept("application/json");
