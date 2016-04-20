@@ -4,6 +4,10 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
@@ -35,7 +39,7 @@ public class XtestRestClients {
 		String sid = loginGet();
 		
 		//listDocuments(sid, 04L);
-		listDocuments(sid, 04L, "InvoiceProcessing01-workflow*.png"); // 4 documents
+		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow*.png"); // 4 documents
 		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow.png"); // 1 document
 		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow(3).png"); // 1 document
 		//listFolders(sid, 04L);
@@ -55,7 +59,7 @@ public class XtestRestClients {
 //		
 //		updateDocument(sid, myDoc);
 		
-		//createDocument(sid);
+		createDocument02(sid);
 		//createFolder(sid, 04L, "DJ KATCH");
 		
 		long start_time = System.nanoTime();
@@ -159,6 +163,21 @@ public class XtestRestClients {
 		document.setFileName(xxxx.getName());
 		docClient.create(sid, document, xxxx);
 	}
+	
+	private static void createDocument02(String sid) throws Exception {
+		
+		File xxxx = new File("C:\\tmp\\InvoiceProcessing02-dashboard.png");
+		
+		WSDocument document = new WSDocument();
+		document.setFolderId(04L);
+		document.setFileName(xxxx.getName());
+		
+		DataSource fds = new FileDataSource(xxxx);
+		DataHandler handler = new DataHandler(fds);
+		 
+		WSDocument created = docClient.create(sid, document, handler);
+		System.out.println(created.getId());
+	}	
 
 	private static void updateDocument(String sid, WSDocument document) throws Exception {
 

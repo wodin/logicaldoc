@@ -40,7 +40,7 @@ public class RestDocumentClient extends AbstractRestClient {
 		super(endpoint, timeout);
 		
         JacksonJsonProvider provider = new JacksonJsonProvider();	        
-        proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider));		
+        proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider));	
 	}
 	
 	public WSDocument create(String sid, WSDocument document, File packageFile) throws Exception {
@@ -81,7 +81,7 @@ public class RestDocumentClient extends AbstractRestClient {
 		atts.add(fileAttachment);
         
 		return proxy.create(atts);
-	}	
+	}			
 
 	public WSDocument[] list(String sid, long folderId) throws Exception {
 
