@@ -1,7 +1,7 @@
 package com.logicaldoc.bm.loaders;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
 import com.logicaldoc.bm.AbstractServerProxy;
@@ -20,7 +20,7 @@ import com.logicaldoc.webservice.model.WSFolder;
  */
 public class ListFolders extends AbstractLoader {
 	
-	private static Log log = LogFactory.getLog(ListFolders.class);
+	private static Logger log = LoggerFactory.getLogger(ListFolders.class);
 
 	private String messageRecord;
 

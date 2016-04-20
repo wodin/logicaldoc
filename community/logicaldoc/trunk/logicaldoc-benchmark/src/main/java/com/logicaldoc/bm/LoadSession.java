@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -25,7 +25,7 @@ import com.logicaldoc.util.config.ContextProperties;
  */
 public class LoadSession {
 
-	private static Log log = LogFactory.getLog(LoadSession.class);
+	private static Logger log = LoggerFactory.getLogger(LoadSession.class);
 
 	public static final ThreadGroup THREAD_GROUP = new ThreadGroup("FileFolderRemoteLoader");
 
@@ -68,7 +68,7 @@ public class LoadSession {
 			String s = tokenizer.nextToken().trim();
 			AbstractServerProxy server = LoadSession.connect(s, username, password);
 			servers.add(server);
-			log.info("Connected to server " + s);
+			log.info("Connected to server {}", s);
 		}
 
 		// Construct output and error files
@@ -113,7 +113,7 @@ public class LoadSession {
 
 			// Authenticate
 			String ticket = lsp.login(username, password);
-			log.info("Created SID: " + ticket);
+			log.info("Created SID: {}", ticket);
 
 			remoteServer = lsp;
 		} catch (Throwable e) {

@@ -72,7 +72,7 @@ public abstract class AbstractLoader extends Thread {
 					// int serverIndex = random.nextInt(serverCount);
 					// LoaderServerProxy serverProxy = session.getRemoteServers().get(serverIndex);
 					AbstractServerProxy serverProxy = session.getRemoteServer();
-					log.error("serverProxy: " + serverProxy);
+					log.debug("serverProxy: {}", serverProxy);
 
 					doLoading(serverProxy);
 					statCount++;
@@ -90,7 +90,7 @@ public abstract class AbstractLoader extends Thread {
 			}
 		} finally {
 			statTotalMs = System.currentTimeMillis() - startTime;
-			log.info(getName() + " finished in ms: " + statTotalMs);
+			log.info("{} finished in ms: {}", getName() ,statTotalMs);
 		}
 	}
 

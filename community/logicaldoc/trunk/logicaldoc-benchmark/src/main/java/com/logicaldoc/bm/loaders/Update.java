@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
 import com.logicaldoc.bm.AbstractServerProxy;
@@ -22,12 +22,12 @@ import com.logicaldoc.webservice.model.WSFolder;
 /**
  * Loader thread that updates documents already stored in the database.
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 6.5
  */
 public class Update extends AbstractLoader {
 
-	private static Log log = LogFactory.getLog(Update.class);
+	private static Logger log = LoggerFactory.getLogger(Update.class);
 
 	private static List<Long> folders = new ArrayList<Long>();
 
@@ -56,10 +56,10 @@ public class Update extends AbstractLoader {
 		synchronized (folders) {
 			if (folders.isEmpty()) {
 				prepareFolders(serverProxy, rootFolder, 1);
-				log.info("Retrieved " + folders.size() + " folders");
+				log.info("Retrieved {} folders", folders.size());
 
 				prepareTags();
-				log.info("Prepared " + tags.size() + " tags");
+				log.info("Prepared {} tags", tags.size());
 			}
 		}
 
