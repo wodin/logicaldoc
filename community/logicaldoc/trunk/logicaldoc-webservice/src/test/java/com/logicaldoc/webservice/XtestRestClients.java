@@ -35,7 +35,7 @@ public class XtestRestClients {
 		String sid = loginGet();
 		
 		//listDocuments(sid, 04L);
-		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow*.png"); // 4 documents
+		listDocuments(sid, 04L, "InvoiceProcessing01-workflow*.png"); // 4 documents
 		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow.png"); // 1 document
 		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow(3).png"); // 1 document
 		//listFolders(sid, 04L);
@@ -56,7 +56,7 @@ public class XtestRestClients {
 //		updateDocument(sid, myDoc);
 		
 		//createDocument(sid);
-		createFolder(sid, 04L, "DJ KATCH");
+		//createFolder(sid, 04L, "DJ KATCH");
 		
 		long start_time = System.nanoTime();
 		
