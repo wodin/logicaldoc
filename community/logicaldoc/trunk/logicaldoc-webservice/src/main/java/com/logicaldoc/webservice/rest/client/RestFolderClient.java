@@ -30,7 +30,7 @@ public class RestFolderClient extends AbstractRestClient {
 		super(endpoint);
 		
         JacksonJsonProvider provider = new JacksonJsonProvider();        
-        proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));		
+        proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));	
 	}
 	
 	public RestFolderClient(String endpoint, int timeout) {
