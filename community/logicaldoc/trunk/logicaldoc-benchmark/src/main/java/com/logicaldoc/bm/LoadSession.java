@@ -103,7 +103,13 @@ public class LoadSession {
 			ContextProperties config = new ContextProperties();
 
 			// Store the service references
-			AbstractServerProxy lsp = new SoapServerProxy(url, config);
+			AbstractServerProxy lsp = null;
+			String wsAPI = config.getProperty("serverproxy.type");
+			if ("rest".equals(wsAPI)) {				
+				lsp = new RestServerProxy(url, config);
+			} else {
+				lsp = new SoapServerProxy(url, config);
+			}
 
 			// Authenticate
 			String ticket = lsp.login(username, password);

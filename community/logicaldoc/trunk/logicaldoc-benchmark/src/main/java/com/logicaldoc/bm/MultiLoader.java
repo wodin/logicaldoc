@@ -15,8 +15,8 @@ import com.logicaldoc.util.config.ContextProperties;
  * Executes a number of different load threads against one or more LogicalDOC
  * instances.
  * 
- * @author Marco Meschieri - Logical Objects
- * @author Alessandro Gasparini - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
+ * @author Alessandro Gasparini - LogicalDOC
  * @since 6.5
  */
 public class MultiLoader {
@@ -95,7 +95,12 @@ public class MultiLoader {
 
 	public synchronized void start() {
 
+		log.debug("start()");
+		
+		log.debug("session: "+ session);
+		log.debug("loaders: "+ loaders);
 		if (session == null || loaders == null) {
+			log.debug("session IS NULL and loaders IS NULL");
 			throw new RuntimeException("Application not initialized");
 		}
 
@@ -105,10 +110,13 @@ public class MultiLoader {
 		for (Thread thread : loaders) {
 			thread.start();
 		}
+		log.debug("start() completed");
 	}
 
 	private void initConsole() {
 
+		log.debug("initConsole()");
+		
 		consoleThread = new Thread() {
 
 			@Override
@@ -140,6 +148,7 @@ public class MultiLoader {
 		};
 
 		consoleThread.setPriority(Thread.MIN_PRIORITY);
+		log.debug("initConsole() completed");
 	}
 
 	protected synchronized void stopThreads() {
@@ -173,6 +182,8 @@ public class MultiLoader {
 
 	public synchronized void stopAll() {
 
+		log.debug("stopAll()");
+		
 		consoleThread.interrupt();
 
 		// Print and Log each thread's summary
@@ -193,6 +204,7 @@ public class MultiLoader {
 	 * @throws Exception
 	 */
 	public void init() throws Exception {
+		log.debug("init()");
 		loaders = makeThreads(session);
 
 		// Log the initial summaries
@@ -205,6 +217,7 @@ public class MultiLoader {
 
 		// Initialize control console
 		initConsole();
+		log.debug("init() completed");
 	}
 
 	private AbstractLoader[] makeThreads(LoadSession session) throws Exception {
@@ -235,6 +248,8 @@ public class MultiLoader {
 
 		// Done
 		AbstractLoader[] ret = new AbstractLoader[allLoaders.size()];
+		log.debug("allLoaders.size(): " +allLoaders.size());
+		log.debug("makeThreads() completed");
 		return allLoaders.toArray(ret);
 	}
 

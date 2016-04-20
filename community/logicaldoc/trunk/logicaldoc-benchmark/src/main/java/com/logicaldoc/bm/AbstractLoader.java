@@ -70,9 +70,9 @@ public abstract class AbstractLoader extends Thread {
 					// Choose a server
 					// int serverCount = session.getRemoteServers().size();
 					// int serverIndex = random.nextInt(serverCount);
-					// LoaderServerProxy serverProxy =
-					// session.getRemoteServers().get(serverIndex);
+					// LoaderServerProxy serverProxy = session.getRemoteServers().get(serverIndex);
 					AbstractServerProxy serverProxy = session.getRemoteServer();
+					log.error("serverProxy: " + serverProxy);
 
 					doLoading(serverProxy);
 					statCount++;
