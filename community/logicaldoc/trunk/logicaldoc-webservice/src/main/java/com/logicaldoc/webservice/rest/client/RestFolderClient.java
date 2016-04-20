@@ -23,20 +23,25 @@ import com.logicaldoc.webservice.rest.FolderService;
 public class RestFolderClient extends AbstractRestClient {
 
 	protected static Logger log = LoggerFactory.getLogger(RestFolderClient.class);
+	
+	FolderService proxy = null;
 
 	public RestFolderClient(String endpoint) {
 		super(endpoint);
+		
+        JacksonJsonProvider provider = new JacksonJsonProvider();        
+        proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));		
 	}
 	
 	public RestFolderClient(String endpoint, int timeout) {
 		super(endpoint, timeout);
+		
+        JacksonJsonProvider provider = new JacksonJsonProvider();        
+        proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));		
 	}
 	
 	public WSFolder[] listChildren(String sid, long folderId) throws Exception {
 
-        JacksonJsonProvider provider = new JacksonJsonProvider();
-        
-        FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
         WebClient.client(proxy).type("*/*");
         WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
         //WebClient.client(proxy).accept(MediaType.APPLICATION_XML);
@@ -46,9 +51,6 @@ public class RestFolderClient extends AbstractRestClient {
 	
 	public WSFolder create(String sid, WSFolder folder) throws Exception {
 				
-        JacksonJsonProvider provider = new JacksonJsonProvider();	
-        
-        FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
 		WebClient.client(proxy).type(MediaType.MULTIPART_FORM_DATA);
 		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
         
@@ -67,9 +69,6 @@ public class RestFolderClient extends AbstractRestClient {
 	
 	public WSFolder createPath(String sid, long rootFolder, String path) throws Exception {
 		
-        JacksonJsonProvider provider = new JacksonJsonProvider();
-        
-        FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
         WebClient.client(proxy).type(MediaType.APPLICATION_FORM_URLENCODED);
         WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);      
         
@@ -78,9 +77,6 @@ public class RestFolderClient extends AbstractRestClient {
 	
 	public WSFolder getFolder(String sid, long folderId) throws Exception {
 		
-		JacksonJsonProvider provider = new JacksonJsonProvider();
-		
-        FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
         //WebClient.client(proxy).accept(MediaType.APPLICATION_XML);
         WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
         
@@ -89,9 +85,6 @@ public class RestFolderClient extends AbstractRestClient {
 	
 	public long createFolder(String sid, long parentId, String folderName) throws Exception {
 		
-		JacksonJsonProvider provider = new JacksonJsonProvider();
-		
-        FolderService proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
         WebClient.client(proxy).accept(MediaType.TEXT_PLAIN);
         
 		return proxy.createFolder(sid, parentId, folderName);
