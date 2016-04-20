@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -21,7 +21,7 @@ import com.logicaldoc.util.config.ContextProperties;
  */
 public class MultiLoader {
 
-	private static Log log = LogFactory.getLog(MultiLoader.class);
+	private static Logger log = LoggerFactory.getLogger(MultiLoader.class);
 
 	private final static long DEFAULTWORKSPACE = 4L;
 
@@ -97,8 +97,8 @@ public class MultiLoader {
 
 		log.debug("start()");
 		
-		log.debug("session: "+ session);
-		log.debug("loaders: "+ loaders);
+		log.debug("session: {}", session);
+		log.debug("loaders: {}", loaders);
 		if (session == null || loaders == null) {
 			log.debug("session IS NULL and loaders IS NULL");
 			throw new RuntimeException("Application not initialized");
@@ -248,7 +248,7 @@ public class MultiLoader {
 
 		// Done
 		AbstractLoader[] ret = new AbstractLoader[allLoaders.size()];
-		log.debug("allLoaders.size(): " +allLoaders.size());
+		log.debug("allLoaders.size(): {}", allLoaders.size());
 		log.debug("makeThreads() completed");
 		return allLoaders.toArray(ret);
 	}

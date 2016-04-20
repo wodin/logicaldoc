@@ -8,11 +8,13 @@ import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
 import com.logicaldoc.bm.AbstractServerProxy;
+import com.logicaldoc.util.Context;
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSSearchOptions;
 import com.logicaldoc.webservice.model.WSSearchResult;
@@ -24,7 +26,8 @@ import com.logicaldoc.webservice.model.WSSearchResult;
  * @since 6.5
  */
 public class Search extends AbstractLoader {
-	private static Log log = LogFactory.getLog(Search.class);
+	
+	private static Logger log = LoggerFactory.getLogger(Search.class);
 
 	private Random random = new Random();
 
@@ -32,8 +35,16 @@ public class Search extends AbstractLoader {
 
 	private String messageRecord;
 
+	private int searchResults = 50;
+
 	public Search() {
 		super(Search.class.getName().substring(Search.class.getName().lastIndexOf('.') + 1));
+		
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		if (config.containsKey("Search.results")) {		
+			searchResults = config.getInt("Search.results");
+		}
+		
 		loadExpressions();
 	}
 
@@ -77,7 +88,7 @@ public class Search extends AbstractLoader {
 
 		// This is required and it is the maximum number of results that we want
 		// for this search
-		options.setMaxHits(50);
+		options.setMaxHits(searchResults);
 
 		WSSearchResult sr = serverProxy.find(serverProxy.sid, options);
 
@@ -108,7 +119,7 @@ public class Search extends AbstractLoader {
 			// Close the input stream
 			fstream.close();
 
-			log.warn("Loaded " + expressions.size() + " expressions");
+			log.info("Loaded {} expressions", expressions.size());
 		} catch (Throwable e) {
 			System.err.println("Error: " + e.getMessage());
 		}

@@ -10,8 +10,8 @@ import javax.activation.DataHandler;
 import javax.mail.util.ByteArrayDataSource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.bm.AbstractLoader;
 import com.logicaldoc.bm.AbstractServerProxy;
@@ -30,12 +30,12 @@ import net.sf.ehcache.CacheManager;
 /**
  * Loader thread that puts documents to the remote repository.
  * 
- * @author Alessandro Gasparini - Logical Objects
+ * @author Alessandro Gasparini - LogicalDOC
  * @since 6.5
  */
 public class Upload extends AbstractLoader {
 
-	private static Log log = LogFactory.getLog(Upload.class);
+	private static Logger log = LoggerFactory.getLogger(Upload.class);
 
 	private static EhCacheAdapter<String, Long> pathCache;
 
@@ -90,7 +90,7 @@ public class Upload extends AbstractLoader {
 					+ "E.g. '1, 3'");
 		}
 
-		log.error("folderProfilesStr.length(): " + folderProfilesList.size());
+		log.error("folderProfilesStr.length(): {}", folderProfilesList.size());
 	}
 
 	@Override
@@ -102,7 +102,6 @@ public class Upload extends AbstractLoader {
 				try {
 					prepareTags();
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					log.error("exception preparing tags", e);
 					throw e;
@@ -110,7 +109,7 @@ public class Upload extends AbstractLoader {
 					log.error("exception preparing tags", tw);
 					throw tw;					
 				}
-				log.info("Prepared " + tags.size() + " tags");
+				log.debug("Prepared {} tags", tags.size());
 			}
 		}
 		// Get a random folder
@@ -167,7 +166,7 @@ public class Upload extends AbstractLoader {
 			}
 
 			if (doc != null) {
-				log.debug("Created document " + fileName);
+				log.debug("Created document {}", fileName);
 			}
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
@@ -215,15 +214,6 @@ public class Upload extends AbstractLoader {
 
 			// It is not there, so create it
 			try {
-				// TODO - this can be optimized, it is a waste to encode and then decode WSFolder object just to get the xxx in the end
-				// we can replace all this by invoking folder.createFolder
-//				WSFolder newFolder = new WSFolder();
-//				newFolder.setName(aFolderPath);
-//				newFolder.setParentId(currentParentFolderID);
-//				WSFolder folder = serverProxy.create(ticket, newFolder);
-//
-//				currentParentFolderID = folder.getId();
-				
 				currentParentFolderID = serverProxy.create(ticket, currentParentFolderID, aFolderPath);
 			} catch (Exception e) {
 				currentParentFolderID = pathCache.get(currentKey);
@@ -283,7 +273,7 @@ public class Upload extends AbstractLoader {
 			if (StringUtils.isNotEmpty(token) && token.length() > tagSize)
 				tags.add(token);
 		}
-		log.debug("tags.size(): " + tags.size());
+		log.debug("tags.size(): {}", tags.size());
 		log.debug("prepareTags() completed");
 	}
 }

@@ -26,8 +26,7 @@
 
 	<!-- This post processor ensures placeholders substitutions -->
 	<bean id="PropertyPlaceholderConfigurer" class="com.logicaldoc.util.spring.PropertiesPlaceHolder"
-		lazy-init="false" abstract="false" autowire="default"
-		>
+		lazy-init="false" abstract="false" autowire="default">
 		<property name="locations">
 			<list>
 				<value>classpath*:context.properties</value>
@@ -49,7 +48,7 @@
 	</bean>
 
 	<bean id="MultiLoader" class="com.logicaldoc.bm.MultiLoader"
-		init-method="init">
+		init-method="init" >
 		<property name="session" ref="LoadSession" />
 		<property name="config" ref="ContextProperties" />
 	</bean>
