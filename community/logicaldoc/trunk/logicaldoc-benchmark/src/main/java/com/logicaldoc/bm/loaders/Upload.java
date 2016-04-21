@@ -95,10 +95,10 @@ public class Upload extends AbstractLoader {
 
 	@Override
 	protected String doLoading(AbstractServerProxy serverProxy) throws Exception {
-		log.debug("Upload.doLoading()");
+//		log.debug("Upload.doLoading()");
 		synchronized (tags) {
 			if (tags.isEmpty()) {
-				log.debug("tags.isEmpty()");
+//				log.debug("tags.isEmpty()");
 				try {
 					prepareTags();
 				} catch (Exception e) {
@@ -109,17 +109,16 @@ public class Upload extends AbstractLoader {
 					log.error("exception preparing tags", tw);
 					throw tw;					
 				}
-				log.debug("Prepared {} tags", tags.size());
+//				log.debug("Prepared {} tags", tags.size());
 			}
 		}
 		// Get a random folder
 		List<String> folderPath = chooseFolderPath();
 
 		// Make sure the folder exists
-		log.info("Create the folders");
+		log.debug("Creating folders");
 		Long folderID = makeFolders(serverProxy.sid, serverProxy, rootFolder, folderPath);
-		// Long folderID = makeFoldersFromPath(serverProxy.sid, serverProxy,
-		// rootFolder, folderPath);
+		// Long folderID = makeFoldersFromPath(serverProxy.sid, serverProxy, rootFolder, folderPath);
 
 		SourceFile sourceFile = randomFile.getSourceFile();
 		String title = formatter.format(loaderCount);
@@ -263,7 +262,7 @@ public class Upload extends AbstractLoader {
 	}
 
 	private void prepareTags() throws IOException {
-		log.debug("prepareTags()");
+//		log.debug("prepareTags()");
 		tags.clear();
 
 		String buf = StringUtil.writeToString(this.getClass().getResourceAsStream("/tags.txt"), "UTF-8");
@@ -273,7 +272,7 @@ public class Upload extends AbstractLoader {
 			if (StringUtils.isNotEmpty(token) && token.length() > tagSize)
 				tags.add(token);
 		}
-		log.debug("tags.size(): {}", tags.size());
-		log.debug("prepareTags() completed");
+//		log.debug("tags.size(): {}", tags.size());
+//		log.debug("prepareTags() completed");
 	}
 }

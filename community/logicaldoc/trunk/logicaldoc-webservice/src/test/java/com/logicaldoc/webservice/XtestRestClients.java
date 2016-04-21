@@ -3,6 +3,7 @@ package com.logicaldoc.webservice;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -65,8 +66,9 @@ public class XtestRestClients {
 		//createDocument02(sid);
 		//createFolder(sid, 04L, "DJ KATCH");
 		
-		//deleteDocument(sid, 3375105);
-		deleteFolder(sid, 4128768);
+		//deleteDocument(sid, 3375105L);
+		//deleteFolder(sid, 4128768L);
+		updateDocument(sid, 164986881L);
 		
 		long start_time = System.nanoTime();
 		
@@ -156,7 +158,25 @@ public class XtestRestClients {
         // Total Exec. time (ms): 918.054599
 	}
 	
-	private static void deleteFolder(String sid, int folderId) {
+	private static void updateDocument(String sid, long docId) {
+		try {
+			WSDocument doc = docClient.getDocument(sid, docId);
+			
+			String prefix = doc.getTitle();
+			if (prefix.contains("updated on")) {
+				prefix = prefix.substring(0, prefix.indexOf("updated on"));
+			}
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			doc.setTitle(prefix + " updated on " + df.format(new Date()));
+			
+			docClient.update(sid, doc);
+			System.out.println("Successfully updated document");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}			
+	}
+
+	private static void deleteFolder(String sid, long folderId) {
 		try {
 			fldClient.delete(sid, folderId);
 			System.out.println("Successfully deleted folder");

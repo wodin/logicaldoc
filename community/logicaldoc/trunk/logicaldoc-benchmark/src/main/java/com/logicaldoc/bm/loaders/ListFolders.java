@@ -38,7 +38,7 @@ public class ListFolders extends AbstractLoader {
 	 * Go to a directory and get a listing of the folders beneath it.
 	 */
 	@Override
-	protected String doLoading(AbstractServerProxy serverProxy) throws Exception {
+	protected String doLoading(AbstractServerProxy serverProxy) throws Exception {		
 		totalFolders = 0;
 		listFoldersRecursive(serverProxy, rootFolder);
 
@@ -58,14 +58,21 @@ public class ListFolders extends AbstractLoader {
 	 */
 	private void listFoldersRecursive(AbstractServerProxy serverProxy, long parentFolder) {
 
+		//log.debug("listFoldersRecursive()");
+		
 		WSFolder[] folders = new WSFolder[0];
 		try {
 			folders = serverProxy.listChildren(serverProxy.sid, parentFolder);
+			//log.debug("folders: {}", (Object[])folders);
 		} catch (Exception e) {
 			log.warn("listFoldersRecursive(): ", e);
+		} catch (Throwable tw) {
+			log.warn("listFoldersRecursive(): ", tw);
+			throw tw;
 		}
 
 		if (folders != null) {
+			//log.debug("folders.length: {}", folders.length);
 			totalFolders += folders.length;
 			for (WSFolder info : folders) {
 				listFoldersRecursive(serverProxy, info.getId());
