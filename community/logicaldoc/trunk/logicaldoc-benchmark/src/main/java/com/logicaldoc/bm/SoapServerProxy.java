@@ -5,6 +5,9 @@ import java.io.IOException;
 
 import javax.activation.DataHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSFolder;
@@ -22,6 +25,8 @@ import com.logicaldoc.webservice.soap.client.SoapSearchClient;
  * @since 7.5
  */
 public class SoapServerProxy extends AbstractServerProxy {
+	
+	private static Logger log = LoggerFactory.getLogger(SoapServerProxy.class);
 
 	public SoapAuthClient authClient;
 	public SoapDocumentClient documentClient;
@@ -57,6 +62,7 @@ public class SoapServerProxy extends AbstractServerProxy {
 	}
 	
 	public WSFolder[] listChildren(String sid2, long parentFolder) throws Exception {
+		//log.debug("listChildren {}, {}", sid2, parentFolder);
 		return folderClient.listChildren(sid2, parentFolder);
 	}
 

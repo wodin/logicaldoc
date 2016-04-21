@@ -13,7 +13,7 @@
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -59,17 +59,21 @@
             <artifactId>spring-context-support</artifactId>
         </dependency>
         
-        <!-- Added by Alle (temporarily) -->        
+        <!-- Added by Alle (needed at build time) -->        
 		<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<scope>provided</scope>
 		</dependency>
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache-core</artifactId>
             <scope>provided</scope>
-        </dependency>		
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <scope>provided</scope>
+        </dependency>        		
 		                
 	</dependencies>
 	<build>
