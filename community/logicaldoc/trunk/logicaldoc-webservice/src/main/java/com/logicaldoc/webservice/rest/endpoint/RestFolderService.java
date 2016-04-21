@@ -147,15 +147,7 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public WSFolder[] listChildren(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId)
 			throws Exception {
-		log.debug("listChildren()");
-		log.debug("sid: {}", sid);
-		log.debug("folderId: {}", folderId);
-
-		WSFolder[] fchildren = super.listChildren(sid, folderId);
-		log.debug("fchildren: {}", (Object) fchildren);
-		log.debug("fchildren.length: {}", fchildren.length);
-
-		return fchildren;
+		return super.listChildren(sid, folderId);
 	}
 
 	/* (non-Javadoc)

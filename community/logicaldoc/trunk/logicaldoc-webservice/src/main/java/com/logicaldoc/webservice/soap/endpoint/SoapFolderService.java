@@ -176,6 +176,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 
 	@Override
 	public WSFolder[] listChildren(String sid, long folderId) throws Exception {
+
 		User user = validateSession(sid);
 		checkReadEnable(user, folderId);
 
