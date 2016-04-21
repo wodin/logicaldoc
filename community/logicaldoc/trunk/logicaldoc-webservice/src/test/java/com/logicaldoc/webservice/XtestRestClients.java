@@ -28,6 +28,7 @@ public class XtestRestClients {
 	private static RestSearchClient searchClient = null;
 	
 	private static String BASE_PATH = "http://localhost:8080/logicaldoc";
+	//private static String BASE_PATH = "http://192.168.2.11:8080/logicaldoc";
 	
 	public static void main(String[] args) throws Exception {
 		
@@ -38,11 +39,13 @@ public class XtestRestClients {
 		
 		String sid = loginGet();
 		
+		// Note: 04L is the id of the default workspace
 		//listDocuments(sid, 04L);
 		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow*.png"); // 4 documents
 		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow.png"); // 1 document
 		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow(3).png"); // 1 document
-		//listFolders(sid, 04L);
+		//listFolderChildren(sid, 3342386L);
+		//listFolderChildren(sid, 4L);
 		
 		//createPath(sid, 04L, "/sgsgsgs/Barisoni/rurururu");
 		//createPath(sid, 04L, "/La zanzara/Cruciani/coloqui via Sky");
@@ -59,8 +62,11 @@ public class XtestRestClients {
 //		
 //		updateDocument(sid, myDoc);
 		
-		createDocument02(sid);
+		//createDocument02(sid);
 		//createFolder(sid, 04L, "DJ KATCH");
+		
+		//deleteDocument(sid, 3375105);
+		deleteFolder(sid, 4128768);
 		
 		long start_time = System.nanoTime();
 		
@@ -150,6 +156,24 @@ public class XtestRestClients {
         // Total Exec. time (ms): 918.054599
 	}
 	
+	private static void deleteFolder(String sid, int folderId) {
+		try {
+			fldClient.delete(sid, folderId);
+			System.out.println("Successfully deleted folder");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void deleteDocument(String sid, long docId) {
+		try {
+			docClient.delete(sid, docId);
+			System.out.println("Successfully deleted document");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}		
+	}
+
 	private static void createFolder(String sid, long parentId, String fname) throws Exception {
 		long fldId = fldClient.createFolder(sid, parentId, fname);
 		System.out.println("fldId: "+ fldId);
@@ -273,15 +297,17 @@ public class XtestRestClients {
 		}
 	}	
 	
-	private static void listFolders(String sid, long folderId) throws Exception {
+	private static void listFolderChildren(String sid, long folderId) throws Exception {
 		WSFolder[] dirs = fldClient.listChildren(sid, folderId);
 		System.out.println("docs: " +dirs);
 		System.out.println("docs.length: " +dirs.length);
 		
 		//Object to JSON in String
-		ObjectMapper mapper = new ObjectMapper();
-		String jsonInString = mapper.writeValueAsString(dirs[0]);
-		System.out.println("doc[1]: " +jsonInString);
+		if ((dirs != null) && (dirs.length > 0)) {
+			ObjectMapper mapper = new ObjectMapper();
+			String jsonInString = mapper.writeValueAsString(dirs[0]);
+			System.out.println("dirs[0]: " +jsonInString);
+		}
 	}
 	
 

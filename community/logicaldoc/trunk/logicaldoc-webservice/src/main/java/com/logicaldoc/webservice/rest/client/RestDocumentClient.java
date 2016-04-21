@@ -121,9 +121,17 @@ public class RestDocumentClient extends AbstractRestClient {
 	public WSDocument getDocument(String sid, long docId) throws Exception {
 		
 		WebClient.client(proxy).type("*/*");
-		//WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
-		WebClient.client(proxy).accept(MediaType.APPLICATION_XML);
+		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
+		//WebClient.client(proxy).accept(MediaType.APPLICATION_XML);
 		
 		return proxy.getDocument(sid, docId);
 	}	
+	
+	public void delete(String sid, long docId) throws Exception {
+		
+		WebClient.client(proxy).type("*/*");
+		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
+		
+		proxy.delete(sid, docId);
+	}
 }

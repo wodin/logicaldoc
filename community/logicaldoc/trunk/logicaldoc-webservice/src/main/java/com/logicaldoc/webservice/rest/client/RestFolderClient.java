@@ -89,6 +89,12 @@ public class RestFolderClient extends AbstractRestClient {
         
 		return proxy.createFolder(sid, parentId, folderName);
 	}
+	
+	public void delete(String sid, long folderId) throws Exception {
+
+		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
+		proxy.delete(sid, folderId);
+	}	
 
 
 }
