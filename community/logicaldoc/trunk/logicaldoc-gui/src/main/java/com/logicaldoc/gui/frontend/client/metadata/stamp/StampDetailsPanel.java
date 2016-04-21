@@ -236,7 +236,7 @@ public class StampDetailsPanel extends VLayout {
 		page.addChangedHandler(changedHandler);
 
 		final SpinnerItem size = ItemFactory.newSpinnerItem("size", "size", stamp.getSize(), 1, 9999);
-		page.addChangedHandler(changedHandler);
+		size.addChangedHandler(changedHandler);
 
 		form1.setItems(name, type, page, exprx, rotation, expry, opacity, description);
 
