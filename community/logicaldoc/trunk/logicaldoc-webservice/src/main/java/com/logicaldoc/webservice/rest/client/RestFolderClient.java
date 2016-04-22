@@ -42,7 +42,8 @@ public class RestFolderClient extends AbstractRestClient {
 	
 	public WSFolder[] listChildren(String sid, long folderId) throws Exception {
 
-        WebClient.client(proxy).type("*/*");
+        //WebClient.client(proxy).type("*/*");
+		WebClient.client(proxy).type(MediaType.APPLICATION_JSON);
         WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
         //WebClient.client(proxy).accept(MediaType.APPLICATION_XML);
         
