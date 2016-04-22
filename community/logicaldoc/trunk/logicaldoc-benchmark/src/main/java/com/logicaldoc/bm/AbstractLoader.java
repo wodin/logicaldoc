@@ -96,7 +96,7 @@ public abstract class AbstractLoader extends Thread {
 
 	/**
 	 * <pre>
-	 * NAME+36\tCOUNT          \tTOTAL TIME     \tAVERAGE TIME   \tPER SECOND     \tDESCRIPTION
+	 * NAME+21\tCOUNT          \tTOTAL TIME     \tAVERAGE TIME   \tPER SECOND     \tERRORS \tDESCRIPTION
 	 * </pre>
 	 * 
 	 * @return Returns the summary of the results
@@ -107,10 +107,13 @@ public abstract class AbstractLoader extends Thread {
 		double statAveSec = statTotalSec / statCount;
 		// Summarize the results
 		StringBuilder sb = new StringBuilder();
-		sb.append(String.format("%40s", loaderName)).append("\t").append(String.format("%15.0f", (float) statCount))
-				.append("\t").append(String.format("%15.3f", statTotalSec)).append("\t")
-				.append(String.format("%15.3f", statAveSec)).append("\t").append(String.format("%15.3f", statPerSec))
-				.append("\t").append("");
+		sb.append(String.format("%15s", loaderName)).append("\t")
+				.append(String.format("%15d", statCount)).append("\t")
+				.append(String.format("%15.3f", statTotalSec)).append("\t")
+				.append(String.format("%15.3f", statAveSec)).append("\t")
+				.append(String.format("%15.3f", statPerSec)).append("\t")
+				.append(String.format("%15d", statErrors)).append("\t")
+				.append("");
 		return sb.toString();
 	}
 

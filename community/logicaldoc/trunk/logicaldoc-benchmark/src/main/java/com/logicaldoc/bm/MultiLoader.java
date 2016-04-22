@@ -33,8 +33,8 @@ public class MultiLoader {
 		this.rootFolder = rootFolder;
 	}
 
-	private static final String COLUMNS_SUMMARY = String.format("%40s\t%15s\t%15s\t%15s\t%15s\t%15s", "NAME", "COUNT",
-			"TOTAL TIME", "AVERAGE TIME", "PER SECOND", "DESCRIPTION");
+	private static final String COLUMNS_SUMMARY = String.format("%15s\t%15s\t%15s\t%15s\t%15s\t%15s\t%25s", "NAME", "COUNT",
+			"TOTAL TIME", "AVERAGE TIME", "PER SECOND", "ERRORS", "DESCRIPTION");
 
 	protected long startTime;
 
@@ -98,9 +98,9 @@ public class MultiLoader {
 		log.debug("start()");
 		
 		log.debug("session: {}", session);
-		log.debug("loaders: {}", loaders);
+		log.debug("loaders: {}", (Object[])loaders);
 		if (session == null || loaders == null) {
-			log.debug("session IS NULL and loaders IS NULL");
+			log.warn("session IS NULL and loaders IS NULL");
 			throw new RuntimeException("Application not initialized");
 		}
 
@@ -232,7 +232,7 @@ public class MultiLoader {
 
 		for (String loader : loaders) {
 			for (int i = 0; i < config.getInt(loader + ".threads"); i++) {
-				Class clazz = Class.forName("com.logicaldoc.bm.loaders." + loader);
+				Class<?> clazz = Class.forName("com.logicaldoc.bm.loaders." + loader);
 				// Try to instantiate the parser
 				Object o = clazz.newInstance();
 				if (!(o instanceof AbstractLoader))

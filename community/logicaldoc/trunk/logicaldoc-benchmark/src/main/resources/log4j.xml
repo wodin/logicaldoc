@@ -25,7 +25,7 @@
 		<priority value="fatal" />
 	</category>
 
-	<category name="com.logicaldoc.benchmark" additivity="true">
+	<category name="com.logicaldoc.bm" additivity="true">
 		<priority value="info" />
 	</category>
 
