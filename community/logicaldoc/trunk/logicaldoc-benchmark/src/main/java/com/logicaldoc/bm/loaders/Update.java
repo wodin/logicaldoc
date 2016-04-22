@@ -23,6 +23,7 @@ import com.logicaldoc.webservice.model.WSFolder;
  * Loader thread that updates documents already stored in the database.
  * 
  * @author Marco Meschieri - LogicalDOC
+ * @author Alessandro Gasparini - LogicalDOC
  * @since 6.5
  */
 public class Update extends AbstractLoader {
@@ -58,8 +59,13 @@ public class Update extends AbstractLoader {
 				prepareFolders(serverProxy, rootFolder, 1);
 				log.info("Retrieved {} folders", folders.size());
 
-				prepareTags();
-				log.info("Prepared {} tags", tags.size());
+				try {
+					prepareTags();
+					log.info("Prepared {} tags", tags.size());
+				} catch (Throwable tw) {
+					tw.printStackTrace();
+					log.error("Error paparing the tags", tw);
+				}
 			}
 		}
 
@@ -68,12 +74,21 @@ public class Update extends AbstractLoader {
 			long folderId = chooseFolder();
 
 			// List all the documents
-			WSDocument[] docs = serverProxy.list(serverProxy.sid, folderId);
-			if (docs != null)
+			WSDocument[] docs = null;
+			try {
+				docs = serverProxy.list(serverProxy.sid, folderId);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				log.error("gjhghj", e);
+			}
+			
+			if (docs != null) {
 				for (WSDocument doc : docs) {
 					updateDocument(serverProxy, doc);
 					statCount++;
 				}
+			}
 		} finally {
 			// To compensate the internal increments
 			statCount--;
@@ -138,12 +153,23 @@ public class Update extends AbstractLoader {
 	}
 
 	private void prepareFolders(AbstractServerProxy serverProxy, long parent, int level) throws Exception {
-		WSFolder[] ret = serverProxy.listChildren(serverProxy.sid, parent);
-		if (ret != null)
-			for (WSFolder wsFolder : ret) {
-				folders.add(wsFolder.getId());
-				if (level < depth)
-					prepareFolders(serverProxy, wsFolder.getId(), level + 1);
-			}
+		try {
+			WSFolder[] ret = serverProxy.listChildren(serverProxy.sid, parent);
+			if (ret != null) {
+				for (WSFolder wsFolder : ret) {
+					folders.add(wsFolder.getId());
+					if (level < depth)
+						prepareFolders(serverProxy, wsFolder.getId(), level + 1);
+				}
+			}			
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("Exception: ", e);
+			throw e;			
+		} catch (Throwable tw) {
+			tw.printStackTrace();
+			log.error("Throwable exception: ", tw);
+			throw tw;
+		}
 	}
 }
