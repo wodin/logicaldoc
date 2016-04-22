@@ -69,7 +69,7 @@ public interface DocumentService {
 	 */
 	@POST
 	@Path("/update")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)	
+	@Consumes({ MediaType.MULTIPART_FORM_DATA })
 	void update(List<Attachment> attachments) throws Exception;	
 
 }

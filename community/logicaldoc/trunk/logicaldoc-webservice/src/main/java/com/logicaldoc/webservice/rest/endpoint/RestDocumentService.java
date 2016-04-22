@@ -203,10 +203,10 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Override
 	@POST
 	@Path("/update")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
+	@Consumes({ MediaType.MULTIPART_FORM_DATA })
 	// The "document" comes in the POST request body (encoded as JSON).
 	public void update(List<Attachment> atts) throws Exception {
-		log.debug("update()");
+		//log.debug("update()");
 
 		String sid = null;
 		WSDocument document = null;
@@ -215,11 +215,15 @@ public class RestDocumentService extends SoapDocumentService implements Document
 			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
 				sid = att.getObject(String.class);
 			} else if ("document".equals(att.getContentDisposition().getParameter("name"))) {
+				//log.debug("document attachment found.");
 				document = att.getObject(WSDocument.class);
 			} 
 		}
 
-		log.debug("document: {}", document);
+//		log.debug("document: {}", document);
+//		if (document != null) {
+//			log.debug("document.getId(): {}", document.getId());
+//		}
 
 		super.update(sid, document);
 	}	
