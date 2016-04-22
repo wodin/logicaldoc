@@ -20,7 +20,7 @@ import com.logicaldoc.util.config.ContextProperties;
  * Models a load session during which the LogicalDOC server will be heavy
  * loaded.
  * 
- * @author Alessandro Gasparini - Logical Objects
+ * @author Alessandro Gasparini - LogicalDOC
  * @since 6.5
  */
 public class LoadSession {
@@ -46,6 +46,8 @@ public class LoadSession {
 	private Random random = new Random();
 
 	private List<AbstractServerProxy> servers = new ArrayList<AbstractServerProxy>();
+
+	private static String wsAPI;
 
 	public LoadSession() {
 
@@ -104,7 +106,7 @@ public class LoadSession {
 
 			// Store the service references
 			AbstractServerProxy lsp = null;
-			String wsAPI = config.getProperty("serverproxy.type");
+			wsAPI = config.getProperty("serverproxy.type");
 			if ("rest".equals(wsAPI)) {				
 				lsp = new RestServerProxy(url, config);
 			} else {
@@ -148,7 +150,8 @@ public class LoadSession {
 	public String getSummary() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Server URL:         ").append(url).append(getLineEnding()).append(getLineEnding())
-				.append("Start Time:       ").append(new Date(startTime));
+	      .append("Service type:     ").append(wsAPI).append(getLineEnding()).append(getLineEnding())
+		  .append("Start Time:       ").append(new Date(startTime));
 		return sb.toString();
 	}
 
