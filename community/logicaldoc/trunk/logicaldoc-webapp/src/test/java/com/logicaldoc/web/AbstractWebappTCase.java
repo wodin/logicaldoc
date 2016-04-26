@@ -11,13 +11,21 @@ import junit.framework.Assert;
 
 import org.apache.commons.io.FileUtils;
 import org.hsqldb.cmdline.SqlFile;
+import org.hsqldb.cmdline.SqlTool.SqlToolException;
 import org.junit.After;
 import org.junit.Before;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.authentication.AuthenticationChain;
+import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.gui.common.client.beans.GUISession;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.FileUtil;
+import com.logicaldoc.web.service.SecurityServiceImpl;
 
 /**
  * Abstract test case for the Webapp module. This class initialises a test
@@ -42,6 +50,8 @@ public abstract class AbstractWebappTCase {
 	protected File dataFile;
 
 	private String userHome;
+	
+	protected GUISession session;
 
 	static {
 		System.setProperty("LOGICALDOC_REPOSITORY", "target");
@@ -56,6 +66,30 @@ public abstract class AbstractWebappTCase {
 		context = new ClassPathXmlApplicationContext(new String[] { "/contexttest.xml" });
 		createTestDirs();
 		createTestDatabase();
+		
+		this.session=prepareSession();
+		Assert.assertNotNull(session);
+		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
+
+	}
+
+	private GUISession prepareSession() {
+		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+
+		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+				AuthenticationChain.class);
+
+		GUISession session = new GUISession();
+
+		String[] remoteAddressAndKey = new String[] { null, null, null };
+
+		if (authenticationChain.authenticate("admin", "admin", null, remoteAddressAndKey)) {
+			User user = userDao.findByUserNameIgnoreCase("admin");
+			userDao.initialize(user);
+			session = new SecurityServiceImpl().internalLogin(AuthenticationChain.getSessionId(), user, null);
+		}
+
+		return session;
 	}
 
 	protected void createTestDirs() throws IOException {
@@ -118,20 +152,20 @@ public abstract class AbstractWebappTCase {
 	private void createTestDatabase() throws Exception {
 		ds = (DataSource) context.getBean("DataSource");
 		Assert.assertNotNull(ds);
-		
+
 		Connection con = null;
 		try {
 			con = ds.getConnection();
 
 			// Load schema
-			SqlFile sqlFile = new SqlFile(dbSchemaFile, "Cp1252", false);	
+			SqlFile sqlFile = new SqlFile(dbSchemaFile, "Cp1252", false);
 			sqlFile.setConnection(con);
-			sqlFile.execute();		
+			sqlFile.execute();
 
 			// Load data
-			sqlFile = new SqlFile(dataFile, "Cp1252", false);	
+			sqlFile = new SqlFile(dataFile, "Cp1252", false);
 			sqlFile.setConnection(con);
-			sqlFile.execute();	
+			sqlFile.execute();
 
 			// Test the connection
 			ResultSet rs = con.createStatement().executeQuery("select * from ld_menu where ld_id=2");

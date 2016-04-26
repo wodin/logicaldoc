@@ -9,19 +9,15 @@ import org.junit.Test;
 
 import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Permission;
-import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
-import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.web.AbstractWebappTCase;
 
 public class FolderServiceImplTest extends AbstractWebappTCase {
 
 	// Instance under test
 	private FolderServiceImpl service = new FolderServiceImpl();
-
-	private GUISession session;
 
 	private FolderDAO folderDao;
 
@@ -30,11 +26,6 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 		super.setUp();
 
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
-
-		SecurityServiceImpl securityService = new SecurityServiceImpl();
-		session = securityService.login("admin", "admin", null, null, null);
-		Assert.assertNotNull(session);
-		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}
 
 	@Test

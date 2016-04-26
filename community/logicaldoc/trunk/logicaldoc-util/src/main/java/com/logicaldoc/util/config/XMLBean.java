@@ -81,12 +81,11 @@ public class XMLBean {
 
 		try {
 			SAXBuilder builder = new SAXBuilder(false);
-
 			if (docPath != null) {
-
 				try {
 					doc = builder.build(docPath);
 				} catch (Throwable t) {
+					t.printStackTrace();
 
 					// In some environments, during maven test phase a well
 					// formed
@@ -135,6 +134,13 @@ public class XMLBean {
 		}
 	}
 
+	private List<Element> getChildren(Element elem, String name) {
+		List<Element> list = (List<Element>) elem.getChildren(name, elem.getNamespace());
+		if (list == null || list.isEmpty())
+			list = elem.getChildren(name);
+		return list;
+	}
+
 	/**
 	 * This method finds a child by name and attribute.
 	 * 
@@ -149,12 +155,13 @@ public class XMLBean {
 			return null;
 		} else {
 			Element temp = null;
-			List list = root.getChildren(elemname, getRootElement().getNamespace());
-			Iterator iter = list.iterator();
+			List<Element> list = getChildren(root, elemname);
+
+			Iterator<Element> iter = list.iterator();
 			String val = "";
 
 			while (iter.hasNext()) {
-				Element elem = (Element) iter.next();
+				Element elem = iter.next();
 				val = elem.getAttributeValue(attribute);
 
 				if ((val != null) && val.equals(value)) {
@@ -300,7 +307,7 @@ public class XMLBean {
 		try {
 			FileUtils.copyFile(src, backup);
 		} catch (Exception ex) {
-	       log.error(ex.getMessage());
+			log.error(ex.getMessage());
 		}
 		log.debug("Backup saved in " + backup.getPath());
 

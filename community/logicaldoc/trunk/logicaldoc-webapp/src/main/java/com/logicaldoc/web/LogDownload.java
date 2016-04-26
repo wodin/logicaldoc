@@ -58,7 +58,7 @@ public class LogDownload extends HttpServlet {
 				response.setDateHeader("Expires", 0);
 
 				file = prepareAllLogs(response);
-			} else {
+			} else if (appender != null) {
 				response.setContentType("text/html");
 				LoggingConfigurator conf = new LoggingConfigurator();
 				file = new File(conf.getFile(appender, true));

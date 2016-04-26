@@ -3,7 +3,6 @@ package com.logicaldoc.web.service;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,7 +12,6 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.FileUtils;
@@ -42,14 +40,11 @@ import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.sequence.SequenceDAO;
-import com.logicaldoc.core.ticket.Ticket;
-import com.logicaldoc.core.ticket.TicketDAO;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.ServerException;
@@ -71,8 +66,8 @@ import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.crypt.CryptUtil;
 import com.logicaldoc.util.security.PasswordGenerator;
 import com.logicaldoc.util.sql.SqlUtil;
-import com.logicaldoc.web.SessionFilter;
 import com.logicaldoc.web.util.ServiceUtil;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * Implementation of the SecurityService
@@ -85,75 +80,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	private static final long serialVersionUID = 1L;
 
 	private static Logger log = LoggerFactory.getLogger(SecurityServiceImpl.class);
-
-	@Override
-	public GUISession login(String username, String password, String key, String locale, String tenant) {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-
-		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
-				AuthenticationChain.class);
-
-		GUISession session = new GUISession();
-		GUIUser guiUser = new GUIUser();
-
-		try {
-			String[] remoteAddressAndKey = new String[] { null, null, key };
-			if (getThreadLocalRequest() != null) {
-				remoteAddressAndKey = new String[] { getThreadLocalRequest().getRemoteAddr(),
-						getThreadLocalRequest().getRemoteHost() };
-			}
-
-			if (authenticationChain.authenticate(username, password, key, remoteAddressAndKey)) {
-				User user = userDao.findByUserNameIgnoreCase(username);
-				userDao.initialize(user);
-				session = internalLogin(AuthenticationChain.getSessionId(), user, locale);
-				guiUser = session.getUser();
-			} else if (userDao.isPasswordExpired(username)) {
-				User user = userDao.findByUserName(username);
-				guiUser.setId(user.getId());
-				guiUser.setPasswordExpired(true);
-				guiUser.setLanguage(user.getLanguage());
-				guiUser.setName(user.getName());
-				guiUser.setFirstName(user.getFirstName());
-				session.setUser(guiUser);
-				GUIInfo info = new GUIInfo();
-				info.setTenant(getTenant(user.getTenantId()));
-				session.setInfo(info);
-				session.setLoggedIn(false);
-				log.info("User " + username + " password expired");
-			} else {
-				guiUser = null;
-				GUIInfo info = new GUIInfo();
-				try {
-					if (tenant == null)
-						info.setTenant(getTenant(Tenant.DEFAULT_NAME));
-					else
-						info.setTenant(getTenant(tenant));
-				} catch (Throwable t) {
-					log.warn(t.getMessage());
-					GUITenant ten = new GUITenant();
-					ten.setId(Tenant.DEFAULT_ID);
-					ten.setName(Tenant.DEFAULT_NAME);
-					info.setTenant(ten);
-				}
-				session.setInfo(info);
-				session.setLoggedIn(false);
-				log.warn("User " + username + " is not valid");
-			}
-
-			if (guiUser != null) {
-				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-				guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty(session.getInfo().getTenant()
-						.getName()
-						+ ".password.size")));
-			}
-
-			return session;
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
-			throw new RuntimeException(e.getMessage(), e);
-		}
-	}
 
 	public static GUITenant getTenant(long tenantId) {
 		TenantDAO dao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
@@ -196,7 +122,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	 * Used internally by login procedures, instantiates a new GUISession by a
 	 * given authenticated user.
 	 */
-	protected GUISession internalLogin(String sid, User user, String locale) {
+	public GUISession internalLogin(String sid, User user, String locale) {
 		GUIUser guiUser = new GUIUser();
 		GUISession session = new GUISession();
 		session.setSid(sid);
@@ -308,13 +234,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUISession login(String sid) {
+	public GUISession login(String sid, String locale) {
 		try {
 			UserSession userSession = ServiceUtil.validateSession(sid);
 			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 			User user = userDao.findById(userSession.getUserId());
 			userDao.initialize(user);
-			GUISession session = internalLogin(sid, user, null);
+			GUISession session = internalLogin(sid, user, locale);
 			return session;
 		} catch (Throwable e) {
 			log.debug(e.getMessage());
@@ -510,7 +436,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	/**
 	 * Retrieves the dashlets configuration
 	 */
-	protected void loadDashlets(GUIUser usr) {
+	protected static void loadDashlets(GUIUser usr) {
 		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
 		List<GUIDashlet> dashlets = new ArrayList<GUIDashlet>();
 		Map<String, Generic> map = userDao.findUserSettings(usr.getId(), "dashlet");
@@ -749,7 +675,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		SessionManager.getInstance().kill(sid);
 
 		// Also kill the servlet container session, if any
-		HttpSession httpSession = SessionFilter.getServletSession(sid);
+		HttpSession httpSession = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
 		if (httpSession != null) {
 			httpSession.invalidate();
 		}
@@ -923,73 +849,6 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			return f;
 		} catch (Throwable e) {
 			return (GUIMenu) ServiceUtil.throwServerException(session, log, e);
-		}
-	}
-
-	@Override
-	public void resetPassword(String username, String emailAddress, String productName) throws Exception {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		User user = userDao.findByUserName(username);
-
-		EMail email;
-		try {
-			if (user == null)
-				throw new Exception("User " + username + " not found");
-			else if (!user.getEmail().trim().equals(emailAddress.trim()))
-				throw new Exception("User with email " + emailAddress + " not found");
-
-			email = new EMail();
-			email.setHtml(1);
-			email.setTenantId(user.getTenantId());
-			Recipient recipient = new Recipient();
-			recipient.setAddress(user.getEmail());
-			recipient.setRead(1);
-			email.addRecipient(recipient);
-			email.setFolder("outbox");
-
-			// Prepare a new download ticket
-			String temp = new Date().toString() + user.getId();
-			String ticketid = CryptUtil.cryptString(temp);
-			Ticket ticket = new Ticket();
-			ticket.setTicketId(ticketid);
-			ticket.setDocId(0L);
-			ticket.setUserId(user.getId());
-			ticket.setTenantId(user.getTenantId());
-			ticket.setType(Ticket.PSW_RECOVERY);
-			Calendar cal = Calendar.getInstance();
-			cal.add(Calendar.MINUTE, +5);
-			ticket.setExpired(cal.getTime());
-
-			// Store the ticket
-			TicketDAO ticketDao = (TicketDAO) Context.getInstance().getBean(TicketDAO.class);
-			ticketDao.store(ticket);
-
-			// Try to clean the DB from old tickets
-			ticketDao.deleteExpired();
-
-			Locale locale = new Locale(user.getLanguage());
-
-			email.setLocale(locale);
-			email.setSentDate(new Date());
-			email.setUserName(user.getUserName());
-
-			HttpServletRequest request = this.getThreadLocalRequest();
-			String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-					+ request.getContextPath();
-			String address = urlPrefix + "/pswrecovery?ticketId=" + ticketid + "&userId=" + user.getId();
-
-			/*
-			 * Prepare the template
-			 */
-			Map<String, Object> dictionary = new HashMap<String, Object>();
-			dictionary.put("product", productName);
-			dictionary.put("url", address);
-			dictionary.put("user", user);
-
-			EMailSender sender = new EMailSender(user.getTenantId());
-			sender.send(email, "psw.rec2", dictionary);
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
 		}
 	}
 

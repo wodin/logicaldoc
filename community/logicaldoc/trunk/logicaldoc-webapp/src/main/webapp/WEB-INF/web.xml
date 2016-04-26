@@ -33,16 +33,16 @@
     </init-param>
   </filter>
   <filter>
+    <filter-name>springSecurityFilterChain</filter-name>
+    <filter-class>org.springframework.web.filter.DelegatingFilterProxy/filter-class>
+  </filter>   
+  <filter>
     <filter-name>CharsetFilter</filter-name>
     <filter-class>com.logicaldoc.web.CharsetFilter</filter-class>
     <init-param>
       <param-name>requestEncoding</param-name>
       <param-value>UTF-8</param-value>
     </init-param>
-  </filter>
-  <filter>
-    <filter-name>SessionFilter</filter-name>
-    <filter-class>com.logicaldoc.web.SessionFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>UrlRewriteFilter</filter-name>
@@ -51,9 +51,9 @@
     <dispatcher>FORWARD</dispatcher>
   </filter-mapping>
   <filter-mapping>
-    <filter-name>SessionFilter</filter-name>
+    <filter-name>springSecurityFilterChain</filter-name>
     <url-pattern>/*</url-pattern>
-  </filter-mapping>
+  </filter-mapping>   
   <filter-mapping>
     <filter-name>CharsetFilter</filter-name>
     <url-pattern>/*</url-pattern>
@@ -65,6 +65,9 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>  
   <listener>
     <listener-class>org.apache.chemistry.opencmis.server.impl.CmisRepositoryContextListener</listener-class>
   </listener>
@@ -80,6 +83,10 @@
   <servlet>
     <servlet-name>SecurityService</servlet-name>
     <servlet-class>com.logicaldoc.web.service.SecurityServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>LoginService</servlet-name>
+    <servlet-class>com.logicaldoc.web.service.LoginServiceImpl</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>SystemService</servlet-name>
@@ -319,6 +326,10 @@
     <url-pattern>/uploadresource</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
+    <servlet-name>LoginService</servlet-name>
+    <url-pattern>/login/login</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
     <servlet-name>SecurityService</servlet-name>
     <url-pattern>/frontend/security</url-pattern>
   </servlet-mapping>
@@ -338,6 +349,10 @@
     <servlet-name>InfoService</servlet-name>
     <url-pattern>/setup/info</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>InfoService</servlet-name>
+    <url-pattern>/login/info</url-pattern>
+  </servlet-mapping>  
   <servlet-mapping>
     <servlet-name>SearchEngineService</servlet-name>
     <url-pattern>/frontend/searchengine</url-pattern>
