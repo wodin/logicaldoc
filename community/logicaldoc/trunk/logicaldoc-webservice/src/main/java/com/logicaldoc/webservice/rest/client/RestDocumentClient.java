@@ -2,7 +2,6 @@ package com.logicaldoc.webservice.rest.client;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +20,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -97,17 +95,14 @@ public class RestDocumentClient extends AbstractRestClient {
 	}			
 
 	public WSDocument[] list(String sid, long folderId) throws Exception {
-
-        WebClient.client(proxy).type("*/*");
-        
+		
+		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
 		return proxy.list(sid, folderId);
 	}
 	
 	public WSDocument[] listDocuments(String sid, long folderId, String fileName) throws Exception {
 
-        WebClient.client(proxy).type("*/*");
         WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
-        
 		return proxy.listDocuments(sid, folderId, fileName);
 	}	
 	
@@ -203,7 +198,6 @@ Caused by: javax.ws.rs.ProcessingException: No message body writer has been foun
 
 	public WSDocument getDocument(String sid, long docId) throws Exception {
 		
-		WebClient.client(proxy).type("*/*");
 		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
 		//WebClient.client(proxy).accept(MediaType.APPLICATION_XML);
 		
@@ -212,9 +206,17 @@ Caused by: javax.ws.rs.ProcessingException: No message body writer has been foun
 	
 	public void delete(String sid, long docId) throws Exception {
 		
-		WebClient.client(proxy).type("*/*");
 		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
 		
 		proxy.delete(sid, docId);
 	}
+	
+	public DataHandler getContent(String sid, long docId) throws Exception {
+		
+		//WebClient.client(proxy).type("*/*");
+		WebClient.client(proxy).accept(MediaType.APPLICATION_OCTET_STREAM);
+		
+		return proxy.getContent(sid, docId);
+	}
+	
 }

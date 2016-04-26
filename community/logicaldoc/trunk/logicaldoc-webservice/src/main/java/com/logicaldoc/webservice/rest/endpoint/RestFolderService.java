@@ -8,6 +8,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -39,7 +40,7 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	// JSON).
 	public WSFolder create(List<Attachment> atts) throws Exception {
 
-		log.debug("create({})", atts);
+//		log.debug("create({})", atts);
 
 		String sid = null;
 		WSFolder folder = null;
@@ -48,13 +49,12 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
 				sid = att.getObject(String.class);
 			} else if ("folder".equals(att.getContentDisposition().getParameter("name"))) {
-				log.debug("create({})", att.getContentType());
-				log.debug("create({})", att.getContentDisposition());
+//				log.debug("create({})", att.getContentType());
+//				log.debug("create({})", att.getContentDisposition());
 				folder = att.getObject(WSFolder.class);
-				log.debug("create({})", folder);
+//				log.debug("create({})", folder);
 			}
 		}
-
 		return super.create(sid, folder);
 	}
 
@@ -171,6 +171,37 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 			pathString += "/" + wsFolder.getName();
 		}
 		return pathString;
+	}
+	
+	@POST
+	@Path("/update")
+	@Consumes(MediaType.MULTIPART_FORM_DATA)	
+	public void update(List<Attachment> atts) throws Exception {
+		log.debug("update({})", atts);
+
+		String sid = null;
+		WSFolder folder = null;
+
+		for (Attachment att : atts) {
+			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
+				sid = att.getObject(String.class);
+			} else if ("folder".equals(att.getContentDisposition().getParameter("name"))) {
+				folder = att.getObject(WSFolder.class);
+			}
+		}
+		super.update(sid, folder);	
+	}
+	
+	@PUT
+	@Path("/rename")
+	public void rename(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId, @QueryParam("name") String name) throws Exception {
+		super.rename(sid, folderId, name);
+	}
+	
+	@PUT
+	@Path("/move")
+	public void move(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId, @QueryParam("parentId") long parentId) throws Exception {
+		super.move(sid, folderId, parentId);
 	}
 
 }
