@@ -1,6 +1,9 @@
 package com.logicaldoc.webservice;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -9,9 +12,11 @@ import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 
+import org.apache.commons.io.IOUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
+import com.logicaldoc.util.io.IOUtil;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.model.WSSearchOptions;
@@ -42,8 +47,8 @@ public class XtestRestClients {
 		
 		// Note: 04L is the id of the default workspace
 		//listDocuments(sid, 04L);
-		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow*.png"); // 4 documents
-		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow.png"); // 1 document
+		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow*.png"); // 3 documents
+		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow.png"); // 0 document
 		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow(3).png"); // 1 document
 		//listFolderChildren(sid, 3342386L);
 		//listFolderChildren(sid, 4L);
@@ -57,7 +62,7 @@ public class XtestRestClients {
 //		
 //		Calendar cal = Calendar.getInstance();
 //        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-////        System.out.println( sdf.format(cal.getTime()) );
+//        System.out.println( sdf.format(cal.getTime()) );
 //        
 //		myDoc.setTitle("document test(" +sdf.format(cal.getTime()) +")");
 //		
@@ -66,9 +71,11 @@ public class XtestRestClients {
 		//createDocument02(sid);
 		//createFolder(sid, 04L, "DJ KATCH");
 		
-		//deleteDocument(sid, 3375105L);
+		//deleteDocument(sid, 4325376L);
 		//deleteFolder(sid, 4128768L);
-		updateDocument(sid, 164986881L);
+		//updateDocument(sid, 164986881L);
+		
+		getDocumentContent(sid, 164134912L);
 		
 		long start_time = System.nanoTime();
 		
@@ -158,6 +165,19 @@ public class XtestRestClients {
         // Total Exec. time (ms): 918.054599
 	}
 	
+	private static void getDocumentContent(String sid, long docId) throws Exception {
+
+		System.out.println("docId: " + docId);
+		
+		DataHandler handler = docClient.getContent(sid, docId);
+		
+		InputStream is = handler.getInputStream();
+		OutputStream os = new FileOutputStream(new File("C:/tmp/myFile.raw"));
+		IOUtils.copy(is, os);
+		IOUtils.closeQuietly(os);
+		IOUtils.closeQuietly(is);
+	}
+
 	private static void updateDocument(String sid, long docId) {
 		try {
 			WSDocument doc = docClient.getDocument(sid, docId);

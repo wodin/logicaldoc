@@ -2,6 +2,7 @@ package com.logicaldoc.webservice.rest;
 
 import java.util.List;
 
+import javax.activation.DataHandler;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -70,6 +71,11 @@ public interface DocumentService {
 	@POST
 	@Path("/update")
 	@Consumes({ MediaType.MULTIPART_FORM_DATA })
-	void update(List<Attachment> attachments) throws Exception;	
+	void update(List<Attachment> attachments) throws Exception;
+	
+	@GET
+	@Path("/getContent")	
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	DataHandler getContent(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception;
 
 }

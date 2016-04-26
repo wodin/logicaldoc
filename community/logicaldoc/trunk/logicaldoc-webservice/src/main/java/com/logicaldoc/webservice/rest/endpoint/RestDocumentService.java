@@ -226,6 +226,13 @@ public class RestDocumentService extends SoapDocumentService implements Document
 //		}
 
 		super.update(sid, document);
-	}	
+	}
+	
+	@GET
+	@Path("/getContent")	
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public DataHandler getContent(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
+			return super.getContent(sid, docId);
+	}
 
 }

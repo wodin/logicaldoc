@@ -804,7 +804,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 			else
 				doc.setLanguage(language);
 
-			UserSession session = SessionManager.getInstance().get(sid);
+//			UserSession session = SessionManager.getInstance().get(sid);
 
 			return create(sid, doc, content).getId();
 		}
