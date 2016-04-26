@@ -1,29 +1,31 @@
-package com.logicaldoc.gui.frontend.client.security;
+package com.logicaldoc.gui.login.client;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
-import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.services.SecurityService;
-import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.MessageLabel;
-import com.logicaldoc.gui.frontend.client.Frontend;
-import com.logicaldoc.gui.frontend.client.personal.ChangePassword;
-import com.logicaldoc.gui.frontend.client.services.SystemService;
-import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
+import com.logicaldoc.gui.login.client.services.LoginService;
+import com.logicaldoc.gui.login.client.services.LoginServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.VerticalAlignment;
@@ -56,16 +58,18 @@ import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.layout.VStack;
 
 /**
- * The Login entry point
+ * The panel showing the login form
  * 
- * @author Marco Meschieri - Logical Objects
- * @since 6.0
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.5
  */
 public class LoginPanel extends VLayout {
 
-	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
+	protected static final String PARAM_SUCCESSURL = "j_successurl";
 
-	protected SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
+	protected static final String PARAM_FAILUREURL = "j_failureurl";
+
+	protected LoginServiceAsync loginService = (LoginServiceAsync) GWT.create(LoginService.class);
 
 	protected TextItem username = new TextItem();
 
@@ -80,7 +84,7 @@ public class LoginPanel extends VLayout {
 	// Flag used to handle double clicks on the login button
 	protected static boolean loggingIn = false;
 
-	protected HTMLFlow reflections = null;
+	private HTMLFlow reflections = null;
 
 	protected Canvas licensingCanvas = new Canvas();
 
@@ -97,7 +101,7 @@ public class LoginPanel extends VLayout {
 		this.info = info;
 	}
 
-	public void initGUI() {
+	protected void initGUI() {
 
 		// Prepare the logo to show on the top
 		Img logoTop = ItemFactory.newBrandImg(info.isLogoOemCustomized() ? "logo_head.png" : "logo_oem.png", info);
@@ -175,7 +179,7 @@ public class LoginPanel extends VLayout {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase()))
-					onLogin();
+					onLoginClicked();
 			}
 		});
 
@@ -190,7 +194,7 @@ public class LoginPanel extends VLayout {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase()))
-					onLogin();
+					onLoginClicked();
 			}
 		});
 
@@ -210,6 +214,21 @@ public class LoginPanel extends VLayout {
 		language.setPickerIconHeight(36);
 		language.setPickerIconWidth(50);
 
+		RequestInfo request = WindowUtils.getRequestInfo();
+
+		// If a parameter specifies a locale, we initialize the language
+		// selector
+		if (request.getParameter(Constants.LOCALE) != null && !request.getParameter(Constants.LOCALE).equals("")) {
+			String lang = request.getParameter(Constants.LOCALE);
+			Map<String, String> languages = I18N.getSupportedGuiLanguages(false);
+			for (String l : languages.keySet()) {
+				if (lang.equals(l)) {
+					language.setValue(l);
+					break;
+				}
+			}
+		}
+
 		SpacerItem spacerItem = new SpacerItem();
 		spacerItem.setHeight(12);
 
@@ -223,7 +242,7 @@ public class LoginPanel extends VLayout {
 		signIn.setAlign(Alignment.CENTER);
 		signIn.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				onLogin();
+				onLoginClicked();
 			}
 		});
 
@@ -362,7 +381,7 @@ public class LoginPanel extends VLayout {
 		formLayout.addMember(reflections);
 	}
 
-	private void showMessages(final GUIInfo info) {
+	protected void showMessages(final GUIInfo info) {
 		List<MessageLabel> messages = new ArrayList<MessageLabel>();
 		if (info.getMessages().length > 0) {
 			for (GUIMessage message : info.getMessages()) {
@@ -407,46 +426,62 @@ public class LoginPanel extends VLayout {
 		}
 	}
 
-	protected void onLogin() {
+	protected void onLoginClicked() {
 		if (loggingIn == true)
 			return;
 		else
 			loggingIn = true;
 
-		securityService.login((String) username.getValue(), (String) password.getValue(), null,
-				(String) language.getValue(), Util.detectTenant(), new AsyncCallback<GUISession>() {
-					public void onFailure(Throwable caught) {
-						loggingIn = false;
-						Log.serverError(caught);
-						SC.warn(I18N.message("accesdenied"));
-					}
+		removeLoginCookies();
 
-					@Override
-					public void onSuccess(GUISession session) {
-						loggingIn = false;
-						if (session.isLoggedIn()) {
-							onLoggedIn(session);
-						} else if (session.getUser() != null && session.getUser().isPasswordExpired()) {
-							ChangePassword change = new ChangePassword(session.getUser(), "needtochangepassword");
-							change.show();
-						} else {
-							SC.warn(I18N.message("accesdenied"));
-						}
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, Util.contextPath() + "j_spring_security_check");
+		builder.setHeader("Content-type", "application/x-www-form-urlencoded");
+		try {
+			String data = "j_username=" + UriUtils.encode((String) username.getValue());
+			data += "&j_password=" + UriUtils.encode((String) password.getValue());
+			data += "&" + PARAM_SUCCESSURL + "=" + UriUtils.encode(Util.getJavascriptVariable(PARAM_SUCCESSURL));
+			data += "&" + PARAM_FAILUREURL + "=" + UriUtils.encode(Util.getJavascriptVariable(PARAM_FAILUREURL));
+
+			builder.sendRequest(data, new RequestCallback() {
+				public void onError(Request request, Throwable exception) {
+					loggingIn = false;
+					onAuthenticationFailure();
+				}
+
+				public void onResponseReceived(Request request, Response response) {
+					loggingIn = false;
+					String sid = Cookies.getCookie(Constants.COOKIE_SID);
+					if (sid != null && !"".equals(sid)) {
+						onAuthenticationSuccess(sid);
+					} else {
+						onAuthenticationFailure();
 					}
-				});
+				}
+			});
+		} catch (RequestException e) {
+			SC.warn(e.getMessage());
+		}
+	}
+
+	private void removeLoginCookies() {
+		try {
+			Offline.remove(Constants.COOKIE_SID);
+			Cookies.removeCookie(Constants.COOKIE_SID);
+			Cookies.removeCookie(Constants.COOKIE_FAILURE);
+		} catch (Throwable t) {
+
+		}
 	}
 
 	public static void onForgottenPwd(String productName) {
-		PasswordReset pwdReset = new PasswordReset(productName);
+		ResetPassword pwdReset = new ResetPassword(productName);
 		pwdReset.show();
 	}
 
-	public void onLoggedIn(GUISession session) {
+	protected void onAuthenticationSuccess(String sid) {
 		try {
 			licensingCanvas.destroy();
 			messagesWindow.destroy();
-			Session.get().init(session);
-			Frontend.get().showMain();
 		} catch (Throwable e) {
 			SC.warn(e.getMessage());
 		}
@@ -462,14 +497,35 @@ public class LoginPanel extends VLayout {
 			Offline.put(Constants.COOKIE_PASSWORD, "");
 		}
 
-		// In any case save the SID in the browser
-		Offline.put(Constants.COOKIE_SID, session.getSid());
-		Cookies.setCookie(Constants.COOKIE_SID, session.getSid(), null, null, null, WindowUtils.getRequestInfo()
-				.isSecure());
-
-		GUIUser user = session.getUser();
-		if (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)
-			Log.warn(I18N.message("quotadocsexceeded"), null);
+		Util.redirectToSuccessUrl(language.getValueAsString());
 	}
 
+	protected void onAuthenticationFailure() {
+		final String failure = Cookies.getCookie(Constants.COOKIE_FAILURE);
+		removeLoginCookies();
+
+		if (failure != null && !"".equals(failure)) {
+			loginService.getUser((String) username.getValue(), new AsyncCallback<GUIUser>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					SC.warn(caught.getMessage());
+				}
+
+				@Override
+				public void onSuccess(GUIUser user) {
+					if (user != null && (user.getQuotaCount() >= user.getQuota() && user.getQuota() >= 0)) {
+						SC.warn(I18N.message("quotadocsexceeded"));
+					} else if ("passwordexpired".equals(failure)) {
+						ChangePassword change = new ChangePassword(user);
+						change.show();
+					} else {
+						SC.warn(I18N.message("accesdenied"));
+					}
+				}
+			});
+		} else {
+			SC.warn(I18N.message("accesdenied"));
+		}
+	}
 }

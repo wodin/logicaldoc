@@ -477,8 +477,8 @@
         <property name="config" ref="ContextProperties" />
     </bean>
     <!-- Authentication -->
-    <bean id="BasicAuthentication"
-        class="com.logicaldoc.core.security.authentication.BasicAuthentication">
+    <bean id="DefaultAuthentication"
+        class="com.logicaldoc.core.security.authentication.DefaultAuthentication">
         <property name="userDAO" ref="UserDAO" />
     </bean>
 </beans>

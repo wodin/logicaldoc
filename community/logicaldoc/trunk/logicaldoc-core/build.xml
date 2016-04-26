@@ -16,4 +16,17 @@
 
 		<echo message="${pom.artifactId} is deployed" />
 	</target>
+    
+    <target name="deploy-spring" depends="init-all" description="Updates a deployed webapp">
+        <property environment="env" />
+        <property id="properties" file="build.properties" />
+
+        <echo message="Deploying ${pom.artifactId}" />
+
+       <copy todir="${logicaldoc.webroot}/WEB-INF/classes" verbose="true">
+            <fileset dir="target/classes">
+                <include name="**/security/spring/*" />
+            </fileset>
+        </copy>
+    </target>
 </project>

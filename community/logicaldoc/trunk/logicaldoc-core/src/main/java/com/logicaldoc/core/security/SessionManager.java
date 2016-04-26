@@ -95,6 +95,8 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 * @return true only if the session exists
 	 */
 	public boolean isValid(String sessionId) {
+		if(sessionId!=null)
+			return false;
 		UserSession session = get(sessionId);
 		return session != null && !isExpired(session) && session.getStatus() == UserSession.STATUS_OPEN;
 	}

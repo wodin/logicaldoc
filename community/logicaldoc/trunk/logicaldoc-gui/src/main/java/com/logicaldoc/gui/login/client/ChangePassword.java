@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.personal;
+package com.logicaldoc.gui.login.client;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +10,11 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
+import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.SC;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
@@ -53,7 +56,7 @@ public class ChangePassword extends Window {
 		final ValuesManager vm = new ValuesManager();
 		final DynamicForm form = new DynamicForm();
 		form.setValuesManager(vm);
-		form.setWidth(350);
+		form.setWidth(300);
 		form.setMargin(5);
 
 		PasswordItem password = new PasswordItem();
@@ -127,6 +130,17 @@ public class ChangePassword extends Window {
 		});
 
 		form.setFields(password, newPass, newPassAgain, apply);
+
+		Label label = new Label();
+		label.setHeight(30);
+		label.setPadding(10);
+		label.setMargin(5);
+		label.setAlign(Alignment.CENTER);
+		label.setValign(VerticalAlignment.CENTER);
+		label.setWrap(false);
+		label.setIcon("[SKIN]/Dialog/warn.png");
+		label.setContents(I18N.message("needtochangepassword"));
+		addItem(label);
 
 		addItem(form);
 	}

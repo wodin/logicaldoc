@@ -139,6 +139,8 @@ public final class Constants {
 	public static final String COOKIE_VERSION = "ldoc-version";
 
 	public static final String COOKIE_SID = "ldoc-sid";
+	
+	public static final String COOKIE_FAILURE = "ldoc-failure";
 
 	public static final String SID = "sid";
 	

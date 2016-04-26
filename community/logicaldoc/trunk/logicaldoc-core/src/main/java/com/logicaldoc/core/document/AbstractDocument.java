@@ -449,7 +449,7 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 		String icon = IconSelector.selectIcon("", docRef != null);
 		try {
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-			icon = IconSelector.selectIcon(extension, docRef != null);
+			icon = IconSelector.selectIcon(extension, docRef != null && docRef.longValue()!=0L);
 		} catch (Exception e) {
 		}
 		return icon;

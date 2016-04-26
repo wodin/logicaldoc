@@ -288,12 +288,12 @@ public class StatsCollector extends Task {
 			long templates = documentDAO.queryForLong("select count(ld_id) from ld_template where ld_deleted=0");
 			postParams.add(new BasicNameValuePair("templates", Long.toString(templates)));
 
-			long shares = 0;
+			long importFolders = 0;
 			try {
-				shares = documentDAO.queryForLong("select count(ld_id) from ld_share where ld_deleted=0");
+				importFolders = documentDAO.queryForLong("select count(ld_id) from ld_importfolder where ld_deleted=0");
 			} catch (Throwable t) {
 			}
-			postParams.add(new BasicNameValuePair("shares", Long.toString(shares)));
+			postParams.add(new BasicNameValuePair("importfolders", Long.toString(importFolders)));
 
 			long stamps = 0;
 			try {

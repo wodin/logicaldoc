@@ -125,6 +125,7 @@
           <modules>
             <module>com.logicaldoc.gui.common.Common</module>
             <module>com.logicaldoc.gui.frontend.Frontend</module>
+            <module>com.logicaldoc.gui.login.Login</module>
             <module>com.logicaldoc.gui.setup.Setup</module>
           </modules>
         </configuration>

@@ -123,7 +123,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 
 			// validates an user for valid login credentials if a specific
 			// component handles this user explicitly (e.g. admin is
-			// BasicAuthentication)
+			// DefaultAuthentication)
 			if (cmp.validateOnUser(username)) {
 				loggedIn = cmp.authenticate(username, password);
 			}
@@ -174,7 +174,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 		}
 
 		if (sortedExts.isEmpty())
-			providers.add((AuthenticationProvider) context.getBean("BasicAuthentication"));
+			providers.add((AuthenticationProvider) context.getBean(DefaultAuthentication.class));
 
 		log.info("Authentication chain initialized");
 	}
