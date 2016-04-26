@@ -6,7 +6,6 @@ import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
@@ -20,23 +19,22 @@ import javax.ws.rs.core.MediaType;
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 public interface AuthService {
-	
+
 	@GET
 	@Path("/login")
 	String login(@QueryParam("u") String username, @QueryParam("pw") String password) throws Exception;
-	
+
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	String loginPost(@FormParam("username") String username, @FormParam("password") String password) throws Exception;
-	
+
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
-	String loginPostJSON(String jsonstr) throws Exception;		
-	
-	@DELETE
-	@Path("/logout/{sid}")
-	void logout(@PathParam("sid") String sid);
+	String loginPostJSON(String jsonstr) throws Exception;
 
+	@DELETE
+	@Path("/logout")
+	void logout();
 }

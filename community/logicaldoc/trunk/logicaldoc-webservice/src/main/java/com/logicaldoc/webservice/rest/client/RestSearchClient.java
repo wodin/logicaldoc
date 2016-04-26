@@ -22,39 +22,37 @@ import com.logicaldoc.webservice.rest.SearchService;
 public class RestSearchClient extends AbstractRestClient {
 
 	protected static Logger log = LoggerFactory.getLogger(RestSearchClient.class);
-	
+
 	SearchService proxy = null;
-	
+
 	public RestSearchClient(String endpoint) {
 		super(endpoint);
-		
-        JacksonJsonProvider provider = new JacksonJsonProvider();	
+
+		JacksonJsonProvider provider = new JacksonJsonProvider();
 		proxy = JAXRSClientFactory.create(endpoint, SearchService.class, Arrays.asList(provider));
 	}
-	
+
 	public RestSearchClient(String endpoint, int timeout) {
 		super(endpoint, timeout);
-		
-        JacksonJsonProvider provider = new JacksonJsonProvider();	
-		proxy = JAXRSClientFactory.create(endpoint, SearchService.class, Arrays.asList(provider));		
-	}
-    
 
-	public WSSearchResult find(String sid, WSSearchOptions owd) throws Exception {
-			
-        WebClient.client(proxy).type("multipart/form-data");
+		JacksonJsonProvider provider = new JacksonJsonProvider();
+		proxy = JAXRSClientFactory.create(endpoint, SearchService.class, Arrays.asList(provider));
+	}
+
+	public WSSearchResult find(WSSearchOptions owd) throws Exception {
+		WebClient.client(proxy).type("multipart/form-data");
 		WebClient.client(proxy).accept("application/json");
-		//WebClient.client(proxy).accept("*/*"); // This also works
-        
-		//ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		// WebClient.client(proxy).accept("*/*"); // This also works
+
+		// ObjectWriter ow = new
+		// ObjectMapper().writer().withDefaultPrettyPrinter();
 		ObjectWriter ow = new ObjectMapper().writer();
-		String jsonStr = ow.writeValueAsString(owd);		      
-        		
-        Attachment sidAttachment = new AttachmentBuilder().id("sid").object(sid).contentDisposition(new ContentDisposition("form-data; name=\"sid\"")).build();
-		Attachment optAttachment = new AttachmentBuilder().id("opt").object(jsonStr).mediaType("application/json").contentDisposition(new ContentDisposition("form-data; name=\"opt\"")).build();
-		
+		String jsonStr = ow.writeValueAsString(owd);
+
+		Attachment optAttachment = new AttachmentBuilder().id("opt").object(jsonStr).mediaType("application/json")
+				.contentDisposition(new ContentDisposition("form-data; name=\"opt\"")).build();
+
 		List<Attachment> atts = new LinkedList<Attachment>();
-		atts.add(sidAttachment);
 		atts.add(optAttachment);
 
 		return proxy.find(atts);

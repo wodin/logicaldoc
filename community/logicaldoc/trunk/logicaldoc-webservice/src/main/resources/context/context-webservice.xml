@@ -115,7 +115,9 @@
     </jaxrs:server>
     <jaxrs:server id="restDocument" address="/rest/document">
         <jaxrs:serviceBeans>
-            <bean class="com.logicaldoc.webservice.rest.endpoint.RestDocumentService" />
+            <bean class="com.logicaldoc.webservice.rest.endpoint.RestDocumentService">
+                <aop:scoped-proxy />
+            </bean>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider" />

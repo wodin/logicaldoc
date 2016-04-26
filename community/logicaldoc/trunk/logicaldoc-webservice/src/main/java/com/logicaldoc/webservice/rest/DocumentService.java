@@ -21,7 +21,7 @@ import com.logicaldoc.webservice.model.WSDocument;
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
 public interface DocumentService {
-		
+
 	@POST
 	@Path("/create")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
@@ -31,51 +31,52 @@ public interface DocumentService {
 	@GET
 	@Path("/getDocument")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	WSDocument getDocument(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception;
+	WSDocument getDocument(@QueryParam("docId") long docId) throws Exception;
 
 	@POST
 	@Path("/checkout")
-	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })	
-	void checkout(@FormParam("sid") String sid, @FormParam("docId") long docId) throws Exception;
+	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+	void checkout(@FormParam("docId") long docId) throws Exception;
 
 	@POST
 	@Path("/checkin")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })	
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	Response checkin(List<Attachment> attachments) throws Exception;
 
 	@POST
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })	
+	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	Response upload(List<Attachment> attachments) throws Exception;
 
 	@DELETE
 	@Path("/delete")
-	void delete(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception;
+	void delete(@QueryParam("docId") long docId) throws Exception;
 
 	@GET
 	@Path("/list")
 	@Produces({ MediaType.APPLICATION_JSON })
-	WSDocument[] list(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception;	
+	WSDocument[] list(@QueryParam("folderId") long folderId) throws Exception;
 
 	@GET
 	@Path("/listDocuments")
-	WSDocument[] listDocuments(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId, @QueryParam("fileName") String fileName) throws Exception;
-	
-	
+	WSDocument[] listDocuments(@QueryParam("folderId") long folderId, @QueryParam("fileName") String fileName)
+			throws Exception;
+
 	/**
-	 * Updates an existing document with the value object containing the document's metadata.
+	 * Updates an existing document with the value object containing the
+	 * document's metadata.
+	 * 
 	 * @throws Exception
 	 */
 	@POST
 	@Path("/update")
 	@Consumes({ MediaType.MULTIPART_FORM_DATA })
 	void update(List<Attachment> attachments) throws Exception;
-	
-	@GET
-	@Path("/getContent")	
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	DataHandler getContent(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception;
 
+	@GET
+	@Path("/getContent")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	DataHandler getContent(@QueryParam("docId") long docId) throws Exception;
 }

@@ -28,8 +28,8 @@ public class RestAuthClient extends AbstractRestClient implements AuthService {
 		return proxy.login(username, password);   
 	}	
 
-	public void logout(String sid) {
-		proxy.logout(sid);
+	public void logout() {
+		proxy.logout();
 	}
 
 	@Override

@@ -9,12 +9,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Resource;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.ext.MessageContext;
+import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
@@ -217,5 +222,69 @@ public class AbstractService {
 		// https://jersey.java.net/documentation/latest/jaxrs-resources.html#d0e2790
 		// https://jersey.java.net/apidocs-javax.jax-rs/2.0.1/javax/ws/rs/core/Context.html
 		this.messageContext = messageContext;
+	}
+
+	/**
+	 * Gets the current Session ID following this logic:
+	 * <ol>
+	 * <li>Request parameter sid</li>
+	 * <li>Request attribute sid</li>
+	 * <li>Session attribute sid</li>
+	 * <li>Request cookie ldoc-sid</li>
+	 * <li>SecurityContextHolder</li>
+	 * 
+	 * @return The current Session ID
+	 */
+	protected String getCurrentSessionId() {
+		HttpServletRequest request = null;
+		if (context != null && context.getMessageContext() != null)
+			request = (HttpServletRequest) context.getMessageContext().get(AbstractHTTPDestination.HTTP_REQUEST);
+		else if (messageContext != null)
+			request = (HttpServletRequest) messageContext.get(AbstractHTTPDestination.HTTP_REQUEST);
+		if (request == null)
+			return null;
+
+		String sid = null;
+		if (request.getParameter("sid") != null)
+			sid = request.getParameter("sid");
+		else if (request.getAttribute("sid") != null)
+			sid = (String) request.getAttribute("sid");
+		else if (request.getParameter("sid") != null)
+			sid = request.getParameter("sid");
+		else if (request.getSession(false) != null)
+			sid = (String) request.getSession(false).getAttribute("sid");
+
+		if (sid == null) {
+			Cookie[] cookies = request.getCookies();
+			if (cookies != null)
+				for (Cookie cookie : cookies) {
+					if ("ldoc-sid".equals(cookie.getName())) {
+						sid = cookie.getValue();
+						break;
+					}
+				}
+		}
+
+		if (sid == null) {
+			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+			if (auth != null)
+				sid = auth.toString();
+		}
+
+		return sid;
+	}
+
+	/**
+	 * Same as getCurrentSessionId but throws an Exception in case of bad
+	 * session
+	 * 
+	 * @return The session ID (if valid)
+	 * @throws Exception
+	 */
+	protected String validateSession() throws Exception {
+		String sid = getCurrentSessionId();
+		if (sid == null)
+			throw new Exception("Invalid session");
+		return sid;
 	}
 }
