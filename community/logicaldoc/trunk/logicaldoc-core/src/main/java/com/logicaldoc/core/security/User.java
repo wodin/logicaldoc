@@ -503,4 +503,9 @@ public class User extends PersistentObject implements Serializable {
 	public void setEmailSignature(String emailSignature) {
 		this.emailSignature = emailSignature;
 	}
+
+	public void clearPassword() {
+		this.password = null;
+		this.passwordmd4 = null;
+	}
 }

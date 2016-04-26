@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.security;
+package com.logicaldoc.gui.login.client;
 
 import java.util.Map;
 
@@ -6,9 +6,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.services.SecurityService;
-import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.login.client.services.LoginService;
+import com.logicaldoc.gui.login.client.services.LoginServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
@@ -19,15 +19,21 @@ import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 
-public class PasswordReset extends Window {
+/**
+ * Reset the password in case it was lost or forgotten
+ * 
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.5
+ */
+public class ResetPassword extends Window {
 
-	protected SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
+	protected LoginServiceAsync loginService = (LoginServiceAsync) GWT.create(LoginService.class);
 
 	private ValuesManager vm = new ValuesManager();
 
 	private String productName = "";
 
-	public PasswordReset(String product) {
+	public ResetPassword(String product) {
 		this.productName = product;
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("passwordreset"));
@@ -68,7 +74,7 @@ public class PasswordReset extends Window {
 					final String userName = (String) values.get("username");
 					final String emailAddress = (String) values.get("email");
 					buttonForm.setDisabled(true);
-					securityService.resetPassword(userName, emailAddress, productName, new AsyncCallback<Void>() {
+					loginService.resetPassword(userName, emailAddress, productName, new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

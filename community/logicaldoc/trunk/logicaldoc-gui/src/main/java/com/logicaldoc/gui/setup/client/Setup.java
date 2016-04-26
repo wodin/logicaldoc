@@ -15,7 +15,6 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.services.InfoService;
 import com.logicaldoc.gui.common.client.services.InfoServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.common.client.util.RequestInfo;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.setup.client.services.SetupService;
@@ -66,7 +65,7 @@ public class Setup implements EntryPoint {
 	private static final String MYSQL = "MySQL";
 
 	private static final String SQLSERVER = "MSSQL";
-	
+
 	private static final String POSTGRESQL = "PostgreSQL";
 
 	private static final String REPOSITORY_FOLDER = "repositoryFolder";
@@ -99,17 +98,7 @@ public class Setup implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
-		// Setup the language for localization
-		RequestInfo loc = WindowUtils.getRequestInfo();
-
-		// Tries to capture locale parameter
-		String lang;
-		if (loc.getParameter(Constants.LOCALE) != null && !loc.getParameter(Constants.LOCALE).equals("")) {
-			lang = loc.getParameter(Constants.LOCALE);
-		} else {
-			// First we initialize language values
-			lang = Util.getBrowserLanguage();
-		}
+		String lang = Util.detectLocale();
 		I18N.setLocale(lang);
 
 		// Get grid of scrollbars, and clear out the window's built-in margin,
@@ -188,7 +177,7 @@ public class Setup implements EntryPoint {
 		RootPanel.get().add(vPanel);
 
 		// Remove the loading frame
-		RootPanel.getBodyElement().removeChild(RootPanel.get("loadingWrapper").getElement());
+		RootPanel.getBodyElement().removeChild(RootPanel.get("loadingwrapper-setup").getElement());
 	}
 
 	/**

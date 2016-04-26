@@ -16,13 +16,11 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
  */
 @RemoteServiceRelativePath("security")
 public interface SecurityService extends RemoteService {
-	public GUISession login(String username, String password, String key, String locale, String tenant);
-
 	/**
 	 * Logs-in a user by an existing session ID (session reuse)
 	 *
 	 */
-	public GUISession login(String sid);
+	public GUISession login(String sid, String locale);
 
 	/**
 	 * Changes the password of a user
@@ -113,15 +111,6 @@ public interface SecurityService extends RemoteService {
 	 * Retrieves the specified menu
 	 */
 	public GUIMenu getMenu(String sid, long id) throws ServerException;
-
-	/**
-	 * Reset the password for the given email.
-	 * 
-	 * @param emailAddress the username for which reset password
-	 * @param emailAddress the email for which reset password
-	 * @param productName the application product name
-	 */
-	public void resetPassword(String username, String emailAddress, String productName) throws Exception;
 
 	/**
 	 * Searches for users

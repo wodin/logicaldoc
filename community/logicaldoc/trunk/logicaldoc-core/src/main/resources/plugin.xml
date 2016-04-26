@@ -54,8 +54,8 @@
   </extension-point>
   
 
-  <extension plugin-id="logicaldoc-core" point-id="Authentication" id="BasicAuthentication">
-    <parameter id="providerId" value="BasicAuthentication" />
+  <extension plugin-id="logicaldoc-core" point-id="Authentication" id="DefaultAuthentication">
+    <parameter id="providerId" value="DefaultAuthentication" />
     <parameter id="position" value="1" />
   </extension>
 

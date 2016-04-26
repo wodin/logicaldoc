@@ -9,7 +9,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
  * @author Sebastian Wenzky
  * @since 4.5
  */
-public class BasicAuthentication implements AuthenticationProvider {
+public class DefaultAuthentication implements AuthenticationProvider {
 
 	protected UserDAO userDAO;
 

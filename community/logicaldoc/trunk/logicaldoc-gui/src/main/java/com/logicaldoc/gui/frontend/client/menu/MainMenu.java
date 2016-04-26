@@ -221,8 +221,9 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		LD.ask(I18N.message("question"), I18N.message("confirmexit"), 300, new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
-				if (value)
+				if (value){
 					Session.get().logout();
+				}
 			}
 		});
 	}
@@ -751,7 +752,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		changePswd.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				ChangePassword cp = new ChangePassword(Session.get().getUser(), null);
+				ChangePassword cp = new ChangePassword(Session.get().getUser());
 				cp.show();
 			}
 		});
@@ -807,13 +808,9 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 				} catch (Throwable t) {
 
 				}
-				try {
-					Offline.remove(Constants.COOKIE_SID);
-					Cookies.removeCookie(Constants.COOKIE_SID);
-				} catch (Throwable t) {
-
-				}
+	
 				Log.info(I18N.message("cookiesremoved"), null);
+				Session.get().logout();
 			}
 		});
 

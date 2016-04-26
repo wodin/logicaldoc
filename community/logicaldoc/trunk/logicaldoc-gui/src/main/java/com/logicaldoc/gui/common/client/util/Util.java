@@ -13,8 +13,6 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.Cookies;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.Widget;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
@@ -24,6 +22,7 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.Offline;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
@@ -525,8 +524,7 @@ public class Util {
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("folderId", "" + Session.get().getCurrentFolder().getId());
 		params.put("disallow", Session.get().getInfo().getConfig("upload.disallow"));
-		params.put("sizeMax", ""
-				+ (Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize")) * 1024 * 1024));
+		params.put("sizeMax", "" + (Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize")) * 1024 * 1024));
 		WindowUtils.openUrl(Util.webstartURL("dropspot", params), "_blank");
 	}
 
@@ -680,6 +678,19 @@ public class Util {
 		}
 		return tenant;
 	}
+	
+	/**
+	 * Detect locale specification from the request
+	 */
+	public static String detectLocale() {
+		RequestInfo request = WindowUtils.getRequestInfo();
+		// Tries to capture locale parameter
+		String locale = Util.getBrowserLanguage();;
+		if (request.getParameter(Constants.LOCALE) != null && !request.getParameter(Constants.LOCALE).equals("")) {
+			locale = request.getParameter(Constants.LOCALE);
+		}
+		return locale;
+	}
 
 	/**
 	 * Detect KEY specification from the request
@@ -711,14 +722,13 @@ public class Util {
 
 		try {
 			if (sid == null)
-				sid = Offline.get(Constants.COOKIE_SID).toString();
+				sid = Cookies.getCookie(Constants.COOKIE_SID);
 		} catch (Throwable t) {
 		}
 
 		try {
-
 			if (sid == null)
-				sid = Cookies.getCookie(Constants.COOKIE_SID);
+				sid = Offline.get(Constants.COOKIE_SID).toString();
 		} catch (Throwable t) {
 		}
 
@@ -733,6 +743,10 @@ public class Util {
 		Util.redirectToRoot(null, "sid=" + Session.get().getSid());
 	}
 
+	public static void redirectToRoot(String moduleName) {
+		Util.redirectToRoot(moduleName, null);
+	}
+
 	public static void redirectToRoot(String moduleName, String parameters) {
 		String base = GWT.getHostPageBaseURL();
 		String module = GWT.getModuleName();
@@ -742,6 +756,29 @@ public class Util {
 		url += "?locale=" + I18N.getLocale() + "&tenant=" + Session.get().getTenantName();
 		if (parameters != null)
 			url += "&" + parameters;
+		Util.redirect(url);
+	}
+
+	/**
+	 * Redirects to the configured page after a successful login (the url
+	 * specified in the j_successurl javascript variable.
+	 */
+	public static void redirectToSuccessUrl(String locale) {
+		String url = Util.getJavascriptVariable("j_successurl");
+		url += "?tenant=" + Session.get().getTenantName();
+		if (locale != null && !"".equals(locale))
+			url += "&locale=" + locale;
+		Util.redirect(url);
+	}
+
+	/**
+	 * Redirects to the configured login page (the url specified in the
+	 * j_loginurl javascript variable.
+	 */
+	public static void redirectToLoginUrl() {
+		String url = Util.getJavascriptVariable("j_loginurl");
+		url += "?tenant=" + Session.get().getTenantName();
+		url += "&locale=" + I18N.getLocale();
 		Util.redirect(url);
 	}
 
@@ -760,4 +797,8 @@ public class Util {
 
 		return primitives;
 	}
+
+	public static native String getJavascriptVariable(String jsVar)/*-{
+		return eval('$wnd.' + jsVar);
+	}-*/;
 }
