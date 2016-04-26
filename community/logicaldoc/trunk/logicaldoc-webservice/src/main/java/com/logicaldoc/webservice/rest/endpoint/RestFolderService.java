@@ -30,8 +30,12 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 
 	private static Logger log = LoggerFactory.getLogger(RestFolderService.class);
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#create(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#create(java.util
+	 * .List)
 	 */
 	@POST
 	@Path("/create")
@@ -39,41 +43,41 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	// The "folder" parameter comes in the POST request body (encoded as XML or
 	// JSON).
 	public WSFolder create(List<Attachment> atts) throws Exception {
-
-//		log.debug("create({})", atts);
-
-		String sid = null;
+		String sid = validateSession();
 		WSFolder folder = null;
 
 		for (Attachment att : atts) {
-			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
-				sid = att.getObject(String.class);
-			} else if ("folder".equals(att.getContentDisposition().getParameter("name"))) {
-//				log.debug("create({})", att.getContentType());
-//				log.debug("create({})", att.getContentDisposition());
+			if ("folder".equals(att.getContentDisposition().getParameter("name"))) {
 				folder = att.getObject(WSFolder.class);
-//				log.debug("create({})", folder);
 			}
 		}
 		return super.create(sid, folder);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#createSimpleForm(java.lang.String, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#createSimpleForm
+	 * (java.lang.String, java.lang.String)
 	 */
 	@POST
 	@Path("/createSimple")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
 	// The "folderPath" parameter comes in the POST request body.
-	public WSFolder createSimpleForm(@FormParam("sid") String sid, @FormParam("folderPath") String folderPath)
-			throws Exception {
+	public WSFolder createSimpleForm(@FormParam("folderPath") String folderPath) throws Exception {
 		log.debug("createSimpleForm()");
+		String sid = validateSession();
 		WSFolder root = super.getRootFolder(sid);
 		return super.createPath(sid, root.getId(), folderPath);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#createSimpleJSON(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#createSimpleJSON
+	 * (java.lang.String)
 	 */
 	@POST
 	@Path("/createSimple")
@@ -82,32 +86,41 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	public WSFolder createSimpleJSON(String jsonstr) throws Exception {
 		log.debug("createSimpleJSON()");
 
+		String sid = validateSession();
+
 		ObjectMapper mapper = new ObjectMapper();
-		TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
+		TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
+		};
 		HashMap<String, String> hm = mapper.readValue(jsonstr, typeRef);
 
-		String sid = hm.get("sid");
 		String folderPath = hm.get("folderPath");
 
 		WSFolder root = super.getRootFolder(sid);
 		return super.createPath(sid, root.getId(), folderPath);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#createPath(java.lang.String, long, java.lang.String)
-	 * The parameters come in the POST request body.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#createPath(java
+	 * .lang.String, long, java.lang.String) The parameters come in the POST
+	 * request body.
 	 */
 	@POST
 	@Path("/createPath")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-	public WSFolder createPath(@FormParam("sid") String sid, @FormParam("parentId") long parentId,
-			@FormParam("path") String path) throws Exception {
-
+	public WSFolder createPath(@FormParam("parentId") long parentId, @FormParam("path") String path) throws Exception {
+		String sid = validateSession();
 		return super.createPath(sid, parentId, path);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#createFolder(java.lang.String, long, java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#createFolder(java
+	 * .lang.String, long, java.lang.String)
 	 */
 	@POST
 	@Path("/createFolder")
@@ -115,56 +128,80 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@Override
 	// The parameters come in the POST request body.
-	public long createFolder(@FormParam("sid") String sid, @FormParam("parentId") long parentId,
-			@FormParam("name") String name) throws Exception {
+	public long createFolder(@FormParam("parentId") long parentId, @FormParam("name") String name) throws Exception {
+		String sid = validateSession();
 		return super.createFolder(sid, parentId, name);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#getFolder(java.lang.String, long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#getFolder(java.
+	 * lang.String, long)
 	 */
 	@GET
 	@Path("/getFolder")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public WSFolder getFolder(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
+	public WSFolder getFolder(@QueryParam("folderId") long folderId) throws Exception {
+		String sid = validateSession();
 		return super.getFolder(sid, folderId);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#delete(java.lang.String, long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#delete(java.lang
+	 * .String, long)
 	 */
 	@DELETE
 	@Path("/delete")
-	public void delete(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
+	public void delete(@QueryParam("folderId") long folderId) throws Exception {
+		String sid = validateSession();
 		super.delete(sid, folderId);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#listChildren(java.lang.String, long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#listChildren(java
+	 * .lang.String, long)
 	 */
 	@GET
 	@Path("/listChildren")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public WSFolder[] listChildren(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId)
-			throws Exception {
+	public WSFolder[] listChildren(@QueryParam("folderId") long folderId) throws Exception {
+		String sid = validateSession();
 		return super.listChildren(sid, folderId);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#getPath(java.lang.String, long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#getPath(java.lang
+	 * .String, long)
 	 */
 	@GET
 	@Path("/getPath")
-	public WSFolder[] getPath(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
+	public WSFolder[] getPath(@QueryParam("folderId") long folderId) throws Exception {
+		String sid = validateSession();
 		return super.getPath(sid, folderId);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.FolderService#getPathString(java.lang.String, long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#getPathString(java
+	 * .lang.String, long)
 	 */
 	@GET
 	@Path("/getPathString")
-	public String getPathString(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {
+	public String getPathString(@QueryParam("folderId") long folderId) throws Exception {
+		String sid = validateSession();
 		WSFolder[] sss = this.getPath(sid, folderId);
 		String pathString = "";
 		for (WSFolder wsFolder : sss) {
@@ -172,36 +209,35 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 		}
 		return pathString;
 	}
-	
+
 	@POST
 	@Path("/update")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)	
+	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public void update(List<Attachment> atts) throws Exception {
 		log.debug("update({})", atts);
 
-		String sid = null;
+		String sid = validateSession();
 		WSFolder folder = null;
 
 		for (Attachment att : atts) {
-			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
-				sid = att.getObject(String.class);
-			} else if ("folder".equals(att.getContentDisposition().getParameter("name"))) {
+			if ("folder".equals(att.getContentDisposition().getParameter("name"))) {
 				folder = att.getObject(WSFolder.class);
 			}
 		}
-		super.update(sid, folder);	
-	}
-	
-	@PUT
-	@Path("/rename")
-	public void rename(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId, @QueryParam("name") String name) throws Exception {
-		super.rename(sid, folderId, name);
-	}
-	
-	@PUT
-	@Path("/move")
-	public void move(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId, @QueryParam("parentId") long parentId) throws Exception {
-		super.move(sid, folderId, parentId);
+		super.update(sid, folder);
 	}
 
+	@PUT
+	@Path("/rename")
+	public void rename(@QueryParam("folderId") long folderId, @QueryParam("name") String name) throws Exception {
+		String sid = validateSession();
+		super.rename(sid, folderId, name);
+	}
+
+	@PUT
+	@Path("/move")
+	public void move(@QueryParam("folderId") long folderId, @QueryParam("parentId") long parentId) throws Exception {
+		String sid = validateSession();
+		super.move(sid, folderId, parentId);
+	}
 }

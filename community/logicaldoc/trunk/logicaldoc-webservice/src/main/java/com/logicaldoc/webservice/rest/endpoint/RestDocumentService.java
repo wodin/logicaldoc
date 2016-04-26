@@ -29,7 +29,9 @@ public class RestDocumentService extends SoapDocumentService implements Document
 
 	private static Logger log = LoggerFactory.getLogger(RestDocumentService.class);
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.logicaldoc.webservice.rest.RestDocument#create(java.util.List)
 	 */
 	@Override
@@ -40,14 +42,13 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	public WSDocument create(List<Attachment> atts) throws Exception {
 		log.debug("create()");
 
-		String sid = null;
+		String sid = validateSession();
+
 		WSDocument document = null;
 		DataHandler content = null;
 
 		for (Attachment att : atts) {
-			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
-				sid = att.getObject(String.class);
-			} else if ("document".equals(att.getContentDisposition().getParameter("name"))) {
+			if ("document".equals(att.getContentDisposition().getParameter("name"))) {
 				document = att.getObject(WSDocument.class);
 			} else if ("content".equals(att.getContentDisposition().getParameter("name"))) {
 				content = att.getDataHandler();
@@ -60,29 +61,41 @@ public class RestDocumentService extends SoapDocumentService implements Document
 		return super.create(sid, document, content);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.RestDocument#getDocument(java.lang.String, long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.RestDocument#getDocument(java.lang.String,
+	 * long)
 	 */
 	@Override
 	@GET
 	@Path("/getDocument")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public WSDocument getDocument(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
+	public WSDocument getDocument(@QueryParam("docId") long docId) throws Exception {
+		String sid = validateSession();
 		return super.getDocument(sid, docId);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.RestDocument#checkout(java.lang.String, long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.RestDocument#checkout(java.lang.String,
+	 * long)
 	 */
 	@Override
 	@POST
 	@Path("/checkout")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-	public void checkout(@FormParam("sid") String sid, @FormParam("docId") long docId) throws Exception {
+	public void checkout(@FormParam("docId") long docId) throws Exception {
+		String sid = validateSession();
 		super.checkout(sid, docId);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.logicaldoc.webservice.rest.RestDocument#checkin(java.util.List)
 	 */
 	@Override
@@ -91,8 +104,8 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response checkin(List<Attachment> attachments) throws Exception {
+		String sid = validateSession();
 		try {
-			String sid = null;
 			long docId = 0L;
 			String comment = null;
 			boolean release = false;
@@ -101,9 +114,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 
 			for (Attachment att : attachments) {
 				Map<String, String> params = att.getContentDisposition().getParameters();
-				if ("sid".equals(params.get("name"))) {
-					sid = att.getObject(String.class);
-				} else if ("docId".equals(params.get("name"))) {
+				if ("docId".equals(params.get("name"))) {
 					docId = Long.parseLong(att.getObject(String.class));
 				} else if ("comment".equals(params.get("name"))) {
 					comment = att.getObject(String.class);
@@ -124,7 +135,9 @@ public class RestDocumentService extends SoapDocumentService implements Document
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.logicaldoc.webservice.rest.RestDocument#upload(java.util.List)
 	 */
 	@Override
@@ -133,8 +146,8 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	public Response upload(List<Attachment> attachments) throws Exception {
+		String sid = validateSession();
 		try {
-			String sid = null;
 			Long docId = null;
 			Long folderId = null;
 			boolean release = false;
@@ -144,9 +157,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 
 			for (Attachment att : attachments) {
 				Map<String, String> params = att.getContentDisposition().getParameters();
-				if ("sid".equals(params.get("name"))) {
-					sid = att.getObject(String.class);
-				} else if ("docId".equals(params.get("name"))) {
+				if ("docId".equals(params.get("name"))) {
 					docId = Long.parseLong(att.getObject(String.class));
 				} else if ("folderId".equals(params.get("name"))) {
 					folderId = Long.parseLong(att.getObject(String.class));
@@ -169,34 +180,48 @@ public class RestDocumentService extends SoapDocumentService implements Document
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.RestDocument#delete(java.lang.String, long)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.logicaldoc.webservice.rest.RestDocument#delete(java.lang.String,
+	 * long)
 	 */
 	@Override
 	@DELETE
 	@Path("/delete")
-	public void delete(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
+	public void delete(@QueryParam("docId") long docId) throws Exception {
+		String sid = validateSession();
 		super.delete(sid, docId);
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.RestDocument#list(java.lang.String, long)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.logicaldoc.webservice.rest.RestDocument#list(java.lang.String,
+	 * long)
 	 */
 	@Override
 	@GET
 	@Path("/list")
 	@Produces({ MediaType.APPLICATION_JSON })
-	public WSDocument[] list(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId) throws Exception {		
+	public WSDocument[] list(@QueryParam("folderId") long folderId) throws Exception {
+		String sid = validateSession();
 		return super.listDocuments(sid, folderId, null);
-	}	
-	
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.RestDocument#listDocuments(java.lang.String, long, java.lang.String)
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.RestDocument#listDocuments(java.lang.String
+	 * , long, java.lang.String)
 	 */
 	@Override
 	@GET
 	@Path("/listDocuments")
-	public WSDocument[] listDocuments(@QueryParam("sid") String sid, @QueryParam("folderId") long folderId, @QueryParam("fileName") String fileName) throws Exception {
+	public WSDocument[] listDocuments(@QueryParam("folderId") long folderId, @QueryParam("fileName") String fileName)
+			throws Exception {
+		String sid = validateSession();
 		return super.listDocuments(sid, folderId, fileName);
 	}
 
@@ -206,33 +231,27 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Consumes({ MediaType.MULTIPART_FORM_DATA })
 	// The "document" comes in the POST request body (encoded as JSON).
 	public void update(List<Attachment> atts) throws Exception {
-		//log.debug("update()");
+		log.debug("update()");
 
-		String sid = null;
+		String sid = validateSession();
+
 		WSDocument document = null;
 
 		for (Attachment att : atts) {
-			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
-				sid = att.getObject(String.class);
-			} else if ("document".equals(att.getContentDisposition().getParameter("name"))) {
-				//log.debug("document attachment found.");
+			if ("document".equals(att.getContentDisposition().getParameter("name"))) {
+				// log.debug("document attachment found.");
 				document = att.getObject(WSDocument.class);
-			} 
+			}
 		}
-
-//		log.debug("document: {}", document);
-//		if (document != null) {
-//			log.debug("document.getId(): {}", document.getId());
-//		}
 
 		super.update(sid, document);
 	}
-	
-	@GET
-	@Path("/getContent")	
-	@Produces(MediaType.APPLICATION_OCTET_STREAM)
-	public DataHandler getContent(@QueryParam("sid") String sid, @QueryParam("docId") long docId) throws Exception {
-			return super.getContent(sid, docId);
-	}
 
+	@GET
+	@Path("/getContent")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	public DataHandler getContent(@QueryParam("docId") long docId) throws Exception {
+		String sid = validateSession();
+		return super.getContent(sid, docId);
+	}
 }

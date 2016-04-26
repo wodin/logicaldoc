@@ -23,34 +23,26 @@ public class RestSearchService extends SoapSearchService implements SearchServic
 
 	protected static Logger log = LoggerFactory.getLogger(RestSearchService.class);
 
-	/* (non-Javadoc)
-	 * @see com.logicaldoc.webservice.rest.endpoint.SearchService#find(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.logicaldoc.webservice.rest.endpoint.SearchService#find(java.util.
+	 * List)
 	 */
 	@POST
 	@Path("/find")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	public WSSearchResult find(List<Attachment> atts) throws Exception {
-		
-//		log.debug("find({})", atts);
-
-		String sid = null;
+		String sid = validateSession();
 		WSSearchOptions opt = null;
 
 		for (Attachment att : atts) {
-			
-//			log.debug("attName: " +att.getContentDisposition().getParameter("name"));
-//			log.debug("attType: " +att.getContentType());
-			
-			if ("sid".equals(att.getContentDisposition().getParameter("name"))) {
-				sid = att.getObject(String.class);
-			} else if ("opt".equals(att.getContentDisposition().getParameter("name"))) {
-//				log.debug("find({})", att.getContentType());
-//				log.debug("find({})", att.getContentDisposition());
+			if ("opt".equals(att.getContentDisposition().getParameter("name"))) {
 				opt = att.getObject(WSSearchOptions.class);
-//				log.debug("find({})", opt);
 			}
-		}		
-		
+		}
+
 		return super.find(sid, opt);
 	}
 }
