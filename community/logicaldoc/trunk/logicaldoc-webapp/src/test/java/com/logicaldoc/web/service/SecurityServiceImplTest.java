@@ -18,7 +18,6 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUISecuritySettings;
-import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.web.AbstractWebappTCase;
 
@@ -31,18 +30,12 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 
 	private GroupDAO groupDAO;
 
-	private GUISession session;
-
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 
 		userDAO = (UserDAO) context.getBean("UserDAO");
 		groupDAO = (GroupDAO) context.getBean("GroupDAO");
-
-		session = service.login("admin", "admin", null, null, null);
-		Assert.assertNotNull(session);
-		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}
 
 	@After
@@ -55,20 +48,6 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 			} catch (Throwable t) {
 			}
 		}
-	}
-
-	@Test
-	public void testLogin() {
-		Assert.assertEquals("admin", session.getUser().getUserName());
-		int sessions = SessionManager.getInstance().countOpened();
-		Assert.assertEquals(1, session.getUser().getId());
-		SessionManager.getInstance().get(session.getSid()).setClosed();
-		Assert.assertEquals(sessions - 1, SessionManager.getInstance().countOpened());
-
-		session = service.login("admin", "password", null, null, null);
-		Assert.assertFalse(session.isLoggedIn());
-		session = service.login("unexisting", "admin", null, null, null);
-		Assert.assertFalse(session.isLoggedIn());
 	}
 
 	@Test

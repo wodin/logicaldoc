@@ -18,9 +18,7 @@ import org.apache.commons.lang.StringUtils;
 import com.logicaldoc.core.security.SessionManager;
 
 /**
- * Check if the user session was expired or active. In addition a binding
- * between UserSession and ServletSession is maintained as internal state. If
- * the kill parameter is found in the request, the given session is killed.
+ * Check the session fot the current request and stores it in the SessionHolder 
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0

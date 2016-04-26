@@ -7,9 +7,7 @@ import org.junit.Test;
 
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
-import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.gui.common.client.ServerException;
-import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.web.AbstractWebappTCase;
 
@@ -18,8 +16,6 @@ public class TemplateServiceImplTest extends AbstractWebappTCase {
 	// Instance under test
 	private TemplateServiceImpl service = new TemplateServiceImpl();
 
-	private GUISession session;
-
 	private DocumentTemplateDAO templateDao;
 
 	@Before
@@ -27,11 +23,6 @@ public class TemplateServiceImplTest extends AbstractWebappTCase {
 		super.setUp();
 
 		templateDao = (DocumentTemplateDAO) context.getBean("DocumentTemplateDAO");
-
-		SecurityServiceImpl securityService = new SecurityServiceImpl();
-		session = securityService.login("admin", "admin", null, null, null);
-		Assert.assertNotNull(session);
-		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}
 
 	@Test

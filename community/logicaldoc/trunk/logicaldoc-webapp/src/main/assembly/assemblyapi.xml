@@ -20,7 +20,6 @@
 				<exclude>ehcache.xml</exclude>
 				<exclude>log.xml</exclude>
 			    <exclude>log4j.dtd</exclude>
-			    <exclude>spring-beans-2.0.dtd</exclude>
 			</excludes>
 		</fileSet>
 	</fileSets>

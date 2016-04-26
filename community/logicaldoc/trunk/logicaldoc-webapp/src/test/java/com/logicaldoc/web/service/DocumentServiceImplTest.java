@@ -20,12 +20,10 @@ import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DocumentNoteDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
-import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
-import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.web.AbstractWebappTCase;
 
@@ -33,8 +31,6 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	// Instance under test
 	private DocumentServiceImpl service = new DocumentServiceImpl();
-
-	private GUISession session;
 
 	private DocumentDAO docDao;
 
@@ -58,11 +54,6 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		noteDao = (DocumentNoteDAO) context.getBean("DocumentNoteDAO");
 		bookDao = (BookmarkDAO) context.getBean("BookmarkDAO");
 		historyDao = (HistoryDAO) context.getBean("HistoryDAO");
-
-		SecurityServiceImpl securityService = new SecurityServiceImpl();
-		session = securityService.login("admin", "admin",null, null, null);
-		Assert.assertNotNull(session);
-		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}
 
 	@Test

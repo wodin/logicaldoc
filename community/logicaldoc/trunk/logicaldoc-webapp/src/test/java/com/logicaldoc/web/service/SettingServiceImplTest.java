@@ -5,12 +5,10 @@ import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIDashlet;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
-import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.web.AbstractWebappTCase;
 
@@ -19,16 +17,9 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 	// Instance under test
 	private SettingServiceImpl service = new SettingServiceImpl();
 
-	private GUISession session;
-
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
-
-		SecurityServiceImpl securityService = new SecurityServiceImpl();
-		session = securityService.login("admin", "admin", null, null, null);
-		Assert.assertNotNull(session);
-		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
 	}
 
 	@Test

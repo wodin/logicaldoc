@@ -1,7 +1,5 @@
 package com.logicaldoc.web.service;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

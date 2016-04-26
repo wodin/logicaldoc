@@ -31,6 +31,7 @@ import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * This servlet is responsible for document uploads operations.
@@ -60,7 +61,7 @@ public class UploadServlet extends UploadAction {
 		try {
 			setUploadMax();
 
-			HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
+			HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
 
 			if (session == null)
 				session = request.getSession();
@@ -177,7 +178,7 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void removeItem(HttpServletRequest request, String fieldName) throws UploadActionException {
-		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
+		HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
 		if (session == null)
 			session = request.getSession();
 
@@ -211,7 +212,7 @@ public class UploadServlet extends UploadAction {
 
 		String fieldName = request.getParameter(UConsts.PARAM_SHOW);
 
-		HttpSession session = SessionFilter.getServletSession(request.getParameter("sid"));
+		HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
 
 		if (session == null)
 			session = request.getSession();
@@ -241,7 +242,7 @@ public class UploadServlet extends UploadAction {
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, File> getReceivedFiles(HttpServletRequest request, String sid) {
-		HttpSession session = SessionFilter.getServletSession(sid);
+		HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
 
 		if (session == null)
 			session = request.getSession();
@@ -251,7 +252,7 @@ public class UploadServlet extends UploadAction {
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, String> getReceivedFileNames(HttpServletRequest request, String sid) {
-		HttpSession session = SessionFilter.getServletSession(sid);
+		HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
 		if (session == null)
 			session = request.getSession();
 
@@ -298,7 +299,7 @@ public class UploadServlet extends UploadAction {
 	}
 
 	public static void cleanReceivedFiles(String sid) {
-		HttpSession session = SessionFilter.getServletSession(sid);
+		HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
 		cleanReceivedFiles(session);
 	}
 
