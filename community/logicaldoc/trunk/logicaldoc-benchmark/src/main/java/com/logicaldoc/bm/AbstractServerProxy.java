@@ -29,9 +29,9 @@ public abstract class AbstractServerProxy {
 
 	public abstract WSSearchResult find(String sid, WSSearchOptions options) throws Exception;
 
-	public abstract WSDocument[] list(String sid2, long folderId) throws Exception;
+	public abstract WSDocument[] list(String sid, long folderId) throws Exception;
 
-	public abstract void update(String sid2, WSDocument doc) throws Exception;
+	public abstract void update(String sid, WSDocument doc) throws Exception;
 
 	public abstract WSDocument create(String ticket, WSDocument doc, DataHandler dataHandler) throws Exception;
 

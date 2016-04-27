@@ -61,24 +61,24 @@ public class SoapServerProxy extends AbstractServerProxy {
 		return sid;
 	}
 	
-	public WSFolder[] listChildren(String sid2, long parentFolder) throws Exception {
-		//log.debug("listChildren {}, {}", sid2, parentFolder);
-		return folderClient.listChildren(sid2, parentFolder);
+	public WSFolder[] listChildren(String sid, long parentFolder) throws Exception {
+		//log.debug("listChildren {}, {}", sid, parentFolder);
+		return folderClient.listChildren(sid, parentFolder);
 	}
 
 	@Override
-	public WSSearchResult find(String sid2, WSSearchOptions options) throws Exception {
-		return searchClient.find(sid2, options);
+	public WSSearchResult find(String sid, WSSearchOptions options) throws Exception {
+		return searchClient.find(sid, options);
 	}
 
 	@Override
-	public WSDocument[] list(String sid2, long folderId) throws Exception {
-		return documentClient.listDocuments(sid2, folderId, null);
+	public WSDocument[] list(String sid, long folderId) throws Exception {
+		return documentClient.listDocuments(sid, folderId, null);
 	}
 
 	@Override
-	public void update(String sid2, WSDocument doc) throws Exception {
-		documentClient.update(sid2, doc);
+	public void update(String sid, WSDocument doc) throws Exception {
+		documentClient.update(sid, doc);
 	}
 
 	@Override

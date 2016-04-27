@@ -52,7 +52,7 @@ public class RandomFile {
 			File[] sss  = sourceDir.listFiles();
 			sourceFiles = new SourceFile[sss.length];
 
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties config = Context.get().getRegisty();
 			boolean loadMemory = "true".equals(config.getProperty("Upload.loadinmemory"));
 
 			

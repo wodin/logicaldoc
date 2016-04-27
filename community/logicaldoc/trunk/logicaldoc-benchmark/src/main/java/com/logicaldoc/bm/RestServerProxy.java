@@ -39,56 +39,56 @@ public class RestServerProxy extends AbstractServerProxy {
 
 	public void logout() {
 		System.out.println("logout sid: " + sid);
-		authClient.logout(sid);
+		authClient.logout();
 	}
 
 	public String login(String username, String password) throws Exception {
-		sid = authClient.login(username, password);
+		sid = authClient.getSid();
 		System.out.println("login sid: " + sid);
 		return sid;
 	}
 	
-	public WSFolder[] listChildren(String sid2, long parentFolder) throws Exception {
-		return folderClient.listChildren(sid2, parentFolder);
+	public WSFolder[] listChildren(String sid, long parentFolder) throws Exception {
+		return folderClient.listChildren(parentFolder);
 	}
 
 	@Override
-	public WSSearchResult find(String sid2, WSSearchOptions options) throws Exception {
-		return searchClient.find(sid2, options);
+	public WSSearchResult find(String sid, WSSearchOptions options) throws Exception {
+		return searchClient.find(options);
 	}
 
 	@Override
-	public WSDocument[] list(String sid2, long folderId) throws Exception {
-		return documentClient.listDocuments(sid2, folderId, null);
+	public WSDocument[] list(String sid, long folderId) throws Exception {
+		return documentClient.listDocuments(folderId, null);
 	}
 
 	@Override
-	public void update(String sid2, WSDocument doc) throws Exception {
-		documentClient.update(sid2, doc);
+	public void update(String sid, WSDocument doc) throws Exception {
+		documentClient.update(doc);
 	}
 
 	@Override
-	public WSDocument create(String ticket, WSDocument doc, DataHandler dataHandler) throws Exception {
-		return documentClient.create(ticket, doc, dataHandler);
+	public WSDocument create(String sid, WSDocument doc, DataHandler dataHandler) throws Exception {
+		return documentClient.create(doc, dataHandler);
 	}
 
 	@Override
-	public WSDocument create(String ticket, WSDocument doc, File file) throws Exception {
-		return documentClient.create(ticket, doc, file);
+	public WSDocument create(String sid, WSDocument doc, File file) throws Exception {
+		return documentClient.create(doc, file);
 	}
 
 	@Override
-	public WSFolder create(String ticket, WSFolder newFolder) throws Exception {
-		return folderClient.create(ticket, newFolder);
+	public WSFolder create(String sid, WSFolder newFolder) throws Exception {
+		return folderClient.create(newFolder);
 	}
 
 	@Override
-	public WSFolder createPath(String ticket, Long rootFolder, String currentKey) throws Exception {
-		return folderClient.createPath(ticket, rootFolder, currentKey);
+	public WSFolder createPath(String sid, Long rootFolder, String currentKey) throws Exception {
+		return folderClient.createPath(rootFolder, currentKey);
 	}
 
 	@Override
-	public long create(String ticket, long parentFolder, String fname) throws Exception {
-		return folderClient.createFolder(ticket, parentFolder, fname);
+	public long create(String sid, long parentFolder, String fname) throws Exception {
+		return folderClient.createFolder(parentFolder, fname);
 	}	
 }
