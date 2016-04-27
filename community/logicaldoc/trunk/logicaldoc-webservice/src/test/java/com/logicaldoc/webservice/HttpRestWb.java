@@ -30,7 +30,6 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
 import com.logicaldoc.webservice.model.WSDocument;
-import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.model.WSSearchOptions;
 import com.logicaldoc.webservice.model.WSSearchResult;
 
@@ -42,7 +41,7 @@ public class HttpRestWb {
 
 		String sid = loginJSON();
 
-		//createFolderSimple(sid);
+		createFolderSimple(sid);
 		//createFolderSimpleJSON(sid);
 
 		//listDocuments(sid, 04L);
@@ -112,7 +111,6 @@ public class HttpRestWb {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-		formparams.add(new BasicNameValuePair("sid", sid));
 		formparams.add(new BasicNameValuePair("parentId", String.valueOf(parentId)));
 		formparams.add(new BasicNameValuePair("path", path));
 		
@@ -165,11 +163,9 @@ public class HttpRestWb {
         ObjectWriter ow = mapper.writer();
 		String jsonStr = ow.writeValueAsString(wsso);		
         
-		StringBody sidPart = new StringBody(sid, ContentType.TEXT_PLAIN);
 		StringBody jsonPart = new StringBody(jsonStr, ContentType.APPLICATION_JSON);       
 
         HttpEntity reqEntity = MultipartEntityBuilder.create()
-        		.addPart("sid", sidPart)
                 .addPart("opt", jsonPart)
                 .build();
 		
@@ -199,7 +195,6 @@ public class HttpRestWb {
 		System.out.println("sid: " + sid);
 
 		List<NameValuePair> params = new LinkedList<NameValuePair>();
-		params.add(new BasicNameValuePair("sid", sid));
 		params.add(new BasicNameValuePair("folderId", String.valueOf(parentId)));
 		params.add(new BasicNameValuePair("fileName", "gjhghjgj"));
 
@@ -236,7 +231,6 @@ public class HttpRestWb {
 		System.out.println("sid: " + sid);
 
 		List<NameValuePair> params = new LinkedList<NameValuePair>();
-		params.add(new BasicNameValuePair("sid", sid));
 		params.add(new BasicNameValuePair("folderId", String.valueOf(parentId)));
 
 		StringBuilder requestUrl = new StringBuilder(BASE_PATH + "/services/rest/folder/listChildren");
@@ -287,12 +281,10 @@ public class HttpRestWb {
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String jsonStr = ow.writeValueAsString(wsDoc);		
         
-		StringBody sidPart = new StringBody(sid, ContentType.TEXT_PLAIN);
 		StringBody jsonPart = new StringBody(jsonStr, ContentType.APPLICATION_JSON);
         FileBody binPart = new FileBody(f);        
 
         HttpEntity reqEntity = MultipartEntityBuilder.create()
-        		.addPart("sid", sidPart)
                 .addPart("document", jsonPart)
                 .addPart("content", binPart)
                 .build();
@@ -317,7 +309,6 @@ public class HttpRestWb {
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 		
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-		formparams.add(new BasicNameValuePair("sid", sid));
 		formparams.add(new BasicNameValuePair("folderPath", "/LogicalDOC/USA/NJ/Fair Lawn/createSimple"));
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
 		HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/folder/createSimple");
