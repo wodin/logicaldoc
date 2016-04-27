@@ -63,7 +63,7 @@
         lazy-init="default" parent="ApplicationBaseTransactionProxy">
         <property name="target">
             <bean abstract="false" autowire="default"
-                class="com.logicaldoc.core.security.dao.HibernateFolderHistoryDAO"
+                class="com.logicaldoc.core.folder.HibernateFolderHistoryDAO"
                 lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
                 <property name="config" ref="ContextProperties" />
@@ -74,7 +74,7 @@
         parent="ApplicationBaseTransactionProxy">
         <property name="target">
             <bean abstract="false" autowire="default"
-                class="com.logicaldoc.core.security.dao.HibernateFolderDAO"
+                class="com.logicaldoc.core.folder.HibernateFolderDAO"
                 lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
                 <property name="userDAO" ref="UserDAO" />

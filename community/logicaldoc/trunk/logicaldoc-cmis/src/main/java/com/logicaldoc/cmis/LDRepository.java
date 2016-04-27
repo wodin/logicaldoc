@@ -122,19 +122,19 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
+import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.folder.FolderEvent;
+import com.logicaldoc.core.folder.FolderHistory;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
-import com.logicaldoc.core.security.Folder;
-import com.logicaldoc.core.security.FolderEvent;
-import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
@@ -233,7 +233,7 @@ public class LDRepository {
 
 		repositoryInfo.setId(id);
 
-		long rootId = folderDao.findRoot(SessionManager.getInstance().get(sid).getTenantId()).getId();
+		long rootId = folderDao.findRoot(SessionManager.get().get(sid).getTenantId()).getId();
 		if (root.getId() == rootId) {
 			repositoryInfo.setName("Main Repository");
 			repositoryInfo.setDescription("Main Repository");
@@ -2531,7 +2531,7 @@ public class LDRepository {
 	 */
 	private User getSessionUser() {
 		if (sid != null) {
-			UserSession session = SessionManager.getInstance().get(sid);
+			UserSession session = SessionManager.get().get(sid);
 			if (session.getStatus() != UserSession.STATUS_OPEN)
 				return null;
 			return userDao.findById(session.getUserId());
@@ -2555,7 +2555,7 @@ public class LDRepository {
 
 		long userId = 0;
 		if (sid != null) {
-			UserSession session = SessionManager.getInstance().get(sid);
+			UserSession session = SessionManager.get().get(sid);
 			if (session.getStatus() != UserSession.STATUS_OPEN)
 				return false;
 			else

@@ -42,7 +42,7 @@ public class HibernateDocumentNoteDAO extends HibernatePersistentObjectDAO<Docum
 			}
 		} catch (Throwable e) {
 			if (transaction != null && StringUtils.isNotEmpty(transaction.getSessionId())) {
-				UserSession session = SessionManager.getInstance().get(transaction.getSessionId());
+				UserSession session = SessionManager.get().get(transaction.getSessionId());
 				session.logError(e.getMessage());
 			}
 			log.error(e.getMessage(), e);

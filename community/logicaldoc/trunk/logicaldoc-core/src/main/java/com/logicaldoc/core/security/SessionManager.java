@@ -34,7 +34,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	private SessionManager() {
 	}
 
-	public final static SessionManager getInstance() {
+	public final static SessionManager get() {
 		return instance;
 	}
 

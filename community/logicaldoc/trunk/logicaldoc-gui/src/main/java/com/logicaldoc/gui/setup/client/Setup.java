@@ -193,7 +193,7 @@ public class Setup implements EntryPoint {
 		repositoryForm.setID("repositoryForm");
 		repositoryForm.setValuesManager(vm);
 		TextItem repositoryItem = ItemFactory.newTextItem(REPOSITORY_FOLDER, "repofolder", null);
-		repositoryItem.setWidth(200);
+		repositoryItem.setWidth(400);
 		repositoryItem.setRequired(true);
 		repositoryItem.setWrapTitle(false);
 		repositoryItem.setDefaultValue(getDefaultFolder());
@@ -277,6 +277,7 @@ public class Setup implements EntryPoint {
 		TextItem dbDriver = ItemFactory.newTextItem(DB_DRIVER, "driverclass", null);
 		dbDriver.setVisible(false);
 		dbDriver.setWrapTitle(false);
+		dbDriver.setWidth(300);
 		dbDriver.setShowIfCondition(new FormItemIfFunction() {
 			public boolean execute(FormItem item, Object value, DynamicForm form) {
 				return !I18N.message(EMBEDDED).equals(databaseForm.getValue(DB_TYPE));
@@ -287,7 +288,7 @@ public class Setup implements EntryPoint {
 
 		// The connection URL to external DB
 		TextItem dbUrl = ItemFactory.newTextItem(DB_URL, "connectionurl", null);
-		dbUrl.setWidth(200);
+		dbUrl.setWidth(400);
 		dbUrl.setVisible(false);
 		dbUrl.setWrapTitle(false);
 		dbUrl.setShowIfCondition(new FormItemIfFunction() {

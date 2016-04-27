@@ -3,7 +3,7 @@ package com.logicaldoc.core.document;
 import java.io.File;
 import java.io.InputStream;
 
-import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.store.Storer;
 
 /**

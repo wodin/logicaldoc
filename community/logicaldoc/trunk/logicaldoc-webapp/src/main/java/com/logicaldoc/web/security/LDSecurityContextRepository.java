@@ -37,13 +37,13 @@ public class LDSecurityContextRepository implements SecurityContextRepository {
 	@Override
 	public SecurityContext loadContext(HttpRequestResponseHolder request) {
 		String sid = SessionUtil.getSid(request.getRequest());
-		if (sid == null || !SessionManager.getInstance().isValid(sid))
+		if (sid == null || !SessionManager.get().isValid(sid))
 			sid = null;
 
 		if (sid == null)
 			return SecurityContextHolder.createEmptyContext();
 
-		UserSession session = SessionManager.getInstance().get(sid);
+		UserSession session = SessionManager.get().get(sid);
 
 		LDAuthenticationToken token = new LDAuthenticationToken(session.getUserName(), "", null);
 		token.setSid(sid);

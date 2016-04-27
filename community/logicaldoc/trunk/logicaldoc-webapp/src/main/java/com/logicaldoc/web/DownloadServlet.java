@@ -19,12 +19,12 @@ import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.document.pdf.PdfConverterManager;
+import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
-import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.AuthenticationUtil;
@@ -102,7 +102,7 @@ public class DownloadServlet extends HttpServlet {
 			/*
 			 * We can reach this point only if a valid session was created
 			 */
-			UserSession session = SessionManager.getInstance().get(sessionId);
+			UserSession session = SessionManager.get().get(sessionId);
 			// Load the user associated to the session
 			UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 			user = udao.findById(session.getUserId());
@@ -120,7 +120,7 @@ public class DownloadServlet extends HttpServlet {
 			log.error(ex.getMessage(), ex);
 		} finally {
 			if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null && sessionId != null)
-				SessionManager.getInstance().kill(sessionId);
+				SessionManager.get().kill(sessionId);
 		}
 	}
 

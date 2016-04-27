@@ -24,10 +24,10 @@ import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.pdf.PdfConverterManager;
-import com.logicaldoc.core.security.Folder;
-import com.logicaldoc.core.security.FolderEvent;
-import com.logicaldoc.core.security.FolderHistory;
-import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.folder.FolderEvent;
+import com.logicaldoc.core.folder.FolderHistory;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 

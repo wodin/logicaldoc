@@ -62,7 +62,7 @@
         <property name="nature" type="int" column="ld_nature" not-null="true"/>
         <property name="formId" type="long" column="ld_formid" />
 
-		<many-to-one name="folder" class="com.logicaldoc.core.security.Folder" column="ld_folderid" />
+		<many-to-one name="folder" class="com.logicaldoc.core.folder.Folder" column="ld_folderid" />
         
 		<many-to-one name="template" class="com.logicaldoc.core.document.DocumentTemplate" column="ld_templateid" />
 		

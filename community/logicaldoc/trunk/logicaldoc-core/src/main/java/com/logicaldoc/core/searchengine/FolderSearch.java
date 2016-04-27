@@ -9,9 +9,9 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.Tenant;
-import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.sql.SqlUtil;
 

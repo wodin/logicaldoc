@@ -1,4 +1,4 @@
-package com.logicaldoc.core.security.dao;
+package com.logicaldoc.core.folder;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -11,7 +11,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
-import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
 

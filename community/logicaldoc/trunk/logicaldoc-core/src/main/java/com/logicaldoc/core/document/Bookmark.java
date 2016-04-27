@@ -2,7 +2,7 @@ package com.logicaldoc.core.document;
 
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.dao.FolderDAO;
+import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 

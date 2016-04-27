@@ -41,7 +41,7 @@ public class LDAuthenticationSuccessHandler implements AuthenticationSuccessHand
 			StringBuffer successUrl = new StringBuffer(param);
 			log.info("Authentication of {} was succesful, redirecting to {}", authentication.getName(), successUrl);
 
-			UserSession session = SessionManager.getInstance().get(token.getSid());
+			UserSession session = SessionManager.get().get(token.getSid());
 			if (param.indexOf('?') != -1)
 				successUrl.append("&");
 			else

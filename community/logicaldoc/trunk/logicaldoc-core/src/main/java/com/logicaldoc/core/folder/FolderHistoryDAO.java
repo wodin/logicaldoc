@@ -1,11 +1,10 @@
-package com.logicaldoc.core.security.dao;
+package com.logicaldoc.core.folder;
 
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
-import com.logicaldoc.core.security.FolderHistory;
 
 /**
  * DAO for <code>FolderHistory</code> handling.

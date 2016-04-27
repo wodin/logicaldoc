@@ -1,4 +1,6 @@
-package com.logicaldoc.core.security;
+package com.logicaldoc.core.folder;
+
+import com.logicaldoc.core.security.Permission;
 
 /**
  * This class represents security permissions for a group in relation to a

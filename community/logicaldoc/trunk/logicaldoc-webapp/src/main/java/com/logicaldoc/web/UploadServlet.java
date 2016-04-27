@@ -96,7 +96,7 @@ public class UploadServlet extends UploadAction {
 
 			String tenant = Tenant.DEFAULT_NAME;
 			if (request.getParameter("sid") != null) {
-				UserSession userSession = SessionManager.getInstance().get(request.getParameter("sid"));
+				UserSession userSession = SessionManager.get().get(request.getParameter("sid"));
 				tenant = userSession.getTenantName();
 			}
 

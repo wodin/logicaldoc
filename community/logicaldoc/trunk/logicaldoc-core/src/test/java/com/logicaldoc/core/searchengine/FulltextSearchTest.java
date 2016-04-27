@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
-import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.plugin.PluginRegistry;
 

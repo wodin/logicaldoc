@@ -10,7 +10,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import com.logicaldoc.core.ExtensibleObject;
 import com.logicaldoc.core.TransactionalObject;
-import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.LocaleUtil;
 

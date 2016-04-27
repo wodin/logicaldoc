@@ -43,7 +43,7 @@ public class SessionsDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 			response.setHeader("Expires", "0");
 
-			List<UserSession> sessions = SessionManager.getInstance().getSessions();
+			List<UserSession> sessions = SessionManager.get().getSessions();
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -69,7 +69,7 @@ public class SessionsDataServlet extends HttpServlet {
 					continue;
 
 				// Just to update the session status
-				SessionManager.getInstance().get(session.getId());
+				SessionManager.get().get(session.getId());
 
 				writer.print("<session>");
 				writer.print("<sid><![CDATA[" + session.getId() + "]]></sid>");
