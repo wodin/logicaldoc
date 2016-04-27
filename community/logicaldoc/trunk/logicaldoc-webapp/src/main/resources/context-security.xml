@@ -66,6 +66,12 @@
             access="isAuthenticated()" />
         <security:intercept-url pattern="/mobile/**"
             access="isAuthenticated()" />
+        <security:intercept-url pattern="/setup/**"
+            access="permitAll" />
+        <security:intercept-url pattern="/setup"
+            access="permitAll" />
+        <security:intercept-url pattern="/setup.jsp"
+            access="permitAll" />
         
         <!-- Login page -->
         <security:form-login login-page="/login.jsp"
