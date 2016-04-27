@@ -6,8 +6,8 @@
 <%@ include file="detectmobile.jsp" %>
 
 <script type="text/javascript">
-	var j_loginurl='${request.contextPath}/<%=LOGIN_PAGE%>';
-	var j_successurl='${request.contextPath}/frontend.jsp';
+	var j_loginurl='${pageContext.request.contextPath}/<%=LOGIN_PAGE%>';
+	var j_successurl='${pageContext.request.contextPath}/frontend.jsp';
 	var j_failureurl=j_loginurl;
 	var j_layout='standard';
 </script>
