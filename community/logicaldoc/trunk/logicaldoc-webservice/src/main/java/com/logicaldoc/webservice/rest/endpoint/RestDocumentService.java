@@ -9,6 +9,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -225,33 +226,19 @@ public class RestDocumentService extends SoapDocumentService implements Document
 		return super.listDocuments(sid, folderId, fileName);
 	}
 
-	@Override
-	@POST
-	@Path("/update")
-	@Consumes({ MediaType.MULTIPART_FORM_DATA })
-	// The "document" comes in the POST request body (encoded as JSON).
-	public void update(List<Attachment> atts) throws Exception {
-		log.debug("update()");
-
-		String sid = validateSession();
-
-		WSDocument document = null;
-
-		for (Attachment att : atts) {
-			if ("document".equals(att.getContentDisposition().getParameter("name"))) {
-				// log.debug("document attachment found.");
-				document = att.getObject(WSDocument.class);
-			}
-		}
-
-		super.update(sid, document);
-	}
-
 	@GET
 	@Path("/getContent")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	public DataHandler getContent(@QueryParam("docId") long docId) throws Exception {
 		String sid = validateSession();
 		return super.getContent(sid, docId);
+	}
+
+	@Override
+	@PUT
+	@Path("/update")
+	public void update(WSDocument document) throws Exception {
+		String sid = validateSession();
+		super.update(sid, document);
 	}
 }
