@@ -19,6 +19,7 @@ import org.springframework.context.event.ContextStartedEvent;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.core.io.Resource;
 
+import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.event.SystemEvent;
 import com.logicaldoc.util.event.SystemEventStatus;
 
@@ -42,8 +43,16 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 		Context.instance = this;
 	}
 
-	public static Context getInstance() {
+	public static Context get() {
 		return instance;
+	}
+
+	/**
+	 * Gets the registry with all the configuration properties for this context
+	 */
+	public ContextProperties getRegisty() {
+		ContextProperties registry = (ContextProperties) getBean(ContextProperties.class);
+		return registry;
 	}
 
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
@@ -79,7 +88,7 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 	 * @param clazz The bean identifier as class name
 	 * @return The bean instance
 	 */
-	public Object getBean(Class clazz) {
+	public Object getBean(@SuppressWarnings("rawtypes") Class clazz) {
 		String id = clazz.getName();
 
 		if (!applicationContext.containsBean(id))
@@ -114,7 +123,7 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 		CacheManager cm1 = CacheManager.getInstance();
 		cm1.shutdown();
 
-		for (Object cm : Context.getInstance().getBeansOfType(CacheManager.class)) {
+		for (Object cm : Context.get().getBeansOfType(CacheManager.class)) {
 			((CacheManager) cm).shutdown();
 		}
 	}
@@ -157,7 +166,7 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 
 	public Resource[] getResources(String resourcePattern) {
 		try {
-			return this.applicationContext.getResources(resourcePattern);
+			return Context.applicationContext.getResources(resourcePattern);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -171,7 +180,7 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 	 * @return
 	 */
 	public Resource getResource(String resourceLocation) {
-		return this.applicationContext.getResource(resourceLocation);
+		return Context.applicationContext.getResource(resourceLocation);
 	}
 
 	/**

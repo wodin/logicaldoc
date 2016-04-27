@@ -335,7 +335,7 @@ public class WSUser {
 			user.setEmailSignature(getEmailSignature());
 
 			if (getGroupIds().length > 0) {
-				GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+				GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 				Set<Group> groups = new HashSet<Group>();
 				for (long groupId : getGroupIds()) {
 					Group group = groupDao.findById(groupId);

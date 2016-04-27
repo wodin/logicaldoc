@@ -44,14 +44,14 @@ public class CommentService extends AbstractService {
 
 		User user = validateSession(sid);
 
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO ddao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		Long docId = new Long(docid);
 		Document document = ddao.findById(docId);
 
 		checkReadEnable(user, document.getFolder().getId());
 		boolean writeEnabled = isWriteEnabled(user, document.getFolder().getId());
 
-		DocumentNoteDAO dndao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
+		DocumentNoteDAO dndao = (DocumentNoteDAO) Context.get().getBean(DocumentNoteDAO.class);
 
 		List<DocumentNote> notes = dndao.findByDocId(docId);
 
@@ -81,7 +81,7 @@ public class CommentService extends AbstractService {
 
 	private boolean isWriteEnabled(User user, long folderId) {
 		try {
-			FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			if (dao.isPermissionEnabled(Permission.WRITE, folderId, user.getId())) {
 				return true;
 			}
@@ -110,7 +110,7 @@ public class CommentService extends AbstractService {
 		note.setDate(new Date());
 		note.setMessage(content);
 
-		DocumentNoteDAO dndao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
+		DocumentNoteDAO dndao = (DocumentNoteDAO) Context.get().getBean(DocumentNoteDAO.class);
 		dndao.store(note);
 
 		return Response.ok(comment).build();
@@ -132,7 +132,7 @@ public class CommentService extends AbstractService {
 		note.setDate(new Date());
 		note.setMessage(comment.getContent());
 
-		DocumentNoteDAO dndao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
+		DocumentNoteDAO dndao = (DocumentNoteDAO) Context.get().getBean(DocumentNoteDAO.class);
 		dndao.store(note);
 
 		return Response.ok(comment).build();

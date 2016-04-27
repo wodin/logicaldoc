@@ -268,7 +268,7 @@ public class ResourceImpl implements Resource {
 			personRequest = (Long) session.getObject("id");
 		}
 
-		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Set<Permission> permissions = null;
 		long fid = 0;
 		if (isFolder)

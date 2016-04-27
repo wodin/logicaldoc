@@ -66,7 +66,7 @@ public class ZipExport {
 	 * @return The Stream of the zip archive
 	 */
 	public ByteArrayOutputStream process(FolderHistory transaction, boolean pdfConversion) {
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Folder folder = folderDao.findFolder(transaction.getFolderId());
 		this.userId = transaction.getUserId();
 		this.startFolderId = folder.getId();
@@ -121,7 +121,7 @@ public class ZipExport {
 	 *        the original files
 	 */
 	public void process(long[] docIds, OutputStream out, boolean pdfConversion, History transaction) {
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO ddao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		zos = new ZipArchiveOutputStream(out);
 		zos.setEncoding("UTF-8");
 		zos.setMethod(ZipEntry.DEFLATED);
@@ -178,7 +178,7 @@ public class ZipExport {
 			return;
 		} else {
 			addFolderDocuments(folder, pdfConversion, sid);
-			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			Collection<Folder> children = folderDao.findByUserId(userId, folder.getId());
 			Iterator<Folder> iter = children.iterator();
 
@@ -192,7 +192,7 @@ public class ZipExport {
 	 * Adds all folder's documents
 	 */
 	protected void addFolderDocuments(Folder folder, boolean pdfConversion, String sid) {
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO ddao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		Collection<Document> docs = ddao.findByFolder(folder.getId(), null);
 
 		for (Document document : docs) {
@@ -213,11 +213,11 @@ public class ZipExport {
 	 * Adds a single document into the archive in the specified path.
 	 */
 	private void addDocument(String path, Document document, boolean pdfConversion, String sid) {
-		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		Storer storer = (Storer) Context.get().getBean(Storer.class);
 		String resource = storer.getResourceName(document, null, null);
 
 		if (pdfConversion && !"pdf".equals(FilenameUtils.getExtension(document.getFileName().toLowerCase()))) {
-			PdfConverterManager manager = (PdfConverterManager) Context.getInstance()
+			PdfConverterManager manager = (PdfConverterManager) Context.get()
 					.getBean(PdfConverterManager.class);
 			try {
 				manager.createPdf(document, sid);
@@ -268,7 +268,7 @@ public class ZipExport {
 	 * @return The full path
 	 */
 	private String getZipEntryPath(Folder folder) {
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
 		long rootId = folderDao.findRoot(folder.getTenantId()).getId();
 		if (folder.getId() == rootId)

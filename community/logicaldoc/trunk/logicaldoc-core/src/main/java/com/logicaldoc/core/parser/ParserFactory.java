@@ -210,7 +210,7 @@ public class ParserFactory {
 		parser.setEncoding(encoding);
 
 		if (tenantId != Tenant.DEFAULT_ID) {
-			TenantDAO dao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+			TenantDAO dao = (TenantDAO) Context.get().getBean(TenantDAO.class);
 			Tenant tenant = dao.findById(tenantId);
 			parser.setTenant(tenant.getName());
 		}
@@ -283,7 +283,7 @@ public class ParserFactory {
 	 * @param aliases Array of extension aliases (eg. test, acme ...)
 	 */
 	public static void setAliases(String ext, String[] aliases) {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		String pAlias = PARSER_ALIAS + ext.toLowerCase();
 		if (aliases == null || aliases.length == 0) {
 			config.setProperty(pAlias, "");
@@ -309,10 +309,10 @@ public class ParserFactory {
 	private static void initAliases() {
 		aliases.clear();
 
-		if (Context.getInstance() == null)
+		if (Context.get() == null)
 			return;
 
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		for (Object key : config.keySet()) {
 			if (key.toString().startsWith(PARSER_ALIAS)) {
 				String ext = key.toString().substring(PARSER_ALIAS.length());

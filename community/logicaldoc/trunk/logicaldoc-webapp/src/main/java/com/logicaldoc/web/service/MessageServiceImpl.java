@@ -42,7 +42,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	@Override
 	public void delete(String sid, long[] ids) throws ServerException {
 		ServiceUtil.validateSession(sid);
-		Context context = Context.getInstance();
+		Context context = Context.get();
 		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 		for (long id : ids) {
 			dao.delete(id);
@@ -53,7 +53,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	public GUIMessage getMessage(String sid, long messageId, boolean markAsRead) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 			SystemMessage message = dao.findById(messageId);
 			dao.initialize(message);
@@ -117,7 +117,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	}
 
 	private void saveMessage(GUIMessage message, UserSession session, long recipientId) {
-		Context context = Context.getInstance();
+		Context context = Context.get();
 		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 		UserDAO uDao = (UserDAO) context.getBean(UserDAO.class);
 
@@ -150,7 +150,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	@Override
 	public GUIMessageTemplate[] loadTemplates(String sid, String language) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
-		Context context = Context.getInstance();
+		Context context = Context.get();
 
 		try {
 			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
@@ -190,7 +190,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
 
 			for (GUIMessageTemplate t : templates) {
@@ -215,7 +215,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
 
 			for (long id : ids) {

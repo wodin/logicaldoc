@@ -64,7 +64,7 @@ public class DeletedDocsDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "no-store");
 			response.setDateHeader("Expires", 0);
 
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 

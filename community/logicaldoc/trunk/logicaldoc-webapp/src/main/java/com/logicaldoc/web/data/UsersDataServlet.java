@@ -60,7 +60,7 @@ public class UsersDataServlet extends HttpServlet {
 				writer.print("<user><id></id><username></username><name></name></user>");
 
 			if (groupIdOrName != null && !groupIdOrName.trim().isEmpty()) {
-				GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+				GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 				Group group = null;
 				try {
 					group = groupDao.findById(Long.parseLong(groupIdOrName));
@@ -102,7 +102,7 @@ public class UsersDataServlet extends HttpServlet {
 					writer.print("</user>");
 				}
 			} else {
-				UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+				UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 				String query = "select A.ld_id, A.ld_username, A.ld_enabled, A.ld_name, A.ld_firstname, A.ld_email, A.ld_telephone, "
 						+ "A.ld_telephone2, A.ld_certsubject, A.ld_keydigest, B.ld_id "
 						+ "from ld_user A, ld_group B where A.ld_deleted = 0 and A.ld_type = 0 and B.ld_type=1 and A.ld_tenantid="

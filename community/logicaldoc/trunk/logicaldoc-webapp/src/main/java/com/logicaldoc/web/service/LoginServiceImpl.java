@@ -49,8 +49,8 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 	@Override
 	public GUIUser getUser(String username) {
 		try {
-			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-			TenantDAO tenantDao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+			UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
+			TenantDAO tenantDao = (TenantDAO) Context.get().getBean(TenantDAO.class);
 
 			User user = userDao.findByUserName(username);
 			if (user == null)
@@ -65,7 +65,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 
 			Tenant tenant = tenantDao.findById(user.getTenantId());
 
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 			usr.setPasswordMinLenght(Integer.parseInt(config.getProperty(tenant.getName() + ".password.size")));
 
 			return usr;
@@ -77,7 +77,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 
 	@Override
 	public void resetPassword(String username, String emailAddress, String productName) throws ServerException {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		User user = userDao.findByUserName(username);
 
 		EMail email;
@@ -110,7 +110,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 			ticket.setExpired(cal.getTime());
 
 			// Store the ticket
-			TicketDAO ticketDao = (TicketDAO) Context.getInstance().getBean(TicketDAO.class);
+			TicketDAO ticketDao = (TicketDAO) Context.get().getBean(TicketDAO.class);
 			ticketDao.store(ticket);
 
 			// Try to clean the DB from old tickets

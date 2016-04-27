@@ -54,7 +54,7 @@ public class BookmarksDataServlet extends HttpServlet {
 			writer.write("<list>");
 
 			List<Object> records = new ArrayList<Object>();
-			BookmarkDAO dao = (BookmarkDAO) Context.getInstance().getBean(BookmarkDAO.class);
+			BookmarkDAO dao = (BookmarkDAO) Context.get().getBean(BookmarkDAO.class);
 
 			/*
 			 * Search for folders first.

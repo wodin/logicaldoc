@@ -75,7 +75,7 @@ public class FSStorer implements Storer {
 	 * @return The document's container
 	 */
 	public File getContainer(long docId) {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		Document document = docDao.findById(docId);
 
 		if (document == null) {
@@ -127,7 +127,7 @@ public class FSStorer implements Storer {
 
 	@Override
 	public String getResourceName(Document doc, String fileVersion, String suffix) {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		Document document = doc;
 
 		/*
@@ -161,7 +161,7 @@ public class FSStorer implements Storer {
 
 	@Override
 	public String getResourceName(long docId, String fileVersion, String suffix) {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		return getResourceName(doc, fileVersion, suffix);
 	}

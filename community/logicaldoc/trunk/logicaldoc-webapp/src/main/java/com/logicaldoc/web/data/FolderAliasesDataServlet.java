@@ -48,7 +48,7 @@ public class FolderAliasesDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			DocumentDAO dao = (DocumentDAO) context.getBean(DocumentDAO.class);
 			FolderDAO folderDAO = (FolderDAO) context.getBean(FolderDAO.class);
 			Collection<Long> ids = folderDAO.findFolderIdByUserId(session.getUserId(), null, true);

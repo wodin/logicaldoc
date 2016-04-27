@@ -41,9 +41,9 @@ public class InMemoryZipImport extends ZipImport {
 		this.zipFile = zipsource;
 		this.sessionId = sessionId;
 
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		FolderDAO fDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
+		FolderDAO fDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+		DocumentManager docManager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 
 		this.user = userDao.findById(userId);
 

@@ -52,7 +52,7 @@ public class TasksDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "no-store");
 			response.setDateHeader("Expires", 0);
 
-			TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
+			TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 

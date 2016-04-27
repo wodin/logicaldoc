@@ -58,7 +58,7 @@ public class FoldersDataServlet extends HttpServlet {
 			UserSession session = ServiceUtil.validateSession(request);
 			long tenantId = session.getTenantId();
 
-			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			long parent = Folder.ROOTID;
 
 			if ("/".equals(request.getParameter("parent"))) {
@@ -71,7 +71,7 @@ public class FoldersDataServlet extends HttpServlet {
 
 			Folder parentFolder = folderDao.findFolder(parent);
 
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());
 			udao.initialize(user);

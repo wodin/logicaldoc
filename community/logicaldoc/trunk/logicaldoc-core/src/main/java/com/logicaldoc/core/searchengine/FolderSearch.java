@@ -31,7 +31,7 @@ public class FolderSearch extends Search {
 	public void internalSearch() throws Exception {
 		prepareExpression();
 
-		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		FolderSearchOptions fso = (FolderSearchOptions) getOptions();
 
 		List<Object> params = new ArrayList<Object>();
@@ -70,7 +70,7 @@ public class FolderSearch extends Search {
 
 		FolderSearchOptions fso = (FolderSearchOptions) getOptions();
 
-		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		if (StringUtils.isNotEmpty(fso.getFolderName())) {
 			query.append(" and " + (dao.getDbms().endsWith("hsqldb") ? "lcase" : "lower") + "(ld_name) like '%");
 			query.append(SqlUtil.doubleQuotes(fso.getFolderName().trim().toLowerCase()));
@@ -93,7 +93,7 @@ public class FolderSearch extends Search {
 
 		boolean searchInSingleFolder = (options.getFolderId() != null && !options.isSearchInSubPath());
 
-		FolderDAO folderDAO = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDAO = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
 		if (!searchInSingleFolder) {
 			if (!(options.getFolderId() == null && searchUser.isInGroup("admin"))) {

@@ -51,8 +51,8 @@ public class TagsDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "no-store");
 			response.setDateHeader("Expires", 0);
 
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+			ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 			String mode = config.getProperty(session.getTenantName() + ".tag.mode");
 
 			String firstLetter = request.getParameter("firstLetter");
@@ -70,7 +70,7 @@ public class TagsDataServlet extends HttpServlet {
 			if (("preset".equals(firstLetter) || "preset".equals(mode)) && "true".equals(editing)) {
 				// We have to return the preset only, since the user is editing
 				// a document
-				GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+				GenericDAO gDao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 				List<Generic> buf = gDao.findByTypeAndSubtype("tag", null, null, session.getTenantId());
 				for (Generic generic : buf)
 					tgs.put(generic.getSubtype(), 0L);

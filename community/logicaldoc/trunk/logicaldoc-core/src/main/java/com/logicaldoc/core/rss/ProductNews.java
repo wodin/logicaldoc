@@ -65,7 +65,7 @@ public class ProductNews extends Task {
 			// Clean the DB from feed messages older that 1 year.
 			feedMessageDao.deleteOld();
 
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties config = Context.get().getRegisty();
 			String url = config.getProperty("news.url");
 			if (StringUtils.isEmpty(url))
 				url = "http://www.logicaldoc.com/news/rss.html";
@@ -135,7 +135,7 @@ public class ProductNews extends Task {
 	 * Creates the system message for the administrator user.
 	 */
 	private void createAlerts() {
-		SystemMessageDAO systemMessageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+		SystemMessageDAO systemMessageDao = (SystemMessageDAO) Context.get().getBean(SystemMessageDAO.class);
 		Map<Locale, Set<Recipient>> recipientsLocalesMap = new HashMap<Locale, Set<Recipient>>();
 		try {
 			for (Long userId : userDao.findAllIds()) {

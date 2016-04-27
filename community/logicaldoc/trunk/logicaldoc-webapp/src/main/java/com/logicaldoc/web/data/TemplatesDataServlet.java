@@ -50,7 +50,7 @@ public class TemplatesDataServlet extends HttpServlet {
 
 			List<Long> templateIds = new ArrayList<Long>();
 			if (StringUtils.isNotEmpty(folderId)) {
-				GenericDAO genericDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+				GenericDAO genericDao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 				// Get all the 'wf-trigger' generics on this folder
 				List<Generic> triggerGenerics = genericDao.findByTypeAndSubtype("wf-trigger", folderId + "-%", null,
 						session.getTenantId());
@@ -84,7 +84,7 @@ public class TemplatesDataServlet extends HttpServlet {
 				writer.print("</template>");
 			}
 
-			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
 			List<DocumentTemplate> templates = null;
 			if (type != null)
 				templates = dao.findByType(type, session.getTenantId());

@@ -58,8 +58,8 @@ public class ConvertPdf extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		User user = ServiceUtil.getSessionUser(request);
 
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		VersionDAO versionDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		VersionDAO versionDao = (VersionDAO) Context.get().getBean(VersionDAO.class);
 
 		try {
 			long docId = Long.parseLong(request.getParameter(DOCUMENT_ID));

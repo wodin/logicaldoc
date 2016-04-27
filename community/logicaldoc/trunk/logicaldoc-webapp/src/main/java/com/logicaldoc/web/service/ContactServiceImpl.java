@@ -40,7 +40,7 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 		ServiceUtil.validateSession(sid);
 
 		try {
-			ContactDAO dao = (ContactDAO) Context.getInstance().getBean(ContactDAO.class);
+			ContactDAO dao = (ContactDAO) Context.get().getBean(ContactDAO.class);
 			for (long id : ids) {
 				dao.delete(id);
 			}
@@ -53,7 +53,7 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	public void save(String sid, GUIContact contact) throws ServerException {
 		ServiceUtil.validateSession(sid);
 		try {
-			ContactDAO dao = (ContactDAO) Context.getInstance().getBean(ContactDAO.class);
+			ContactDAO dao = (ContactDAO) Context.get().getBean(ContactDAO.class);
 			Contact con = dao.findById(contact.getId());
 			if (con == null)
 				con = new Contact();
@@ -76,7 +76,7 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
-			ContactDAO dao = (ContactDAO) Context.getInstance().getBean(ContactDAO.class);
+			ContactDAO dao = (ContactDAO) Context.get().getBean(ContactDAO.class);
 			Contact contact = dao.findById(id);
 			return fromContact(contact);
 		} catch (Throwable t) {
@@ -111,7 +111,7 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
 
-		ContactDAO dao = (ContactDAO) Context.getInstance().getBean(ContactDAO.class);
+		ContactDAO dao = (ContactDAO) Context.get().getBean(ContactDAO.class);
 
 		List<GUIContact> contacts = new ArrayList<GUIContact>();
 

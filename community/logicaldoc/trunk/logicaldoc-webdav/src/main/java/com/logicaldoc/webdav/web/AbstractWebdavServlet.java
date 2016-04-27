@@ -143,7 +143,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 					&& !(DavMethods.DAV_VERSION_CONTROL == methodCode || DavMethods.DAV_REPORT == methodCode);
 			WebdavResponse webdavResponse = new WebdavResponseImpl(response, noCache);
 
-			AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+			AuthenticationChain authenticationChain = (AuthenticationChain) Context.get().getBean(
 					AuthenticationChain.class);
 			String sid = null;
 			String username = null;
@@ -203,7 +203,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				DavSessionImpl davSession = new DavSessionImpl();
 				davSession.setTenantId(SessionManager.getInstance().get(sid).getTenantId());
 				davSession.putObject("sid", sid);
-				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+				UserDAO dao = (UserDAO) Context.get().getBean(UserDAO.class);
 				User user = dao.findByUserName(username);
 				dao.initialize(user);
 				davSession.putObject("id", user.getId());

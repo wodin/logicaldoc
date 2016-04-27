@@ -59,7 +59,7 @@ public class DownloadServlet extends HttpServlet {
 		String sessionId = null;
 		User user = null;
 
-		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+		AuthenticationChain authenticationChain = (AuthenticationChain) Context.get().getBean(
 				AuthenticationChain.class);
 
 		if (!ServletIOUtil.isPreviewAgent(request)) {
@@ -104,7 +104,7 @@ public class DownloadServlet extends HttpServlet {
 			 */
 			UserSession session = SessionManager.getInstance().get(sessionId);
 			// Load the user associated to the session
-			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 			user = udao.findById(session.getUserId());
 			if (user == null)
 				return;
@@ -126,9 +126,9 @@ public class DownloadServlet extends HttpServlet {
 
 	protected void downloadDocument(HttpServletRequest request, HttpServletResponse response, String sid, User user)
 			throws FileNotFoundException, IOException, ServletException {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		VersionDAO versDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		VersionDAO versDao = (VersionDAO) Context.get().getBean(VersionDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
 		// Flag indicating to download only indexed text
 		String downloadText = request.getParameter("downloadText");
@@ -156,7 +156,7 @@ public class DownloadServlet extends HttpServlet {
 					&& !doc.getFileName().toLowerCase().endsWith(".pdf")) {
 				
 				// Generate the PDF conversion
-				PdfConverterManager manager = (PdfConverterManager) Context.getInstance().getBean(
+				PdfConverterManager manager = (PdfConverterManager) Context.get().getBean(
 						PdfConverterManager.class);
 				manager.createPdf(doc, fileVersion, sid);
 

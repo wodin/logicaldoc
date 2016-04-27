@@ -30,7 +30,7 @@ public class TagSearch extends Search {
 	public void internalSearch() throws Exception {
 		prepareExpression();
 
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		hits.addAll((List<Hit>) dao.query(options.getExpression(), null, new HitMapper(), options.getMaxHits()));
 
 		moreHitsPresent = (hits.size() >= options.getMaxHits());
@@ -117,7 +117,7 @@ public class TagSearch extends Search {
 			query.append(" and A.ld_docref is not null and REF.ld_deleted=0 and A.ld_docref = REF.ld_id and A.ld_docref in ");
 		else
 			query.append(" and A.ld_docref is null and A.ld_id in ");
-		DocumentDAO docDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDAO = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		List<Long> precoll = docDAO.findDocIdByUserIdAndTag(options.getUserId(), options.getExpression());
 		String buf = precoll.toString().replace("[", "(").replace("]", ")");
 		query.append(!"()".equals(buf) ? buf : "(0)");

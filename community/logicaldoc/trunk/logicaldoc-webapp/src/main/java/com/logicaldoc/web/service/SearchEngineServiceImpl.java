@@ -40,11 +40,11 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 		try {
 			GUISearchEngine searchEngine = new GUISearchEngine();
 
-			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+			SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 			searchEngine.setLocked(indexer.isLocked());
 			searchEngine.setEntries(indexer.getCount());
 
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 			searchEngine.setExcludePatters(conf.getProperty(session.getTenantName() + ".index.excludes"));
 			searchEngine.setIncludePatters(conf.getProperty(session.getTenantName() + ".index.includes"));
 			searchEngine.setDir(conf.getProperty("index.dir"));
@@ -87,7 +87,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 		if (dropIndex)
 			try {
-				SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+				SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 				indexer.dropIndex();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
@@ -97,7 +97,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 		Runnable task = new Runnable() {
 			public void run() {
 				try {
-					DocumentDAO documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+					DocumentDAO documentDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 					documentDao.bulkUpdate("set ld_indexed=0 where ld_indexed=1 "
 							+ (!dropIndex ? " and ld_tenantid=" + session.getTenantId() : ""), null);
 				} catch (Exception t) {
@@ -117,7 +117,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public void unlocks(String sid) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
-			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+			SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 			indexer.unlock();
 		} catch (Exception t) {
 			ServiceUtil.throwServerException(session, log, t);
@@ -128,7 +128,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public String check(String sid) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
-			SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+			SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 			return indexer.check();
 		} catch (Exception t) {
 			return (String) ServiceUtil.throwServerException(session, log, t);
@@ -139,7 +139,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public void save(String sid, GUISearchEngine searchEngine) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 			conf.setProperty(session.getTenantName() + ".index.excludes",
 					searchEngine.getExcludePatters() != null ? searchEngine.getExcludePatters() : "");
 			conf.setProperty(session.getTenantName() + ".index.includes",
@@ -163,7 +163,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public void setLanguageStatus(String sid, String language, boolean active) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 			conf.setProperty(session.getTenantName() + ".lang." + language, active ? "enabled" : "disabled");
 			conf.write();
 		} catch (Throwable t) {

@@ -74,9 +74,9 @@ public abstract class AbstractWebappTCase {
 	}
 
 	private GUISession prepareSession() {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 
-		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+		AuthenticationChain authenticationChain = (AuthenticationChain) Context.get().getBean(
 				AuthenticationChain.class);
 
 		GUISession session = new GUISession();

@@ -50,7 +50,7 @@ public class ExtendedAttributeOptionsDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.getInstance().getBean(
+			ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.get().getBean(
 					ExtendedAttributeOptionDAO.class);
 			List<ExtendedAttributeOption> options = dao.findByTemplateAndAttribute(templateId, attribute);
 

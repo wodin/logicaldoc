@@ -133,7 +133,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 			saveOrUpdate(user);
 
-			GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+			GroupDAO groupDAO = (GroupDAO) Context.get().getBean(GroupDAO.class);
 
 			String userGroupName = "_user_" + Long.toString(user.getId());
 			Group grp = groupDAO.findByName(userGroupName, user.getTenantId());
@@ -322,7 +322,7 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 
 			// Delete the user's group
 			if (userGroup != null) {
-				GroupDAO groupDAO = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+				GroupDAO groupDAO = (GroupDAO) Context.get().getBean(GroupDAO.class);
 				groupDAO.delete(userGroup.getId());
 			}
 

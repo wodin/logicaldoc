@@ -101,7 +101,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	 * Loads the access token saved for the given user.
 	 */
 	static String loadAccessToken(User user) {
-		GenericDAO dao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+		GenericDAO dao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 		Generic generic = dao.findByAlternateKey("dropbox", "token", user.getId(), user.getTenantId());
 		if (generic == null)
 			return null;
@@ -114,7 +114,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	 * Generic(type: dropbox, subtype: token)
 	 */
 	protected void saveAccessToken(User user, String token, String account) {
-		GenericDAO dao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+		GenericDAO dao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 		Generic generic = dao.findByAlternateKey("dropbox", "token", user.getId(), user.getTenantId());
 		if (generic == null)
 			generic = new Generic("dropbox", "token", user.getId(), user.getTenantId());
@@ -143,8 +143,8 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 			if (!targetPath.endsWith("/"))
 				targetPath += "/";
 
-			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+			DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 
 			// Prepare a map docId-path
 			Map<Long, String> documents = new HashMap<Long, String>();
@@ -188,9 +188,9 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	}
 
 	private void uploadDocument(Long docId, String path, Dropbox dropbox, User user, String sid) throws IOException {
-		Storer store = (Storer) Context.getInstance().getBean(Storer.class);
-		HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		Storer store = (Storer) Context.get().getBean(Storer.class);
+		HistoryDAO hdao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
+		DocumentDAO ddao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 
 		File temp = null;
 		try {
@@ -211,7 +211,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 			history.setUser(user);
 			history.setSessionId(sid);
 
-			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
 			history.setEvent(DocumentEvent.DOWNLOADED.toString());
 			hdao.store(history);
@@ -221,7 +221,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	}
 
 	private void loadFoldersTree(long parentId, String parentPath, long userId, Map<Long, String> folders) {
-		FolderDAO fDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO fDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		folders.put(parentId, parentPath);
 		for (Folder folder : fDao.findChildren(parentId, userId)) {
 			if (parentId == folder.getId())
@@ -234,7 +234,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	@Override
 	public int importDocuments(String sid, long targetFolder, String[] paths) throws ServerException {
 		UserSession session = SessionUtil.validateSession(sid);
-		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
 		if (!fdao.isPermissionEnabled(Permission.IMPORT, targetFolder, session.getUserId()))
 			return 0;
@@ -294,8 +294,8 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	}
 
 	private void importDocument(Folder root, DbxEntry src, Dropbox dbox, User user, String sid) throws Exception {
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		DocumentManager manager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		DocumentDAO ddao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		DocumentManager manager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 
 		File temp = null;
 		try {
@@ -315,7 +315,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 				history.setUser(user);
 				history.setSessionId(sid);
 
-				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+				FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 				String pathExtended = fdao.computePathExtended(root.getId());
 				history.setPath(pathExtended);
 
@@ -346,7 +346,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 				history.setUser(user);
 				history.setSessionId(sid);
 
-				FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+				FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 				history.setPath(fdao.computePathExtended(root.getId()));
 				history.setEvent(DocumentEvent.STORED.toString());
 

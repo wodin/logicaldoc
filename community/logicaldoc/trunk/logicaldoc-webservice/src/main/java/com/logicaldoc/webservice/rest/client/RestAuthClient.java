@@ -42,4 +42,9 @@ public class RestAuthClient extends AbstractRestClient implements AuthService {
 		return proxy.loginPostJSON(jsonstr);
 	}
 
+	@Override
+	public String getSid() {
+		return proxy.getSid();
+	}
+
 }

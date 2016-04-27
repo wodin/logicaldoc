@@ -65,7 +65,7 @@ public class ZipImport {
 		this.zipFile = zipsource;
 		this.sessionId = sessionId;
 
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		this.user = userDao.findById(userId);
 
 		File dir = UserUtil.getUserResource(userId, "unzip");
@@ -112,7 +112,7 @@ public class ZipImport {
 	 * @param parent
 	 */
 	protected void addEntry(File file, Folder parent) {
-		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		String folderName = file.getName();
 		FolderHistory transaction = new FolderHistory();
 		transaction.setUser(user);
@@ -132,7 +132,7 @@ public class ZipImport {
 					addEntry(files[i], folder);
 		} else {
 			// creates a document
-			DocumentManager docManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+			DocumentManager docManager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 			try {
 				History history = new History();
 				history.setEvent(DocumentEvent.STORED.toString());
@@ -156,7 +156,7 @@ public class ZipImport {
 	 * @param archive
 	 */
 	protected void sendNotificationMessage() {
-		SystemMessageDAO smdao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+		SystemMessageDAO smdao = (SystemMessageDAO) Context.get().getBean(SystemMessageDAO.class);
 		Date now = new Date();
 		Recipient recipient = new Recipient();
 		recipient.setName(user.getUserName());

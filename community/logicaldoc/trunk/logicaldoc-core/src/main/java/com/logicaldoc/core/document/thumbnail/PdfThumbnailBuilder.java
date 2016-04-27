@@ -88,7 +88,7 @@ public class PdfThumbnailBuilder extends ImageThumbnailBuilder {
 	}
 
 	protected void renderPage(File src, File dst, int page) {
-		ContextProperties context = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties context = Context.get().getRegisty();
 		String ghostCommand = context.getProperty("command.gs");
 		String[] cmd = new String[] { ghostCommand, "-q", "-sDEVICE=jpeg", "-dJPEGQ=100", "-dQFactor=1", "-dBATCH",
 				"-dNOPAUSE", "-dFirstPage=" + page, "-dLastPage=" + page, "-r150", "-sOutputFile=" + dst.getPath(),

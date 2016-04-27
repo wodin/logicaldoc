@@ -50,7 +50,7 @@ public class ContactsDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			ContactDAO dao = (ContactDAO) Context.getInstance().getBean(ContactDAO.class);
+			ContactDAO dao = (ContactDAO) Context.get().getBean(ContactDAO.class);
 
 			/*
 			 * Iterate over records composing the response XML document

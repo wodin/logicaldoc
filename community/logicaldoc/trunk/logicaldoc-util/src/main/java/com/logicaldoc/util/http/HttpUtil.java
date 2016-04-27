@@ -38,7 +38,7 @@ public class HttpUtil {
 
 			// Try to get the config of the application context
 			try {
-				config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+				config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 			} catch (Throwable t) {
 
 			}

@@ -50,8 +50,8 @@ public class GarbageDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "no-store");
 			response.setDateHeader("Expires", 0);
 
-			DocumentDAO documentDAO = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			FolderDAO folderDAO = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			DocumentDAO documentDAO = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+			FolderDAO folderDAO = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));

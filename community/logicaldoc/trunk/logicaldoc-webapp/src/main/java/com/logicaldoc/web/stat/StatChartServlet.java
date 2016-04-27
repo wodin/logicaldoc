@@ -50,7 +50,7 @@ public class StatChartServlet extends HttpServlet {
 		response.setHeader("Cache-Control", "no-store");
 		response.setDateHeader("Expires", 0);
 		
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 		User user = udao.findById(session.getUserId());
 
 		// Create the folder for the chart

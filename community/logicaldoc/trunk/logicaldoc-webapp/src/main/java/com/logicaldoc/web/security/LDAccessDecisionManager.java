@@ -43,7 +43,7 @@ public class LDAccessDecisionManager extends UnanimousBased {
 				if (StringUtils.isNotEmpty(request.getParameter("tenant")))
 					tenant = request.getParameter("tenant");
 
-				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+				ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 				boolean enabled = "true".equals(config.get(tenant + ".anonymous.enabled"));
 				if (enabled) {
 					return;

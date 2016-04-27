@@ -77,7 +77,7 @@ public class IndexerTask extends Task {
 			 */
 			documentDao.cleanExpiredTransactions();
 
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties config = Context.get().getRegisty();
 			Integer max = config.getProperty("index.batch") != null ? new Integer(config.getProperty("index.batch"))
 					: null;
 

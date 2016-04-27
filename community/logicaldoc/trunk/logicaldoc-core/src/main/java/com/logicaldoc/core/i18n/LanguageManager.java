@@ -89,7 +89,7 @@ public class LanguageManager {
 	}
 
 	public Collection<Language> getActiveLanguages(String tenantName) {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		if (config == null)
 			return getLanguages();
 

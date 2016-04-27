@@ -57,7 +57,7 @@ public class DocumentsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			UserSession session = ServiceUtil.validateSession(request);
 			ContextProperties config = (ContextProperties) context.getBean(ContextProperties.class);
 			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);

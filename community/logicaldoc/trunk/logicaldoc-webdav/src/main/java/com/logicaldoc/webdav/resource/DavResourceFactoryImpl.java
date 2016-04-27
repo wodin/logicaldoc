@@ -41,14 +41,14 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 	private ResourceService resourceService;
 
 	public DavResourceFactoryImpl(LockManager lockMgr) {
-		this.resourceConfig = (ResourceConfig) Context.getInstance().getBean("ResourceConfig");
-		this.resourceService = (ResourceService) Context.getInstance().getBean("ResourceService");
+		this.resourceConfig = (ResourceConfig) Context.get().getBean("ResourceConfig");
+		this.resourceService = (ResourceService) Context.get().getBean("ResourceService");
 	}
 
 	public DavResourceFactoryImpl(LockManager lockMgr, ResourceConfig resourceConfig) {
-		this.resourceConfig = (resourceConfig != null) ? resourceConfig : (ResourceConfig) Context.getInstance()
+		this.resourceConfig = (resourceConfig != null) ? resourceConfig : (ResourceConfig) Context.get()
 				.getBean("ResourceConfig");
-		this.resourceService = (ResourceService) Context.getInstance().getBean("ResourceService");
+		this.resourceService = (ResourceService) Context.get().getBean("ResourceService");
 	}
 
 	public DavResource createResource(DavResourceLocator locator, DavServletRequest request) throws DavException {
@@ -114,10 +114,10 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 	 */
 	public void putInCache(DavSession session, DavResource resource) {
 		try {
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 			if ("true".equals(config.getProperty("webdav.usecache"))) {
 				// Initialize the collection of children
-				Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager"))
+				Cache cache = ((CacheManager) Context.get().getBean("DavCacheManager"))
 						.getCache("dav-resources");
 				Element element = new Element(session.getObject("id") + ";" + resource.getResourcePath(), resource);
 				cache.put(element);
@@ -134,10 +134,10 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 	 * @return The cached entry
 	 */
 	private DavResource getFromCache(DavSession session, String path) {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 		if ("true".equals(config.getProperty("webdav.usecache"))) {
 			String key = session.getObject("id") + ";" + path;
-			Cache cache = ((CacheManager) Context.getInstance().getBean("DavCacheManager")).getCache("dav-resources");
+			Cache cache = ((CacheManager) Context.get().getBean("DavCacheManager")).getCache("dav-resources");
 			Element element = cache.get(key);
 			DavResource resource = null;
 			if (element != null) {

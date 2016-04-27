@@ -394,7 +394,7 @@ public abstract class Task implements Runnable {
 	 */
 	public void save() throws IOException, ParseException {
 		getScheduling().save();
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		config.setProperty("task.recipients." + name, getReportRecipients());
 		config.setProperty("task.sendreport." + name, isSendActivityReport() ? "true" : "false");
 		config.write();

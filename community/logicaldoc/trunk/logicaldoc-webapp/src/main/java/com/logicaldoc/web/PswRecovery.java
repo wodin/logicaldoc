@@ -77,7 +77,7 @@ public class PswRecovery extends HttpServlet {
 		log.debug("Recover password for ticket with ticketId=" + ticketId);
 
 		try {
-			TicketDAO ticketDao = (TicketDAO) Context.getInstance().getBean(TicketDAO.class);
+			TicketDAO ticketDao = (TicketDAO) Context.get().getBean(TicketDAO.class);
 			Ticket ticket = ticketDao.findByTicketId(ticketId);
 
 			if ((ticket != null) && ticket.getType() == Ticket.PSW_RECOVERY) {
@@ -87,7 +87,7 @@ public class PswRecovery extends HttpServlet {
 					return;
 				}
 
-				UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+				UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 				User user = userDao.findById(Long.parseLong(userId));
 
 				EMail email;
@@ -101,7 +101,7 @@ public class PswRecovery extends HttpServlet {
 					email.setFolder("outbox");
 
 					// Generate a new password
-					ContextProperties pbean = (ContextProperties) Context.getInstance()
+					ContextProperties pbean = (ContextProperties) Context.get()
 							.getBean(ContextProperties.class);
 					String password = new PasswordGenerator().generate(pbean.getInt("password.size"));
 					user.setDecodedPassword(password);

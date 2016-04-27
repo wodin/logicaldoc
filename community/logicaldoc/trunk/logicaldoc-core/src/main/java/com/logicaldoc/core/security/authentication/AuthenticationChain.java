@@ -38,7 +38,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 	};
 
 	protected boolean ignoreCaseLogin() {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		return "true".equals(config.getProperty("login.ignorecase"));
 	}
 
@@ -92,7 +92,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 		 */
 		{
 			String tenant = Tenant.DEFAULT_NAME;
-			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 			User user = null;
 
 			if (ignoreCaseLogin())
@@ -101,14 +101,14 @@ public class AuthenticationChain implements AuthenticationProvider {
 				user = udao.findByUserName(username);
 
 			if (user != null) {
-				TenantDAO tdao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+				TenantDAO tdao = (TenantDAO) Context.get().getBean(TenantDAO.class);
 				Tenant t = tdao.findById(user.getTenantId());
 				if (t != null)
 					tenant = t.getName();
 			}
 
 			if (key != null) {
-				ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+				ContextProperties config = Context.get().getRegisty();
 				if ("true".equals(config.getProperty(tenant + ".anonymous.enabled"))
 						&& username.equals(config.getProperty(tenant + ".anonymous.user"))
 						&& key.equals(config.getProperty(tenant + ".anonymous.key")))
@@ -145,7 +145,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 	 * declared in the core plug-in.
 	 */
 	private void init() {
-		Context context = Context.getInstance();
+		Context context = Context.get();
 		PluginRegistry registry = PluginRegistry.getInstance();
 		Collection<Extension> exts = registry.getExtensions("logicaldoc-core", "Authentication");
 

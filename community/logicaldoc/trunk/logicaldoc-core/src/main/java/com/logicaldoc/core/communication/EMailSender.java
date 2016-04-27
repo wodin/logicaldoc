@@ -63,7 +63,7 @@ public class EMailSender {
 	private int connectionSecurity = SECURITY_NONE;
 
 	public EMailSender(long tenant) {
-		TenantDAO tenantDao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		TenantDAO tenantDao = (TenantDAO) Context.get().getBean(TenantDAO.class);
 		loadSettings(tenantDao.findById(tenant).getName());
 	}
 
@@ -72,7 +72,7 @@ public class EMailSender {
 	}
 
 	private void loadSettings(String tenant) {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 
 		host = config.getProperty(tenant + ".smtp.host");
 		port = config.getInt(tenant + ".smtp.port");
@@ -135,7 +135,7 @@ public class EMailSender {
 	 * @throws Exception
 	 */
 	public void send(EMail email, String templateName, Map<String, Object> dictionarty) throws Exception {
-		MessageTemplateDAO templateDao = (MessageTemplateDAO) Context.getInstance().getBean(MessageTemplateDAO.class);
+		MessageTemplateDAO templateDao = (MessageTemplateDAO) Context.get().getBean(MessageTemplateDAO.class);
 		MessageTemplate template = templateDao.findByNameAndLanguage(templateName, email.getLocale().toString(),
 				email.getTenantId());
 		if (template == null) {

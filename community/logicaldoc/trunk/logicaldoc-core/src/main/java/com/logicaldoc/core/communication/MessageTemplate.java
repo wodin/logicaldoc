@@ -4,6 +4,7 @@ import java.util.Map;
 
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.script.ScriptingEngine;
+import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -32,8 +33,7 @@ public class MessageTemplate extends PersistentObject {
 		ScriptingEngine script = new ScriptingEngine(getName(), LocaleUtil.toLocale(language));
 
 		// General configurations
-		ContextProperties config = (ContextProperties) com.logicaldoc.util.Context.getInstance().getBean(
-				ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		dictionary.put("serverUrl", config.get("server.url"));
 
 		return script.evaluate(text, dictionary);

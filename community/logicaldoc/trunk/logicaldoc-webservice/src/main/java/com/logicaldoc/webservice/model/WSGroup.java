@@ -105,7 +105,7 @@ public class WSGroup {
 			group.setType(getType());
 
 			if (getUserIds().length > 0) {
-				UserDAO userDao = (UserDAO) Context.getInstance().getBean(
+				UserDAO userDao = (UserDAO) Context.get().getBean(
 						UserDAO.class);
 				Set<User> users = new HashSet<User>();
 				for (long userId : getUserIds()) {

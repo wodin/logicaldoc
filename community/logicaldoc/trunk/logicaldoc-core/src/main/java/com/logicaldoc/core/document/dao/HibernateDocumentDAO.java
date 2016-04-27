@@ -1015,7 +1015,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<TagCloud> getTagCloud(long tenantId, int maxTags) {
-		GenericDAO gendao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+		GenericDAO gendao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 
 		List<TagCloud> list = (List<TagCloud>) gendao.query(
 				"select ld_tag, ld_count from ld_uniquetag where ld_tenantid=" + tenantId + " order by ld_count desc",
@@ -1054,7 +1054,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public List<TagCloud> getTagCloud(String sid) {
 		UserSession session = SessionManager.getInstance().get(sid);
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 
 		int maxTags = config.getInt(session.getTenantName() + ".tagcloud.maxtags", 30);
 		return getTagCloud(session.getTenantId(), maxTags);

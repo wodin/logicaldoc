@@ -22,19 +22,23 @@ public interface AuthService {
 
 	@GET
 	@Path("/login")
-	String login(@QueryParam("u") String username, @QueryParam("pw") String password) throws Exception;
+	public String login(@QueryParam("u") String username, @QueryParam("pw") String password) throws Exception;
 
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	String loginPost(@FormParam("username") String username, @FormParam("password") String password) throws Exception;
+	public String loginPost(@FormParam("username") String username, @FormParam("password") String password) throws Exception;
 
 	@POST
 	@Path("/login")
 	@Consumes(MediaType.APPLICATION_JSON)
-	String loginPostJSON(String jsonstr) throws Exception;
+	public String loginPostJSON(String jsonstr) throws Exception;
 
 	@DELETE
 	@Path("/logout")
-	void logout();
+	public void logout();
+	
+	@GET
+	@Path("/getSid")
+	public String getSid();
 }

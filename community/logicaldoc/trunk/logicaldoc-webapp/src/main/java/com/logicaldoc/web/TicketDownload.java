@@ -73,9 +73,9 @@ public class TicketDownload extends HttpServlet {
 		logger.debug("Download ticket ticketId=" + ticketId);
 
 		try {
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-			TicketDAO ticketDao = (TicketDAO) Context.getInstance().getBean(TicketDAO.class);
-			PdfConverterManager converter = (PdfConverterManager) Context.getInstance().getBean(
+			DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+			TicketDAO ticketDao = (TicketDAO) Context.get().getBean(TicketDAO.class);
+			PdfConverterManager converter = (PdfConverterManager) Context.get().getBean(
 					PdfConverterManager.class);
 			Ticket ticket = ticketDao.findByTicketId(ticketId);
 			if (ticket == null || ticket.getDocId() == 0)
@@ -137,7 +137,7 @@ public class TicketDownload extends HttpServlet {
 	private void downloadDocument(HttpServletRequest request, HttpServletResponse response, Document doc,
 			String fileVersion, String suffix, User user) throws FileNotFoundException, IOException, ServletException {
 
-		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		Storer storer = (Storer) Context.get().getBean(Storer.class);
 		String resource = storer.getResourceName(doc, fileVersion, suffix);
 		String filename = doc.getFileName();
 		if (suffix != null && suffix.contains("pdf"))
@@ -182,14 +182,14 @@ public class TicketDownload extends HttpServlet {
 			history.setTitle(doc.getTitle());
 			history.setVersion(doc.getVersion());
 
-			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
 			history.setEvent(DocumentEvent.DOWNLOADED.toString());
 			history.setFilename(doc.getFileName());
 			history.setFolderId(doc.getFolder().getId());
 			history.setUser(user);
 
-			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+			HistoryDAO hdao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 			hdao.store(history);
 		}
 	}

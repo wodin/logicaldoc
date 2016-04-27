@@ -47,7 +47,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 	@Override
 	public GUIInfo getInfo(String locale, String tenantName) {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 		GUIInfo info = null;
 		try {
@@ -107,7 +107,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 					messages.add(setupReminder);
 				} else {
 					// Check if the database is connected
-					UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+					UserDAO dao = (UserDAO) Context.get().getBean(UserDAO.class);
 					int test = -1;
 					try {
 						test = dao.queryForInt("select count(*) from ld_user");
@@ -137,7 +137,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	 * installed languages.
 	 */
 	public static GUIInfo getInfo(String tenantName) {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 		/*
 		 * Populate the infos from the SystemInfo
@@ -209,7 +209,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		Locale l = null;
 		Locale test = LocaleUtil.toLocale(locale);
 
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 		/*
 		 * Check if the given locale is active and if the case peek an active
@@ -265,7 +265,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		log.debug("Requested info for session " + sid);
 
 		try {
-			SystemMessageDAO messageDao = (SystemMessageDAO) Context.getInstance().getBean(SystemMessageDAO.class);
+			SystemMessageDAO messageDao = (SystemMessageDAO) Context.get().getBean(SystemMessageDAO.class);
 			List<GUIParameter> parameters = new ArrayList<GUIParameter>();
 			
 			UserSession session = SessionManager.getInstance().get(sid);

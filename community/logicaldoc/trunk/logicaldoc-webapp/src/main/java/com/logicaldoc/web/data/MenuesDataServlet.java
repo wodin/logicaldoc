@@ -45,7 +45,7 @@ public class MenuesDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "no-store");
 			response.setDateHeader("Expires", 0);
 
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			MenuDAO dao = (MenuDAO) context.getBean(MenuDAO.class);
 			long parent = Menu.ROOT;
 

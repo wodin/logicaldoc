@@ -100,8 +100,8 @@ public class UserSession implements Comparable<UserSession> {
 		this.status = STATUS_EXPIRED;
 		externalSession = null;
 		// Add a user history entry
-		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
+		UserDAO userDAO = (UserDAO) Context.get().getBean(UserDAO.class);
+		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
 		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_TIMEOUT, "", id);
 	}
 
@@ -109,8 +109,8 @@ public class UserSession implements Comparable<UserSession> {
 		this.status = STATUS_CLOSED;
 		externalSession = null;
 		// Add a user history entry
-		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
+		UserDAO userDAO = (UserDAO) Context.get().getBean(UserDAO.class);
+		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
 		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGOUT, "", id);
 	}
 
@@ -123,9 +123,9 @@ public class UserSession implements Comparable<UserSession> {
 		this.userObject = userObject;
 
 		// Set the user's id
-		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		UserDAO userDAO = (UserDAO) Context.get().getBean(UserDAO.class);
+		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
+		ContextProperties config = Context.get().getRegisty();
 
 		User user = null;
 		if ("true".equals(config.getProperty("login.ignorecase")))
@@ -138,7 +138,7 @@ public class UserSession implements Comparable<UserSession> {
 
 		// Set the tenant's id and name
 		this.tenantId = user.getTenantId();
-		TenantDAO tenantDAO = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		TenantDAO tenantDAO = (TenantDAO) Context.get().getBean(TenantDAO.class);
 		Tenant tenant = tenantDAO.findById(this.tenantId);
 		if (tenant != null)
 			tenantName = tenant.getName();
