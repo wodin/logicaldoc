@@ -45,7 +45,7 @@ public class Update extends AbstractLoader {
 	public Update() {
 		super(Update.class.getName().substring(Update.class.getName().lastIndexOf('.') + 1));
 
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 		rootFolder = Long.parseLong(config.getProperty("Update.rootFolder"));
 		depth = config.getInt("Update.depth");
 		tagSize = config.getInt("Update.tagsize");

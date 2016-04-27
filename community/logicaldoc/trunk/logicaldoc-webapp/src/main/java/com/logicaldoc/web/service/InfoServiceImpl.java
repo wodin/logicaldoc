@@ -47,7 +47,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 	@Override
 	public GUIInfo getInfo(String locale, String tenantName) {
-		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getProperties();
 
 		GUIInfo info = null;
 		try {
@@ -137,7 +137,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	 * installed languages.
 	 */
 	public static GUIInfo getInfo(String tenantName) {
-		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getProperties();
 
 		/*
 		 * Populate the infos from the SystemInfo
@@ -209,7 +209,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 		Locale l = null;
 		Locale test = LocaleUtil.toLocale(locale);
 
-		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getProperties();
 
 		/*
 		 * Check if the given locale is active and if the case peek an active

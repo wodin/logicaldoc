@@ -181,7 +181,7 @@ public class ServletIOUtil {
 			IOException, ServletException {
 		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
-		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getProperties();
 
 		UserSession session = null;
 		if (!isPreviewAgent(request)) {

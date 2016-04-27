@@ -32,7 +32,6 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * Basepoint for creating webservices implementations
@@ -196,12 +195,8 @@ public class AbstractService {
 		return null;
 	}
 
-	protected ContextProperties getSettings() {
-		return (ContextProperties) Context.get().getBean(ContextProperties.class);
-	}
-
 	protected boolean isWebserviceEnabled() {
-		return "true".equals(getSettings().get("webservice.enabled"));
+		return "true".equals(Context.get().getProperties().get("webservice.enabled"));
 	}
 
 	public WebServiceContext getContext() {

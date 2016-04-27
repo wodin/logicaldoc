@@ -125,7 +125,7 @@ public class UserSession implements Comparable<UserSession> {
 		// Set the user's id
 		UserDAO userDAO = (UserDAO) Context.get().getBean(UserDAO.class);
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 
 		User user = null;
 		if ("true".equals(config.getProperty("login.ignorecase")))

@@ -25,7 +25,7 @@ public class CmisServlet extends CmisAtomPubServlet {
 
 	@Override
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ContextProperties settings = Context.get().getRegisty();
+		ContextProperties settings = Context.get().getProperties();
 
 		// Save the remote identification as thread local variable
 		String[] addr = new String[] { request.getRemoteAddr(), request.getRemoteHost() };

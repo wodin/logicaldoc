@@ -30,7 +30,7 @@ public class ListFolders extends AbstractLoader {
 
 	public ListFolders() {
 		super(ListFolders.class.getName().substring(ListFolders.class.getName().lastIndexOf('.') + 1));
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 		rootFolder = Long.parseLong(config.getProperty("ListFolders.rootFolder"));
 	}
 

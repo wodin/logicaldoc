@@ -83,7 +83,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 	public GUIParameter[] getSettings(String sid) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
+		ContextProperties conf = Context.get().getProperties();
 
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object name : conf.keySet()) {

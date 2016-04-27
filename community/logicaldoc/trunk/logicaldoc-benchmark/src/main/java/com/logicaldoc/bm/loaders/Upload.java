@@ -66,7 +66,7 @@ public class Upload extends AbstractLoader {
 	public Upload() {
 		super(Upload.class.getName().substring(Upload.class.getName().lastIndexOf('.') + 1));
 
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 		rootFolder = Long.parseLong(config.getProperty("Upload.rootFolder"));
 		randomFile.setSourceDir(config.getProperty("Upload.sourcedir"));
 		depth = config.getInt("Upload.depth");

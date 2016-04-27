@@ -120,7 +120,7 @@ public abstract class AbstractParser implements Parser {
 		long timeout = -1;
 
 		try {
-			ContextProperties config = Context.get().getRegisty();
+			ContextProperties config = Context.get().getProperties();
 			String to = config.getProperty("parser.timeout");
 			if (org.apache.commons.lang.StringUtils.isNotEmpty(to))
 				timeout = Long.parseLong(to);

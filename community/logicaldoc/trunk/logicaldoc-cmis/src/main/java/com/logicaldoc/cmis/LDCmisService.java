@@ -143,7 +143,7 @@ public class LDCmisService extends AbstractCmisService {
 	 */
 	protected String getLatestChangeLogToken(String repositoryId) {
 		try {
-			ContextProperties settings = Context.get().getRegisty();
+			ContextProperties settings = Context.get().getProperties();
 			if (!"true".equals(settings.getProperty("cmis.changelog")))
 				return null;
 
