@@ -250,7 +250,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 	public List query(String sql, Object[] args, RowMapper rowMapper, Integer maxRows) {
 		List list = new ArrayList();
 		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
 
 			// DataSource dataSource =
 			// SessionFactoryUtils.getDataSource(getSessionFactory());
@@ -274,7 +274,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 
 		List list = new ArrayList();
 		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			if (maxRows != null)
 				jdbcTemplate.setMaxRows(maxRows);
@@ -294,7 +294,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 	public SqlRowSet queryForRowSet(String sql, Object[] args, Integer maxRows) {
 		SqlRowSet rs = null;
 		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			if (maxRows != null)
 				jdbcTemplate.setMaxRows(maxRows);
@@ -326,7 +326,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 	@Override
 	public long queryForLong(String sql) {
 		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.queryForLong(sql);
 		} catch (EmptyResultDataAccessException empty) {
@@ -342,7 +342,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 	@Override
 	public Object queryForObject(String sql, Class type) {
 		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.queryForObject(sql, type);
 		} catch (EmptyResultDataAccessException empty) {
@@ -357,7 +357,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 	@Override
 	public int jdbcUpdate(String statement) {
 		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.update(statement);
 		} catch (Exception e) {
@@ -399,7 +399,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 	@Override
 	public int jdbcUpdate(String statement, Object... args) {
 		try {
-			DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.update(statement, args);
 		} catch (Exception e) {
@@ -410,13 +410,13 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 	}
 
 	protected Connection getConnection() throws SQLException {
-		DataSource dataSource = (DataSource) Context.getInstance().getBean("DataSource");
+		DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
 		return dataSource.getConnection();
 	}
 
 	@Override
 	public String getDbms() {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		return config.getProperty("jdbc.dbms").toLowerCase();
 	}
 

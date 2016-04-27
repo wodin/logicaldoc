@@ -49,7 +49,7 @@ public class FeedMessageDataServlet extends HttpServlet {
 			/*
 			 * Execute the Query
 			 */
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
 
 			List<FeedMessage> records = dao.findAll();

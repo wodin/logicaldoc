@@ -74,7 +74,7 @@ public class NotesDataServlet extends HttpServlet {
 				query.append(" and A.ld_page =" + page);
 			query.append(" order by A.ld_date desc, A.ld_page asc ");
 
-			DocumentNoteDAO dao = (DocumentNoteDAO) Context.getInstance().getBean(DocumentNoteDAO.class);
+			DocumentNoteDAO dao = (DocumentNoteDAO) Context.get().getBean(DocumentNoteDAO.class);
 			SqlRowSet set = dao.queryForRowSet(query.toString(), null, 200);
 
 			while (set.next()) {

@@ -75,4 +75,10 @@ public class RestAuthService extends SoapAuthService implements AuthService {
 		if (sid != null)
 			super.logout(sid);
 	}
+
+	@GET
+	@Path("/getSid")
+	public String getSid() {
+		return getCurrentSessionId();
+	}
 }

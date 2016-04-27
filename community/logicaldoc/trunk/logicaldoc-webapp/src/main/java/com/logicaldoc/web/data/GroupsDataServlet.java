@@ -54,7 +54,7 @@ public class GroupsDataServlet extends HttpServlet {
 					+ "from com.logicaldoc.core.security.Group A where A.deleted = 0 and A.type = "
 					+ Group.TYPE_DEFAULT + " and A.tenantId=" + session.getTenantId());
 
-			GroupDAO dao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+			GroupDAO dao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
 
 			/*

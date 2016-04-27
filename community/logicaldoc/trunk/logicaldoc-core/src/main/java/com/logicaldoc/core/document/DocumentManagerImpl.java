@@ -233,7 +233,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	}
 
 	private long store(Document doc, File file) throws IOException {
-		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		Storer storer = (Storer) Context.get().getBean(Storer.class);
 		String resourceName = storer.getResourceName(doc, null, null);
 
 		// In case the resouce already exists, avoid the overwrite
@@ -771,7 +771,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		Document document = doc;
 		if (doc.getDocRef() != null) {
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 			document = docDao.findById(doc.getDocRef());
 		}
 
@@ -1019,7 +1019,7 @@ public class DocumentManagerImpl implements DocumentManager {
 	public void archiveDocuments(long[] docIds, History transaction) throws Exception {
 		assert (transaction.getUser() != null);
 		List<Long> idsList = new ArrayList<Long>();
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		Collection<Long> folderIds = folderDAO.findFolderIdByUserIdAndPermission(transaction.getUserId(),
 				Permission.ARCHIVE, null, true);
 
@@ -1038,7 +1038,7 @@ public class DocumentManagerImpl implements DocumentManager {
 		}
 
 		// Remove all corresponding hits from the index
-		SearchEngine engine = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+		SearchEngine engine = (SearchEngine) Context.get().getBean(SearchEngine.class);
 		engine.deleteHits(idsList);
 
 		log.info("Archived documents " + idsList);

@@ -80,9 +80,9 @@ public class LDCmisService extends AbstractCmisService {
 		this.sessionId = sessionId;
 
 		try {
-			historyDao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+			historyDao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 
-			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			UserSession session = SessionManager.getInstance().get(sessionId);
 			Folder root = fdao.findRoot(session.getTenantId());
 
@@ -143,7 +143,7 @@ public class LDCmisService extends AbstractCmisService {
 	 */
 	protected String getLatestChangeLogToken(String repositoryId) {
 		try {
-			ContextProperties settings = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties settings = Context.get().getRegisty();
 			if (!"true".equals(settings.getProperty("cmis.changelog")))
 				return null;
 

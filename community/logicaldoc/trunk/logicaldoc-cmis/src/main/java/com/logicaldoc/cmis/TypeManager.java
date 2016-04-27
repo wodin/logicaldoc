@@ -366,7 +366,7 @@ public class TypeManager {
 		/*
 		 * Extended properties
 		 */
-		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
 		List<DocumentTemplate> templates = dao.findAll();
 		for (DocumentTemplate template : templates) {
 			dao.initialize(template);

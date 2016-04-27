@@ -307,7 +307,7 @@ public class WSDocument implements Serializable {
 	}
 
 	public Document toDocument() throws Exception {
-		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Folder folder = fdao.findById(folderId);
 		if (folder == null) {
 			log.error("Folder " + folder + " not found");
@@ -325,7 +325,7 @@ public class WSDocument implements Serializable {
 		DocumentTemplate template = null;
 		Map<String, ExtendedAttribute> attributes = new HashMap<String, ExtendedAttribute>();
 		if (templateId != null) {
-			DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.getInstance().getBean(
+			DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.get().getBean(
 					DocumentTemplateDAO.class);
 			template = templDao.findById(templateId);
 			if (template != null) {

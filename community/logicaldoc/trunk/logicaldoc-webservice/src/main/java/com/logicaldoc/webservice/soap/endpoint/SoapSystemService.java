@@ -38,7 +38,7 @@ public class SoapSystemService extends AbstractService implements SystemService 
 	public WSParameter[] getStatistics(String sid) throws Exception {
 		validateSession(sid);
 
-		GenericDAO genDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+		GenericDAO genDao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 
 		WSParameter[] parameters = new WSParameter[15];
 		try {

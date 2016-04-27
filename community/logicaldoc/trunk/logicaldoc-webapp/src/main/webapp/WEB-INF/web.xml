@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+                       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                       xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"> 
+  <description>LogicalDOC - Document Management System</description>
+  <display-name>LogicalDOC</display-name>
   <context-param>
     <param-name>org.apache.chemistry.opencmis.REPOSITORY_CONFIG_FILE</param-name>
     <param-value>/cmis-repository.properties</param-value>
-  </context-param>
-  <description>LogicalDOC - Document Management System</description>
-  <display-name>LogicalDOC</display-name>
+  </context-param>  
   <!-- Location of the XML file that defines the root application context Applied by ContextLoaderListener. -->
   <context-param>
     <param-name>contextConfigLocation</param-name>

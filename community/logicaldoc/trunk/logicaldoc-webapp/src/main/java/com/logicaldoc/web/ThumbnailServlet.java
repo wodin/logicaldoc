@@ -72,13 +72,13 @@ public class ThumbnailServlet extends HttpServlet {
 		String suffix = request.getParameter(SUFFIX);
 
 		try {
-			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+			Storer storer = (Storer) Context.get().getBean(Storer.class);
 
 			// 1) check if the document exists
 			long docId = Long.parseLong(id);
 			if (StringUtils.isEmpty(suffix))
 				suffix = "thumb.jpg";
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 			Document doc = docDao.findById(docId);
 			if (doc.getDocRef() != null) {
 				doc = docDao.findById(doc.getDocRef());
@@ -89,14 +89,14 @@ public class ThumbnailServlet extends HttpServlet {
 				fileVersion = doc.getFileVersion();
 
 			if (version != null) {
-				VersionDAO vDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+				VersionDAO vDao = (VersionDAO) Context.get().getBean(VersionDAO.class);
 				Version ver = vDao.findByVersion(docId, version);
 				if (ver != null)
 					fileVersion = ver.getFileVersion();
 			}
 
 			UserSession session = ServiceUtil.validateSession(request.getParameter("sid"));
-			UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());
 
 			if (doc != null && !user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
@@ -124,8 +124,8 @@ public class ThumbnailServlet extends HttpServlet {
 	 * in the repository for future access.
 	 */
 	protected void createPreviewResource(String sid, Document doc, String fileVersion, String resource) {
-		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
-		ThumbnailManager thumbManager = (ThumbnailManager) Context.getInstance().getBean(ThumbnailManager.class);
+		Storer storer = (Storer) Context.get().getBean(Storer.class);
+		ThumbnailManager thumbManager = (ThumbnailManager) Context.get().getBean(ThumbnailManager.class);
 
 		// In any case try to produce the thumbnail
 		String thumbResource = storer.getResourceName(doc, fileVersion, "thumb.jpg");

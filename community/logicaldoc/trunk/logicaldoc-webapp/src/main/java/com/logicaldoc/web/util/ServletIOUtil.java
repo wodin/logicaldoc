@@ -179,9 +179,9 @@ public class ServletIOUtil {
 	public static void downloadDocument(HttpServletRequest request, HttpServletResponse response, String sid,
 			long docId, String fileVersion, String fileName, String suffix, User user) throws FileNotFoundException,
 			IOException, ServletException {
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
+		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 		UserSession session = null;
 		if (!isPreviewAgent(request)) {
@@ -208,7 +208,7 @@ public class ServletIOUtil {
 				&& !doc.isPublishing())
 			throw new FileNotFoundException("Document not published");
 
-		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		Storer storer = (Storer) Context.get().getBean(Storer.class);
 		String resource = storer.getResourceName(doc, fileVersion, null);
 
 		String filename = fileName;
@@ -433,7 +433,7 @@ public class ServletIOUtil {
 				history.setSessionId(sid);
 			}
 
-			FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
 			if ("preview".equals(request.getParameter("control")))
 				history.setEvent(DocumentEvent.VIEWED.toString());
@@ -445,7 +445,7 @@ public class ServletIOUtil {
 			 * session. So we will not save if there is another view in the same
 			 * session asked since 30 seconds.
 			 */
-			HistoryDAO hdao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+			HistoryDAO hdao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 			List<History> oldHistories = hdao.findByUserIdAndEvent(user.getId(), history.getEvent(), session.getId());
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(history.getDate());
@@ -572,7 +572,7 @@ public class ServletIOUtil {
 		response.setCharacterEncoding("UTF-8");
 
 		// get document
-		DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO ddao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		Document doc = ddao.findById(docId);
 
 		if (doc == null) {
@@ -591,12 +591,12 @@ public class ServletIOUtil {
 
 		setContentDisposition(request, response, doc.getFileName() + ".txt");
 
-		UserDAO udao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 		udao.initialize(user);
 		if (doc != null && !user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
 			throw new FileNotFoundException("Document not published");
 
-		SearchEngine indexer = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+		SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 
 		String content = indexer.getHit(docId).getContent();
 		if (content == null)
@@ -648,7 +648,7 @@ public class ServletIOUtil {
 	@SuppressWarnings("unchecked")
 	public static void uploadDocumentResource(HttpServletRequest request, String docId, String suffix,
 			String fileVersion, String docVersion) throws Exception {
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(Long.parseLong(docId));
 
 		String ver = docVersion;
@@ -657,7 +657,7 @@ public class ServletIOUtil {
 		if (StringUtils.isEmpty(ver))
 			ver = doc.getFileVersion();
 
-		Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+		Storer storer = (Storer) Context.get().getBean(Storer.class);
 
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		// Configure the factory here, if desired.

@@ -117,7 +117,7 @@ public class FulltextSearch extends Search {
 	@Override
 	public void internalSearch() throws Exception {
 		FulltextSearchOptions opt = (FulltextSearchOptions) options;
-		SearchEngine engine = (SearchEngine) Context.getInstance().getBean(SearchEngine.class);
+		SearchEngine engine = (SearchEngine) Context.get().getBean(SearchEngine.class);
 
 		if (opt.getFields() == null) {
 			String[] fields = new String[] { Fields.TITLE.toString(), Fields.TAGS.toString(), Fields.CONTENT.toString() };
@@ -140,7 +140,7 @@ public class FulltextSearch extends Search {
 		 */
 		ArrayList<String> filters = new ArrayList<String>();
 
-		TenantDAO tdao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		TenantDAO tdao = (TenantDAO) Context.get().getBean(TenantDAO.class);
 		long tenantId = Tenant.DEFAULT_ID;
 		if (opt.getTenantId() != null)
 			tenantId = opt.getTenantId().longValue();
@@ -189,7 +189,7 @@ public class FulltextSearch extends Search {
 		 * perform this check only if the search is not restricted to one folder
 		 * only.
 		 */
-		FolderDAO fdao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Collection<Long> accessibleFolderIds = new TreeSet<Long>();
 		boolean searchInSingleFolder = (opt.getFolderId() != null && !opt.isSearchInSubPath());
 		if (!searchInSingleFolder) {
@@ -305,7 +305,7 @@ public class FulltextSearch extends Search {
 
 		log.debug("Execute query\n" + richQuery.toString());
 
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		dao.query(richQuery.toString(), null, new HitMapper(hitsMap), null);
 
 		// Now sort the hits by score desc

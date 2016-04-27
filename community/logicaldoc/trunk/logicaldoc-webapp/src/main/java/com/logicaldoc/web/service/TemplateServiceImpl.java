@@ -46,7 +46,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	public void delete(String sid, long templateId) throws ServerException {
 		ServiceUtil.validateSession(sid);
 
-		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
 		dao.delete(templateId);
 	}
 
@@ -54,7 +54,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	public void saveOptions(String sid, long templateId, String attribute, String[] values) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.getInstance().getBean(
+		ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.get().getBean(
 				ExtendedAttributeOptionDAO.class);
 		try {
 			Map<String, ExtendedAttributeOption> optionsMap = new HashMap<String, ExtendedAttributeOption>();
@@ -85,7 +85,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	public void deleteOptions(String sid, long templateId, String attribute, String[] values) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.getInstance().getBean(
+		ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.get().getBean(
 				ExtendedAttributeOptionDAO.class);
 		try {
 			List<ExtendedAttributeOption> options = dao.findByTemplateAndAttribute(templateId, attribute);
@@ -104,7 +104,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	public GUITemplate save(String sid, GUITemplate template) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
 		try {
 			DocumentTemplate templ;
 			if (template.getId() != 0) {
@@ -208,7 +208,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	public GUITemplate getTemplate(String sid, long templateId) throws ServerException {
 		ServiceUtil.validateSession(sid);
 
-		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
+		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
 		try {
 			DocumentTemplate template = dao.findById(templateId);
 			if (template == null)

@@ -71,7 +71,7 @@ public class SoapSearchService extends AbstractService implements SearchService 
 	public WSDocument[] findByFilename(String sid, String filename) throws Exception {
 		User user = validateSession(sid);
 
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null, user.getTenantId(), null);
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
 		for (int i = 0; i < docs.size(); i++) {
@@ -93,7 +93,7 @@ public class SoapSearchService extends AbstractService implements SearchService 
 	public WSDocument[] findByTag(String sid, String tag) throws Exception {
 		User user = validateSession(sid);
 
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		List<Document> docs = docDao.findByUserIdAndTag(user.getId(), tag, null);
 		WSDocument[] wsDocs = new WSDocument[docs.size()];
 		for (int i = 0; i < docs.size(); i++) {
@@ -114,7 +114,7 @@ public class SoapSearchService extends AbstractService implements SearchService 
 	public WSFolder[] findFolders(String sid, String name) throws Exception {
 		User user = validateSession(sid);
 
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		List<Folder> folders = folderDao.find(name, user.getTenantId());
 		WSFolder[] wsFolders = new WSFolder[folders.size()];
 		for (int i = 0; i < folders.size(); i++) {
@@ -134,7 +134,7 @@ public class SoapSearchService extends AbstractService implements SearchService 
 	public WSTagCloud[] getTagCloud(String sid) throws Exception {
 		validateSession(sid);
 
-		DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		List<TagCloud> list = dao.getTagCloud(sid);
 
 		WSTagCloud[] tagClouds = new WSTagCloud[list.size()];
@@ -150,7 +150,7 @@ public class SoapSearchService extends AbstractService implements SearchService 
 	@Override
 	public String[] getTags(String sid) throws Exception {
 		User user = validateSession(sid);
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		List<String> tags = docDao.findAllTags(null, user.getTenantId());
 		String[] wsTags = new String[tags.size()];
 		for (int i = 0; i < tags.size(); i++) {

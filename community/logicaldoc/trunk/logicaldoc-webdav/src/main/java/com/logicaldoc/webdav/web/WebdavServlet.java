@@ -167,7 +167,7 @@ public class WebdavServlet extends AbstractWebdavServlet {
 		if (config != null)
 			return config;
 		else
-			return (ResourceConfig) Context.getInstance().getBean(ResourceConfig.class);
+			return (ResourceConfig) Context.get().getBean(ResourceConfig.class);
 	}
 
 	public void setResourceConfig(ResourceConfig config) {
@@ -186,7 +186,7 @@ public class WebdavServlet extends AbstractWebdavServlet {
 
 	public ContextProperties getSettings() {
 		if (settings == null)
-			settings = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			settings = (ContextProperties) Context.get().getBean(ContextProperties.class);
 		return settings;
 	}
 }

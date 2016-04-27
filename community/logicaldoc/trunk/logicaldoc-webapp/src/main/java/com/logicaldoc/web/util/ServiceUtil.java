@@ -75,7 +75,7 @@ public class ServiceUtil {
 	public static User getSessionUser(String sid) throws InvalidSessionException {
 		UserSession session = validateSession(sid);
 		User user = (User) session.getDictionary().get(USER);
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		userDao.initialize(user);
 		return user;
 	}
@@ -83,7 +83,7 @@ public class ServiceUtil {
 	public static User getSessionUser(HttpServletRequest request) throws ServletException {
 		UserSession session = validateSession(request);
 		User user = (User) session.getDictionary().get(USER);
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		userDao.initialize(user);
 		return user;
 	}

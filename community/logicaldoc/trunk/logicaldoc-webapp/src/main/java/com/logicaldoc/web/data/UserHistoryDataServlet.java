@@ -52,7 +52,7 @@ public class UserHistoryDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			UserHistoryDAO dao = (UserHistoryDAO) Context.getInstance().getBean(UserHistoryDAO.class);
+			UserHistoryDAO dao = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 

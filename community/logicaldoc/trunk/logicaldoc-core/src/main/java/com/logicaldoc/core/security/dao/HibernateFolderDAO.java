@@ -1275,8 +1275,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		Folder newFolder = createPath(target, source.getName(), inheritSecurity, (FolderHistory) transaction.clone());
 		newFolder.setFoldRef(source.getFoldRef());
 
-		DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		DocumentManager docMan = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		DocumentManager docMan = (DocumentManager) Context.get().getBean(DocumentManager.class);
 
 		// List source docs and create them in the new folder
 		if (!foldersOnly) {

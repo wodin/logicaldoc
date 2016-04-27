@@ -34,7 +34,7 @@ public class WebserviceServlet extends CXFServlet {
 
 	public ContextProperties getSettings() {
 		if (settings == null)
-			settings = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			settings = (ContextProperties) Context.get().getBean(ContextProperties.class);
 		return settings;
 	}
 }

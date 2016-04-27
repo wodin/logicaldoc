@@ -211,15 +211,15 @@ public class LDRepository {
 			throw new IllegalArgumentException("Invalid root folder!");
 		}
 
-		userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
-		folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		documentDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
-		documentManager = (DocumentManager) Context.getInstance().getBean(DocumentManager.class);
-		templateDao = (DocumentTemplateDAO) Context.getInstance().getBean(DocumentTemplateDAO.class);
-		versionDao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
-		historyDao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+		userDao = (UserDAO) Context.get().getBean(UserDAO.class);
+		folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+		documentDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		documentManager = (DocumentManager) Context.get().getBean(DocumentManager.class);
+		templateDao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
+		versionDao = (VersionDAO) Context.get().getBean(VersionDAO.class);
+		historyDao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 
 		this.sid = sid;
 		this.root = root;
@@ -268,7 +268,7 @@ public class LDRepository {
 		capabilities.setSupportsGetFolderTree(true);
 		capabilities.setCapabilityRendition(CapabilityRenditions.READ);
 
-		ContextProperties settings = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties settings = Context.get().getRegisty();
 		capabilities.setCapabilityChanges("true".equals(settings.getProperty("cmis.changelog")) ? CapabilityChanges.ALL
 				: CapabilityChanges.NONE);
 
@@ -1049,7 +1049,7 @@ public class LDRepository {
 			AbstractDocument doc = getDocument(objectId);
 
 			InputStream stream = null;
-			Storer storer = (Storer) Context.getInstance().getBean(Storer.class);
+			Storer storer = (Storer) Context.get().getBean(Storer.class);
 			InputStream is = null;
 			if (doc instanceof Document) {
 				is = storer.getStream(doc.getId(), storer.getResourceName((Document) doc, null, null));
@@ -1080,7 +1080,7 @@ public class LDRepository {
 			}
 
 			try {
-				HistoryDAO historyDAO = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+				HistoryDAO historyDAO = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 				historyDAO.store(transaction);
 			} catch (Throwable t) {
 				log.warn(t.getMessage(), t);
@@ -1458,7 +1458,7 @@ public class LDRepository {
 
 			String filename = "%" + expr + "%";
 
-			DocumentDAO docDao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 			List<Document> docs = docDao.findByFileNameAndParentFolderId(null, filename, null,
 					getSessionUser().getId(), max);
 
@@ -1495,7 +1495,7 @@ public class LDRepository {
 	}
 
 	private void checkReadEnable(User user, long folderId) throws Exception {
-		FolderDAO dao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		if (!dao.isReadEnabled(folderId, user.getId())) {
 			String message = "User " + user.getUserName() + " doesn't have read permission on folder " + folderId;
 			log.error(message);

@@ -36,7 +36,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
 			ArrayList<GUITag> ret = new ArrayList<GUITag>();
-			DocumentDAO dao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 			List<TagCloud> list = dao.getTagCloud(sid);
 
 			for (TagCloud tagCloud : list) {
@@ -83,7 +83,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 	public GUIParameter[] getSettings(String sid) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object name : conf.keySet()) {

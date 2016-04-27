@@ -48,7 +48,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
 		try {
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 			emailSettings.setSmtpServer(conf.getProperty(session.getTenantName() + ".smtp.host"));
 			emailSettings.setPort(Integer.parseInt(conf.getProperty(session.getTenantName() + ".smtp.port")));
@@ -76,7 +76,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		UserSession session = ServiceUtil.validateSession(sid);
 
 		try {
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 			conf.setProperty(session.getTenantName() + ".smtp.host", settings.getSmtpServer());
 			conf.setProperty(session.getTenantName() + ".smtp.port", Integer.toString(settings.getPort()));
@@ -91,7 +91,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 			conf.write();
 
-			EMailSender sender = (EMailSender) Context.getInstance().getBean(EMailSender.class);
+			EMailSender sender = (EMailSender) Context.get().getBean(EMailSender.class);
 			sender.setHost(conf.getProperty(Tenant.DEFAULT_NAME + ".smtp.host"));
 			sender.setPort(Integer.parseInt(conf.getProperty(Tenant.DEFAULT_NAME + ".smtp.port")));
 			sender.setUsername(conf.getProperty(Tenant.DEFAULT_NAME + ".smtp.username"));
@@ -113,7 +113,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		ServiceUtil.validateSession(sid);
 
 		TreeSet<String> sortedSet = new TreeSet<String>();
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 		for (Object key : conf.keySet()) {
 			String name = key.toString();
 			if (name.endsWith(".hidden") || name.endsWith("readonly"))
@@ -158,7 +158,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	public GUIParameter[] loadClientSettings(String sid) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object key : conf.keySet()) {
 			if (key.toString().equals("webservice.enabled") || key.toString().startsWith("webdav")
@@ -178,7 +178,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		ServiceUtil.validateSession(sid);
 
 		try {
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 			for (int i = 0; i < settings.length; i++) {
 				if (settings[i] == null || StringUtils.isEmpty(settings[i].getName()))
 					continue;
@@ -199,7 +199,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 		GUIParameter[] values = new GUIParameter[names.length];
 		try {
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 			for (int i = 0; i < names.length; i++) {
 				values[i] = new GUIParameter(names[i], conf.getProperty(names[i]));
@@ -214,7 +214,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	public GUIParameter[][] loadRepositories(String sid) throws ServerException {
 		ServiceUtil.validateSession(sid);
 
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 		// Collect the directories
 		GUIParameter[] dirs = new GUIParameter[6];
@@ -246,7 +246,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	public void saveRepositories(String sid, GUIParameter[][] repos) throws ServerException {
 		ServiceUtil.validateSession(sid);
 
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 		try {
 			// First of all the folders
 			for (GUIParameter f : repos[0]) {
@@ -268,7 +268,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	public GUIParameter[] loadOcrSettings(String sid) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 		GUIParameter[] params = new GUIParameter[13];
 		params[0] = new GUIParameter("ocr.enabled", conf.getProperty("ocr.enabled"));
@@ -296,7 +296,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	public GUIParameter[] computeStoragesSize(String sid) throws ServerException {
 		ServiceUtil.validateSession(sid);
 
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 		List<GUIParameter> storagesList = new ArrayList<GUIParameter>();
 		GUIParameter param = null;
 		for (Object key : conf.keySet()) {
@@ -317,7 +317,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	public GUIParameter[] loadGUISettings(String sid) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object name : conf.keySet()) {
@@ -343,8 +343,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	@Override
 	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
-		GenericDAO gDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
-		UserDAO uDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		GenericDAO gDao = (GenericDAO) Context.get().getBean(GenericDAO.class);
+		UserDAO uDao = (UserDAO) Context.get().getBean(UserDAO.class);
 
 		try {
 			/*
@@ -375,7 +375,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	public boolean testEmail(String sid, String email) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 		EMailSender sender = new EMailSender(session.getTenantName());
 
 		try {

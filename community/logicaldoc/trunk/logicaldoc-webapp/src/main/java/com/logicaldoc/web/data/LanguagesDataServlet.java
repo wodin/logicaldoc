@@ -57,7 +57,7 @@ public class LanguagesDataServlet extends HttpServlet {
 			writer.print("<list>");
 
 			if (gui) {
-				ContextProperties pbean = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+				ContextProperties pbean = (ContextProperties) Context.get().getBean(ContextProperties.class);
 				List<String> installedLocales = I18N.getLocales();
 				for (String loc : installedLocales) {
 					Locale lc = LocaleUtil.toLocale(loc);

@@ -50,7 +50,7 @@ public class MessagesDataServlet extends HttpServlet {
 			/*
 			 * Execute the Query
 			 */
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 			dao.deleteExpiredMessages(session.getUserName());
 

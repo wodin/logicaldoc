@@ -85,7 +85,7 @@ public class ServiceFactory extends AbstractServiceFactory {
 		}
 
 		// We need to authenticate the user
-		AuthenticationChain chain = (AuthenticationChain) Context.getInstance().getBean(AuthenticationChain.class);
+		AuthenticationChain chain = (AuthenticationChain) Context.get().getBean(AuthenticationChain.class);
 		boolean authenticated = chain.authenticate(username, password, null,
 				new String[] { CmisServlet.remoteAddress.get()[0], CmisServlet.remoteAddress.get()[1], combinedUserId,
 						context.getRepositoryId() });

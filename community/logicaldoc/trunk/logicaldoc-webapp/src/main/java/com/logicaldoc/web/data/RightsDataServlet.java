@@ -78,8 +78,8 @@ public class RightsDataServlet extends HttpServlet {
 	}
 
 	private void folderRights(HttpServletResponse response, Long folderId, String locale) throws IOException {
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+		GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 		Folder folder = folderDao.findById(folderId);
 		folderDao.initialize(folder);
 
@@ -137,8 +137,8 @@ public class RightsDataServlet extends HttpServlet {
 	}
 
 	private void menuRights(HttpServletResponse response, Long menuId, String locale, long tenantId) throws IOException {
-		MenuDAO menuDao = (MenuDAO) Context.getInstance().getBean(MenuDAO.class);
-		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		MenuDAO menuDao = (MenuDAO) Context.get().getBean(MenuDAO.class);
+		GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 		Menu menu = menuDao.findById(menuId);
 		menuDao.initialize(menu);
 

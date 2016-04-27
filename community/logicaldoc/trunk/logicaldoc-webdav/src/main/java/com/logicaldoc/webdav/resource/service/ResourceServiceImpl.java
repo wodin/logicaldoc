@@ -134,7 +134,7 @@ public class ResourceServiceImpl implements ResourceService {
 			return resourceList;
 
 		// Find children visible by the current user
-		FolderDAO folderDAO = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDAO = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Collection<Folder> folders = folderDAO.findChildren(folderID, parentResource.getRequestedPerson());
 		if (folders != null) {
 			for (Iterator<Folder> iterator = folders.iterator(); iterator.hasNext();) {

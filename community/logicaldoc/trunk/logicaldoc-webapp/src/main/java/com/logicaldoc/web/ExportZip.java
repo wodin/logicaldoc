@@ -47,8 +47,8 @@ public class ExportZip extends HttpServlet {
 		UserSession session = ServiceUtil.validateSession(request);
 
 		try {
-			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-			UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+			UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 
 			Long userId = session.getUserId();
 			String folderId = request.getParameter("folderId");

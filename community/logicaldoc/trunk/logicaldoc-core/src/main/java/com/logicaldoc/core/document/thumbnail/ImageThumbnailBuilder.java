@@ -26,7 +26,7 @@ public class ImageThumbnailBuilder extends AbstractThumbnailBuilder {
 	public synchronized void buildThumbnail(String sid, String tenant, File src, String srcFileName, File dest, int size, int quality)
 			throws IOException {
 		try {
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties conf = Context.get().getRegisty();
 			String commandLine = conf.getProperty(CONVERT) + " -compress JPEG -quality " + Integer.toString(quality)
 					+ " -resize x" + Integer.toString(size) + " " + src.getPath() + " " + dest.getPath();
 			Exec.exec(commandLine, null, null, 10);

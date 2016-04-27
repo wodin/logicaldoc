@@ -24,7 +24,7 @@ public class SoapAuthService extends AbstractService implements AuthService {
 
 	@Override
 	public String login(String username, String password) throws Exception {
-		AuthenticationChain authenticationChain = (AuthenticationChain) Context.getInstance().getBean(
+		AuthenticationChain authenticationChain = (AuthenticationChain) Context.get().getBean(
 				AuthenticationChain.class);
 
 		HttpServletRequest request = null;

@@ -260,7 +260,7 @@ public class UploadServlet extends UploadAction {
 	}
 
 	protected void setUploadMax() {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 		int maxUploadMB = 100;
 		if (config.getProperty("upload.maxsize") != null)
 			maxUploadMB = Integer.parseInt(config.getProperty("upload.maxsize"));
@@ -277,7 +277,7 @@ public class UploadServlet extends UploadAction {
 	 * configured in 'upload.disallow'.
 	 */
 	public static boolean isAllowedForUpload(String filename, String tenant) {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 		String disallow = config.getProperty(tenant + ".upload.disallow");
 
 		if (disallow == null || disallow.trim().isEmpty())

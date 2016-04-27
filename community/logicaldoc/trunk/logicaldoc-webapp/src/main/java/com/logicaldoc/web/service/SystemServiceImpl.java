@@ -69,7 +69,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public boolean disableTask(String sid, String taskName) throws ServerException {
 		ServiceUtil.validateSession(sid);
 
-		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
+		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 		try {
 			Task task = null;
 			for (Task t : manager.getTasks()) {
@@ -93,7 +93,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public boolean enableTask(String sid, String taskName) throws ServerException {
 		ServiceUtil.validateSession(sid);
 
-		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
+		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 		try {
 			Task task = null;
 			for (Task t : manager.getTasks()) {
@@ -116,7 +116,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	@Override
 	public GUIParameter[][] getStatistics(String sid, String locale) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
-		GenericDAO genDao = (GenericDAO) Context.getInstance().getBean(GenericDAO.class);
+		GenericDAO genDao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 
 		GUIParameter[][] parameters = new GUIParameter[4][8];
 		try {
@@ -274,7 +274,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public GUITask getTaskByName(String sid, String taskName, String locale) throws ServerException {
 		ServiceUtil.validateSession(sid);
 
-		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
+		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 		try {
 			Task tsk = null;
 			for (Task t : manager.getTasks()) {
@@ -323,7 +323,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				/*
 				 * Parse the recipients ids and check the users existence
 				 */
-				UserDAO dao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+				UserDAO dao = (UserDAO) Context.get().getBean(UserDAO.class);
 				if (tsk.getReportRecipients() != null) {
 					StringTokenizer st = new StringTokenizer(tsk.getReportRecipients(), ",", false);
 					while (st.hasMoreTokens()) {
@@ -356,7 +356,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			progress = -1;
 		progress++;
 
-		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
+		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 		GUITask[] tasks;
 		try {
 			tasks = new GUITask[manager.getTasks().size()];
@@ -415,7 +415,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public GUITask saveTask(String sid, GUITask task, String locale) throws ServerException {
 		ServiceUtil.validateSession(sid);
 
-		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
+		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 
 		try {
 			Task tsk = null;
@@ -482,7 +482,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 			String[] event) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 
-		HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+		HistoryDAO dao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 		List<GUIHistory> histories = new ArrayList<GUIHistory>();
 		try {
 
@@ -635,7 +635,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 	@Override
 	public boolean startTask(String taskName) {
-		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
+		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 
 		try {
 			for (Task task : manager.getTasks()) {
@@ -655,7 +655,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 	@Override
 	public boolean stopTask(String taskName) {
-		TaskManager manager = (TaskManager) Context.getInstance().getBean(TaskManager.class);
+		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 
 		try {
 			for (Task task : manager.getTasks()) {
@@ -676,7 +676,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public void setGUILanguageStatus(String sid, String language, boolean active) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
-			ContextProperties conf = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
 			conf.setProperty(session.getTenantName() + ".lang." + language + ".gui", active ? "enabled" : "disabled");
 			conf.write();
 		} catch (Throwable t) {
@@ -688,7 +688,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public void markFeedMsgAsRead(String sid, long[] ids) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
 			for (long id : ids) {
 				FeedMessage message = dao.findById(id);
@@ -705,7 +705,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public void markFeedMsgAsNotRead(String sid, long[] ids) throws ServerException {
 		ServiceUtil.validateSession(sid);
 		try {
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
 			for (long id : ids) {
 				FeedMessage message = dao.findById(id);
@@ -723,7 +723,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 		ServiceUtil.validateSession(sid);
 
 		try {
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
 			for (long id : ids) {
 				dao.delete(id);

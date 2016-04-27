@@ -60,7 +60,7 @@ public class VersionsDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			VersionDAO dao = (VersionDAO) Context.getInstance().getBean(VersionDAO.class);
+			VersionDAO dao = (VersionDAO) Context.get().getBean(VersionDAO.class);
 
 			List<Object> parameters = new ArrayList<Object>();
 			StringBuffer query = new StringBuffer(

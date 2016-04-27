@@ -120,7 +120,7 @@ public abstract class Search {
 		log.info("Launch search");
 		log.info("Expression: " + options.getExpression());
 
-		UserDAO uDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO uDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		searchUser = uDao.findById(options.getUserId());
 		if (searchUser == null) {
 			log.warn("Unexisting user");
@@ -141,8 +141,8 @@ public abstract class Search {
 			log.error(e.getMessage(), e);
 		}
 
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
-		TenantDAO tdao = (TenantDAO) Context.getInstance().getBean(TenantDAO.class);
+		ContextProperties config = Context.get().getRegisty();
+		TenantDAO tdao = (TenantDAO) Context.get().getBean(TenantDAO.class);
 		Tenant tenant = tdao.findById(searchUser.getTenantId());
 
 		String extattrs = config.getProperty(tenant.getName() + ".search.extattr");
@@ -163,7 +163,7 @@ public abstract class Search {
 			// Search for extended attributes, key is docId-name
 			final Map<String, ExtendedAttribute> extAtt = new HashMap<String, ExtendedAttribute>();
 
-			DocumentDAO ddao = (DocumentDAO) Context.getInstance().getBean(DocumentDAO.class);
+			DocumentDAO ddao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 			StringBuffer query = new StringBuffer(
 					"select ld_docid, ld_name, ld_type, ld_stringvalue, ld_intvalue, ld_doublevalue, ld_datevalue ");
 			query.append(" from ld_document_ext where ld_docid in ");

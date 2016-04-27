@@ -46,7 +46,7 @@ public class LinksDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			Context context = Context.getInstance();
+			Context context = Context.get();
 			DocumentDAO dao = (DocumentDAO) context.getBean(DocumentDAO.class);
 			StringBuffer query = new StringBuffer(
 					"select A.id, B.folder.id, A.type, A.document1.id, A.document1.title, A.document1.type, A.document2.id, A.document2.title, A.document2.type "

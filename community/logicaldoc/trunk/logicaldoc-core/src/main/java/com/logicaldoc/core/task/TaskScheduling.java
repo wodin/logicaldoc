@@ -122,7 +122,7 @@ public class TaskScheduling {
 	}
 
 	public Date getNextFireTime() {
-		Trigger trigger = (Trigger) Context.getInstance().getBean(taskName + "Trigger");
+		Trigger trigger = (Trigger) Context.get().getBean(taskName + "Trigger");
 		if (!(trigger instanceof TaskTrigger))
 			return null;
 
@@ -167,7 +167,7 @@ public class TaskScheduling {
 	 * Loads scheduling configurations from persistent storage
 	 */
 	public void load() throws IOException, ParseException {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		String enbl = config.getProperty("schedule.enabled." + taskName);
 		this.enabled = "true".equals(enbl);
 		setCronExpression(config.getProperty("schedule.cron." + taskName));
@@ -184,11 +184,11 @@ public class TaskScheduling {
 	 * Saves scheduling configurations in the persistent storage
 	 */
 	public void save() throws IOException, ParseException {
-		Scheduler scheduler = (Scheduler) Context.getInstance().getBean("Scheduler");
-		TaskTrigger trigger = (TaskTrigger) Context.getInstance().getBean(taskName + "Trigger");
+		Scheduler scheduler = (Scheduler) Context.get().getBean("Scheduler");
+		TaskTrigger trigger = (TaskTrigger) Context.get().getBean(taskName + "Trigger");
 		String expression = getCronExpression();
 
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		config.setProperty("schedule.cron." + taskName, expression);
 		config.setProperty("schedule.enabled." + taskName, enabled ? "true" : "false");
 		config.setProperty("schedule.length." + taskName, Long.toString(maxLength));

@@ -40,7 +40,7 @@ public class ParsersDataServlet extends HttpServlet {
 			IOException {
 		try {
 			ServiceUtil.validateSession(request);
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");

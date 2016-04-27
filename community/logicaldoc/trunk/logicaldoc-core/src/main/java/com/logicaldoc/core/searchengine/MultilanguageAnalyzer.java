@@ -41,7 +41,7 @@ public class MultilanguageAnalyzer extends AnalyzerWrapper {
 
 	private boolean isSubwordsEnabled() {
 		try {
-			ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+			ContextProperties config = Context.get().getRegisty();
 			boolean subwords = "true".equals(config.getProperty("index.subwords"));
 			return subwords;
 		} catch (Throwable t) {

@@ -39,7 +39,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 		User user = validateSession(sid);
 
 		try {
-			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			Folder parentFolder = folderDao.findById(folder.getParentId());
 			if (parentFolder == null)
 				throw new Exception("A parent folder with id " + folder.getParentId() + " was not found.");
@@ -82,7 +82,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 		User user = validateSession(sid);
 
 		try {
-			FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			Folder parentFolder = folderDao.findFolder(parentId);
 			if (parentFolder == null)
 				throw new Exception("A parent folder with id " + parentId + " was not found.");
@@ -117,7 +117,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 	@Override
 	public void delete(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		long rootId = folderDao.findRoot(user.getTenantId()).getTenantId();
 		if (folderId == rootId || folderId == rootId)
 			throw new Exception("Cannot delete root folder or Default workspace");
@@ -141,7 +141,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 	public WSFolder getFolder(String sid, long folderId) throws Exception {
 		User user = validateSession(sid);
 		checkReadEnable(user, folderId);
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Folder folder = folderDao.findById(folderId);
 		folderDao.initialize(folder);
 
@@ -152,7 +152,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 	public WSFolder findByPath(String sid, String path) throws Exception {
 		User user = validateSession(sid);
 
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Folder folder = folderDao.findByPath(path, user.getTenantId());
 		if (folder == null)
 			return null;
@@ -180,7 +180,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 		User user = validateSession(sid);
 		checkReadEnable(user, folderId);
 
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		List<Folder> folders = folderDao.findChildren(folderId, user.getId());
 		List<WSFolder> wsFolders = new ArrayList<WSFolder>();
 		for (Folder folder : folders) {
@@ -196,7 +196,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 	@Override
 	public void move(String sid, long folderId, long parentId) throws Exception {
 		User user = validateSession(sid);
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
 		if (parentId == folderDao.findRoot(user.getTenantId()).getId()) {
 			log.error("Cannot move folders in the root");
@@ -239,7 +239,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 	@Override
 	public void copy(String sid, long folderId, long targetId, int foldersOnly, int inheritSecurity) throws Exception {
 		User user = validateSession(sid);
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
 		if (targetId == folderDao.findRoot(user.getTenantId()).getId()) {
 			log.error("Cannot move folders in the root");
@@ -275,7 +275,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 	@Override
 	public void rename(String sid, long folderId, String name) throws Exception {
 		User user = validateSession(sid);
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		if (!folderDao.isPermissionEnabled(Permission.RENAME, folderId, user.getId())) {
 			throw new Exception("user does't have rename permission");
 		}
@@ -313,14 +313,14 @@ public class SoapFolderService extends AbstractService implements FolderService 
 	@Override
 	public WSFolder getRootFolder(String sid) throws Exception {
 		User user = validateSession(sid);
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		return getFolder(sid, folderDao.findRoot(user.getTenantId()).getId());
 	}
 
 	@Override
 	public WSFolder getDefaultWorkspace(String sid) throws Exception {
 		User user = validateSession(sid);
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		return getFolder(sid, folderDao.findDefaultWorkspace(user.getTenantId()).getId());
 	}
 
@@ -354,7 +354,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 
 		List<WSFolder> path = new ArrayList<WSFolder>();
 
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		long rootId = folderDao.findRoot(user.getTenantId()).getId();
 		if (folderId == rootId)
 			path.add(getRootFolder(sid));
@@ -378,7 +378,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 
 	@Override
 	public void grantUser(String sid, long folderId, long userId, int permissions, boolean recursive) throws Exception {
-		UserDAO userDao = (UserDAO) Context.getInstance().getBean(UserDAO.class);
+		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 
 		User user = userDao.findById(userId);
 		grantGroup(sid, folderId, user.getUserGroup().getId(), permissions, recursive);
@@ -389,7 +389,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 			throws Exception {
 		User sessionUser = validateSession(sid);
 
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		// Check if the session user has the Security Permission of this folder
 		if (!folderDao.isPermissionEnabled(Permission.SECURITY, folderId, sessionUser.getId()))
 			throw new Exception("Security Rights not granted to the user on folder id " + folderId);
@@ -412,7 +412,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 	}
 
 	private FolderGroup addFolderGroup(Folder folder, long groupId, int permissions) {
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
 		Set<FolderGroup> groups = new HashSet<FolderGroup>();
 		for (FolderGroup folderGroup : folder.getFolderGroups()) {
@@ -442,8 +442,8 @@ public class SoapFolderService extends AbstractService implements FolderService 
 		validateSession(sid);
 
 		List<Right> rightsList = new ArrayList<Right>();
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
-		GroupDAO groupDao = (GroupDAO) Context.getInstance().getBean(GroupDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+		GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 		try {
 			Folder folder = folderDao.findById(folderId);
 			if (folder.getSecurityRef() != null)
@@ -477,7 +477,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 		long folderId = folder.getId();
 		String name = folder.getName();
 
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		if (!folderDao.isPermissionEnabled(Permission.RENAME, folderId, user.getId())) {
 			throw new Exception("user does't have rename permission");
 		}
@@ -516,7 +516,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 		User user = validateSession(sid);
 		checkPermission(Permission.ADD, user, parentId);
 
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Folder parent = folderDao.findById(parentId);
 
 		FolderHistory transaction = new FolderHistory();
@@ -562,7 +562,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 	public WSFolder[] listWorkspaces(String sid) throws Exception {
 		User user = validateSession(sid);
 
-		FolderDAO folderDao = (FolderDAO) Context.getInstance().getBean(FolderDAO.class);
+		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		List<Folder> folders = folderDao.findByUserId(user.getId(), folderDao.findRoot(user.getTenantId()).getId());
 		List<WSFolder> wsFolders = new ArrayList<WSFolder>();
 		for (Folder folder : folders) {

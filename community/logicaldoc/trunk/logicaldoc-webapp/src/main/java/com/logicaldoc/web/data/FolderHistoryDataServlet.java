@@ -46,7 +46,7 @@ public class FolderHistoryDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			HistoryDAO dao = (HistoryDAO) Context.getInstance().getBean(HistoryDAO.class);
+			HistoryDAO dao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 			StringBuffer query = new StringBuffer(
 					"select A.userName, A.event, A.date, A.comment, A.title, A.path, A.sessionId from FolderHistory A where A.deleted = 0 ");
 			if (request.getParameter("id") != null)

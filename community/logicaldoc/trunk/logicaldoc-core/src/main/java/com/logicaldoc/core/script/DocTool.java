@@ -14,7 +14,7 @@ import com.logicaldoc.util.config.ContextProperties;
 public class DocTool {
 
 	public String download(long docId) {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		String url = config.getProperty("server.url");
 		if (!url.endsWith("/"))
 			url += "/";
@@ -23,7 +23,7 @@ public class DocTool {
 	}
 
 	public String display(long tenantId, long docId) {
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		String url = config.getProperty("server.url");
 		if (!url.endsWith("/"))
 			url += "/";
