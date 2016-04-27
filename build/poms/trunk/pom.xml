@@ -544,11 +544,6 @@
         <version>1.8.5</version>
       </dependency>
       <dependency>
-        <groupId>org.quartz-scheduler</groupId>
-        <artifactId>quartz</artifactId>
-        <version>1.8.5</version>
-      </dependency>
-      <dependency>
         <groupId>com.google.gwt</groupId>
         <artifactId>gwt-servlet</artifactId>
         <version>${gwt.version}</version>
