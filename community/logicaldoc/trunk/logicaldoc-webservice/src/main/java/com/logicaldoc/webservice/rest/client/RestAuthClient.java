@@ -20,7 +20,7 @@ public class RestAuthClient extends AbstractRestClient implements AuthService {
 	AuthService proxy = null;
 
 	public RestAuthClient(String endpoint) {
-		super(endpoint);
+		super(endpoint, null, null);
 		proxy = JAXRSClientFactory.create(endpoint, AuthService.class);
 	}
 	

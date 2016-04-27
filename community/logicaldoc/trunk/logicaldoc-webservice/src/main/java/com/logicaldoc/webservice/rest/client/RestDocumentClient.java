@@ -9,18 +9,25 @@ import java.util.List;
 import javax.activation.DataHandler;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.AttachmentBuilder;
 import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
@@ -40,18 +47,27 @@ public class RestDocumentClient extends AbstractRestClient {
 
 	DocumentService proxy = null;
 
-	public RestDocumentClient(String endpoint) {
-		super(endpoint);
-
-		JacksonJsonProvider provider = new JacksonJsonProvider();
-		proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider));
+	public RestDocumentClient(String endpoint, String username, String password) {
+		this(endpoint, username, password, -1);
 	}
 
-	public RestDocumentClient(String endpoint, int timeout) {
-		super(endpoint, timeout);
+	public RestDocumentClient(String endpoint, String username, String password, int timeout) {
+		super(endpoint, username, password, timeout);
 
 		JacksonJsonProvider provider = new JacksonJsonProvider();
-		proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider));
+		
+		if ((username == null) || (password == null)) {
+			proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider));
+		} else {
+			proxy = JAXRSClientFactory.create(endpoint, DocumentService.class, Arrays.asList(provider), username, password, null);
+		}
+		
+		if (timeout > 0) {
+			HTTPConduit conduit = WebClient.getConfig(proxy).getHttpConduit();
+			HTTPClientPolicy policy = new HTTPClientPolicy();
+			policy.setReceiveTimeout(timeout);
+			conduit.setClient(policy);
+		}		
 	}
 
 	public WSDocument create(WSDocument document, File packageFile) throws Exception {
@@ -149,7 +165,7 @@ public class RestDocumentClient extends AbstractRestClient {
 	 * @param document
 	 * @throws Exception
 	 */
-	public void updateBAD(WSDocument document) throws Exception {
+	public void update(WSDocument document) throws Exception {
 
 		log.info("update docID: {}", document.getId());
 		WebClient.client(proxy).type(MediaType.MULTIPART_FORM_DATA);
@@ -167,10 +183,19 @@ public class RestDocumentClient extends AbstractRestClient {
 		proxy.update(atts);
 	}
 
-	public void update(WSDocument wsDoc) throws Exception {
+	public void updateHTTPClient(WSDocument wsDoc) throws Exception {
 
 		log.debug("update docID: {}", wsDoc.getId());
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+		//CloseableHttpClient httpclient = HttpClients.createDefault();
+		
+		String[] credent = StringUtils.split(credentials, ':'); 
+		
+		CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(credent[0], credent[1]));
+        
+        CloseableHttpClient httpclient = HttpClients.custom()
+                .setDefaultCredentialsProvider(credsProvider)
+                .build();		
 
 		HttpPost httppost = new HttpPost(endpoint + "/update");
 		httppost.addHeader(new BasicHeader("Accept", "application/json"));
