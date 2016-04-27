@@ -88,14 +88,14 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	}
 
 	/**
-	 * Checks if a sessions is valid or not. A valid session is a one that
-	 * exists and is in state OPEN
+	 * Checks if a session is valid or not. A valid session is a one that exists
+	 * and is in state OPEN
 	 * 
 	 * @param sessionId The session identifier
 	 * @return true only if the session exists
 	 */
 	public boolean isValid(String sessionId) {
-		if(sessionId!=null)
+		if (sessionId == null)
 			return false;
 		UserSession session = get(sessionId);
 		return session != null && !isExpired(session) && session.getStatus() == UserSession.STATUS_OPEN;
