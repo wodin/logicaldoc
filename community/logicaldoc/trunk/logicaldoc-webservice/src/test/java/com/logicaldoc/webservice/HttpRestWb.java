@@ -9,8 +9,12 @@ import java.util.List;
 
 import org.apache.http.Consts;
 import org.apache.http.HttpEntity;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -21,6 +25,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
@@ -39,14 +44,21 @@ public class HttpRestWb {
 
 	public static void main(String[] args) throws Exception {
 
-		String sid = loginJSON();
+		//String sid = loginJSON();
 
-		createFolderSimple(sid);
-		//createFolderSimpleJSON(sid);
+		CredentialsProvider credsProvider = new BasicCredentialsProvider();
+        credsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("admin", "admin"));
+        
+        CloseableHttpClient httpclient = HttpClients.custom()
+                .setDefaultCredentialsProvider(credsProvider)
+                .build();
+        
+		//createFolderSimple(httpclient);
+		createFolderSimpleJSON(httpclient);
 
-		//listDocuments(sid, 04L);
-		// createDocument( sid);
-		// listChildrean(sid, 04L);
+		//createDocument( httpclient);
+		//listDocuments(httpclient, 04L);
+		listChildren(httpclient, 04L);
 		
 		/*
 		long start_time = System.nanoTime();
@@ -103,7 +115,7 @@ public class HttpRestWb {
 		// Total Exec. time (ms): 1062.980412
 		// Total Exec. time (ms): 1064.021243
 		
-		createPath(sid, 04L, "/sgsgsgs/Barisoni/rurururu");
+		createPath("XXXXX", 04L, "/sgsgsgs/Barisoni/rurururu");
 	}
 	
 	private static void createPath(String sid, long parentId, String path) throws Exception {
@@ -190,13 +202,15 @@ public class HttpRestWb {
 		}
 	}	
 	
-	private static void listDocuments(String sid, long parentId) throws ClientProtocolException, IOException {
+	private static void listDocuments(CloseableHttpClient httpclient, long parentId) throws ClientProtocolException, IOException {
 
-		System.out.println("sid: " + sid);
+		//System.out.println("sid: " + httpclient);
 
 		List<NameValuePair> params = new LinkedList<NameValuePair>();
 		params.add(new BasicNameValuePair("folderId", String.valueOf(parentId)));
-		params.add(new BasicNameValuePair("fileName", "gjhghjgj"));
+		//params.add(new BasicNameValuePair("fileName", "gjhghjgj")); // this should result nothing
+		//params.add(new BasicNameValuePair("fileName", "InvoiceProcessing01-workflow.png"));
+		params.add(new BasicNameValuePair("fileName", "*.png"));
 
 		StringBuilder requestUrl = new StringBuilder(BASE_PATH + "/services/rest/document/listDocuments");
 		String querystring = URLEncodedUtils.format(params, "utf-8");
@@ -205,7 +219,7 @@ public class HttpRestWb {
 
 		System.out.println(requestUrl);
 
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+		//CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet method = new HttpGet(requestUrl.toString());
 		method.setHeader("Accept", "application/json");
 
@@ -226,9 +240,9 @@ public class HttpRestWb {
 		}
 	}	
 
-	private static void listChildrean(String sid, long parentId) throws ClientProtocolException, IOException {
+	private static void listChildren(CloseableHttpClient httpclient, long parentId) throws ClientProtocolException, IOException {
 
-		System.out.println("sid: " + sid);
+		//System.out.println("sid: " + httpclient);
 
 		List<NameValuePair> params = new LinkedList<NameValuePair>();
 		params.add(new BasicNameValuePair("folderId", String.valueOf(parentId)));
@@ -240,7 +254,7 @@ public class HttpRestWb {
 
 		System.out.println(requestUrl);
 
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+		//CloseableHttpClient httpclient = HttpClients.createDefault();
 		HttpGet method = new HttpGet(requestUrl.toString());
 		method.setHeader("Accept", "application/json");
 
@@ -261,9 +275,9 @@ public class HttpRestWb {
 		}
 	}
 
-	private static void createDocument(String sid) throws IOException {
+	private static void createDocument(CloseableHttpClient httpclient) throws IOException {
 
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+		//CloseableHttpClient httpclient = HttpClients.createDefault();
 		
         HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/document/create");
 
@@ -304,17 +318,27 @@ public class HttpRestWb {
 		}
 	}
 
-	private static void createFolderSimple(String sid) throws UnsupportedEncodingException, IOException {
-
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+	private static void createFolderSimple(CloseableHttpClient httpclient) throws Exception { 
 		
+		// This will create a tree starting from the Root folder (not in the Default workspace)
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 		formparams.add(new BasicNameValuePair("folderPath", "/LogicalDOC/USA/NJ/Fair Lawn/createSimple"));
+		
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
+		
 		HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/folder/createSimple");
 		httppost.setEntity(entity);		
 
 		CloseableHttpResponse response = httpclient.execute(httppost);
+		int code = response.getStatusLine().getStatusCode();
+		System.out.println("HTTPstatus code: "+ code);
+		if (code == HttpStatus.SC_OK) {
+		} else {
+			//log.warn("status code is invalid: {}", code);
+			System.err.println("status code is invalid: "+ code);
+			throw new Exception(response.getStatusLine().getReasonPhrase());
+		}				
+		
 		try {
 			HttpEntity rent = response.getEntity();
 			if (rent != null) {
@@ -326,13 +350,14 @@ public class HttpRestWb {
 		}
 	}
 
-	private static void createFolderSimpleJSON(String sid)
+	private static void createFolderSimpleJSON(CloseableHttpClient httpclient)
 			throws UnsupportedEncodingException, IOException {
 
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+//		CloseableHttpClient httpclient = HttpClients.createDefault();
 
-		String folderPath = "/LogicalDOC/USA/NJ/Fair Lawn/createSimple";
-		String input = "{ \"sid\" : \"" + sid + "\", \"folderPath\" : \"" + folderPath + "\" }";
+		// This will create a tree starting from the Default workspace
+		String folderPath = "/Default/USA/NJ/Fair Lawn/createSimple/JSON";
+		String input = "{ \"sid\" : \"" + httpclient + "\", \"folderPath\" : \"" + folderPath + "\" }";
 		System.out.println(input);
 
 		HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/folder/createSimple");
