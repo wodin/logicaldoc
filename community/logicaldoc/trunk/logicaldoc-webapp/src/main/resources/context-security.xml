@@ -23,6 +23,7 @@
         <property name="userDAO" ref="UserDAO" />
         <property name="authenticationChain" ref="AuthenticationChain" />
     </bean>
+    <bean id="AdminPasswdAuthenticationProvider" class="com.logicaldoc.web.security.AdminPasswdAuthenticationProvider" />
     <bean id="LDAccessDecisionManager" class="com.logicaldoc.web.security.LDAccessDecisionManager">
         <constructor-arg>
             <list>
@@ -39,7 +40,43 @@
     </security:authentication-manager>
     <bean id="LDAnonymousLoginFilter" class="com.logicaldoc.web.security.LDAnonymousLoginFilter" />
     <bean id="LDSecurityContextRepository" class="com.logicaldoc.web.security.LDSecurityContextRepository" />
-
+    <security:authentication-manager id="AdminPasswdAuthenticationManager">
+        <security:authentication-provider ref='AdminPasswdAuthenticationProvider' />
+    </security:authentication-manager>
+    
+    <security:http pattern="/setup/**" use-expressions="true"
+        create-session="never" disable-url-rewriting="true" auto-config="false"
+        access-decision-manager-ref="LDAccessDecisionManager"
+        authentication-manager-ref="AdminPasswdAuthenticationManager"
+        security-context-repository-ref="LDSecurityContextRepository">
+        <!-- Protected areas -->
+        <security:intercept-url pattern="/**"
+            access="isAuthenticated()" />
+        <security:http-basic />
+    </security:http>
+    
+    <security:http pattern="/license/**" use-expressions="true"
+        create-session="never" disable-url-rewriting="true" auto-config="false"
+        access-decision-manager-ref="LDAccessDecisionManager"
+        authentication-manager-ref="AdminPasswdAuthenticationManager"
+        security-context-repository-ref="LDSecurityContextRepository">
+        <!-- Protected areas -->
+        <security:intercept-url pattern="/**"
+            access="isAuthenticated()" />
+        <security:http-basic />
+    </security:http>
+    
+    <security:http pattern="/sessions/**" use-expressions="true"
+        create-session="never" disable-url-rewriting="true" auto-config="false"
+        access-decision-manager-ref="LDAccessDecisionManager"
+        authentication-manager-ref="AdminPasswdAuthenticationManager"
+        security-context-repository-ref="LDSecurityContextRepository">
+        <!-- Protected areas -->
+        <security:intercept-url pattern="/**"
+            access="isAuthenticated()" />
+        <security:http-basic />
+    </security:http>
+    
     <security:http pattern="/services/rest/**" use-expressions="true"
         create-session="never" disable-url-rewriting="true" auto-config="false"
         access-decision-manager-ref="LDAccessDecisionManager"
