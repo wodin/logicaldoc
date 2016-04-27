@@ -12,7 +12,7 @@
        <%=message("performfollowingsteps",request)%>:
        <ol>
          <li><%=message("deletecache",request)%> <a href="http://docs.logicaldoc.com/en/update/clear-browser-cache" target="_blank"><%=message("clickforhowto",request)%></a></li>
-         <li><%=message("loginfromhere",request)%>: <a href="${request.contextPath}/<%=LOGIN_PAGE%>?skipreleasecheck=true"><%=message("login",request)%></a></li>
+         <li><%=message("loginfromhere",request)%>: <a href="${pageContext.request.contextPath}/<%=LOGIN_PAGE%>?skipreleasecheck=true"><%=message("login",request)%></a></li>
        </ol>
     </p>
     <hr/>
