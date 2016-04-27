@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
  */
 public class LDAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-	private static Logger log = LoggerFactory.getLogger(LDAuthenticationProvider.class);
+	private static Logger log = LoggerFactory.getLogger(LDAuthenticationFailureHandler.class);
 
 	private static final String COOKIE_LDOC_FAILURE = "ldoc-failure";
 
