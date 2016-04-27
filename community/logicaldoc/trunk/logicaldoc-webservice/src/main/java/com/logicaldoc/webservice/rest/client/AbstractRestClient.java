@@ -18,22 +18,37 @@ public abstract class AbstractRestClient {
 	protected String endpoint;
 
 	/**
-	 * Constructor
-	 * 
-	 * @param endpoint Connection URL
+	 * Must be in the format username:password
 	 */
-	public AbstractRestClient(String endpoint) {
-		this.endpoint = endpoint;
-	}
+	protected String credentials;
+
+	protected int timeout;
 
 	/**
 	 * Constructor
 	 * 
 	 * @param endpoint Connection URL
-	 * @param timeout Timeout for the RESTful requests
+	 * @param password 
+	 * @param userPassw 
 	 */
-	public AbstractRestClient(String endpoint, int timeout) {
-		this(endpoint);
+	public AbstractRestClient(String endpoint, String username, String password) {
+		this.endpoint = endpoint;
+		if (username != null && password != null) {
+			this.credentials = username + ":" +password;
+		}
+	}
+
+	/**
+	 * Constructor
+	 * 
+	 * @param endpoint  Connection URL
+	 * @param username
+	 * @param password
+	 * @param timeout Timeout for the RESTful requests
+	 */	
+	public AbstractRestClient(String endpoint2, String username, String password, int timeout) {
+		this(endpoint2, username, password);
+		this.timeout = timeout;
 	}
 
 }

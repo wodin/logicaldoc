@@ -11,6 +11,8 @@ import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.apache.cxf.jaxrs.ext.multipart.AttachmentBuilder;
 import org.apache.cxf.jaxrs.ext.multipart.ContentDisposition;
+import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
 import org.codehaus.jackson.jaxrs.JacksonJsonProvider;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
@@ -26,18 +28,29 @@ public class RestFolderClient extends AbstractRestClient {
 
 	FolderService proxy = null;
 
-	public RestFolderClient(String endpoint) {
-		super(endpoint);
-
-		JacksonJsonProvider provider = new JacksonJsonProvider();
-		proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
+	public RestFolderClient(String endpoint, String username, String password) {
+		this(endpoint, username, password, -1);
 	}
 
-	public RestFolderClient(String endpoint, int timeout) {
-		super(endpoint, timeout);
+	public RestFolderClient(String endpoint, String username, String password, int timeout) {
+		super(endpoint, username, password, timeout);
 
 		JacksonJsonProvider provider = new JacksonJsonProvider();
-		proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
+		
+		if ((username == null) || (password == null)) {
+			proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
+		} else {
+			//proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider));
+			//create(String baseAddress, Class<T> cls, List<?> providers, String username, String password, String configLocation)
+			proxy = JAXRSClientFactory.create(endpoint, FolderService.class, Arrays.asList(provider), username, password, null);
+		}
+		
+		if (timeout > 0) {
+			HTTPConduit conduit = WebClient.getConfig(proxy).getHttpConduit();
+			HTTPClientPolicy policy = new HTTPClientPolicy();
+			policy.setReceiveTimeout(timeout);
+			conduit.setClient(policy);
+		}		
 	}
 
 	public WSFolder[] listChildren(long folderId) throws Exception {

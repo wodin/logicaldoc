@@ -68,8 +68,25 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	public WSFolder createSimpleForm(@FormParam("folderPath") String folderPath) throws Exception {
 		log.debug("createSimpleForm()");
 		String sid = validateSession();
+		log.debug("sid: " +sid);
 		WSFolder root = super.getRootFolder(sid);
-		return super.createPath(sid, root.getId(), folderPath);
+		log.debug("root: " +root);
+		log.debug("root: {}", root);
+		try {
+			return super.createPath(sid, root.getId(), folderPath);
+		} catch (RuntimeException re) {
+			re.printStackTrace();
+			log.error("createSimpleForm RuntimeException", re);
+			throw re;
+		} catch (Exception e) {
+			e.printStackTrace();
+			log.error("createSimpleForm Exception", e);
+			throw e;
+		} catch (Throwable tw) {
+			tw.printStackTrace();
+			log.error("createSimpleForm Throwable", tw);
+			throw tw;
+		}
 	}
 
 	/*

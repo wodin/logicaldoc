@@ -17,6 +17,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.utils.URLEncodedUtils;
@@ -53,19 +54,19 @@ public class HttpRestWb {
                 .setDefaultCredentialsProvider(credsProvider)
                 .build();
         
-		//createFolderSimple(httpclient);
+		createFolderSimple(httpclient);
 		createFolderSimpleJSON(httpclient);
 
-		//createDocument( httpclient);
-		//listDocuments(httpclient, 04L);
+		createDocument( httpclient);
+		listDocuments(httpclient, 04L);
 		listChildren(httpclient, 04L);
 		
-		/*
 		long start_time = System.nanoTime();
 		
         WSSearchOptions wsso = buildSearchOptions("en", "document management system");
-		find(sid, wsso);
+		find(httpclient, wsso);
 		
+		/*
         wsso = buildSearchOptions("en", "document management");
 		find(sid, wsso);
 		
@@ -115,12 +116,30 @@ public class HttpRestWb {
 		// Total Exec. time (ms): 1062.980412
 		// Total Exec. time (ms): 1064.021243
 		
-		createPath("XXXXX", 04L, "/sgsgsgs/Barisoni/rurururu");
+		createPath(httpclient, 04L, "/sgsgsgs/Barisoni/rurururu");
+		
+		logout(httpclient);
 	}
 	
-	private static void createPath(String sid, long parentId, String path) throws Exception {
+	private static void logout(CloseableHttpClient httpclient) throws ClientProtocolException, IOException {
+
+		HttpDelete deletem = new HttpDelete(BASE_PATH + "/services/rest/auth/logout");	
+
+		CloseableHttpResponse response = httpclient.execute(deletem);
+		try {
+			HttpEntity rent = response.getEntity();
+			if (rent != null) {
+				String respoBody = EntityUtils.toString(rent, "UTF-8");
+				System.out.println(respoBody);
+			}
+		} finally {
+			response.close();
+		}		
+	}
+
+	private static void createPath(CloseableHttpClient httpclient, long parentId, String path) throws Exception {
 		
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+		//CloseableHttpClient httpclient = HttpClients.createDefault();
 		
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
 		formparams.add(new BasicNameValuePair("parentId", String.valueOf(parentId)));
@@ -163,9 +182,9 @@ public class HttpRestWb {
 		return options;
 	}
 	
-	private static void find(String sid, WSSearchOptions wsso) throws IOException {
+	private static void find(CloseableHttpClient httpclient, WSSearchOptions wsso) throws IOException {
 
-		CloseableHttpClient httpclient = HttpClients.createDefault();
+		//CloseableHttpClient httpclient = HttpClients.createDefault();
 		
         HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/search/find");
         httppost.addHeader(new BasicHeader("Accept", "application/json"));

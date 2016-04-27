@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.activation.DataHandler;
@@ -41,58 +42,58 @@ public class XtestRestClients {
 
 	public static void main(String[] args) throws Exception {
 
+		String username = "admin";
+		String password = "admin";
+		
 		authClient = new RestAuthClient(BASE_PATH + "/services/rest/auth");
-		docClient = new RestDocumentClient(BASE_PATH + "/services/rest/document");
-		fldClient = new RestFolderClient(BASE_PATH + "/services/rest/folder");
-		searchClient = new RestSearchClient(BASE_PATH + "/services/rest/search");
+		docClient = new RestDocumentClient(BASE_PATH + "/services/rest/document", username, password);
+		fldClient = new RestFolderClient(BASE_PATH + "/services/rest/folder", username, password);
+		searchClient = new RestSearchClient(BASE_PATH + "/services/rest/search", username, password);
 
 		// Note: 04L is the id of the default workspace
 
-		// listDocuments(sid, 04L);
-		// listDocuments(sid, 04L, "InvoiceProcessing01-workflow*.png"); // 4
-		// documents
-		// listDocuments(sid, 04L, "InvoiceProcessing01-workflow.png"); // 1
-		// document
-		// listDocuments(sid, 04L, "InvoiceProcessing01-workflow(3).png"); // 1
-		// document
-		// listFolderChildren(sid, 3342386L);
-		// listFolderChildren(sid, 4L);
+		//listDocuments(04L);
+		//listDocuments(04L, "InvoiceProcessing01-workflow*.png"); // 4 documents
+		//listDocuments(04L, "InvoiceProcessing01-workflow.png"); // 1 document
+		//listDocuments(04L, "InvoiceProcessing01-workflow(3).png"); // 1 document
+		//listFolderChildren(3342342L);
+		//listFolderChildren(4L);
 
-		// createPath(sid, 04L, "/sgsgsgs/Barisoni/rurururu");
-		// createPath(sid, 04L, "/La zanzara/Cruciani/coloqui via Sky");
+		//createPath(04L, "/sgsgsgs/Barisoni/rurururu");
+		//createPath(04L, "/La zanzara/Cruciani/coloqui via Sky");
 
-		// getFolder(sid, 04L);
+		//getFolder(04L);
 
-		// WSDocument myDoc = getDocument(sid, 3375109L);
-		//
-		// Calendar cal = Calendar.getInstance();
-		// SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		// // System.out.println( sdf.format(cal.getTime()) );
-		//
-		// myDoc.setTitle("document test(" +sdf.format(cal.getTime()) +")");
-		//
-		// updateDocument(sid, myDoc);
-
-		// createDocument02(sid);
-		// createFolder(sid, 04L, "DJ KATCH");
-
-		// deleteDocument(sid, 3375105L);
-		// deleteFolder(sid, 4128768L);
-		updateDocument(164986881L);
-
-		//listDocuments(sid, 04L);
-		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow*.png"); // 3 documents
-		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow.png"); // 0 document
-		//listDocuments(sid, 04L, "InvoiceProcessing01-workflow(3).png"); // 1 document
-		//listFolderChildren(sid, 3342386L);
-		//listFolderChildren(sid, 4L);
+		WSDocument myDoc = getDocument(3407874L);
 		
-		//createPath(sid, 04L, "/sgsgsgs/Barisoni/rurururu");
-		//createPath(sid, 04L, "/La zanzara/Cruciani/coloqui via Sky");
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		System.out.println( sdf.format(cal.getTime()) );
 		
-		//getFolder(sid, 04L);
+		myDoc.setTitle("document test(" +sdf.format(cal.getTime()) +")");
 		
-//		WSDocument myDoc = getDocument(sid, 3375109L);
+		updateDocument(myDoc);
+
+		// createDocument02();
+		// createFolder(04L, "DJ KATCH");
+
+		// deleteDocument(3375105L);
+		// deleteFolder(4128768L);
+		//updateDocument(164986881L);
+
+		//listDocuments(04L);
+		//listDocuments(04L, "InvoiceProcessing01-workflow*.png"); // 3 documents
+		//listDocuments(04L, "InvoiceProcessing01-workflow.png"); // 0 document
+		//listDocuments(04L, "InvoiceProcessing01-workflow(3).png"); // 1 document
+		//listFolderChildren(3342386L);
+		//listFolderChildren(4L);
+		
+		//createPath(04L, "/sgsgsgs/Barisoni/rurururu");
+		//createPath(04L, "/La zanzara/Cruciani/coloqui via Sky");
+		
+		//getFolder(04L);
+		
+//		WSDocument myDoc = getDocument(3375109L);
 //		
 //		Calendar cal = Calendar.getInstance();
 //        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -100,14 +101,14 @@ public class XtestRestClients {
 //        
 //		myDoc.setTitle("document test(" +sdf.format(cal.getTime()) +")");
 //		
-//		updateDocument(sid, myDoc);
+//		updateDocument(myDoc);
 		
-		//createDocument02(sid);
-		//createFolder(sid, 04L, "DJ KATCH");
+		//createDocument02();
+		//createFolder(04L, "DJ KATCH");
 		
-		//deleteDocument(sid, 4325376L);
-		//deleteFolder(sid, 4128768L);
-		//updateDocument(sid, 164986881L);
+		//deleteDocument(4325376L);
+		//deleteFolder(4128768L);
+		//updateDocument(164986881L);
 		
 		long start_time = System.nanoTime();
 
@@ -331,8 +332,10 @@ public class XtestRestClients {
 
 		// Object to JSON in String
 		ObjectMapper mapper = new ObjectMapper();
-		String jsonInString = mapper.writeValueAsString(docs[1]);
-		System.out.println("doc[1]: " + jsonInString);
+		if (docs.length > 0) {
+			String jsonInString = mapper.writeValueAsString(docs[0]);
+			System.out.println("doc[1]: " + jsonInString);
+		}
 	}
 
 	private static void listDocuments(long folderId, String fileName) throws Exception {
