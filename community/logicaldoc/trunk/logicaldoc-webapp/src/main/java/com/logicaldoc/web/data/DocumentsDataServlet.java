@@ -59,7 +59,7 @@ public class DocumentsDataServlet extends HttpServlet {
 		try {
 			Context context = Context.get();
 			UserSession session = ServiceUtil.validateSession(request);
-			ContextProperties config = (ContextProperties) context.getBean(ContextProperties.class);
+			ContextProperties config = Context.get().getProperties();
 			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());
 			udao.initialize(user);

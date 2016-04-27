@@ -1054,7 +1054,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public List<TagCloud> getTagCloud(String sid) {
 		UserSession session = SessionManager.getInstance().get(sid);
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 
 		int maxTags = config.getInt(session.getTenantName() + ".tagcloud.maxtags", 30);
 		return getTagCloud(session.getTenantId(), maxTags);

@@ -121,7 +121,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		// Reload the application context in order to obtain the new value
 		Context.refresh();
 
-		ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
+		ContextProperties conf = Context.get().getProperties();
 		String path = conf.getPropertyWithSubstitutions("index.dir");
 
 		if (!path.endsWith(File.pathSeparator)) {
@@ -172,7 +172,7 @@ public class SetupServiceImpl extends RemoteServiceServlet implements SetupServi
 		FileUtils.forceMkdir(new File(logDir));
 		String dbDirectory = FilenameUtils.separatorsToSystem(repoFolder.getPath() + "/db/");
 
-		ContextProperties pbean = (ContextProperties) Context.get().getBean(ContextProperties.class);
+		ContextProperties pbean = Context.get().getProperties();
 		pbean.setProperty("store.1.dir", docDir);
 		pbean.setProperty("store.write", "1");
 		pbean.setProperty("index.dir", indexDir);

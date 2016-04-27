@@ -44,7 +44,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			searchEngine.setLocked(indexer.isLocked());
 			searchEngine.setEntries(indexer.getCount());
 
-			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
+			ContextProperties conf = Context.get().getProperties();
 			searchEngine.setExcludePatters(conf.getProperty(session.getTenantName() + ".index.excludes"));
 			searchEngine.setIncludePatters(conf.getProperty(session.getTenantName() + ".index.includes"));
 			searchEngine.setDir(conf.getProperty("index.dir"));
@@ -139,7 +139,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public void save(String sid, GUISearchEngine searchEngine) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
-			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
+			ContextProperties conf = Context.get().getProperties();
 			conf.setProperty(session.getTenantName() + ".index.excludes",
 					searchEngine.getExcludePatters() != null ? searchEngine.getExcludePatters() : "");
 			conf.setProperty(session.getTenantName() + ".index.includes",
@@ -163,7 +163,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	public void setLanguageStatus(String sid, String language, boolean active) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
-			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
+			ContextProperties conf = Context.get().getProperties();
 			conf.setProperty(session.getTenantName() + ".lang." + language, active ? "enabled" : "disabled");
 			conf.write();
 		} catch (Throwable t) {

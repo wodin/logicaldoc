@@ -219,7 +219,7 @@ public class LDRepository {
 		versionDao = (VersionDAO) Context.get().getBean(VersionDAO.class);
 		historyDao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 
 		this.sid = sid;
 		this.root = root;
@@ -268,7 +268,7 @@ public class LDRepository {
 		capabilities.setSupportsGetFolderTree(true);
 		capabilities.setCapabilityRendition(CapabilityRenditions.READ);
 
-		ContextProperties settings = Context.get().getRegisty();
+		ContextProperties settings = Context.get().getProperties();
 		capabilities.setCapabilityChanges("true".equals(settings.getProperty("cmis.changelog")) ? CapabilityChanges.ALL
 				: CapabilityChanges.NONE);
 

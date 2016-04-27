@@ -50,8 +50,8 @@ public class Context implements ApplicationContextAware, ApplicationListener {
 	/**
 	 * Gets the registry with all the configuration properties for this context
 	 */
-	public ContextProperties getRegisty() {
-		ContextProperties registry = (ContextProperties) getBean(ContextProperties.class);
+	public ContextProperties getProperties() {
+		ContextProperties registry = Context.get().getProperties();
 		return registry;
 	}
 

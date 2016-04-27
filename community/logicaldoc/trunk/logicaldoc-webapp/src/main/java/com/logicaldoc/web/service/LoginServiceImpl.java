@@ -65,7 +65,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 
 			Tenant tenant = tenantDao.findById(user.getTenantId());
 
-			ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
+			ContextProperties config = Context.get().getProperties();
 			usr.setPasswordMinLenght(Integer.parseInt(config.getProperty(tenant.getName() + ".password.size")));
 
 			return usr;

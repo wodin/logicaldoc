@@ -38,7 +38,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 	};
 
 	protected boolean ignoreCaseLogin() {
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 		return "true".equals(config.getProperty("login.ignorecase"));
 	}
 
@@ -108,7 +108,7 @@ public class AuthenticationChain implements AuthenticationProvider {
 			}
 
 			if (key != null) {
-				ContextProperties config = Context.get().getRegisty();
+				ContextProperties config = Context.get().getProperties();
 				if ("true".equals(config.getProperty(tenant + ".anonymous.enabled"))
 						&& username.equals(config.getProperty(tenant + ".anonymous.user"))
 						&& key.equals(config.getProperty(tenant + ".anonymous.key")))

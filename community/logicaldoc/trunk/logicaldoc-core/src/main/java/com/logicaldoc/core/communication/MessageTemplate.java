@@ -33,7 +33,7 @@ public class MessageTemplate extends PersistentObject {
 		ScriptingEngine script = new ScriptingEngine(getName(), LocaleUtil.toLocale(language));
 
 		// General configurations
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 		dictionary.put("serverUrl", config.get("server.url"));
 
 		return script.evaluate(text, dictionary);

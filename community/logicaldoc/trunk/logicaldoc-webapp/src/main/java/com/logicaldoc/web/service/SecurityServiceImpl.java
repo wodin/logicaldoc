@@ -191,7 +191,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		/*
 		 * Prepare an incoming message, if any
 		 */
-		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getProperties();
 		String incomingMessage = config.getProperty(userSession.getTenantName() + ".gui.welcome");
 		if (StringUtils.isNotEmpty(incomingMessage)) {
 			Map<String, String> map = new HashMap<String, String>();
@@ -420,7 +420,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 				Tenant tenant = tenantDao.findById(user.getTenantId());
 
-				ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
+				ContextProperties config = Context.get().getProperties();
 				usr.setPasswordMinLenght(Integer.parseInt(config.getProperty(tenant.getName() + ".password.size")));
 
 				loadDashlets(usr);
@@ -544,7 +544,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				}
 
 				// Generate an initial password
-				ContextProperties pbean = (ContextProperties) Context.get().getBean(ContextProperties.class);
+				ContextProperties pbean = Context.get().getProperties();
 				int minsize = 8;
 				try {
 					minsize = pbean.getInt(session.getTenantName() + ".password.size");
@@ -627,7 +627,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		 * Prepare the template
 		 */
 		Map<String, Object> dictionary = new HashMap<String, Object>();
-		ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getProperties();
 		String address = config.getProperty("server.url");
 		dictionary.put("url", address);
 		dictionary.put("user", user);
@@ -688,7 +688,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		try {
 			UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
-			ContextProperties pbean = (ContextProperties) Context.get().getBean(ContextProperties.class);
+			ContextProperties pbean = Context.get().getProperties();
 
 			securitySettings.setPwdExpiration(Integer.parseInt(pbean.getProperty("password.ttl")));
 			securitySettings
@@ -725,7 +725,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		boolean restartRequired = false;
 
 		try {
-			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
+			ContextProperties conf = Context.get().getProperties();
 
 			if (session.getTenantId() == Tenant.DEFAULT_ID) {
 				conf.setProperty("password.ttl", Integer.toString(settings.getPwdExpiration()));

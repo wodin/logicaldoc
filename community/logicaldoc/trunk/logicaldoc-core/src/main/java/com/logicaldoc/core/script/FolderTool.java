@@ -14,7 +14,7 @@ import com.logicaldoc.util.config.ContextProperties;
 public class FolderTool {
 
 	public String display(long tenatId, long folderId) {
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 		String url = config.getProperty("server.url");
 		if (!url.endsWith("/"))
 			url += "/";

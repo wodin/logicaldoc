@@ -167,7 +167,7 @@ public class TaskScheduling {
 	 * Loads scheduling configurations from persistent storage
 	 */
 	public void load() throws IOException, ParseException {
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 		String enbl = config.getProperty("schedule.enabled." + taskName);
 		this.enabled = "true".equals(enbl);
 		setCronExpression(config.getProperty("schedule.cron." + taskName));
@@ -188,7 +188,7 @@ public class TaskScheduling {
 		TaskTrigger trigger = (TaskTrigger) Context.get().getBean(taskName + "Trigger");
 		String expression = getCronExpression();
 
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 		config.setProperty("schedule.cron." + taskName, expression);
 		config.setProperty("schedule.enabled." + taskName, enabled ? "true" : "false");
 		config.setProperty("schedule.length." + taskName, Long.toString(maxLength));

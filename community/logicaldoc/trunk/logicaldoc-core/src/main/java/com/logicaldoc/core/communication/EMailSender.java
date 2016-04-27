@@ -72,7 +72,7 @@ public class EMailSender {
 	}
 
 	private void loadSettings(String tenant) {
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 
 		host = config.getProperty(tenant + ".smtp.host");
 		port = config.getInt(tenant + ".smtp.port");

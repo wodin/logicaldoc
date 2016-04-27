@@ -63,7 +63,7 @@ public class UserUtil {
 	 * the folder. The folder is: <conf.userdir>
 	 */
 	public static File getUsersDir() {
-		ContextProperties conf = Context.get().getRegisty();
+		ContextProperties conf = Context.get().getProperties();
 		File userpath = new File(conf.getPropertyWithSubstitutions("conf.userdir"));
 		try {
 			FileUtils.forceMkdir(userpath);

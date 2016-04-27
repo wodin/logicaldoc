@@ -54,7 +54,7 @@ public class LDAnonymousLoginFilter extends GenericFilterBean {
 			if (StringUtils.isNotEmpty(request.getParameter("tenant")))
 				tenant = request.getParameter("tenant");
 
-			ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
+			ContextProperties config = Context.get().getProperties();
 			boolean enabled = "true".equals(config.get(tenant + ".anonymous.enabled"));
 			if (enabled) {
 				LDAuthenticationToken auth = new LDAuthenticationToken(config.getProperty(tenant + ".anonymous.user"));

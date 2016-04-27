@@ -141,7 +141,7 @@ public abstract class Search {
 			log.error(e.getMessage(), e);
 		}
 
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 		TenantDAO tdao = (TenantDAO) Context.get().getBean(TenantDAO.class);
 		Tenant tenant = tdao.findById(searchUser.getTenantId());
 

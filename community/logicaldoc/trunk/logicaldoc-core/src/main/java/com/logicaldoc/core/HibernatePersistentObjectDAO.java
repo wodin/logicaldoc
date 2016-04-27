@@ -416,7 +416,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 
 	@Override
 	public String getDbms() {
-		ContextProperties config = Context.get().getRegisty();
+		ContextProperties config = Context.get().getProperties();
 		return config.getProperty("jdbc.dbms").toLowerCase();
 	}
 

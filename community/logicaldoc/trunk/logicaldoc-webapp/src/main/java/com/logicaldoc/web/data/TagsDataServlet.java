@@ -52,7 +52,7 @@ public class TagsDataServlet extends HttpServlet {
 			response.setDateHeader("Expires", 0);
 
 			DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
-			ContextProperties config = (ContextProperties) Context.get().getBean(ContextProperties.class);
+			ContextProperties config = Context.get().getProperties();
 			String mode = config.getProperty(session.getTenantName() + ".tag.mode");
 
 			String firstLetter = request.getParameter("firstLetter");

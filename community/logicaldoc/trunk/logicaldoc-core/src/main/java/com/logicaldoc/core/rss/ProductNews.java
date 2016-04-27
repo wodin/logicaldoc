@@ -65,7 +65,7 @@ public class ProductNews extends Task {
 			// Clean the DB from feed messages older that 1 year.
 			feedMessageDao.deleteOld();
 
-			ContextProperties config = Context.get().getRegisty();
+			ContextProperties config = Context.get().getProperties();
 			String url = config.getProperty("news.url");
 			if (StringUtils.isEmpty(url))
 				url = "http://www.logicaldoc.com/news/rss.html";

@@ -676,7 +676,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	public void setGUILanguageStatus(String sid, String language, boolean active) throws ServerException {
 		UserSession session = ServiceUtil.validateSession(sid);
 		try {
-			ContextProperties conf = (ContextProperties) Context.get().getBean(ContextProperties.class);
+			ContextProperties conf = Context.get().getProperties();
 			conf.setProperty(session.getTenantName() + ".lang." + language + ".gui", active ? "enabled" : "disabled");
 			conf.write();
 		} catch (Throwable t) {
