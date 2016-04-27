@@ -8,6 +8,7 @@ import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -63,17 +64,16 @@ public interface DocumentService {
 	@Path("/listDocuments")
 	WSDocument[] listDocuments(@QueryParam("folderId") long folderId, @QueryParam("fileName") String fileName)
 			throws Exception;
-
+	
 	/**
 	 * Updates an existing document with the value object containing the
 	 * document's metadata.
 	 * 
 	 * @throws Exception
 	 */
-	@POST
+	@PUT
 	@Path("/update")
-	@Consumes({ MediaType.MULTIPART_FORM_DATA })
-	void update(List<Attachment> attachments) throws Exception;
+	void update(WSDocument document) throws Exception;	
 
 	@GET
 	@Path("/getContent")
