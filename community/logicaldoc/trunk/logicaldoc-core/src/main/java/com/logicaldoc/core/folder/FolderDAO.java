@@ -1,12 +1,10 @@
-package com.logicaldoc.core.security.dao;
+package com.logicaldoc.core.folder;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import com.logicaldoc.core.PersistentObjectDAO;
-import com.logicaldoc.core.security.Folder;
-import com.logicaldoc.core.security.FolderHistory;
 import com.logicaldoc.core.security.Permission;
 
 /**

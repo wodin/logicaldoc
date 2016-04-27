@@ -15,11 +15,11 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
-import com.logicaldoc.core.security.Folder;
-import com.logicaldoc.core.security.FolderHistory;
+import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.folder.FolderHistory;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.transfer.ZipExport;
 import com.logicaldoc.util.Context;

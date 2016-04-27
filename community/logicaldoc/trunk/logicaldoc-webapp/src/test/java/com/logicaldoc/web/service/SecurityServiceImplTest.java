@@ -41,10 +41,10 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
-		List<UserSession> sessions = SessionManager.getInstance().getSessions();
+		List<UserSession> sessions = SessionManager.get().getSessions();
 		for (UserSession session : sessions) {
 			try {
-				SessionManager.getInstance().kill(session.getId());
+				SessionManager.get().kill(session.getId());
 			} catch (Throwable t) {
 			}
 		}
@@ -54,10 +54,10 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	public void testLogout() {
 		Assert.assertEquals("admin", session.getUser().getUserName());
 		Assert.assertEquals(1, session.getUser().getId());
-		int sessions = SessionManager.getInstance().countOpened();
+		int sessions = SessionManager.get().countOpened();
 		service.logout(session.getSid());
 
-		Assert.assertEquals(sessions - 1, SessionManager.getInstance().countOpened());
+		Assert.assertEquals(sessions - 1, SessionManager.get().countOpened());
 	}
 
 	@Test
@@ -183,7 +183,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testKill() {
-		SessionManager sm = SessionManager.getInstance();
+		SessionManager sm = SessionManager.get();
 		sm.clear();
 		String session1 = sm.newSession("admin", null, null);
 		Assert.assertNotNull(session1);

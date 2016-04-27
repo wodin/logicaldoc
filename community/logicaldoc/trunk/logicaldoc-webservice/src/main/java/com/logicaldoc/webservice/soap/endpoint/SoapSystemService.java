@@ -189,8 +189,8 @@ public class SoapSystemService extends AbstractService implements SystemService 
 
 		String t = Tenant.DEFAULT_NAME;
 		if (tenantOrSid != null)
-			if (SessionManager.getInstance().get(tenantOrSid) != null)
-				t = SessionManager.getInstance().get(tenantOrSid).getTenantName();
+			if (SessionManager.get().get(tenantOrSid) != null)
+				t = SessionManager.get().get(tenantOrSid).getTenantName();
 			else
 				t = tenantOrSid;
 

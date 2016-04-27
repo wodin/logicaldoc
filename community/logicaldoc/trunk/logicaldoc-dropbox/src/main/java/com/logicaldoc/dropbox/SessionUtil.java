@@ -49,7 +49,7 @@ public class SessionUtil {
 	 * @throws SecurityException
 	 */
 	public static UserSession validateSession(String sid) throws ServerException {
-		UserSession session = SessionManager.getInstance().get(sid);
+		UserSession session = SessionManager.get().get(sid);
 		if (session == null)
 			throw new ServerException("Invalid Session");
 		if (session.getStatus() != UserSession.STATUS_OPEN)

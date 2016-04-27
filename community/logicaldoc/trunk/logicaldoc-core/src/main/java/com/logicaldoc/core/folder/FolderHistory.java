@@ -1,4 +1,4 @@
-package com.logicaldoc.core.security;
+package com.logicaldoc.core.folder;
 
 import com.logicaldoc.core.document.AbstractHistory;
 

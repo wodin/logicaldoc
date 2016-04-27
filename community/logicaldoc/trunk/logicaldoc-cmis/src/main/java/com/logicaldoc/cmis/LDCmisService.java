@@ -41,10 +41,10 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.dao.HistoryDAO;
-import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -83,7 +83,7 @@ public class LDCmisService extends AbstractCmisService {
 			historyDao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 
 			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
-			UserSession session = SessionManager.getInstance().get(sessionId);
+			UserSession session = SessionManager.get().get(sessionId);
 			Folder root = fdao.findRoot(session.getTenantId());
 
 			repositories.put(Long.toString(root.getId()), new LDRepository(root, sessionId));
@@ -378,7 +378,7 @@ public class LDCmisService extends AbstractCmisService {
 			return null;
 
 		try {
-			UserSession session = SessionManager.getInstance().get(getSessionId());
+			UserSession session = SessionManager.get().get(getSessionId());
 			if (session == null)
 				throw new CmisPermissionDeniedException("Unexisting session " + getSessionId());
 			if (session.getStatus() != UserSession.STATUS_OPEN)

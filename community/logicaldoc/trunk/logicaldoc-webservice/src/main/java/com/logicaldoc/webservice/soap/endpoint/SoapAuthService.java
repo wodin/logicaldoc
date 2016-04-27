@@ -46,21 +46,21 @@ public class SoapAuthService extends AbstractService implements AuthService {
 
 	@Override
 	public void logout(String sid) {
-		SessionManager.getInstance().kill(sid);
+		SessionManager.get().kill(sid);
 	}
 
 	@Override
 	public boolean valid(String sid) {
 		if (!isWebserviceEnabled())
 			return false;
-		return SessionManager.getInstance().isValid(sid);
+		return SessionManager.get().isValid(sid);
 	}
 
 	@Override
 	public void renew(String sid) {
 		if (!isWebserviceEnabled())
 			return;
-		if (SessionManager.getInstance().isValid(sid))
-			SessionManager.getInstance().renew(sid);
+		if (SessionManager.get().isValid(sid))
+			SessionManager.get().renew(sid);
 	}
 }

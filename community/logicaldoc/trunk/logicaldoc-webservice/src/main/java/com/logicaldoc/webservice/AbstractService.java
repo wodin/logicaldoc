@@ -23,11 +23,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.FolderDAO;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
@@ -80,12 +80,12 @@ public class AbstractService {
 		if (!isWebserviceEnabled())
 			throw new Exception("WebServices are disabled");
 
-		if (sid == null || !SessionManager.getInstance().isValid(sid)) {
+		if (sid == null || !SessionManager.get().isValid(sid)) {
 			throw new Exception("Invalid session " + sid);
 		} else {
-			SessionManager.getInstance().renew(sid);
+			SessionManager.get().renew(sid);
 		}
-		String username = SessionManager.getInstance().get(sid).getUserName();
+		String username = SessionManager.get().get(sid).getUserName();
 		User user = userDao.findByUserName(username);
 		if (user == null)
 			throw new Exception("User " + username + "not found");

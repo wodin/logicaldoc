@@ -54,10 +54,10 @@ public class ServiceUtil {
 	 * @throws InvalidSessionException
 	 */
 	public static UserSession validateSession(String sid) throws InvalidSessionException {
-		UserSession session = SessionManager.getInstance().get(sid);
+		UserSession session = SessionManager.get().get(sid);
 		if (session == null)
 			throw new InvalidSessionException("Invalid Session");
-		if (!SessionManager.getInstance().isValid(sid))
+		if (!SessionManager.get().isValid(sid))
 			throw new InvalidSessionException("Invalid or Expired Session");
 		session.renew();
 		return session;

@@ -103,10 +103,4 @@
     
     <bean id="AuthenticationChain"
         class="com.logicaldoc.core.security.authentication.AuthenticationChain" />
-    
-    <bean id="AuthenticationChainProvider"
-        class="com.logicaldoc.core.security.spring.AuthenticationChainProvider">
-        <property name="userDAO" ref="UserDAO" />
-        <property name="authenticationChain" ref="AuthenticationChain" />
-    </bean>
 </beans>

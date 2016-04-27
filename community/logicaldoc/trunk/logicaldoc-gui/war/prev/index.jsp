@@ -4,15 +4,15 @@
 <%@ page import="com.logicaldoc.core.security.*" %>
 <%@ page import="com.logicaldoc.util.*" %>
 <%
-  if(!SessionManager.getInstance().isValid(request.getParameter("sid")))
+  if(!SessionManager.get().isValid(request.getParameter("sid")))
 	  throw new Exception("Session expired");
     
-  UserSession ldSession = SessionManager.getInstance().get(request.getParameter("sid"));    
+  UserSession ldSession = SessionManager.get().get(request.getParameter("sid"));    
     
   Long userId = ldSession.getUserId();
   Long docId = Long.parseLong(request.getParameter("docId"));
   
-  com.logicaldoc.core.security.SecurityManager security = (com.logicaldoc.core.security.SecurityManager)Context.getInstance().getBean(com.logicaldoc.core.security.SecurityManager.class);  
+  com.logicaldoc.core.security.SecurityManager security = (com.logicaldoc.core.security.SecurityManager)Context.get().getBean(com.logicaldoc.core.security.SecurityManager.class);  
   if(!security.isReadEnabled(docId, userId))
       throw new Exception("Permission Denied");
   

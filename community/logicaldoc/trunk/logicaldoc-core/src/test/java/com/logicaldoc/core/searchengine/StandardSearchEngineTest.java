@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.folder.Folder;
 
 public class StandardSearchEngineTest extends AbstractCoreTCase {
 

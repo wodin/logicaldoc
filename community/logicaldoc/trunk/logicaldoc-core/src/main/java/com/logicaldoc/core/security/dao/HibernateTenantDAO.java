@@ -8,6 +8,7 @@ import java.util.Set;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.communication.MessageTemplateDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.util.config.ContextProperties;

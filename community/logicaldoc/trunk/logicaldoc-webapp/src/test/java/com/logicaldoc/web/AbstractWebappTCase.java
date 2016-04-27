@@ -69,7 +69,7 @@ public abstract class AbstractWebappTCase {
 		
 		this.session=prepareSession();
 		Assert.assertNotNull(session);
-		Assert.assertNotNull(SessionManager.getInstance().get(session.getSid()));
+		Assert.assertNotNull(SessionManager.get().get(session.getSid()));
 
 	}
 

@@ -1,4 +1,4 @@
-package com.logicaldoc.core.security.dao;
+package com.logicaldoc.core.folder;
 
 import java.io.FileInputStream;
 import java.util.Collection;
@@ -19,12 +19,15 @@ import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
-import com.logicaldoc.core.security.Folder;
-import com.logicaldoc.core.security.FolderEvent;
-import com.logicaldoc.core.security.FolderHistory;
+import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.folder.FolderEvent;
+import com.logicaldoc.core.folder.FolderHistory;
+import com.logicaldoc.core.folder.FolderHistoryDAO;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
  * Test case for <code>HibernateFolderDAOTest</code>

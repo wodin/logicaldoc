@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.util.Context;
 

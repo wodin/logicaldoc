@@ -24,11 +24,11 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.TagsProcessor;
+import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.lock.LockManager;
-import com.logicaldoc.core.security.Folder;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.dao.FolderDAO;
 
 /**
  * Test case for <code>HibernateDocumentDAO</code>

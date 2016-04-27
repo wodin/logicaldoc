@@ -127,7 +127,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		GUISession session = new GUISession();
 		session.setSid(sid);
 
-		UserSession userSession = SessionManager.getInstance().get(sid);
+		UserSession userSession = SessionManager.get().get(sid);
 
 		DocumentDAO documentDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		SystemMessageDAO messageDao = (SystemMessageDAO) Context.get().getBean(SystemMessageDAO.class);
@@ -251,7 +251,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	@Override
 	public void logout(String sid) {
 		try {
-			UserSession session = SessionManager.getInstance().get(sid);
+			UserSession session = SessionManager.get().get(sid);
 			if (session == null)
 				return;
 
@@ -672,7 +672,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	@Override
 	public void kill(String sid) {
 		// Kill the LogicalDOC session
-		SessionManager.getInstance().kill(sid);
+		SessionManager.get().kill(sid);
 
 		// Also kill the servlet container session, if any
 		HttpSession httpSession = SessionUtil.getServletSession(SessionUtil.getCurrentSid());

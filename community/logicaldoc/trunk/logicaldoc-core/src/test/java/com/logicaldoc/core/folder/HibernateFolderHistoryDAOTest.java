@@ -1,4 +1,4 @@
-package com.logicaldoc.core.security.dao;
+package com.logicaldoc.core.folder;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,9 +11,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.AbstractCoreTCase;
+import com.logicaldoc.core.folder.FolderEvent;
+import com.logicaldoc.core.folder.FolderHistory;
+import com.logicaldoc.core.folder.FolderHistoryDAO;
 import com.logicaldoc.core.i18n.DateBean;
-import com.logicaldoc.core.security.FolderEvent;
-import com.logicaldoc.core.security.FolderHistory;
 
 /**
  * Test case for <code>HibernateFolderFolderHistoryDAO</code>

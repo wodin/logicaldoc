@@ -1,7 +1,7 @@
 package com.logicaldoc.core.script;
 
-import com.logicaldoc.core.security.Folder;
-import com.logicaldoc.core.security.FolderHistory;
+import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.folder.FolderHistory;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 

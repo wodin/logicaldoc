@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
-import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
 

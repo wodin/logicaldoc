@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.DocumentEvent;
-import com.logicaldoc.core.security.FolderEvent;
+import com.logicaldoc.core.folder.FolderEvent;
 import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.i18n.I18N;
 

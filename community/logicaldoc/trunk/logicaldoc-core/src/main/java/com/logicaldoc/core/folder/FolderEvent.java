@@ -1,4 +1,4 @@
-package com.logicaldoc.core.security;
+package com.logicaldoc.core.folder;
 
 /**
  * Possible events in the folder's history

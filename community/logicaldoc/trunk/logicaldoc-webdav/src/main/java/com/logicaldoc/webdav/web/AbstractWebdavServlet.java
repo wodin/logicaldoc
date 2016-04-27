@@ -163,12 +163,12 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 						return;
 					}
 
-					for (UserSession session : SessionManager.getInstance().getSessions()) {
+					for (UserSession session : SessionManager.get().getSessions()) {
 						try {
 							String[] userObject = (String[]) session.getUserObject();
 							if (userObject[2].equals(combinedUserId)
-									&& SessionManager.getInstance().isValid(session.getId())) {
-								SessionManager.getInstance().renew(session.getId());
+									&& SessionManager.get().isValid(session.getId())) {
+								SessionManager.get().renew(session.getId());
 								sid = session.getId();
 								break;
 							}
@@ -201,7 +201,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 				}
 
 				DavSessionImpl davSession = new DavSessionImpl();
-				davSession.setTenantId(SessionManager.getInstance().get(sid).getTenantId());
+				davSession.setTenantId(SessionManager.get().get(sid).getTenantId());
 				davSession.putObject("sid", sid);
 				UserDAO dao = (UserDAO) Context.get().getBean(UserDAO.class);
 				User user = dao.findByUserName(username);

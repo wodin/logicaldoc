@@ -71,12 +71,12 @@ public class ServiceFactory extends AbstractServiceFactory {
 		String combinedUserId = String.format("%s-%s-%s", username, password == null ? "0" : password.hashCode(), CmisServlet.remoteAddress.get()[0]);
 
 		// Check if the session already exists
-		for (UserSession session : SessionManager.getInstance().getSessions()) {
+		for (UserSession session : SessionManager.get().getSessions()) {
 			try {
 				String[] userObject = (String[]) session.getUserObject();
 				if (userObject.length > 2 && userObject[2].equals(combinedUserId))
-					if (SessionManager.getInstance().isValid(session.getId())) {
-						SessionManager.getInstance().renew(session.getId());
+					if (SessionManager.get().isValid(session.getId())) {
+						SessionManager.get().renew(session.getId());
 						return session.getId();
 					}
 			} catch (Throwable t) {

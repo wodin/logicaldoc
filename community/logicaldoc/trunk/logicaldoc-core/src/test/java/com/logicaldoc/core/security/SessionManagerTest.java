@@ -16,7 +16,7 @@ public class SessionManagerTest extends AbstractCoreTCase {
 
 	@Test
 	public void testNewSession() {
-		SessionManager sm = SessionManager.getInstance();
+		SessionManager sm = SessionManager.get();
 		sm.clear();
 		String session1 = sm.newSession("admin", null, null);
 		Assert.assertNotNull(session1);
@@ -28,7 +28,7 @@ public class SessionManagerTest extends AbstractCoreTCase {
 
 	@Test
 	public void testKill() {
-		SessionManager sm = SessionManager.getInstance();
+		SessionManager sm = SessionManager.get();
 		sm.clear();
 		String session1 = sm.newSession("admin", null, null);
 		Assert.assertNotNull(session1);

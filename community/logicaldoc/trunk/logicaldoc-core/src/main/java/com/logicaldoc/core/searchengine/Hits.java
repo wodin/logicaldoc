@@ -9,7 +9,7 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SpellCheckResponse.Suggestion;
 import org.apache.solr.common.SolrDocument;
 
-import com.logicaldoc.core.security.Folder;
+import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.security.Tenant;
 
 /**

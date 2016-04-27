@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-lazy="false">
-  <class name="com.logicaldoc.core.security.Folder" table="ld_folder" where="ld_deleted=0">
+  <class name="com.logicaldoc.core.folder.Folder" table="ld_folder" where="ld_deleted=0">
     <cache usage="read-write" />
     <id name="id" type="long" column="ld_id" unsaved-value="0">
       <generator class="hilo" />
@@ -29,7 +29,7 @@
 		
     <set name="folderGroups" table="ld_foldergroup" cascade="all">
       <key column="ld_folderid" />
-      <composite-element class="com.logicaldoc.core.security.FolderGroup">
+      <composite-element class="com.logicaldoc.core.folder.FolderGroup">
         <property name="groupId" type="long" column="ld_groupid" not-null="true" />
         <property name="write" type="int" column="ld_write" not-null="true" />
         <property name="add" type="int" column="ld_add" not-null="true" />
