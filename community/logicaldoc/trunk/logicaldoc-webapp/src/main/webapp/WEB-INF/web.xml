@@ -600,64 +600,16 @@
       <el-ignored>false</el-ignored>
     </jsp-property-group>
   </jsp-config>
+  
   <security-constraint>
-    <display-name>Setup only allowed after authentication</display-name>
-    <web-resource-collection>
-      <web-resource-name>Setup</web-resource-name>
-      <url-pattern>/setup.jsp</url-pattern>
-      <url-pattern>/setup/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>admin</role-name>
-    </auth-constraint>
-    <user-data-constraint>
-      <transport-guarantee>NONE</transport-guarantee>
-    </user-data-constraint>
-  </security-constraint>
-  <!-- security-constraint>
     <web-resource-collection>
       <web-resource-name>Entire Application</web-resource-name>
       <url-pattern>/*</url-pattern>
-      <http-method>GET</http-method>
-      <http-method>POST</http-method>
+      <!--http-method>GET</http-method>
+      <http-method>POST</http-method-->
     </web-resource-collection>
     <user-data-constraint>
       <transport-guarantee>NONE</transport-guarantee>
     </user-data-constraint>
-  </security-constraint-->  
-  <security-constraint>
-    <display-name>Sessions management only allowed after authentication</display-name>
-    <web-resource-collection>
-      <web-resource-name>Sessions</web-resource-name>
-      <url-pattern>/sessions.jsp</url-pattern>
-      <url-pattern>/sessions/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>admin</role-name>
-    </auth-constraint>
-    <user-data-constraint>
-      <transport-guarantee>NONE</transport-guarantee>
-    </user-data-constraint>
-  </security-constraint>
-  <security-constraint>
-    <display-name>License management only allowed after authentication</display-name>
-    <web-resource-collection>
-      <web-resource-name>License</web-resource-name>
-      <url-pattern>/license.jsp</url-pattern>
-      <url-pattern>/license/*</url-pattern>
-    </web-resource-collection>
-    <auth-constraint>
-      <role-name>admin</role-name>
-    </auth-constraint>
-    <user-data-constraint>
-      <transport-guarantee>NONE</transport-guarantee>
-    </user-data-constraint>
-  </security-constraint>
-  <login-config>
-    <auth-method>BASIC</auth-method>
-    <realm-name>Secured Area</realm-name>
-  </login-config>
-  <security-role>
-    <role-name>admin</role-name>
-  </security-role>
+  </security-constraint>  
 </web-app>

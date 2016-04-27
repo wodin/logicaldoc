@@ -17,6 +17,7 @@ import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
 import com.logicaldoc.core.security.UserListener;
@@ -178,6 +179,13 @@ public class HibernateUserDAO extends HibernatePersistentObjectDAO<User> impleme
 			log.debug("Invoke listeners after store");
 			for (UserListener listener : userListenerManager.getListeners()) {
 				listener.afterStore(user, transaction, dictionary);
+			}
+
+			//If the admin password was changed the 'adminpasswd' also has to be updated
+			if ("admin".equals(user.getUserName()) && user.getTenantId() == Tenant.DEFAULT_ID) {
+				log.info("Updated adminpasswd");
+				config.setProperty("adminpasswd", user.getPassword());
+				config.write();
 			}
 		} catch (Exception e) {
 			if (log.isErrorEnabled())
