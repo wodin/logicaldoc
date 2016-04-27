@@ -40,7 +40,7 @@ public class Search extends AbstractLoader {
 	public Search() {
 		super(Search.class.getName().substring(Search.class.getName().lastIndexOf('.') + 1));
 		
-		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		ContextProperties config = Context.get().getRegisty();
 		if (config.containsKey("Search.results")) {		
 			searchResults = config.getInt("Search.results");
 		}
