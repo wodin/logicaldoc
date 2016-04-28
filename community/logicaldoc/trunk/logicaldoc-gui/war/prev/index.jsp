@@ -7,7 +7,7 @@
   if(!SessionManager.get().isValid(request.getParameter("sid")))
 	  throw new Exception("Session expired");
     
-  UserSession ldSession = SessionManager.get().get(request.getParameter("sid"));    
+  com.logicaldoc.core.security.Session ldSession = SessionManager.get().get(request.getParameter("sid"));    
     
   Long userId = ldSession.getUserId();
   Long docId = Long.parseLong(request.getParameter("docId"));
