@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Bookmark;
 import com.logicaldoc.core.document.dao.BookmarkDAO;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
@@ -37,7 +37,7 @@ public class BookmarksDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			UserSession session = ServiceUtil.validateSession(request);
+			Session session = ServiceUtil.validateSession(request);
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");

@@ -43,7 +43,7 @@ import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.gui.common.client.ServerException;
@@ -183,7 +183,7 @@ public class ServletIOUtil {
 		UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 		ContextProperties config = Context.get().getProperties();
 
-		UserSession session = null;
+		Session session = null;
 		if (!isPreviewAgent(request)) {
 			if (sid != null)
 				try {

@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
-import com.logicaldoc.core.security.UserSession.Log;
+import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.Session.Log;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.ServerException;
@@ -28,7 +28,7 @@ public class ServiceUtil {
 
 	public static final String USER = "user";
 
-	public static UserSession validateSession(HttpServletRequest request) throws ServletException {
+	public static Session validateSession(HttpServletRequest request) throws ServletException {
 		try {
 			String sid = (String) request.getParameter("sid");
 			if (sid == null) {
@@ -53,8 +53,8 @@ public class ServiceUtil {
 	 * 
 	 * @throws InvalidSessionException
 	 */
-	public static UserSession validateSession(String sid) throws InvalidSessionException {
-		UserSession session = SessionManager.get().get(sid);
+	public static Session validateSession(String sid) throws InvalidSessionException {
+		Session session = SessionManager.get().get(sid);
 		if (session == null)
 			throw new InvalidSessionException("Invalid Session");
 		if (!SessionManager.get().isValid(sid))
@@ -63,17 +63,17 @@ public class ServiceUtil {
 		return session;
 	}
 
-	public static Locale currentLocale(UserSession session) throws InvalidSessionException {
+	public static Locale currentLocale(Session session) throws InvalidSessionException {
 		return (Locale) session.getDictionary().get(LOCALE);
 	}
 
 	public static Locale currentLocale(String sid) throws InvalidSessionException {
-		UserSession session = validateSession(sid);
+		Session session = validateSession(sid);
 		return currentLocale(session);
 	}
 
 	public static User getSessionUser(String sid) throws InvalidSessionException {
-		UserSession session = validateSession(sid);
+		Session session = validateSession(sid);
 		User user = (User) session.getDictionary().get(USER);
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		userDao.initialize(user);
@@ -81,14 +81,14 @@ public class ServiceUtil {
 	}
 
 	public static User getSessionUser(HttpServletRequest request) throws ServletException {
-		UserSession session = validateSession(request);
+		Session session = validateSession(request);
 		User user = (User) session.getDictionary().get(USER);
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		userDao.initialize(user);
 		return user;
 	}
 
-	public static Object throwServerException(UserSession session, Logger logger, Throwable t) throws ServerException {
+	public static Object throwServerException(Session session, Logger logger, Throwable t) throws ServerException {
 		if (logger != null)
 			logger.error(t.getMessage(), t);
 

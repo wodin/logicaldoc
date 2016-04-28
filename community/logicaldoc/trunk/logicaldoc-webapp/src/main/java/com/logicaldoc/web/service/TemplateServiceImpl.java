@@ -20,7 +20,7 @@ import com.logicaldoc.core.ExtendedAttributeOption;
 import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.ExtendedAttributeOptionDAO;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
@@ -52,7 +52,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 	@Override
 	public void saveOptions(String sid, long templateId, String attribute, String[] values) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.get().getBean(
 				ExtendedAttributeOptionDAO.class);
@@ -83,7 +83,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 	@Override
 	public void deleteOptions(String sid, long templateId, String attribute, String[] values) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.get().getBean(
 				ExtendedAttributeOptionDAO.class);
@@ -102,7 +102,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 	@Override
 	public GUITemplate save(String sid, GUITemplate template) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
 		try {

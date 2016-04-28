@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.Group;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
@@ -35,7 +35,7 @@ public class GroupsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			UserSession session = ServiceUtil.validateSession(request);
+			Session session = ServiceUtil.validateSession(request);
 
 			String locale = request.getParameter("locale");
 

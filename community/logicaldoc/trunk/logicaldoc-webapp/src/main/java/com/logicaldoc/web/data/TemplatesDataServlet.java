@@ -18,7 +18,7 @@ import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
@@ -39,7 +39,7 @@ public class TemplatesDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			UserSession session = ServiceUtil.validateSession(request);
+			Session session = ServiceUtil.validateSession(request);
 
 			String folderId = request.getParameter("folderId");
 			boolean count = "true".equals(request.getParameter("count"));

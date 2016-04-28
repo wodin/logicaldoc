@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.web.util.ServiceUtil;
 
@@ -43,7 +43,7 @@ public class SessionsDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "must-revalidate, post-check=0,pre-check=0");
 			response.setHeader("Expires", "0");
 
-			List<UserSession> sessions = SessionManager.get().getSessions();
+			List<Session> sessions = SessionManager.get().getSessions();
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
 
@@ -56,7 +56,7 @@ public class SessionsDataServlet extends HttpServlet {
 			String tenant = null;
 
 			if (request.getServletPath().contains("data")) {
-				UserSession session = ServiceUtil.validateSession(request);
+				Session session = ServiceUtil.validateSession(request);
 				if (!Tenant.DEFAULT_NAME.equals(session.getTenantName()))
 					tenant = session.getTenantName();
 			}
@@ -64,7 +64,7 @@ public class SessionsDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.print("<list>");
 
-			for (UserSession session : sessions) {
+			for (Session session : sessions) {
 				if (tenant != null && !tenant.equals(session.getTenantName()))
 					continue;
 
@@ -74,11 +74,11 @@ public class SessionsDataServlet extends HttpServlet {
 				writer.print("<session>");
 				writer.print("<sid><![CDATA[" + session.getId() + "]]></sid>");
 				writer.print("<status>" + session.getStatus() + "</status>");
-				if (session.getStatus() == UserSession.STATUS_OPEN)
+				if (session.getStatus() == Session.STATUS_OPEN)
 					writer.print("<statusLabel>" + I18N.message("opened", locale) + "</statusLabel>");
-				else if (session.getStatus() == UserSession.STATUS_CLOSED)
+				else if (session.getStatus() == Session.STATUS_CLOSED)
 					writer.print("<statusLabel>" + I18N.message("closed", locale) + "</statusLabel>");
-				else if (session.getStatus() == UserSession.STATUS_EXPIRED)
+				else if (session.getStatus() == Session.STATUS_EXPIRED)
 					writer.print("<statusLabel>" + I18N.message("expired", locale) + "</statusLabel>");
 				writer.print("<username><![CDATA[" + session.getUserName() + "]]></username>");
 				writer.print("<tenant><![CDATA[" + session.getTenantName() + "]]></tenant>");

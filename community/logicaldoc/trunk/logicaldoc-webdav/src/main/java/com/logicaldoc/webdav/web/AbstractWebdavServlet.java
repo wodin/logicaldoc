@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -163,7 +163,7 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 						return;
 					}
 
-					for (UserSession session : SessionManager.get().getSessions()) {
+					for (Session session : SessionManager.get().getSessions()) {
 						try {
 							String[] userObject = (String[]) session.getUserObject();
 							if (userObject[2].equals(combinedUserId)

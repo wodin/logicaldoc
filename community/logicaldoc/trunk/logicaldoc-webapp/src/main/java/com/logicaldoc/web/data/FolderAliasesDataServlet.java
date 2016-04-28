@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
 
@@ -31,7 +31,7 @@ public class FolderAliasesDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			UserSession session = ServiceUtil.validateSession(request);
+			Session session = ServiceUtil.validateSession(request);
 
 			Long folderId = null;
 			if (StringUtils.isNotEmpty(request.getParameter("folderId")))

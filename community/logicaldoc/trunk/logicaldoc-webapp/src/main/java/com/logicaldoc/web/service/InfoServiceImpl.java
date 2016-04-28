@@ -19,7 +19,7 @@ import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
@@ -268,7 +268,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			SystemMessageDAO messageDao = (SystemMessageDAO) Context.get().getBean(SystemMessageDAO.class);
 			List<GUIParameter> parameters = new ArrayList<GUIParameter>();
 			
-			UserSession session = SessionManager.get().get(sid);
+			Session session = SessionManager.get().get(sid);
 			if (session != null) {
 				GUIParameter messages = new GUIParameter("messages", ""
 						+ messageDao.getCount(session.getUserName(), SystemMessage.TYPE_SYSTEM, 0));

@@ -20,7 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.i18n.I18N;
@@ -43,7 +43,7 @@ public class StatChartServlet extends HttpServlet {
 	protected static Logger log = LoggerFactory.getLogger(StatChartServlet.class);
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		UserSession session = ServiceUtil.validateSession(request);
+		Session session = ServiceUtil.validateSession(request);
 
 		// Avoid resource caching
 		response.setHeader("Pragma", "no-cache");

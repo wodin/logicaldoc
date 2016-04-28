@@ -14,7 +14,7 @@ import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.web.util.SessionUtil;
 
 /**
@@ -43,7 +43,7 @@ public class LDSecurityContextRepository implements SecurityContextRepository {
 		if (sid == null)
 			return SecurityContextHolder.createEmptyContext();
 
-		UserSession session = SessionManager.get().get(sid);
+		Session session = SessionManager.get().get(sid);
 
 		LDAuthenticationToken token = new LDAuthenticationToken(session.getUserName(), "", null);
 		token.setSid(sid);

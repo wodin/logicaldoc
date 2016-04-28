@@ -13,7 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 
 /**
  * This handler gets the j_successurl request parameter and use it's value to
@@ -41,7 +41,7 @@ public class LDAuthenticationSuccessHandler implements AuthenticationSuccessHand
 			StringBuffer successUrl = new StringBuffer(param);
 			log.info("Authentication of {} was succesful, redirecting to {}", authentication.getName(), successUrl);
 
-			UserSession session = SessionManager.get().get(token.getSid());
+			Session session = SessionManager.get().get(token.getSid());
 			if (param.indexOf('?') != -1)
 				successUrl.append("&");
 			else

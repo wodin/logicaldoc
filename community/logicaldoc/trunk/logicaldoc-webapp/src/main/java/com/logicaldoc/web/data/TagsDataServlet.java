@@ -20,7 +20,7 @@ import com.logicaldoc.core.document.Tag;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.ServiceUtil;
@@ -41,7 +41,7 @@ public class TagsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			UserSession session = ServiceUtil.validateSession(request);
+			Session session = ServiceUtil.validateSession(request);
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");

@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.document.TagCloud;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITag;
@@ -33,7 +33,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 
 	@Override
 	public GUITag[] getTagCloud(String sid) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			ArrayList<GUITag> ret = new ArrayList<GUITag>();
 			DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
@@ -81,7 +81,7 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 
 	@Override
 	public GUIParameter[] getSettings(String sid) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = Context.get().getProperties();
 

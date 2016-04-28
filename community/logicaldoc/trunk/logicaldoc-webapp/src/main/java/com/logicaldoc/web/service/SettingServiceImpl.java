@@ -19,7 +19,7 @@ import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Tenant;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIDashlet;
@@ -44,7 +44,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIEmailSettings loadEmailSettings(String sid) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
 		try {
@@ -73,7 +73,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public void saveEmailSettings(String sid, GUIEmailSettings settings) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			ContextProperties conf = Context.get().getProperties();
@@ -156,7 +156,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIParameter[] loadClientSettings(String sid) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = Context.get().getProperties();
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
@@ -266,7 +266,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIParameter[] loadOcrSettings(String sid) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = Context.get().getProperties();
 
@@ -315,7 +315,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public GUIParameter[] loadGUISettings(String sid) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		ContextProperties conf = Context.get().getProperties();
 
@@ -342,7 +342,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		GenericDAO gDao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 		UserDAO uDao = (UserDAO) Context.get().getBean(UserDAO.class);
 
@@ -373,7 +373,7 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public boolean testEmail(String sid, String email) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		ContextProperties config = Context.get().getProperties();
 		EMailSender sender = new EMailSender(session.getTenantName());
