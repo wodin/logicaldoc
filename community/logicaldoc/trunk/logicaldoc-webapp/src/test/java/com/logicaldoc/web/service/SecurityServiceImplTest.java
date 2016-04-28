@@ -12,7 +12,7 @@ import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.ServerException;
@@ -41,8 +41,8 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	@After
 	public void tearDown() throws Exception {
 		super.tearDown();
-		List<UserSession> sessions = SessionManager.get().getSessions();
-		for (UserSession session : sessions) {
+		List<Session> sessions = SessionManager.get().getSessions();
+		for (Session session : sessions) {
 			try {
 				SessionManager.get().kill(session.getId());
 			} catch (Throwable t) {

@@ -23,7 +23,7 @@ import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -102,7 +102,7 @@ public class DownloadServlet extends HttpServlet {
 			/*
 			 * We can reach this point only if a valid session was created
 			 */
-			UserSession session = SessionManager.get().get(sessionId);
+			Session session = SessionManager.get().get(sessionId);
 			// Load the user associated to the session
 			UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 			user = udao.findById(session.getUserId());

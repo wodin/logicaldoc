@@ -18,7 +18,7 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
@@ -55,7 +55,7 @@ public class FoldersDataServlet extends HttpServlet {
 				return;
 			}
 
-			UserSession session = ServiceUtil.validateSession(request);
+			Session session = ServiceUtil.validateSession(request);
 			long tenantId = session.getTenantId();
 
 			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);

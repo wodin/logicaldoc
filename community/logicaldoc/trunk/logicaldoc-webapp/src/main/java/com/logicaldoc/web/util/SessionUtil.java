@@ -12,7 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.web.security.LDAuthenticationToken;
 import com.logicaldoc.web.security.LDSecurityContextRepository;
 
@@ -62,7 +62,7 @@ public class SessionUtil {
 
 		String combinedUserId = getCombinedUserId(request);
 		if (combinedUserId != null)
-			for (UserSession session : SessionManager.get().getSessions()) {
+			for (Session session : SessionManager.get().getSessions()) {
 				try {
 					String[] userObject = (String[]) session.getUserObject();
 					if (userObject.length > 2 && userObject[2].equals(combinedUserId))

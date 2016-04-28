@@ -18,7 +18,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.document.thumbnail.ThumbnailManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
@@ -95,7 +95,7 @@ public class ThumbnailServlet extends HttpServlet {
 					fileVersion = ver.getFileVersion();
 			}
 
-			UserSession session = ServiceUtil.validateSession(request.getParameter("sid"));
+			Session session = ServiceUtil.validateSession(request.getParameter("sid"));
 			UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());
 

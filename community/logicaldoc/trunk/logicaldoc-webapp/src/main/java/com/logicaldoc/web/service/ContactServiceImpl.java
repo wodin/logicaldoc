@@ -14,7 +14,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.contact.Contact;
 import com.logicaldoc.core.contact.ContactDAO;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIContact;
 import com.logicaldoc.gui.frontend.client.services.ContactService;
@@ -73,7 +73,7 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 
 	@Override
 	public GUIContact load(String sid, long id) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			ContactDAO dao = (ContactDAO) Context.get().getBean(ContactDAO.class);
@@ -105,7 +105,7 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	public GUIContact[] parseContacts(String sid, boolean preview, String separator, String delimiter,
 			boolean skipFirstRow, int firstName, int lastName, int email, int company, int phone, int mobile,
 			int address) throws ServerException {
-		final UserSession session = ServiceUtil.validateSession(sid);
+		final Session session = ServiceUtil.validateSession(sid);
 
 		User user = ServiceUtil.getSessionUser(sid);
 

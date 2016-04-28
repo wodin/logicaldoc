@@ -30,7 +30,7 @@ import com.logicaldoc.core.folder.FolderGroup;
 import com.logicaldoc.core.folder.FolderHistory;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.sequence.SequenceDAO;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.ServerException;
@@ -57,7 +57,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder inheritRights(String sid, long folderId, long rightsFolderId) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
@@ -81,7 +81,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void applyRights(String sid, GUIFolder folder, boolean subtree) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
@@ -108,7 +108,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void applyMetadata(String sid, long parentId) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
@@ -123,7 +123,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void delete(final String sid, final long[] folderIds) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		User user = ServiceUtil.getSessionUser(sid);
 
 		try {
@@ -148,7 +148,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	public static GUIFolder getFolder(String sid, long folderId) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
@@ -268,7 +268,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder getFolder(String sid, long folderId, boolean computePath) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
@@ -313,7 +313,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	@Override
 	public void copyFolders(String sid, long[] folderIds, long targetId, boolean foldersOnly, boolean inheritSecurity)
 			throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		User user = ServiceUtil.getSessionUser(sid);
 
 		try {
@@ -364,7 +364,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void move(String sid, long[] folderIds, long targetId) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			User user = ServiceUtil.getSessionUser(sid);
 
@@ -420,7 +420,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void rename(String sid, long folderId, String name) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		try {
@@ -449,7 +449,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder save(String sid, GUIFolder folder) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		try {
@@ -502,7 +502,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder create(String sid, GUIFolder newFolder, boolean inheritSecurity) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		try {
@@ -545,7 +545,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public GUIFolder createAlias(String sid, long parentId, long foldRef) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
@@ -687,7 +687,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	private void cut(String sid, long[] docIds, long folderId) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		DocumentManager docManager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
@@ -731,7 +731,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	}
 
 	private void copy(String sid, long[] docIds, long folderId) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Folder selectedFolderFolder = folderDao.findById(folderId);
@@ -766,7 +766,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void pasteAsAlias(String sid, long[] docIds, long folderId, String type) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Folder selectedFolderFolder = folderDao.findFolder(folderId);
@@ -966,7 +966,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void restore(String sid, long folderId, long parentId) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
@@ -983,7 +983,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 
 	@Override
 	public void deleteFromTrash(String sid, Long[] ids) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		if (ids == null || ids.length < 1)
 			return;
 

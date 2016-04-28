@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.util.SessionUtil;
@@ -96,7 +96,7 @@ public class UploadServlet extends UploadAction {
 
 			String tenant = Tenant.DEFAULT_NAME;
 			if (request.getParameter("sid") != null) {
-				UserSession userSession = SessionManager.get().get(request.getParameter("sid"));
+				Session userSession = SessionManager.get().get(request.getParameter("sid"));
 				tenant = userSession.getTenantName();
 			}
 

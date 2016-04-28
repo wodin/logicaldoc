@@ -31,7 +31,7 @@ import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.gui.common.client.Constants;
@@ -58,7 +58,7 @@ public class DocumentsDataServlet extends HttpServlet {
 			IOException {
 		try {
 			Context context = Context.get();
-			UserSession session = ServiceUtil.validateSession(request);
+			Session session = ServiceUtil.validateSession(request);
 			ContextProperties config = Context.get().getProperties();
 			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
 			User user = udao.findById(session.getUserId());

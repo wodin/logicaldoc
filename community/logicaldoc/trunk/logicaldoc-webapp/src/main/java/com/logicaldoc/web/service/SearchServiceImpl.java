@@ -22,7 +22,7 @@ import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
@@ -48,7 +48,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 	@Override
 	public GUIResult search(String sid, GUISearchOptions options) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		options.setUserId(session.getUserId());
 
 		GUIResult result = new GUIResult();
@@ -133,7 +133,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 	@Override
 	public boolean save(String sid, GUISearchOptions options) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			SearchOptions opt = toSearchOptions(options);
@@ -159,7 +159,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 	@Override
 	public void delete(String sid, String[] names) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			File dir = UserUtil.getUserResource(session.getUserId(), "queries");
@@ -179,7 +179,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 
 	@Override
 	public GUISearchOptions load(String sid, String name) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			File dir = UserUtil.getUserResource(session.getUserId(), "queries");
@@ -202,7 +202,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 	 * 
 	 * @return the list of search options
 	 */
-	public List<SearchOptions> getSearches(UserSession user) {
+	public List<SearchOptions> getSearches(Session user) {
 		File file = UserUtil.getUserResource(user.getUserId(), "queries");
 		if (!file.exists()) {
 			return null;

@@ -25,7 +25,7 @@ import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.folder.Folder;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
@@ -46,7 +46,7 @@ public class DeletedDocsDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			final UserSession session = ServiceUtil.validateSession(request);
+			final Session session = ServiceUtil.validateSession(request);
 
 			Long folderId = request.getParameter("folderId") != null ? Long.parseLong(request.getParameter("folderId"))
 					: null;

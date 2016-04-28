@@ -14,7 +14,7 @@ import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Tenant;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
@@ -36,7 +36,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	@Override
 	public GUISearchEngine getInfo(String sid) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			GUISearchEngine searchEngine = new GUISearchEngine();
 
@@ -83,7 +83,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	@Override
 	public void rescheduleAll(String sid, final boolean dropIndex) throws ServerException {
-		final UserSession session = ServiceUtil.validateSession(sid);
+		final Session session = ServiceUtil.validateSession(sid);
 
 		if (dropIndex)
 			try {
@@ -115,7 +115,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	@Override
 	public void unlocks(String sid) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 			indexer.unlock();
@@ -126,7 +126,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	@Override
 	public String check(String sid) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 			return indexer.check();
@@ -137,7 +137,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	@Override
 	public void save(String sid, GUISearchEngine searchEngine) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			ContextProperties conf = Context.get().getProperties();
 			conf.setProperty(session.getTenantName() + ".index.excludes",
@@ -161,7 +161,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	@Override
 	public void setLanguageStatus(String sid, String language, boolean active) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			ContextProperties conf = Context.get().getProperties();
 			conf.setProperty(session.getTenantName() + ".lang." + language, active ? "enabled" : "disabled");
@@ -173,7 +173,7 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 	@Override
 	public void setAliases(String sid, String extension, String aliases) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		try {
 			StringTokenizer st = new StringTokenizer(aliases, ",", false);

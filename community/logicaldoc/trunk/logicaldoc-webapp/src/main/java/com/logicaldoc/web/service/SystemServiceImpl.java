@@ -30,7 +30,7 @@ import com.logicaldoc.core.rss.FeedMessage;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.core.task.Task;
@@ -115,7 +115,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 	@Override
 	public GUIParameter[][] getStatistics(String sid, String locale) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		GenericDAO genDao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 
 		GUIParameter[][] parameters = new GUIParameter[4][8];
@@ -480,7 +480,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	@Override
 	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid,
 			String[] event) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 
 		HistoryDAO dao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 		List<GUIHistory> histories = new ArrayList<GUIHistory>();
@@ -674,7 +674,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 	@Override
 	public void setGUILanguageStatus(String sid, String language, boolean active) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			ContextProperties conf = Context.get().getProperties();
 			conf.setProperty(session.getTenantName() + ".lang." + language + ".gui", active ? "enabled" : "disabled");
@@ -686,7 +686,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 	@Override
 	public void markFeedMsgAsRead(String sid, long[] ids) throws ServerException {
-		UserSession session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(sid);
 		try {
 			Context context = Context.get();
 			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
