@@ -44,7 +44,7 @@ import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
@@ -804,7 +804,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 			else
 				doc.setLanguage(language);
 
-//			UserSession session = SessionManager.getInstance().get(sid);
+//			Session session = SessionManager.getInstance().get(sid);
 
 			return create(sid, doc, content).getId();
 		}

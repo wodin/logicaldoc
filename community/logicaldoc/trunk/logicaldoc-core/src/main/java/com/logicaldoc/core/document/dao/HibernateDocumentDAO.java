@@ -41,7 +41,7 @@ import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
@@ -379,7 +379,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			}
 		} catch (Throwable e) {
 			if (transaction != null && StringUtils.isNotEmpty(transaction.getSessionId())) {
-				UserSession session = SessionManager.get().get(transaction.getSessionId());
+				Session session = SessionManager.get().get(transaction.getSessionId());
 				session.logError(e.getMessage());
 			}
 			log.error(e.getMessage(), e);
@@ -1053,7 +1053,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public List<TagCloud> getTagCloud(String sid) {
-		UserSession session = SessionManager.get().get(sid);
+		Session session = SessionManager.get().get(sid);
 		ContextProperties config = Context.get().getProperties();
 
 		int maxTags = config.getInt(session.getTenantName() + ".tagcloud.maxtags", 30);

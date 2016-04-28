@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.util.Context;
@@ -24,7 +24,7 @@ public class SessionUtil {
 
 	public static final String USER = "user";
 
-	public static UserSession validateSession(HttpServletRequest request) throws ServletException {
+	public static Session validateSession(HttpServletRequest request) throws ServletException {
 		try {
 			String sid = (String) request.getParameter("sid");
 			if (sid == null) {
@@ -48,27 +48,27 @@ public class SessionUtil {
 	 * 
 	 * @throws SecurityException
 	 */
-	public static UserSession validateSession(String sid) throws ServerException {
-		UserSession session = SessionManager.get().get(sid);
+	public static Session validateSession(String sid) throws ServerException {
+		Session session = SessionManager.get().get(sid);
 		if (session == null)
 			throw new ServerException("Invalid Session");
-		if (session.getStatus() != UserSession.STATUS_OPEN)
+		if (session.getStatus() != Session.STATUS_OPEN)
 			throw new ServerException("Invalid or Expired Session");
 		session.renew();
 		return session;
 	}
 
-	public static Locale currentLocale(UserSession session) throws ServerException {
+	public static Locale currentLocale(Session session) throws ServerException {
 		return (Locale) session.getDictionary().get(LOCALE);
 	}
 
 	public static Locale currentLocale(String sid) throws ServerException {
-		UserSession session = validateSession(sid);
+		Session session = validateSession(sid);
 		return currentLocale(session);
 	}
 
 	public static User getSessionUser(String sid) throws ServerException {
-		UserSession session = validateSession(sid);
+		Session session = validateSession(sid);
 		User user = (User) session.getDictionary().get(USER);
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		userDao.initialize(user);
@@ -76,7 +76,7 @@ public class SessionUtil {
 	}
 
 	public static User getSessionUser(HttpServletRequest request) throws ServletException {
-		UserSession session = validateSession(request);
+		Session session = validateSession(request);
 		User user = (User) session.getDictionary().get(USER);
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		userDao.initialize(user);

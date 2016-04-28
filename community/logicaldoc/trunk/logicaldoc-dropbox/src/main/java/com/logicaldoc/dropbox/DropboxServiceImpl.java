@@ -29,7 +29,7 @@ import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.frontend.client.services.DropboxService;
@@ -233,7 +233,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 
 	@Override
 	public int importDocuments(String sid, long targetFolder, String[] paths) throws ServerException {
-		UserSession session = SessionUtil.validateSession(sid);
+		Session session = SessionUtil.validateSession(sid);
 		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
 		if (!fdao.isPermissionEnabled(Permission.IMPORT, targetFolder, session.getUserId()))

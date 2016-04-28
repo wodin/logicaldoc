@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.util.Context;
 
@@ -71,7 +71,7 @@ public class ServiceFactory extends AbstractServiceFactory {
 		String combinedUserId = String.format("%s-%s-%s", username, password == null ? "0" : password.hashCode(), CmisServlet.remoteAddress.get()[0]);
 
 		// Check if the session already exists
-		for (UserSession session : SessionManager.get().getSessions()) {
+		for (Session session : SessionManager.get().getSessions()) {
 			try {
 				String[] userObject = (String[]) session.getUserObject();
 				if (userObject.length > 2 && userObject[2].equals(combinedUserId))

@@ -10,7 +10,7 @@ import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentNote;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.util.Context;
 
 /**
@@ -42,7 +42,7 @@ public class HibernateDocumentNoteDAO extends HibernatePersistentObjectDAO<Docum
 			}
 		} catch (Throwable e) {
 			if (transaction != null && StringUtils.isNotEmpty(transaction.getSessionId())) {
-				UserSession session = SessionManager.get().get(transaction.getSessionId());
+				Session session = SessionManager.get().get(transaction.getSessionId());
 				session.logError(e.getMessage());
 			}
 			log.error(e.getMessage(), e);
