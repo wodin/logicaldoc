@@ -43,14 +43,11 @@ import org.apache.jackrabbit.webdav.version.report.ReportInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.Session;
-import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.webdav.AuthenticationUtil;
-import com.logicaldoc.webdav.AuthenticationUtil.Credentials;
 import com.logicaldoc.webdav.resource.DavResourceFactory;
 import com.logicaldoc.webdav.session.DavSession;
 import com.logicaldoc.webdav.session.DavSessionImpl;
@@ -64,15 +61,6 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 	protected static Logger log = LoggerFactory.getLogger(AbstractWebdavServlet.class);
 
 	private static final long serialVersionUID = -8726695805361483901L;
-
-	/**
-	 * Default value for the 'WWW-Authenticate' header, that is set, if request
-	 * results in a {@link DavServletResponse#SC_UNAUTHORIZED 401
-	 * (Unauthorized)} error.
-	 * 
-	 * @see #getAuthenticateHeaderValue()
-	 */
-	public static final String DEFAULT_AUTHENTICATE_HEADER = "Basic realm=\"LogicalDOC Webdav Server\"";
 
 	/**
 	 * Checks if the precondition for this request and resource is valid.
@@ -143,70 +131,19 @@ abstract public class AbstractWebdavServlet extends HttpServlet implements DavCo
 					&& !(DavMethods.DAV_VERSION_CONTROL == methodCode || DavMethods.DAV_REPORT == methodCode);
 			WebdavResponse webdavResponse = new WebdavResponseImpl(response, noCache);
 
-			AuthenticationChain authenticationChain = (AuthenticationChain) Context.get().getBean(
-					AuthenticationChain.class);
-			String sid = null;
-			String username = null;
 			try {
-				if (request.getHeader(DavConstants.HEADER_AUTHORIZATION) != null) {
-
-					log.debug("Authentication Header: " + request.getHeader(DavConstants.HEADER_AUTHORIZATION));
-
-					Credentials credentials = AuthenticationUtil.authenticate(webdavRequest);
-					username = credentials.getUserName();
-					String combinedUserId = request.getRemoteAddr() + "-" + credentials.getUserName();
-
-					// Check the credentials
-					if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword(), null)) {
-						log.debug("Authentication failed. Answer again with Authorization request");
-						AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
-						return;
-					}
-
-					for (Session session : SessionManager.get().getSessions()) {
-						try {
-							String[] userObject = (String[]) session.getUserObject();
-							if (userObject[2].equals(combinedUserId)
-									&& SessionManager.get().isValid(session.getId())) {
-								SessionManager.get().renew(session.getId());
-								sid = session.getId();
-								break;
-							}
-						} catch (Throwable t) {
-							// Nothing to do. perhaps this session was not
-							// created by WebDAV
-						}
-					}
-					// No active session found, new login required
-					if (sid == null) {
-						String[] userObject = new String[3];
-						userObject[0] = request.getRemoteAddr();
-						userObject[1] = request.getRemoteHost();
-						userObject[2] = combinedUserId;
-
-						boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(),
-								credentials.getPassword(), null, userObject);
-						if (isLoggedOn == false) {
-							log.debug("Authentication failed. Answer again with Authorization request");
-							AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
-							return;
-						} else {
-							sid = AuthenticationChain.getSessionId();
-						}
-					}
-				} else {
-					log.debug("Answer with Authorization request");
-					AuthenticationUtil.sendAuthorisationCommand(webdavResponse);
-					return;
-				}
+				Session session = SessionManager.get().getSession(request);
+				if (session == null)
+					throw new DavException(DavServletResponse.SC_FORBIDDEN);
+				SessionManager.get().renew(session.getId());
 
 				DavSessionImpl davSession = new DavSessionImpl();
-				davSession.setTenantId(SessionManager.get().get(sid).getTenantId());
-				davSession.putObject("sid", sid);
+				davSession.setTenantId(SessionManager.get().get(session.getId()).getTenantId());
+				davSession.putObject("sid", session.getId());
 				UserDAO dao = (UserDAO) Context.get().getBean(UserDAO.class);
-				User user = dao.findByUserName(username);
+				User user = dao.findById(session.getUserId());
 				dao.initialize(user);
-				davSession.putObject("id", user.getId());
+				davSession.putObject("id", session.getUserId());
 				davSession.putObject("user", user);
 
 				webdavRequest.setDavSession(davSession);

@@ -1,6 +1,5 @@
 package com.logicaldoc.webdav.session;
 
-import com.logicaldoc.webdav.AuthenticationUtil.Credentials;
 
 /**
  * For more informations, please visit
@@ -10,20 +9,6 @@ import com.logicaldoc.webdav.AuthenticationUtil.Credentials;
  * 
  */
 public interface DavSession extends org.apache.jackrabbit.webdav.DavSession {
-
-	/**
-	 * Sets a new Credentials Object to the DavSession
-	 * 
-	 * @param credentials Credentials
-	 */
-	public void setCredentials(Credentials credentials);
-
-	/**
-	 * Getting back the current set credentials
-	 * 
-	 * @return
-	 */
-	public Credentials getCredentials();
 
 	/**
 	 * Puts an object to the session map
