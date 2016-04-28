@@ -1,4 +1,4 @@
-package com.logicaldoc.cmis.util;
+package com.logicaldoc.cmis;
 
 import java.io.IOException;
 import java.io.InputStream;

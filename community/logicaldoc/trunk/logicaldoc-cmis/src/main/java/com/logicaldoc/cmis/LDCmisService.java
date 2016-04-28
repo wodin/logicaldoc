@@ -397,7 +397,7 @@ public class LDCmisService extends AbstractCmisService {
 	public LDRepository getRepository() {
 		LDRepository repo = null;
 		Session session = validateSession();
-		String[] sessionObj = (String[]) session.getUserObject();
+		Object[] sessionObj = (Object[]) session.getUserObject();
 
 		if (StringUtils.isEmpty(getCallContext().getRepositoryId())) {
 			/*
