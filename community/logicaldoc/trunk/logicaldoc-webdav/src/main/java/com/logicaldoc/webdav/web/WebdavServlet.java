@@ -76,12 +76,6 @@ public class WebdavServlet extends AbstractWebdavServlet {
 		getServletContext().setAttribute(CTX_ATTR_RESOURCE_PATH_PREFIX, resourcePathPrefix);
 		log.info(INIT_PARAM_RESOURCE_PATH_PREFIX + " = '" + resourcePathPrefix + "'");
 
-		authenticate_header = getInitParameter(INIT_PARAM_AUTHENTICATE_HEADER);
-		if (authenticate_header == null) {
-			authenticate_header = DEFAULT_AUTHENTICATE_HEADER;
-		}
-		log.info("WWW-Authenticate header = '" + authenticate_header + "'");
-
 		String configParam = getInitParameter(INIT_PARAM_RESOURCE_CONFIG);
 		if (configParam != null) {
 			try {
@@ -96,9 +90,9 @@ public class WebdavServlet extends AbstractWebdavServlet {
 	 * {@inheritDoc}
 	 */
 	protected boolean isPreconditionValid(WebdavRequest request, DavResource resource) {
-	    if(resource.getDisplayName().toLowerCase().equals("thumbs.db"))
-	    	return false;
-		
+		if (resource.getDisplayName().toLowerCase().equals("thumbs.db"))
+			return false;
+
 		return !resource.exists() || request.matchesIfHeader(resource);
 	}
 
@@ -176,7 +170,7 @@ public class WebdavServlet extends AbstractWebdavServlet {
 
 	public void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		ContextProperties settings = getSettings();
-		
+
 		// Check if the service is enabled
 		if ("true".equals(settings.get("webdav.enabled")))
 			super.service(request, response);

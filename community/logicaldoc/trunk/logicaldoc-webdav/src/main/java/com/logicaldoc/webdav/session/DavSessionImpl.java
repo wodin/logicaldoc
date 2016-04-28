@@ -2,8 +2,6 @@ package com.logicaldoc.webdav.session;
 
 import java.util.HashMap;
 
-import com.logicaldoc.webdav.AuthenticationUtil.Credentials;
-
 /**
  * For more informations, please visit
  * {@link org.apache.jackrabbit.webdav.simple.DavSessionImpl}
@@ -14,26 +12,7 @@ public class DavSessionImpl implements DavSession {
 
 	private HashMap<String, Object> map = new HashMap<String, Object>();
 
-	private Credentials credentials;
-
 	private long tenantId;
-
-	/**
-	 * @see DavSession#setCredentials(Credentials)
-	 */
-	@Override
-	public void setCredentials(Credentials credentials) {
-		this.credentials = credentials;
-
-	}
-
-	/**
-	 * @see DavSession#getCredentials()
-	 */
-	@Override
-	public Credentials getCredentials() {
-		return this.credentials;
-	}
 
 	/**
 	 * @see DavSession#getObject(String)
