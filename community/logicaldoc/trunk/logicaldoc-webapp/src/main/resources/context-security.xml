@@ -19,12 +19,12 @@
             http://www.springframework.org/schema/security/spring-security.xsd">
     <bean id="AuthenticationChain"
         class="com.logicaldoc.core.security.authentication.AuthenticationChain" />
-    <bean id="LDAuthenticationProvider" class="com.logicaldoc.web.security.LDAuthenticationProvider">
+    <bean id="LDAuthenticationProvider" class="com.logicaldoc.core.security.spring.LDAuthenticationProvider">
         <property name="userDAO" ref="UserDAO" />
         <property name="authenticationChain" ref="AuthenticationChain" />
     </bean>
-    <bean id="AdminPasswdAuthenticationProvider" class="com.logicaldoc.web.security.AdminPasswdAuthenticationProvider" />
-    <bean id="LDAccessDecisionManager" class="com.logicaldoc.web.security.LDAccessDecisionManager">
+    <bean id="AdminPasswdAuthenticationProvider" class="com.logicaldoc.core.security.spring.AdminPasswdAuthenticationProvider" />
+    <bean id="LDAccessDecisionManager" class="com.logicaldoc.core.security.spring.LDAccessDecisionManager">
         <constructor-arg>
             <list>
                 <bean
@@ -33,13 +33,13 @@
             </list>
         </constructor-arg>
     </bean>
-    <bean id="LDAuthenticationSuccessHandler" class="com.logicaldoc.web.security.LDAuthenticationSuccessHandler" />
-    <bean id="LDAuthenticationFailureHandler" class="com.logicaldoc.web.security.LDAuthenticationFailureHandler" />
+    <bean id="LDAuthenticationSuccessHandler" class="com.logicaldoc.core.security.spring.LDAuthenticationSuccessHandler" />
+    <bean id="LDAuthenticationFailureHandler" class="com.logicaldoc.core.security.spring.LDAuthenticationFailureHandler" />
     <security:authentication-manager id="AuthenticationManager">
         <security:authentication-provider ref='LDAuthenticationProvider' />
     </security:authentication-manager>
-    <bean id="LDAnonymousLoginFilter" class="com.logicaldoc.web.security.LDAnonymousLoginFilter" />
-    <bean id="LDSecurityContextRepository" class="com.logicaldoc.web.security.LDSecurityContextRepository" />
+    <bean id="LDAnonymousLoginFilter" class="com.logicaldoc.core.security.spring.LDAnonymousLoginFilter" />
+    <bean id="LDSecurityContextRepository" class="com.logicaldoc.core.security.spring.LDSecurityContextRepository" />
     <security:authentication-manager id="AdminPasswdAuthenticationManager">
         <security:authentication-provider ref='AdminPasswdAuthenticationProvider' />
     </security:authentication-manager>
@@ -78,6 +78,28 @@
     </security:http>
     
     <security:http pattern="/services/rest/**" use-expressions="true"
+        create-session="never" disable-url-rewriting="true" auto-config="false"
+        access-decision-manager-ref="LDAccessDecisionManager"
+        authentication-manager-ref="AuthenticationManager"
+        security-context-repository-ref="LDSecurityContextRepository">
+        <!-- Protected areas -->
+        <security:intercept-url pattern="/**"
+            access="isAuthenticated()" />
+        <security:http-basic />
+    </security:http>
+    
+    <security:http pattern="/webdav/**" use-expressions="true"
+        create-session="never" disable-url-rewriting="true" auto-config="false"
+        access-decision-manager-ref="LDAccessDecisionManager"
+        authentication-manager-ref="AuthenticationManager"
+        security-context-repository-ref="LDSecurityContextRepository">
+        <!-- Protected areas -->
+        <security:intercept-url pattern="/**"
+            access="isAuthenticated()" />
+        <security:http-basic />
+    </security:http>
+    
+    <security:http pattern="/service/cmis/**" use-expressions="true"
         create-session="never" disable-url-rewriting="true" auto-config="false"
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AuthenticationManager"

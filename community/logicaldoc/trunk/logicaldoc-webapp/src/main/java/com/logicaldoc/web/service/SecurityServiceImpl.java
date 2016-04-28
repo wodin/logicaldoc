@@ -35,11 +35,11 @@ import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Menu;
 import com.logicaldoc.core.security.MenuGroup;
 import com.logicaldoc.core.security.SecurityManager;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.UserHistory;
-import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.TenantDAO;
@@ -67,7 +67,6 @@ import com.logicaldoc.util.crypt.CryptUtil;
 import com.logicaldoc.util.security.PasswordGenerator;
 import com.logicaldoc.util.sql.SqlUtil;
 import com.logicaldoc.web.util.ServiceUtil;
-import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * Implementation of the SecurityService
@@ -675,7 +674,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		SessionManager.get().kill(sid);
 
 		// Also kill the servlet container session, if any
-		HttpSession httpSession = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
+		HttpSession httpSession = SessionManager.get().getServletSession(sid);
 		if (httpSession != null) {
 			httpSession.invalidate();
 		}
