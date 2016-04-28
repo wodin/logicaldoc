@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
- * Manager on security issues such as users and groups
+ * Manager for security objects like users and groups
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 3.0
@@ -110,7 +110,7 @@ public interface SecurityManager {
 	public boolean isWriteEnabled(long docId, long userId);
 
 	public boolean isReadEnabled(long docId, long userId);
-	
+
 	public boolean isDownloadEnabled(long docId, long userId);
 
 	/**

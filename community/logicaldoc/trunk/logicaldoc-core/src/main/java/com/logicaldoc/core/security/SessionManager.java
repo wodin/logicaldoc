@@ -20,7 +20,7 @@ import com.logicaldoc.util.time.TimeDiff.TimeField;
  * @author Marco Meschieri - Logical Objects
  * @since 4.6
  */
-public class SessionManager extends ConcurrentHashMap<String, UserSession> {
+public class SessionManager extends ConcurrentHashMap<String, Session> {
 
 	private static Logger log = LoggerFactory.getLogger(SessionManager.class);
 
@@ -42,7 +42,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 * Creates a new session and stores it in the pool of opened sessions
 	 */
 	public synchronized String newSession(String username, String password, String key, Object userObject) {
-		UserSession session = new UserSession(username, password, key, userObject);
+		Session session = new Session(username, password, key, userObject);
 		put(session.getId(), session);
 		log.warn("Created new session " + session.getId() + " for user '" + username + "'");
 		cleanClosedSessions();
@@ -63,7 +63,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 * Kills an existing session
 	 */
 	public void kill(String sessionId) {
-		UserSession session = get(sessionId);
+		Session session = get(sessionId);
 		if (session != null) {
 			session.setClosed();
 			log.warn("Killed session " + sessionId);
@@ -71,7 +71,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	}
 
 	@Override
-	public UserSession remove(Object key) {
+	public Session remove(Object key) {
 		kill((String) key);
 		return super.remove(key);
 	}
@@ -97,16 +97,16 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	public boolean isValid(String sessionId) {
 		if (sessionId == null)
 			return false;
-		UserSession session = get(sessionId);
-		return session != null && !isExpired(session) && session.getStatus() == UserSession.STATUS_OPEN;
+		Session session = get(sessionId);
+		return session != null && !isExpired(session) && session.getStatus() == Session.STATUS_OPEN;
 	}
 
 	/**
 	 * Checks if the session is expired. Note that if timeout occurred after the
 	 * last renewal, the session state will be set to EXPIRED.
 	 */
-	private boolean isExpired(UserSession session) {
-		if (session == null || session.getStatus() != UserSession.STATUS_OPEN)
+	private boolean isExpired(Session session) {
+		if (session == null || session.getStatus() != Session.STATUS_OPEN)
 			return true;
 
 		Date lastRenew = session.getLastRenew();
@@ -129,8 +129,8 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	}
 
 	@Override
-	public UserSession get(Object sessionId) {
-		UserSession session = super.get(sessionId);
+	public Session get(Object sessionId) {
+		Session session = super.get(sessionId);
 		isExpired(session);
 		return session;
 	}
@@ -140,7 +140,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 */
 	public int countOpened() {
 		int count = 0;
-		for (UserSession session : getSessions()) {
+		for (Session session : getSessions()) {
 			if (!isExpired(session))
 				count++;
 		}
@@ -152,7 +152,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 */
 	public int countOpened(long tenantId) {
 		int count = 0;
-		for (UserSession session : getSessions()) {
+		for (Session session : getSessions()) {
 			if (!isExpired(session) && session.getTenantId() == tenantId)
 				count++;
 		}
@@ -163,8 +163,8 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 * Returns the list of sessions ordered by ascending status and creation
 	 * date.
 	 */
-	public List<UserSession> getSessions() {
-		List<UserSession> sessions = new ArrayList<UserSession>(values());
+	public List<Session> getSessions() {
+		List<Session> sessions = new ArrayList<Session>(values());
 		Collections.sort(sessions);
 		return sessions;
 	}
@@ -173,10 +173,10 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	 * Returns the list of sessions of the specified tenant ordered by ascending
 	 * status and creation date.
 	 */
-	public List<UserSession> getSessions(long tenantId) {
-		List<UserSession> sessions = new ArrayList<UserSession>(values());
-		List<UserSession> tenantSessions = new ArrayList<UserSession>();
-		for (UserSession session : sessions)
+	public List<Session> getSessions(long tenantId) {
+		List<Session> sessions = new ArrayList<Session>(values());
+		List<Session> tenantSessions = new ArrayList<Session>();
+		for (Session session : sessions)
 			if (session.getTenantId() == tenantId)
 				tenantSessions.add(session);
 		Collections.sort(tenantSessions);
@@ -186,11 +186,11 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	/**
 	 * Returns the list of sessions for the specified user object
 	 */
-	public List<UserSession> getSessionsByUserObject(Object userObject) {
-		List<UserSession> sessions = new ArrayList<UserSession>();
+	public List<Session> getSessionsByUserObject(Object userObject) {
+		List<Session> sessions = new ArrayList<Session>();
 		if (userObject == null)
 			return sessions;
-		for (UserSession userSession : values()) {
+		for (Session userSession : values()) {
 			if (userObject.equals(userSession.getUserObject()))
 				sessions.add(userSession);
 		}
@@ -204,8 +204,8 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	private void cleanClosedSessions() {
 		List<String> garbage = new ArrayList<String>();
 		int counter = 0;
-		for (UserSession session : getSessions()) {
-			if (session.getStatus() != UserSession.STATUS_OPEN)
+		for (Session session : getSessions()) {
+			if (session.getStatus() != Session.STATUS_OPEN)
 				counter++;
 			if (counter > MAX_CLOSED_SESSIONS)
 				garbage.add(session.getId());

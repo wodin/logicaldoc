@@ -44,7 +44,7 @@ import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -83,7 +83,7 @@ public class LDCmisService extends AbstractCmisService {
 			historyDao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 
 			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
-			UserSession session = SessionManager.get().get(sessionId);
+			Session session = SessionManager.get().get(sessionId);
 			Folder root = fdao.findRoot(session.getTenantId());
 
 			repositories.put(Long.toString(root.getId()), new LDRepository(root, sessionId));
@@ -373,15 +373,15 @@ public class LDCmisService extends AbstractCmisService {
 		return sessionId;
 	}
 
-	private UserSession validateSession() {
+	private Session validateSession() {
 		if (getSessionId() == null)
 			return null;
 
 		try {
-			UserSession session = SessionManager.get().get(getSessionId());
+			Session session = SessionManager.get().get(getSessionId());
 			if (session == null)
 				throw new CmisPermissionDeniedException("Unexisting session " + getSessionId());
-			if (session.getStatus() != UserSession.STATUS_OPEN)
+			if (session.getStatus() != Session.STATUS_OPEN)
 				throw new CmisPermissionDeniedException("Invalid or Expired Session " + getSessionId());
 			session.renew();
 			return session;
@@ -396,7 +396,7 @@ public class LDCmisService extends AbstractCmisService {
 
 	public LDRepository getRepository() {
 		LDRepository repo = null;
-		UserSession session = validateSession();
+		Session session = validateSession();
 		String[] sessionObj = (String[]) session.getUserObject();
 
 		if (StringUtils.isEmpty(getCallContext().getRepositoryId())) {

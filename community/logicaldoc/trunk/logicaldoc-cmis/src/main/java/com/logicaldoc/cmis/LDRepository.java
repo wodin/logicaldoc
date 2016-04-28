@@ -134,7 +134,7 @@ import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.UserSession;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
@@ -2531,8 +2531,8 @@ public class LDRepository {
 	 */
 	private User getSessionUser() {
 		if (sid != null) {
-			UserSession session = SessionManager.get().get(sid);
-			if (session.getStatus() != UserSession.STATUS_OPEN)
+			Session session = SessionManager.get().get(sid);
+			if (session.getStatus() != Session.STATUS_OPEN)
 				return null;
 			return userDao.findById(session.getUserId());
 		} else {
@@ -2555,8 +2555,8 @@ public class LDRepository {
 
 		long userId = 0;
 		if (sid != null) {
-			UserSession session = SessionManager.get().get(sid);
-			if (session.getStatus() != UserSession.STATUS_OPEN)
+			Session session = SessionManager.get().get(sid);
+			if (session.getStatus() != Session.STATUS_OPEN)
 				return false;
 			else
 				session.renew();

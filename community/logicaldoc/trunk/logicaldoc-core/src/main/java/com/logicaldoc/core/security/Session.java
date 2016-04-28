@@ -22,7 +22,7 @@ import com.logicaldoc.util.config.ContextProperties;
  * @author Marco Meschieri - Logical Objects
  * @since 4.6.0
  */
-public class UserSession implements Comparable<UserSession> {
+public class Session implements Comparable<Session> {
 	public final static int STATUS_OPEN = 0;
 
 	public final static int STATUS_EXPIRED = 1;
@@ -114,7 +114,7 @@ public class UserSession implements Comparable<UserSession> {
 		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGOUT, "", id);
 	}
 
-	UserSession(String userName, String password, String key, Object userObject) {
+	Session(String userName, String password, String key, Object userObject) {
 		super();
 		this.id = UUID.randomUUID().toString();
 		this.userName = userName;
@@ -187,7 +187,7 @@ public class UserSession implements Comparable<UserSession> {
 	}
 
 	@Override
-	public int compareTo(UserSession o) {
+	public int compareTo(Session o) {
 		int compare = new Integer(status).compareTo(new Integer(o.getStatus()));
 		if (compare == 0)
 			compare = o.getCreation().compareTo(creation);
@@ -207,7 +207,7 @@ public class UserSession implements Comparable<UserSession> {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		final UserSession other = (UserSession) obj;
+		final Session other = (Session) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

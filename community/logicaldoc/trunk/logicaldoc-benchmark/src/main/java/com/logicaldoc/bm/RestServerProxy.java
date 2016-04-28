@@ -44,7 +44,6 @@ public class RestServerProxy extends AbstractServerProxy {
 
 	public String login(String username, String password) throws Exception {
 		sid = authClient.getSid();
-		System.out.println("login sid: " + sid);
 		return sid;
 	}
 	
