@@ -26,12 +26,11 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
-import com.logicaldoc.core.security.Session;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.web.util.SessionUtil;
 
 /**
  * This servlet is responsible for document uploads operations.
@@ -61,7 +60,7 @@ public class UploadServlet extends UploadAction {
 		try {
 			setUploadMax();
 
-			HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
+			HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSid(request));
 
 			if (session == null)
 				session = request.getSession();
@@ -178,7 +177,7 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void removeItem(HttpServletRequest request, String fieldName) throws UploadActionException {
-		HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
+		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSid(request));
 		if (session == null)
 			session = request.getSession();
 
@@ -212,7 +211,7 @@ public class UploadServlet extends UploadAction {
 
 		String fieldName = request.getParameter(UConsts.PARAM_SHOW);
 
-		HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
+		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSid(request));
 
 		if (session == null)
 			session = request.getSession();
@@ -242,7 +241,7 @@ public class UploadServlet extends UploadAction {
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, File> getReceivedFiles(HttpServletRequest request, String sid) {
-		HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
+		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSid(request));
 
 		if (session == null)
 			session = request.getSession();
@@ -252,7 +251,7 @@ public class UploadServlet extends UploadAction {
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, String> getReceivedFileNames(HttpServletRequest request, String sid) {
-		HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
+		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSid(request));
 		if (session == null)
 			session = request.getSession();
 
@@ -299,7 +298,7 @@ public class UploadServlet extends UploadAction {
 	}
 
 	public static void cleanReceivedFiles(String sid) {
-		HttpSession session = SessionUtil.getServletSession(SessionUtil.getCurrentSid());
+		HttpSession session = SessionManager.get().getServletSession(sid);
 		cleanReceivedFiles(session);
 	}
 
