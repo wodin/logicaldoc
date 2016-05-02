@@ -80,7 +80,7 @@ public class SessionsDataServlet extends HttpServlet {
 					writer.print("<statusLabel>" + I18N.message("closed", locale) + "</statusLabel>");
 				else if (session.getStatus() == Session.STATUS_EXPIRED)
 					writer.print("<statusLabel>" + I18N.message("expired", locale) + "</statusLabel>");
-				writer.print("<username><![CDATA[" + session.getUserName() + "]]></username>");
+				writer.print("<username><![CDATA[" + session.getUsername() + "]]></username>");
 				writer.print("<tenant><![CDATA[" + session.getTenantName() + "]]></tenant>");
 				writer.print("<created>" + df.format((Date) session.getCreation()) + "</created>");
 				writer.print("<renew>" + df.format((Date) session.getLastRenew()) + "</renew>");

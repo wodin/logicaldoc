@@ -48,20 +48,20 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testDelete() {
 		// User with history, not deletable
-		User user = dao.findByUserName("author");
+		User user = dao.findByUsername("author");
 		Assert.assertEquals(2, user.getGroups().size());
 		dao.delete(user.getId());
-		user = dao.findByUserName("author");
+		user = dao.findByUsername("author");
 		Assert.assertNull(user);
 
 		// Try with a deletable user
-		User testUser = dao.findByUserName("test");
+		User testUser = dao.findByUsername("test");
 		Assert.assertEquals(2, testUser.getGroups().size());
 		manager.removeUserFromAllGroups(testUser);
 		Assert.assertEquals(1, testUser.getGroups().size());
 		String name = testUser.getUserGroupName();
 		Assert.assertTrue(dao.delete(testUser.getId()));
-		user = dao.findByUserName("test");
+		user = dao.findByUsername("test");
 		Assert.assertNull(user);
 		Assert.assertNull(groupDao.findByName(name, 1));
 
@@ -94,53 +94,53 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByUserName() {
-		User user = dao.findByUserName("admin");
+		User user = dao.findByUsername("admin");
 		Assert.assertNotNull(user);
-		Assert.assertEquals("admin", user.getUserName());
+		Assert.assertEquals("admin", user.getUsername());
 		user.setDecodedPassword("admin");
 		Assert.assertEquals(CryptUtil.cryptString("admin"), user.getPassword());
 		Assert.assertEquals("admin@admin.net", user.getEmail());
 		Assert.assertEquals(2, user.getGroups().size());
 
 		// Try with unexisting username
-		user = dao.findByUserName("xxxx");
+		user = dao.findByUsername("xxxx");
 		Assert.assertNull(user);
 
-		user = dao.findByUserName("Admin");
+		user = dao.findByUsername("Admin");
 		Assert.assertNull(user);
 	}
 
 	@Test
 	public void testFindByUserNameIgnoreCase() {
-		User user = dao.findByUserNameIgnoreCase("admin");
+		User user = dao.findByUsernameIgnoreCase("admin");
 		Assert.assertNotNull(user);
-		Assert.assertEquals("admin", user.getUserName());
+		Assert.assertEquals("admin", user.getUsername());
 		
 		// Try with unexisting username
-		user = dao.findByUserNameIgnoreCase("xxxx");
+		user = dao.findByUsernameIgnoreCase("xxxx");
 		Assert.assertNull(user);
 
 		// Try with different case
-		user = dao.findByUserName("AdMiN");
+		user = dao.findByUsername("AdMiN");
 		Assert.assertNull(user);
-		user = dao.findByUserNameIgnoreCase("AdMiN");
+		user = dao.findByUsernameIgnoreCase("AdMiN");
 		Assert.assertNotNull(user);
-		Assert.assertEquals("admin", user.getUserName());
+		Assert.assertEquals("admin", user.getUsername());
 	}
 	
 	@Test
 	public void testFindByLikeUserName() {
-		Collection<User> users = dao.findByLikeUserName("admin");
+		Collection<User> users = dao.findByLikeUsername("admin");
 		Assert.assertNotNull(users);
 		Assert.assertEquals(1, users.size());
-		Assert.assertEquals("admin", users.iterator().next().getUserName());
+		Assert.assertEquals("admin", users.iterator().next().getUsername());
 
-		users = dao.findByLikeUserName("adm%");
+		users = dao.findByLikeUsername("adm%");
 		Assert.assertNotNull(users);
 		Assert.assertEquals(1, users.size());
-		Assert.assertEquals("admin", users.iterator().next().getUserName());
+		Assert.assertEquals("admin", users.iterator().next().getUsername());
 
-		users = dao.findByLikeUserName("xxx%");
+		users = dao.findByLikeUsername("xxx%");
 		Assert.assertNotNull(users);
 		Assert.assertTrue(users.isEmpty());
 	}
@@ -149,7 +149,7 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 	public void testFindById() {
 		User user = dao.findById(1);
 		Assert.assertNotNull(user);
-		Assert.assertEquals("admin", user.getUserName());
+		Assert.assertEquals("admin", user.getUsername());
 		user.setDecodedPassword("admin");
 		Assert.assertEquals(CryptUtil.cryptString("admin"), user.getPassword());
 		Assert.assertEquals("admin@admin.net", user.getEmail());
@@ -162,17 +162,17 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 
 	@Test
 	public void testFindByUserNameAndName() {
-		Collection<User> users = dao.findByUserNameAndName("boss", "Meschieri");
+		Collection<User> users = dao.findByUsernameAndName("boss", "Meschieri");
 		Assert.assertNotNull(users);
 		Assert.assertEquals(1, users.size());
-		Assert.assertEquals("boss", users.iterator().next().getUserName());
+		Assert.assertEquals("boss", users.iterator().next().getUsername());
 
-		users = dao.findByUserNameAndName("b%", "Mes%");
+		users = dao.findByUsernameAndName("b%", "Mes%");
 		Assert.assertNotNull(users);
 		Assert.assertEquals(1, users.size());
-		Assert.assertEquals("boss", users.iterator().next().getUserName());
+		Assert.assertEquals("boss", users.iterator().next().getUsername());
 
-		users = dao.findByUserNameAndName("a%", "xxxx%");
+		users = dao.findByUsernameAndName("a%", "xxxx%");
 		Assert.assertNotNull(users);
 		Assert.assertTrue(users.isEmpty());
 	}
@@ -180,7 +180,7 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testStore() {
 		User user = new User();
-		user.setUserName("xxx");
+		user.setUsername("xxx");
 		user.setDecodedPassword("xxxpwd");
 		user.setName("claus");
 		user.setFirstName("valca");
@@ -194,7 +194,7 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(groupDao.findByName(user.getUserGroupName(), 1) != null);
 		manager.assignUserToGroups(user, new long[] { 1 });
 
-		User storedUser = dao.findByUserName("xxx");
+		User storedUser = dao.findByUsername("xxx");
 		Assert.assertNotNull(user);
 		Assert.assertEquals(user, storedUser);
 		Assert.assertEquals(2, storedUser.getGroups().size());
@@ -230,7 +230,7 @@ public class HibernateUserDAOTest extends AbstractCoreTCase {
 
 	public void isPasswordExpired() {
 		Assert.assertFalse(dao.isPasswordExpired("admin"));
-		User user = dao.findByUserName("boss");
+		User user = dao.findByUsername("boss");
 		Date lastChange = null;
 		Calendar calendar = new GregorianCalendar();
 		calendar.setTime(lastChange);

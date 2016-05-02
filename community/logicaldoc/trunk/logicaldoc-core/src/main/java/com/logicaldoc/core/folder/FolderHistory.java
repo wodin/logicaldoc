@@ -30,7 +30,7 @@ public class FolderHistory extends AbstractHistory {
 		history.setFilename(getFilename());
 		history.setFilenameOld(getFilenameOld());
 		history.setUserId(getUserId());
-		history.setUserName(getUserName());
+		history.setUsername(getUsername());
 
 		return history;
 	}

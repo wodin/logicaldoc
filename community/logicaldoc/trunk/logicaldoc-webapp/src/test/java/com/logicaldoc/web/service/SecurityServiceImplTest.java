@@ -1,7 +1,5 @@
 package com.logicaldoc.web.service;
 
-import java.util.List;
-
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -9,10 +7,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.logicaldoc.core.security.Group;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.ServerException;
@@ -38,18 +36,6 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		groupDAO = (GroupDAO) context.getBean("GroupDAO");
 	}
 
-	@After
-	public void tearDown() throws Exception {
-		super.tearDown();
-		List<Session> sessions = SessionManager.get().getSessions();
-		for (Session session : sessions) {
-			try {
-				SessionManager.get().kill(session.getId());
-			} catch (Throwable t) {
-			}
-		}
-	}
-
 	@Test
 	public void testLogout() {
 		Assert.assertEquals("admin", session.getUser().getUserName());
@@ -69,18 +55,18 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testAddUserToGroup() throws ServerException {
-		User test = userDAO.findByUserName("test");
+		User test = userDAO.findByUsername("test");
 		Assert.assertNotNull(test);
 		Group group = groupDAO.findByName("author", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(group);
 		service.addUserToGroup(session.getSid(), group.getId(), test.getId());
-		User user = userDAO.findByUserName("test");
+		User user = userDAO.findByUsername("test");
 		Assert.assertTrue(user.getGroups().contains(group));
 
 		group = groupDAO.findByName("guest", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(group);
 		service.addUserToGroup(session.getSid(), group.getId(), test.getId());
-		user = userDAO.findByUserName("test");
+		user = userDAO.findByUsername("test");
 		Assert.assertTrue(user.getGroups().contains(group));
 	}
 
@@ -98,10 +84,10 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testDeleteUser() throws ServerException {
-		User user = userDAO.findByUserName("author");
+		User user = userDAO.findByUsername("author");
 		Assert.assertEquals(2, user.getGroups().size());
 		service.deleteUser(session.getSid(), user.getId());
-		user = userDAO.findByUserName("author");
+		user = userDAO.findByUsername("author");
 		Assert.assertNull(user);
 	}
 
@@ -112,16 +98,16 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		users[1] = 1;
 		Group group = groupDAO.findByName("author", Tenant.DEFAULT_ID);
 		service.removeFromGroup(session.getSid(), group.getId(), users);
-		User user = userDAO.findByUserName("test");
+		User user = userDAO.findByUsername("test");
 		Assert.assertFalse(user.getGroups().contains(group));
-		user = userDAO.findByUserName("admin");
+		user = userDAO.findByUsername("admin");
 		Assert.assertFalse(user.getGroups().contains(group));
 
 		group = groupDAO.findByName("guest", Tenant.DEFAULT_ID);
 		service.removeFromGroup(session.getSid(), group.getId(), users);
-		user = userDAO.findByUserName("test");
+		user = userDAO.findByUsername("test");
 		Assert.assertFalse(user.getGroups().contains(group));
-		user = userDAO.findByUserName("admin");
+		user = userDAO.findByUsername("admin");
 		Assert.assertFalse(user.getGroups().contains(group));
 	}
 
@@ -185,16 +171,16 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	public void testKill() {
 		SessionManager sm = SessionManager.get();
 		sm.clear();
-		String session1 = sm.newSession("admin", null, null);
+		Session session1 = sm.newSession("admin", "admin", null);
 		Assert.assertNotNull(session1);
-		String session2 = sm.newSession("admin", null, null);
+		Session session2 = sm.newSession("admin", "admin", null);
 		Assert.assertNotNull(session2);
 		Assert.assertFalse(session1.equals(session2));
 		Assert.assertEquals(2, sm.getSessions().size());
 
-		service.kill(session1);
-		Assert.assertTrue(sm.isValid(session2));
-		Assert.assertTrue(!sm.isValid(session1));
+		service.kill(session1.getId());
+		Assert.assertTrue(sm.isValid(session2.getId()));
+		Assert.assertTrue(!sm.isValid(session1.getId()));
 		Assert.assertEquals(2, sm.getSessions().size());
 	}
 

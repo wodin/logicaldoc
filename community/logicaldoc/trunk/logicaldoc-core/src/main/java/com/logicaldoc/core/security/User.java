@@ -36,7 +36,7 @@ public class User extends PersistentObject implements Serializable {
 
 	private static final long serialVersionUID = 8093874904302301982L;
 
-	private String userName = "";
+	private String username = "";
 
 	private String password = "";
 
@@ -133,8 +133,8 @@ public class User extends PersistentObject implements Serializable {
 		this.repass = repass;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
 	public String getPassword() {
@@ -152,7 +152,7 @@ public class User extends PersistentObject implements Serializable {
 		if (fullName == null && getName() != null)
 			fullName = getName();
 		if (fullName == null)
-			fullName = getUserName();
+			fullName = getUsername();
 		return fullName;
 	}
 
@@ -209,8 +209,8 @@ public class User extends PersistentObject implements Serializable {
 		return false;
 	}
 
-	public void setUserName(String uname) {
-		userName = uname;
+	public void setUsername(String uname) {
+		username = uname;
 	}
 
 	public void setPassword(String pwd) {
@@ -287,7 +287,7 @@ public class User extends PersistentObject implements Serializable {
 	}
 
 	public void reset() {
-		userName = "";
+		username = "";
 		password = "";
 		passwordmd4 = "";
 		name = "";
@@ -305,7 +305,7 @@ public class User extends PersistentObject implements Serializable {
 	}
 
 	public String toString() {
-		return getUserName();
+		return getUsername();
 	}
 
 	public Set<Group> getGroups() {

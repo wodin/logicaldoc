@@ -142,8 +142,8 @@ public class ProductNews extends Task {
 				User user = userDao.findById(userId);
 				if (user.isInGroup("admin")) {
 					Recipient recipient = new Recipient();
-					recipient.setName(user.getUserName());
-					recipient.setAddress(user.getUserName());
+					recipient.setName(user.getUsername());
+					recipient.setAddress(user.getUsername());
 					recipient.setType(Recipient.TYPE_SYSTEM);
 					recipient.setMode(Recipient.MODE_EMAIL_TO);
 					recipient.setRead(1);

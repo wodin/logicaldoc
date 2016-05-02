@@ -10,9 +10,10 @@ import org.java.plugin.registry.Extension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.Client;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.HibernateUserDAO;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -27,116 +28,104 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * @since 4.5
  */
 public class AuthenticationChain implements AuthenticationProvider {
+
 	private static Logger log = LoggerFactory.getLogger(AuthenticationChain.class);
 
 	private List<AuthenticationProvider> providers = new ArrayList<AuthenticationProvider>();
 
-	private static ThreadLocal<String> sessionId = new ThreadLocal<String>() {
-		protected synchronized String initialValue() {
-			return null;
-		}
-	};
-
-	protected boolean ignoreCaseLogin() {
-		ContextProperties config = Context.get().getProperties();
-		return "true".equals(config.getProperty("login.ignorecase"));
-	}
-
-	public static String getSessionId() {
-		String sid = (String) sessionId.get();
-		sessionId.remove();
-		return sid;
-	}
-
 	@Override
-	public final boolean authenticate(String username, String password, String key) {
+	public final User authenticate(String username, String password, String key) throws AuthenticationException {
 		return authenticate(username, password, key, null);
 	}
 
 	@Override
-	public final boolean authenticate(String username, String password) {
+	public final User authenticate(String username, String password) throws AuthenticationException {
 		return authenticate(username, password, null, null);
 	}
 
 	@Override
-	public final boolean authenticate(String username, String password, String key, Object userObject) {
-		boolean loggedIn = validate(username, password, key);
-
-		if (loggedIn) {
-			// Create a new session and store if into the current thread
-			String session = SessionManager.get().newSession(username, password, userObject);
-			AuthenticationChain.sessionId.set(session);
-		}
-
-		return loggedIn;
-	}
-
-	public boolean validate(String username, String password) {
-		return validate(username, password, null);
-	}
-
-	/**
-	 * Try to authenticate the user without creating a new session
-	 * 
-	 * @param username
-	 * @param password
-	 * @param key Optional authentication parameter
-	 * @return True only on successful authentication
-	 */
-	public boolean validate(String username, String password, String key) {
+	public final User authenticate(String username, String password, String key, Client client)
+			throws AuthenticationException {
 		if (providers == null || providers.isEmpty())
 			init();
 
-		/*
-		 * Check the anonymous login
-		 */
-		{
-			String tenant = Tenant.DEFAULT_NAME;
-			UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
-			User user = null;
+		User user = checkAnonymousLogin(username, key);
+		if (user != null)
+			return user;
 
-			if (ignoreCaseLogin())
-				user = udao.findByUserNameIgnoreCase(username);
-			else
-				user = udao.findByUserName(username);
-
-			if (user != null) {
-				TenantDAO tdao = (TenantDAO) Context.get().getBean(TenantDAO.class);
-				Tenant t = tdao.findById(user.getTenantId());
-				if (t != null)
-					tenant = t.getName();
-			}
-
-			if (key != null) {
-				ContextProperties config = Context.get().getProperties();
-				if ("true".equals(config.getProperty(tenant + ".anonymous.enabled"))
-						&& username.equals(config.getProperty(tenant + ".anonymous.user"))
-						&& key.equals(config.getProperty(tenant + ".anonymous.key")))
-					return true;
-			}
-		}
-
-		boolean loggedIn = false;
+		List<AuthenticationException> errors = new ArrayList<AuthenticationException>();
 		for (AuthenticationProvider cmp : providers) {
 			if (!cmp.isEnabled())
 				continue;
 
-			// validates an user for valid login credentials if a specific
+			// Validates an user for valid login credentials if a specific
 			// component handles this user explicitly (e.g. admin is
 			// DefaultAuthentication)
-			if (cmp.validateOnUser(username)) {
-				loggedIn = cmp.authenticate(username, password);
+			if (cmp.canAuthenticateUser(username)) {
+				try {
+					user = cmp.authenticate(username, password);
+				} catch (AuthenticationException ae) {
+					errors.add(ae);
+				}
 			}
 
-			if (loggedIn)
+			if (user != null)
 				break;
 		}
 
-		return loggedIn;
+		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
+		if (user != null)
+			userDao.initialize(user);
+		else if (!errors.isEmpty())
+			throw errors.get(0);
+
+		return user;
+	}
+
+	/*
+	 * Checks the anonymous login
+	 */
+	protected User checkAnonymousLogin(String username, String key) {
+		String tenant = Tenant.DEFAULT_NAME;
+
+		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
+
+		User user = null;
+
+		if (HibernateUserDAO.ignoreCaseLogin())
+			user = userDao.findByUsernameIgnoreCase(username);
+		else
+			user = userDao.findByUsername(username);
+
+		if (user == null)
+			throw new AccountNotFoundException();
+
+		userDao.initialize(user);
+
+		if (user.getEnabled() == 0)
+			throw new AccountDisabledException();
+
+		if (userDao.isPasswordExpired(username))
+			throw new PasswordExpiredException();
+
+		TenantDAO tdao = (TenantDAO) Context.get().getBean(TenantDAO.class);
+		Tenant t = tdao.findById(user.getTenantId());
+		if (t != null)
+			tenant = t.getName();
+
+		if (key != null) {
+			ContextProperties config = Context.get().getProperties();
+			if ("true".equals(config.getProperty(tenant + ".anonymous.enabled"))
+					&& username.equals(config.getProperty(tenant + ".anonymous.user"))
+					&& key.equals(config.getProperty(tenant + ".anonymous.key")))
+				return user;
+		}
+
+		return null;
 	}
 
 	@Override
-	public boolean validateOnUser(String user) {
+	public boolean canAuthenticateUser(String user) {
 		return false;
 	}
 

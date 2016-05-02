@@ -95,7 +95,7 @@ public class SoapSecurityService extends AbstractService implements SecurityServ
 				usr.setStreet(user.getStreet());
 				usr.setTelephone(user.getTelephone());
 				usr.setTelephone2(user.getTelephone2());
-				usr.setUserName(user.getUserName());
+				usr.setUsername(user.getUsername());
 				usr.setEnabled(user.getEnabled());
 				usr.setPasswordExpires(user.getPasswordExpires());
 				usr.setQuota(user.getQuota());
@@ -103,7 +103,7 @@ public class SoapSecurityService extends AbstractService implements SecurityServ
 				usr.setSource(user.getSource());
 			}
 
-			if (StringUtils.isEmpty(usr.getUserName()))
+			if (StringUtils.isEmpty(usr.getUsername()))
 				throw new Exception("Missing mandatory value 'UserName'");
 			else if (StringUtils.isEmpty(usr.getEmail()))
 				throw new Exception("Missing mandatory value 'Email'");
@@ -278,7 +278,7 @@ public class SoapSecurityService extends AbstractService implements SecurityServ
 		checkAdministrator(sid);
 		try {
 			UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
-			User user = userDao.findByUserName(username);
+			User user = userDao.findByUsername(username);
 			
 			if (user == null)
 				return null;

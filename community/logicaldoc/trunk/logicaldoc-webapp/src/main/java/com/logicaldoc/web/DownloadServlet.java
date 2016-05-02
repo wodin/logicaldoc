@@ -3,7 +3,6 @@ package com.logicaldoc.web;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import javax.naming.AuthenticationException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,14 +20,9 @@ import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.document.pdf.PdfConverterManager;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.Permission;
-import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
-import com.logicaldoc.core.security.authentication.AuthenticationChain;
-import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.AuthenticationUtil;
-import com.logicaldoc.web.util.AuthenticationUtil.Credentials;
 import com.logicaldoc.web.util.ServiceUtil;
 import com.logicaldoc.web.util.ServletIOUtil;
 
@@ -56,71 +50,26 @@ public class DownloadServlet extends HttpServlet {
 	 * @throws IOException if an error occurred
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String sessionId = null;
+		String sid = null;
 		User user = null;
 
-		AuthenticationChain authenticationChain = (AuthenticationChain) Context.get().getBean(
-				AuthenticationChain.class);
-
 		if (!ServletIOUtil.isPreviewAgent(request)) {
-			try {
-				sessionId = ServiceUtil.validateSession(request).getId();
-			} catch (Throwable e) {
-				/*
-				 * No current session, try to handle a basic authentication
-				 */
-				if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null) {
-					Credentials credentials = null;
-					try {
-						credentials = AuthenticationUtil.authenticate(request);
-					} catch (AuthenticationException e1) {
-						AuthenticationUtil.sendAuthorisationCommand(response);
-						return;
-					}
-
-					// Check the credentials
-					if (!authenticationChain.validate(credentials.getUserName(), credentials.getPassword(), null)) {
-						AuthenticationUtil.sendAuthorisationCommand(response);
-						return;
-					}
-
-					// No active session found, new login required
-					boolean isLoggedOn = authenticationChain.authenticate(credentials.getUserName(),
-							credentials.getPassword());
-					if (isLoggedOn == false) {
-						AuthenticationUtil.sendAuthorisationCommand(response);
-						return;
-					} else {
-						sessionId = AuthenticationChain.getSessionId();
-					}
-				} else {
-					AuthenticationUtil.sendAuthorisationCommand(response);
-					return;
-				}
-			}
-
 			/*
 			 * We can reach this point only if a valid session was created
 			 */
-			Session session = SessionManager.get().get(sessionId);
-			// Load the user associated to the session
-			UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
-			user = udao.findById(session.getUserId());
-			if (user == null)
-				return;
+			Session session = ServiceUtil.validateSession(request);
+			sid = session.getId();
+			user = session.getUser();
 		}
 
 		try {
 			if (request.getParameter("pluginId") != null)
-				ServletIOUtil.downloadPluginResource(request, response, sessionId, request.getParameter("pluginId"),
+				ServletIOUtil.downloadPluginResource(request, response, sid, request.getParameter("pluginId"),
 						request.getParameter("resourcePath"), request.getParameter("fileName"));
 			else
-				downloadDocument(request, response, sessionId, user);
+				downloadDocument(request, response, sid, user);
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
-		} finally {
-			if (request.getHeader(AuthenticationUtil.HEADER_AUTHORIZATION) != null && sessionId != null)
-				SessionManager.get().kill(sessionId);
 		}
 	}
 
@@ -154,10 +103,9 @@ public class DownloadServlet extends HttpServlet {
 			if (doc.getDocRef() != null && StringUtil.isEmpty(downloadText)
 					&& (doc.getDocRefType() != null && doc.getDocRefType().contains("pdf"))
 					&& !doc.getFileName().toLowerCase().endsWith(".pdf")) {
-				
+
 				// Generate the PDF conversion
-				PdfConverterManager manager = (PdfConverterManager) Context.get().getBean(
-						PdfConverterManager.class);
+				PdfConverterManager manager = (PdfConverterManager) Context.get().getBean(PdfConverterManager.class);
 				manager.createPdf(doc, fileVersion, sid);
 
 				suffix = PdfConverterManager.SUFFIX;

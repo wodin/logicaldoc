@@ -43,8 +43,8 @@ import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
-import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -397,17 +397,16 @@ public class LDCmisService extends AbstractCmisService {
 	public LDRepository getRepository() {
 		LDRepository repo = null;
 		Session session = validateSession();
-		Object[] sessionObj = (Object[]) session.getUserObject();
 
 		if (StringUtils.isEmpty(getCallContext().getRepositoryId())) {
 			/*
 			 * The information is not in the request, so fallback to the session
 			 */
-			repo = repositories.get(sessionObj[3]);
+			repo = repositories.get(session.getDictionary().get(ServiceFactory.KEY_REPO_ID));
 		} else {
 			// Update the last accessed repository
 			repo = repositories.get(getCallContext().getRepositoryId());
-			sessionObj[3] = repo.getId();
+			session.getDictionary().put(ServiceFactory.KEY_REPO_ID, repo.getId());
 		}
 
 		if (repo == null)
@@ -459,6 +458,5 @@ public class LDCmisService extends AbstractCmisService {
 			throw t;
 		}
 	}
-	
-	
+
 }

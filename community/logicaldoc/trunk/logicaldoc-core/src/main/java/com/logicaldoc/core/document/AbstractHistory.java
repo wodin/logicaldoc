@@ -20,7 +20,7 @@ public class AbstractHistory extends PersistentObject {
 
 	private Date date = new Date();
 
-	private String userName = "";
+	private String username = "";
 
 	private String event = "";
 
@@ -137,17 +137,17 @@ public class AbstractHistory extends PersistentObject {
 	}
 
 	/**
-	 * @return Returns the userName.
+	 * @return Returns the username.
 	 */
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
 	/**
-	 * @param userName The userName to set.
+	 * @param username The username to set.
 	 */
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public String getComment() {
@@ -187,13 +187,13 @@ public class AbstractHistory extends PersistentObject {
 	}
 
 	/**
-	 * This setter also sets the userId and userName
+	 * This setter also sets the userId and username
 	 */
 	public void setUser(User user) {
 		this.user = user;
 		if (user != null) {
 			setUserId(user.getId());
-			setUserName(user.getFullName());
+			setUsername(user.getFullName());
 			setTenantId(user.getTenantId());
 		}
 	}

@@ -19,7 +19,7 @@ public class EMail extends Message {
 
 	private String authorAddress = "";
 
-	private String userName = "";
+	private String username = "";
 
 	private String folder = "";
 
@@ -66,16 +66,16 @@ public class EMail extends Message {
 		return authorAddress;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
 	public void setAuthorAddress(String address) {
 		authorAddress = address;
 	}
 
-	public void setUserName(String uname) {
-		userName = uname;
+	public void setUsername(String username) {
+		this.username = username;
 	}
 
 	public void addRecipient(Recipient rec) {

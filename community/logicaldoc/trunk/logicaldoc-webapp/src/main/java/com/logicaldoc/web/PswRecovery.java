@@ -111,7 +111,7 @@ public class PswRecovery extends HttpServlet {
 						Locale locale = new Locale(user.getLanguage());
 
 						email.setSentDate(new Date());
-						email.setUserName(user.getUserName());
+						email.setUsername(user.getUsername());
 						email.setLocale(locale);
 						email.setHtml(1);
 

@@ -1,5 +1,8 @@
 package com.logicaldoc.core.security.authentication;
 
+import com.logicaldoc.core.security.Client;
+import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.HibernateUserDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
@@ -18,7 +21,7 @@ public class DefaultAuthentication implements AuthenticationProvider {
 	}
 
 	@Override
-	public boolean validateOnUser(String user) {
+	public boolean canAuthenticateUser(String username) {
 		return true;
 	}
 
@@ -28,17 +31,37 @@ public class DefaultAuthentication implements AuthenticationProvider {
 	}
 
 	@Override
-	public boolean authenticate(String username, String password, String key, Object userObject) {
+	public User authenticate(String username, String password, String key, Client client)
+			throws AuthenticationException {
 		return authenticate(username, password, key);
 	}
 
 	@Override
-	public boolean authenticate(String username, String password) {
+	public User authenticate(String username, String password) throws AuthenticationException {
 		return this.authenticate(username, password, null);
 	}
 
 	@Override
-	public boolean authenticate(String username, String password, String key) {
-		return userDAO.validateUser(username, password);
+	public User authenticate(String username, String password, String key) throws AuthenticationException {
+		User user = null;
+
+		if (HibernateUserDAO.ignoreCaseLogin())
+			user = userDAO.findByUsernameIgnoreCase(username);
+		else
+			user = userDAO.findByUsername(username);
+
+		if (user == null)
+			throw new AccountNotFoundException();
+
+		if (user.getEnabled() == 0)
+			throw new AccountDisabledException();
+
+		if (userDAO.isPasswordExpired(username))
+			throw new PasswordExpiredException();
+
+		if (!userDAO.validateUser(username, password))
+			throw new WrongPasswordException();
+
+		return user;
 	}
 }

@@ -64,7 +64,7 @@ public class LDAnonymousLoginFilter extends GenericFilterBean {
 					Authentication anonAuthentication = authenticationManager.authenticate(auth);
 					if (anonAuthentication.isAuthenticated()) {
 						String sid = ((LDAuthenticationToken) anonAuthentication).getSid();
-						SessionManager.get().saveSid(request, response, sid);
+						SessionManager.get().saveSessionId(request, response, sid);
 					}
 				} catch (AuthenticationException ae) {
 

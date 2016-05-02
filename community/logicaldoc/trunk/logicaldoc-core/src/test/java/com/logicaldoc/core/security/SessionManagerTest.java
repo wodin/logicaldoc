@@ -18,9 +18,9 @@ public class SessionManagerTest extends AbstractCoreTCase {
 	public void testNewSession() {
 		SessionManager sm = SessionManager.get();
 		sm.clear();
-		String session1 = sm.newSession("admin", null, null);
+		Session session1 = sm.newSession("admin", "admin", null);
 		Assert.assertNotNull(session1);
-		String session2 = sm.newSession("admin", null, null);
+		Session session2 = sm.newSession("admin", "admin", null);
 		Assert.assertNotNull(session2);
 		Assert.assertFalse(session1.equals(session2));
 		Assert.assertEquals(2, sm.getSessions().size());
@@ -30,16 +30,16 @@ public class SessionManagerTest extends AbstractCoreTCase {
 	public void testKill() {
 		SessionManager sm = SessionManager.get();
 		sm.clear();
-		String session1 = sm.newSession("admin", null, null);
+		Session session1 = sm.newSession("admin", "admin", null);
 		Assert.assertNotNull(session1);
-		String session2 = sm.newSession("admin", null, null);
+		Session session2 = sm.newSession("admin", "admin", null);
 		Assert.assertNotNull(session2);
 		Assert.assertFalse(session1.equals(session2));
 		Assert.assertEquals(2, sm.getSessions().size());
 
-		sm.kill(session1);
-		Assert.assertTrue(sm.isValid(session2));
-		Assert.assertTrue(!sm.isValid(session1));
+		sm.kill(session1.getId());
+		Assert.assertTrue(sm.isValid(session2.getId()));
+		Assert.assertTrue(!sm.isValid(session1.getId()));
 		Assert.assertEquals(2, sm.getSessions().size());
 	}
 }

@@ -631,7 +631,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 			mail = new EMail();
 			mail.setTenantId(user.getTenantId());
 			mail.setAccountId(-1);
-			mail.setAuthor(user.getUserName());
+			mail.setAuthor(user.getUsername());
 			mail.setAuthorAddress(user.getEmail());
 			mail.parseRecipients(recipients);
 			for (Recipient recipient : mail.getRecipients()) {
@@ -641,7 +641,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 			mail.setMessageText(message);
 			mail.setSentDate(new Date());
 			mail.setSubject(subject);
-			mail.setUserName(user.getUserName());
+			mail.setUsername(user.getUsername());
 
 			/*
 			 * Only readable documents can be sent

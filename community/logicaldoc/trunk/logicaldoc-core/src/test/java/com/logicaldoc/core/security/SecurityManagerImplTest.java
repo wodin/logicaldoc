@@ -38,40 +38,40 @@ public class SecurityManagerImplTest extends AbstractCoreTCase {
 	@Test
 	public void testAssignUsersToGroup() {
 		ArrayList<User> users = new ArrayList<User>();
-		users.add(userDAO.findByUserName("test"));
-		users.add(userDAO.findByUserName("admin"));
+		users.add(userDAO.findByUsername("test"));
+		users.add(userDAO.findByUsername("admin"));
 		Group group = groupDAO.findByName("author", 1);
 		manager.assignUsersToGroup(users, group);
-		User user = userDAO.findByUserName("test");
+		User user = userDAO.findByUsername("test");
 		Assert.assertTrue(user.getGroups().contains(group));
-		user = userDAO.findByUserName("admin");
+		user = userDAO.findByUsername("admin");
 		Assert.assertTrue(user.getGroups().contains(group));
 
 		group = groupDAO.findByName("guest", 1);
 		manager.assignUsersToGroup(users, group);
-		user = userDAO.findByUserName("test");
+		user = userDAO.findByUsername("test");
 		Assert.assertTrue(user.getGroups().contains(group));
-		user = userDAO.findByUserName("admin");
+		user = userDAO.findByUsername("admin");
 		Assert.assertTrue(user.getGroups().contains(group));
 	}
 
 	@Test
 	public void testRemoveUsersFromGroup() {
 		ArrayList<User> users = new ArrayList<User>();
-		users.add(userDAO.findByUserName("test"));
-		users.add(userDAO.findByUserName("admin"));
+		users.add(userDAO.findByUsername("test"));
+		users.add(userDAO.findByUsername("admin"));
 		Group group = groupDAO.findByName("author", 1);
 		manager.removeUsersFromGroup(users, group);
-		User user = userDAO.findByUserName("test");
+		User user = userDAO.findByUsername("test");
 		Assert.assertFalse(user.getGroups().contains(group));
-		user = userDAO.findByUserName("admin");
+		user = userDAO.findByUsername("admin");
 		Assert.assertFalse(user.getGroups().contains(group));
 
 		group = groupDAO.findByName("guest", 1);
 		manager.removeUsersFromGroup(users, group);
-		user = userDAO.findByUserName("test");
+		user = userDAO.findByUsername("test");
 		Assert.assertFalse(user.getGroups().contains(group));
-		user = userDAO.findByUserName("admin");
+		user = userDAO.findByUsername("admin");
 		Assert.assertFalse(user.getGroups().contains(group));
 	}
 
@@ -89,25 +89,25 @@ public class SecurityManagerImplTest extends AbstractCoreTCase {
 		// create 4 new users
 		// assign the newly created users to the editor group
 		User user = new User();
-		user.setUserName("test1");
+		user.setUsername("test1");
 		user.setDecodedPassword("xxxpwd");
 		userDAO.store(user);
 		manager.assignUserToGroup(user, editorGroup);
 
 		user = new User();
-		user.setUserName("test2");
+		user.setUsername("test2");
 		user.setDecodedPassword("xxxpwd");
 		userDAO.store(user);
 		manager.assignUserToGroup(user, editorGroup);
 
 		user = new User();
-		user.setUserName("test3");
+		user.setUsername("test3");
 		user.setDecodedPassword("xxxpwd");
 		userDAO.store(user);
 		manager.assignUserToGroup(user, editorGroup);
 
 		user = new User();
-		user.setUserName("test4");
+		user.setUsername("test4");
 		user.setDecodedPassword("xxxpwd");
 		userDAO.store(user);
 		manager.assignUserToGroup(user, editorGroup);
@@ -116,14 +116,14 @@ public class SecurityManagerImplTest extends AbstractCoreTCase {
 		manager.removeAllUsersFromGroup(editorGroup);
 
 		// check
-		User userf = userDAO.findByUserName("test4");
+		User userf = userDAO.findByUsername("test4");
 		Assert.assertFalse(userf.getGroups().contains(editorGroup));
 	}
 
 	@Test
 	public void testAssignUserToGroups() {
 		User user = new User();
-		user.setUserName("zzz");
+		user.setUsername("zzz");
 		user.setDecodedPassword("xxxpwd");
 		userDAO.store(user);
 	}

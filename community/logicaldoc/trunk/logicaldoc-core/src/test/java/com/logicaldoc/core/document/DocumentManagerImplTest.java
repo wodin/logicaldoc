@@ -60,7 +60,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		docDao.initialize(doc);
 		docDao.initialize(newDoc);
 
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 		History transaction = new History();
 		transaction.setFolderId(103);
 		transaction.setUser(user);
@@ -80,7 +80,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 	@Test
 	public void testCopyToFolder() throws Exception {
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		Folder folder = doc.getFolder();
@@ -104,7 +104,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 	@Test
 	public void testMoveToFolder() throws Exception {
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		Folder folder = doc.getFolder();
@@ -127,7 +127,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 	@Test
 	public void testMakeImmutable() throws Exception {
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		History transaction = new History();
@@ -147,7 +147,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 	@Test
 	public void testLock() throws Exception {
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 		History transaction = new History();
 		transaction.setFolderId(103);
 		transaction.setUser(user);
@@ -166,7 +166,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 	@Test
 	public void testCreate() throws Exception {
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
@@ -192,7 +192,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 	@Test
 	public void testCreateAlias() throws Exception {
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 		Document doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
@@ -217,7 +217,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 	@Test
 	public void testCheckin() throws Exception {
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 		History transaction = new History();
 		transaction.setFolderId(103);
 		transaction.setUser(user);
@@ -290,7 +290,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 	
 	@Test
 	public void testArchiveDocuments() throws Exception {
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 		History transaction=new History();
 		transaction.setSessionId("1234");
 		transaction.setUser(user);

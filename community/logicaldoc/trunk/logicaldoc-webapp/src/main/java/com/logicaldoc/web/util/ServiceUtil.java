@@ -3,15 +3,14 @@ package com.logicaldoc.web.util;
 import java.util.Locale;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 
-import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.Session.Log;
+import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.ServerException;
@@ -30,18 +29,7 @@ public class ServiceUtil {
 
 	public static Session validateSession(HttpServletRequest request) throws ServletException {
 		try {
-			String sid = (String) request.getParameter("sid");
-			if (sid == null) {
-				// Check if the sid is in the cookies
-				Cookie[] cookies = request.getCookies();
-				if (cookies != null)
-					for (Cookie cookie : cookies) {
-						if ("ldoc-sid".equals(cookie.getName())) {
-							sid = cookie.getValue();
-						}
-					}
-			}
-
+			String sid = SessionManager.get().getSessionId(request);
 			return validateSession(sid);
 		} catch (ServerException e) {
 			throw new ServletException(e);

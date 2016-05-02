@@ -153,7 +153,7 @@ public class SoapWorgkbench {
 		WSUser wsUserTest = new WSUser();
 		wsUserTest.setName("marco2");
 		wsUserTest.setEmail("marco@acme.com");
-		wsUserTest.setUserName("marco2");
+		wsUserTest.setUsername("marco2");
 		wsUserTest.setFirstName("alle2");
 		long[] ids = { 2, 3 };
 		wsUserTest.setGroupIds(ids);

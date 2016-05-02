@@ -23,6 +23,8 @@ import com.logicaldoc.core.security.SessionManager;
  */
 public class ServiceFactory extends AbstractServiceFactory {
 
+	public static final String KEY_REPO_ID = "cmis-repoId";
+
 	private static final BigInteger DEFAULT_MAX_ITEMS_TYPES = BigInteger.valueOf(50);
 
 	private static final BigInteger DEFAULT_DEPTH_TYPES = BigInteger.valueOf(-1);
@@ -44,9 +46,8 @@ public class ServiceFactory extends AbstractServiceFactory {
 
 		CmisService wrapperService = null;
 		if (session != null) {
-			Object[] userObject = (Object[]) session.getUserObject();
-			userObject[3] = context.getRepositoryId();
-			log.debug("Using session " + session.getId() + " for user " + session.getUserName());
+			session.getDictionary().put(KEY_REPO_ID, context.getRepositoryId());
+			log.debug("Using session " + session.getId() + " for user " + session.getUsername());
 			wrapperService = new CmisServiceWrapper<LDCmisService>(new LDCmisService(context, session.getId()),
 					DEFAULT_MAX_ITEMS_TYPES, DEFAULT_DEPTH_TYPES, DEFAULT_MAX_ITEMS_OBJECTS, DEFAULT_DEPTH_OBJECTS);
 

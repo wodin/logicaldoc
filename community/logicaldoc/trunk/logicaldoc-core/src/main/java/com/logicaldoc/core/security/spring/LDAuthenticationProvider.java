@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,9 +19,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import com.logicaldoc.core.security.Client;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.authentication.AuthenticationChain;
+import com.logicaldoc.core.security.authentication.AccountDisabledException;
+import com.logicaldoc.core.security.authentication.AccountNotFoundException;
+import com.logicaldoc.core.security.authentication.PasswordExpiredException;
 import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
@@ -35,8 +37,6 @@ import com.logicaldoc.core.security.dao.UserDAO;
 public class LDAuthenticationProvider implements AuthenticationProvider {
 
 	private static Logger log = LoggerFactory.getLogger(LDAuthenticationProvider.class);
-
-	private AuthenticationChain authenticationChain;
 
 	private UserDAO userDAO;
 
@@ -51,70 +51,58 @@ public class LDAuthenticationProvider implements AuthenticationProvider {
 
 		log.debug("Authenticate user " + username);
 
-		User user = userDAO.findByUserName(username);
-		if (user == null) {
-			String message = "Username " + username + " not found";
-			log.warn(message);
-			throw new UsernameNotFoundException("notfound");
-		}
-
-		if (user.getEnabled() == 0) {
-			String message = "User " + username + " is disabled";
-			log.warn(message);
-			throw new DisabledException("disabled");
-		}
-
-		if (userDAO.isPasswordExpired(username)) {
-			String message = "Bad Credentials for user " + username;
-			log.warn(message);
-			throw new CredentialsExpiredException("passwordexpired");
-		}
-
-		userDAO.initialize(user);
-
 		HttpServletRequest httpReq = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
 
-		Object[] userObj = new Object[] { null, null, null, null };
 		String key = null;
-		if (httpReq != null) {
-			userObj = new Object[] { httpReq.getRemoteAddr(), httpReq.getRemoteHost(),
-					SessionManager.get().getCombinedUserId(httpReq), null };
+		if (httpReq != null)
 			key = httpReq.getParameter("key");
-		}
+
+		Client client = SessionManager.get().buildClient(httpReq);
 
 		// Check the passwords match
-		if (!authenticationChain.authenticate(username, password, key, userObj)) {
-			String message = "User " + username + " not authenticated";
+		try {
+			Session session = SessionManager.get().newSession(username, password, key, client);
+
+			// Preferably clear the password in the user object before storing
+			// in
+			// authentication object
+			session.getUser().clearPassword();
+
+			String[] groups = session.getUser().getGroupNames();
+			Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+			for (String role : groups) {
+				authorities.add(new SimpleGrantedAuthority(role));
+			}
+
+			// Return an authenticated token, containing user data and
+			// authorities
+			LDAuthenticationToken a = new LDAuthenticationToken(session.getUser(), null, authorities);
+			a.setSid(session.getId());
+
+			return a;
+		} catch (AccountNotFoundException nf) {
+			String message = "Username " + username + " not found";
 			log.warn(message);
-			throw new BadCredentialsException("badcredentials");
+			throw new UsernameNotFoundException(nf.getMessage());
+		} catch (AccountDisabledException ad) {
+			String message = "User " + username + " is disabled";
+			log.warn(message);
+			throw new DisabledException(ad.getMessage());
+		} catch (PasswordExpiredException pe) {
+			String message = "Credentials expired for user " + username;
+			log.warn(message);
+			throw new CredentialsExpiredException(pe.getMessage());
+		} catch (com.logicaldoc.core.security.authentication.AuthenticationException ae) {
+			String message = "Bad Credentials for user " + username;
+			log.warn(message);
+			throw new CredentialsExpiredException("badcredentials");
 		}
-
-		// Preferably clear the password in the user object before storing in
-		// authentication object
-		user.clearPassword();
-
-		String[] groups = user.getGroupNames();
-		Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-		for (String role : groups) {
-			authorities.add(new SimpleGrantedAuthority(role));
-		}
-
-		// Return an authenticated token, containing user data and
-		// authorities
-		LDAuthenticationToken a = new LDAuthenticationToken(user, null, authorities);
-		a.setSid(AuthenticationChain.getSessionId());
-
-		return a;
 	}
 
 	@Override
 	public boolean supports(Class<?> arg0) {
 		return true;
-	}
-
-	public void setAuthenticationChain(AuthenticationChain authenticationChain) {
-		this.authenticationChain = authenticationChain;
 	}
 
 	public void setUserDAO(UserDAO userDAO) {

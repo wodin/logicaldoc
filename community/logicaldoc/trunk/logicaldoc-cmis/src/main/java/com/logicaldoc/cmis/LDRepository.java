@@ -132,9 +132,9 @@ import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
@@ -1174,7 +1174,7 @@ public class LDRepository {
 			result.setHasMoreItems(false);
 			int count = 0;
 
-			User user = userDao.findByUserName(context.getUsername());
+			User user = userDao.findByUsername(context.getUsername());
 			long userId = user.getId();
 
 			// iterate through children folders
@@ -1497,7 +1497,7 @@ public class LDRepository {
 	private void checkReadEnable(User user, long folderId) throws Exception {
 		FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		if (!dao.isReadEnabled(folderId, user.getId())) {
-			String message = "User " + user.getUserName() + " doesn't have read permission on folder " + folderId;
+			String message = "User " + user.getUsername() + " doesn't have read permission on folder " + folderId;
 			log.error(message);
 			throw new Exception(message);
 		}
@@ -2562,7 +2562,7 @@ public class LDRepository {
 				session.renew();
 			userId = session.getUserId();
 		} else {
-			User user = userDao.findByUserName(context.getUsername());
+			User user = userDao.findByUsername(context.getUsername());
 			userId = user.getId();
 		}
 

@@ -75,7 +75,7 @@ public class HibernateVersionDAOTest extends AbstractCoreTCase {
 		docDao.initialize(doc);
 		User user = new User();
 		user.setId(1);
-		user.setUserName("admin");
+		user.setUsername("admin");
 		user.setName("xx");
 		user.setFirstName("xx");
 		version = Version.create(doc, user, "", Version.EVENT_STORED, true);

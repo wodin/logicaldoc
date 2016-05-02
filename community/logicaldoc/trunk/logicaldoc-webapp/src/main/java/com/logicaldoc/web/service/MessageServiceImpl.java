@@ -66,8 +66,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 			m.setValidity(message.getDateScope());
 
 			// If the case mark the message as read
-			if (!message.wasReadBy(session.getUserName())) {
-				Recipient rec = message.getRecipient(session.getUserName());
+			if (!message.wasReadBy(session.getUsername())) {
+				Recipient rec = message.getRecipient(session.getUsername());
 				if (rec != null) {
 					rec.setRead(1);
 					dao.store(message);
@@ -125,7 +125,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 
 		SystemMessage m = new SystemMessage();
 		m.setTenantId(session.getTenantId());
-		m.setAuthor(session.getUserName());
+		m.setAuthor(session.getUsername());
 		m.setSentDate(new Date());
 		m.setStatus(SystemMessage.STATUS_NEW);
 		m.setType(SystemMessage.TYPE_SYSTEM);
@@ -133,8 +133,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 		m.setMessageText(message.getMessage());
 		m.setSubject(message.getSubject());
 		Recipient recipient = new Recipient();
-		recipient.setName(user.getUserName());
-		recipient.setAddress(user.getUserName());
+		recipient.setName(user.getUsername());
+		recipient.setAddress(user.getUsername());
 		recipient.setType(Recipient.TYPE_SYSTEM);
 		recipient.setMode("message");
 		Set<Recipient> recipients = new HashSet<Recipient>();

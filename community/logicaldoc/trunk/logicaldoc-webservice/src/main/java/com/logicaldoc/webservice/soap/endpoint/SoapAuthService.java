@@ -7,9 +7,8 @@ import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
-import com.logicaldoc.core.security.authentication.AuthenticationChain;
-import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.soap.AuthService;
 
@@ -24,9 +23,6 @@ public class SoapAuthService extends AbstractService implements AuthService {
 
 	@Override
 	public String login(String username, String password) throws Exception {
-		AuthenticationChain authenticationChain = (AuthenticationChain) Context.get().getBean(
-				AuthenticationChain.class);
-
 		HttpServletRequest request = null;
 		if (context != null) {
 			MessageContext ctx = context.getMessageContext();
@@ -37,11 +33,9 @@ public class SoapAuthService extends AbstractService implements AuthService {
 		if (request == null)
 			request = messageContext.getHttpServletRequest();
 
-		if (authenticationChain.authenticate(username, password, null,
-				new String[] { request.getRemoteAddr(), request.getRemoteHost() }))
-			return AuthenticationChain.getSessionId();
-		else
-			throw new Exception("Unable to create a new session");
+		Session session = SessionManager.get()
+				.newSession(username, password, SessionManager.get().buildClient(request));
+		return session.getId();
 	}
 
 	@Override

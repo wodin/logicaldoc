@@ -1,5 +1,8 @@
 package com.logicaldoc.core.security.authentication;
 
+import com.logicaldoc.core.security.Client;
+import com.logicaldoc.core.security.User;
+
 /**
  * Implementations of this interface must provide authentication of a user
  * against a defined source.
@@ -10,40 +13,39 @@ package com.logicaldoc.core.security.authentication;
 public interface AuthenticationProvider {
 
 	/**
-	 * Authenticates the user using the given credentials, if successful a new
-	 * session will be created.
+	 * Authenticates the user using the given credentials, if successful, the
+	 * corresponding user is returned.
 	 * 
 	 * @param username
 	 * @param password
-	 * @param userObject Opaque object that will be associated to the session
-	 * @return True only on successful authentication
+	 * @return The user, or null if the authentication was unsuccessful
 	 */
-	public boolean authenticate(String username, String password);
+	public User authenticate(String username, String password) throws AuthenticationException;
 
 	/**
-	 * Authenticates the user using the given credentials, if successful a new
-	 * session will be created.
+	 * Authenticates the user using the given credentials, if successful, the
+	 * corresponding user is returned.
 	 * 
 	 * @param username
 	 * @param password
 	 * @param key Optional third authentication parameter
-	 * @param userObject Opaque object that will be associated to the session
-	 * @return True only on successful authentication
+	 * @return The user, or null if the authentication was unsuccessful
 	 */
-	public boolean authenticate(String username, String password, String key, Object userObject);
+	public User authenticate(String username, String password, String key) throws AuthenticationException;
 
 	/**
-	 * Authenticates the user using the given credentials, if successful a new
-	 * session will be created.
+	 * Authenticates the user using the given credentials, if successful, the
+	 * corresponding user is returned.
 	 * 
 	 * @param username
 	 * @param password
 	 * @param key Optional third authentication parameter
-	 * @return True only on successful authentication
+	 * @param client Client informations
+	 * @return @return The user, or null if the authentication was unsuccessful
 	 */
-	public boolean authenticate(String username, String password, String key);
+	public User authenticate(String username, String password, String key, Client client) throws AuthenticationException;
 
-	public boolean validateOnUser(String user);
+	public boolean canAuthenticateUser(String user);
 
 	/**
 	 * A provider can be in a disabled state

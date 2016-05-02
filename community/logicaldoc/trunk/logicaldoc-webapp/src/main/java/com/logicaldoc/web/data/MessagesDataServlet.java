@@ -52,7 +52,7 @@ public class MessagesDataServlet extends HttpServlet {
 			 */
 			Context context = Context.get();
 			SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
-			dao.deleteExpiredMessages(session.getUserName());
+			dao.deleteExpiredMessages(session.getUsername());
 
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -63,7 +63,7 @@ public class MessagesDataServlet extends HttpServlet {
 			/*
 			 * Iterate over records composing the response XML document
 			 */
-			List<SystemMessage> unread = dao.findByRecipient(session.getUserName(), SystemMessage.TYPE_SYSTEM, 0);
+			List<SystemMessage> unread = dao.findByRecipient(session.getUsername(), SystemMessage.TYPE_SYSTEM, 0);
 			for (SystemMessage record : unread) {
 				writer.print("<message>");
 				writer.print("<id>" + record.getId() + "</id>");
@@ -76,7 +76,7 @@ public class MessagesDataServlet extends HttpServlet {
 				writer.print("</message>");
 			}
 
-			List<SystemMessage> read = dao.findByRecipient(session.getUserName(), SystemMessage.TYPE_SYSTEM, 1);
+			List<SystemMessage> read = dao.findByRecipient(session.getUsername(), SystemMessage.TYPE_SYSTEM, 1);
 			for (SystemMessage record : read) {
 				writer.print("<message>");
 				writer.print("<id>" + record.getId() + "</id>");

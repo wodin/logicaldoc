@@ -346,7 +346,7 @@ public class ResourceServiceImpl implements ResourceService {
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to write resource.");
 
 			if ((document.getStatus() == Document.DOC_CHECKED_OUT || document.getStatus() == Document.DOC_LOCKED)
-					&& (user.getId() != document.getLockUserId() && !"admin".equals(user.getUserName()))) {
+					&& (user.getId() != document.getLockUserId() && !"admin".equals(user.getUsername()))) {
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "Current user didn't locked the document");
 			}
 

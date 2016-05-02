@@ -147,7 +147,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			// set other properties of the document
 			document.setDate(new Date());
-			document.setPublisher(transaction.getUserName());
+			document.setPublisher(transaction.getUsername());
 			document.setPublisherId(transaction.getUserId());
 			document.setStatus(Document.DOC_UNLOCKED);
 			document.setLockUserId(null);
@@ -542,7 +542,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			if (StringUtils.isNotEmpty(docVO.getPublisher()))
 				docVO.setPublisher(docVO.getPublisher());
 			else
-				docVO.setPublisher(transaction.getUserName());
+				docVO.setPublisher(transaction.getUsername());
 
 			if (docVO.getPublisherId() != 0L)
 				docVO.setPublisherId(docVO.getPublisherId());
@@ -552,7 +552,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			if (StringUtils.isNotEmpty(docVO.getCreator()))
 				docVO.setCreator(docVO.getCreator());
 			else
-				docVO.setCreator(transaction.getUserName());
+				docVO.setCreator(transaction.getUsername());
 
 			if (docVO.getCreatorId() != 0L)
 				docVO.setCreatorId(docVO.getCreatorId());
@@ -844,9 +844,9 @@ public class DocumentManagerImpl implements DocumentManager {
 				alias.setSourceDate(doc.getSourceDate());
 			else
 				alias.setSourceDate(alias.getDate());
-			alias.setPublisher(transaction.getUserName());
+			alias.setPublisher(transaction.getUsername());
 			alias.setPublisherId(transaction.getUserId());
-			alias.setCreator(transaction.getUserName());
+			alias.setCreator(transaction.getUsername());
 			alias.setCreatorId(transaction.getUserId());
 			alias.setStatus(Document.DOC_UNLOCKED);
 			alias.setType(type);
@@ -1027,7 +1027,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			Document doc = dao.findById(id);
 
 			// Skip documents in folders without Archive permission
-			if (!(transaction.getUser().isInGroup("admin") || transaction.getUser().getUserName().equals("_retention"))
+			if (!(transaction.getUser().isInGroup("admin") || transaction.getUser().getUsername().equals("_retention"))
 					&& !folderIds.contains(doc.getFolder().getId()))
 				continue;
 
