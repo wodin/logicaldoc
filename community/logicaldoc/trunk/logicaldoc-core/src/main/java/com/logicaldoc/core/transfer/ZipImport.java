@@ -159,8 +159,8 @@ public class ZipImport {
 		SystemMessageDAO smdao = (SystemMessageDAO) Context.get().getBean(SystemMessageDAO.class);
 		Date now = new Date();
 		Recipient recipient = new Recipient();
-		recipient.setName(user.getUserName());
-		recipient.setAddress(user.getUserName());
+		recipient.setName(user.getUsername());
+		recipient.setAddress(user.getUsername());
 		recipient.setType(Recipient.TYPE_SYSTEM);
 		recipient.setMode("message");
 		Set<Recipient> recipients = new HashSet<Recipient>();

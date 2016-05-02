@@ -331,7 +331,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 						if (user != null) {
 							GUIUser u = new GUIUser();
 							u.setId(user.getId());
-							u.setUserName(user.getUserName());
+							u.setUserName(user.getUsername());
 							u.setName(user.getName());
 							u.setFirstName(user.getFirstName());
 							task.addReportRecipient(u);

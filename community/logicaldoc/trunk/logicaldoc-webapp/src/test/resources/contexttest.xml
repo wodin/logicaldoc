@@ -99,8 +99,7 @@
 	<!--Transactional proxy-->
 	<bean id="ApplicationBaseTransactionProxy"
 		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
-		lazy-init="true" abstract="false" autowire="default"
-		>
+		lazy-init="true" abstract="false" autowire="default">
 		<property name="transactionManager">
 			<ref bean="TransactionManager" />
 		</property>
@@ -112,4 +111,7 @@
 	</bean>
   
   <bean id="AuthenticationChain" class="com.logicaldoc.core.security.authentication.AuthenticationChain" />
+  <bean id="SessionManager" class="com.logicaldoc.core.security.SessionManager" destroy-method="destroy">
+     <property name="authenticationChain" ref="AuthenticationChain" />
+  </bean>
 </beans>

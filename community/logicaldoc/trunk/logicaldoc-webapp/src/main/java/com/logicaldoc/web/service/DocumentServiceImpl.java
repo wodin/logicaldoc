@@ -1068,7 +1068,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			mail.setTenantId(session.getTenantId());
 
 			mail.setAccountId(-1);
-			mail.setAuthor(user.getUserName());
+			mail.setAuthor(user.getUsername());
 			mail.setAuthorAddress(user.getEmail());
 
 			if (StringUtils.isNotEmpty(email.getRecipients()))
@@ -1081,7 +1081,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			mail.setSentDate(new Date());
 			mail.setSubject(email.getSubject());
-			mail.setUserName(user.getUserName());
+			mail.setUsername(user.getUsername());
 
 			// Needed in case the zip compression was requested by the user
 			File zipFile = null;

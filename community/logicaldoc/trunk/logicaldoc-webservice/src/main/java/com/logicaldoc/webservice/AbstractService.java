@@ -85,8 +85,8 @@ public class AbstractService {
 		} else {
 			SessionManager.get().renew(sid);
 		}
-		String username = SessionManager.get().get(sid).getUserName();
-		User user = userDao.findByUserName(username);
+		String username = SessionManager.get().get(sid).getUsername();
+		User user = userDao.findByUsername(username);
 		if (user == null)
 			throw new Exception("User " + username + "not found");
 		else
@@ -100,7 +100,7 @@ public class AbstractService {
 	protected void checkGroup(String sid, String group) throws Exception {
 		User user = validateSession(sid);
 		if (!user.isInGroup(group)) {
-			String message = "User " + user.getUserName() + " doesn't belong to group " + group;
+			String message = "User " + user.getUsername() + " doesn't belong to group " + group;
 			log.error(message);
 			throw new Exception(message);
 		}
@@ -116,7 +116,7 @@ public class AbstractService {
 	protected void checkPermission(Permission permission, User user, long folderId) throws Exception {
 		FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		if (!dao.isPermissionEnabled(permission, folderId, user.getId())) {
-			String message = "User " + user.getUserName() + " doesn't have permission " + permission.getName()
+			String message = "User " + user.getUsername() + " doesn't have permission " + permission.getName()
 					+ " on folder " + folderId;
 			log.error(message);
 			throw new Exception(message);
@@ -126,7 +126,7 @@ public class AbstractService {
 	protected void checkMenu(User user, long menuId) throws Exception {
 		MenuDAO dao = (MenuDAO) Context.get().getBean(MenuDAO.class);
 		if (!dao.isReadEnable(menuId, user.getId())) {
-			String message = "User " + user.getUserName() + " doesn't have read permission on menu " + menuId;
+			String message = "User " + user.getUsername() + " doesn't have read permission on menu " + menuId;
 			log.error(message);
 			throw new Exception(message);
 		}
@@ -139,7 +139,7 @@ public class AbstractService {
 	protected void checkReadEnable(User user, long folderId) throws Exception {
 		FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		if (!dao.isReadEnabled(folderId, user.getId())) {
-			String message = "User " + user.getUserName() + " doesn't have read permission on folder " + folderId;
+			String message = "User " + user.getUsername() + " doesn't have read permission on folder " + folderId;
 			log.error(message);
 			throw new Exception(message);
 		}
@@ -148,7 +148,7 @@ public class AbstractService {
 	protected void checkDownloadEnable(User user, long folderId) throws Exception {
 		FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		if (!dao.isPermissionEnabled(Permission.DOWNLOAD, folderId, user.getId())) {
-			String message = "User " + user.getUserName() + " doesn't have download permission on folder " + folderId;
+			String message = "User " + user.getUsername() + " doesn't have download permission on folder " + folderId;
 			log.error(message);
 			throw new Exception(message);
 		}

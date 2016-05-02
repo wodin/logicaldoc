@@ -49,7 +49,7 @@ public class SoapSecurityServiceTest extends AbstractWebServiceTestCase {
 		List<WSUser> usersList = Arrays.asList(users);
 		Assert.assertEquals(1, usersList.get(0).getId());
 		Assert.assertEquals(2, usersList.get(1).getId());
-		Assert.assertEquals("boss", usersList.get(1).getUserName());
+		Assert.assertEquals("boss", usersList.get(1).getUsername());
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class SoapSecurityServiceTest extends AbstractWebServiceTestCase {
 		WSUser wsUserTest = new WSUser();
 		wsUserTest.setName("user test");
 		wsUserTest.setEmail("user@acme.com");
-		wsUserTest.setUserName("user");
+		wsUserTest.setUsername("user");
 		wsUserTest.setFirstName("test");
 
 		Long userId = securityServiceImpl.storeUser("", wsUserTest);
@@ -121,7 +121,7 @@ public class SoapSecurityServiceTest extends AbstractWebServiceTestCase {
 	public void testChangePassword() throws Exception {
 		WSUser newUser = new WSUser();
 		newUser.setName("user test");
-		newUser.setUserName("user");
+		newUser.setUsername("user");
 		newUser.setFirstName("test");
 		newUser.setEmail("user@acme.com");
 

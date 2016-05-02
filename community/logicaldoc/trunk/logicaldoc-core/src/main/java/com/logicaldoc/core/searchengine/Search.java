@@ -127,7 +127,7 @@ public abstract class Search {
 			return hits;
 		} else {
 			uDao.initialize(searchUser);
-			log.info("Search User: " + searchUser.getUserName());
+			log.info("Search User: " + searchUser.getUsername());
 		}
 
 		Date start = new Date();

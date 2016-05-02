@@ -62,7 +62,7 @@ public class UserHistoryDataServlet extends HttpServlet {
 
 			for (UserHistory history : dao.findByUserId(userId)) {
 				writer.print("<history>");
-				writer.print("<user><![CDATA[" + history.getUserName() + "]]></user>");
+				writer.print("<user><![CDATA[" + history.getUsername() + "]]></user>");
 				writer.print("<event><![CDATA[" + I18N.message(history.getEvent(), locale) + "]]></event>");
 				writer.print("<date>" + df.format(history.getDate()) + "</date>");
 				writer.print("<comment><![CDATA[" + history.getComment() + "]]></comment>");

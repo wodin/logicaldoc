@@ -2,18 +2,16 @@ package com.logicaldoc.core.security;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.security.dao.TenantDAO;
-import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * A single user session with it's unique identifier and the reference to the
@@ -23,56 +21,61 @@ import com.logicaldoc.util.config.ContextProperties;
  * @since 4.6.0
  */
 public class Session implements Comparable<Session> {
+
 	public final static int STATUS_OPEN = 0;
 
 	public final static int STATUS_EXPIRED = 1;
 
 	public final static int STATUS_CLOSED = 2;
 
+	private final static String ERROR = "ERROR";
+
+	private final static String WARN = "WARN";
+
+	private final static String INFO = "INFO";
+
+	public final static String KEY_COMBINEDUSERID = "combineduserid";
+
 	private Date creation = new Date();
 
 	private Date lastRenew = creation;
 
+	/**
+	 * Represents the auto generated identifier of the session
+	 */
 	private String id;
 
-	private String userName;
+	/**
+	 * The password given by the user at login time
+	 */
+	private String password;
 
+	/**
+	 * A third parameter(other than the username and password) given by the
+	 * client at login time
+	 */
 	private String key;
-
-	private long userId;
-
-	private long tenantId;
 
 	private String tenantName;
 
-	// The password given by the user at login time
-	private String password;
+	private long tenantId;
 
 	private int status = STATUS_OPEN;
 
-	private Object externalSession = null;
+	private Client client = null;
 
-	private Object userObject = null;
+	private User user = null;
 
-	private Map<String, Object> dictionary = new HashMap<String, Object>();
-
-	public final static String ERROR = "ERROR";
-
-	public final static String WARN = "WARN";
-
-	public final static String INFO = "INFO";
+	/**
+	 * Represents a dictionary of custom informations a client may save in the
+	 * session
+	 */
+	private Map<String, Object> dictionary = new ConcurrentHashMap<String, Object>();
 
 	private List<Log> logs = new ArrayList<Log>();
 
 	public Map<String, Object> getDictionary() {
 		return dictionary;
-	}
-
-	/**
-	 * Map that collects session-bound values
-	 */
-	public void setDictionary(Map<String, Object> dictionary) {
-		this.dictionary = dictionary;
 	}
 
 	public String getId() {
@@ -98,48 +101,33 @@ public class Session implements Comparable<Session> {
 
 	public void setExpired() {
 		this.status = STATUS_EXPIRED;
-		externalSession = null;
 		// Add a user history entry
-		UserDAO userDAO = (UserDAO) Context.get().getBean(UserDAO.class);
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
-		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_TIMEOUT, "", id);
+		userHistoryDAO.createUserHistory(user, UserHistory.EVENT_USER_TIMEOUT, "", id);
 	}
 
 	public void setClosed() {
 		this.status = STATUS_CLOSED;
-		externalSession = null;
 		// Add a user history entry
-		UserDAO userDAO = (UserDAO) Context.get().getBean(UserDAO.class);
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
-		userHistoryDAO.createUserHistory(userDAO.findById(userId), UserHistory.EVENT_USER_LOGOUT, "", id);
+		userHistoryDAO.createUserHistory(user, UserHistory.EVENT_USER_LOGOUT, "", id);
 	}
 
-	Session(String userName, String password, String key, Object userObject) {
+	Session(User user, String password, String key, Client client) {
 		super();
+		assert (user != null);
 		this.id = UUID.randomUUID().toString();
-		this.userName = userName;
+		this.tenantId = user.getTenantId();
+		this.user = user;
 		this.password = password;
 		this.key = key;
-		this.userObject = userObject;
+		this.client = client;
 
 		// Set the user's id
-		UserDAO userDAO = (UserDAO) Context.get().getBean(UserDAO.class);
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
-		ContextProperties config = Context.get().getProperties();
 
-		User user = null;
-		if ("true".equals(config.getProperty("login.ignorecase")))
-			user = userDAO.findByUserNameIgnoreCase(userName);
-		else
-			user = userDAO.findByUserName(userName);
-
-		this.userId = user.getId();
-		this.userName = user.getUserName();
-
-		// Set the tenant's id and name
-		this.tenantId = user.getTenantId();
 		TenantDAO tenantDAO = (TenantDAO) Context.get().getBean(TenantDAO.class);
-		Tenant tenant = tenantDAO.findById(this.tenantId);
+		Tenant tenant = tenantDAO.findById(tenantId);
 		if (tenant != null)
 			tenantName = tenant.getName();
 
@@ -147,9 +135,9 @@ public class Session implements Comparable<Session> {
 		 * Store in the history comment the remote host and IP
 		 */
 		String comment = "";
-		if (userObject != null && "[Ljava.lang.String;".equals(userObject.getClass().getName())) {
-			String addr = ((String[]) userObject)[0];
-			String host = ((String[]) userObject)[1];
+		if (client != null) {
+			String addr = client.getAddress();
+			String host = client.getHost();
 			if (StringUtils.isNotEmpty(host) && !host.equals(addr))
 				comment = host + " (" + addr + ") ";
 			else
@@ -160,30 +148,13 @@ public class Session implements Comparable<Session> {
 		userHistoryDAO.createUserHistory(user, UserHistory.EVENT_USER_LOGIN, comment, id);
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	/**
-	 * Representation of the container session eventually associated to this
-	 * user session
-	 */
-	public Object getExternalSession() {
-		return externalSession;
-	}
-
-	public void setExternalSession(Object externalSession) {
-		this.externalSession = externalSession;
+	public String getUsername() {
+		return user.getUsername();
 	}
 
 	@Override
 	public String toString() {
 		return getId();
-	}
-
-	@Override
-	protected void finalize() throws Throwable {
-		externalSession = null;
 	}
 
 	@Override
@@ -216,32 +187,12 @@ public class Session implements Comparable<Session> {
 		return true;
 	}
 
-	/**
-	 * A generic object that is stored within the session and is thought to be
-	 * used as alternative session identifier
-	 */
-	public Object getUserObject() {
-		return userObject;
-	}
-
-	public void setUserObject(Object userObject) {
-		this.userObject = userObject;
-	}
-
 	public long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
+		return user.getId();
 	}
 
 	public long getTenantId() {
 		return tenantId;
-	}
-
-	public void setTenantId(long tenantId) {
-		this.tenantId = tenantId;
 	}
 
 	public String getTenantName() {
@@ -250,10 +201,6 @@ public class Session implements Comparable<Session> {
 
 	public String getPassword() {
 		return password;
-	}
-
-	public void setTenantName(String tenantName) {
-		this.tenantName = tenantName;
 	}
 
 	public void logError(String message) {
@@ -324,4 +271,25 @@ public class Session implements Comparable<Session> {
 	public void setKey(String key) {
 		this.key = key;
 	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	void setClient(Client client) {
+		this.client = client;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setTenantId(long tenantId) {
+		this.tenantId = tenantId;
+	}
+
+	public void setTenantName(String tenantName) {
+		this.tenantName = tenantName;
+	}
+
 }

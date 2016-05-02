@@ -60,7 +60,7 @@ public class UploadServlet extends UploadAction {
 		try {
 			setUploadMax();
 
-			HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSid(request));
+			HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSessionId(request));
 
 			if (session == null)
 				session = request.getSession();
@@ -177,7 +177,7 @@ public class UploadServlet extends UploadAction {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void removeItem(HttpServletRequest request, String fieldName) throws UploadActionException {
-		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSid(request));
+		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSessionId(request));
 		if (session == null)
 			session = request.getSession();
 
@@ -211,7 +211,7 @@ public class UploadServlet extends UploadAction {
 
 		String fieldName = request.getParameter(UConsts.PARAM_SHOW);
 
-		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSid(request));
+		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSessionId(request));
 
 		if (session == null)
 			session = request.getSession();
@@ -241,7 +241,7 @@ public class UploadServlet extends UploadAction {
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, File> getReceivedFiles(HttpServletRequest request, String sid) {
-		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSid(request));
+		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSessionId(request));
 
 		if (session == null)
 			session = request.getSession();
@@ -251,7 +251,7 @@ public class UploadServlet extends UploadAction {
 
 	@SuppressWarnings("unchecked")
 	public static Map<String, String> getReceivedFileNames(HttpServletRequest request, String sid) {
-		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSid(request));
+		HttpSession session = SessionManager.get().getServletSession(SessionManager.get().getSessionId(request));
 		if (session == null)
 			session = request.getSession();
 

@@ -110,7 +110,7 @@ public class RightsDataServlet extends HttpServlet {
 					else {
 						User user = group.getUsers().iterator().next();
 						writer.print("<entity><![CDATA[" + I18N.message("user", locale) + ": " + user.getFullName()
-								+ " (" + user.getUserName() + ")]]></entity>");
+								+ " (" + user.getUsername() + ")]]></entity>");
 					}
 					writer.print("<read>" + true + "</read>");
 					writer.print("<write>" + (folderGroup.getWrite() == 1 ? true : false) + "</write>");
@@ -163,7 +163,7 @@ public class RightsDataServlet extends HttpServlet {
 					else {
 						User user = group.getUsers().iterator().next();
 						writer.print("<entity><![CDATA[" + I18N.message("user", locale) + ": " + user.getFullName()
-								+ " (" + user.getUserName() + ")]]></entity>");
+								+ " (" + user.getUsername() + ")]]></entity>");
 					}
 					writer.print("<type>" + group.getType() + "</type>");
 					writer.print("</right>");

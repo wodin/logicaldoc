@@ -28,7 +28,7 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	 * @param username username of wanted User.
 	 * @return Wanted User or null if user doesn't exist.
 	 */
-	public User findByUserName(String username);
+	public User findByUsername(String username);
 
 	/**
 	 * This method finds an User by its username. The search is case
@@ -37,7 +37,7 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	 * @param username username of wanted User.
 	 * @return Wanted User or null if user doesn't exist.
 	 */
-	public User findByUserNameIgnoreCase(String username);
+	public User findByUsernameIgnoreCase(String username);
 
 	/**
 	 * This method finds an User by username.
@@ -45,7 +45,7 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	 * @param username The username of wanted User.
 	 * @return Collection of selected users.
 	 */
-	public List<User> findByLikeUserName(String username);
+	public List<User> findByLikeUsername(String username);
 
 	/**
 	 * This method finds an User by name.
@@ -62,7 +62,7 @@ public interface UserDAO extends PersistentObjectDAO<User> {
 	 * @param name The name of wanted user.
 	 * @return Collection of selected users.
 	 */
-	public List<User> findByUserNameAndName(String username, String name);
+	public List<User> findByUsernameAndName(String username, String name);
 
 	/**
 	 * Validates an username and a password.

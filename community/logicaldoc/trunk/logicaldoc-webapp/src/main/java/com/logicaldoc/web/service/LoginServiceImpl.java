@@ -52,7 +52,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 			UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 			TenantDAO tenantDao = (TenantDAO) Context.get().getBean(TenantDAO.class);
 
-			User user = userDao.findByUserName(username);
+			User user = userDao.findByUsername(username);
 			if (user == null)
 				return null;
 
@@ -78,7 +78,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 	@Override
 	public void resetPassword(String username, String emailAddress, String productName) throws ServerException {
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
-		User user = userDao.findByUserName(username);
+		User user = userDao.findByUsername(username);
 
 		EMail email;
 		try {
@@ -120,7 +120,7 @@ public class LoginServiceImpl extends RemoteServiceServlet implements LoginServi
 
 			email.setLocale(locale);
 			email.setSentDate(new Date());
-			email.setUserName(user.getUserName());
+			email.setUsername(user.getUsername());
 
 			HttpServletRequest request = this.getThreadLocalRequest();
 			String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()

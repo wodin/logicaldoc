@@ -1296,7 +1296,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				documentTransaction.setSessionId(transaction.getSessionId());
 				documentTransaction.setUser(transaction.getUser());
 				documentTransaction.setUserId(transaction.getUserId());
-				documentTransaction.setUserName(transaction.getUserName());
+				documentTransaction.setUsername(transaction.getUsername());
 				documentTransaction.setComment(transaction.getComment());
 				documentTransaction.setEvent(DocumentEvent.STORED.toString());
 
@@ -1355,7 +1355,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		hist.setEvent(FolderEvent.SUBFOLDER_MOVED.toString());
 		hist.setSessionId(transaction.getSessionId());
 		hist.setUserId(transaction.getUserId());
-		hist.setUserName(transaction.getUserName());
+		hist.setUsername(transaction.getUsername());
 		hist.setTitle(source.getName());
 		hist.setPath(transaction.getPath());
 		hist.setPathOld(transaction.getPathOld());

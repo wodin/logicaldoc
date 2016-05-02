@@ -15,7 +15,7 @@
         <property name="folderId" type="long" column="ld_folderid" not-null="true"/>
 		<property name="userId" type="long" column="ld_userid" />
 		<property name="date" type="timestamp" column="ld_date" />
-		<property name="userName" type="string" column="ld_username" length="255" />
+		<property name="username" type="string" column="ld_username" length="255" />
 		<property name="event" type="string" column="ld_event" length="255" />
 		<property name="comment" type="string" column="ld_comment" length="4000" />
 		<property name="version" type="string" column="ld_version" length="10" />

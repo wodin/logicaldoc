@@ -103,7 +103,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 
 		history.setDate(new Date());
 		history.setUserId(1);
-		history.setUserName("mario");
+		history.setUsername("mario");
 		history.setEvent(DocumentEvent.STORED.toString());
 		history.setComment("The document has been created.");
 
@@ -120,7 +120,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		history.setDocId(1L);
 		history.setFolderId(5);
 		history.setDate(DateBean.dateFromCompactString("20061220"));
-		history.setUserName("sebastian");
+		history.setUsername("sebastian");
 		history.setFilenameOld("file.old");
 		history.setUserId(3);
 		history.setEvent("test History store");
@@ -132,7 +132,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		History folderHistory = new History();
 		folderHistory.setFolderId(5);
 		folderHistory.setDate(DateBean.dateFromCompactString("20061220"));
-		folderHistory.setUserName("sebastian");
+		folderHistory.setUsername("sebastian");
 		folderHistory.setUserId(3);
 		folderHistory.setEvent("test History store");
 
@@ -157,7 +157,7 @@ public class HibernateHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(hStored.equals(folderHistory));
 		Assert.assertEquals(hStored.getFolderId(), 5);
 		Assert.assertEquals(hStored.getDate().getTime(), DateBean.dateFromCompactString("20061220").getTime());
-		Assert.assertEquals(hStored.getUserName(), "sebastian");
+		Assert.assertEquals(hStored.getUsername(), "sebastian");
 		Assert.assertEquals(hStored.getEvent(), "test History store");
 	}
 

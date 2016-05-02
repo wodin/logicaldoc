@@ -29,13 +29,13 @@ public class LDSecurityContextRepository implements SecurityContextRepository {
 
 	@Override
 	public boolean containsContext(HttpServletRequest request) {
-		String sid = SessionManager.get().getSid(request);
+		String sid = SessionManager.get().getSessionId(request);
 		return sid != null;
 	}
 
 	@Override
 	public SecurityContext loadContext(HttpRequestResponseHolder request) {
-		String sid = SessionManager.get().getSid(request.getRequest());
+		String sid = SessionManager.get().getSessionId(request.getRequest());
 		if (sid == null || !SessionManager.get().isValid(sid))
 			sid = null;
 
@@ -44,7 +44,7 @@ public class LDSecurityContextRepository implements SecurityContextRepository {
 
 		Session session = SessionManager.get().get(sid);
 
-		LDAuthenticationToken token = new LDAuthenticationToken(session.getUserName(), "", null);
+		LDAuthenticationToken token = new LDAuthenticationToken(session.getUsername(), "", null);
 		token.setSid(sid);
 
 		SecurityContextImpl context = new SecurityContextImpl();
@@ -62,7 +62,7 @@ public class LDSecurityContextRepository implements SecurityContextRepository {
 
 		if (principal != null && principal instanceof LDAuthenticationToken) {
 			LDAuthenticationToken token = (LDAuthenticationToken) principal;
-			SessionManager.get().saveSid(request, response, token.getSid());
+			SessionManager.get().saveSessionId(request, response, token.getSid());
 		}
 	}
 

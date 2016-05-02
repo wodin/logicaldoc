@@ -79,7 +79,7 @@ public class DocumentResourceUpload extends HttpServlet {
 		UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 
 		// Load the user associated to the session
-		User user = udao.findByUserName(session.getUserName());
+		User user = udao.findByUsername(session.getUsername());
 		if (user == null)
 			return;
 

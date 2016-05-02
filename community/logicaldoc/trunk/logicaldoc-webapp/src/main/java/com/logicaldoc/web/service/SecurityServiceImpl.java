@@ -160,13 +160,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		}
 		guiUser.setGroups(groups);
 
-		guiUser.setUserName(user.getUserName());
+		guiUser.setUserName(user.getUsername());
 		guiUser.setPasswordExpired(false);
 
 		guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED).size());
 		guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_CHECKED_OUT)
 				.size());
-		guiUser.setUnreadMessages(messageDao.getCount(user.getUserName(), SystemMessage.TYPE_SYSTEM, 0));
+		guiUser.setUnreadMessages(messageDao.getCount(user.getUsername(), SystemMessage.TYPE_SYSTEM, 0));
 
 		guiUser.setQuota(user.getQuota());
 		guiUser.setQuotaCount(seqDao.getCurrentValue("userquota", user.getId(), user.getTenantId()));
@@ -255,7 +255,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				return;
 
 			FileUtils.forceDelete(UserUtil.getUserResource(session.getUserId(), "temp"));
-			log.info("User " + session.getUserName() + " logged out and closed session " + sid);
+			log.info("User " + session.getUsername() + " logged out and closed session " + sid);
 			kill(sid);
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
@@ -391,7 +391,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				usr.setName(user.getName());
 				usr.setPostalCode(user.getPostalcode());
 				usr.setState(user.getState());
-				usr.setUserName(user.getUserName());
+				usr.setUserName(user.getUsername());
 				usr.setPasswordExpires(user.getPasswordExpires() == 1);
 				usr.setPasswordExpired(user.getPasswordExpired() == 1);
 				usr.setCertSubject(user.getCertSubject());
@@ -524,7 +524,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setStreet(user.getAddress());
 			usr.setTelephone(user.getPhone());
 			usr.setTelephone2(user.getCell());
-			usr.setUserName(user.getUserName());
+			usr.setUsername(user.getUserName());
 			usr.setEnabled(user.isEnabled() ? 1 : 0);
 			usr.setPasswordExpires(user.isPasswordExpires() ? 1 : 0);
 			usr.setWelcomeScreen(user.getWelcomeScreen());
@@ -535,7 +535,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setQuota(user.getQuota());
 
 			if (createNew) {
-				User existingUser = userDao.findByUserName(user.getUserName());
+				User existingUser = userDao.findByUsername(user.getUserName());
 				if (existingUser != null) {
 					log.warn("Tried to create duplicate username " + user.getUserName());
 					user.setWelcomeScreen(-99);
@@ -616,7 +616,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		recipient.setRead(1);
 		email.addRecipient(recipient);
 		email.setFolder("outbox");
-		email.setUserName(user.getUserName());
+		email.setUsername(user.getUsername());
 		email.setSentDate(new Date());
 
 		Locale locale = new Locale(user.getLanguage());
@@ -702,7 +702,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".anonymous.key")))
 				securitySettings.setAnonymousKey(pbean.getProperty(session.getTenantName() + ".anonymous.key"));
 			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".anonymous.user"))) {
-				User user = userDao.findByUserName(pbean.getProperty(session.getTenantName() + ".anonymous.user"));
+				User user = userDao.findByUsername(pbean.getProperty(session.getTenantName() + ".anonymous.user"));
 				if (user != null)
 					securitySettings.setAnonymousUser(getUser(sid, user.getId()));
 			}
@@ -738,7 +738,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 					WebConfigurator configurator = new WebConfigurator(context.getRealPath("/WEB-INF/web.xml"));
 					restartRequired = configurator.setTransportGuarantee(policy);
 				} catch (Throwable t) {
-					log.error(t.getMessage(), t);
+					log.error(t.getMessage());
 				}
 			}
 

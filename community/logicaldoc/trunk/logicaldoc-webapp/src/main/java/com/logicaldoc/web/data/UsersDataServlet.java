@@ -79,7 +79,7 @@ public class UsersDataServlet extends HttpServlet {
 
 					writer.print("<user>");
 					writer.print("<id>" + user.getId() + "</id>");
-					writer.print("<username><![CDATA[" + user.getUserName() + "]]></username>");
+					writer.print("<username><![CDATA[" + user.getUsername() + "]]></username>");
 					if (user.getEnabled() == 1)
 						writer.print("<eenabled>0</eenabled>");
 					else if (user.getEnabled() == 0)
@@ -114,7 +114,7 @@ public class UsersDataServlet extends HttpServlet {
 					public User mapRow(ResultSet rs, int rowNum) throws SQLException {
 						User user = new User();
 						user.setId(rs.getLong(1));
-						user.setUserName(rs.getString(2));
+						user.setUsername(rs.getString(2));
 						user.setEnabled(rs.getInt(3));
 						user.setName(rs.getString(4));
 						user.setFirstName(rs.getString(5));
@@ -138,7 +138,7 @@ public class UsersDataServlet extends HttpServlet {
 				for (User user : records) {
 					writer.print("<user>");
 					writer.print("<id>" + user.getId() + "</id>");
-					writer.print("<username><![CDATA[" + user.getUserName() + "]]></username>");
+					writer.print("<username><![CDATA[" + user.getUsername() + "]]></username>");
 					if (user.getEnabled() == 1)
 						writer.print("<eenabled>0</eenabled>");
 					else if (user.getEnabled() == 0)

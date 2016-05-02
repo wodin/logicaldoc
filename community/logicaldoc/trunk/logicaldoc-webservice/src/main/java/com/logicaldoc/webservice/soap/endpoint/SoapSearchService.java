@@ -61,7 +61,7 @@ public class SoapSearchService extends AbstractService implements SearchService 
 		searchResult.setTime(lastSearch.getExecTime());
 		searchResult.setMoreHits(lastSearch.isMoreHitsPresent() ? 1 : 0);
 
-		log.info("User: " + user.getUserName() + " Query: " + options.getExpression());
+		log.info("User: " + user.getUsername() + " Query: " + options.getExpression());
 		log.info("Results number: " + docs.size());
 
 		return searchResult;

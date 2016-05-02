@@ -31,7 +31,7 @@ public class GUIUser implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	private String userName = "";
+	private String username = "";
 
 	private long id = 0;
 
@@ -108,12 +108,12 @@ public class GUIUser implements Serializable {
 	private GUIDashlet[] dashlets = new GUIDashlet[0];
 
 	public void setUserName(String userName) {
-		this.userName = userName;
-		notifyObservers("userName");
+		this.username = userName;
+		notifyObservers("username");
 	}
 
 	public String getUserName() {
-		return userName;
+		return username;
 	}
 
 	public long getId() {

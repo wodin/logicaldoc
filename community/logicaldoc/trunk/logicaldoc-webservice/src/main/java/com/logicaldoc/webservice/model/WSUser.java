@@ -32,7 +32,7 @@ public class WSUser {
 
 	private long id;
 
-	private String userName = "";
+	private String username = "";
 
 	private String password = "";
 
@@ -98,8 +98,8 @@ public class WSUser {
 		this.type = type;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUsername() {
+		return username;
 	}
 
 	public String getPassword() {
@@ -117,7 +117,7 @@ public class WSUser {
 		if (fullName == null && getName() != null)
 			fullName = getName();
 		if (fullName == null)
-			fullName = getUserName();
+			fullName = getUsername();
 		return fullName;
 	}
 
@@ -153,8 +153,8 @@ public class WSUser {
 		return telephone;
 	}
 
-	public void setUserName(String uname) {
-		userName = uname;
+	public void setUsername(String uname) {
+		username = uname;
 	}
 
 	/**
@@ -213,7 +213,7 @@ public class WSUser {
 	}
 
 	public String toString() {
-		return getUserName();
+		return getUsername();
 	}
 
 	/**
@@ -324,7 +324,7 @@ public class WSUser {
 			user.setStreet(getStreet());
 			user.setTelephone(getTelephone());
 			user.setTelephone2(getTelephone2());
-			user.setUserName(getUserName());
+			user.setUsername(getUsername());
 			user.setEnabled(getEnabled());
 			user.setPasswordExpires(getPasswordExpires());
 			user.setQuota(getQuota());
@@ -368,7 +368,7 @@ public class WSUser {
 			wsUser.setStreet(user.getStreet());
 			wsUser.setTelephone(user.getTelephone());
 			wsUser.setTelephone2(user.getTelephone2());
-			wsUser.setUserName(user.getUserName());
+			wsUser.setUsername(user.getUsername());
 			wsUser.setEnabled(user.getEnabled());
 			wsUser.setPasswordExpires(user.getPasswordExpires());
 			wsUser.setQuota(user.getQuota());

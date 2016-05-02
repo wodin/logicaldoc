@@ -91,7 +91,7 @@ public class HibernateFolderHistoryDAOTest extends AbstractCoreTCase {
 
 		history.setDate(new Date());
 		history.setUserId(1);
-		history.setUserName("mario");
+		history.setUsername("mario");
 		history.setEvent(FolderEvent.CREATED.toString());
 		history.setComment("The folder has been created.");
 
@@ -108,7 +108,7 @@ public class HibernateFolderHistoryDAOTest extends AbstractCoreTCase {
 		history.setDocId(1L);
 		history.setFolderId(5);
 		history.setDate(DateBean.dateFromCompactString("20061220"));
-		history.setUserName("sebastian");
+		history.setUsername("sebastian");
 		history.setUserId(3);
 		history.setEvent("test FolderHistory store");
 
@@ -117,7 +117,7 @@ public class HibernateFolderHistoryDAOTest extends AbstractCoreTCase {
 		FolderHistory folderFolderHistory = new FolderHistory();
 		folderFolderHistory.setFolderId(5);
 		folderFolderHistory.setDate(DateBean.dateFromCompactString("20061220"));
-		folderFolderHistory.setUserName("sebastian");
+		folderFolderHistory.setUsername("sebastian");
 		folderFolderHistory.setUserId(3);
 		folderFolderHistory.setEvent("test FolderHistory store");
 
@@ -139,7 +139,7 @@ public class HibernateFolderHistoryDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(hStored.equals(folderFolderHistory));
 		Assert.assertEquals(hStored.getFolderId(), 5);
 		Assert.assertEquals(hStored.getDate().getTime(), DateBean.dateFromCompactString("20061220").getTime());
-		Assert.assertEquals(hStored.getUserName(), "sebastian");
+		Assert.assertEquals(hStored.getUsername(), "sebastian");
 		Assert.assertEquals(hStored.getEvent(), "test FolderHistory store");
 	}
 

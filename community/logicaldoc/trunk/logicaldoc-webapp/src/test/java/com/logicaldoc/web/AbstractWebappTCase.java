@@ -18,9 +18,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import com.logicaldoc.core.security.Client;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.authentication.AuthenticationChain;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.util.Context;
@@ -50,7 +51,7 @@ public abstract class AbstractWebappTCase {
 	protected File dataFile;
 
 	private String userHome;
-	
+
 	protected GUISession session;
 
 	static {
@@ -66,8 +67,8 @@ public abstract class AbstractWebappTCase {
 		context = new ClassPathXmlApplicationContext(new String[] { "/contexttest.xml" });
 		createTestDirs();
 		createTestDatabase();
-		
-		this.session=prepareSession();
+
+		this.session = prepareSession();
 		Assert.assertNotNull(session);
 		Assert.assertNotNull(SessionManager.get().get(session.getSid()));
 
@@ -76,17 +77,12 @@ public abstract class AbstractWebappTCase {
 	private GUISession prepareSession() {
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 
-		AuthenticationChain authenticationChain = (AuthenticationChain) Context.get().getBean(
-				AuthenticationChain.class);
-
 		GUISession session = new GUISession();
-
-		String[] remoteAddressAndKey = new String[] { null, null, null };
-
-		if (authenticationChain.authenticate("admin", "admin", null, remoteAddressAndKey)) {
-			User user = userDao.findByUserNameIgnoreCase("admin");
+		Session sess = SessionManager.get().newSession("admin", "admin", null, new Client());
+		if (sess != null) {
+			User user = userDao.findByUsernameIgnoreCase("admin");
 			userDao.initialize(user);
-			session = new SecurityServiceImpl().internalLogin(AuthenticationChain.getSessionId(), user, null);
+			session = new SecurityServiceImpl().internalLogin(sess.getId(), user, null);
 		}
 
 		return session;

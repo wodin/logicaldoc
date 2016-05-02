@@ -121,7 +121,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(dao.findById(1200));
 		Assert.assertNotNull(dao.findById(1202));
 		User user = new User();
-		user.setUserName("admin");
+		user.setUsername("admin");
 		user.setId(1);
 		FolderHistory history = new FolderHistory();
 		history.setUser(user);
@@ -142,7 +142,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Folder source = dao.findByPath("/Default/pippo", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(source);
 
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 
 		History transaction = new History();
 		transaction.setFolderId(103);
@@ -204,7 +204,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		folderVO.setName("folderC");
 		Folder folderC = dao.create(folderB, folderVO, true, null);
 
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 
 		FolderHistory transaction = new FolderHistory();
 		transaction.setNotified(0);
@@ -238,7 +238,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		folderVO.setName("folderE");
 		dao.create(folderC, folderVO, true, null);
 
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 
 		FolderHistory transaction = new FolderHistory();
 		transaction.setNotified(0);
@@ -282,7 +282,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		doc2.setIndexed(AbstractDocument.INDEX_INDEXED);
 		docDao.store(doc2);
 
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 
 		FolderHistory transaction = new FolderHistory();
 		transaction.setNotified(0);
@@ -329,7 +329,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		folderVO.setName("folderF");
 		dao.create(folderE, folderVO, true, null);
 
-		User user = userDao.findByUserName("admin");
+		User user = userDao.findByUsername("admin");
 
 		FolderHistory transaction = new FolderHistory();
 		transaction.setNotified(0);
