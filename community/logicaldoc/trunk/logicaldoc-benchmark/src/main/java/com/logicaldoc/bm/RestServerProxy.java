@@ -29,12 +29,15 @@ public class RestServerProxy extends AbstractServerProxy {
 	public RestSearchClient searchClient;
 	
 	public RestServerProxy(String url, ContextProperties config) throws IOException {
-		
 		this.url = url;
+		
+		String username = config.getProperty("session.username");
+		String pasword = config.getProperty("session.password");
+		
 		this.authClient = new RestAuthClient(url + "/services/rest/auth");
-		this.folderClient = new RestFolderClient(url + "/services/rest/folder", 40);
-		this.documentClient = new RestDocumentClient(url + "/services/rest/document", 40);
-		this.searchClient = new RestSearchClient(url + "/services/rest/search", 40);		
+		this.folderClient = new RestFolderClient(url + "/services/rest/folder", username, pasword, 40);
+		this.documentClient = new RestDocumentClient(url + "/services/rest/document", username, pasword, 40);
+		this.searchClient = new RestSearchClient(url + "/services/rest/search", username, pasword, 40);		
 	}
 
 	public void logout() {
