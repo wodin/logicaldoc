@@ -18,8 +18,8 @@ import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
-import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIDashlet;
@@ -43,8 +43,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	private static Logger log = LoggerFactory.getLogger(SettingServiceImpl.class);
 
 	@Override
-	public GUIEmailSettings loadEmailSettings(String sid) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIEmailSettings loadEmailSettings() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		GUIEmailSettings emailSettings = new GUIEmailSettings();
 		try {
@@ -72,8 +72,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveEmailSettings(String sid, GUIEmailSettings settings) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void saveEmailSettings(GUIEmailSettings settings) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			ContextProperties conf = Context.get().getProperties();
@@ -109,8 +109,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadSettings(String sid) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUIParameter[] loadSettings() throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		TreeSet<String> sortedSet = new TreeSet<String>();
 		ContextProperties conf = Context.get().getProperties();
@@ -155,8 +155,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadClientSettings(String sid) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIParameter[] loadClientSettings() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ContextProperties conf = Context.get().getProperties();
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
@@ -174,8 +174,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveSettings(String sid, GUIParameter[] settings) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void saveSettings(GUIParameter[] settings) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			ContextProperties conf = Context.get().getProperties();
@@ -194,8 +194,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadSettingsByNames(String sid, String[] names) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUIParameter[] loadSettingsByNames(String[] names) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		GUIParameter[] values = new GUIParameter[names.length];
 		try {
@@ -211,8 +211,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[][] loadRepositories(String sid) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUIParameter[][] loadRepositories() throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ContextProperties conf = Context.get().getProperties();
 
@@ -243,8 +243,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveRepositories(String sid, GUIParameter[][] repos) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void saveRepositories(GUIParameter[][] repos) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ContextProperties conf = Context.get().getProperties();
 		try {
@@ -265,8 +265,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadOcrSettings(String sid) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIParameter[] loadOcrSettings() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ContextProperties conf = Context.get().getProperties();
 
@@ -293,8 +293,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] computeStoragesSize(String sid) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUIParameter[] computeStoragesSize() throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ContextProperties conf = Context.get().getProperties();
 		List<GUIParameter> storagesList = new ArrayList<GUIParameter>();
@@ -314,8 +314,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public GUIParameter[] loadGUISettings(String sid) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIParameter[] loadGUISettings() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ContextProperties conf = Context.get().getProperties();
 
@@ -341,8 +341,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void saveDashlets(GUIDashlet[] dashlets) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		GenericDAO gDao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 		UserDAO uDao = (UserDAO) Context.get().getBean(UserDAO.class);
 
@@ -372,8 +372,8 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 	}
 
 	@Override
-	public boolean testEmail(String sid, String email) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public boolean testEmail(String email) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ContextProperties config = Context.get().getProperties();
 		EMailSender sender = new EMailSender(session.getTenantName());

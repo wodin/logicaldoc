@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.folder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
@@ -88,7 +87,7 @@ public class FolderSearchDialog extends Window {
 	}
 
 	protected void search(GUISearchOptions options) {
-		service.search(Session.get().getSid(), options, new AsyncCallback<GUIResult>() {
+		service.search(options, new AsyncCallback<GUIResult>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ContactingServer.get().hide();

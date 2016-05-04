@@ -138,7 +138,7 @@ public class VersionsPanel extends VLayout {
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
 				Window.open(
-						GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+						GWT.getHostPageBaseURL() + "download?docId="
 								+ record.getAttributeAsString("docid") + "&versionId=" + record.getAttribute("id")
 								+ "&open=true", "_blank", "");
 			}
@@ -180,23 +180,23 @@ public class VersionsPanel extends VLayout {
 							listGrid.removeSelectedData();
 							listGrid.deselectAllRecords();
 
-							service.deleteVersions(Session.get().getSid(), archiveId, ids,
-									new AsyncCallback<GUIArchive>() {
+							service.deleteVersions(archiveId, ids, new AsyncCallback<GUIArchive>() {
 
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-										@Override
-										public void onSuccess(GUIArchive archive) {
-											ListGridRecord selectedRecord = archivesList.getList().getSelectedRecord();
-											if (selectedRecord != null) {
-												selectedRecord.setAttribute("size", archive.getSize());
-												archivesList.getList().refreshRow(archivesList.getList().getRecordIndex(selectedRecord));
-											}
-										}
-									});
+								@Override
+								public void onSuccess(GUIArchive archive) {
+									ListGridRecord selectedRecord = archivesList.getList().getSelectedRecord();
+									if (selectedRecord != null) {
+										selectedRecord.setAttribute("size", archive.getSize());
+										archivesList.getList().refreshRow(
+												archivesList.getList().getRecordIndex(selectedRecord));
+									}
+								}
+							});
 						}
 					}
 				});

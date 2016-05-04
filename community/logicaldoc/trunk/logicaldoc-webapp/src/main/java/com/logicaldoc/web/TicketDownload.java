@@ -31,7 +31,7 @@ import com.logicaldoc.core.ticket.Ticket;
 import com.logicaldoc.core.ticket.TicketDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
-import com.logicaldoc.web.util.ServletIOUtil;
+import com.logicaldoc.web.util.ServletUtil;
 
 public class TicketDownload extends HttpServlet {
 	/**
@@ -153,7 +153,7 @@ public class TicketDownload extends HttpServlet {
 			// it seems everything is fine, so we can now start writing to the
 			// response object
 			response.setContentType(mimetype);
-			ServletIOUtil.setContentDisposition(request, response, filename);
+			ServletUtil.setContentDisposition(request, response, filename);
 
 			// Headers required by Internet Explorer
 			response.setHeader("Pragma", "public");

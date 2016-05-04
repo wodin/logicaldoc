@@ -31,6 +31,7 @@ import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for document uploads operations.
@@ -94,10 +95,9 @@ public class UploadServlet extends UploadAction {
 			uploadFolder.mkdir();
 
 			String tenant = Tenant.DEFAULT_NAME;
-			if (request.getParameter("sid") != null) {
-				Session userSession = SessionManager.get().get(request.getParameter("sid"));
-				tenant = userSession.getTenantName();
-			}
+
+			Session sess = ServiceUtil.validateSession(request);
+			tenant = sess.getTenantName();
 
 			for (FileItem item : sessionFiles) {
 				if (false == item.isFormField()) {

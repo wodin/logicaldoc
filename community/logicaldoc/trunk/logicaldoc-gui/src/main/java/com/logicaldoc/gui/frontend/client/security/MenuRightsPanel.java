@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIMenu;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.data.RightsDS;
@@ -233,7 +232,7 @@ public class MenuRightsPanel extends VLayout {
 		// Apply all rights
 		menu.setRights(this.getRights());
 
-		service.applyRights(Session.get().getSid(), menu, new AsyncCallback<Void>() {
+		service.applyRights(menu, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

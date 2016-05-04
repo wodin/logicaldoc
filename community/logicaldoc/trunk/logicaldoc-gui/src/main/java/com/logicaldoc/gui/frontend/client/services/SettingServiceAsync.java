@@ -7,29 +7,29 @@ import com.logicaldoc.gui.common.client.beans.GUIParameter;
 
 public interface SettingServiceAsync {
 
-	void loadClientSettings(String sid, AsyncCallback<GUIParameter[]> callback);
+	void loadClientSettings(AsyncCallback<GUIParameter[]> callback);
 
-	void saveSettings(String sid, GUIParameter[] settings, AsyncCallback<Void> callback);
+	void saveSettings(GUIParameter[] settings, AsyncCallback<Void> callback);
 
-	void loadEmailSettings(String sid, AsyncCallback<GUIEmailSettings> callback);
+	void loadEmailSettings(AsyncCallback<GUIEmailSettings> callback);
 
-	void saveEmailSettings(String sid, GUIEmailSettings settings, AsyncCallback<Void> callback);
+	void saveEmailSettings(GUIEmailSettings settings, AsyncCallback<Void> callback);
 
-	void loadRepositories(String sid, AsyncCallback<GUIParameter[][]> callback);
+	void loadRepositories(AsyncCallback<GUIParameter[][]> callback);
 
-	void saveRepositories(String sid, GUIParameter[][] repos, AsyncCallback<Void> callback);
+	void saveRepositories(GUIParameter[][] repos, AsyncCallback<Void> callback);
 
-	void loadOcrSettings(String sid, AsyncCallback<GUIParameter[]> callback);
+	void loadOcrSettings(AsyncCallback<GUIParameter[]> callback);
 
-	void computeStoragesSize(String sid, AsyncCallback<GUIParameter[]> callback);
+	void computeStoragesSize(AsyncCallback<GUIParameter[]> callback);
 
-	void loadGUISettings(String sid, AsyncCallback<GUIParameter[]> callback);
+	void loadGUISettings(AsyncCallback<GUIParameter[]> callback);
 
-	void loadSettingsByNames(String sid, String[] names, AsyncCallback<GUIParameter[]> callback);
+	void loadSettingsByNames(String[] names, AsyncCallback<GUIParameter[]> callback);
 
-	void loadSettings(String sid, AsyncCallback<GUIParameter[]> callback);
+	void loadSettings(AsyncCallback<GUIParameter[]> callback);
 
-	void saveDashlets(String sid, GUIDashlet[] dashlets, AsyncCallback<Void> callback);
+	void saveDashlets(GUIDashlet[] dashlets, AsyncCallback<Void> callback);
 
-	void testEmail(String sid, String email, AsyncCallback<Boolean> callback);
+	void testEmail(String email, AsyncCallback<Boolean> callback);
 }

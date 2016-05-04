@@ -101,24 +101,23 @@ public class ShareFileDialog extends Dialog {
 						folderIds[0] = Session.get().getCurrentFolder().getId();
 
 					ContactingServer.get().show();
-					service.exportDocuments(Session.get().getSid(), targetId, folderIds, docIds,
-							new AsyncCallback<Boolean>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									ContactingServer.get().hide();
-									Log.serverError(caught);
-								}
+					service.exportDocuments(targetId, folderIds, docIds, new AsyncCallback<Boolean>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							ContactingServer.get().hide();
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Boolean result) {
-									ContactingServer.get().hide();
-									if (result.booleanValue()) {
-										SC.say(I18N.message("sfileexportok"));
-										ShareFileDialog.this.destroy();
-									} else
-										SC.say(I18N.message("sfileexportko"));
-								}
-							});
+						@Override
+						public void onSuccess(Boolean result) {
+							ContactingServer.get().hide();
+							if (result.booleanValue()) {
+								SC.say(I18N.message("sfileexportok"));
+								ShareFileDialog.this.destroy();
+							} else
+								SC.say(I18N.message("sfileexportko"));
+						}
+					});
 				}
 			}
 		});
@@ -140,7 +139,7 @@ public class ShareFileDialog extends Dialog {
 				if (choice.booleanValue()) {
 					ShareFileDialog.this.destroy();
 					ContactingServer.get().show();
-					service.importDocuments(Session.get().getSid(), Session.get().getCurrentFolder().getId(), ids,
+					service.importDocuments(Session.get().getCurrentFolder().getId(), ids,
 							new AsyncCallback<Integer>() {
 								@Override
 								public void onFailure(Throwable caught) {

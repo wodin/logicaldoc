@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.tenant;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITenant;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -90,7 +89,7 @@ public class TenantDetailsPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (tenant.getId() != 0) {
-					service.load(Session.get().getSid(), tenant.getId(), new AsyncCallback<GUITenant>() {
+					service.load(tenant.getId(), new AsyncCallback<GUITenant>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -210,7 +209,7 @@ public class TenantDetailsPanel extends VLayout {
 
 			final boolean newTenant = TenantDetailsPanel.this.tenant.getId() == 0L;
 
-			service.save(Session.get().getSid(), tenant, new AsyncCallback<GUITenant>() {
+			service.save(tenant, new AsyncCallback<GUITenant>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);

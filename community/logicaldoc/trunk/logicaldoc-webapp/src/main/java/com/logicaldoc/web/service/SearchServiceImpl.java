@@ -47,8 +47,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 	protected static Logger log = LoggerFactory.getLogger(SearchServiceImpl.class);
 
 	@Override
-	public GUIResult search(String sid, GUISearchOptions options) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIResult search(GUISearchOptions options) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		options.setUserId(session.getUserId());
 
 		GUIResult result = new GUIResult();
@@ -112,10 +112,10 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 					extList.add(ext);
 				}
 				h.setAttributes(extList.toArray(new GUIExtendedAttribute[0]));
-				
+
 				if ("folder".equals(hit.getType()))
 					h.setIcon("folder_closed");
-				else if("folderalias".equals(hit.getType()))
+				else if ("folderalias".equals(hit.getType()))
 					h.setIcon("folder_alias_closed");
 				else if ("pdf".equals(hit.getDocRefType()))
 					h.setIcon("pdf");
@@ -132,8 +132,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 	}
 
 	@Override
-	public boolean save(String sid, GUISearchOptions options) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public boolean save(GUISearchOptions options) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			SearchOptions opt = toSearchOptions(options);
@@ -158,8 +158,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 	}
 
 	@Override
-	public void delete(String sid, String[] names) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void delete(String[] names) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			File dir = UserUtil.getUserResource(session.getUserId(), "queries");
@@ -178,8 +178,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 	}
 
 	@Override
-	public GUISearchOptions load(String sid, String name) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUISearchOptions load(String name) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			File dir = UserUtil.getUserResource(session.getUserId(), "queries");
@@ -202,8 +202,8 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 	 * 
 	 * @return the list of search options
 	 */
-	public List<SearchOptions> getSearches(Session user) {
-		File file = UserUtil.getUserResource(user.getUserId(), "queries");
+	public List<SearchOptions> getSearches(Session session) {
+		File file = UserUtil.getUserResource(session.getUserId(), "queries");
 		if (!file.exists()) {
 			return null;
 		}

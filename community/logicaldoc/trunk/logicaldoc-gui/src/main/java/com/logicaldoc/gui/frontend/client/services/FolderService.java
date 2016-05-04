@@ -21,62 +21,57 @@ public interface FolderService extends RemoteService {
 	 * @param folder The folder to save
 	 * @return The saved folder
 	 */
-	public GUIFolder save(String sid, GUIFolder folder) throws ServerException;
+	public GUIFolder save(GUIFolder folder) throws ServerException;
 
 	/**
 	 * Creates a new folder
 	 * 
-	 * @param sid The session ID
 	 * @param newFolder The folder to be created
 	 * @param inheritSecurity True if the new folder has to inherit the security
 	 *        policies from the parent
 	 * @return The saved folder
 	 */
-	public GUIFolder create(String sid, GUIFolder newFolder, boolean inheritSecurity) throws ServerException;
+	public GUIFolder create(GUIFolder newFolder, boolean inheritSecurity) throws ServerException;
 
 	/**
 	 * Creates a new folder alias
 	 * 
-	 * @param sid The session ID
 	 * @param parentId The folder in which the alias must be created
 	 * @param foldRef The original folder
 	 * @return The created alias
 	 */
-	public GUIFolder createAlias(String sid, long parentId, long foldRef) throws ServerException;
+	public GUIFolder createAlias(long parentId, long foldRef) throws ServerException;
 
 	/**
 	 * Renames the given folder
 	 */
-	public void rename(String sid, long folderId, String name) throws ServerException;
+	public void rename(long folderId, String name) throws ServerException;
 
 	/**
 	 * Applies all security settings to folder
 	 * 
-	 * @param sid The session ID
 	 * @param folder The folder that contains the new security settings
 	 * @param subfolders If true, the current security settings will be applied
 	 *        to the sub-folders
 	 */
-	public void applyRights(String sid, GUIFolder folder, boolean subfolders) throws ServerException;
+	public void applyRights(GUIFolder folder, boolean subfolders) throws ServerException;
 
 	/**
 	 * Inherits the rights of another folder
 	 * 
-	 * @param sid The session ID
 	 * @param folderId The folder that has to be updated
 	 * @param rightsFolderId the folder that defines the rights
 	 * 
 	 * @return The updated Folder
 	 */
-	public GUIFolder inheritRights(String sid, long folderId, long rightsFolderId) throws ServerException;
+	public GUIFolder inheritRights(long folderId, long rightsFolderId) throws ServerException;
 
 	/**
 	 * Applies all extendedAttributes to a sub-tree
 	 * 
-	 * @param sid The session ID
 	 * @param parentId The parent folder containing the metadata
 	 */
-	public void applyMetadata(String sid, long parentId) throws ServerException;
+	public void applyMetadata(long parentId) throws ServerException;
 
 	/**
 	 * Gets the Folder initializing the permissions.
@@ -85,32 +80,32 @@ public interface FolderService extends RemoteService {
 	 * @param boolean True if the complete path must be retrieved
 	 * @return The Folder bean
 	 */
-	public GUIFolder getFolder(String sid, long folderId, boolean computePath) throws ServerException;
+	public GUIFolder getFolder(long folderId, boolean computePath) throws ServerException;
 
 	/**
 	 * Deletes the folders and the subtrees
 	 */
-	public void delete(String sid, long[] folderIds) throws ServerException;
+	public void delete(long[] folderIds) throws ServerException;
 
 	/**
 	 * Deletes a selection of folders from trash
 	 */
-	public void deleteFromTrash(String sid, Long[] ids) throws ServerException;
+	public void deleteFromTrash(Long[] ids) throws ServerException;
 
 	/**
 	 * Restores a given folder
 	 */
-	public void restore(String sid, long folderId, long parentId) throws ServerException;
+	public void restore(long folderId, long parentId) throws ServerException;
 
 	/**
 	 * Moves some folders under a target folder
 	 */
-	public void move(String sid, long[] folderIds, long targetId) throws ServerException;
+	public void move(long[] folderIds, long targetId) throws ServerException;
 
 	/**
 	 * Copies a folder under a target folder
 	 */
-	public void copyFolders(String sid, long[] folderIds, long targetId, boolean foldersOnly, boolean inheritSecurity)
+	public void copyFolders(long[] folderIds, long targetId, boolean foldersOnly, boolean inheritSecurity)
 			throws ServerException;
 
 	/**
@@ -120,23 +115,23 @@ public interface FolderService extends RemoteService {
 	 * @param folderId The target folder identifier.
 	 * @param action The action selectee (Clipboard#COPY or Clipboard#COPY).
 	 */
-	public void paste(String sid, long[] docIds, long folderId, String action) throws ServerException;
+	public void paste(long[] docIds, long folderId, String action) throws ServerException;
 
-	public void pasteAsAlias(String sid, long[] docIds, long folderId, String type) throws ServerException;
+	public void pasteAsAlias(long[] docIds, long folderId, String type) throws ServerException;
 
 	/**
 	 * Loads the folders templates
 	 */
-	public GUIValue[] loadTemplates(String sid) throws ServerException;
+	public GUIValue[] loadTemplates() throws ServerException;
 
 	/**
 	 * Saves the passed folder templates
 	 */
-	public void saveTemplates(String sid, GUIValue[] templates) throws ServerException;
+	public void saveTemplates(GUIValue[] templates) throws ServerException;
 
 	/**
 	 * Applies a template to a folder
 	 */
-	public void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity)
+	public void applyTemplate(long folderId, long templateId, boolean inheritSecurity)
 			throws ServerException;
 }

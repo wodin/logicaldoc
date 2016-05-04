@@ -5,19 +5,19 @@ import com.logicaldoc.gui.common.client.beans.GUIStamp;
 
 public interface StampServiceAsync {
 
-	void delete(String sid, long id, AsyncCallback<Void> callback);
+	void delete(long id, AsyncCallback<Void> callback);
 
-	void save(String sid, GUIStamp stamp, AsyncCallback<GUIStamp> callback);
+	void save(GUIStamp stamp, AsyncCallback<GUIStamp> callback);
 
-	void getStamp(String sid, long id, AsyncCallback<GUIStamp> callback);
+	void getStamp(long id, AsyncCallback<GUIStamp> callback);
 
-	void changeStatus(String sid, long id, boolean enabled, AsyncCallback<Void> callback);
+	void changeStatus(long id, boolean enabled, AsyncCallback<Void> callback);
 
-	void saveImage(String sid, long stampId, AsyncCallback<Void> callback);
+	void saveImage(long stampId, AsyncCallback<Void> callback);
 
-	void applyStamp(String sid, long[] docIds, long stampId, AsyncCallback<Void> callback);
+	void applyStamp(long[] docIds, long stampId, AsyncCallback<Void> callback);
 
-	void removeUsers(String sid, long[] userIds, long stampId, AsyncCallback<Void> callback);
+	void removeUsers(long[] userIds, long stampId, AsyncCallback<Void> callback);
 
-	void addUsers(String sid, long[] userIds, long stampId, AsyncCallback<Void> callback);
+	void addUsers(long[] userIds, long stampId, AsyncCallback<Void> callback);
 }

@@ -238,19 +238,18 @@ public class GUISettingsPanel extends VLayout {
 					for (GUIParameter p : params)
 						Session.get().getInfo().setConfig(p.getName(), p.getValue());
 
-					service.saveSettings(Session.get().getSid(), params.toArray(new GUIParameter[0]),
-							new AsyncCallback<Void>() {
+					service.saveSettings(params.toArray(new GUIParameter[0]), new AsyncCallback<Void>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Void ret) {
-									Log.info(I18N.message("settingssaved"), null);
-								}
-							});
+						@Override
+						public void onSuccess(Void ret) {
+							Log.info(I18N.message("settingssaved"), null);
+						}
+					});
 				}
 			}
 		});

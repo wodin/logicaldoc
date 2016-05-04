@@ -81,8 +81,8 @@ public class SetAdminPassword extends Window {
 				vm.validate();
 				if (!vm.hasErrors()) {
 					apply.setDisabled(true);
-					service.changeAdminPassword(Session.get().getSid(), vm.getValueAsString(NEWPASSWORD).trim(),
-							tenantName, new AsyncCallback<Void>() {
+					service.changeAdminPassword(vm.getValueAsString(NEWPASSWORD).trim(), tenantName,
+							new AsyncCallback<Void>() {
 
 								@Override
 								public void onFailure(Throwable caught) {

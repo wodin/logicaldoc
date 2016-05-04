@@ -101,7 +101,7 @@ public class SecurityMenu extends VLayout {
 		security.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.loadSettings(Session.get().getSid(), new AsyncCallback<GUISecuritySettings>() {
+				service.loadSettings(new AsyncCallback<GUISecuritySettings>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -120,7 +120,7 @@ public class SecurityMenu extends VLayout {
 		extAuth.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ldapService.loadSettings(Session.get().getSid(), new AsyncCallback<GUILdapSettings>() {
+				ldapService.loadSettings(new AsyncCallback<GUILdapSettings>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -141,7 +141,7 @@ public class SecurityMenu extends VLayout {
 			public void onClick(ClickEvent event) {
 				String tenant = Session.get().getTenantName();
 
-				settingService.loadSettingsByNames(Session.get().getSid(), new String[] { "antivirus.command",
+				settingService.loadSettingsByNames(new String[] { "antivirus.command",
 						tenant + ".antivirus.enabled", tenant + ".antivirus.includes", tenant + ".antivirus.excludes",
 						tenant + ".antivirus.timeout" }, new AsyncCallback<GUIParameter[]>() {
 					@Override

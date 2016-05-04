@@ -16,36 +16,36 @@ public interface SearchEngineService extends RemoteService {
 	/**
 	 * Loads a search engine that contains all search engine infos.
 	 */
-	public GUISearchEngine getInfo(String sid) throws ServerException;
+	public GUISearchEngine getInfo() throws ServerException;
 
 	/**
 	 * Unlocks the indexer.
 	 */
-	public void unlocks(String sid) throws ServerException;
+	public void unlocks() throws ServerException;
 
 	/**
 	 * Checks the indexer.
 	 */
-	public String check(String sid) throws ServerException;
+	public String check() throws ServerException;
 
 	/**
 	 * Reschedule all entries for indexing.
 	 */
-	public void rescheduleAll(String sid, boolean dropIndex) throws ServerException;
+	public void rescheduleAll(boolean dropIndex) throws ServerException;
 
 	/**
 	 * Saves search engine settings
 	 */
-	public void save(String sid, GUISearchEngine searchEngine) throws ServerException;
+	public void save(GUISearchEngine searchEngine) throws ServerException;
 
 	/**
 	 * Changes the activation status of a language
 	 */
-	public void setLanguageStatus(String sid, String language, boolean active) throws ServerException;
+	public void setLanguageStatus(String language, boolean active) throws ServerException;
 
 	/**
 	 * Sets the parser aliases for the given extension. Aliases must be a
 	 * comma-separated values.
 	 */
-	public void setAliases(String sid, String extension, String aliases) throws ServerException;
+	public void setAliases(String extension, String aliases) throws ServerException;
 }

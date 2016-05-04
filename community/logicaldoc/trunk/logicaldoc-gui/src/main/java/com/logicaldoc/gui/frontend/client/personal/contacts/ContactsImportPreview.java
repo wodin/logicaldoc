@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIContact;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -59,11 +58,10 @@ public class ContactsImportPreview extends com.smartgwt.client.widgets.Window {
 			public void onClick(ClickEvent event) {
 				ContactingServer.get().show();
 				try {
-					service.parseContacts(Session.get().getSid(), false, settings.getSeparator(),
-							settings.getTextDelimiter(), settings.isSkipFirstRow(), settings.getFirstNameIndex(),
-							settings.getLastNameIndex(), settings.getEmailIndex(), settings.getCompanyIndex(),
-							settings.getPhoneIndex(), settings.getMobileIndex(), settings.getAddressIndex(),
-							new AsyncCallback<GUIContact[]>() {
+					service.parseContacts(false, settings.getSeparator(), settings.getTextDelimiter(),
+							settings.isSkipFirstRow(), settings.getFirstNameIndex(), settings.getLastNameIndex(),
+							settings.getEmailIndex(), settings.getCompanyIndex(), settings.getPhoneIndex(),
+							settings.getMobileIndex(), settings.getAddressIndex(), new AsyncCallback<GUIContact[]>() {
 
 								@Override
 								public void onFailure(Throwable caught) {

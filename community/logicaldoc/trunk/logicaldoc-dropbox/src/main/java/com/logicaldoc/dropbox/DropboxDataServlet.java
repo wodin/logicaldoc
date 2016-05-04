@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.dropbox.core.DbxEntry;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.util.IconSelector;
 
@@ -33,8 +34,8 @@ public class DropboxDataServlet extends HttpServlet {
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
 		try {
-			SessionUtil.validateSession(request);
-			User user = SessionUtil.getSessionUser(request);
+			Session session = SessionUtil.validateSession(request);
+			User user = session.getUser();
 
 			Dropbox dbox = new Dropbox();
 			boolean connected = dbox.login(DropboxServiceImpl.loadAccessToken(user), user.getLocale());

@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIBarcodePattern;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -65,7 +64,7 @@ public class BarcodePatternsPanel extends VLayout {
 			public void onChanged(ChangedEvent event) {
 				Long id = getSelectedTemplate();
 
-				service.loadPatterns(Session.get().getSid(), id, new AsyncCallback<GUIBarcodePattern[]>() {
+				service.loadPatterns(id, new AsyncCallback<GUIBarcodePattern[]>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -111,7 +110,7 @@ public class BarcodePatternsPanel extends VLayout {
 
 		setMembers(hint, toolStrip);
 
-		service.loadPatterns(Session.get().getSid(), null, new AsyncCallback<GUIBarcodePattern[]>() {
+		service.loadPatterns(null, new AsyncCallback<GUIBarcodePattern[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
@@ -157,7 +156,7 @@ public class BarcodePatternsPanel extends VLayout {
 			patterns[i++] = record.getAttributeAsString("pattern");
 		}
 
-		service.savePatterns(Session.get().getSid(), patterns, getSelectedTemplate(), new AsyncCallback<Void>() {
+		service.savePatterns(patterns, getSelectedTemplate(), new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

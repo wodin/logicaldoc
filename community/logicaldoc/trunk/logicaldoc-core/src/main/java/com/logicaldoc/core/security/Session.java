@@ -5,13 +5,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.concurrency.NamedThreadFactory;
+import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * A single user session with it's unique identifier and the reference to the
@@ -21,6 +30,8 @@ import com.logicaldoc.util.Context;
  * @since 4.6.0
  */
 public class Session implements Comparable<Session> {
+
+	private static Logger log = LoggerFactory.getLogger(Session.class);
 
 	public final static int STATUS_OPEN = 0;
 
@@ -67,6 +78,17 @@ public class Session implements Comparable<Session> {
 	private User user = null;
 
 	/**
+	 * This executor will be used to execute timeout checks in the future
+	 */
+	private static ScheduledExecutorService executor = Executors.newScheduledThreadPool(5, new NamedThreadFactory(
+			"SessionTimeout"));
+
+	/**
+	 * Represents the action to be taken in the future when the timeout occurs
+	 */
+	private FutureTask timeoutTask;
+
+	/**
 	 * Represents a dictionary of custom informations a client may save in the
 	 * session
 	 */
@@ -93,6 +115,26 @@ public class Session implements Comparable<Session> {
 	public void renew() {
 		if (status == STATUS_OPEN)
 			lastRenew = new Date();
+		else
+			return;
+
+		stopTimeout();
+
+		int timeout = 30;
+		ContextProperties config = Context.get().getProperties();
+		if (config.getInt(getTenantName() + ".session.timeout") > 0)
+			timeout = config.getInt(getTenantName() + ".session.timeout");
+
+		if (timeout > 0) {
+			try {
+				timeoutTask = new FutureTask<String>(new SessionTimeout());
+				executor.schedule(timeoutTask, timeout, TimeUnit.MINUTES);
+				if (log.isDebugEnabled())
+					log.debug("Renewing session " + getId());
+			} catch (Exception e) {
+				log.warn(e.getMessage());
+			}
+		}
 	}
 
 	public int getStatus() {
@@ -100,17 +142,27 @@ public class Session implements Comparable<Session> {
 	}
 
 	public void setExpired() {
+		log.warn("Session " + getId() + " expired");
+		logWarn("Session expired");
+
 		this.status = STATUS_EXPIRED;
 		// Add a user history entry
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
 		userHistoryDAO.createUserHistory(user, UserHistory.EVENT_USER_TIMEOUT, "", id);
+
+		stopTimeout();
 	}
 
 	public void setClosed() {
+		log.info("Session " + getId() + " was closed");
+		logInfo("Session closed");
+
 		this.status = STATUS_CLOSED;
 		// Add a user history entry
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
 		userHistoryDAO.createUserHistory(user, UserHistory.EVENT_USER_LOGOUT, "", id);
+
+		stopTimeout();
 	}
 
 	Session(User user, String password, String key, Client client) {
@@ -146,6 +198,11 @@ public class Session implements Comparable<Session> {
 
 		// Add a user history entry
 		userHistoryDAO.createUserHistory(user, UserHistory.EVENT_USER_LOGIN, comment, id);
+
+		log.info("Session " + getId() + " has been started");
+		logInfo("Session started");
+		
+		renew();
 	}
 
 	public String getUsername() {
@@ -292,4 +349,24 @@ public class Session implements Comparable<Session> {
 		this.tenantName = tenantName;
 	}
 
+	private void stopTimeout() {
+		if (timeoutTask != null)
+			timeoutTask.cancel(true);
+	}
+
+	/**
+	 * This is invoked at the session timeout
+	 * 
+	 * @author Marco Meschieri - LogicalDOC
+	 * @since 7.5
+	 */
+	class SessionTimeout implements Callable<String> {
+
+		@Override
+		public String call() throws Exception {
+			Session.this.setExpired();
+			return "done";
+		}
+
+	}
 }

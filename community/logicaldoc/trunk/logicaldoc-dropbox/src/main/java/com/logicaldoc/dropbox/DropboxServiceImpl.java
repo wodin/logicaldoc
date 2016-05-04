@@ -28,8 +28,8 @@ import com.logicaldoc.core.folder.FolderHistory;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Permission;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.frontend.client.services.DropboxService;
@@ -47,16 +47,15 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	private static Logger log = LoggerFactory.getLogger(DropboxServiceImpl.class);
 
 	@Override
-	public boolean isConnected(String sid) throws ServerException {
-		SessionUtil.validateSession(sid);
+	public boolean isConnected() throws ServerException {
+		Session session = SessionUtil.validateSession(getThreadLocalRequest());
 
 		try {
-			User user = SessionUtil.getSessionUser(sid);
 			Dropbox dbox = new Dropbox();
-			String accessToken = loadAccessToken(user);
+			String accessToken = loadAccessToken(session.getUser());
 			if (accessToken == null)
 				return false;
-			return dbox.login(accessToken, user.getLocale());
+			return dbox.login(accessToken, session.getUser().getLocale());
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
@@ -64,13 +63,12 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	}
 
 	@Override
-	public String startAuthorization(String sid) throws ServerException {
-		SessionUtil.validateSession(sid);
+	public String startAuthorization() throws ServerException {
+		Session session = SessionUtil.validateSession(getThreadLocalRequest());
 
 		try {
-			User user = SessionUtil.getSessionUser(sid);
 			Dropbox dbox = new Dropbox();
-			return dbox.startAuthorization(user.getLocale());
+			return dbox.startAuthorization(session.getUser().getLocale());
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			throw new RuntimeException(t.getMessage(), t);
@@ -78,11 +76,11 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	}
 
 	@Override
-	public String finishAuthorization(String sid, String authorizationCode) throws ServerException {
-		SessionUtil.validateSession(sid);
+	public String finishAuthorization(String authorizationCode) throws ServerException {
+		Session session = SessionUtil.validateSession(getThreadLocalRequest());
 
 		try {
-			User user = SessionUtil.getSessionUser(sid);
+			User user = session.getUser();
 			Dropbox dbox = new Dropbox();
 			String token = dbox.finishAuthorization(authorizationCode, user.getLocale());
 			if (token == null)
@@ -124,12 +122,11 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	}
 
 	@Override
-	public boolean exportDocuments(String sid, String targetPath, long[] folderIds, long[] docIds)
-			throws ServerException {
-		SessionUtil.validateSession(sid);
+	public boolean exportDocuments(String targetPath, long[] folderIds, long[] docIds) throws ServerException {
+		Session session = SessionUtil.validateSession(getThreadLocalRequest());
 
 		try {
-			User user = SessionUtil.getSessionUser(sid);
+			User user = session.getUser();
 			Dropbox dbox = new Dropbox();
 			String token = loadAccessToken(user);
 			if (token == null)
@@ -177,7 +174,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 			}
 
 			for (Long docId : documents.keySet()) {
-				uploadDocument(docId, targetPath + documents.get(docId), dbox, user, sid);
+				uploadDocument(docId, targetPath + documents.get(docId), dbox, session);
 			}
 
 			return true;
@@ -187,7 +184,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 		}
 	}
 
-	private void uploadDocument(Long docId, String path, Dropbox dropbox, User user, String sid) throws IOException {
+	private void uploadDocument(Long docId, String path, Dropbox dropbox, Session session) throws IOException {
 		Storer store = (Storer) Context.get().getBean(Storer.class);
 		HistoryDAO hdao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 		DocumentDAO ddao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
@@ -208,8 +205,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 			history.setFilename(doc.getFileName());
 			history.setFolderId(doc.getFolder().getId());
 			history.setComment("Exported into Dropbox");
-			history.setUser(user);
-			history.setSessionId(sid);
+			history.setSession(session);
 
 			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			history.setPath(fdao.computePathExtended(doc.getFolder().getId()));
@@ -232,8 +228,8 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 	}
 
 	@Override
-	public int importDocuments(String sid, long targetFolder, String[] paths) throws ServerException {
-		Session session = SessionUtil.validateSession(sid);
+	public int importDocuments(long targetFolder, String[] paths) throws ServerException {
+		Session session = SessionUtil.validateSession(getThreadLocalRequest());
 		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
 		if (!fdao.isPermissionEnabled(Permission.IMPORT, targetFolder, session.getUserId()))
@@ -241,7 +237,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 
 		int count = 0;
 		try {
-			User user = SessionUtil.getSessionUser(sid);
+			User user = session.getUser();
 			Dropbox dbox = new Dropbox();
 			String token = loadAccessToken(user);
 			if (token == null)
@@ -257,7 +253,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 
 				DbxEntry entry = dbox.get(path);
 				if (entry instanceof DbxEntry.File) {
-					importDocument(root, (DbxEntry.File) entry, dbox, user, sid);
+					importDocument(root, (DbxEntry.File) entry, dbox, session);
 					imported.add(entry.path);
 				} else {
 					String rootPath = entry.path;
@@ -270,8 +266,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 							continue;
 
 						FolderHistory transaction = new FolderHistory();
-						transaction.setSessionId(sid);
-						transaction.setUser(user);
+						transaction.setSession(session);
 
 						String folderPath = file.path.substring(rootPath.length());
 						folderPath = FilenameUtils.getPath(file.path);
@@ -279,7 +274,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 
 						Folder folder = fdao.createPath(root, folderPath, true, transaction);
 
-						importDocument(folder, file, dbox, user, sid);
+						importDocument(folder, file, dbox, session);
 						imported.add(file.path);
 					}
 				}
@@ -293,7 +288,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 		return count;
 	}
 
-	private void importDocument(Folder root, DbxEntry src, Dropbox dbox, User user, String sid) throws Exception {
+	private void importDocument(Folder root, DbxEntry src, Dropbox dbox, Session session) throws Exception {
 		DocumentDAO ddao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		DocumentManager manager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 
@@ -312,8 +307,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 
 				History history = new History();
 				history.setFolderId(root.getId());
-				history.setUser(user);
-				history.setSessionId(sid);
+				history.setSession(session);
 
 				FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 				String pathExtended = fdao.computePathExtended(root.getId());
@@ -323,8 +317,7 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 
 				history = new History();
 				history.setFolderId(root.getId());
-				history.setUser(user);
-				history.setSessionId(sid);
+				history.setSession(session);
 				history.setPath(pathExtended);
 				history.setComment("Updated from Dropbox");
 
@@ -338,13 +331,12 @@ public class DropboxServiceImpl extends RemoteServiceServlet implements DropboxS
 				docVO.setTitle(FilenameUtils.getBaseName(src.name));
 				docVO.setFileName(src.name);
 				docVO.setFolder(root);
-				docVO.setLanguage(user.getLanguage());
+				docVO.setLanguage(session.getUser().getLanguage());
 
 				History history = new History();
 				history.setFolderId(root.getId());
 				history.setComment("Imported from Dropbox");
-				history.setUser(user);
-				history.setSessionId(sid);
+				history.setSession(session);
 
 				FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 				history.setPath(fdao.computePathExtended(root.getId()));

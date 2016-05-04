@@ -92,19 +92,18 @@ public class TaskDetailPanel extends VLayout {
 		closeImage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.getTaskByName(Session.get().getSid(), task.getName(), I18N.getLocale(),
-						new AsyncCallback<GUITask>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+				service.getTaskByName(task.getName(), I18N.getLocale(), new AsyncCallback<GUITask>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUITask task) {
-								setTask(task);
-								savePanel.setVisible(false);
-							}
-						});
+					@Override
+					public void onSuccess(GUITask task) {
+						setTask(task);
+						savePanel.setVisible(false);
+					}
+				});
 			}
 		});
 		closeImage.setCursor(Cursor.HAND);
@@ -209,7 +208,7 @@ public class TaskDetailPanel extends VLayout {
 
 	public void onSave() {
 		if (schedulingPanel.validate() && notificationPanel.validate()) {
-			service.saveTask(Session.get().getSid(), task, I18N.getLocale(), new AsyncCallback<GUITask>() {
+			service.saveTask(task, I18N.getLocale(), new AsyncCallback<GUITask>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);

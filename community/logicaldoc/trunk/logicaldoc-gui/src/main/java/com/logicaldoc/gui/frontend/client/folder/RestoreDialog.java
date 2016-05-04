@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.folder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.widgets.FolderTree;
@@ -62,7 +61,7 @@ public class RestoreDialog extends Dialog {
 
 			@Override
 			public void onClick(final ClickEvent event) {
-				docService.restore(Session.get().getSid(), docIds,
+				docService.restore(docIds,
 						Long.parseLong(folders.getSelectedRecord().getAttributeAsString("folderId")),
 						new AsyncCallback<Void>() {
 

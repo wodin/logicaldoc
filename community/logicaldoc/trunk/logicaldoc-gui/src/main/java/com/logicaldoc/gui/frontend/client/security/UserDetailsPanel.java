@@ -102,7 +102,7 @@ public class UserDetailsPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (user.getId() != 0) {
-					service.getUser(Session.get().getSid(), user.getId(), new AsyncCallback<GUIUser>() {
+					service.getUser(user.getId(), new AsyncCallback<GUIUser>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -292,7 +292,7 @@ public class UserDetailsPanel extends VLayout {
 			saveButton.setDisabled(true);
 
 			ContactingServer.get().show();
-			service.saveUser(Session.get().getSid(), user, Session.get().getInfo(), new AsyncCallback<GUIUser>() {
+			service.saveUser(user, Session.get().getInfo(), new AsyncCallback<GUIUser>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					ContactingServer.get().hide();

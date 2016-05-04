@@ -100,23 +100,22 @@ public class WorkflowPortlet extends Portlet {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				Record record = event.getRecord();
-				service.getWorkflowDetailsByTask(Session.get().getSid(), record.getAttributeAsString("id"),
-						new AsyncCallback<GUIWorkflow>() {
+				service.getWorkflowDetailsByTask(record.getAttributeAsString("id"), new AsyncCallback<GUIWorkflow>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUIWorkflow result) {
-								if (result != null) {
-									WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(
-											workflowDashboard, result);
-									workflowDetailsDialog.show();
-								}
-							}
-						});
+					@Override
+					public void onSuccess(GUIWorkflow result) {
+						if (result != null) {
+							WorkflowDetailsDialog workflowDetailsDialog = new WorkflowDetailsDialog(workflowDashboard,
+									result);
+							workflowDetailsDialog.show();
+						}
+					}
+				});
 			}
 		});
 
@@ -162,7 +161,7 @@ public class WorkflowPortlet extends Portlet {
 						if (value) {
 							// Extract the process instance ID
 							String processId = selection.getAttributeAsString("processId");
-							service.deleteInstance(Session.get().getSid(), processId, new AsyncCallback<Void>() {
+							service.deleteInstance(processId, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

@@ -14,10 +14,10 @@ public interface FormService extends RemoteService {
 	/**
 	 * Creates a new form
 	 */
-	public GUIDocument create(String sid, GUIDocument form) throws ServerException;
+	public GUIDocument create(GUIDocument form) throws ServerException;
 
 	/**
 	 * Creates a form
 	 */
-	public void delete(String sid, long formId) throws ServerException;
+	public void delete(long formId) throws ServerException;
 }

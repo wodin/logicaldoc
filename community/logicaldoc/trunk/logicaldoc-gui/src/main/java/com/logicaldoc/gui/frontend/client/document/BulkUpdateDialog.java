@@ -105,26 +105,24 @@ public class BulkUpdateDialog extends Window {
 
 				if (checkin) {
 					ContactingServer.get().show();
-					documentService.checkin(Session.get().getSid(), metadata, majorVersion,
-							new AsyncCallback<GUIDocument>() {
+					documentService.checkin(metadata, majorVersion, new AsyncCallback<GUIDocument>() {
 
-								@Override
-								public void onFailure(Throwable error) {
-									ContactingServer.get().hide();
-									Log.serverError(error);
-								}
+						@Override
+						public void onFailure(Throwable error) {
+							ContactingServer.get().hide();
+							Log.serverError(error);
+						}
 
-								@Override
-								public void onSuccess(GUIDocument doc) {
-									ContactingServer.get().hide();
-									DocumentsPanel.get().onDocumentSaved(doc);
-									DocumentsPanel.get().getDocumentsGrid().markSelectedAsCheckedIn();
-									Session.get().getUser()
-											.setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
-									DocumentsPanel.get().selectDocument(doc.getId(), false);
-									destroy();
-								}
-							});
+						@Override
+						public void onSuccess(GUIDocument doc) {
+							ContactingServer.get().hide();
+							DocumentsPanel.get().onDocumentSaved(doc);
+							DocumentsPanel.get().getDocumentsGrid().markSelectedAsCheckedIn();
+							Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() - 1);
+							DocumentsPanel.get().selectDocument(doc.getId(), false);
+							destroy();
+						}
+					});
 				} else if (ids != null && ids.length > 0)
 					LD.ask(I18N.message("bulkupdate"), I18N.message("bulkwarning"), new BooleanCallback() {
 						@Override
@@ -132,50 +130,48 @@ public class BulkUpdateDialog extends Window {
 							if (value) {
 								bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
 								ContactingServer.get().show();
-								documentService.bulkUpdate(Session.get().getSid(), ids, bulkPanel.getDocument(),
-										new AsyncCallback<Void>() {
-											@Override
-											public void onFailure(Throwable error) {
-												ContactingServer.get().hide();
-												Log.serverError(error);
-											}
+								documentService.bulkUpdate(ids, bulkPanel.getDocument(), new AsyncCallback<Void>() {
+									@Override
+									public void onFailure(Throwable error) {
+										ContactingServer.get().hide();
+										Log.serverError(error);
+									}
 
-											@Override
-											public void onSuccess(Void arg0) {
-												ContactingServer.get().hide();
-												Log.info(I18N.message("bulkapplied"), null);
-												DocumentsPanel.get().refresh();
-												destroy();
-											}
-										});
+									@Override
+									public void onSuccess(Void arg0) {
+										ContactingServer.get().hide();
+										Log.info(I18N.message("bulkapplied"), null);
+										DocumentsPanel.get().refresh();
+										destroy();
+									}
+								});
 							}
 						}
 					});
 				else {
 					bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
 					ContactingServer.get().show();
-					documentService.addDocuments(Session.get().getSid(), zip, immediteIndexing,
-							bulkPanel.getDocument(), new AsyncCallback<GUIDocument[]>() {
+					documentService.addDocuments(zip, immediteIndexing, bulkPanel.getDocument(),
+							new AsyncCallback<GUIDocument[]>() {
 
 								@Override
 								public void onSuccess(GUIDocument[] arg0) {
 									DocumentsPanel.get().refresh();
-									documentService.cleanUploadedFileFolder(Session.get().getSid(),
-											new AsyncCallback<Void>() {
+									documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
 
-												@Override
-												public void onFailure(Throwable caught) {
-													ContactingServer.get().hide();
-													Log.serverError(caught);
-													destroy();
-												}
+										@Override
+										public void onFailure(Throwable caught) {
+											ContactingServer.get().hide();
+											Log.serverError(caught);
+											destroy();
+										}
 
-												@Override
-												public void onSuccess(Void result) {
-													ContactingServer.get().hide();
-													destroy();
-												}
-											});
+										@Override
+										public void onSuccess(Void result) {
+											ContactingServer.get().hide();
+											destroy();
+										}
+									});
 								}
 
 								@Override
@@ -187,20 +183,19 @@ public class BulkUpdateDialog extends Window {
 									// because maybe
 									// some documents have been stored.
 									DocumentsPanel.get().refresh();
-									documentService.cleanUploadedFileFolder(Session.get().getSid(),
-											new AsyncCallback<Void>() {
+									documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
 
-												@Override
-												public void onFailure(Throwable caught) {
-													Log.serverError(caught);
-													destroy();
-												}
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+											destroy();
+										}
 
-												@Override
-												public void onSuccess(Void result) {
-													destroy();
-												}
-											});
+										@Override
+										public void onSuccess(Void result) {
+											destroy();
+										}
+									});
 								}
 							});
 				}

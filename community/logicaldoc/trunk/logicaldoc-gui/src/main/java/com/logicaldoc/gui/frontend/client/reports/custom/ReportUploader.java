@@ -6,7 +6,6 @@ import gwtupload.client.MultiUploader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIReport;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -102,7 +101,7 @@ public class ReportUploader extends Window {
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
 			public void onCloseClick(CloseClickEvent event) {
-				documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+				documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -120,7 +119,7 @@ public class ReportUploader extends Window {
 		addItem(layout);
 
 		// Clean the upload folder
-		documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+		documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -171,7 +170,7 @@ public class ReportUploader extends Window {
 		}
 
 		if (report != null) {
-			reportService.storeUploadedDesign(Session.get().getSid(), report.getId(), new AsyncCallback<Void>() {
+			reportService.storeUploadedDesign(report.getId(), new AsyncCallback<Void>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -192,7 +191,7 @@ public class ReportUploader extends Window {
 			report.setName(vm.getValueAsString("name"));
 			report.setOutputFolder(outputFolderSelector.getFolder());
 
-			reportService.create(Session.get().getSid(), report, new AsyncCallback<GUIReport>() {
+			reportService.create(report, new AsyncCallback<GUIReport>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

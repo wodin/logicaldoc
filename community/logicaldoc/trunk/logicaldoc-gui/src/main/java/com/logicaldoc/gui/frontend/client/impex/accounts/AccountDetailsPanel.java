@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.impex.accounts;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmailAccount;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -91,7 +90,7 @@ public class AccountDetailsPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (account.getId() != 0) {
-					service.get(Session.get().getSid(), account.getId(), new AsyncCallback<GUIEmailAccount>() {
+					service.get(account.getId(), new AsyncCallback<GUIEmailAccount>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -222,7 +221,7 @@ public class AccountDetailsPanel extends VLayout {
 
 	public void onSave() {
 		if (validate()) {
-			service.save(Session.get().getSid(), account, new AsyncCallback<GUIEmailAccount>() {
+			service.save(account, new AsyncCallback<GUIEmailAccount>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);

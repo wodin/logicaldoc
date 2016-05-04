@@ -106,7 +106,7 @@ public class ExternalAppsPanel extends VLayout {
 			else if (parameter.getName().equals("acmecad.command"))
 				acmecad = parameter;
 		}
-	
+
 		Tab webService = new Tab();
 		webService.setTitle(I18N.message("webservice"));
 
@@ -158,7 +158,7 @@ public class ExternalAppsPanel extends VLayout {
 		cmisChangelogItem.setRequired(true);
 		cmisChangelogItem.setWrapTitle(false);
 		cmisChangelogItem.setValue(cmisChangelog.getValue().equals("true") ? "yes" : "no");
-		
+
 		if (Session.get().isDefaultTenant())
 			cmisForm.setItems(cmisUrl, cmisEnabledItem, cmisChangelogItem);
 		else
@@ -268,9 +268,9 @@ public class ExternalAppsPanel extends VLayout {
 
 						ExternalAppsPanel.this.cmisEnabled.setValue(values.get("cmisEnabled").equals("yes") ? "true"
 								: "false");
-						
-						ExternalAppsPanel.this.cmisChangelog.setValue(values.get("cmisChangelog").equals("yes") ? "true"
-								: "false");
+
+						ExternalAppsPanel.this.cmisChangelog
+								.setValue(values.get("cmisChangelog").equals("yes") ? "true" : "false");
 
 						ExternalAppsPanel.this.wdSettings.setValue(values.get("wdEnabled").equals("yes") ? "true"
 								: "false");
@@ -336,7 +336,7 @@ public class ExternalAppsPanel extends VLayout {
 					} catch (Throwable t) {
 					}
 
-					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
+					service.saveSettings(params, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);

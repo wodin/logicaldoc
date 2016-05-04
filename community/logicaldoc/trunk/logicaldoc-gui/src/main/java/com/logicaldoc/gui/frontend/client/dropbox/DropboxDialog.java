@@ -101,24 +101,23 @@ public class DropboxDialog extends Dialog {
 						folderIds[0] = Session.get().getCurrentFolder().getId();
 
 					ContactingServer.get().show();
-					service.exportDocuments(Session.get().getSid(), targetPath, folderIds, docIds,
-							new AsyncCallback<Boolean>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									ContactingServer.get().hide();
-									Log.serverError(caught);
-								}
+					service.exportDocuments(targetPath, folderIds, docIds, new AsyncCallback<Boolean>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							ContactingServer.get().hide();
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Boolean result) {
-									ContactingServer.get().hide();
-									if (result.booleanValue()) {
-										SC.say(I18N.message("dboxexportok"));
-										DropboxDialog.this.destroy();
-									} else
-										SC.say(I18N.message("dboxexportko"));
-								}
-							});
+						@Override
+						public void onSuccess(Boolean result) {
+							ContactingServer.get().hide();
+							if (result.booleanValue()) {
+								SC.say(I18N.message("dboxexportok"));
+								DropboxDialog.this.destroy();
+							} else
+								SC.say(I18N.message("dboxexportko"));
+						}
+					});
 				}
 			}
 		});
@@ -140,7 +139,7 @@ public class DropboxDialog extends Dialog {
 				if (choice.booleanValue()) {
 					DropboxDialog.this.destroy();
 					ContactingServer.get().show();
-					service.importDocuments(Session.get().getSid(), Session.get().getCurrentFolder().getId(), paths,
+					service.importDocuments(Session.get().getCurrentFolder().getId(), paths,
 							new AsyncCallback<Integer>() {
 								@Override
 								public void onFailure(Throwable caught) {

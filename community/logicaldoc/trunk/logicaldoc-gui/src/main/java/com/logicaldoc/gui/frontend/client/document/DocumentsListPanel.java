@@ -88,7 +88,7 @@ public class DocumentsListPanel extends VLayout {
 				String title = doc.getTitle();
 				String type = doc.getType();
 				String filename = doc.getFileName();
-				String fileVersion = doc.getFileVersion();
+				;
 
 				if (filename == null)
 					filename = title + "." + type;
@@ -96,13 +96,11 @@ public class DocumentsListPanel extends VLayout {
 				if (Session.get().getCurrentFolder().isDownload()
 						&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
 					try {
-						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-								+ id);
+						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id);
 					} catch (Throwable t) {
 
 					}
 				else {
-					GUIFolder folder = Session.get().getCurrentFolder();
 					PreviewPopup iv = new PreviewPopup(doc);
 					iv.show();
 				}
@@ -162,21 +160,20 @@ public class DocumentsListPanel extends VLayout {
 		if (grid.getSelectedCount() != 1)
 			return;
 
-		documentService.getById(Session.get().getSid(), grid.getSelectedDocument().getId(),
-				new AsyncCallback<GUIDocument>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						/*
-						 * Sometimes we can have spurious errors using Firefox.
-						 */
-						if (Session.get().isDevel())
-							Log.serverError(caught);
-					}
+		documentService.getById(grid.getSelectedDocument().getId(), new AsyncCallback<GUIDocument>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				/*
+				 * Sometimes we can have spurious errors using Firefox.
+				 */
+				if (Session.get().isDevel())
+					Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(GUIDocument result) {
-						Session.get().setCurrentDocument(result);
-					}
-				});
+			@Override
+			public void onSuccess(GUIDocument result) {
+				Session.get().setCurrentDocument(result);
+			}
+		});
 	}
 }

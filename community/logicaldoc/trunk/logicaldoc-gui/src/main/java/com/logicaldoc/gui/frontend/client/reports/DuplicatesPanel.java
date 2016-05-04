@@ -260,8 +260,7 @@ public class DuplicatesPanel extends VLayout {
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
 				if (Session.get().getCurrentFolder().isDownload())
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-							+ id + "&open=true");
+					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id + "&open=true");
 			}
 		});
 
@@ -305,7 +304,7 @@ public class DuplicatesPanel extends VLayout {
 						@Override
 						public void execute(Boolean value) {
 							if (value) {
-								docService.delete(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+								docService.delete(ids, new AsyncCallback<Void>() {
 									@Override
 									public void onFailure(Throwable caught) {
 										Log.serverError(caught);
@@ -328,7 +327,7 @@ public class DuplicatesPanel extends VLayout {
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
-				docService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
+				docService.getById(id, new AsyncCallback<GUIDocument>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

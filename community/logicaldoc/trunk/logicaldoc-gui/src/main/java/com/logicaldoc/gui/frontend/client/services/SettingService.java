@@ -20,12 +20,12 @@ public interface SettingService extends RemoteService {
 	/**
 	 * Loads web services, webDav and other client-related settings
 	 */
-	public GUIParameter[] loadClientSettings(String sid) throws ServerException;
+	public GUIParameter[] loadClientSettings() throws ServerException;
 
 	/**
 	 * Loads the complete settings set
 	 */
-	public GUIParameter[] loadSettings(String sid) throws ServerException;
+	public GUIParameter[] loadSettings()throws ServerException;
 
 	/**
 	 * Loads a set of settings values
@@ -35,17 +35,17 @@ public interface SettingService extends RemoteService {
 	 * @return The array of settings
 	 * @throws ServerException
 	 */
-	public GUIParameter[] loadSettingsByNames(String sid, String[] names) throws ServerException;
+	public GUIParameter[] loadSettingsByNames(String[] names) throws ServerException;
 
 	/**
 	 * Saves settings
 	 */
-	public void saveSettings(String sid, GUIParameter[] settings) throws ServerException;
+	public void saveSettings(GUIParameter[] settings) throws ServerException;
 
 	/**
 	 * Loads email settings (SMTP connection)
 	 */
-	public GUIEmailSettings loadEmailSettings(String sid) throws ServerException;
+	public GUIEmailSettings loadEmailSettings()throws ServerException;
 
 	/**
 	 * Tests the SMTP connection
@@ -54,7 +54,7 @@ public interface SettingService extends RemoteService {
 	 * @param email email address to test(it will receive a test message)
 	 * @return True only if the email was sent
 	 */
-	public boolean testEmail(String sid, String email) throws ServerException;
+	public boolean testEmail(String email) throws ServerException;
 
 	/**
 	 * Load the repositories paths.
@@ -65,37 +65,37 @@ public interface SettingService extends RemoteService {
 	 * </ol>
 	 * 
 	 */
-	public GUIParameter[][] loadRepositories(String sid) throws ServerException;
+	public GUIParameter[][] loadRepositories()throws ServerException;
 
 	/**
 	 * Saves folders path
 	 */
-	public void saveRepositories(String sid, GUIParameter[][] repos) throws ServerException;
+	public void saveRepositories(GUIParameter[][] repos) throws ServerException;
 
 	/**
 	 * Saves email settings (SMTP connection)
 	 */
-	public void saveEmailSettings(String sid, GUIEmailSettings settings) throws ServerException;
+	public void saveEmailSettings(GUIEmailSettings settings) throws ServerException;
 
 	/**
 	 * Loads the OCR settings
 	 */
-	public GUIParameter[] loadOcrSettings(String sid) throws ServerException;
+	public GUIParameter[] loadOcrSettings()throws ServerException;
 
 	/**
 	 * Load the GUI settings
 	 */
-	public GUIParameter[] loadGUISettings(String sid) throws ServerException;
+	public GUIParameter[] loadGUISettings()throws ServerException;
 
 	/**
 	 * Retrieves the size of all saved storages.
 	 * 
 	 * @param sid The current user session
 	 */
-	public GUIParameter[] computeStoragesSize(String sid) throws ServerException;
+	public GUIParameter[] computeStoragesSize()throws ServerException;
 
 	/**
 	 * Saves the dashlets configuration for the current user
 	 */
-	public void saveDashlets(String sid, GUIDashlet[] dashlets) throws ServerException;
+	public void saveDashlets(GUIDashlet[] dashlets) throws ServerException;
 }

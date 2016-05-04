@@ -15,24 +15,24 @@ public interface LdapService extends RemoteService {
 	/**
 	 * Saves external authentication settings
 	 */
-	public void saveSettings(String sid, GUILdapSettings ldapSettings) throws ServerException;
+	public void saveSettings(GUILdapSettings ldapSettings) throws ServerException;
 
 	/**
 	 * Tests the connection
 	 */
-	public boolean testConnection(String sid, GUILdapSettings ldapSettings) throws ServerException;
+	public boolean testConnection(GUILdapSettings ldapSettings) throws ServerException;
 
 	/**
 	 * Loads external authentication settings
 	 */
-	public GUILdapSettings loadSettings(String sid) throws ServerException;
+	public GUILdapSettings loadSettings() throws ServerException;
 
 	/**
 	 * Search for users in the LDAP repository
 	 * 
 	 * @login used with LIKE operator to restrict the search
 	 */
-	public GUIUser[] listUsers(String sid, String login) throws ServerException;
+	public GUIUser[] listUsers(String login) throws ServerException;
 
 	/**
 	 * Imports a selection of users
@@ -43,5 +43,5 @@ public interface LdapService extends RemoteService {
 	 * 
 	 * @return Number of imports, updates, errors.
 	 */
-	public GUIValue[] importUsers(String sid, String[] usernames, long tenantId) throws ServerException;
+	public GUIValue[] importUsers(String[] usernames, long tenantId) throws ServerException;
 }

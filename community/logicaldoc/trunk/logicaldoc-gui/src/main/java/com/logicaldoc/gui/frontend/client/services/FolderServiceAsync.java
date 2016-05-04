@@ -6,40 +6,40 @@ import com.logicaldoc.gui.common.client.beans.GUIValue;
 
 public interface FolderServiceAsync {
 
-	void save(String sid, GUIFolder folder, AsyncCallback<GUIFolder> callback);
+	void save(GUIFolder folder, AsyncCallback<GUIFolder> callback);
 
-	void applyRights(String sid, GUIFolder folder, boolean subfolders, AsyncCallback<Void> callback);
+	void applyRights(GUIFolder folder, boolean subfolders, AsyncCallback<Void> callback);
 
-	void delete(String sid, long[] folderIds, AsyncCallback<Void> callback);
+	void delete(long[] folderIds, AsyncCallback<Void> callback);
 
-	void getFolder(String sid, long folderId, boolean computePath, AsyncCallback<GUIFolder> callback);
+	void getFolder(long folderId, boolean computePath, AsyncCallback<GUIFolder> callback);
 
-	void move(String sid, long[] folderIds, long targetId, AsyncCallback<Void> callback);
+	void move(long[] folderIds, long targetId, AsyncCallback<Void> callback);
 
-	void rename(String sid, long folderId, String name, AsyncCallback<Void> callback);
+	void rename(long folderId, String name, AsyncCallback<Void> callback);
 
-	void paste(String sid, long[] docIds, long folderId, String action, AsyncCallback<Void> callback);
+	void paste(long[] docIds, long folderId, String action, AsyncCallback<Void> callback);
 
-	void pasteAsAlias(String sid, long[] docIds, long folderId, String type, AsyncCallback<Void> callback);
+	void pasteAsAlias(long[] docIds, long folderId, String type, AsyncCallback<Void> callback);
 
-	void loadTemplates(String sid, AsyncCallback<GUIValue[]> callback);
+	void loadTemplates(AsyncCallback<GUIValue[]> callback);
 
-	void saveTemplates(String sid, GUIValue[] templates, AsyncCallback<Void> callback);
+	void saveTemplates(GUIValue[] templates, AsyncCallback<Void> callback);
 
-	void applyTemplate(String sid, long folderId, long templateId, boolean inheritSecurity, AsyncCallback<Void> callback);
+	void applyTemplate(long folderId, long templateId, boolean inheritSecurity, AsyncCallback<Void> callback);
 
-	void applyMetadata(String sid, long parentId, AsyncCallback<Void> callback);
+	void applyMetadata(long parentId, AsyncCallback<Void> callback);
 
-	void create(String sid, GUIFolder folder, boolean inheritSecurity, AsyncCallback<GUIFolder> callback);
+	void create(GUIFolder folder, boolean inheritSecurity, AsyncCallback<GUIFolder> callback);
 
-	void restore(String sid, long folerId, long parentId, AsyncCallback<Void> callback);
+	void restore(long folerId, long parentId, AsyncCallback<Void> callback);
 
-	void copyFolders(String sid, long[] folderIds, long targetId, boolean foldersOnly, boolean inheritSecurity,
+	void copyFolders(long[] folderIds, long targetId, boolean foldersOnly, boolean inheritSecurity,
 			AsyncCallback<Void> callback);
 
-	void inheritRights(String sid, long folderId, long rightsFolderId, AsyncCallback<GUIFolder> callback);
+	void inheritRights(long folderId, long rightsFolderId, AsyncCallback<GUIFolder> callback);
 
-	void deleteFromTrash(String sid, Long[] ids, AsyncCallback<Void> callback);
+	void deleteFromTrash(Long[] ids, AsyncCallback<Void> callback);
 
-	void createAlias(String sid, long parentId, long foldRef, AsyncCallback<GUIFolder> callback);
+	void createAlias(long parentId, long foldRef, AsyncCallback<GUIFolder> callback);
 }

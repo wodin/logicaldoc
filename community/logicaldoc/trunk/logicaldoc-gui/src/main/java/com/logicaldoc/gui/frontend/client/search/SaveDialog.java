@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.search;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -67,7 +66,7 @@ public class SaveDialog extends Window {
 					final GUISearchOptions options = Search.get().getOptions();
 					options.setName(vm.getValueAsString("name"));
 					options.setDescription(vm.getValueAsString("description"));
-					searchService.save(Session.get().getSid(), Search.get().getOptions(), new AsyncCallback<Boolean>() {
+					searchService.save(Search.get().getOptions(), new AsyncCallback<Boolean>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

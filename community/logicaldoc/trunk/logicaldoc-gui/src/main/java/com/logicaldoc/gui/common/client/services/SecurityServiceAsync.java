@@ -9,40 +9,40 @@ import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 
 public interface SecurityServiceAsync {
-	void logout(String sid, AsyncCallback<Void> callback);
+	void logout(AsyncCallback<Void> callback);
 
 	void changePassword(long userId, String oldPassword, String newPassword, boolean notify,
 			AsyncCallback<Integer> callback);
 
-	void deleteUser(String sid, long userId, AsyncCallback<Void> callback);
+	void deleteUser(long userId, AsyncCallback<Void> callback);
 
-	void saveUser(String sid, GUIUser user, GUIInfo info, AsyncCallback<GUIUser> callback);
+	void saveUser(GUIUser user, GUIInfo info, AsyncCallback<GUIUser> callback);
 
-	void getUser(String sid, long userId, AsyncCallback<GUIUser> callback);
+	void getUser(long userId, AsyncCallback<GUIUser> callback);
 
-	void getGroup(String sid, long groupId, AsyncCallback<GUIGroup> callback);
+	void getGroup(long groupId, AsyncCallback<GUIGroup> callback);
 
-	void deleteGroup(String sid, long groupId, AsyncCallback<Void> callback);
+	void deleteGroup(long groupId, AsyncCallback<Void> callback);
 
-	void saveGroup(String sid, GUIGroup group, AsyncCallback<GUIGroup> callback);
+	void saveGroup(GUIGroup group, AsyncCallback<GUIGroup> callback);
 
-	void removeFromGroup(String sid, long groupId, long[] docIds, AsyncCallback<Void> callback);
+	void removeFromGroup(long groupId, long[] docIds, AsyncCallback<Void> callback);
 
-	void addUserToGroup(String sid, long groupId, long userId, AsyncCallback<Void> callback);
+	void addUserToGroup(long groupId, long userId, AsyncCallback<Void> callback);
 
-	void loadSettings(String sid, AsyncCallback<GUISecuritySettings> callback);
+	void loadSettings(AsyncCallback<GUISecuritySettings> callback);
 
-	void saveSettings(String sid, GUISecuritySettings settings, AsyncCallback<Boolean> callback);
+	void saveSettings(GUISecuritySettings settings, AsyncCallback<Boolean> callback);
 
 	void kill(String sid, AsyncCallback<Void> callback);
 
-	void saveProfile(String sid, GUIUser user, AsyncCallback<GUIUser> callback);
+	void saveProfile(GUIUser user, AsyncCallback<GUIUser> callback);
 
-	void applyRights(String sid, GUIMenu menu, AsyncCallback<Void> callback);
+	void applyRights(GUIMenu menu, AsyncCallback<Void> callback);
 
-	void getMenu(String sid, long id, AsyncCallback<GUIMenu> callback);
+	void getMenu(long id, AsyncCallback<GUIMenu> callback);
 
-	void searchUsers(String sid, String username, String groupId, AsyncCallback<GUIUser[]> callback);
+	void searchUsers(String username, String groupId, AsyncCallback<GUIUser[]> callback);
 
-	void login(String sid, String lo, AsyncCallback<GUISession> callback);
+	void getSession(String locale, AsyncCallback<GUISession> callback);
 }

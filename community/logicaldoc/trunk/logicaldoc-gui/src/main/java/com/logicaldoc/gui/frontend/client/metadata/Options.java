@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.metadata;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.ExtendedAttributeOptionsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -129,7 +128,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 		importCsv.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+				documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -230,7 +229,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 			values[i++] = record.getAttributeAsString("value");
 
 		ContactingServer.get().show();
-		templateService.saveOptions(Session.get().getSid(), templateId, attribute, values, new AsyncCallback<Void>() {
+		templateService.saveOptions(templateId, attribute, values, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ContactingServer.get().hide();
@@ -256,7 +255,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 		for (int i = 0; i < selection.length; i++)
 			values[i] = selection[i].getAttributeAsString("value");
 
-		templateService.deleteOptions(Session.get().getSid(), templateId, attribute, values, new AsyncCallback<Void>() {
+		templateService.deleteOptions(templateId, attribute, values, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.system;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.LanguagesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -84,7 +83,7 @@ public class GUILanguagesPanel extends VLayout {
 		enable.setTitle(I18N.message("enable"));
 		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.setGUILanguageStatus(Session.get().getSid(), record.getAttributeAsString("code"), true,
+				service.setGUILanguageStatus(record.getAttributeAsString("code"), true,
 						new AsyncCallback<Void>() {
 
 							@Override
@@ -106,7 +105,7 @@ public class GUILanguagesPanel extends VLayout {
 		disable.setTitle(I18N.message("disable"));
 		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.setGUILanguageStatus(Session.get().getSid(), record.getAttributeAsString("code"), false,
+				service.setGUILanguageStatus(record.getAttributeAsString("code"), false,
 						new AsyncCallback<Void>() {
 
 							@Override

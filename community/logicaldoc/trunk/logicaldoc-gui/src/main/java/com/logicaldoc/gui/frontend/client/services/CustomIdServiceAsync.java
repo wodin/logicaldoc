@@ -6,18 +6,18 @@ import com.logicaldoc.gui.common.client.beans.GUISequence;
 
 public interface CustomIdServiceAsync {
 
-	void delete(String sid, long templateId, String type, AsyncCallback<Void> callback);
+	void delete(long templateId, String type, AsyncCallback<Void> callback);
 
-	void get(String sid, long templateId, String type, AsyncCallback<GUICustomId> callback);
+	void get(long templateId, String type, AsyncCallback<GUICustomId> callback);
 
-	void load(String sid, AsyncCallback<GUICustomId[]> callback);
+	void load(AsyncCallback<GUICustomId[]> callback);
 
-	void save(String sid, GUICustomId customid, AsyncCallback<Void> callback);
+	void save(GUICustomId customid, AsyncCallback<Void> callback);
 
-	void resetSequence(String sid, long sequenceId, long value, AsyncCallback<Void> callback);
+	void resetSequence(long sequenceId, long value, AsyncCallback<Void> callback);
 
-	void loadSequences(String sid, AsyncCallback<GUISequence[]> callback);
+	void loadSequences(AsyncCallback<GUISequence[]> callback);
 
-	void deleteSequence(String sid, long sequenceId, AsyncCallback<Void> callback);
+	void deleteSequence(long sequenceId, AsyncCallback<Void> callback);
 
 }

@@ -22,7 +22,6 @@ import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.Offline;
-import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
@@ -64,7 +63,7 @@ public class Util {
 	}
 
 	public static String downloadURL(long docId, String fileVersion, String suffix, boolean open) {
-		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + docId;
+		String url = GWT.getHostPageBaseURL() + "download?docId=" + docId;
 		if (fileVersion != null)
 			url += "&fileVersion=" + fileVersion;
 		if (suffix != null)
@@ -75,7 +74,7 @@ public class Util {
 	}
 
 	public static String downloadURL(long docId, String fileVersion, boolean open) {
-		String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + docId;
+		String url = GWT.getHostPageBaseURL() + "download?docId=" + docId;
 		if (fileVersion != null)
 			url += "&fileVersion=" + fileVersion;
 		if (open)
@@ -84,8 +83,8 @@ public class Util {
 	}
 
 	public static String webEditorUrl(long docId, String fileName, int height) {
-		String url = contextPath() + "ckeditor/index.jsp?sid=" + Session.get().getSid() + "&docId=" + docId + "&lang="
-				+ I18N.getLocale() + "&fileName=" + fileName + "&height=" + height;
+		String url = contextPath() + "ckeditor/index.jsp?docId=" + docId + "&lang=" + I18N.getLocale() + "&fileName="
+				+ fileName + "&height=" + height;
 		return url;
 	}
 
@@ -138,37 +137,36 @@ public class Util {
 		return tmp;
 	}
 
-	public static String thumbnailUrl(String sid, long docId, String fileVersion) {
-		String url = GWT.getHostPageBaseURL() + "thumbnail?sid=" + Session.get().getSid() + "&docId=" + docId
-				+ "&random=" + new Date().getTime();
+	public static String thumbnailUrl(long docId, String fileVersion) {
+		String url = GWT.getHostPageBaseURL() + "thumbnail?docId=" + docId + "&random=" + new Date().getTime();
 		if (fileVersion != null)
 			url += "&fileVersion=" + fileVersion;
 		return url;
 	}
 
-	public static String thumbnailImgageHTML(String sid, long docId, String fileVersion, Integer width, Integer height) {
+	public static String thumbnailImgageHTML(long docId, String fileVersion, Integer width, Integer height) {
 		String style = "";
 		if (width != null)
 			style += "width:" + width + "px; ";
 		if (height != null)
 			style += "height:" + height + "px; ";
 
-		String img = "<img src='" + thumbnailUrl(sid, docId, fileVersion) + "' style='" + style + "' />";
+		String img = "<img src='" + thumbnailUrl(docId, fileVersion) + "' style='" + style + "' />";
 		return img;
 	}
 
-	public static String tileUrl(String sid, long docId, String fileVersion) {
-		return thumbnailUrl(sid, docId, fileVersion) + "&suffix=tile.jpg";
+	public static String tileUrl(long docId, String fileVersion) {
+		return thumbnailUrl(docId, fileVersion) + "&suffix=tile.jpg";
 	}
 
-	public static String tileImgageHTML(String sid, long docId, String fileVersion, Integer width, Integer height) {
+	public static String tileImgageHTML(long docId, String fileVersion, Integer width, Integer height) {
 		String style = "";
 		if (width != null)
 			style += "width:" + width + "px; ";
 		if (height != null)
 			style += "height:" + height + "px; ";
 
-		String img = "<img src='" + tileUrl(sid, docId, fileVersion) + "' style='" + style + "' />";
+		String img = "<img src='" + tileUrl(docId, fileVersion) + "' style='" + style + "' />";
 		return img;
 	}
 
@@ -617,8 +615,7 @@ public class Util {
 		/*
 		 * Now post the CSV content to the server
 		 */
-		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, Util.contextPath() + "/csv?sid="
-				+ Session.get().getSid());
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, Util.contextPath() + "/csv");
 		builder.setHeader("Content-type", "application/csv");
 
 		try {
@@ -631,7 +628,7 @@ public class Util {
 					/*
 					 * Now we can download the complete file
 					 */
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "/csv?sid=" + Session.get().getSid());
+					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "/csv");
 				}
 			});
 		} catch (RequestException e) {
@@ -678,14 +675,15 @@ public class Util {
 		}
 		return tenant;
 	}
-	
+
 	/**
 	 * Detect locale specification from the request
 	 */
 	public static String detectLocale() {
 		RequestInfo request = WindowUtils.getRequestInfo();
 		// Tries to capture locale parameter
-		String locale = Util.getBrowserLanguage();;
+		String locale = Util.getBrowserLanguage();
+		;
 		if (request.getParameter(Constants.LOCALE) != null && !request.getParameter(Constants.LOCALE).equals("")) {
 			locale = request.getParameter(Constants.LOCALE);
 		}
@@ -737,10 +735,6 @@ public class Util {
 
 	public static void redirectToRoot() {
 		Util.redirectToRoot(null, null);
-	}
-
-	public static void reload() {
-		Util.redirectToRoot(null, "sid=" + Session.get().getSid());
 	}
 
 	public static void redirectToRoot(String moduleName) {

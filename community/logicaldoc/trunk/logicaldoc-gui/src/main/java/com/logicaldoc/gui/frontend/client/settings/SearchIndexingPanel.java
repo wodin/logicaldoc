@@ -336,7 +336,7 @@ public class SearchIndexingPanel extends VLayout {
 			public void onEditComplete(EditCompleteEvent event) {
 				ListGridRecord record = parsersList.getRecord(event.getRowNum());
 
-				service.setAliases(Session.get().getSid(), record.getAttributeAsString("extension"), (String) event
+				service.setAliases(record.getAttributeAsString("extension"), (String) event
 						.getNewValues().get("aliases"), new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
@@ -501,7 +501,7 @@ public class SearchIndexingPanel extends VLayout {
 					else
 						SearchIndexingPanel.this.searchEngine.setMaxText(new Integer(maxtext));
 
-					service.save(Session.get().getSid(), SearchIndexingPanel.this.searchEngine,
+					service.save(SearchIndexingPanel.this.searchEngine,
 							new AsyncCallback<Void>() {
 
 								@Override
@@ -512,7 +512,7 @@ public class SearchIndexingPanel extends VLayout {
 								@Override
 								public void onSuccess(Void ret) {
 									Log.info(I18N.message("settingssaved"), null);
-									service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+									service.getInfo(new AsyncCallback<GUISearchEngine>() {
 
 										@Override
 										public void onFailure(Throwable caught) {
@@ -535,7 +535,7 @@ public class SearchIndexingPanel extends VLayout {
 		unlock.setTitle(I18N.message("unlock"));
 		unlock.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				service.unlocks(Session.get().getSid(), new AsyncCallback<Void>() {
+				service.unlocks(new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -545,7 +545,7 @@ public class SearchIndexingPanel extends VLayout {
 					@Override
 					public void onSuccess(Void ret) {
 						Log.info(I18N.message("indexunlocked"), null);
-						service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+						service.getInfo(new AsyncCallback<GUISearchEngine>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -575,7 +575,7 @@ public class SearchIndexingPanel extends VLayout {
 						if (value) {
 							ContactingServer.get().show();
 							rescheduleAll.setDisabled(true);
-							service.rescheduleAll(Session.get().getSid(), false, new AsyncCallback<Void>() {
+							service.rescheduleAll(false, new AsyncCallback<Void>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -590,7 +590,7 @@ public class SearchIndexingPanel extends VLayout {
 									rescheduleAll.setDisabled(false);
 									ContactingServer.get().hide();
 
-									service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+									service.getInfo(new AsyncCallback<GUISearchEngine>() {
 										@Override
 										public void onFailure(Throwable caught) {
 											Log.serverError(caught);
@@ -608,7 +608,7 @@ public class SearchIndexingPanel extends VLayout {
 				});
 			}
 		});
-		
+
 		final IButton dropIndex = new IButton();
 		dropIndex.setAutoFit(true);
 		dropIndex.setTitle(I18N.message("dropindex"));
@@ -621,7 +621,7 @@ public class SearchIndexingPanel extends VLayout {
 						if (value) {
 							ContactingServer.get().show();
 							rescheduleAll.setDisabled(true);
-							service.rescheduleAll(Session.get().getSid(), true, new AsyncCallback<Void>() {
+							service.rescheduleAll(true, new AsyncCallback<Void>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -636,7 +636,7 @@ public class SearchIndexingPanel extends VLayout {
 									dropIndex.setDisabled(false);
 									ContactingServer.get().hide();
 
-									service.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+									service.getInfo(new AsyncCallback<GUISearchEngine>() {
 										@Override
 										public void onFailure(Throwable caught) {
 											Log.serverError(caught);
@@ -660,7 +660,7 @@ public class SearchIndexingPanel extends VLayout {
 		check.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				ContactingServer.get().show();
-				service.check(Session.get().getSid(), new AsyncCallback<String>() {
+				service.check(new AsyncCallback<String>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -677,8 +677,6 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 
-		
-		
 		if (Session.get().isDefaultTenant()) {
 			buttons.setMembers(save, unlock, rescheduleAll, dropIndex, check);
 		} else {
@@ -689,9 +687,9 @@ public class SearchIndexingPanel extends VLayout {
 			subwords.setVisible(false);
 			buttons.setMembers(save, rescheduleAll);
 		}
-		
-		searchEngineForm.setItems(entries, status, repository, includePatters, excludePatters, batch, timeout,
-				maxText, subwords);
+
+		searchEngineForm.setItems(entries, status, repository, includePatters, excludePatters, batch, timeout, maxText,
+				subwords);
 
 		buttons.setMembersMargin(5);
 		searchEngineTabPanel.setMembers(searchEngineForm, buttons);
@@ -721,7 +719,7 @@ public class SearchIndexingPanel extends VLayout {
 					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
 				}
 
-				documentService.markUnindexable(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				documentService.markUnindexable(ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -749,7 +747,7 @@ public class SearchIndexingPanel extends VLayout {
 		enable.setTitle(I18N.message("enable"));
 		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.setLanguageStatus(Session.get().getSid(), record.getAttributeAsString("code"), true,
+				service.setLanguageStatus(record.getAttributeAsString("code"), true,
 						new AsyncCallback<Void>() {
 
 							@Override
@@ -771,7 +769,7 @@ public class SearchIndexingPanel extends VLayout {
 		disable.setTitle(I18N.message("disable"));
 		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.setLanguageStatus(Session.get().getSid(), record.getAttributeAsString("code"), false,
+				service.setLanguageStatus(record.getAttributeAsString("code"), false,
 						new AsyncCallback<Void>() {
 
 							@Override

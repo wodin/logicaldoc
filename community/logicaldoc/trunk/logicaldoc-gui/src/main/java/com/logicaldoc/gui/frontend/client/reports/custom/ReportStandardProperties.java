@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIReport;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -105,8 +104,7 @@ public class ReportStandardProperties extends ReportDetailsTab {
 		updatePolicy.setValueMap(map2);
 		updatePolicy.setValue(Integer.toString(report.getUpdatePolicy()));
 
-		String downloadUrl = Util.contextPath() + "download?" + Constants.DOC_ID + "=" + report.getOutputDocId()
-				+ "&sid=" + Session.get().getSid();
+		String downloadUrl = Util.contextPath() + "download?" + Constants.DOC_ID + "=" + report.getOutputDocId();
 		String perma = "<a href='" + downloadUrl + "'>" + I18N.message("download") + "</a>";
 		StaticTextItem outputLink = ItemFactory.newStaticTextItem("output", "output", perma);
 

@@ -97,7 +97,7 @@ public class VersionsPanel extends DocumentDetailTab {
 	protected void onDownload(final GUIDocument document, ListGridRecord record) {
 		if (document.getFolder().isDownload()) {
 			Window.open(
-					GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+					GWT.getHostPageBaseURL() + "download?docId="
 							+ (document.getDocRef() != null ? document.getDocRef() : document.getId()) + "&versionId="
 							+ record.getAttribute("id"), "_blank", "");
 		}
@@ -127,8 +127,7 @@ public class VersionsPanel extends DocumentDetailTab {
 		compareMetadata.setTitle(I18N.message("comparemetadata"));
 		compareMetadata.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				documentService.getVersionsById(Session.get().getSid(),
-						Long.parseLong(selection[0].getAttribute("id")),
+				documentService.getVersionsById(Long.parseLong(selection[0].getAttribute("id")),
 						Long.parseLong(selection[1].getAttribute("id")), new AsyncCallback<GUIVersion[]>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -148,8 +147,7 @@ public class VersionsPanel extends DocumentDetailTab {
 		compareContent.setTitle(I18N.message("comparecontent"));
 		compareContent.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				documentService.getVersionsById(Session.get().getSid(),
-						Long.parseLong(selection[0].getAttribute("id")),
+				documentService.getVersionsById(Long.parseLong(selection[0].getAttribute("id")),
 						Long.parseLong(selection[1].getAttribute("id")), new AsyncCallback<GUIVersion[]>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -196,24 +194,23 @@ public class VersionsPanel extends DocumentDetailTab {
 							for (ListGridRecord record : selection)
 								ids[i++] = Long.parseLong(record.getAttribute("id"));
 
-							documentService.deleteVersions(Session.get().getSid(), ids,
-									new AsyncCallback<GUIDocument>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+							documentService.deleteVersions(ids, new AsyncCallback<GUIDocument>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-										@Override
-										public void onSuccess(GUIDocument result) {
-											if (result != null) {
-												document.setVersion(result.getVersion());
-												document.setFileVersion(result.getFileVersion());
-												observer.onDocumentSaved(result);
-												observer.onDocumentSelected(result);
-												listGrid.removeSelectedData();
-											}
-										}
-									});
+								@Override
+								public void onSuccess(GUIDocument result) {
+									if (result != null) {
+										document.setVersion(result.getVersion());
+										document.setFileVersion(result.getFileVersion());
+										observer.onDocumentSaved(result);
+										observer.onDocumentSelected(result);
+										listGrid.removeSelectedData();
+									}
+								}
+							});
 						}
 					}
 				});

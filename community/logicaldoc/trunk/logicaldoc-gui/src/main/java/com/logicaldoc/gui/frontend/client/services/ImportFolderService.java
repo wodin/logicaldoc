@@ -14,30 +14,30 @@ public interface ImportFolderService extends RemoteService {
 	/**
 	 * Deletes a given folder
 	 */
-	public void delete(String sid, long id) throws ServerException;
+	public void delete(long id) throws ServerException;
 
 	/**
 	 * Creates or updates an import folder
 	 */
-	public GUIImportFolder save(String sid, GUIImportFolder share) throws ServerException;
+	public GUIImportFolder save(GUIImportFolder share) throws ServerException;
 
 	/**
 	 * Loads a given import folder from the database
 	 */
-	public GUIImportFolder getImportFolder(String sid, long id) throws ServerException;
+	public GUIImportFolder getImportFolder(long id) throws ServerException;
 
 	/**
 	 * Test the connection to the given import folder
 	 */
-	public boolean test(String sid, long id) throws ServerException;
+	public boolean test(long id) throws ServerException;
 
 	/**
 	 * Changes a importFolder enabled/disabled status
 	 */
-	public void changeStatus(String sid, long id, boolean enabled) throws ServerException;
+	public void changeStatus(long id, boolean enabled) throws ServerException;
 
 	/**
 	 * Cleans the cache
 	 */
-	public void resetCache(String sid, long id) throws ServerException;
+	public void resetCache(long id) throws ServerException;
 }

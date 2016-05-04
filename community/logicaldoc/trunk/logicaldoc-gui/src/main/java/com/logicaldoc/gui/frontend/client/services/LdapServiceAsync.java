@@ -7,13 +7,13 @@ import com.logicaldoc.gui.common.client.beans.GUIValue;
 
 public interface LdapServiceAsync {
 
-	void loadSettings(String sid, AsyncCallback<GUILdapSettings> callback);
+	void loadSettings(AsyncCallback<GUILdapSettings> callback);
 
-	void saveSettings(String sid, GUILdapSettings ldapSettings, AsyncCallback<Void> callback);
+	void saveSettings(GUILdapSettings ldapSettings, AsyncCallback<Void> callback);
 
-	void testConnection(String sid, GUILdapSettings ldapSettings, AsyncCallback<Boolean> callback);
+	void testConnection(GUILdapSettings ldapSettings, AsyncCallback<Boolean> callback);
 
-	void listUsers(String sid, String login, AsyncCallback<GUIUser[]> callback);
+	void listUsers(String login, AsyncCallback<GUIUser[]> callback);
 
-	void importUsers(String sid, String[] usernames, long tenantId, AsyncCallback<GUIValue[]> callback);
+	void importUsers(String[] usernames, long tenantId, AsyncCallback<GUIValue[]> callback);
 }

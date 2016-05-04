@@ -128,43 +128,39 @@ public class Session {
 
 							if (info.getSessionHeartbeat() > 0) {
 								/*
-								 * Create the timer that synchronize the session
-								 * info
+								 * Create the timer that synchronizes the
+								 * session info
 								 */
 								timer = new Timer() {
 									public void run() {
-										service.getSessionInfo(Session.get().getSid(),
-												new AsyncCallback<GUIParameter[]>() {
-													@Override
-													public void onFailure(Throwable caught) {
-														onInvalidSession();
-													}
+										service.getSessionInfo(new AsyncCallback<GUIParameter[]>() {
+											@Override
+											public void onFailure(Throwable caught) {
+												onInvalidSession();
+											}
 
-													@Override
-													public void onSuccess(GUIParameter[] parameters) {
-														boolean validSession = true;
-														if (parameters.length > 0) {
-															GUIUser user = getUser();
-															for (GUIParameter parameter : parameters) {
-																if (parameter.getName().equals("messages"))
-																	user.setMessages(Integer.parseInt(parameter
-																			.getValue()));
-																else if (parameter.getName().equals("workflows"))
-																	user.setActiveTasks(Integer.parseInt(parameter
-																			.getValue()));
-																else if (parameter.getName().equals("events"))
-																	user.setUpcomingEvents(Integer.parseInt(parameter
-																			.getValue()));
-																else if (parameter.getName().equals("valid"))
-																	validSession = Boolean.parseBoolean(parameter
-																			.getValue());
-															}
-														}
-
-														if (!validSession)
-															onInvalidSession();
+											@Override
+											public void onSuccess(GUIParameter[] parameters) {
+												boolean validSession = true;
+												if (parameters.length > 0) {
+													GUIUser user = getUser();
+													for (GUIParameter parameter : parameters) {
+														if (parameter.getName().equals("messages"))
+															user.setMessages(Integer.parseInt(parameter.getValue()));
+														else if (parameter.getName().equals("workflows"))
+															user.setActiveTasks(Integer.parseInt(parameter.getValue()));
+														else if (parameter.getName().equals("events"))
+															user.setUpcomingEvents(Integer.parseInt(parameter
+																	.getValue()));
+														else if (parameter.getName().equals("valid"))
+															validSession = Boolean.parseBoolean(parameter.getValue());
 													}
-												});
+												}
+
+												if (!validSession)
+													onInvalidSession();
+											}
+										});
 									}
 								};
 
@@ -255,7 +251,7 @@ public class Session {
 	}
 
 	public void logout() {
-		securityService.logout(Session.get().getSid(), new AsyncCallback<Void>() {
+		securityService.logout(new AsyncCallback<Void>() {
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
 				SC.warn(caught.getMessage());

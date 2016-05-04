@@ -83,8 +83,8 @@ public class FiltersPanel extends VLayout {
 			/*
 			 * We are operating on general filters
 			 */
-			settingsService.loadSettingsByNames(Session.get().getSid(),
-					new String[] { "ip.whitelist", "ip.blacklist" }, new AsyncCallback<GUIParameter[]>() {
+			settingsService.loadSettingsByNames(new String[] { "ip.whitelist", "ip.blacklist" },
+					new AsyncCallback<GUIParameter[]>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -117,7 +117,7 @@ public class FiltersPanel extends VLayout {
 		params[1] = new GUIParameter("ip.blacklist", blacklist != null ? blacklist.replace('\n', ',').replaceAll(" ",
 				"") : null);
 
-		settingsService.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
+		settingsService.saveSettings(params, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

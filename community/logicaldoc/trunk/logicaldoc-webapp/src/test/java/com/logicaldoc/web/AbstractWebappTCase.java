@@ -17,12 +17,14 @@ import org.junit.Before;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.logicaldoc.core.security.Client;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.security.spring.LDAuthenticationToken;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.FileUtil;
@@ -82,7 +84,10 @@ public abstract class AbstractWebappTCase {
 		if (sess != null) {
 			User user = userDao.findByUsernameIgnoreCase("admin");
 			userDao.initialize(user);
-			session = new SecurityServiceImpl().internalLogin(sess.getId(), user, null);
+			LDAuthenticationToken token = new LDAuthenticationToken("admin");
+			token.setSid(sess.getId());
+			SecurityContextHolder.getContext().setAuthentication(token);
+			session = new SecurityServiceImpl().internalLogin(sess, null);
 		}
 
 		return session;

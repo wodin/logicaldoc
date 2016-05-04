@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -73,7 +72,7 @@ public class DownloadTicketDialog extends Window {
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
 			public void onCloseClick(CloseClickEvent event) {
-				documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+				documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -138,7 +137,7 @@ public class DownloadTicketDialog extends Window {
 		if (date == null && (expireHours == null || expireHours.intValue() < 1))
 			SC.warn(I18N.message("providexepinfo"));
 
-		documentService.createDownloadTicket(Session.get().getSid(), document.getId(), suffix, expireHours, date,
+		documentService.createDownloadTicket(document.getId(), suffix, expireHours, date,
 				new AsyncCallback<String>() {
 
 					@Override

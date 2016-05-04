@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.impex.archives;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -189,7 +188,7 @@ public class ImportArchivesList extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.delete(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -221,7 +220,7 @@ public class ImportArchivesList extends VLayout {
 			return;
 		}
 
-		service.load(Session.get().getSid(), archiveId, new AsyncCallback<GUIArchive>() {
+		service.load(archiveId, new AsyncCallback<GUIArchive>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

@@ -15,45 +15,45 @@ public interface ReportService extends RemoteService {
 	/**
 	 * Deletes a given report
 	 */
-	public void delete(String sid, long id) throws ServerException;
+	public void delete(long id) throws ServerException;
 
 	/**
 	 * Updates a report
 	 */
-	public GUIReport save(String sid, GUIReport report) throws ServerException;
+	public GUIReport save(GUIReport report) throws ServerException;
 
 	/**
 	 * Store the uploaded design file in the given report
 	 */
-	public void storeUploadedDesign(String sid, long id) throws ServerException;
+	public void storeUploadedDesign(long id) throws ServerException;
 
 	/**
 	 * Creates a new report
 	 */
-	public GUIReport create(String sid, GUIReport report) throws ServerException;
+	public GUIReport create(GUIReport report) throws ServerException;
 
 	/**
 	 * Loads a given report from the database
 	 */
-	public GUIReport getReport(String sid, long id, boolean withLog) throws ServerException;
+	public GUIReport getReport(long id, boolean withLog) throws ServerException;
 
 	/**
 	 * Loads all the reports
 	 */
-	public GUIReport[] getReports(String sid) throws ServerException;
+	public GUIReport[] getReports() throws ServerException;
 
 	/**
 	 * Loads the attributes defined in the given report
 	 */
-	public GUIExtendedAttribute[] getReportParameters(String sid, long id) throws ServerException;
+	public GUIExtendedAttribute[] getReportParameters(long id) throws ServerException;
 
 	/**
 	 * Changes a report enabled/disabled status
 	 */
-	public void changeStatus(String sid, long id, boolean enabled) throws ServerException;
+	public void changeStatus(long id, boolean enabled) throws ServerException;
 
 	/**
 	 * Processes a report
 	 */
-	public void execute(String sid, long id, GUIExtendedAttribute[] parameters) throws ServerException;
+	public void execute(long id, GUIExtendedAttribute[] parameters) throws ServerException;
 }

@@ -23,7 +23,7 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
-import com.logicaldoc.web.util.ServletIOUtil;
+import com.logicaldoc.web.util.ServletUtil;
 
 /**
  * This servlet is responsible for document thumbnail. It searches for the
@@ -95,9 +95,8 @@ public class ThumbnailServlet extends HttpServlet {
 					fileVersion = ver.getFileVersion();
 			}
 
-			Session session = ServiceUtil.validateSession(request.getParameter("sid"));
-			UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
-			User user = udao.findById(session.getUserId());
+			Session session = ServiceUtil.validateSession(request);
+			User user = session.getUser();
 
 			if (doc != null && !user.isInGroup("admin") && !user.isInGroup("publisher") && !doc.isPublishing())
 				throw new FileNotFoundException("Document not published");
@@ -111,7 +110,7 @@ public class ThumbnailServlet extends HttpServlet {
 			}
 
 			// 3) return the the thumbnail resource
-			ServletIOUtil.downloadDocument(request, response, session.getId(), docId, fileVersion,
+			ServletUtil.downloadDocument(request, response, session.getId(), docId, fileVersion,
 					storer.getResourceName(doc, fileVersion, suffix), suffix, user);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);

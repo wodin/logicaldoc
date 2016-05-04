@@ -16,18 +16,16 @@ public interface AnnotationsService extends RemoteService {
 	/**
 	 * Prepares the system to accept annotations for the given document
 	 * 
-	 * @param sid Current session identifier
 	 * @param docId The document to elaborate
 	 * @param fileVersion Optional file version specification
 	 * @return The number of document's pages
 	 * @throws ServerException
 	 */
-	public int prepareAnnotations(String sid, long docId, String fileVersion) throws ServerException;
+	public int prepareAnnotations(long docId, String fileVersion) throws ServerException;
 
 	/**
 	 * Adds a new annotation in the given page
 	 * 
-	 * @param sid Current session identifier
 	 * @param docId The document identifier
 	 * @param page The current page
 	 * @param snippet A snippet of the selected text
@@ -36,17 +34,16 @@ public interface AnnotationsService extends RemoteService {
 	 * @return The new annotation's ID
 	 * @throws ServerException
 	 */
-	public long addAnnotation(String sid, long docId, int page, String snippet, String text) throws ServerException;
+	public long addAnnotation(long docId, int page, String snippet, String text) throws ServerException;
 
 	/**
 	 * Saves the page with annotations
 	 * 
-	 * @param sid Current session identifier
 	 * @param docId The document identifier
 	 * @param page The current page
 	 * @param content The page's content
 	 * 
 	 * @throws ServerException
 	 */
-	public void savePage(String sid, long docId, int page, String content) throws ServerException;
+	public void savePage(long docId, int page, String content) throws ServerException;
 }

@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
-import com.logicaldoc.core.security.Session;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.web.util.ServiceUtil;
 
@@ -75,12 +75,14 @@ public class SessionsDataServlet extends HttpServlet {
 				writer.print("<sid><![CDATA[" + session.getId() + "]]></sid>");
 				writer.print("<status>" + session.getStatus() + "</status>");
 				if (session.getStatus() == Session.STATUS_OPEN)
-					writer.print("<statusLabel>" + I18N.message("opened", locale) + "</statusLabel>");
+					writer.print("<statusLabel>" + I18N.message("open", locale) + "</statusLabel>");
 				else if (session.getStatus() == Session.STATUS_CLOSED)
 					writer.print("<statusLabel>" + I18N.message("closed", locale) + "</statusLabel>");
 				else if (session.getStatus() == Session.STATUS_EXPIRED)
 					writer.print("<statusLabel>" + I18N.message("expired", locale) + "</statusLabel>");
 				writer.print("<username><![CDATA[" + session.getUsername() + "]]></username>");
+				writer.print("<client><![CDATA[" + (session.getClient() != null ? session.getClient() : "")
+						+ "]]></client>");
 				writer.print("<tenant><![CDATA[" + session.getTenantName() + "]]></tenant>");
 				writer.print("<created>" + df.format((Date) session.getCreation()) + "</created>");
 				writer.print("<renew>" + df.format((Date) session.getLastRenew()) + "</renew>");

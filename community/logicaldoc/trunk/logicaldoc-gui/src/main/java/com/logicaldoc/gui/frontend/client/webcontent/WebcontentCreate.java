@@ -92,7 +92,7 @@ public class WebcontentCreate extends Window {
 		vo.setLanguage(I18N.getDefaultLocaleForDoc());
 		vo.setFolder(Session.get().getCurrentFolder());
 
-		service.createEmpty(Session.get().getSid(), vo, new AsyncCallback<GUIDocument>() {
+		service.createEmpty(vo, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

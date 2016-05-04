@@ -90,7 +90,7 @@ public class SettingsMenu extends VLayout {
 		clientTools.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				settingService.loadClientSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				settingService.loadClientSettings(new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -116,7 +116,7 @@ public class SettingsMenu extends VLayout {
 			public void onClick(ClickEvent event) {
 				ContactingServer.get().show();
 
-				seService.getInfo(Session.get().getSid(), new AsyncCallback<GUISearchEngine>() {
+				seService.getInfo(new AsyncCallback<GUISearchEngine>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -137,7 +137,7 @@ public class SettingsMenu extends VLayout {
 		guiSettings.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				settingService.loadGUISettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				settingService.loadGUISettings(new AsyncCallback<GUIParameter[]>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -154,7 +154,7 @@ public class SettingsMenu extends VLayout {
 		ocr.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				settingService.loadOcrSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				settingService.loadOcrSettings(new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -172,7 +172,7 @@ public class SettingsMenu extends VLayout {
 		parameters.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				settingService.loadSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				settingService.loadSettings(new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -191,7 +191,7 @@ public class SettingsMenu extends VLayout {
 		smtp.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				settingService.loadEmailSettings(Session.get().getSid(), new AsyncCallback<GUIEmailSettings>() {
+				settingService.loadEmailSettings(new AsyncCallback<GUIEmailSettings>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -210,7 +210,7 @@ public class SettingsMenu extends VLayout {
 		folders.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				settingService.loadRepositories(Session.get().getSid(), new AsyncCallback<GUIParameter[][]>() {
+				settingService.loadRepositories(new AsyncCallback<GUIParameter[][]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

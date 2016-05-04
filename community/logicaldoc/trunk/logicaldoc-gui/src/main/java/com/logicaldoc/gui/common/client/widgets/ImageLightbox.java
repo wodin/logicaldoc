@@ -23,7 +23,7 @@ public class ImageLightbox extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
-		HTMLPanel html = new HTMLPanel(Util.thumbnailImgageHTML(Session.get().getSid(), docId, null, null, size));
+		HTMLPanel html = new HTMLPanel(Util.thumbnailImgageHTML(docId, null, null, size));
 		addItem(html);
 	}
 }

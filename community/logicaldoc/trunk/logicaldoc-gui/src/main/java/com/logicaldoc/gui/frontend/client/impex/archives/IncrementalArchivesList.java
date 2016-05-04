@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.impex.archives;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
 import com.logicaldoc.gui.common.client.data.IncrementalArchivesDS;
@@ -159,7 +158,7 @@ public class IncrementalArchivesList extends VLayout {
 				ListGridRecord record = list.getSelectedRecord();
 				if (record == null)
 					return;
-				service.loadIncremental(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+				service.loadIncremental(Long.parseLong(record.getAttributeAsString("id")),
 						new AsyncCallback<GUIIncrementalArchive>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -201,7 +200,7 @@ public class IncrementalArchivesList extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteIncremental(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.deleteIncremental(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -261,7 +260,7 @@ public class IncrementalArchivesList extends VLayout {
 			list.selectRecord(record);
 		}
 	}
-	
+
 	protected void onAddingIncrementalArchive() {
 		list.deselectAllRecords();
 		GUIIncrementalArchive archive = new GUIIncrementalArchive();

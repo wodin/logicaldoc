@@ -17,10 +17,9 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
-import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.ServiceUtil;
-import com.logicaldoc.web.util.ServletIOUtil;
+import com.logicaldoc.web.util.ServletUtil;
 
 /**
  * This servlet simply download the document it is a PDF.
@@ -56,7 +55,7 @@ public class ConvertPdf extends HttpServlet {
 	 * @throws IOException if an error occurred
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		User user = ServiceUtil.getSessionUser(request);
+		Session session = ServletUtil.validateSession(request);
 
 		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		VersionDAO versionDao = (VersionDAO) Context.get().getBean(VersionDAO.class);
@@ -78,12 +77,12 @@ public class ConvertPdf extends HttpServlet {
 			String suffix = null;
 
 			// Download the already stored resource
-			ServletIOUtil.downloadDocument(request, response, null, document.getId(), version.getFileVersion(), null,
-					suffix, user);
+			ServletUtil.downloadDocument(request, response, null, document.getId(), version.getFileVersion(), null,
+					suffix, session.getUser());
 		} catch (Throwable r) {
 			log.error(r.getMessage(), r);
 
-			ServletIOUtil.setContentDisposition(request, response, "notavailable.pdf");
+			ServletUtil.setContentDisposition(request, response, "notavailable.pdf");
 
 			InputStream is = ConvertPdf.class.getResourceAsStream("/pdf/notavailable.pdf");
 			OutputStream os;

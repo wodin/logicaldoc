@@ -139,9 +139,9 @@ public class SystemMenu extends VLayout {
 		clustering.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				service.loadSettingsByNames(Session.get().getSid(), new String[] { "cluster.enabled", "cluster.name",
-						"cluster.node.host", "cluster.node.port", "cluster.node.context", "cluster.port",
-						"cluster.multicastip", "cluster.nodeId" }, new AsyncCallback<GUIParameter[]>() {
+				service.loadSettingsByNames(new String[] { "cluster.enabled", "cluster.name", "cluster.node.host",
+						"cluster.node.port", "cluster.node.context", "cluster.port", "cluster.multicastip",
+						"cluster.nodeId" }, new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

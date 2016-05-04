@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.folder;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -68,8 +67,8 @@ public class InheritRightsDialog extends Dialog {
 							@Override
 							public void execute(Boolean value) {
 								if (value) {
-									folderService.inheritRights(Session.get().getSid(), panel.getFolder().getId(), Long
-											.parseLong(folders.getSelectedRecord().getAttributeAsString("folderId")),
+									folderService.inheritRights(panel.getFolder().getId(), Long.parseLong(folders
+											.getSelectedRecord().getAttributeAsString("folderId")),
 											new AsyncCallback<GUIFolder>() {
 
 												@Override

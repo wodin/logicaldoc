@@ -147,7 +147,7 @@ public class MessagesPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				final Record record = grid.getSelectedRecord();
 				if (record != null)
-					service.getMessage(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
+					service.getMessage(Long.parseLong(record.getAttributeAsString("id")), true,
 							new AsyncCallback<GUIMessage>() {
 
 								@Override
@@ -225,7 +225,7 @@ public class MessagesPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							service.delete(ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

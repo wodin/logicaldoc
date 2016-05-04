@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.annnotation;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.document.NotesPanel;
@@ -108,40 +107,39 @@ public class AnnotationEditor extends Window {
 			return;
 		if (notesPanel == null) {
 			if (noteId == null) {
-				annotationsService.addAnnotation(Session.get().getSid(), docId, page, snippet, message.getValue()
-						.toString(), new AsyncCallback<Long>() {
+				annotationsService.addAnnotation(docId, page, snippet, message.getValue().toString(),
+						new AsyncCallback<Long>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-						
-						try {
-							removeTempAnnotationFromHTML();
-						} catch (Throwable t) {
-						}
-						
-						destroy();
-					}
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
 
-					@Override
-					public void onSuccess(Long noteId) {
-						try {
-							updateTempAnnotationToHTML("" + noteId);
-						} catch (Throwable t) {
-						}
-						
-						annotationsService.savePage(Session.get().getSid(), docId, page, getPageContent(),
-								new AsyncCallback<Void>() {
+								try {
+									removeTempAnnotationFromHTML();
+								} catch (Throwable t) {
+								}
+
+								destroy();
+							}
+
+							@Override
+							public void onSuccess(Long noteId) {
+								try {
+									updateTempAnnotationToHTML("" + noteId);
+								} catch (Throwable t) {
+								}
+
+								annotationsService.savePage(docId, page, getPageContent(), new AsyncCallback<Void>() {
 
 									@Override
 									public void onFailure(Throwable caught) {
 										Log.serverError(caught);
-										
+
 										try {
 											removeTempAnnotationFromHTML();
 										} catch (Throwable t) {
 										}
-										
+
 										destroy();
 									}
 
@@ -151,59 +149,55 @@ public class AnnotationEditor extends Window {
 										destroy();
 									}
 								});
-					}
-				});
-			} else {
-				documentService.updateNote(Session.get().getSid(), docId, noteId, message.getValue().toString(),
-						new AsyncCallback<Void>() {
-
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-								destroy();
-							}
-
-							@Override
-							public void onSuccess(Void result) {
-								annotationsWindow.onUpdated(message.getValue().toString());
-								destroy();
 							}
 						});
+			} else {
+				documentService.updateNote(docId, noteId, message.getValue().toString(), new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+						destroy();
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						annotationsWindow.onUpdated(message.getValue().toString());
+						destroy();
+					}
+				});
 			}
 		} else {
 			if (noteId == null) {
-				documentService.addNote(Session.get().getSid(), docId, message.getValue().toString(),
-						new AsyncCallback<Long>() {
+				documentService.addNote(docId, message.getValue().toString(), new AsyncCallback<Long>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-								destroy();
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+						destroy();
+					}
 
-							@Override
-							public void onSuccess(Long result) {
-								AnnotationEditor.this.notesPanel.onAdded(result.longValue(), message.getValue()
-										.toString());
-								destroy();
-							}
-						});
+					@Override
+					public void onSuccess(Long result) {
+						AnnotationEditor.this.notesPanel.onAdded(result.longValue(), message.getValue().toString());
+						destroy();
+					}
+				});
 			} else {
-				documentService.updateNote(Session.get().getSid(), docId, noteId, message.getValue().toString(),
-						new AsyncCallback<Void>() {
+				documentService.updateNote(docId, noteId, message.getValue().toString(), new AsyncCallback<Void>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-								destroy();
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+						destroy();
+					}
 
-							@Override
-							public void onSuccess(Void result) {
-								AnnotationEditor.this.notesPanel.onUpdated(message.getValue().toString());
-								destroy();
-							}
-						});
+					@Override
+					public void onSuccess(Void result) {
+						AnnotationEditor.this.notesPanel.onUpdated(message.getValue().toString());
+						destroy();
+					}
+				});
 			}
 		}
 	}

@@ -56,7 +56,6 @@ public class RepositoriesPanel extends VLayout {
 		setMembersMargin(5);
 		setMargin(5);
 
-
 		tabs = new TabSet();
 		tabs.setWidth100();
 		tabs.setHeight100();
@@ -123,7 +122,7 @@ public class RepositoriesPanel extends VLayout {
 					repos[0] = folders.toArray(new GUIParameter[0]);
 					repos[1] = storages.toArray(new GUIParameter[0]);
 
-					service.saveRepositories(Session.get().getSid(), repos, new AsyncCallback<Void>() {
+					service.saveRepositories(repos, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);

@@ -5,7 +5,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 
 public interface FormServiceAsync {
 
-	void create(String sid, GUIDocument form, AsyncCallback<GUIDocument> callback);
+	void create(GUIDocument form, AsyncCallback<GUIDocument> callback);
 
-	void delete(String sid, long formId, AsyncCallback<Void> callback);
+	void delete(long formId, AsyncCallback<Void> callback);
 }

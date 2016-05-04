@@ -101,22 +101,21 @@ public class DropboxAuthorizationWizard extends Window {
 		if (!vm.validate())
 			return;
 
-		service.finishAuthorization(Session.get().getSid(), vm.getValueAsString("code").trim(),
-				new AsyncCallback<String>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+		service.finishAuthorization(vm.getValueAsString("code").trim(), new AsyncCallback<String>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(String account) {
-						if (account != null) {
-							destroy();
-							SC.say(I18N.message("correctlyauthorized", new String[] {
-									Session.get().getInfo().getProductName(), account }));
-						} else
-							SC.warn(I18N.message("unabletoauthorize"));
-					}
-				});
+			@Override
+			public void onSuccess(String account) {
+				if (account != null) {
+					destroy();
+					SC.say(I18N.message("correctlyauthorized", new String[] { Session.get().getInfo().getProductName(),
+							account }));
+				} else
+					SC.warn(I18N.message("unabletoauthorize"));
+			}
+		});
 	}
 }

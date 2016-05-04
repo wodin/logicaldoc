@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.metadata.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -93,7 +92,7 @@ public class FormCreate extends Window {
 		vo.setFileName(vo.getTitle() + ".html");
 		vo.setNature(Constants.NATURE_FORM);
 
-		service.create(Session.get().getSid(), vo, new AsyncCallback<GUIDocument>() {
+		service.create(vo, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

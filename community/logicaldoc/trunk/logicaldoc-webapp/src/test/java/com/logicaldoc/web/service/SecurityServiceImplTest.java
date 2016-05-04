@@ -2,7 +2,6 @@ package com.logicaldoc.web.service;
 
 import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -41,7 +40,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		Assert.assertEquals("admin", session.getUser().getUserName());
 		Assert.assertEquals(1, session.getUser().getId());
 		int sessions = SessionManager.get().countOpened();
-		service.logout(session.getSid());
+		service.logout();
 
 		Assert.assertEquals(sessions - 1, SessionManager.get().countOpened());
 	}
@@ -59,13 +58,13 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(test);
 		Group group = groupDAO.findByName("author", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(group);
-		service.addUserToGroup(session.getSid(), group.getId(), test.getId());
+		service.addUserToGroup(group.getId(), test.getId());
 		User user = userDAO.findByUsername("test");
 		Assert.assertTrue(user.getGroups().contains(group));
 
 		group = groupDAO.findByName("guest", Tenant.DEFAULT_ID);
 		Assert.assertNotNull(group);
-		service.addUserToGroup(session.getSid(), group.getId(), test.getId());
+		service.addUserToGroup(group.getId(), test.getId());
 		user = userDAO.findByUsername("test");
 		Assert.assertTrue(user.getGroups().contains(group));
 	}
@@ -73,12 +72,12 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	@Test
 	public void testDeleteGroup() throws ServerException {
 		Assert.assertNotNull(groupDAO.findById(10));
-		service.deleteGroup(session.getSid(), 10);
+		service.deleteGroup(10);
 		Assert.assertNull(groupDAO.findById(10));
 
 		// Delete a BIG group with associated MenuGroups and UserGroups
 		Assert.assertNotNull(groupDAO.findById(1));
-		service.deleteGroup(session.getSid(), 1);
+		service.deleteGroup(1);
 		Assert.assertNull(groupDAO.findById(1));
 	}
 
@@ -86,7 +85,7 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 	public void testDeleteUser() throws ServerException {
 		User user = userDAO.findByUsername("author");
 		Assert.assertEquals(2, user.getGroups().size());
-		service.deleteUser(session.getSid(), user.getId());
+		service.deleteUser(user.getId());
 		user = userDAO.findByUsername("author");
 		Assert.assertNull(user);
 	}
@@ -97,14 +96,14 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		users[0] = 5;
 		users[1] = 1;
 		Group group = groupDAO.findByName("author", Tenant.DEFAULT_ID);
-		service.removeFromGroup(session.getSid(), group.getId(), users);
+		service.removeFromGroup(group.getId(), users);
 		User user = userDAO.findByUsername("test");
 		Assert.assertFalse(user.getGroups().contains(group));
 		user = userDAO.findByUsername("admin");
 		Assert.assertFalse(user.getGroups().contains(group));
 
 		group = groupDAO.findByName("guest", Tenant.DEFAULT_ID);
-		service.removeFromGroup(session.getSid(), group.getId(), users);
+		service.removeFromGroup(group.getId(), users);
 		user = userDAO.findByUsername("test");
 		Assert.assertFalse(user.getGroups().contains(group));
 		user = userDAO.findByUsername("admin");
@@ -113,54 +112,54 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testGetGroup() throws ServerException {
-		GUIGroup group = service.getGroup(session.getSid(), 10);
+		GUIGroup group = service.getGroup(10);
 		Assert.assertNotNull(group);
 		Assert.assertEquals("testGroup", group.getName());
 
 		// Try with unexisting id
-		group = service.getGroup(session.getSid(), 999);
+		group = service.getGroup(999);
 		Assert.assertNull(group);
 	}
 
 	@Test
 	public void testGetUser() throws ServerException {
-		GUIUser user = service.getUser(session.getSid(), 1);
+		GUIUser user = service.getUser(1);
 		Assert.assertNotNull(user);
 		Assert.assertEquals("admin", user.getUserName());
 		Assert.assertEquals("admin@admin.net", user.getEmail());
 
-		user = service.getUser(session.getSid(), 3);
+		user = service.getUser(3);
 		Assert.assertNotNull(user);
 		Assert.assertEquals("sebastian", user.getUserName());
 		Assert.assertEquals("seb_stein@gmx.de", user.getEmail());
 		Assert.assertEquals("de", user.getLanguage());
 
 		// Try with unexisting id
-		user = service.getUser(session.getSid(), 9999);
+		user = service.getUser(9999);
 		Assert.assertNull(user);
 	}
 
 	@Test
 	public void testSaveGroup() throws ServerException {
-		GUIGroup group = service.getGroup(session.getSid(), 10);
+		GUIGroup group = service.getGroup(10);
 
-		group = service.saveGroup(session.getSid(), group);
+		group = service.saveGroup(group);
 		Assert.assertNotNull(group);
 		Assert.assertEquals("testGroup", group.getName());
 	}
 
 	@Test
 	public void testSaveUser() throws ServerException {
-		GUIUser user = service.getUser(session.getSid(), 1);
+		GUIUser user = service.getUser(1);
 
-		user = service.saveUser(session.getSid(), user, session.getInfo());
+		user = service.saveUser(user, session.getInfo());
 		Assert.assertNotNull(user);
 		Assert.assertEquals("admin", user.getUserName());
 		Assert.assertEquals("admin@admin.net", user.getEmail());
 
-		user = service.getUser(session.getSid(), 3);
+		user = service.getUser(3);
 
-		user = service.saveUser(session.getSid(), user, session.getInfo());
+		user = service.saveUser(user, session.getInfo());
 		Assert.assertNotNull(user);
 		Assert.assertEquals("sebastian", user.getUserName());
 		Assert.assertEquals("seb_stein@gmx.de", user.getEmail());
@@ -179,8 +178,8 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		Assert.assertEquals(2, sm.getSessions().size());
 
 		service.kill(session1.getId());
-		Assert.assertTrue(sm.isValid(session2.getId()));
-		Assert.assertTrue(!sm.isValid(session1.getId()));
+		Assert.assertTrue(sm.isOpen(session2.getId()));
+		Assert.assertFalse(sm.isOpen(session1.getId()));
 		Assert.assertEquals(2, sm.getSessions().size());
 	}
 
@@ -190,6 +189,6 @@ public class SecurityServiceImplTest extends AbstractWebappTCase {
 		securitySettings.setPwdExpiration(30);
 		securitySettings.setPwdSize(6);
 		securitySettings.setAnonymousKey("xxx");
-		service.saveSettings(session.getSid(), securitySettings);
+		service.saveSettings(securitySettings);
 	}
 }

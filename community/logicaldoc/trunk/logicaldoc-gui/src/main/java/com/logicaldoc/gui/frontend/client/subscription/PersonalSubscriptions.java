@@ -155,8 +155,7 @@ public class PersonalSubscriptions extends com.smartgwt.client.widgets.Window {
 				String type = list.getSelectedRecord().getAttribute("type");
 				String id = list.getSelectedRecord().getAttribute("objectid");
 				if ("document".equals(type)) {
-					Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id
-							+ "&open=true", "_blank", "");
+					Window.open(GWT.getHostPageBaseURL() + "download?docId=" + id + "&open=true", "_blank", "");
 				} else
 					DocumentsPanel.get().openInFolder(Long.parseLong(id), null);
 			}
@@ -191,7 +190,7 @@ public class PersonalSubscriptions extends com.smartgwt.client.widgets.Window {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteSubscriptions(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							service.deleteSubscriptions(ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -228,7 +227,7 @@ public class PersonalSubscriptions extends com.smartgwt.client.widgets.Window {
 				if ("folder".equals(type))
 					DocumentsPanel.get().openInFolder(Long.parseLong(id), null);
 				else {
-					docService.getById(Session.get().getSid(), Long.parseLong(id), new AsyncCallback<GUIDocument>() {
+					docService.getById(Long.parseLong(id), new AsyncCallback<GUIDocument>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

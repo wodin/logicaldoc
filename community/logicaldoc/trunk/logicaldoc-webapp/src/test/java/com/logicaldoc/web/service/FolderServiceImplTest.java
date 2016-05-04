@@ -30,16 +30,16 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testSave() throws ServerException {
-		GUIFolder folder = service.getFolder(session.getSid(), 6, false);
+		GUIFolder folder = service.getFolder(6, false);
 
-		folder = service.save(session.getSid(), folder);
+		folder = service.save(folder);
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("folder6", folder.getName());
 		Assert.assertEquals(5, folder.getParentId());
 
-		folder = service.getFolder(session.getSid(), 1200, false);
+		folder = service.getFolder(1200, false);
 
-		folder = service.save(session.getSid(), folder);
+		folder = service.save(folder);
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("test", folder.getName());
 		Assert.assertEquals(5, folder.getParentId());
@@ -50,7 +50,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 		Folder folder = folderDao.findById(6);
 		Assert.assertEquals("folder6", folder.getName());
 
-		service.rename(session.getSid(), 6, "pluto");
+		service.rename(6, "pluto");
 
 		folder = folderDao.findById(6);
 		Assert.assertEquals("pluto", folder.getName());
@@ -68,9 +68,9 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 1202, 3));
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 1202, 3));
 
-		GUIFolder folder = service.getFolder(session.getSid(), 6, false);
+		GUIFolder folder = service.getFolder(6, false);
 
-		service.applyRights(session.getSid(), folder, true);
+		service.applyRights(folder, true);
 
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.DELETE, 1202, 1));
 		Assert.assertTrue(folderDao.isPermissionEnabled(Permission.RENAME, 1202, 1));
@@ -80,19 +80,19 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testGetFolder() throws ServerException {
-		GUIFolder folder = service.getFolder(session.getSid(), 6, false);
+		GUIFolder folder = service.getFolder(6, false);
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("folder6", folder.getName());
 		Assert.assertEquals(5, folder.getParentId());
 
-		folder = service.getFolder(session.getSid(), 1202, true);
+		folder = service.getFolder(1202, true);
 		Assert.assertNotNull(folder);
 		Assert.assertEquals("xyz", folder.getName());
 		Assert.assertEquals(1201, folder.getParentId());
 		Assert.assertEquals("/test/ABC/xyz", folder.getPathExtended());
 
 		// Try with unexisting id
-		folder = service.getFolder(session.getSid(), 9999, false);
+		folder = service.getFolder(9999, false);
 		Assert.assertNull(folder);
 	}
 
@@ -103,7 +103,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 		Folder folderB = folderDao.create(docsFolder, new Folder("folderB"), true, null);
 		Folder folderC = folderDao.create(folderB, new Folder("folderC"), true, null);
 
-		service.move(session.getSid(), new long[] { folderC.getId() }, folderA.getId());
+		service.move(new long[] { folderC.getId() }, folderA.getId());
 
 		List<Folder> folderList = folderDao.findChildren(folderA.getId(), null);
 		Assert.assertTrue(folderList.size() == 1);
@@ -124,7 +124,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 		folderDao.create(folderC, new Folder("folderD"), true, null);
 		folderDao.create(folderC, new Folder("folderE"), true, null);
 
-		service.move(session.getSid(), new long[] { folderC.getId() }, folderA.getId());
+		service.move(new long[] { folderC.getId() }, folderA.getId());
 
 		List<Folder> folderList = folderDao.findChildren(folderA.getId(), null);
 		Assert.assertTrue(folderList.size() == 1);
@@ -143,7 +143,7 @@ public class FolderServiceImplTest extends AbstractWebappTCase {
 		Folder folderE = folderDao.create(folderC, new Folder("folderE"), true, null);
 		folderDao.create(folderE, new Folder("folderF"), true, null);
 
-		service.move(session.getSid(), new long[] { folderE.getId() }, folderD.getId());
+		service.move(new long[] { folderE.getId() }, folderD.getId());
 
 		List<Folder> folderList = folderDao.findChildren(folderD.getId(), null);
 		Assert.assertTrue(folderList.size() == 1);

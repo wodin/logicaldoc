@@ -115,7 +115,7 @@ public class StatusDashlet extends Dashlet {
 				if (event != null)
 					event.cancel();
 				Record record = event.getRecord();
-				documentService.getById(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+				documentService.getById(Long.parseLong(record.getAttributeAsString("id")),
 						new AsyncCallback<GUIDocument>() {
 
 							@Override
@@ -184,7 +184,7 @@ public class StatusDashlet extends Dashlet {
 			unlock.setTitle(I18N.message("unlock"));
 			unlock.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 				public void onClick(MenuItemClickEvent event) {
-					documentService.unlock(Session.get().getSid(), new long[] { document.getId() },
+					documentService.unlock(new long[] { document.getId() },
 							new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {

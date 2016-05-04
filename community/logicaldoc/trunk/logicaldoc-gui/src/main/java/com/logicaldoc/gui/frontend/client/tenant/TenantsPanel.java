@@ -172,7 +172,7 @@ public class TenantsPanel extends VLayout {
 	}
 
 	public void loadTenant(long tenantId) {
-		service.load(Session.get().getSid(), tenantId, new AsyncCallback<GUITenant>() {
+		service.load(tenantId, new AsyncCallback<GUITenant>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -204,7 +204,7 @@ public class TenantsPanel extends VLayout {
 		record.setAttribute("postalCode", tenant.getPostalCode());
 		record.setAttribute("state", tenant.getState());
 		record.setAttribute("expire", tenant.getExpire());
-		
+
 		if (tenant.isEnabled()) {
 			record.setAttribute("enabledIcon", "bullet_green");
 			record.setAttribute("eenabled", false);
@@ -244,7 +244,7 @@ public class TenantsPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.delete(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

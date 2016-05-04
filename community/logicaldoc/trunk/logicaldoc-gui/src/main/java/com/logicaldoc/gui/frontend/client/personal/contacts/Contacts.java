@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.personal.contacts;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIContact;
 import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -98,11 +97,11 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 
 		ToolStripButton importCsv = new ToolStripButton();
 		importCsv.setTitle(I18N.message("iimport"));
-		importCsv.setTooltip(I18N.message("importfromcsv"));		
+		importCsv.setTooltip(I18N.message("importfromcsv"));
 		importCsv.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+				documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -120,7 +119,7 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 
 		toolStrip.addSeparator();
 		toolStrip.addButton(importCsv);
-		
+
 		ToolStripButton export = new ToolStripButton();
 		export.setTitle(I18N.message("export"));
 		export.addClickHandler(new ClickHandler() {
@@ -142,7 +141,7 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 
 		prepareGrid();
 		addItem(list);
-		
+
 		list.fetchData();
 	}
 
@@ -209,25 +208,21 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 				onEdit();
 			}
 		});
-		
+
 		addResizedHandler(new ResizedHandler() {
-			
+
 			@Override
 			public void onResized(ResizedEvent event) {
-				list.setHeight(getHeight()-68);
+				list.setHeight(getHeight() - 68);
 			}
 		});
 	}
 
-	
-	
 	public void refresh() {
 		list.setDataSource(new ContactsDS());
 		list.fetchData();
 	}
 
-	
-	
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
@@ -247,7 +242,7 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							service.delete(ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -279,20 +274,19 @@ public class Contacts extends com.smartgwt.client.widgets.Window {
 
 	private void onEdit() {
 		final ListGridRecord[] selection = list.getSelectedRecords();
-		service.load(Session.get().getSid(), Long.parseLong(selection[0].getAttribute("id")),
-				new AsyncCallback<GUIContact>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+		service.load(Long.parseLong(selection[0].getAttribute("id")), new AsyncCallback<GUIContact>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(GUIContact result) {
-						if (result != null) {
-							ContactDetails dialog = new ContactDetails(result, Contacts.this);
-							dialog.show();
-						}
-					}
-				});
+			@Override
+			public void onSuccess(GUIContact result) {
+				if (result != null) {
+					ContactDetails dialog = new ContactDetails(result, Contacts.this);
+					dialog.show();
+				}
+			}
+		});
 	}
 }

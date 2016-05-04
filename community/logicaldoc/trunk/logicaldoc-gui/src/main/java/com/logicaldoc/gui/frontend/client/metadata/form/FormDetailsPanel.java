@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.metadata.form;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -95,7 +94,7 @@ public class FormDetailsPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (form.getId() != 0) {
-					docService.getById(Session.get().getSid(), form.getId(), new AsyncCallback<GUIDocument>() {
+					docService.getById(form.getId(), new AsyncCallback<GUIDocument>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -206,7 +205,7 @@ public class FormDetailsPanel extends VLayout {
 				form.setTemplateId(null);
 			form.setNature(Constants.NATURE_FORM);
 
-			docService.save(Session.get().getSid(), form, new AsyncCallback<GUIDocument>() {
+			docService.save(form, new AsyncCallback<GUIDocument>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);

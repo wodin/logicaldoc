@@ -6,7 +6,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.SubscriptionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -38,7 +37,7 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
- * This panel shows the subscriptions on a folder. 
+ * This panel shows the subscriptions on a folder.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 7.1.3
@@ -168,8 +167,8 @@ public class FolderSubscriptionsPanel extends FolderDetailTab {
 				if (selectedRecord == null)
 					return;
 				long groupId = Long.parseLong(selectedRecord.getAttributeAsString("id"));
-				service.subscribeFolder(Session.get().getSid(), folder.getId(), false, Constants.AUDIT_DEFAULT_EVENTS, null,
-						groupId, new AsyncCallback<Void>() {
+				service.subscribeFolder(folder.getId(), false, Constants.AUDIT_DEFAULT_EVENTS, null, groupId,
+						new AsyncCallback<Void>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -195,8 +194,8 @@ public class FolderSubscriptionsPanel extends FolderDetailTab {
 				if (selectedRecord == null)
 					return;
 				long userId = Long.parseLong(selectedRecord.getAttributeAsString("id"));
-				service.subscribeFolder(Session.get().getSid(), folder.getId(), false, Constants.AUDIT_DEFAULT_EVENTS, userId,
-						null, new AsyncCallback<Void>() {
+				service.subscribeFolder(folder.getId(), false, Constants.AUDIT_DEFAULT_EVENTS, userId, null,
+						new AsyncCallback<Void>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -233,7 +232,7 @@ public class FolderSubscriptionsPanel extends FolderDetailTab {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteSubscriptions(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							service.deleteSubscriptions(ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

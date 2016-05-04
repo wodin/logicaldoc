@@ -42,8 +42,7 @@ public class TasksDataServlet extends HttpServlet {
 			ServiceUtil.validateSession(request);
 			String localeStr = request.getParameter("locale");
 			Locale locale = LocaleUtil.toLocale(localeStr);
-			
-			
+
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
 
@@ -62,7 +61,6 @@ public class TasksDataServlet extends HttpServlet {
 			for (Task task : manager.getTasks()) {
 				writer.print("<task>");
 				writer.print("<name><![CDATA[" + task.getName() + "]]></name>");
-				writer.print("<label><![CDATA[" + I18N.message("task.name." + task.getName(), locale) + "]]></label>");
 				if (task.getScheduling().isEnabled()) {
 					writer.print("<eenabled>true</eenabled>");
 					writer.print("<enabledIcon>bullet_green</enabledIcon>");

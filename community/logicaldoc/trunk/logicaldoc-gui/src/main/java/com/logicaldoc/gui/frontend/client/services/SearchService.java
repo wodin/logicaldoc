@@ -22,7 +22,7 @@ public interface SearchService extends RemoteService {
 	 * @param options The search options
 	 * @return Result hits and statistics
 	 */
-	public GUIResult search(String sid, GUISearchOptions options) throws ServerException;
+	public GUIResult search(GUISearchOptions options) throws ServerException;
 
 	/**
 	 * Saves the search options in the user's working dir
@@ -31,7 +31,7 @@ public interface SearchService extends RemoteService {
 	 * @param options The search options
 	 * @return true if the operation was successful and there were no duplicates
 	 */
-	public boolean save(String sid, GUISearchOptions options) throws ServerException;
+	public boolean save(GUISearchOptions options) throws ServerException;
 
 	/**
 	 * Deletes a previously saved search
@@ -39,7 +39,7 @@ public interface SearchService extends RemoteService {
 	 * @param sid The current user session
 	 * @param names The saved search names
 	 */
-	public void delete(String sid, String[] names) throws ServerException;
+	public void delete(String[] names) throws ServerException;
 
 	/**
 	 * Loads a saved search
@@ -48,5 +48,5 @@ public interface SearchService extends RemoteService {
 	 * @param name The saved search name
 	 * @return
 	 */
-	public GUISearchOptions load(String sid, String name) throws ServerException;
+	public GUISearchOptions load(String name) throws ServerException;
 }

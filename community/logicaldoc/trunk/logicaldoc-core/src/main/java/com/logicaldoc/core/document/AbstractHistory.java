@@ -3,6 +3,7 @@ package com.logicaldoc.core.document;
 import java.util.Date;
 
 import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.User;
 
 /**
@@ -184,6 +185,17 @@ public class AbstractHistory extends PersistentObject {
 
 	public User getUser() {
 		return user;
+	}
+
+	/**
+	 * This setter also sets the usr
+	 */
+	public void setSession(Session session) {
+		if (session != null) {
+			setUser(session.getUser());
+			setSessionId(session.getId());
+			setTenantId(session.getTenantId());
+		}
 	}
 
 	/**

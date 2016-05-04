@@ -5,7 +5,6 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUILdapSettings;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -194,19 +193,18 @@ public class LdapPanel extends VLayout {
 					LdapPanel.this.ldapSettings.setLanguage((String) values.get("language"));
 					LdapPanel.this.ldapSettings.setPageSize(Integer.parseInt(values.get("pagesize").toString()));
 
-					service.saveSettings(Session.get().getSid(), LdapPanel.this.ldapSettings,
-							new AsyncCallback<Void>() {
+					service.saveSettings(LdapPanel.this.ldapSettings, new AsyncCallback<Void>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Void ret) {
-									Log.info(I18N.message("settingssaved"), null);
-								}
-							});
+						@Override
+						public void onSuccess(Void ret) {
+							Log.info(I18N.message("settingssaved"), null);
+						}
+					});
 				}
 			}
 		});
@@ -236,30 +234,28 @@ public class LdapPanel extends VLayout {
 					LdapPanel.this.ldapSettings.setGrpsBaseNode((String) values.get("grpsbasenode"));
 					LdapPanel.this.ldapSettings.setLanguage((String) values.get("language"));
 
-					service.testConnection(Session.get().getSid(), LdapPanel.this.ldapSettings,
-							new AsyncCallback<Boolean>() {
+					service.testConnection(LdapPanel.this.ldapSettings, new AsyncCallback<Boolean>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Boolean ret) {
-									if (ret) {
-										LD.ask(I18N.message("testconnection"), I18N.message("connectionestablished")
-												+ ".\n" + I18N.message("openldapexplorer"), new BooleanCallback() {
-											@Override
-											public void execute(Boolean value) {
-												if (value)
-													WindowUtils.openUrl(Util.webstartURL("ldap-explorer", null),
-															"_blank");
-											}
-										});
-									} else
-										SC.warn(I18N.message("connectionfailed"));
-								}
-							});
+						@Override
+						public void onSuccess(Boolean ret) {
+							if (ret) {
+								LD.ask(I18N.message("testconnection"), I18N.message("connectionestablished") + ".\n"
+										+ I18N.message("openldapexplorer"), new BooleanCallback() {
+									@Override
+									public void execute(Boolean value) {
+										if (value)
+											WindowUtils.openUrl(Util.webstartURL("ldap-explorer", null), "_blank");
+									}
+								});
+							} else
+								SC.warn(I18N.message("connectionfailed"));
+						}
+					});
 				}
 			}
 		});

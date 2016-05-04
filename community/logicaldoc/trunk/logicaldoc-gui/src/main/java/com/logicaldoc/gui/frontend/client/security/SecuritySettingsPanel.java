@@ -159,30 +159,28 @@ public class SecuritySettingsPanel extends VLayout {
 								: false);
 					}
 
-					service.saveSettings(Session.get().getSid(), SecuritySettingsPanel.this.settings,
-							new AsyncCallback<Boolean>() {
+					service.saveSettings(SecuritySettingsPanel.this.settings, new AsyncCallback<Boolean>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Boolean restartRequired) {
-									Log.info(
-											I18N.message("settingssaved") + "  "
-													+ I18N.message("settingsaffectnewsessions"), null);
+						@Override
+						public void onSuccess(Boolean restartRequired) {
+							Log.info(I18N.message("settingssaved") + "  " + I18N.message("settingsaffectnewsessions"),
+									null);
 
-									if (restartRequired.booleanValue())
-										SC.warn(I18N.message("needrestart"), new BooleanCallback() {
+							if (restartRequired.booleanValue())
+								SC.warn(I18N.message("needrestart"), new BooleanCallback() {
 
-											@Override
-											public void execute(Boolean value) {
-												WindowUtils.reload();
-											}
-										});
-								}
-							});
+									@Override
+									public void execute(Boolean value) {
+										WindowUtils.reload();
+									}
+								});
+						}
+					});
 				}
 
 				if (Feature.enabled(Feature.IP_FILTERS) && Session.get().isDefaultTenant()) {

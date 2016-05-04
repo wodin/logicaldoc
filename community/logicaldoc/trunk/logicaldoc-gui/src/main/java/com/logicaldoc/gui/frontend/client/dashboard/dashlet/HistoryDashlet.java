@@ -95,7 +95,7 @@ public class HistoryDashlet extends Dashlet {
 				if (event != null)
 					event.cancel();
 				Record record = event.getRecord();
-				documentService.getById(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("docId")),
+				documentService.getById(Long.parseLong(record.getAttributeAsString("docId")),
 						new AsyncCallback<GUIDocument>() {
 
 							@Override
@@ -136,7 +136,7 @@ public class HistoryDashlet extends Dashlet {
 		HeaderControl markAsRead = new HeaderControl(HeaderControl.TRASH, new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent e) {
-				documentService.markHistoryAsRead(Session.get().getSid(), event, new AsyncCallback<Void>() {
+				documentService.markHistoryAsRead(event, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

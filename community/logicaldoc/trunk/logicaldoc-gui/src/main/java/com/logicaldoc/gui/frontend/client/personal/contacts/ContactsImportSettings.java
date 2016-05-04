@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIContact;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -188,9 +187,9 @@ public class ContactsImportSettings extends Window {
 		if (form.validate()) {
 			ContactingServer.get().show();
 			try {
-				service.parseContacts(Session.get().getSid(), true, getSeparator(), getTextDelimiter(),
-						isSkipFirstRow(), getFirstNameIndex(), getLastNameIndex(), getEmailIndex(), getCompanyIndex(),
-						getPhoneIndex(), getMobileIndex(), getAddressIndex(), new AsyncCallback<GUIContact[]>() {
+				service.parseContacts(true, getSeparator(), getTextDelimiter(), isSkipFirstRow(), getFirstNameIndex(),
+						getLastNameIndex(), getEmailIndex(), getCompanyIndex(), getPhoneIndex(), getMobileIndex(),
+						getAddressIndex(), new AsyncCallback<GUIContact[]>() {
 
 							@Override
 							public void onFailure(Throwable caught) {

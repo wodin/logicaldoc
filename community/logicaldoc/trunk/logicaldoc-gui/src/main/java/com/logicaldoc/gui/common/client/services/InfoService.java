@@ -2,6 +2,7 @@ package com.logicaldoc.gui.common.client.services;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 
@@ -18,5 +19,5 @@ public interface InfoService extends RemoteService {
 	 */
 	public GUIInfo getInfo(String locale, String tenant);
 
-	public GUIParameter[] getSessionInfo(String sid);
+	public GUIParameter[] getSessionInfo() throws InvalidSessionException;
 }

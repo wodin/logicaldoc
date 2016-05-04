@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.webcontent;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -102,20 +101,19 @@ public class WebcontentEditor extends Window {
 
 	private void unlockAndClose() {
 		if (document.getId() != 0)
-			documentService.unlock(Session.get().getSid(), new long[] { WebcontentEditor.this.document.getId() },
-					new AsyncCallback<Void>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-							destroy();
-						}
+			documentService.unlock(new long[] { WebcontentEditor.this.document.getId() }, new AsyncCallback<Void>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
+					destroy();
+				}
 
-						@Override
-						public void onSuccess(Void result) {
-							DocumentsPanel.get().refresh();
-							destroy();
-						}
-					});
+				@Override
+				public void onSuccess(Void result) {
+					DocumentsPanel.get().refresh();
+					destroy();
+				}
+			});
 		else
 			destroy();
 	}

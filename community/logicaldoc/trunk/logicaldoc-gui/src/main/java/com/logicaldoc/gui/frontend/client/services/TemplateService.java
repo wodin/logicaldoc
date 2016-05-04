@@ -14,30 +14,30 @@ public interface TemplateService extends RemoteService {
 	/**
 	 * Deletes a given template
 	 */
-	public void delete(String sid, long templateId) throws ServerException;
+	public void delete(long templateId) throws ServerException;
 
 	/**
 	 * Creates or updates a template
 	 */
-	public GUITemplate save(String sid, GUITemplate template) throws ServerException;
+	public GUITemplate save(GUITemplate template) throws ServerException;
 
 	/**
 	 * Loads a given template from the database
 	 */
-	public GUITemplate getTemplate(String sid, long templateId) throws ServerException;
+	public GUITemplate getTemplate(long templateId) throws ServerException;
 
 	/**
 	 * Saves the list of all possible options
 	 */
-	public void saveOptions(String sid, long templateId, String attribute, String[] values) throws ServerException;
+	public void saveOptions(long templateId, String attribute, String[] values) throws ServerException;
 
 	/**
 	 * Delete a selection of options
 	 */
-	public void deleteOptions(String sid, long templateId, String attribute, String[] values) throws ServerException;
+	public void deleteOptions(long templateId, String attribute, String[] values) throws ServerException;
 
 	/**
 	 * Reads the contacts that are about to beimported from CSV
 	 */
-	public String[] parseOptions(String sid, long templateId, String attribute) throws ServerException;
+	public String[] parseOptions(long templateId, String attribute) throws ServerException;
 }

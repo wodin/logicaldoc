@@ -33,7 +33,7 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 		emailSettings.setSecureAuth(true);
 		emailSettings.setSenderEmail("mario@acme.com");
 
-		service.saveEmailSettings(session.getSid(), emailSettings);
+		service.saveEmailSettings(emailSettings);
 	}
 
 	@Test
@@ -44,7 +44,7 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 			params[i] = p;
 		}
 
-		service.saveSettings(session.getSid(), params);
+		service.saveSettings(params);
 	}
 
 	@Test
@@ -62,16 +62,16 @@ public class SettingServiceImplTest extends AbstractWebappTCase {
 		settings[0] = wsSettings;
 		settings[1] = wdSettings;
 
-		service.saveSettings(session.getSid(), settings);
+		service.saveSettings(settings);
 	}
 
 	@Test
 	public void testSaveDashlets() throws ServerException {
 		GUIDashlet[] dashlets = new GUIDashlet[] { new GUIDashlet(100, 0, 1, 0), new GUIDashlet(101, 0, 2, 0) };
-		service.saveDashlets(session.getSid(), dashlets);
+		service.saveDashlets(dashlets);
 
 		SecurityServiceImpl secserver = new SecurityServiceImpl();
-		GUIUser user = secserver.getUser(session.getSid(), 1);
+		GUIUser user = secserver.getUser(1);
 		Assert.assertTrue(user.getDashlets().length == 2);
 	}
 }

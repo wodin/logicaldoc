@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIMenu;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.data.MenusDS;
@@ -59,7 +58,7 @@ public class MenusPanel extends VLayout {
 		name.setCanFilter(true);
 		name.setCellFormatter(new I18NCellFormatter());
 
-		menus=new TreeGrid();
+		menus = new TreeGrid();
 		menus.setWidth100();
 		menus.setShowHeader(false);
 		menus.setLeaveScrollbarGap(false);
@@ -89,19 +88,18 @@ public class MenusPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = menus.getSelectedRecord();
 				if (record != null)
-					service.getMenu(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-							new AsyncCallback<GUIMenu>() {
+					service.getMenu(Long.parseLong(record.getAttributeAsString("id")), new AsyncCallback<GUIMenu>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(GUIMenu menu) {
-									showRights(menu);
-								}
-							});
+						@Override
+						public void onSuccess(GUIMenu menu) {
+							showRights(menu);
+						}
+					});
 			}
 		});
 	}

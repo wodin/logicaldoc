@@ -5,15 +5,15 @@ import com.logicaldoc.gui.common.client.beans.GUIImportFolder;
 
 public interface ImportFolderServiceAsync {
 
-	void delete(String sid, long id, AsyncCallback<Void> callback);
+	void delete(long id, AsyncCallback<Void> callback);
 
-	void save(String sid, GUIImportFolder share, AsyncCallback<GUIImportFolder> callback);
+	void save(GUIImportFolder share, AsyncCallback<GUIImportFolder> callback);
 
-	void test(String sid, long id, AsyncCallback<Boolean> callback);
+	void test(long id, AsyncCallback<Boolean> callback);
 
-	void changeStatus(String sid, long id, boolean enabled, AsyncCallback<Void> callback);
+	void changeStatus(long id, boolean enabled, AsyncCallback<Void> callback);
 
-	void resetCache(String sid, long id, AsyncCallback<Void> callback);
+	void resetCache(long id, AsyncCallback<Void> callback);
 
-	void getImportFolder(String sid, long id, AsyncCallback<GUIImportFolder> callback);
+	void getImportFolder(long id, AsyncCallback<GUIImportFolder> callback);
 }

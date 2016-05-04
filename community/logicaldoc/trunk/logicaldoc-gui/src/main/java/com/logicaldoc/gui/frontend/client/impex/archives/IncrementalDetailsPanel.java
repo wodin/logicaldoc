@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.impex.archives;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIIncrementalArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -86,18 +85,17 @@ public class IncrementalDetailsPanel extends VLayout implements FolderChangeList
 			@Override
 			public void onClick(ClickEvent event) {
 				if (getIncremental().getId() != 0) {
-					service.loadIncremental(Session.get().getSid(), getIncremental().getId(),
-							new AsyncCallback<GUIIncrementalArchive>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+					service.loadIncremental(getIncremental().getId(), new AsyncCallback<GUIIncrementalArchive>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(GUIIncrementalArchive incremental) {
-									setIncremental(incremental);
-								}
-							});
+						@Override
+						public void onSuccess(GUIIncrementalArchive incremental) {
+							setIncremental(incremental);
+						}
+					});
 				} else {
 					GUIIncrementalArchive archive = new GUIIncrementalArchive();
 					archive.setType(IncrementalDetailsPanel.this.incremental.getType());
@@ -172,7 +170,7 @@ public class IncrementalDetailsPanel extends VLayout implements FolderChangeList
 
 	public void onSave() {
 		if (settingsPanel.validate()) {
-			service.saveIncremental(Session.get().getSid(), incremental, new AsyncCallback<GUIIncrementalArchive>() {
+			service.saveIncremental(incremental, new AsyncCallback<GUIIncrementalArchive>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);

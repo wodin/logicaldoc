@@ -38,8 +38,8 @@ public class SessionManagerTest extends AbstractCoreTCase {
 		Assert.assertEquals(2, sm.getSessions().size());
 
 		sm.kill(session1.getId());
-		Assert.assertTrue(sm.isValid(session2.getId()));
-		Assert.assertTrue(!sm.isValid(session1.getId()));
+		Assert.assertTrue(sm.isOpen(session2.getId()));
+		Assert.assertTrue(!sm.isOpen(session1.getId()));
 		Assert.assertEquals(2, sm.getSessions().size());
 	}
 }

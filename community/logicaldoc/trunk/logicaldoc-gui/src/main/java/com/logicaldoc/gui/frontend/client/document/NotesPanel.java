@@ -54,7 +54,7 @@ public class NotesPanel extends DocumentDetailTab {
 	private ListGrid notesGrid;
 
 	private Button addNote;
-	
+
 	private HLayout buttons;
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
@@ -77,7 +77,7 @@ public class NotesPanel extends DocumentDetailTab {
 			container.removeMember(addNote);
 		if (notesGrid != null)
 			container.removeMember(notesGrid);
-		if(buttons!=null)
+		if (buttons != null)
 			container.removeMember(buttons);
 
 		ListGridField id = new ListGridField("id", I18N.message("id"), 50);
@@ -137,27 +137,26 @@ public class NotesPanel extends DocumentDetailTab {
 			@Override
 			public void onClick(ClickEvent event) {
 				ContactingServer.get().show();
-				annotationsService.prepareAnnotations(Session.get().getSid(), document.getId(), null,
-						new AsyncCallback<Integer>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								ContactingServer.get().hide();
-								SC.warn(I18N.message("unabletoprepareforannotations"));
-								Log.serverError(caught);
-							}
+				annotationsService.prepareAnnotations(document.getId(), null, new AsyncCallback<Integer>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						ContactingServer.get().hide();
+						SC.warn(I18N.message("unabletoprepareforannotations"));
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(Integer pages) {
-								ContactingServer.get().hide();
-								if (pages == null || pages.intValue() < 1) {
-									SC.warn(I18N.message("unabletoprepareforannotations"));
-								} else {
-									AnnotationsWindow dialog = new AnnotationsWindow(document.getId(), document
-											.getTitle(), pages);
-									dialog.show();
-								}
-							}
-						});
+					@Override
+					public void onSuccess(Integer pages) {
+						ContactingServer.get().hide();
+						if (pages == null || pages.intValue() < 1) {
+							SC.warn(I18N.message("unabletoprepareforannotations"));
+						} else {
+							AnnotationsWindow dialog = new AnnotationsWindow(document.getId(), document.getTitle(),
+									pages);
+							dialog.show();
+						}
+					}
+				});
 			}
 		});
 
@@ -253,7 +252,7 @@ public class NotesPanel extends DocumentDetailTab {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {
-					documentService.deleteNotes(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+					documentService.deleteNotes(ids, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);

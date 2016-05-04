@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.system;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.FeedMessagesDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -72,7 +71,7 @@ public class ProductNewsPanel extends VLayout {
 					ids[i] = Long.parseLong(records[i].getAttribute("id"));
 				}
 
-				service.markFeedMsgAsRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				service.markFeedMsgAsRead(ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -102,7 +101,7 @@ public class ProductNewsPanel extends VLayout {
 					ids[i] = Long.parseLong(records[i].getAttribute("id"));
 				}
 
-				service.markFeedMsgAsNotRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				service.markFeedMsgAsNotRead(ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -219,7 +218,7 @@ public class ProductNewsPanel extends VLayout {
 		maskAsRead.setTitle(I18N.message("maskasread"));
 		maskAsRead.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.markFeedMsgAsRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				service.markFeedMsgAsRead(ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -240,7 +239,7 @@ public class ProductNewsPanel extends VLayout {
 		maskAsNotRead.setTitle(I18N.message("maskasnotread"));
 		maskAsNotRead.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.markFeedMsgAsNotRead(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				service.markFeedMsgAsNotRead(ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -265,7 +264,7 @@ public class ProductNewsPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteFeedMessages(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							service.deleteFeedMessages(ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

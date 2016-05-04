@@ -77,7 +77,7 @@ public class BarcodesEnginePanel extends VLayout {
 	public BarcodesEnginePanel() {
 		setWidth100();
 
-		service.getInfo(Session.get().getSid(), new AsyncCallback<GUIBarcodeEngine>() {
+		service.getInfo(new AsyncCallback<GUIBarcodeEngine>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -321,7 +321,7 @@ public class BarcodesEnginePanel extends VLayout {
 					else
 						BarcodesEnginePanel.this.engine.setImageThreshold(new Integer(threshold));
 
-					service.save(Session.get().getSid(), BarcodesEnginePanel.this.engine, new AsyncCallback<Void>() {
+					service.save(BarcodesEnginePanel.this.engine, new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -342,7 +342,7 @@ public class BarcodesEnginePanel extends VLayout {
 		rescheduleAll.setTitle(I18N.message("rescheduleallprocessing"));
 		rescheduleAll.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				service.rescheduleAll(Session.get().getSid(), new AsyncCallback<Void>() {
+				service.rescheduleAll(new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -390,7 +390,7 @@ public class BarcodesEnginePanel extends VLayout {
 					ids[j] = Long.parseLong(selection[j].getAttribute("id"));
 				}
 
-				service.markUnprocessable(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				service.markUnprocessable(ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);

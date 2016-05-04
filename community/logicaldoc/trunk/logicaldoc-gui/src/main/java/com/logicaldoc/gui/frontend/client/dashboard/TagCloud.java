@@ -4,7 +4,6 @@ import gdurelle.tagcloud.client.tags.WordTag;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 import com.logicaldoc.gui.frontend.client.services.TagService;
 import com.logicaldoc.gui.frontend.client.services.TagServiceAsync;
@@ -40,7 +39,7 @@ public class TagCloud extends VLayout {
 	}
 
 	public void refresh() {
-		tagService.getTagCloud(Session.get().getSid(), new AsyncCallback<GUITag[]>() {
+		tagService.getTagCloud(new AsyncCallback<GUITag[]>() {
 			@Override
 			public void onFailure(Throwable arg0) {
 
@@ -75,31 +74,5 @@ public class TagCloud extends VLayout {
 		layout.addMember(tagCloud.asWidget());
 
 		addMember(layout);
-	}
-
-	/**
-	 * Refresh the display of the tag cloud. Usually used after an adding or
-	 * deletion of word.
-	 */
-	public void refreshOld() {
-
-		if (container != null) {
-			removeMember(container);
-			container = null;
-		}
-
-		if (isVisible()) {
-			container = new HTMLFlow() {
-
-				@Override
-				public String getInnerHTML() {
-					return "<iframe src='tagcloud/cloud.jsp?sid=" + Session.get().getSid()
-							+ "' style='border: 0px solid white; width:100%; height:" + TagCloud.this.getHeight()
-							+ ";' height='" + TagCloud.this.getHeight() + "' scrolling='no'>";
-				}
-
-			};
-			addMember(container);
-		}
 	}
 }

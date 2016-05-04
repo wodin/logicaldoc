@@ -204,21 +204,20 @@ public class TagsForm extends VLayout {
 								return;
 
 							ListGridRecord selection = tags.getSelectedRecord();
-							tagService.rename(Session.get().getSid(), selection.getAttribute("word"), value,
-									new AsyncCallback<Void>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+							tagService.rename(selection.getAttribute("word"), value, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-										@Override
-										public void onSuccess(Void arg) {
-											Log.info(I18N.message("procinexecution"), I18N.message("taginexecution"));
-											ListGridRecord selection = tags.getSelectedRecord();
-											selection.setAttribute("word", value);
-											onLetterSelect(value.substring(0, 1));
-										}
-									});
+								@Override
+								public void onSuccess(Void arg) {
+									Log.info(I18N.message("procinexecution"), I18N.message("taginexecution"));
+									ListGridRecord selection = tags.getSelectedRecord();
+									selection.setAttribute("word", value);
+									onLetterSelect(value.substring(0, 1));
+								}
+							});
 						}
 					});
 				}
@@ -234,20 +233,18 @@ public class TagsForm extends VLayout {
 						public void execute(Boolean value) {
 							if (value) {
 								ListGridRecord selection = tags.getSelectedRecord();
-								tagService.delete(Session.get().getSid(), selection.getAttribute("word"),
-										new AsyncCallback<Void>() {
-											@Override
-											public void onFailure(Throwable caught) {
-												Log.serverError(caught);
-											}
+								tagService.delete(selection.getAttribute("word"), new AsyncCallback<Void>() {
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
 
-											@Override
-											public void onSuccess(Void arg) {
-												Log.info(I18N.message("procinexecution"),
-														I18N.message("taginexecution"));
-												tags.removeSelectedData();
-											}
-										});
+									@Override
+									public void onSuccess(Void arg) {
+										Log.info(I18N.message("procinexecution"), I18N.message("taginexecution"));
+										tags.removeSelectedData();
+									}
+								});
 							}
 						}
 					});

@@ -33,7 +33,7 @@ public interface SystemService extends RemoteService {
 	 * @param sid The current user session
 	 * @param locale The current user locale
 	 */
-	public GUIParameter[][] getStatistics(String sid, String locale) throws ServerException;
+	public GUIParameter[][] getStatistics(String locale) throws ServerException;
 
 	/**
 	 * Performs a search over the last changes.
@@ -47,7 +47,7 @@ public interface SystemService extends RemoteService {
 	 * @param event The history events
 	 * @return Result hits and statistics
 	 */
-	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid,
+	public GUIHistory[] search(String userName, Date from, Date till, int maxResult, String historySid,
 			String[] event) throws ServerException;
 
 	/**
@@ -56,7 +56,7 @@ public interface SystemService extends RemoteService {
 	 * @param sid The current user session
 	 * @param locale The current user locale
 	 */
-	public GUITask[] loadTasks(String sid, String locale) throws ServerException;
+	public GUITask[] loadTasks(String locale) throws ServerException;
 
 	/**
 	 * Starts the task execution.
@@ -81,7 +81,7 @@ public interface SystemService extends RemoteService {
 	 * @param taskName The task name
 	 * @param locale The current user locale
 	 */
-	public GUITask getTaskByName(String sid, String taskName, String locale) throws ServerException;
+	public GUITask getTaskByName(String taskName, String locale) throws ServerException;
 
 	/**
 	 * Enables the task.
@@ -90,7 +90,7 @@ public interface SystemService extends RemoteService {
 	 * @param taskName The task name
 	 * @return True, if the task is correctly enabled.
 	 */
-	public boolean enableTask(String sid, String taskName) throws ServerException;
+	public boolean enableTask(String taskName) throws ServerException;
 
 	/**
 	 * Disables the task.
@@ -99,7 +99,7 @@ public interface SystemService extends RemoteService {
 	 * @param taskName The task name
 	 * @return True, if the task is correctly disabled.
 	 */
-	public boolean disableTask(String sid, String taskName) throws ServerException;
+	public boolean disableTask(String taskName) throws ServerException;
 
 	/**
 	 * Saves the task.
@@ -109,32 +109,32 @@ public interface SystemService extends RemoteService {
 	 * @param locale The current user locale
 	 * @return True, if the task is correctly saved.
 	 */
-	public GUITask saveTask(String sid, GUITask task, String locale) throws ServerException;
+	public GUITask saveTask(GUITask task, String locale) throws ServerException;
 
 	/**
 	 * Changes the activation status of a language
 	 */
-	public void setGUILanguageStatus(String sid, String language, boolean active) throws ServerException;
+	public void setGUILanguageStatus(String language, boolean active) throws ServerException;
 
 	/**
 	 * Marks as read a list of Feed Messages
 	 */
-	public void markFeedMsgAsRead(String sid, long[] ids) throws ServerException;
+	public void markFeedMsgAsRead(long[] ids) throws ServerException;
 
 	/**
 	 * Marks as not read a list of Feed Messages
 	 */
-	public void markFeedMsgAsNotRead(String sid, long[] ids) throws ServerException;
+	public void markFeedMsgAsNotRead(long[] ids) throws ServerException;
 
 	/**
 	 * Deletes a list of Feed Messages
 	 */
-	public void deleteFeedMessages(String sid, long[] ids) throws ServerException;
+	public void deleteFeedMessages(long[] ids) throws ServerException;
 
 	/**
 	 * Retrieves all plugins.
 	 * 
 	 * @param sid The current user session
 	 */
-	public GUIValue[] getPlugins(String sid) throws ServerException;
+	public GUIValue[] getPlugins() throws ServerException;
 }

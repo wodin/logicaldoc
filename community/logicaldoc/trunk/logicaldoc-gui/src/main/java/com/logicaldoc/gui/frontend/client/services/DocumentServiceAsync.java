@@ -11,86 +11,86 @@ import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
 public interface DocumentServiceAsync {
-	void getVersionsById(String sid, long id1, long id2, AsyncCallback<GUIVersion[]> callback);
+	void getVersionsById(long id1, long id2, AsyncCallback<GUIVersion[]> callback);
 
-	void getAttributes(String sid, long templateId, AsyncCallback<GUIExtendedAttribute[]> callback);
+	void getAttributes(long templateId, AsyncCallback<GUIExtendedAttribute[]> callback);
 
-	void getById(String sid, long docId, AsyncCallback<GUIDocument> callback);
+	void getById(long docId, AsyncCallback<GUIDocument> callback);
 
-	void save(String sid, GUIDocument document, AsyncCallback<GUIDocument> callback);
+	void save(GUIDocument document, AsyncCallback<GUIDocument> callback);
 
-	void sendAsEmail(String sid, GUIEmail email, String locale, AsyncCallback<String> callback);
+	void sendAsEmail(GUIEmail email, String locale, AsyncCallback<String> callback);
 
-	void updateLink(String sid, long id, String type, AsyncCallback<Void> callback);
+	void updateLink(long id, String type, AsyncCallback<Void> callback);
 
-	void deleteLinks(String sid, long[] ids, AsyncCallback<Void> callback);
+	void deleteLinks(long[] ids, AsyncCallback<Void> callback);
 
-	void delete(String sid, long[] ids, AsyncCallback<Void> callback);
+	void delete(long[] ids, AsyncCallback<Void> callback);
 
-	void makeImmutable(String sid, long[] ids, String comment, AsyncCallback<Void> callback);
+	void makeImmutable(long[] ids, String comment, AsyncCallback<Void> callback);
 
-	void lock(String sid, long[] ids, String comment, AsyncCallback<Void> callback);
+	void lock(long[] ids, String comment, AsyncCallback<Void> callback);
 
-	void unlock(String sid, long[] ids, AsyncCallback<Void> callback);
+	void unlock(long[] ids, AsyncCallback<Void> callback);
 
-	void addDocuments(String sid, String language, long folderId, boolean importZip, boolean immediateIndexing,
+	void addDocuments(String language, long folderId, boolean importZip, boolean immediateIndexing,
 			Long templateId, AsyncCallback<GUIDocument[]> callback);
 
-	void checkout(String sid, long id, AsyncCallback<Void> callback);
+	void checkout(long id, AsyncCallback<Void> callback);
 
-	void checkin(String sid, GUIDocument document, boolean major, AsyncCallback<GUIDocument> callback);
+	void checkin(GUIDocument document, boolean major, AsyncCallback<GUIDocument> callback);
 
-	void linkDocuments(String sid, long[] inDocIds, long[] outDocIds, AsyncCallback<Void> callback);
+	void linkDocuments(long[] inDocIds, long[] outDocIds, AsyncCallback<Void> callback);
 
-	void restore(String sid, long[] docIds, long folderId, AsyncCallback<Void> callback);
+	void restore(long[] docIds, long folderId, AsyncCallback<Void> callback);
 
-	void addBookmarks(String sid, long[] targetIds, int type, AsyncCallback<Void> callback);
+	void addBookmarks(long[] targetIds, int type, AsyncCallback<Void> callback);
 
-	void deleteBookmarks(String sid, long[] bookmarkIds, AsyncCallback<Void> callback);
+	void deleteBookmarks(long[] bookmarkIds, AsyncCallback<Void> callback);
 
-	void updateBookmark(String sid, GUIBookmark bookmark, AsyncCallback<Void> callback);
+	void updateBookmark(GUIBookmark bookmark, AsyncCallback<Void> callback);
 
-	void markHistoryAsRead(String sid, String event, AsyncCallback<Void> callback);
+	void markHistoryAsRead(String event, AsyncCallback<Void> callback);
 
-	void markIndexable(String sid, long[] docIds, AsyncCallback<Void> callback);
+	void markIndexable(long[] docIds, AsyncCallback<Void> callback);
 
-	void markUnindexable(String sid, long[] docIds, AsyncCallback<Void> callback);
+	void markUnindexable(long[] docIds, AsyncCallback<Void> callback);
 
-	void cleanUploadedFileFolder(String sid, AsyncCallback<Void> callback);
+	void cleanUploadedFileFolder(AsyncCallback<Void> callback);
 
-	void getRating(String sid, long docId, AsyncCallback<GUIRating> callback);
+	void getRating(long docId, AsyncCallback<GUIRating> callback);
 
-	void saveRating(String sid, GUIRating rating, AsyncCallback<Integer> callback);
+	void saveRating(GUIRating rating, AsyncCallback<Integer> callback);
 
-	void deleteNotes(String sid, long[] ids, AsyncCallback<Void> callback);
+	void deleteNotes(long[] ids, AsyncCallback<Void> callback);
 
-	void addNote(String sid, long docId, String message, AsyncCallback<Long> callback);
+	void addNote(long docId, String message, AsyncCallback<Long> callback);
 
-	void bulkUpdate(String sid, long[] ids, GUIDocument vo, AsyncCallback<Void> callback);
+	void bulkUpdate(long[] ids, GUIDocument vo, AsyncCallback<Void> callback);
 
-	void addDocuments(String sid, boolean importZip, boolean immediateIndexing, GUIDocument metadata,
+	void addDocuments(boolean importZip, boolean immediateIndexing, GUIDocument metadata,
 			AsyncCallback<GUIDocument[]> callback);
 
-	void updateNote(String sid, long docId, long noteId, String message, AsyncCallback<Void> callback);
+	void updateNote(long docId, long noteId, String message, AsyncCallback<Void> callback);
 
-	void deleteVersions(String sid, long[] ids, AsyncCallback<GUIDocument> callback);
+	void deleteVersions(long[] ids, AsyncCallback<GUIDocument> callback);
 
-	void createEmpty(String sid, GUIDocument vo, AsyncCallback<GUIDocument> callback);
+	void createEmpty(GUIDocument vo, AsyncCallback<GUIDocument> callback);
 
-	void indexDocuments(String sid, Long[] docIds, AsyncCallback<Void> callback);
+	void indexDocuments(Long[] docIds, AsyncCallback<Void> callback);
 
-	void deleteFromTrash(String sid, Long[] ids, AsyncCallback<Void> callback);
+	void deleteFromTrash(Long[] ids, AsyncCallback<Void> callback);
 
-	void emptyTrash(String sid, AsyncCallback<Void> callback);
+	void emptyTrash(AsyncCallback<Void> callback);
 
-	void archiveDocuments(String sid, long[] docIds, String comment, AsyncCallback<Void> callback);
+	void archiveDocuments(long[] docIds, String comment, AsyncCallback<Void> callback);
 
-	void archiveFolder(String sid, long folderId, String comment, AsyncCallback<Long> callback);
+	void archiveFolder(long folderId, String comment, AsyncCallback<Long> callback);
 
-	void countDocuments(String sid, long[] folderIds, int status, AsyncCallback<Long> callback);
+	void countDocuments(long[] folderIds, int status, AsyncCallback<Long> callback);
 
-	void unarchiveDocuments(String sid, long[] docIds, AsyncCallback<Void> callback);
+	void unarchiveDocuments(long[] docIds, AsyncCallback<Void> callback);
 
-	void createDownloadTicket(String sid, long docId, String suffix, Integer expireHours, Date expireDate,
+	void createDownloadTicket(long docId, String suffix, Integer expireHours, Date expireDate,
 			AsyncCallback<String> callback);
 }

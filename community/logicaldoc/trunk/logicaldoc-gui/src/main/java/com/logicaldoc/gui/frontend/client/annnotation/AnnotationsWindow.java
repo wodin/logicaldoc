@@ -310,31 +310,29 @@ public class AnnotationsWindow extends Window {
 			@Override
 			public void execute(Boolean value) {
 				if (value) {
-					documentService.deleteNotes(Session.get().getSid(), new long[] { noteId },
-							new AsyncCallback<Void>() {
+					documentService.deleteNotes(new long[] { noteId }, new AsyncCallback<Void>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(Void result) {
+							notesGrid.removeSelectedData();
+							removeAnnotation("" + noteId);
+							annotationsService.savePage(docId, page, getPageContent(), new AsyncCallback<Void>() {
+
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
 								}
 
 								@Override
-								public void onSuccess(Void result) {
-									notesGrid.removeSelectedData();
-									removeAnnotation("" + noteId);
-									annotationsService.savePage(Session.get().getSid(), docId, page, getPageContent(),
-											new AsyncCallback<Void>() {
-
-												@Override
-												public void onFailure(Throwable caught) {
-													Log.serverError(caught);
-												}
-
-												@Override
-												public void onSuccess(Void arg) {
-												}
-											});
+								public void onSuccess(Void arg) {
 								}
 							});
+						}
+					});
 				}
 			}
 		});

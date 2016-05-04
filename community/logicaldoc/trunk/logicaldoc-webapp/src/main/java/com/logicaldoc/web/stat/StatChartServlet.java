@@ -13,22 +13,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.DefaultDrawingSupplier;
 import org.jfree.chart.plot.PiePlot;
 import org.jfree.data.general.DefaultPieDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
-import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.i18n.I18N;
-import com.logicaldoc.util.Context;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.web.service.SystemServiceImpl;
-import com.logicaldoc.web.util.ServiceUtil;
-import com.logicaldoc.web.util.ServletIOUtil;
+import com.logicaldoc.web.util.ServletUtil;
 
 /**
  * This servlet generates the pie charts displayed in the statistics.
@@ -43,15 +39,14 @@ public class StatChartServlet extends HttpServlet {
 	protected static Logger log = LoggerFactory.getLogger(StatChartServlet.class);
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Session session = ServiceUtil.validateSession(request);
+		Session session = ServletUtil.validateSession(request);
 
 		// Avoid resource caching
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Cache-Control", "no-store");
 		response.setDateHeader("Expires", 0);
-		
-		UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
-		User user = udao.findById(session.getUserId());
+
+		User user = session.getUser();
 
 		// Create the folder for the chart
 		File chartFile = File.createTempFile("chart", ".png");
@@ -59,7 +54,7 @@ public class StatChartServlet extends HttpServlet {
 		try {
 			String chart = request.getParameter("chart");
 			SystemServiceImpl service = new SystemServiceImpl();
-			GUIParameter[][] parameters = service.getStatistics(session.getId(), user.getLanguage());
+			GUIParameter[][] parameters = service.getStatistics(user.getLanguage());
 			int index = 0;
 			if ("repository".equals(chart))
 				index = 0;
@@ -109,7 +104,7 @@ public class StatChartServlet extends HttpServlet {
 
 			ChartUtilities.saveChartAsPNG(chartFile, chrt, 250, 250);
 
-			ServletIOUtil.downloadFile(request, response, chartFile, chart + ".png");
+			ServletUtil.downloadFile(request, response, chartFile, chart + ".png");
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
 		} finally {

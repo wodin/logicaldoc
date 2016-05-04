@@ -59,7 +59,7 @@ public class ParametersSettingsPanel extends VLayout {
 		TextItem[] items = new TextItem[settings.length];
 
 		int i = 0;
-		for (GUIParameter parameter : settings) { 
+		for (GUIParameter parameter : settings) {
 			TextItem item = ItemFactory.newTextItem(parameter.getName(), parameter.getName(), parameter.getValue());
 			items[i] = item;
 			i++;
@@ -80,19 +80,18 @@ public class ParametersSettingsPanel extends VLayout {
 						Session.get().getInfo().setConfig(param.getName(), param.getValue());
 					}
 
-					service.saveSettings(Session.get().getSid(), ParametersSettingsPanel.this.settings,
-							new AsyncCallback<Void>() {
+					service.saveSettings(ParametersSettingsPanel.this.settings, new AsyncCallback<Void>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Void ret) {
-									Log.info(I18N.message("settingssaved"), null);
-								}
-							});
+						@Override
+						public void onSuccess(Void ret) {
+							Log.info(I18N.message("settingssaved"), null);
+						}
+					});
 				}
 			}
 		});

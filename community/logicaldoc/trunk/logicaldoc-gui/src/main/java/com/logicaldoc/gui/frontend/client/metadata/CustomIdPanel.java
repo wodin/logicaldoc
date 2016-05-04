@@ -6,7 +6,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICustomId;
 import com.logicaldoc.gui.common.client.beans.GUISequence;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -78,7 +77,7 @@ public class CustomIdPanel extends VLayout {
 			tbs.add(autofoldingTab);
 		tbs.add(sequencesTab);
 		tabs.setTabs(tbs.toArray(new Tab[0]));
-		
+
 		addMember(tabs);
 	}
 
@@ -147,7 +146,7 @@ public class CustomIdPanel extends VLayout {
 				cid.setScheme(record.getAttributeAsString("scheme"));
 				cid.setType(record.getAttributeAsString("type"));
 
-				service.save(Session.get().getSid(), cid, new AsyncCallback<Void>() {
+				service.save(cid, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -223,7 +222,7 @@ public class CustomIdPanel extends VLayout {
 			@Override
 			public void onEditComplete(EditCompleteEvent event) {
 				ListGridRecord record = sequences.getRecord(event.getRowNum());
-				service.resetSequence(Session.get().getSid(), Long.parseLong(record.getAttribute("id")),
+				service.resetSequence(Long.parseLong(record.getAttribute("id")),
 						(Integer) record.getAttributeAsInt("value"), new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -258,8 +257,7 @@ public class CustomIdPanel extends VLayout {
 					public void execute(Boolean value) {
 						if (value) {
 							final ListGridRecord record = schemes.getSelectedRecord();
-							service.delete(Session.get().getSid(),
-									Long.parseLong(record.getAttributeAsString("templateId")),
+							service.delete(Long.parseLong(record.getAttributeAsString("templateId")),
 									record.getAttributeAsString("type"), new AsyncCallback<Void>() {
 
 										@Override
@@ -299,7 +297,7 @@ public class CustomIdPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteSequence(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.deleteSequence(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

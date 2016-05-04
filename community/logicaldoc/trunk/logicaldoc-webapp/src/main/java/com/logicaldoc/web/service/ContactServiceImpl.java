@@ -36,8 +36,8 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	private static Logger log = LoggerFactory.getLogger(ContactServiceImpl.class);
 
 	@Override
-	public void delete(String sid, long[] ids) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void delete(long[] ids) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			ContactDAO dao = (ContactDAO) Context.get().getBean(ContactDAO.class);
@@ -50,8 +50,8 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	}
 
 	@Override
-	public void save(String sid, GUIContact contact) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void save(GUIContact contact) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 		try {
 			ContactDAO dao = (ContactDAO) Context.get().getBean(ContactDAO.class);
 			Contact con = dao.findById(contact.getId());
@@ -72,8 +72,8 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	}
 
 	@Override
-	public GUIContact load(String sid, long id) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIContact load(long id) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			ContactDAO dao = (ContactDAO) Context.get().getBean(ContactDAO.class);
@@ -102,14 +102,12 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 	}
 
 	@Override
-	public GUIContact[] parseContacts(String sid, boolean preview, String separator, String delimiter,
+	public GUIContact[] parseContacts(boolean preview, String separator, String delimiter,
 			boolean skipFirstRow, int firstName, int lastName, int email, int company, int phone, int mobile,
 			int address) throws ServerException {
-		final Session session = ServiceUtil.validateSession(sid);
+		final Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
-		User user = ServiceUtil.getSessionUser(sid);
-
-		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
+		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), session.getId());
 
 		ContactDAO dao = (ContactDAO) Context.get().getBean(ContactDAO.class);
 
@@ -147,7 +145,7 @@ public class ContactServiceImpl extends RemoteServiceServlet implements ContactS
 					if (contact == null) {
 						contact = new Contact();
 						contact.setUserId(session.getUserId());
-						contact.setTenantId(user.getTenantId());
+						contact.setTenantId(session.getUser().getTenantId());
 					}
 
 					contact.setEmail(emailStr);

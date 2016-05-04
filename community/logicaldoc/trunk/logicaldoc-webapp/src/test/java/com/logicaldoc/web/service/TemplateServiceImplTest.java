@@ -27,14 +27,14 @@ public class TemplateServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testDelete() throws ServerException {
-		service.delete(session.getSid(), 1);
+		service.delete(1);
 		DocumentTemplate template = templateDao.findById(1);
 		Assert.assertNull(template);
 	}
 
 	@Test
 	public void testSave() throws ServerException {
-		GUITemplate template = service.getTemplate(session.getSid(), 1);
+		GUITemplate template = service.getTemplate(1);
 		Assert.assertNotNull(template);
 		Assert.assertEquals("test1", template.getName());
 		Assert.assertEquals("test1_desc", template.getDescription());
@@ -42,9 +42,9 @@ public class TemplateServiceImplTest extends AbstractWebappTCase {
 		template.setName("pippo");
 		template.setDescription("paperino");
 
-		template = service.save(session.getSid(), template);
+		template = service.save(template);
 
-		template = service.getTemplate(session.getSid(), 1);
+		template = service.getTemplate(1);
 		Assert.assertNotNull(template);
 		Assert.assertEquals("pippo", template.getName());
 		Assert.assertEquals("paperino", template.getDescription());
@@ -55,12 +55,12 @@ public class TemplateServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testGetTemplate() throws ServerException {
-		GUITemplate template = service.getTemplate(session.getSid(), 2);
+		GUITemplate template = service.getTemplate(2);
 		Assert.assertNotNull(template);
 		Assert.assertEquals("test2", template.getName());
 		Assert.assertEquals("test2_desc", template.getDescription());
 
-		template = service.getTemplate(session.getSid(), 3);
+		template = service.getTemplate(3);
 		Assert.assertNull(template);
 	}
 }

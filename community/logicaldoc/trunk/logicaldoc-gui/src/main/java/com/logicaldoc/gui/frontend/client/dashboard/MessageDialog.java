@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.dashboard;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -129,7 +128,7 @@ public class MessageDialog extends Window {
 					for (int i = 0; i < ids.length; i++)
 						ids[i] = recipientsGrid.getRecords()[i].getAttributeAsLong("id");
 
-					service.save(Session.get().getSid(), message, ids, new AsyncCallback<Void>() {
+					service.save(message, ids, new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -225,7 +224,7 @@ public class MessageDialog extends Window {
 			@Override
 			public void onChanged(ChangedEvent event) {
 				String groupId = groupSelector.getSelectedRecord().getAttributeAsString("id");
-				security.searchUsers(Session.get().getSid(), null, groupId, new AsyncCallback<GUIUser[]>() {
+				security.searchUsers(null, groupId, new AsyncCallback<GUIUser[]>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);

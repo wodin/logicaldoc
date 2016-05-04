@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.frontend.client.document;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.HeaderControls;
@@ -27,11 +26,10 @@ public class ContentDiff extends Window {
 		setCanDragResize(true);
 		centerInPage();
 
-		String url = Util.contextPath() + "/diff/diff.jsp?sid=" + Session.get().getSid() + "&docId=" + docId + "&v1="
-				+ fileVersion1 + "&v2=" + fileVersion2;
+		String url = Util.contextPath() + "/diff/diff.jsp?docId=" + docId + "&v1=" + fileVersion1 + "&v2="
+				+ fileVersion2;
 		HTMLFlow html = new HTMLFlow("<iframe src='" + url + "' style='border:0px solid white; width:"
-				+ (getWidth() - 15) + "px; height:" + (getHeight() - 45)
-				+ "px;'  seamless='seamless'></iframe>");
+				+ (getWidth() - 15) + "px; height:" + (getHeight() - 45) + "px;'  seamless='seamless'></iframe>");
 
 		addItem(html);
 	}

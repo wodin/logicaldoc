@@ -52,8 +52,7 @@ public class StatsPie extends HLayout {
 		} catch (Throwable t) {
 		}
 
-		Image pieImage = new Image(Util.contextPath() + "stat?sid=" + Session.get().getSid()
-				+ "&chart=repository&random=" + new Date().getTime());
+		Image pieImage = new Image(Util.contextPath() + "stat?chart=repository&random=" + new Date().getTime());
 		pieImage.setWidth("250px");
 		pieImage.setHeight("250px");
 		repository.addMember(pieImage);
@@ -69,8 +68,8 @@ public class StatsPie extends HLayout {
 		}
 
 		VLayout documents = new VLayout();
-		pieImage = new Image(Util.contextPath() + "stat?sid=" + Session.get().getSid()
-				+ "&chart=documents&random=" + new Date().getTime());
+		pieImage = new Image(Util.contextPath() + "stat?sid=" + Session.get().getSid() + "&chart=documents&random="
+				+ new Date().getTime());
 		pieImage.setWidth("250px");
 		pieImage.setHeight("250px");
 		documents.addMember(pieImage);

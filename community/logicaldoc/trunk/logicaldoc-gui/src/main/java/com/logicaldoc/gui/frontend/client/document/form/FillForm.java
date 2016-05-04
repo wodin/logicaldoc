@@ -8,7 +8,6 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -216,7 +215,7 @@ public class FillForm extends Window {
 		}
 
 		ContactingServer.get().show();
-		docService.createEmpty(Session.get().getSid(), frm, new AsyncCallback<GUIDocument>() {
+		docService.createEmpty(frm, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ContactingServer.get().hide();

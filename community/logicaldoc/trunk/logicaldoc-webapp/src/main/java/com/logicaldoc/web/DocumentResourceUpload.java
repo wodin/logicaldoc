@@ -23,7 +23,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.ServletIOUtil;
+import com.logicaldoc.web.util.ServletUtil;
 import com.logicaldoc.web.util.ServiceUtil;
 
 /**
@@ -74,7 +74,7 @@ public class DocumentResourceUpload extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 			IOException {
-		Session session = ServiceUtil.validateSession(request);
+		Session session = ServletUtil.validateSession(request);
 
 		UserDAO udao = (UserDAO) Context.get().getBean(UserDAO.class);
 
@@ -101,7 +101,7 @@ public class DocumentResourceUpload extends HttpServlet {
 		try {
 			Folder folder = doc.getFolder();
 			if (fdao.isPermissionEnabled(Permission.SIGN, folder.getId(), user.getId())) {
-				ServletIOUtil.uploadDocumentResource(request, docId, suffix, fileVersion, docVersion);
+				ServletUtil.uploadDocumentResource(request, docId, suffix, fileVersion, docVersion);
 				if (suffix.startsWith("sign")) {
 					docDao.initialize(doc);
 					doc.setSigned(1);

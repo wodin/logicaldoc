@@ -119,7 +119,7 @@ public class RatingDialog extends Window {
 					RatingDialog.this.rating.setUserId(Session.get().getUser().getId());
 					RatingDialog.this.rating.setVote(Integer.parseInt(vm.getValueAsString("stars")));
 
-					documentService.saveRating(Session.get().getSid(), RatingDialog.this.rating,
+					documentService.saveRating(RatingDialog.this.rating,
 							new AsyncCallback<Integer>() {
 
 								@Override

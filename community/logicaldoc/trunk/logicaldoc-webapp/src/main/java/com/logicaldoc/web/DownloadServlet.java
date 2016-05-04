@@ -24,7 +24,7 @@ import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
-import com.logicaldoc.web.util.ServletIOUtil;
+import com.logicaldoc.web.util.ServletUtil;
 
 /**
  * This servlet is responsible for document downloads. It searches for the
@@ -53,18 +53,18 @@ public class DownloadServlet extends HttpServlet {
 		String sid = null;
 		User user = null;
 
-		if (!ServletIOUtil.isPreviewAgent(request)) {
+		if (!ServletUtil.isPreviewAgent(request)) {
 			/*
 			 * We can reach this point only if a valid session was created
 			 */
-			Session session = ServiceUtil.validateSession(request);
+			Session session = ServletUtil.validateSession(request);
 			sid = session.getId();
 			user = session.getUser();
 		}
 
 		try {
 			if (request.getParameter("pluginId") != null)
-				ServletIOUtil.downloadPluginResource(request, response, sid, request.getParameter("pluginId"),
+				ServletUtil.downloadPluginResource(request, response, sid, request.getParameter("pluginId"),
 						request.getParameter("resourcePath"), request.getParameter("fileName"));
 			else
 				downloadDocument(request, response, sid, user);
@@ -133,7 +133,7 @@ public class DownloadServlet extends HttpServlet {
 		else
 			filename = doc.getFileName();
 
-		ServletIOUtil.setContentDisposition(request, response, filename);
+		ServletUtil.setContentDisposition(request, response, filename);
 
 		if (StringUtils.isEmpty(fileVersion)) {
 			if (version != null)
@@ -152,9 +152,9 @@ public class DownloadServlet extends HttpServlet {
 			log.debug("Download document id=" + docId);
 
 		if ("true".equals(downloadText)) {
-			ServletIOUtil.downloadDocumentText(request, response, doc.getId(), user);
+			ServletUtil.downloadDocumentText(request, response, doc.getId(), user);
 		} else {
-			ServletIOUtil.downloadDocument(request, response, sid, doc.getId(), fileVersion, filename, suffix, user);
+			ServletUtil.downloadDocument(request, response, sid, doc.getId(), fileVersion, filename, suffix, user);
 		}
 	}
 }

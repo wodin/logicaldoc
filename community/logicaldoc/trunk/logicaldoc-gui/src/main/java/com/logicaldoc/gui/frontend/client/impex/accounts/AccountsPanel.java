@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.impex.accounts;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmailAccount;
 import com.logicaldoc.gui.common.client.data.EmailAccountsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -153,7 +152,7 @@ public class AccountsPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.get(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+					service.get(Long.parseLong(record.getAttributeAsString("id")),
 							new AsyncCallback<GUIEmailAccount>() {
 
 								@Override
@@ -196,7 +195,7 @@ public class AccountsPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.delete(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -219,21 +218,20 @@ public class AccountsPanel extends VLayout {
 		test.setTitle(I18N.message("testconnection"));
 		test.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.test(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-						new AsyncCallback<Boolean>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+				service.test(Long.parseLong(record.getAttributeAsString("id")), new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(Boolean result) {
-								if (result.booleanValue())
-									SC.say(I18N.message("connectionestablished"));
-								else
-									SC.warn(I18N.message("connectionfailed"));
-							}
-						});
+					@Override
+					public void onSuccess(Boolean result) {
+						if (result.booleanValue())
+							SC.say(I18N.message("connectionestablished"));
+						else
+							SC.warn(I18N.message("connectionfailed"));
+					}
+				});
 
 			}
 		});
@@ -242,7 +240,7 @@ public class AccountsPanel extends VLayout {
 		enable.setTitle(I18N.message("enable"));
 		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.changeStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
+				service.changeStatus(Long.parseLong(record.getAttributeAsString("id")), true,
 						new AsyncCallback<Void>() {
 
 							@Override
@@ -263,7 +261,7 @@ public class AccountsPanel extends VLayout {
 		disable.setTitle(I18N.message("disable"));
 		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.changeStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), false,
+				service.changeStatus(Long.parseLong(record.getAttributeAsString("id")), false,
 						new AsyncCallback<Void>() {
 
 							@Override
@@ -288,7 +286,7 @@ public class AccountsPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.resetCache(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.resetCache(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

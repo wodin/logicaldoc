@@ -89,23 +89,22 @@ public class AddForm extends Window {
 		if (templateIdString != null && !templateIdString.isEmpty()) {
 			frm.setTemplateId(Long.parseLong(templateIdString));
 
-			docService.getAttributes(Session.get().getSid(), Long.parseLong(templateIdString),
-					new AsyncCallback<GUIExtendedAttribute[]>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-						}
+			docService.getAttributes(Long.parseLong(templateIdString), new AsyncCallback<GUIExtendedAttribute[]>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
+				}
 
-						@Override
-						public void onSuccess(GUIExtendedAttribute[] attributes) {
-							frm.setAttributes(attributes);
-							FillForm fillForm = new FillForm(frm);
-							fillForm.show();
-							destroy();
-						}
-					});
+				@Override
+				public void onSuccess(GUIExtendedAttribute[] attributes) {
+					frm.setAttributes(attributes);
+					FillForm fillForm = new FillForm(frm);
+					fillForm.show();
+					destroy();
+				}
+			});
 		} else {
-			formService.create(Session.get().getSid(), frm, new AsyncCallback<GUIDocument>() {
+			formService.create(frm, new AsyncCallback<GUIDocument>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);

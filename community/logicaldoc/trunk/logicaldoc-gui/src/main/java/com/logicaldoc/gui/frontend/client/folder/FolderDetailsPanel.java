@@ -123,7 +123,7 @@ public class FolderDetailsPanel extends VLayout {
 		closeImage.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				folderService.getFolder(Session.get().getSid(), getFolder().getId(), false,
+				folderService.getFolder(getFolder().getId(), false,
 						new AsyncCallback<GUIFolder>() {
 
 							@Override
@@ -384,7 +384,7 @@ public class FolderDetailsPanel extends VLayout {
 		final int oldPosition = folder.getPosition();
 		if (validate()) {
 			folder.setName(folder.getName().trim());
-			folderService.save(Session.get().getSid(), folder, new AsyncCallback<GUIFolder>() {
+			folderService.save(folder, new AsyncCallback<GUIFolder>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);

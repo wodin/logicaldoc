@@ -124,10 +124,9 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 				long[] selection = grid.getSelectedIds();
 				if (selection.length == 1) {
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-							+ Long.toString(selection[0]));
+					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + Long.toString(selection[0]));
 				} else {
-					String url = GWT.getHostPageBaseURL() + "zip-export?sid=" + Session.get().getSid() + "&folderId="
+					String url = GWT.getHostPageBaseURL() + "zip-export?folderId="
 							+ Session.get().getCurrentFolder().getId();
 					for (long id : selection)
 						url += "&docId=" + Long.toString(id);
@@ -142,8 +141,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			@Override
 			public void onClick(ClickEvent event) {
 				Window.open(
-						GWT.getHostPageBaseURL() + "doc_rss?sid=" + Session.get().getSid() + "&docId="
-								+ document.getId() + "&locale=" + I18N.getLocale(), "_blank", "");
+						GWT.getHostPageBaseURL() + "doc_rss?docId=" + document.getId() + "&locale=" + I18N.getLocale(),
+						"_blank", "");
 			}
 		});
 

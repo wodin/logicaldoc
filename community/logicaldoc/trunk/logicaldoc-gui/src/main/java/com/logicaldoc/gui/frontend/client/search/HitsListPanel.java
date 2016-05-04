@@ -109,15 +109,16 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 				final String type = doc.getType();
 				long id = doc.getFolder().getId();
 
-				if (type == null || (!type.contains("folder") && Session.get().getCurrentDocument() != null
-						&& Session.get().getCurrentDocument().getId() == id)) {
+				if (type == null
+						|| (!type.contains("folder") && Session.get().getCurrentDocument() != null && Session.get()
+								.getCurrentDocument().getId() == id)) {
 					Menu contextMenu = prepareContextMenu(Session.get().getCurrentDocument().getFolder(), true);
 					contextMenu.showContextMenu();
 				} else {
 					/*
 					 * We need to retrieve the folder from the server
 					 */
-					folderService.getFolder(Session.get().getSid(), id, false, new AsyncCallback<GUIFolder>() {
+					folderService.getFolder(id, false, new AsyncCallback<GUIFolder>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -141,26 +142,24 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 				if (Search.get().getOptions().getType() != GUISearchOptions.TYPE_FOLDERS) {
 					final GUIDocument doc = grid.getSelectedDocument();
 
-					folderService.getFolder(Session.get().getSid(), doc.getFolder().getId(), false,
-							new AsyncCallback<GUIFolder>() {
+					folderService.getFolder(doc.getFolder().getId(), false, new AsyncCallback<GUIFolder>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(GUIFolder folder) {
-									if (folder.isDownload()
-											&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
-										Window.open(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-												+ "&docId=" + doc.getId(), "_blank", "");
-									else {
-										PreviewPopup iv = new PreviewPopup(doc);
-										iv.show();
-									}
-								}
-							});
+						@Override
+						public void onSuccess(GUIFolder folder) {
+							if (folder.isDownload()
+									&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
+								Window.open(GWT.getHostPageBaseURL() + "download?docId=" + doc.getId(), "_blank", "");
+							else {
+								PreviewPopup iv = new PreviewPopup(doc);
+								iv.show();
+							}
+						}
+					});
 				}
 				event.cancel();
 			}

@@ -283,8 +283,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
 				try {
-					return Util.thumbnailImgageHTML(Session.get().getSid(), Long.parseLong(record.getAttribute("id")),
-							null, 200, null);
+					return Util.thumbnailImgageHTML(Long.parseLong(record.getAttribute("id")), null, 200, null);
 				} catch (Throwable e) {
 					return "";
 				}
@@ -425,8 +424,8 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 						String id = getSelectedRecord().getAttribute("id");
 						if (Session.get().getCurrentFolder().isDownload())
 							try {
-								WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-										+ "&docId=" + id + "&downloadText=true");
+								WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id
+										+ "&downloadText=true");
 							} catch (Throwable t) {
 
 							}
@@ -440,8 +439,8 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 							String fileVersion = getSelectedRecord().getAttribute("fileVersion");
 
 							ContactingServer.get().show();
-							signService.extractSubjectSignatures(Session.get().getSid(), Long.parseLong(id),
-									fileVersion, new AsyncCallback<String[]>() {
+							signService.extractSubjectSignatures(Long.parseLong(id), fileVersion,
+									new AsyncCallback<String[]>() {
 
 										@Override
 										public void onFailure(Throwable caught) {
@@ -479,7 +478,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 					long id = Long.parseLong(getSelectedRecord().getAttribute("id"));
 					String ratingImageName = getSelectedRecord().getAttribute("rating");
 					final int docRating = Integer.parseInt(ratingImageName.replace("rating", ""));
-					documentService.getRating(Session.get().getSid(), id, new AsyncCallback<GUIRating>() {
+					documentService.getRating(id, new AsyncCallback<GUIRating>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);

@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.search;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.data.SavedSearchesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -62,20 +61,19 @@ public class SavedSearchesPanel extends VLayout {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				service.load(Session.get().getSid(), record.getAttributeAsString("name"),
-						new AsyncCallback<GUISearchOptions>() {
+				service.load(record.getAttributeAsString("name"), new AsyncCallback<GUISearchOptions>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUISearchOptions options) {
-								Search.get().setOptions(options);
-								Search.get().search();
-							}
-						});
+					@Override
+					public void onSuccess(GUISearchOptions options) {
+						Search.get().setOptions(options);
+						Search.get().search();
+					}
+				});
 			}
 		});
 
@@ -96,20 +94,19 @@ public class SavedSearchesPanel extends VLayout {
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord selection = list.getSelectedRecord();
-				service.load(Session.get().getSid(), selection.getAttributeAsString("name"),
-						new AsyncCallback<GUISearchOptions>() {
+				service.load(selection.getAttributeAsString("name"), new AsyncCallback<GUISearchOptions>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUISearchOptions options) {
-								Search.get().setOptions(options);
-								Search.get().search();
-							}
-						});
+					@Override
+					public void onSuccess(GUISearchOptions options) {
+						Search.get().setOptions(options);
+						Search.get().search();
+					}
+				});
 			}
 		});
 
@@ -129,7 +126,7 @@ public class SavedSearchesPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), names, new AsyncCallback<Void>() {
+							service.delete(names, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

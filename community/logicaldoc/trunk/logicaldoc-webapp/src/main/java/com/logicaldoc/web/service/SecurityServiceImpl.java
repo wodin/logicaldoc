@@ -121,16 +121,16 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	 * Used internally by login procedures, instantiates a new GUISession by a
 	 * given authenticated user.
 	 */
-	public GUISession internalLogin(String sid, User user, String locale) {
+	public GUISession internalLogin(Session sess, String locale) {
 		GUIUser guiUser = new GUIUser();
 		GUISession session = new GUISession();
-		session.setSid(sid);
-
-		Session userSession = SessionManager.get().get(sid);
+		session.setSid(sess.getId());
 
 		DocumentDAO documentDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		SystemMessageDAO messageDao = (SystemMessageDAO) Context.get().getBean(SystemMessageDAO.class);
 		SequenceDAO seqDao = (SequenceDAO) Context.get().getBean(SequenceDAO.class);
+
+		User user = sess.getUser();
 
 		guiUser.setFirstName(user.getFirstName());
 		guiUser.setName(user.getName());
@@ -142,7 +142,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			guiUser.setLanguage(locale);
 		}
 
-		GUIInfo info = new InfoServiceImpl().getInfo(guiUser.getLanguage(), userSession.getTenantName());
+		GUIInfo info = new InfoServiceImpl().getInfo(guiUser.getLanguage(), sess.getTenantName());
 		session.setInfo(info);
 
 		guiUser.setName(user.getName());
@@ -177,12 +177,12 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		if (StringUtils.isNotEmpty(user.getKeyDigest()))
 			guiUser.setKeyDigest(user.getKeyDigest());
 
-		session.setSid(sid);
+		session.setSid(sess.getId());
 		session.setUser(guiUser);
 		session.setLoggedIn(true);
 
 		MenuDAO mdao = (MenuDAO) Context.get().getBean(MenuDAO.class);
-		List<Long> menues = mdao.findMenuIdByUserId(user.getId());
+		List<Long> menues = mdao.findMenuIdByUserId(sess.getUserId());
 		guiUser.setMenues((Long[]) menues.toArray(new Long[0]));
 
 		loadDashlets(guiUser);
@@ -191,7 +191,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		 * Prepare an incoming message, if any
 		 */
 		ContextProperties config = Context.get().getProperties();
-		String incomingMessage = config.getProperty(userSession.getTenantName() + ".gui.welcome");
+		String incomingMessage = config.getProperty(sess.getTenantName() + ".gui.welcome");
 		if (StringUtils.isNotEmpty(incomingMessage)) {
 			Map<String, String> map = new HashMap<String, String>();
 			map.put("user", user.getFullName());
@@ -210,15 +210,15 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			session.setIncomingMessage(incomingMessage);
 
 		// Define the current locale
-		userSession.getDictionary().put(ServiceUtil.LOCALE, user.getLocale());
-		userSession.getDictionary().put(ServiceUtil.USER, user);
+		sess.getDictionary().put(ServiceUtil.LOCALE, user.getLocale());
+		sess.getDictionary().put(ServiceUtil.USER, user);
 
-		guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty(userSession.getTenantName() + ".password.size")));
+		guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty(sess.getTenantName() + ".password.size")));
 
 		/*
 		 * Prepare the external command
 		 */
-		String tenant = userSession.getTenantName();
+		String tenant = sess.getTenantName();
 		if (info.isEnabled("Feature_31") && "true".equals(config.getProperty(tenant + ".extcall.enabled"))) {
 			GUIExternalCall externalCall = new GUIExternalCall();
 			externalCall.setName(config.getProperty(tenant + ".extcall.name"));
@@ -233,13 +233,11 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUISession login(String sid, String locale) {
+	public GUISession getSession(String locale) {
 		try {
-			Session userSession = ServiceUtil.validateSession(sid);
-			UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
-			User user = userDao.findById(userSession.getUserId());
-			userDao.initialize(user);
-			GUISession session = internalLogin(sid, user, locale);
+			Session sess = ServiceUtil.validateSession(getThreadLocalRequest());
+
+			GUISession session = internalLogin(sess, locale);
 			return session;
 		} catch (Throwable e) {
 			log.debug(e.getMessage());
@@ -248,15 +246,15 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void logout(String sid) {
+	public void logout() {
 		try {
-			Session session = SessionManager.get().get(sid);
+			Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 			if (session == null)
 				return;
 
 			FileUtils.forceDelete(UserUtil.getUserResource(session.getUserId(), "temp"));
-			log.info("User " + session.getUsername() + " logged out and closed session " + sid);
-			kill(sid);
+			log.info("User " + session.getUsername() + " logged out and closed session " + session.getId());
+			kill(session.getId());
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
@@ -309,8 +307,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void addUserToGroup(String sid, long groupId, long userId) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void addUserToGroup(long groupId, long userId) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		SecurityManager manager = (SecurityManager) Context.get().getBean(SecurityManager.class);
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
@@ -319,8 +317,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void deleteGroup(String sid, long groupId) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void deleteGroup(long groupId) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
@@ -333,13 +331,13 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void deleteUser(String sid, long userId) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void deleteUser(long userId) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 
 		// Create the user history event
 		UserHistory transaction = new UserHistory();
-		transaction.setSessionId(sid);
+		transaction.setSession(session);
 		transaction.setEvent(UserHistory.EVENT_USER_DELETED);
 		transaction.setComment("");
 		transaction.setUser(userDao.findById(userId));
@@ -348,8 +346,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIGroup getGroup(String sid, long groupId) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUIGroup getGroup(long groupId) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 		Group group = groupDao.findById(groupId);
 
@@ -365,8 +363,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIUser getUser(String sid, long userId) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUIUser getUser(long userId) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		try {
 			UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 			TenantDAO tenantDao = (TenantDAO) Context.get().getBean(TenantDAO.class);
@@ -449,8 +447,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void removeFromGroup(String sid, long groupId, long[] userIds) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void removeFromGroup(long groupId, long[] userIds) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		SecurityManager manager = (SecurityManager) Context.get().getBean(SecurityManager.class);
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
@@ -463,8 +461,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIGroup saveGroup(String sid, GUIGroup group) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIGroup saveGroup(GUIGroup group) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 		Group grp;
@@ -495,8 +493,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIUser saveUser(String sid, GUIUser user, GUIInfo info) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIUser saveUser(GUIUser user, GUIInfo info) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		boolean createNew = false;
@@ -637,8 +635,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIUser saveProfile(String sid, GUIUser user) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIUser saveProfile(GUIUser user) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 
@@ -670,19 +668,24 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public void kill(String sid) {
-		// Kill the LogicalDOC session
-		SessionManager.get().kill(sid);
+		try {
+			// Kill the LogicalDOC session
+			SessionManager.get().kill(sid);
 
-		// Also kill the servlet container session, if any
-		HttpSession httpSession = SessionManager.get().getServletSession(sid);
-		if (httpSession != null) {
-			httpSession.invalidate();
+			SessionManager.get().removeSessionId(getThreadLocalRequest());
+
+			// Also kill the servlet container session, if any
+			HttpSession httpSession = SessionManager.get().getServletSession(sid);
+			if (httpSession != null)
+				httpSession.invalidate();
+		} catch (Throwable t) {
+			log.warn(t.getMessage());
 		}
 	}
 
 	@Override
-	public GUISecuritySettings loadSettings(String sid) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUISecuritySettings loadSettings() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		GUISecuritySettings securitySettings = new GUISecuritySettings();
 		try {
@@ -704,7 +707,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			if (StringUtils.isNotEmpty(pbean.getProperty(session.getTenantName() + ".anonymous.user"))) {
 				User user = userDao.findByUsername(pbean.getProperty(session.getTenantName() + ".anonymous.user"));
 				if (user != null)
-					securitySettings.setAnonymousUser(getUser(sid, user.getId()));
+					securitySettings.setAnonymousUser(getUser(user.getId()));
 			}
 			if (StringUtils.isNotEmpty(pbean.getProperty("ssl.required")))
 				securitySettings.setForceSsl("true".equals(pbean.getProperty("ssl.required")));
@@ -718,8 +721,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public boolean saveSettings(String sid, GUISecuritySettings settings) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public boolean saveSettings(GUISecuritySettings settings) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		boolean restartRequired = false;
 
@@ -761,9 +764,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		}
 	}
 
-	private boolean saveRules(String sid, Menu menu, long userId, GUIRight[] rights) throws Exception {
-		Session session = ServiceUtil.validateSession(sid);
-
+	private boolean saveRules(Session session, Menu menu, long userId, GUIRight[] rights) throws Exception {
 		MenuDAO mdao = (MenuDAO) Context.get().getBean(MenuDAO.class);
 		GroupDAO gdao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 
@@ -807,20 +808,20 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public void applyRights(String sid, GUIMenu menu) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
-
+	public void applyRights(GUIMenu menu) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		try {
 			MenuDAO mdao = (MenuDAO) Context.get().getBean(MenuDAO.class);
-			saveRules(sid, mdao.findById(menu.getId()), session.getUserId(), menu.getRights());
+			saveRules(session, mdao.findById(menu.getId()), session.getUserId(), menu.getRights());
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 
 	@Override
-	public GUIMenu getMenu(String sid, long menuId) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIMenu getMenu(long menuId) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
 		try {
 			GroupDAO gdao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 			MenuDAO dao = (MenuDAO) Context.get().getBean(MenuDAO.class);
@@ -852,8 +853,8 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	}
 
 	@Override
-	public GUIUser[] searchUsers(String sid, String username, String groupId) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIUser[] searchUsers(String username, String groupId) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);

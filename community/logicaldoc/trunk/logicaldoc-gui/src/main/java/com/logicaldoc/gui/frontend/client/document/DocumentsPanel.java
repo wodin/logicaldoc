@@ -177,7 +177,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	}
 
 	public void openInFolder(long docId) {
-		documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
+		documentService.getById(docId, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				/*
@@ -206,7 +206,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	 *        list
 	 */
 	public void selectDocument(long docId, final boolean clearSelection) {
-		documentService.getById(Session.get().getSid(), docId, new AsyncCallback<GUIDocument>() {
+		documentService.getById(docId, new AsyncCallback<GUIDocument>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				/*
@@ -244,7 +244,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	public void onFolderSelect(long folderId, Long docId) {
 		if (docId != null)
 			hiliteDocId = docId;
-		folderService.getFolder(Session.get().getSid(), folderId, false, new AsyncCallback<GUIFolder>() {
+		folderService.getFolder(folderId, false, new AsyncCallback<GUIFolder>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
