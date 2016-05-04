@@ -88,7 +88,7 @@ public class AntivirusSettingsPanel extends VLayout {
 					if (Session.get().isDefaultTenant())
 						params[4] = new GUIParameter("antivirus.command", form.getValueAsString("command").trim());
 
-					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
+					service.saveSettings(params, new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

@@ -74,21 +74,20 @@ public class GDriveEditor extends Window {
 					// Creating a new document document, so delete the temporary
 					// doc in Google Drive
 					ContactingServer.get().show();
-					gdriveService.delete(Session.get().getSid(), GDriveEditor.this.document.getExtResId(),
-							new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									ContactingServer.get().hide();
-									Log.serverError(caught);
-									destroy();
-								}
+					gdriveService.delete(GDriveEditor.this.document.getExtResId(), new AsyncCallback<Void>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							ContactingServer.get().hide();
+							Log.serverError(caught);
+							destroy();
+						}
 
-								@Override
-								public void onSuccess(Void result) {
-									ContactingServer.get().hide();
-									destroy();
-								}
-							});
+						@Override
+						public void onSuccess(Void result) {
+							ContactingServer.get().hide();
+							destroy();
+						}
+					});
 				}
 			}
 		});
@@ -113,20 +112,22 @@ public class GDriveEditor extends Window {
 	 * Reloads a preview.
 	 */
 	private void reloadBody() {
-		String url =  "https://docs.google.com/document/d/" + document.getExtResId() + "/edit?hl=" + Session.get().getUser().getLanguage();
-//		if (document.getExtResId().startsWith("spreadsheet:"))
-//			url = "https://spreadsheets.google.com/ccc?key="
-//					+ document.getExtResId().substring("spreadsheet:".length()) + "&hl="
-//					+ Session.get().getUser().getLanguage();
-//		else if (document.getExtResId().startsWith("presentation:"))
-//			url = "https://docs.google.com/presentation/d/"
-//					+ document.getExtResId().substring("presentation:".length()) + "/edit?hl="
-//					+ Session.get().getUser().getLanguage();
-//		else
-//			url = "https://docs.google.com/document/d/" + document.getExtResId().substring("document:".length())
-//					+ "/edit?hl=" + Session.get().getUser().getLanguage();
-	
-		
+		String url = "https://docs.google.com/document/d/" + document.getExtResId() + "/edit?hl="
+				+ Session.get().getUser().getLanguage();
+		// if (document.getExtResId().startsWith("spreadsheet:"))
+		// url = "https://spreadsheets.google.com/ccc?key="
+		// + document.getExtResId().substring("spreadsheet:".length()) + "&hl="
+		// + Session.get().getUser().getLanguage();
+		// else if (document.getExtResId().startsWith("presentation:"))
+		// url = "https://docs.google.com/presentation/d/"
+		// + document.getExtResId().substring("presentation:".length()) +
+		// "/edit?hl="
+		// + Session.get().getUser().getLanguage();
+		// else
+		// url = "https://docs.google.com/document/d/" +
+		// document.getExtResId().substring("document:".length())
+		// + "/edit?hl=" + Session.get().getUser().getLanguage();
+
 		String iframe = "<iframe src='" + url + "' style='border: 0px solid white; width:" + (getWidth() - 18)
 				+ "px; height:" + (getHeight() - 68) + "px' scrolling='no'></iframe>";
 		html.setContents(iframe);
@@ -161,36 +162,34 @@ public class GDriveEditor extends Window {
 		cancel.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				documentService.unlock(Session.get().getSid(), new long[] { GDriveEditor.this.document.getId() },
-						new AsyncCallback<Void>() {
+				documentService.unlock(new long[] { GDriveEditor.this.document.getId() }, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+						destroy();
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						grid.markSelectedAsCheckedIn();
+						Session.get().setCurrentDocument(document);
+						ContactingServer.get().show();
+						gdriveService.delete(GDriveEditor.this.document.getExtResId(), new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
+								ContactingServer.get().hide();
 								Log.serverError(caught);
 								destroy();
 							}
 
 							@Override
 							public void onSuccess(Void result) {
-								grid.markSelectedAsCheckedIn();
-								Session.get().setCurrentDocument(document);
-								ContactingServer.get().show();
-								gdriveService.delete(Session.get().getSid(), GDriveEditor.this.document.getExtResId(),
-										new AsyncCallback<Void>() {
-											@Override
-											public void onFailure(Throwable caught) {
-												ContactingServer.get().hide();
-												Log.serverError(caught);
-												destroy();
-											}
-
-											@Override
-											public void onSuccess(Void result) {
-												ContactingServer.get().hide();
-												destroy();
-											}
-										});
+								ContactingServer.get().hide();
+								destroy();
 							}
 						});
+					}
+				});
 			}
 		});
 
@@ -205,8 +204,22 @@ public class GDriveEditor extends Window {
 					checkin.show();
 				} else {
 					ContactingServer.get().show();
-					gdriveService.importDocuments(Session.get().getSid(), new String[] { document.getExtResId() },
-							Session.get().getCurrentFolder().getId(), document.getType(), new AsyncCallback<Void>() {
+					gdriveService.importDocuments(new String[] { document.getExtResId() }, Session.get()
+							.getCurrentFolder().getId(), document.getType(), new AsyncCallback<Void>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							ContactingServer.get().hide();
+							Log.serverError(caught);
+							destroy();
+						}
+
+						@Override
+						public void onSuccess(Void result) {
+							DocumentsPanel.get().refresh();
+
+							// Delete the temporary resource in GDrive
+							gdriveService.delete(document.getExtResId(), new AsyncCallback<Void>() {
+
 								@Override
 								public void onFailure(Throwable caught) {
 									ContactingServer.get().hide();
@@ -215,28 +228,13 @@ public class GDriveEditor extends Window {
 								}
 
 								@Override
-								public void onSuccess(Void result) {
-									DocumentsPanel.get().refresh();
-
-									// Delete the temporary resource in GDrive
-									gdriveService.delete(Session.get().getSid(), document.getExtResId(),
-											new AsyncCallback<Void>() {
-
-												@Override
-												public void onFailure(Throwable caught) {
-													ContactingServer.get().hide();
-													Log.serverError(caught);
-													destroy();
-												}
-
-												@Override
-												public void onSuccess(Void ret) {
-													ContactingServer.get().hide();
-													destroy();
-												}
-											});
+								public void onSuccess(Void ret) {
+									ContactingServer.get().hide();
+									destroy();
 								}
 							});
+						}
+					});
 				}
 			}
 		});

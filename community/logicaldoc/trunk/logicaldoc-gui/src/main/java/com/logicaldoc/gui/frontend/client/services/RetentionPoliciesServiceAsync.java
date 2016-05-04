@@ -5,13 +5,13 @@ import com.logicaldoc.gui.common.client.beans.GUIRetentionPolicy;
 
 public interface RetentionPoliciesServiceAsync {
 
-	void delete(String sid, long id, AsyncCallback<Void> callback);
+	void delete(long id, AsyncCallback<Void> callback);
 
-	void save(String sid, GUIRetentionPolicy policy, AsyncCallback<GUIRetentionPolicy> callback);
+	void save(GUIRetentionPolicy policy, AsyncCallback<GUIRetentionPolicy> callback);
 
-	void getPolicy(String sid, long id, AsyncCallback<GUIRetentionPolicy> callback);
+	void getPolicy(long id, AsyncCallback<GUIRetentionPolicy> callback);
 
-	void reorder(String sid, long[] ids, AsyncCallback<Void> callback);
+	void reorder(long[] ids, AsyncCallback<Void> callback);
 
-	void changeStatus(String sid, long id, boolean enabled, AsyncCallback<Void> callback);
+	void changeStatus(long id, boolean enabled, AsyncCallback<Void> callback);
 }

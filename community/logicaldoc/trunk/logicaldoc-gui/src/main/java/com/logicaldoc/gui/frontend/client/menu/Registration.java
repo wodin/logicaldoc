@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.menu;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -80,7 +79,7 @@ public class Registration extends Window {
 					params[2] = new GUIParameter("reg.organization", form.getValueAsString("reg_organization"));
 					params[3] = new GUIParameter("reg.website", form.getValueAsString("reg_website"));
 
-					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
+					service.saveSettings(params, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							SC.warn(caught.getMessage());

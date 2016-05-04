@@ -6,7 +6,6 @@ import gwtupload.client.MultiUploader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
@@ -99,7 +98,7 @@ public class WorkflowUploader extends Window {
 			return;
 		}
 
-		workflowService.importSchema(Session.get().getSid(), new AsyncCallback<GUIWorkflow>() {
+		workflowService.importSchema(new AsyncCallback<GUIWorkflow>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -115,7 +114,7 @@ public class WorkflowUploader extends Window {
 					designer.saveModel();
 
 					// Cleanup the upload folder
-					documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+					documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

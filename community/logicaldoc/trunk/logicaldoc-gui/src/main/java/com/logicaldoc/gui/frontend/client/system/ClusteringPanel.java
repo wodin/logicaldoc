@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -79,7 +78,7 @@ public class ClusteringPanel extends HLayout {
 		StaticTextItem id = ItemFactory.newStaticTextItem("id", I18N.message("nodeid"), parameters[7].getValue());
 		id.setWrap(false);
 		id.setWrapTitle(false);
-		
+
 		ButtonItem save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
@@ -98,7 +97,7 @@ public class ClusteringPanel extends HLayout {
 					settings[5] = new GUIParameter("cluster.port", vm.getValueAsString("baseport"));
 					settings[6] = new GUIParameter("cluster.multicastip", vm.getValueAsString("multicastip"));
 
-					service.saveSettings(Session.get().getSid(), settings, new AsyncCallback<Void>() {
+					service.saveSettings(settings, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);

@@ -42,10 +42,12 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.searchengine.SearchEngine;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.SessionManager;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
@@ -59,12 +61,21 @@ import com.logicaldoc.util.plugin.PluginRegistry;
  * 
  * @author Sebastian Stein
  */
-public class ServletIOUtil {
+public class ServletUtil {
 	private static final int DEFAULT_BUFFER_SIZE = 10240; // ..bytes = 10KB.
 
 	private static final String MULTIPART_BOUNDARY = "MULTIPART_BYTERANGES";
 
 	private static Set<String> localAddresses = null;
+
+	public static Session validateSession(HttpServletRequest request) throws ServletException {
+		try {
+			String sid = SessionManager.get().getSessionId(request);
+			return ServiceUtil.validateSession(sid);
+		} catch (Throwable t) {
+			throw new ServletException(t.getMessage());
+		}
+	}
 
 	/**
 	 * Downloads a plugin resource
@@ -77,10 +88,11 @@ public class ServletIOUtil {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 * @throws ServletException
+	 * @throws InvalidSessionException
 	 */
 	public static void downloadPluginResource(HttpServletRequest request, HttpServletResponse response, String sid,
 			String pluginName, String resourcePath, String fileName) throws FileNotFoundException, IOException,
-			ServletException {
+			ServletException, InvalidSessionException {
 
 		if (sid != null)
 			try {
@@ -142,7 +154,7 @@ public class ServletIOUtil {
 		/*
 		 * Get all possible addresses for this host
 		 */
-		synchronized (ServletIOUtil.class) {
+		synchronized (ServletUtil.class) {
 			if (localAddresses == null) {
 				try {
 					localAddresses = new HashSet<String>();

@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -66,8 +65,8 @@ public class WorkflowDialog extends Window {
 			return;
 
 		ListGridRecord selection = workflow.getSelectedRecord();
-		service.startWorkflow(Session.get().getSid(), selection.getAttributeAsString("name"),
-				selection.getAttributeAsString("description"), ids, new AsyncCallback<Void>() {
+		service.startWorkflow(selection.getAttributeAsString("name"), selection.getAttributeAsString("description"),
+				ids, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

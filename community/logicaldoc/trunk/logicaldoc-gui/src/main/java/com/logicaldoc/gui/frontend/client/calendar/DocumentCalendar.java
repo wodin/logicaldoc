@@ -72,7 +72,7 @@ public class DocumentCalendar extends Calendar {
 
 			@Override
 			public void onEventClick(final CalendarEventClick event) {
-				service.getEvent(Session.get().getSid(), Long.parseLong(event.getEvent().getAttribute("eventId")),
+				service.getEvent(Long.parseLong(event.getEvent().getAttribute("eventId")),
 						new AsyncCallback<GUICalendarEvent>() {
 							@Override
 							public void onFailure(Throwable caught) {
@@ -95,20 +95,19 @@ public class DocumentCalendar extends Calendar {
 																onChangeCallback);
 														eventDialog.show();
 													} else {
-														service.getEvent(Session.get().getSid(), Long.parseLong(event
-																.getEvent().getAttribute("parentId")),
-																new AsyncCallback<GUICalendarEvent>() {
-																	public void onFailure(Throwable caught) {
-																		Log.serverError(caught);
-																	}
+														service.getEvent(Long.parseLong(event.getEvent().getAttribute(
+																"parentId")), new AsyncCallback<GUICalendarEvent>() {
+															public void onFailure(Throwable caught) {
+																Log.serverError(caught);
+															}
 
-																	@Override
-																	public void onSuccess(GUICalendarEvent calEv) {
-																		CalendarEventDialog eventDialog = new CalendarEventDialog(
-																				calEv, onChangeCallback);
-																		eventDialog.show();
-																	}
-																});
+															@Override
+															public void onSuccess(GUICalendarEvent calEv) {
+																CalendarEventDialog eventDialog = new CalendarEventDialog(
+																		calEv, onChangeCallback);
+																eventDialog.show();
+															}
+														});
 													}
 												}
 											});

@@ -231,7 +231,7 @@ public class ExportArchivesList extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.delete(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -279,7 +279,6 @@ public class ExportArchivesList extends VLayout {
 		if (GUIArchive.STATUS_ERROR != Integer.parseInt(record.getAttributeAsString("status")))
 			open.setEnabled(false);
 
-		
 		contextMenu.setItems(close, open, delete);
 		addUsefulMenuItem(record, contextMenu);
 		contextMenu.showContextMenu();
@@ -300,8 +299,8 @@ public class ExportArchivesList extends VLayout {
 	}
 
 	protected void closeArchive(final ListGridRecord record) {
-		service.setStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-				GUIArchive.STATUS_CLOSED, new AsyncCallback<Void>() {
+		service.setStatus(Long.parseLong(record.getAttributeAsString("id")), GUIArchive.STATUS_CLOSED,
+				new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -337,10 +336,10 @@ public class ExportArchivesList extends VLayout {
 	protected void onClosingArchive(final ListGridRecord record, final long id) {
 		closeArchive(record);
 	}
-	
+
 	protected void openArchive(final ListGridRecord record) {
-		service.setStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-				GUIArchive.STATUS_OPENED, new AsyncCallback<Void>() {
+		service.setStatus(Long.parseLong(record.getAttributeAsString("id")), GUIArchive.STATUS_OPENED,
+				new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);

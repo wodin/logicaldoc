@@ -70,6 +70,9 @@ public class Client {
 
 	@Override
 	public String toString() {
-		return String.format("%s-%s-%s", address, host, address);
+		if (id == null)
+			return String.format("%s - %s", host, address);
+		else
+			return String.format("%s - %s - %s", id, host, address);
 	}
 }

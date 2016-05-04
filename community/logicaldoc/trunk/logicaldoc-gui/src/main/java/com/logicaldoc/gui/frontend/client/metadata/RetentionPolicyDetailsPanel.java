@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIRetentionPolicy;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -89,7 +88,7 @@ public class RetentionPolicyDetailsPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (policy.getId() != 0) {
-					service.getPolicy(Session.get().getSid(), policy.getId(), new AsyncCallback<GUIRetentionPolicy>() {
+					service.getPolicy(policy.getId(), new AsyncCallback<GUIRetentionPolicy>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -202,7 +201,7 @@ public class RetentionPolicyDetailsPanel extends VLayout {
 			else
 				policy.setTemplateId(Long.parseLong(form.getValueAsString("template")));
 
-			service.save(Session.get().getSid(), policy, new AsyncCallback<GUIRetentionPolicy>() {
+			service.save(policy, new AsyncCallback<GUIRetentionPolicy>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);
@@ -215,7 +214,7 @@ public class RetentionPolicyDetailsPanel extends VLayout {
 						policiesPanel.updateRecord(newPolicy);
 						policiesPanel.showPolicyDetails(newPolicy);
 					}
-					if(policy.getId()==0L)
+					if (policy.getId() == 0L)
 						policiesPanel.init();
 				}
 			});

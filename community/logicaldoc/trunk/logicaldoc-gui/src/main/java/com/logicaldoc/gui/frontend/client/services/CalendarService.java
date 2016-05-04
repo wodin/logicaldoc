@@ -20,12 +20,12 @@ public interface CalendarService extends RemoteService {
 	/**
 	 * Saves an event
 	 */
-	public void saveEvent(String sid, GUICalendarEvent event) throws ServerException;
+	public void saveEvent(GUICalendarEvent event) throws ServerException;
 
 	/**
 	 * Gets an event
 	 */
-	public GUICalendarEvent getEvent(String sid, long eventId) throws ServerException;
+	public GUICalendarEvent getEvent(long eventId) throws ServerException;
 
 	/**
 	 * Searches for events.
@@ -43,14 +43,14 @@ public interface CalendarService extends RemoteService {
 	 * 
 	 * @return The list of events ordered by ascending date
 	 */
-	public GUICalendarEvent[] find(String sid, Date startDate, Date endDate, Date expireFrom, Date expireTo,
+	public GUICalendarEvent[] find(Date startDate, Date endDate, Date expireFrom, Date expireTo,
 			Integer frequency, String title, String type, String subtype, Integer status, Integer maxRecords) throws ServerException;
 
 	/**
 	 * Deletes an event. If the event is a master, in any case all the
 	 * occurrences will be deleted too.
 	 */
-	public void deleteEvent(String sid, long eventId) throws ServerException;
+	public void deleteEvent(long eventId) throws ServerException;
 
 	/**
 	 * Counts the number of events that start from now until a given date.

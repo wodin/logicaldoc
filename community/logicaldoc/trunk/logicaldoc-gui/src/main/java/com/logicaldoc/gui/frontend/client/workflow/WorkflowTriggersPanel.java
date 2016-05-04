@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.WorkflowTriggersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -63,14 +62,14 @@ public class WorkflowTriggersPanel extends VLayout {
 
 		Button addTrigger = new Button(I18N.message("workflowtriggeradd"));
 		addTrigger.setAutoFit(true);
-		
+
 		Button applyTriggersToSubfolders = new Button(I18N.message("applytosubfolders"));
 		applyTriggersToSubfolders.setAutoFit(true);
 		applyTriggersToSubfolders.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				ContactingServer.get().show();
-				service.applyTriggersToTree(Session.get().getSid(), folder.getId(), new AsyncCallback<Void>() {
+				service.applyTriggersToTree(folder.getId(), new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -91,7 +90,7 @@ public class WorkflowTriggersPanel extends VLayout {
 		buttons.setMembersMargin(3);
 		buttons.setWidth100();
 		buttons.setHeight(15);
-		
+
 		addTrigger.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -155,9 +154,9 @@ public class WorkflowTriggersPanel extends VLayout {
 								templateSelectedId = templates.getValueAsString();
 							}
 
-							service.saveTrigger(Session.get().getSid(), Long.toString(getFolder().getId()),
-									workflowSelectedId, templateSelectedId,
-									"yes".equals(checkin.getValueAsString()) ? 1 : 0, new AsyncCallback<Void>() {
+							service.saveTrigger(Long.toString(getFolder().getId()), workflowSelectedId,
+									templateSelectedId, "yes".equals(checkin.getValueAsString()) ? 1 : 0,
+									new AsyncCallback<Void>() {
 										@Override
 										public void onFailure(Throwable caught) {
 											Log.serverError(caught);
@@ -245,8 +244,8 @@ public class WorkflowTriggersPanel extends VLayout {
 					public void execute(Boolean value) {
 						if (value) {
 							ListGridRecord record = list.getSelectedRecord();
-							service.deleteTrigger(Session.get().getSid(),
-									Long.parseLong(record.getAttributeAsString("id")), new AsyncCallback<Void>() {
+							service.deleteTrigger(Long.parseLong(record.getAttributeAsString("id")),
+									new AsyncCallback<Void>() {
 										@Override
 										public void onFailure(Throwable caught) {
 											Log.serverError(caught);

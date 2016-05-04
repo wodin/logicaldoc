@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -72,7 +71,7 @@ public class SendToArchiveDialog extends Window {
 			return;
 
 		if (document)
-			service.addDocuments(Session.get().getSid(), Long.parseLong(form.getValueAsString("archive")), ids,
+			service.addDocuments(Long.parseLong(form.getValueAsString("archive")), ids,
 					new AsyncCallback<Void>() {
 
 						@Override
@@ -87,7 +86,7 @@ public class SendToArchiveDialog extends Window {
 						}
 					});
 		else
-			service.addFolder(Session.get().getSid(), Long.parseLong(form.getValueAsString("archive")), ids[0],
+			service.addFolder(Long.parseLong(form.getValueAsString("archive")), ids[0],
 					new AsyncCallback<Void>() {
 
 						@Override

@@ -23,7 +23,6 @@ public class TasksDS extends DataSource {
 		name.setPrimaryKey(true);
 		name.setRequired(true);
 
-		DataSourceTextField label = new DataSourceTextField("label");
 		DataSourceImageField enabledIcon = new DataSourceImageField("enabledIcon");
 		DataSourceBooleanField enabled = new DataSourceBooleanField("eenabled");
 		DataSourceIntegerField status = new DataSourceIntegerField("status");
@@ -39,7 +38,7 @@ public class TasksDS extends DataSource {
 		DataSourceBooleanField indeterminate = new DataSourceBooleanField("indeterminate");
 		DataSourceImageField runningIcon = new DataSourceImageField("runningIcon");
 
-		setFields(name, label, enabledIcon, enabled, status, scheduling, progress, progressbar, completion, size,
+		setFields(name, enabledIcon, enabled, status, scheduling, progress, progressbar, completion, size,
 				lastStart, nextStart, indeterminate, runningIcon);
 		setClientOnly(false);
 		setDataURL("data/tasks.xml?locale=" + I18N.getLocale());

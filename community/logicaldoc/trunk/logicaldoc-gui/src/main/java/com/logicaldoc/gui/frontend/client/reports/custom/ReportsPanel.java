@@ -56,7 +56,7 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  */
 public class ReportsPanel extends VLayout {
 	private ReportServiceAsync service = (ReportServiceAsync) GWT.create(ReportService.class);
-	
+
 	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private Layout listing = new VLayout();
@@ -91,7 +91,7 @@ public class ReportsPanel extends VLayout {
 	}
 
 	public void update() {
-		service.getReports(Session.get().getSid(), new AsyncCallback<GUIReport[]>() {
+		service.getReports(new AsyncCallback<GUIReport[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
@@ -278,7 +278,7 @@ public class ReportsPanel extends VLayout {
 		execute.setTitle(I18N.message("execute"));
 		execute.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.getReport(Session.get().getSid(), selectedId, false, new AsyncCallback<GUIReport>() {
+				service.getReport(selectedId, false, new AsyncCallback<GUIReport>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -318,7 +318,7 @@ public class ReportsPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), selectedId, new AsyncCallback<Void>() {
+							service.delete(selectedId, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -341,7 +341,7 @@ public class ReportsPanel extends VLayout {
 		enable.setTitle(I18N.message("enable"));
 		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.changeStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
+				service.changeStatus(Long.parseLong(record.getAttributeAsString("id")), true,
 						new AsyncCallback<Void>() {
 
 							@Override
@@ -364,7 +364,7 @@ public class ReportsPanel extends VLayout {
 		disable.setTitle(I18N.message("disable"));
 		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.changeStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), false,
+				service.changeStatus(Long.parseLong(record.getAttributeAsString("id")), false,
 						new AsyncCallback<Void>() {
 
 							@Override
@@ -395,7 +395,7 @@ public class ReportsPanel extends VLayout {
 		download.setTitle(I18N.message("download"));
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId="
 						+ outputDocId);
 			}
 		});
@@ -404,7 +404,7 @@ public class ReportsPanel extends VLayout {
 		preview.setTitle(I18N.message("preview"));
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				documentService.getById(Session.get().getSid(), outputDocId, new AsyncCallback<GUIDocument>() {
+				documentService.getById(outputDocId, new AsyncCallback<GUIDocument>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -470,18 +470,17 @@ public class ReportsPanel extends VLayout {
 	private void onSelectedReport() {
 		Record record = grid.getSelectedRecord();
 		if (record != null)
-			service.getReport(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
-					new AsyncCallback<GUIReport>() {
+			service.getReport(Long.parseLong(record.getAttributeAsString("id")), true, new AsyncCallback<GUIReport>() {
 
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-						}
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
+				}
 
-						@Override
-						public void onSuccess(GUIReport report) {
-							showReportDetails(report);
-						}
-					});
+				@Override
+				public void onSuccess(GUIReport report) {
+					showReportDetails(report);
+				}
+			});
 	}
 }

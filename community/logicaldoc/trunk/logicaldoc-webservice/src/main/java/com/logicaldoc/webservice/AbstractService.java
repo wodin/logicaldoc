@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.annotation.Resource;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
 
@@ -18,14 +17,13 @@ import org.apache.cxf.jaxrs.ext.MessageContext;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
@@ -80,7 +78,7 @@ public class AbstractService {
 		if (!isWebserviceEnabled())
 			throw new Exception("WebServices are disabled");
 
-		if (sid == null || !SessionManager.get().isValid(sid)) {
+		if (sid == null || !SessionManager.get().isOpen(sid)) {
 			throw new Exception("Invalid session " + sid);
 		} else {
 			SessionManager.get().renew(sid);
@@ -236,37 +234,12 @@ public class AbstractService {
 			request = (HttpServletRequest) context.getMessageContext().get(AbstractHTTPDestination.HTTP_REQUEST);
 		else if (messageContext != null)
 			request = (HttpServletRequest) messageContext.get(AbstractHTTPDestination.HTTP_REQUEST);
-		if (request == null)
-			return null;
 
-		String sid = null;
-		if (request.getParameter("sid") != null)
-			sid = request.getParameter("sid");
-		else if (request.getAttribute("sid") != null)
-			sid = (String) request.getAttribute("sid");
-		else if (request.getParameter("sid") != null)
-			sid = request.getParameter("sid");
-		else if (request.getSession(false) != null)
-			sid = (String) request.getSession(false).getAttribute("sid");
+		Session session = SessionManager.get().getSession(request);
 
-		if (sid == null) {
-			Cookie[] cookies = request.getCookies();
-			if (cookies != null)
-				for (Cookie cookie : cookies) {
-					if ("ldoc-sid".equals(cookie.getName())) {
-						sid = cookie.getValue();
-						break;
-					}
-				}
-		}
-
-		if (sid == null) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-			if (auth != null)
-				sid = auth.toString();
-		}
-
-		return sid;
+		if (session != null)
+			return session.getId();
+		return null;
 	}
 
 	/**

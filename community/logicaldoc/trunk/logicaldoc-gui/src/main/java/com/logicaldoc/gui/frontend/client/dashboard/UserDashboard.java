@@ -132,7 +132,7 @@ public class UserDashboard extends VLayout {
 				}
 
 		Session.get().getUser().setDashlets(dashlets);
-		service.saveDashlets(Session.get().getSid(), dashlets, new AsyncCallback<Void>() {
+		service.saveDashlets(dashlets, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

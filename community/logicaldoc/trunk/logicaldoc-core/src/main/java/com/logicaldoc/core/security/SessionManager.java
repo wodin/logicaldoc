@@ -1,12 +1,10 @@
 package com.logicaldoc.core.security;
 
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -25,9 +23,6 @@ import com.logicaldoc.core.security.authentication.AuthenticationException;
 import com.logicaldoc.core.security.spring.LDAuthenticationToken;
 import com.logicaldoc.core.security.spring.LDSecurityContextRepository;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.util.time.TimeDiff;
-import com.logicaldoc.util.time.TimeDiff.TimeField;
 
 /**
  * Repository of all current user sessions.
@@ -107,7 +102,7 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 	 * @param sessionId The session to be renewed
 	 */
 	public void renew(String sessionId) {
-		if (isValid(sessionId)) {
+		if (isOpen(sessionId)) {
 			get(sessionId).renew();
 		}
 	}
@@ -117,40 +112,13 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 	 * and is in state OPEN
 	 * 
 	 * @param sessionId The session identifier
-	 * @return true only if the session exists
+	 * @return true only if the session exists and is OPEN
 	 */
-	public boolean isValid(String sessionId) {
+	public boolean isOpen(String sessionId) {
 		if (sessionId == null)
 			return false;
 		Session session = get(sessionId);
-		return session != null && !isExpired(session) && session.getStatus() == Session.STATUS_OPEN;
-	}
-
-	/**
-	 * Checks if the session is expired. Note that if timeout occurred after the
-	 * last renewal, the session state will be set to EXPIRED.
-	 */
-	private boolean isExpired(Session session) {
-		if (session == null || session.getStatus() != Session.STATUS_OPEN)
-			return true;
-
-		Date lastRenew = session.getLastRenew();
-		int timeout = 30;
-		try {
-			ContextProperties config = new ContextProperties();
-			if (config.getInt(session.getTenantName() + ".session.timeout") > 0)
-				timeout = config.getInt(session.getTenantName() + ".session.timeout");
-		} catch (IOException e) {
-		}
-		Date now = new Date();
-
-		// long offset = now.getTime() - lastRenew.getTime();
-		long offset = Math.abs(TimeDiff.getTimeDifference(lastRenew, now, TimeField.MINUTE));
-
-		boolean expired = offset > timeout;
-		if (expired)
-			session.setExpired();
-		return expired;
+		return session != null && (session.getStatus() == Session.STATUS_OPEN);
 	}
 
 	@Override
@@ -158,7 +126,6 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 		if (sessionId == null)
 			return null;
 		Session session = super.get(sessionId);
-		isExpired(session);
 		return session;
 	}
 
@@ -183,7 +150,7 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 	public int countOpened() {
 		int count = 0;
 		for (Session session : getSessions()) {
-			if (!isExpired(session))
+			if (isOpen(session.getId()))
 				count++;
 		}
 		return count;
@@ -195,7 +162,7 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 	public int countOpened(long tenantId) {
 		int count = 0;
 		for (Session session : getSessions()) {
-			if (!isExpired(session) && session.getTenantId() == tenantId)
+			if (isOpen(session.getId()) && session.getTenantId() == tenantId)
 				count++;
 		}
 		return count;
@@ -265,7 +232,7 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 		String sid = getSessionId(request);
 		if (sid == null)
 			return null;
-		if (isValid(sid))
+		if (isOpen(sid))
 			return get(sid);
 		return null;
 	}
@@ -284,28 +251,32 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 	 * @return The SID if any
 	 */
 	public String getSessionId(HttpServletRequest request) {
-		if (request.getSession(false) != null && request.getSession(false).getAttribute(PARAM_SID) != null)
-			return (String) request.getSession(false).getAttribute(PARAM_SID);
-		if (request.getAttribute(PARAM_SID) != null)
-			return (String) request.getAttribute(PARAM_SID);
-		if (request.getParameter(PARAM_SID) != null)
-			return (String) request.getParameter(PARAM_SID);
+		if (request != null) {
+			if (request.getSession(false) != null && request.getSession(false).getAttribute(PARAM_SID) != null)
+				return (String) request.getSession(false).getAttribute(PARAM_SID);
+			if (request.getAttribute(PARAM_SID) != null)
+				return (String) request.getAttribute(PARAM_SID);
+			if (request.getParameter(PARAM_SID) != null)
+				return (String) request.getParameter(PARAM_SID);
 
-		Cookie cookies[] = request.getCookies();
-		if (cookies != null)
-			for (Cookie cookie : cookies) {
-				if (COOKIE_SID.equals(cookie.getName()))
-					return cookie.getValue();
-			}
+			Cookie cookies[] = request.getCookies();
+			if (cookies != null)
+				for (Cookie cookie : cookies) {
+					if (COOKIE_SID.equals(cookie.getName()))
+						return cookie.getValue();
+				}
+		}
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		if (auth != null && auth instanceof LDAuthenticationToken)
 			return ((LDAuthenticationToken) auth).getSid();
 
-		Client client = buildClient(request);
-		Session session = getByClientId(client.getId());
-		if (session != null && isValid(session.getId()))
-			return session.getId();
+		if (request != null) {
+			Client client = buildClient(request);
+			Session session = getByClientId(client.getId());
+			if (session != null && isOpen(session.getId()))
+				return session.getId();
+		}
 
 		return null;
 	}
@@ -324,6 +295,24 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 
 		Cookie sidCookie = new Cookie(COOKIE_SID, sessionId);
 		response.addCookie(sidCookie);
+	}
+
+	/**
+	 * Saves the session identifier in the request
+	 * 
+	 * @param request
+	 * @param sessionId
+	 */
+	public void removeSessionId(HttpServletRequest request) {
+		if (request != null) {
+			request.removeAttribute(PARAM_SID);
+			if (request.getSession(false) != null)
+				request.getSession(false).removeAttribute(PARAM_SID);
+		}
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null)
+			SecurityContextHolder.getContext().setAuthentication(null);
 	}
 
 	/**

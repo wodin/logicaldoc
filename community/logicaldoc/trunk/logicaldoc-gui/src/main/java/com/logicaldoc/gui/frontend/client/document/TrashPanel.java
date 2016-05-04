@@ -111,45 +111,41 @@ public class TrashPanel extends VLayout {
 	}
 
 	private void restoreDocument(final long id) {
-		documentService.restore(Session.get().getSid(), new long[] { id }, Session.get().getCurrentFolder().getId(),
-				new AsyncCallback<Void>() {
+		documentService.restore(new long[] { id }, Session.get().getCurrentFolder().getId(), new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(Void ret) {
-						list.removeSelectedData();
-						Log.info(I18N.message("documentrestored"),
-								I18N.message("documentrestoreddetail", Long.toString(id)));
+			@Override
+			public void onSuccess(Void ret) {
+				list.removeSelectedData();
+				Log.info(I18N.message("documentrestored"), I18N.message("documentrestoreddetail", Long.toString(id)));
 
-						// Force a refresh
-						Session.get().setCurrentFolder(Session.get().getCurrentFolder());
-					}
-				});
+				// Force a refresh
+				Session.get().setCurrentFolder(Session.get().getCurrentFolder());
+			}
+		});
 	}
 
 	private void restoreFolder(final long id) {
-		folderService.restore(Session.get().getSid(), id, Session.get().getCurrentFolder().getId(),
-				new AsyncCallback<Void>() {
+		folderService.restore(id, Session.get().getCurrentFolder().getId(), new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(Void ret) {
-						list.removeSelectedData();
-						Log.info(I18N.message("folderrestored"),
-								I18N.message("folderrestoreddetail", Long.toString(id)));
+			@Override
+			public void onSuccess(Void ret) {
+				list.removeSelectedData();
+				Log.info(I18N.message("folderrestored"), I18N.message("folderrestoreddetail", Long.toString(id)));
 
-						// Force a reload
-						FolderNavigator.get().reload();
-					}
-				});
+				// Force a reload
+				FolderNavigator.get().reload();
+			}
+		});
 	}
 
 	private void showContextMenu() {
@@ -187,21 +183,20 @@ public class TrashPanel extends VLayout {
 					public void execute(Boolean value) {
 						if (value) {
 							if (!docIds.isEmpty())
-								documentService.deleteFromTrash(Session.get().getSid(), docIds.toArray(new Long[0]),
-										new AsyncCallback<Void>() {
+								documentService.deleteFromTrash(docIds.toArray(new Long[0]), new AsyncCallback<Void>() {
 
-											@Override
-											public void onFailure(Throwable caught) {
-												Log.serverError(caught);
-											}
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
 
-											@Override
-											public void onSuccess(Void arg) {
-												refresh();
-											}
-										});
+									@Override
+									public void onSuccess(Void arg) {
+										refresh();
+									}
+								});
 							if (!folderIds.isEmpty())
-								folderService.deleteFromTrash(Session.get().getSid(), folderIds.toArray(new Long[0]),
+								folderService.deleteFromTrash(folderIds.toArray(new Long[0]),
 										new AsyncCallback<Void>() {
 
 											@Override
@@ -228,7 +223,7 @@ public class TrashPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							documentService.emptyTrash(Session.get().getSid(), new AsyncCallback<Void>() {
+							documentService.emptyTrash(new AsyncCallback<Void>() {
 
 								@Override
 								public void onFailure(Throwable caught) {

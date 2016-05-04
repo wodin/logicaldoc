@@ -57,8 +57,8 @@ public class TagsPreset extends VLayout {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
-				settingService.saveSettings(Session.get().getSid(), new GUIParameter[] { new GUIParameter(Session.get()
-						.getTenantName() + ".tag.mode", mode.getValueAsString()) }, new AsyncCallback<Void>() {
+				settingService.saveSettings(new GUIParameter[] { new GUIParameter(Session.get().getTenantName()
+						+ ".tag.mode", mode.getValueAsString()) }, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable t) {
@@ -86,7 +86,7 @@ public class TagsPreset extends VLayout {
 					@Override
 					public void execute(String value) {
 						if (value != null && !"".equals(value))
-							tagService.addTag(Session.get().getSid(), value, new AsyncCallback<Void>() {
+							tagService.addTag(value, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -144,19 +144,18 @@ public class TagsPreset extends VLayout {
 		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord selection = tags.getSelectedRecord();
-				tagService.removeTag(Session.get().getSid(), selection.getAttributeAsString("word"),
-						new AsyncCallback<Void>() {
+				tagService.removeTag(selection.getAttributeAsString("word"), new AsyncCallback<Void>() {
 
-							@Override
-							public void onSuccess(Void arg0) {
-								tags.removeSelectedData();
-							}
+					@Override
+					public void onSuccess(Void arg0) {
+						tags.removeSelectedData();
+					}
 
-							@Override
-							public void onFailure(Throwable arg0) {
-								Log.serverError(arg0);
-							}
-						});
+					@Override
+					public void onFailure(Throwable arg0) {
+						Log.serverError(arg0);
+					}
+				});
 			}
 		});
 		contextMenu.addItem(delete);

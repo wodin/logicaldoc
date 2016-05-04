@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -119,8 +118,8 @@ public class GroupUsersPanel extends VLayout {
 					}
 				}
 
-				service.addUserToGroup(Session.get().getSid(), groupId,
-						Long.parseLong(selectedRecord.getAttribute("id")), new AsyncCallback<Void>() {
+				service.addUserToGroup(groupId, Long.parseLong(selectedRecord.getAttribute("id")),
+						new AsyncCallback<Void>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -188,7 +187,7 @@ public class GroupUsersPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.removeFromGroup(Session.get().getSid(), groupId, ids, new AsyncCallback<Void>() {
+							service.removeFromGroup(groupId, ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

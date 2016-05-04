@@ -3,12 +3,11 @@
 <%@ page import="java.util.regex.*" %>
 <%@ page import="com.logicaldoc.core.security.*" %>
 <%@ page import="com.logicaldoc.util.*" %>
+<%@ page import="com.logicaldoc.web.util.*" %>
+
 <%
-  if(!SessionManager.get().isValid(request.getParameter("sid")))
-	  throw new Exception("Session expired");
-    
-  com.logicaldoc.core.security.Session ldSession = SessionManager.get().get(request.getParameter("sid"));    
-    
+  com.logicaldoc.core.security.Session ldSession = ServiceUtil.validateSession(request); 
+  
   Long userId = ldSession.getUserId();
   Long docId = Long.parseLong(request.getParameter("docId"));
   

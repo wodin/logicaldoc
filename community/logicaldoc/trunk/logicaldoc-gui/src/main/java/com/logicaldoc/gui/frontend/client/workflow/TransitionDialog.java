@@ -4,7 +4,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -93,7 +92,7 @@ public class TransitionDialog extends Window {
 		form.setItems(name, effect, target, save);
 
 		if (widget.getTransition().getTargetFolder() != null) {
-			folderService.getFolder(Session.get().getSid(), widget.getTransition().getTargetFolder(), false,
+			folderService.getFolder(widget.getTransition().getTargetFolder(), false,
 					new AsyncCallback<GUIFolder>() {
 
 						@Override

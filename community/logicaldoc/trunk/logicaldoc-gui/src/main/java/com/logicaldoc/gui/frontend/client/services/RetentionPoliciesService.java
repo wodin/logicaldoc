@@ -14,26 +14,26 @@ public interface RetentionPoliciesService extends RemoteService {
 	/**
 	 * Deletes a given policy
 	 */
-	public void delete(String sid, long id) throws ServerException;
+	public void delete(long id) throws ServerException;
 
 	/**
 	 * Creates or updates a retention policy
 	 */
-	public GUIRetentionPolicy save(String sid, GUIRetentionPolicy policy) throws ServerException;
+	public GUIRetentionPolicy save(GUIRetentionPolicy policy) throws ServerException;
 
 	/**
 	 * Loads a given policy from the database
 	 */
-	public GUIRetentionPolicy getPolicy(String sid, long id) throws ServerException;
+	public GUIRetentionPolicy getPolicy(long id) throws ServerException;
 
 	/**
 	 * Reorder the policies
 	 */
-	public void reorder(String sid, long[] ids) throws ServerException;
+	public void reorder(long[] ids) throws ServerException;
 	
 	/**
 	 * Changes a policy enabled/disabled status
 	 */
-	public void changeStatus(String sid, long id, boolean enabled) throws ServerException;
+	public void changeStatus(long id, boolean enabled) throws ServerException;
 
 }

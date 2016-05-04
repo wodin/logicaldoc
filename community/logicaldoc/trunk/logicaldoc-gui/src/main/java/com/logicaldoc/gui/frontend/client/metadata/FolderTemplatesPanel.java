@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIValue;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -77,7 +76,7 @@ public class FolderTemplatesPanel extends VLayout {
 
 		setMembers(hint, toolStrip);
 
-		service.loadTemplates(Session.get().getSid(), new AsyncCallback<GUIValue[]>() {
+		service.loadTemplates(new AsyncCallback<GUIValue[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
@@ -127,7 +126,7 @@ public class FolderTemplatesPanel extends VLayout {
 				templates[i++].setValue(record.getAttributeAsString("folders"));
 			}
 
-		service.saveTemplates(Session.get().getSid(), templates, new AsyncCallback<Void>() {
+		service.saveTemplates(templates, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

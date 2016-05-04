@@ -6,7 +6,6 @@ import gwtupload.client.MultiUploader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -75,7 +74,7 @@ public class UploadSignedDocument extends Window {
 		LinkItem downloadUrl = ItemFactory.newLinkItem("", "<b>(1)</b> " + I18N.message("downloadfiletosign"));
 		downloadUrl.setTitleOrientation(TitleOrientation.LEFT);
 		downloadUrl.setWrapTitle(false);
-		downloadUrl.setValue(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id);
+		downloadUrl.setValue(GWT.getHostPageBaseURL() + "download?docId=" + id);
 		downloadUrl.setLinkTitle(filename);
 
 		urlForm.setItems(downloadUrl);
@@ -146,7 +145,7 @@ public class UploadSignedDocument extends Window {
 
 		sendButton.setDisabled(true);
 		ContactingServer.get().show();
-		signService.storeSignedDocument(Session.get().getSid(), docId, new AsyncCallback<String>() {
+		signService.storeSignedDocument(docId, new AsyncCallback<String>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -179,7 +178,7 @@ public class UploadSignedDocument extends Window {
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
 			public void onCloseClick(CloseClickEvent event) {
-				documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+				documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

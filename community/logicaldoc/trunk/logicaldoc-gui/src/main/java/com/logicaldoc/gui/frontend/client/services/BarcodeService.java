@@ -17,31 +17,31 @@ public interface BarcodeService extends RemoteService {
 	/**
 	 * Loads a bean that contains all engine infos.
 	 */
-	public GUIBarcodeEngine getInfo(String sid) throws ServerException;
+	public GUIBarcodeEngine getInfo() throws ServerException;
 
 	/**
 	 * Saves the engine settings
 	 */
-	public void save(String sid, GUIBarcodeEngine engine) throws ServerException;
+	public void save(GUIBarcodeEngine engine) throws ServerException;
 
 	/**
 	 * Reschedule all documents for processing
 	 */
-	public void rescheduleAll(String sid) throws ServerException;
+	public void rescheduleAll() throws ServerException;
 
 	/**
 	 * Marks a set of documents as not processable.
 	 */
-	public void markUnprocessable(String sid, long[] ids) throws ServerException;
+	public void markUnprocessable(long[] ids) throws ServerException;
 
 	/**
 	 * Loads the patterns configured for a given template.
 	 */
-	public GUIBarcodePattern[] loadPatterns(String sid, Long templateId) throws ServerException;
+	public GUIBarcodePattern[] loadPatterns(Long templateId) throws ServerException;
 
 	/**
 	 * Saves the patterns for the given template ordered by position
 	 */
-	public void savePatterns(String sid, String[] patterns, Long templateId) throws ServerException;
+	public void savePatterns(String[] patterns, Long templateId) throws ServerException;
 
 }

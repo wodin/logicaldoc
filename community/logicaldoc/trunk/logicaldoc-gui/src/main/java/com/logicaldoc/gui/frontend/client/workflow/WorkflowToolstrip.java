@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWFState;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
@@ -91,20 +90,19 @@ public class WorkflowToolstrip extends ToolStrip {
 			@Override
 			public void onChanged(ChangedEvent event) {
 				if (event.getValue() != null && !"".equals((String) event.getValue())) {
-					workflowService.get(Session.get().getSid(), (String) event.getValue(),
-							new AsyncCallback<GUIWorkflow>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+					workflowService.get((String) event.getValue(), new AsyncCallback<GUIWorkflow>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(GUIWorkflow result) {
-									currentWorkflow = result;
-									WorkflowToolstrip.this.designer.redraw(currentWorkflow);
-									update();
-								}
-							});
+						@Override
+						public void onSuccess(GUIWorkflow result) {
+							currentWorkflow = result;
+							WorkflowToolstrip.this.designer.redraw(currentWorkflow);
+							update();
+						}
+					});
 				}
 
 			}
@@ -119,20 +117,19 @@ public class WorkflowToolstrip extends ToolStrip {
 				if (selectedRecord == null)
 					return;
 
-				workflowService.get(Session.get().getSid(), selectedRecord.getAttributeAsString("name"),
-						new AsyncCallback<GUIWorkflow>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+				workflowService.get(selectedRecord.getAttributeAsString("name"), new AsyncCallback<GUIWorkflow>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUIWorkflow result) {
-								currentWorkflow = result;
-								WorkflowToolstrip.this.designer.redraw(result);
-								update();
-							}
-						});
+					@Override
+					public void onSuccess(GUIWorkflow result) {
+						currentWorkflow = result;
+						WorkflowToolstrip.this.designer.redraw(result);
+						update();
+					}
+				});
 			}
 		});
 		addButton(load);
@@ -233,7 +230,7 @@ public class WorkflowToolstrip extends ToolStrip {
 					SC.warn(I18N.message("workflowtransitiontarget"));
 				else {
 					ContactingServer.get().show();
-					workflowService.deploy(Session.get().getSid(), currentWorkflow, new AsyncCallback<Void>() {
+					workflowService.deploy(currentWorkflow, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							ContactingServer.get().hide();
@@ -266,19 +263,18 @@ public class WorkflowToolstrip extends ToolStrip {
 					@Override
 					public void execute(Boolean value) {
 						if (value.booleanValue())
-							workflowService.undeploy(Session.get().getSid(), currentWorkflow.getName(),
-									new AsyncCallback<Void>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+							workflowService.undeploy(currentWorkflow.getName(), new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-										@Override
-										public void onSuccess(Void result) {
-											SC.say(I18N.message("workflowundeployed", currentWorkflow.getName()));
-											update();
-										}
-									});
+								@Override
+								public void onSuccess(Void result) {
+									SC.say(I18N.message("workflowundeployed", currentWorkflow.getName()));
+									update();
+								}
+							});
 					}
 				});
 			}
@@ -293,20 +289,19 @@ public class WorkflowToolstrip extends ToolStrip {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							workflowService.delete(Session.get().getSid(), currentWorkflow.getName(),
-									new AsyncCallback<Void>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+							workflowService.delete(currentWorkflow.getName(), new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-										@Override
-										public void onSuccess(Void result) {
-											currentWorkflow = new GUIWorkflow();
-											AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
-											update();
-										}
-									});
+								@Override
+								public void onSuccess(Void result) {
+									currentWorkflow = new GUIWorkflow();
+									AdminPanel.get().setContent(new WorkflowDesigner(currentWorkflow));
+									update();
+								}
+							});
 						}
 					}
 				});
@@ -351,8 +346,9 @@ public class WorkflowToolstrip extends ToolStrip {
 		export.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-						+ "&pluginId=logicaldoc-workflow&resourcePath=templates/" + currentWorkflow.getId() + ".ldpm");
+				WindowUtils.openUrl(GWT.getHostPageBaseURL()
+						+ "download?pluginId=logicaldoc-workflow&resourcePath=templates/" + currentWorkflow.getId()
+						+ ".ldpm");
 			}
 		});
 		addButton(export);
@@ -415,7 +411,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		currentWorkflow = designer.getWorkflow();
 
 		ContactingServer.get().show();
-		workflowService.save(Session.get().getSid(), currentWorkflow, new AsyncCallback<GUIWorkflow>() {
+		workflowService.save(currentWorkflow, new AsyncCallback<GUIWorkflow>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ContactingServer.get().hide();

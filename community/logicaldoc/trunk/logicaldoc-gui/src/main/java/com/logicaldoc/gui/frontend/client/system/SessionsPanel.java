@@ -48,6 +48,7 @@ public class SessionsPanel extends VLayout {
 
 		if (showRefresh) {
 			HLayout buttons = new HLayout();
+			buttons.setMembersMargin(2);
 			Button refresh = new Button(I18N.message("refresh"));
 			refresh.setAutoFit(true);
 			buttons.addMember(refresh);
@@ -72,6 +73,9 @@ public class SessionsPanel extends VLayout {
 
 		ListGridField username = new ListGridField("username", I18N.message("username"), 80);
 		username.setCanFilter(true);
+
+		ListGridField client = new ListGridField("client", I18N.message("client"), 200);
+		client.setCanFilter(true);
 
 		ListGridField tenant = new ListGridField("tenant", I18N.message("tenant"), 80);
 		tenant.setCanFilter(true);
@@ -120,7 +124,7 @@ public class SessionsPanel extends VLayout {
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setDataSource(new SessionsDS());
 		list.invalidateCache();
-		list.setFields(sid, statusLabel, username, tenant, created, renew);
+		list.setFields(sid, statusLabel, username, tenant, created, renew, client);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override

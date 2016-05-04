@@ -76,7 +76,7 @@ public class ApplyTemplateDialog extends Dialog {
 				final long folderId = Long.parseLong(selectedNode.getAttributeAsString("folderId"));
 				long templateId = Long.parseLong(form.getValueAsString("foldertemplate"));
 
-				service.applyTemplate(Session.get().getSid(), folderId, templateId,
+				service.applyTemplate(folderId, templateId,
 						inheritOptionEnabled && "true".equals(form.getValueAsString("inheritSecurity")),
 						new AsyncCallback<Void>() {
 

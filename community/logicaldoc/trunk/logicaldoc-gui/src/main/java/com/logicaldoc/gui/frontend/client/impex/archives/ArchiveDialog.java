@@ -12,8 +12,8 @@ import com.logicaldoc.gui.frontend.client.services.ImpexServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.Window;
-import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
+import com.smartgwt.client.widgets.events.CloseClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
@@ -85,7 +85,7 @@ public class ArchiveDialog extends Window {
 					archive.setCreatorName(Session.get().getUser().getFullName());
 					archive.setMode(GUIArchive.MODE_EXPORT);
 
-					archiveService.save(Session.get().getSid(), archive, new AsyncCallback<GUIArchive>() {
+					archiveService.save(archive, new AsyncCallback<GUIArchive>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);

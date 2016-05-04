@@ -17,10 +17,11 @@ import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
-import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
@@ -32,6 +33,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.web.ApplicationListener;
+import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * Implementation of the InfoService
@@ -261,21 +263,21 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 	}
 
 	@Override
-	public GUIParameter[] getSessionInfo(String sid) {
-		log.debug("Requested info for session " + sid);
+	public GUIParameter[] getSessionInfo() throws InvalidSessionException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+		log.debug("Requested info for session " + session.getId());
 
 		try {
 			SystemMessageDAO messageDao = (SystemMessageDAO) Context.get().getBean(SystemMessageDAO.class);
 			List<GUIParameter> parameters = new ArrayList<GUIParameter>();
-			
-			Session session = SessionManager.get().get(sid);
+
 			if (session != null) {
 				GUIParameter messages = new GUIParameter("messages", ""
 						+ messageDao.getCount(session.getUsername(), SystemMessage.TYPE_SYSTEM, 0));
 				parameters.add(messages);
 			}
-			parameters.add(new GUIParameter("valid", "" + SessionManager.get().isValid(sid)));
-			
+			parameters.add(new GUIParameter("valid", "" + SessionManager.get().isOpen(session.getId())));
+
 			return parameters.toArray(new GUIParameter[0]);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);

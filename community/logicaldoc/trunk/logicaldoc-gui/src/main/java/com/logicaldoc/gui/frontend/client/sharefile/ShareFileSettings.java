@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.sharefile;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -82,8 +81,8 @@ public class ShareFileSettings extends Window {
 			return;
 
 		ContactingServer.get().show();
-		sharefileService.saveSettings(Session.get().getSid(), vm.getValueAsString("host"),
-				vm.getValueAsString("username"), vm.getValueAsString("password"), new AsyncCallback<Void>() {
+		sharefileService.saveSettings(vm.getValueAsString("host"), vm.getValueAsString("username"),
+				vm.getValueAsString("password"), new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						ContactingServer.get().hide();

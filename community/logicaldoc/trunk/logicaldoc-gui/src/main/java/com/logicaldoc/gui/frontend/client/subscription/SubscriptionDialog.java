@@ -125,24 +125,23 @@ public class SubscriptionDialog extends Window {
 				} else
 					eventsStr = null;
 
-				service.update(Session.get().getSid(), selectedIds, option.equals("current"), events,
-						new AsyncCallback<Void>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+				service.update(selectedIds, option.equals("current"), events, new AsyncCallback<Void>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(Void ret) {
-								Log.info(I18N.message("settingssaved"), null);
-								for (ListGridRecord record : selectedRecords) {
-									record.setAttribute("events", eventsStr);
-									if (option != null && !option.isEmpty())
-										record.setAttribute("folderOption", option.equals("current") ? "0" : "1");
-									grid.refreshRow(grid.getRecordIndex(record));
-								}
-							}
-						});
+					@Override
+					public void onSuccess(Void ret) {
+						Log.info(I18N.message("settingssaved"), null);
+						for (ListGridRecord record : selectedRecords) {
+							record.setAttribute("events", eventsStr);
+							if (option != null && !option.isEmpty())
+								record.setAttribute("folderOption", option.equals("current") ? "0" : "1");
+							grid.refreshRow(grid.getRecordIndex(record));
+						}
+					}
+				});
 				destroy();
 			}
 		});
@@ -234,9 +233,8 @@ public class SubscriptionDialog extends Window {
 					eventsStr = null;
 
 				if (folderId != null)
-					service.subscribeFolder(Session.get().getSid(), folderId,
-							form.getValueAsString("option").equals("current"), events, null, null,
-							new AsyncCallback<Void>() {
+					service.subscribeFolder(folderId, form.getValueAsString("option").equals("current"), events, null,
+							null, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -250,20 +248,18 @@ public class SubscriptionDialog extends Window {
 								}
 							});
 				else
-					service.subscribeDocuments(Session.get().getSid(), docIds, events, null, null,
-							new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+					service.subscribeDocuments(docIds, events, null, null, new AsyncCallback<Void>() {
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Void ret) {
-									Log.info(I18N.message("documentsubscribed"), null);
-									Session.get().getUser()
-											.setSubscriptions(Session.get().getUser().getSubscriptions() + 1);
-								}
-							});
+						@Override
+						public void onSuccess(Void ret) {
+							Log.info(I18N.message("documentsubscribed"), null);
+							Session.get().getUser().setSubscriptions(Session.get().getUser().getSubscriptions() + 1);
+						}
+					});
 				destroy();
 			}
 		});

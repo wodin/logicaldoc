@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.reports;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.LockedDocsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -240,8 +239,7 @@ public class LockedDocsPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-						+ id + "&open=true");
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id + "&open=true");
 			}
 		});
 
@@ -270,7 +268,7 @@ public class LockedDocsPanel extends VLayout {
 					ids[i] = Long.parseLong(selection[i].getAttribute("id"));
 				}
 
-				docService.unlock(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				docService.unlock(ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -292,7 +290,7 @@ public class LockedDocsPanel extends VLayout {
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
-				docService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
+				docService.getById(id, new AsyncCallback<GUIDocument>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -313,8 +311,7 @@ public class LockedDocsPanel extends VLayout {
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-						+ id);
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id);
 			}
 		});
 

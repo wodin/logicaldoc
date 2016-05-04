@@ -16,18 +16,18 @@ public interface DropboxService extends RemoteService {
 	 * Checks if the user has connected the LogicalDOC application to his
 	 * Dropbox account.
 	 */
-	public boolean isConnected(String sid) throws ServerException;
+	public boolean isConnected() throws ServerException;
 
 	/**
 	 * Starts the authorization process and returns the Dropbox authorization
 	 * page URL to be shown to the user.
 	 */
-	public String startAuthorization(String sid) throws ServerException;
+	public String startAuthorization() throws ServerException;
 
 	/**
 	 * Ends the authorization code and saves the access token in the database.
 	 */
-	public String finishAuthorization(String sid, String authorizationCode) throws ServerException;
+	public String finishAuthorization(String authorizationCode) throws ServerException;
 
 	/**
 	 * Exports documents and folders into Dropbox
@@ -40,9 +40,9 @@ public interface DropboxService extends RemoteService {
 	 * @return
 	 * @throws ServerException
 	 */
-	public boolean exportDocuments(String sid, String targetPath, long[] folderIds, long[] docIds)
+	public boolean exportDocuments(String targetPath, long[] folderIds, long[] docIds)
 			throws ServerException;
 	
-	public int importDocuments(String sid, long targetFolder, String[] paths)
+	public int importDocuments(long targetFolder, String[] paths)
 			throws ServerException;
 }

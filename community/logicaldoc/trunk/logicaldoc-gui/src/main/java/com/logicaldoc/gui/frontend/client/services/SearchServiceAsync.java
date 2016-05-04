@@ -6,11 +6,11 @@ import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 
 public interface SearchServiceAsync {
 
-	void search(String sid, GUISearchOptions options, AsyncCallback<GUIResult> callback);
+	void search(GUISearchOptions options, AsyncCallback<GUIResult> callback);
 
-	void save(String sid, GUISearchOptions options, AsyncCallback<Boolean> callback);
+	void save(GUISearchOptions options, AsyncCallback<Boolean> callback);
 
-	void load(String sid, String name, AsyncCallback<GUISearchOptions> callback);
+	void load(String name, AsyncCallback<GUISearchOptions> callback);
 
-	void delete(String sid, String[] names, AsyncCallback<Void> callback);
+	void delete(String[] names, AsyncCallback<Void> callback);
 }

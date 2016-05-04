@@ -17,8 +17,8 @@ import com.logicaldoc.core.communication.MessageTemplateDAO;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.SystemMessageDAO;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
@@ -40,8 +40,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public void delete(String sid, long[] ids) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void delete(long[] ids) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 		Context context = Context.get();
 		SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
 		for (long id : ids) {
@@ -50,8 +50,9 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	}
 
 	@Override
-	public GUIMessage getMessage(String sid, long messageId, boolean markAsRead) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIMessage getMessage(long messageId, boolean markAsRead) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
 		try {
 			Context context = Context.get();
 			SystemMessageDAO dao = (SystemMessageDAO) context.getBean(SystemMessageDAO.class);
@@ -105,8 +106,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	}
 
 	@Override
-	public void save(String sid, GUIMessage message, long[] recipientIds) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void save(GUIMessage message, long[] recipientIds) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			for (long id : recipientIds)
@@ -148,8 +149,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	}
 
 	@Override
-	public GUIMessageTemplate[] loadTemplates(String sid, String language) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIMessageTemplate[] loadTemplates(String language) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		Context context = Context.get();
 
 		try {
@@ -186,8 +187,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	}
 
 	@Override
-	public void saveTemplates(String sid, GUIMessageTemplate[] templates) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void saveTemplates(GUIMessageTemplate[] templates) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			Context context = Context.get();
@@ -211,8 +212,8 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	}
 
 	@Override
-	public void deleteTemplates(String sid, long[] ids) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void deleteTemplates(long[] ids) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			Context context = Context.get();

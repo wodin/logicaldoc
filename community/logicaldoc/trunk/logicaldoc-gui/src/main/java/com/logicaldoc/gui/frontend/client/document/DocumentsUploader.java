@@ -55,7 +55,7 @@ public class DocumentsUploader extends Window {
 	private boolean zipImport = true;
 
 	private DynamicForm form;
-	
+
 	private Label customExternalDropZone;
 
 	public DocumentsUploader() {
@@ -107,7 +107,7 @@ public class DocumentsUploader extends Window {
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
 			public void onCloseClick(CloseClickEvent event) {
-				documentService.cleanUploadedFileFolder(Session.get().getSid(), new AsyncCallback<Void>() {
+				documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -137,8 +137,8 @@ public class DocumentsUploader extends Window {
 		zipItem.setName("zip");
 		zipItem.setTitle(I18N.message("importfromzip"));
 		zipItem.setValue(!zipImport);
-        zipItem.setTitleAlign(Alignment.LEFT);
-		
+		zipItem.setTitleAlign(Alignment.LEFT);
+
 		final CheckboxItem immediateIndexing = new CheckboxItem();
 		immediateIndexing.setName("immediateIndexing");
 		immediateIndexing.setTitle(I18N.message("immediateindexing"));

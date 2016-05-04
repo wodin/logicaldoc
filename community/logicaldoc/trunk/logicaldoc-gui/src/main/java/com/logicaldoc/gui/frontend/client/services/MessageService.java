@@ -19,27 +19,27 @@ public interface MessageService extends RemoteService {
 	/**
 	 * Gets the Message
 	 */
-	public GUIMessage getMessage(String sid, long messageId, boolean markAsRead) throws ServerException;
+	public GUIMessage getMessage(long messageId, boolean markAsRead) throws ServerException;
 
 	/**
 	 * Deletes a list of Messages
 	 */
-	public void delete(String sid, long[] ids) throws ServerException;
+	public void delete(long[] ids) throws ServerException;
 
-	void save(String sid, GUIMessage message, long[] recipientIds) throws ServerException;
+	void save(GUIMessage message, long[] recipientIds) throws ServerException;
 
 	/**
 	 * Loads the templates configured for a given language.
 	 */
-	public GUIMessageTemplate[] loadTemplates(String sid, String language) throws ServerException;
+	public GUIMessageTemplate[] loadTemplates(String language) throws ServerException;
 
 	/**
 	 * Saves the given templates
 	 */
-	public void saveTemplates(String sid, GUIMessageTemplate[] templates) throws ServerException;
+	public void saveTemplates(GUIMessageTemplate[] templates) throws ServerException;
 
 	/**
 	 * Deletes a selection of templates
 	 */
-	public void deleteTemplates(String sid, long[] ids) throws ServerException;
+	public void deleteTemplates(long[] ids) throws ServerException;
 }

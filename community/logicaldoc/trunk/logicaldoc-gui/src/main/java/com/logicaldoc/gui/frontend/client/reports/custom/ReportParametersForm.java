@@ -8,7 +8,6 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIReport;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -65,7 +64,7 @@ public class ReportParametersForm extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
-		service.getReportParameters(Session.get().getSid(), form.getId(), new AsyncCallback<GUIExtendedAttribute[]>() {
+		service.getReportParameters(form.getId(), new AsyncCallback<GUIExtendedAttribute[]>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -222,20 +221,19 @@ public class ReportParametersForm extends Window {
 			}
 		}
 
-		service.execute(Session.get().getSid(), report.getId(), parameters.toArray(new GUIExtendedAttribute[0]),
-				new AsyncCallback<Void>() {
+		service.execute(report.getId(), parameters.toArray(new GUIExtendedAttribute[0]), new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(Void arg) {
-						destroy();
-						Log.info(I18N.message("reportinexecution"), null);
-						panel.update();
-					}
-				});
+			@Override
+			public void onSuccess(Void arg) {
+				destroy();
+				Log.info(I18N.message("reportinexecution"), null);
+				panel.update();
+			}
+		});
 	}
 }

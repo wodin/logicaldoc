@@ -214,7 +214,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		if (updateEnabled)
 			vote.addIconClickHandler(new IconClickHandler() {
 				public void onIconClick(IconClickEvent event) {
-					documentService.getRating(Session.get().getSid(), document.getId(), new AsyncCallback<GUIRating>() {
+					documentService.getRating(document.getId(), new AsyncCallback<GUIRating>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);

@@ -125,25 +125,24 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 									@Override
 									public void execute(Boolean value) {
 										if (value) {
-											service.move(Session.get().getSid(), source, target,
-													new AsyncCallback<Void>() {
-														@Override
-														public void onFailure(Throwable caught) {
-															Log.serverError(caught);
-															Log.warn(I18N.message("operationnotallowed"), null);
-														}
+											service.move(source, target, new AsyncCallback<Void>() {
+												@Override
+												public void onFailure(Throwable caught) {
+													Log.serverError(caught);
+													Log.warn(I18N.message("operationnotallowed"), null);
+												}
 
-														@Override
-														public void onSuccess(Void ret) {
-															reloadParentsOfSelection();
+												@Override
+												public void onSuccess(Void ret) {
+													reloadParentsOfSelection();
 
-															TreeNode targetNode = getTree().find("folderId",
-																	(Object) new Long(target));
-															if (targetNode != null) {
-																getTree().reloadChildren(targetNode);
-															}
-														}
-													});
+													TreeNode targetNode = getTree().find("folderId",
+															(Object) new Long(target));
+													if (targetNode != null) {
+														getTree().reloadChildren(targetNode);
+													}
+												}
+											});
 										}
 									}
 								});
@@ -178,21 +177,20 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 									@Override
 									public void execute(Boolean value) {
 										if (value) {
-											service.paste(Session.get().getSid(), ids, folderId, "cut",
-													new AsyncCallback<Void>() {
-														@Override
-														public void onFailure(Throwable caught) {
-															Log.serverError(caught);
-															Log.warn(I18N.message("operationnotallowed"), null);
-														}
+											service.paste(ids, folderId, "cut", new AsyncCallback<Void>() {
+												@Override
+												public void onFailure(Throwable caught) {
+													Log.serverError(caught);
+													Log.warn(I18N.message("operationnotallowed"), null);
+												}
 
-														@Override
-														public void onSuccess(Void result) {
-															DocumentsPanel.get().onFolderSelected(
-																	Session.get().getCurrentFolder());
-															Log.debug("Drag&Drop operation completed.");
-														}
-													});
+												@Override
+												public void onSuccess(Void result) {
+													DocumentsPanel.get().onFolderSelected(
+															Session.get().getCurrentFolder());
+													Log.debug("Drag&Drop operation completed.");
+												}
+											});
 										}
 
 										TreeNode node = getTree().find("folderId", (Object) new Long(folderId));
@@ -218,8 +216,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 					Menu contextMenu = prepateContextMenu();
 					contextMenu.showContextMenu();
 				} else {
-					service.getFolder(Session.get().getSid(),
-							Long.parseLong(getSelectedRecord().getAttributeAsString("folderId")), true,
+					service.getFolder(Long.parseLong(getSelectedRecord().getAttributeAsString("folderId")), true,
 							new AsyncCallback<GUIFolder>() {
 
 								@Override
@@ -271,8 +268,8 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 							getTree().openFolder(children[0]);
 						}
 
-						service.getFolder(Session.get().getSid(), Long.parseLong(children[0].getAttribute("folderId")),
-								true, new AsyncCallback<GUIFolder>() {
+						service.getFolder(Long.parseLong(children[0].getAttribute("folderId")), true,
+								new AsyncCallback<GUIFolder>() {
 
 									@Override
 									public void onFailure(Throwable caught) {
@@ -298,7 +295,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	 * @param folderId The folder's identifier
 	 */
 	public void selectFolder(long folderId) {
-		service.getFolder(Session.get().getSid(), folderId, false, new AsyncCallback<GUIFolder>() {
+		service.getFolder(folderId, false, new AsyncCallback<GUIFolder>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -486,8 +483,8 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		}
 		rss.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				Window.open(GWT.getHostPageBaseURL() + "folder_rss?sid=" + Session.get().getSid() + "&folderId=" + id
-						+ "&locale=" + I18N.getLocale(), "_blank", "");
+				Window.open(GWT.getHostPageBaseURL() + "folder_rss?folderId=" + id + "&locale=" + I18N.getLocale(),
+						"_blank", "");
 			}
 		});
 
@@ -628,49 +625,44 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	private void onDelete() {
 		final long[] selectedIds = getSelectedIds();
 
-		documentService.countDocuments(Session.get().getSid(), selectedIds, Constants.DOC_ARCHIVED,
-				new AsyncCallback<Long>() {
+		documentService.countDocuments(selectedIds, Constants.DOC_ARCHIVED, new AsyncCallback<Long>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(Long count) {
-						LD.ask(I18N.message("question"),
-								count.longValue() == 0L ? (I18N.message(selectedIds.length == 1 ? "confirmdeletefolder"
-										: "confirmdeletefolders")) : (I18N
-										.message(selectedIds.length == 1 ? "confirmdeletefolderarchdocs"
-												: "confirmdeletefoldersarchdocs")), new BooleanCallback() {
-									@Override
-									public void execute(Boolean value) {
-										if (value) {
-											service.delete(Session.get().getSid(), selectedIds,
-													new AsyncCallback<Void>() {
-														@Override
-														public void onFailure(Throwable caught) {
-															Log.serverError(caught);
-														}
-
-														@Override
-														public void onSuccess(Void result) {
-															reloadParentsOfSelection();
-
-															TreeNode node = getTree().find(
-																	"folderId",
-																	(Object) getSelectedRecord().getAttributeAsString(
-																			"folderId"));
-															TreeNode parent = getTree().getParent(node);
-															selectFolder(Long.parseLong(parent
-																	.getAttributeAsString("parent")));
-														}
-													});
+			@Override
+			public void onSuccess(Long count) {
+				LD.ask(I18N.message("question"),
+						count.longValue() == 0L ? (I18N.message(selectedIds.length == 1 ? "confirmdeletefolder"
+								: "confirmdeletefolders")) : (I18N
+								.message(selectedIds.length == 1 ? "confirmdeletefolderarchdocs"
+										: "confirmdeletefoldersarchdocs")), new BooleanCallback() {
+							@Override
+							public void execute(Boolean value) {
+								if (value) {
+									service.delete(selectedIds, new AsyncCallback<Void>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
 										}
-									}
-								});
-					}
-				});
+
+										@Override
+										public void onSuccess(Void result) {
+											reloadParentsOfSelection();
+
+											TreeNode node = getTree().find("folderId",
+													(Object) getSelectedRecord().getAttributeAsString("folderId"));
+											TreeNode parent = getTree().getParent(node);
+											selectFolder(Long.parseLong(parent.getAttributeAsString("parent")));
+										}
+									});
+								}
+							}
+						});
+			}
+		});
 	}
 
 	/**
@@ -688,7 +680,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
 		final long folderId = Long.parseLong(selectedNode.getAttributeAsString("folderId"));
 
-		documentService.addBookmarks(Session.get().getSid(), new long[] { folderId }, 1, new AsyncCallback<Void>() {
+		documentService.addBookmarks(new long[] { folderId }, 1, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -711,7 +703,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	public void openFolder(final long folderId) {
 		getTree().closeAll();
 
-		service.getFolder(Session.get().getSid(), folderId, true, new AsyncCallback<GUIFolder>() {
+		service.getFolder(folderId, true, new AsyncCallback<GUIFolder>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -826,7 +818,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 							return;
 						final String val = value.trim().replaceAll("/", "").replaceAll("\\\\", "");
 						final long folderId = Long.parseLong(selectedNode.getAttributeAsString("folderId"));
-						service.rename(Session.get().getSid(), folderId, val, new AsyncCallback<Void>() {
+						service.rename(folderId, val, new AsyncCallback<Void>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -860,20 +852,19 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 			docIds[i++] = doc.getId();
 		}
 
-		service.paste(Session.get().getSid(), docIds, folderId, Clipboard.getInstance().getLastAction(),
-				new AsyncCallback<Void>() {
+		service.paste(docIds, folderId, Clipboard.getInstance().getLastAction(), new AsyncCallback<Void>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(Void result) {
-						DocumentsPanel.get().onFolderSelected(Session.get().getCurrentFolder());
-						Clipboard.getInstance().clear();
-					}
-				});
+			@Override
+			public void onSuccess(Void result) {
+				DocumentsPanel.get().onFolderSelected(Session.get().getCurrentFolder());
+				Clipboard.getInstance().clear();
+			}
+		});
 	}
 
 	private void onPasteAsAlias() {
@@ -898,7 +889,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	}
 
 	private void pasteAsAlias(final long folderId, final long[] docIds, String type) {
-		service.pasteAsAlias(Session.get().getSid(), docIds, folderId, type, new AsyncCallback<Void>() {
+		service.pasteAsAlias(docIds, folderId, type, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -941,7 +932,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	 * @param targetFolderId The parent folder
 	 */
 	public void moveTo(final long targetFolderId) {
-		service.move(Session.get().getSid(), getSelectedIds(), targetFolderId, new AsyncCallback<Void>() {
+		service.move(getSelectedIds(), targetFolderId, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -969,7 +960,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		final TreeNode target = getTree().findById(Long.toString(targetFolderId));
 
 		ContactingServer.get().show();
-		service.copyFolders(Session.get().getSid(), getSelectedIds(), targetFolderId, foldersOnly, inheritPermissions,
+		service.copyFolders(getSelectedIds(), targetFolderId, foldersOnly, inheritPermissions,
 				new AsyncCallback<Void>() {
 
 					@Override
@@ -995,20 +986,19 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	public void createAlias(long referencedFolderId) {
 		final TreeNode parent = getSelectedRecord();
 
-		service.createAlias(Session.get().getSid(), parent.getAttributeAsLong("folderId"), referencedFolderId,
-				new AsyncCallback<GUIFolder>() {
+		service.createAlias(parent.getAttributeAsLong("folderId"), referencedFolderId, new AsyncCallback<GUIFolder>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
 
-					@Override
-					public void onSuccess(GUIFolder ret) {
-						if (parent != null)
-							getTree().reloadChildren(parent);
-					}
-				});
+			@Override
+			public void onSuccess(GUIFolder ret) {
+				if (parent != null)
+					getTree().reloadChildren(parent);
+			}
+		});
 	}
 
 	public boolean isFirstTime() {
@@ -1051,7 +1041,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 				if (value.isEmpty())
 					SC.warn(I18N.message("commentrequired"));
 				else
-					documentService.archiveFolder(Session.get().getSid(), folderId, value, new AsyncCallback<Long>() {
+					documentService.archiveFolder(folderId, value, new AsyncCallback<Long>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);

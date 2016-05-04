@@ -89,7 +89,7 @@ public class LastNotesDashlet extends Dashlet {
 				if (event != null)
 					event.cancel();
 				Record record = event.getRecord();
-				documentService.getById(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("docId")),
+				documentService.getById(Long.parseLong(record.getAttributeAsString("docId")),
 						new AsyncCallback<GUIDocument>() {
 
 							@Override

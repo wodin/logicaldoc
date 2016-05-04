@@ -4,9 +4,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface ClusterServiceAsync {
 
-	void makeGlobal(String sid, String[] parameters, AsyncCallback<Void> callback);
+	void makeGlobal(String[] parameters, AsyncCallback<Void> callback);
 
-	void makeLocal(String sid, String[] parameters, AsyncCallback<Void> callback);
-
+	void makeLocal(String[] parameters, AsyncCallback<Void> callback);
 
 }

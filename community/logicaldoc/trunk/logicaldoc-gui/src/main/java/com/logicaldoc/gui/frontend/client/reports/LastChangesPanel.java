@@ -8,7 +8,6 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIHistory;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -205,11 +204,11 @@ public class LastChangesPanel extends VLayout {
 		ListGridField folderId = new ListGridField("folderId", I18N.message("folderid"), 100);
 		folderId.setCanFilter(true);
 		folderId.setHidden(true);
-		
+
 		ListGridField userId = new ListGridField("userId", I18N.message("userid"), 100);
 		userId.setCanFilter(true);
 		userId.setHidden(true);
-		
+
 		histories = new ListGrid();
 		histories.setEmptyMessage(I18N.message("notitemstoshow"));
 		histories.setWidth100();
@@ -293,7 +292,7 @@ public class LastChangesPanel extends VLayout {
 
 			}
 
-			service.search(Session.get().getSid(), userValue, fromValue, tillValue, displayMaxValue, sid, eventValues,
+			service.search(userValue, fromValue, tillValue, displayMaxValue, sid, eventValues,
 					new AsyncCallback<GUIHistory[]>() {
 
 						@Override

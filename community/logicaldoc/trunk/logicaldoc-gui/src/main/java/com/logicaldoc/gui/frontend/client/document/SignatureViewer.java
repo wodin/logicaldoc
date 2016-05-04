@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.document;
 import java.util.LinkedHashMap;
 
 import com.google.gwt.core.client.GWT;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.HeaderControls;
@@ -48,8 +47,7 @@ public class SignatureViewer extends Window {
 		LinkItem downloadUrl = ItemFactory.newLinkItem("", I18N.message("downloadsignedfile"));
 		downloadUrl.setTitleOrientation(TitleOrientation.LEFT);
 		downloadUrl.setWrapTitle(false);
-		downloadUrl.setValue(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + docId
-				+ "&suffix=sign.p7m");
+		downloadUrl.setValue(GWT.getHostPageBaseURL() + "download?docId=" + docId + "&suffix=sign.p7m");
 		downloadUrl.setLinkTitle(fileName);
 
 		urlForm.setItems(downloadUrl);

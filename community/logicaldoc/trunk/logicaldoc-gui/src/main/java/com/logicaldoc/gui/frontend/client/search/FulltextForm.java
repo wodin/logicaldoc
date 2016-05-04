@@ -138,7 +138,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders"));
 		subfolders.setEndRow(true);
-		
+
 		folder = new FolderSelector(null, true);
 		folder.setColSpan(3);
 		folder.setWidth(200);
@@ -299,7 +299,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		if (templateId == null)
 			return;
 
-		documentService.getAttributes(Session.get().getSid(), templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
+		documentService.getAttributes(templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowHistoriesDS;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
@@ -117,19 +116,18 @@ public class WorkflowHistoryDialog extends Window {
 				if (selectedRecord == null)
 					return;
 
-				service.get(Session.get().getSid(), selectedRecord.getAttributeAsString("name"),
-						new AsyncCallback<GUIWorkflow>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+				service.get(selectedRecord.getAttributeAsString("name"), new AsyncCallback<GUIWorkflow>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUIWorkflow result) {
-								selectedWorkflow = result;
-								reload();
-							}
-						});
+					@Override
+					public void onSuccess(GUIWorkflow result) {
+						selectedWorkflow = result;
+						reload();
+					}
+				});
 			}
 		});
 
@@ -264,21 +262,20 @@ public class WorkflowHistoryDialog extends Window {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteInstance(Session.get().getSid(), selection.getAttributeAsString("id"),
-									new AsyncCallback<Void>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+							service.deleteInstance(selection.getAttributeAsString("id"), new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-										@Override
-										public void onSuccess(Void result) {
-											instancesList.removeSelectedData();
-											instancesList.deselectAllRecords();
-											historiesList.removeSelectedData();
-											historiesList.deselectAllRecords();
-										}
-									});
+								@Override
+								public void onSuccess(Void result) {
+									instancesList.removeSelectedData();
+									instancesList.deselectAllRecords();
+									historiesList.removeSelectedData();
+									historiesList.deselectAllRecords();
+								}
+							});
 						}
 					}
 				});

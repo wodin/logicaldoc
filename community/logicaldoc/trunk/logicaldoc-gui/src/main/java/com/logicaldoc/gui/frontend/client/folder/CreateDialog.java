@@ -98,7 +98,7 @@ public class CreateDialog extends Dialog {
 	private void onCreate(final GUIFolder folder, boolean inheritOptionEnabled) {
 		if (form.validate()) {
 			folder.setName(form.getValueAsString("name").trim());
-			service.create(Session.get().getSid(), folder,
+			service.create(folder,
 					!inheritOptionEnabled || "true".equals(form.getValueAsString("inheritSecurity")),
 					new AsyncCallback<GUIFolder>() {
 

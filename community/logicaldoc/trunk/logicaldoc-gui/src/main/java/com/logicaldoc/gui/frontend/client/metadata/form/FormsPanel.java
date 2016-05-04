@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.metadata.form;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -145,7 +144,7 @@ public class FormsPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					docService.getById(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+					docService.getById(Long.parseLong(record.getAttributeAsString("id")),
 							new AsyncCallback<GUIDocument>() {
 
 								@Override
@@ -188,7 +187,7 @@ public class FormsPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.delete(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

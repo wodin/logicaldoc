@@ -5,15 +5,15 @@ import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUITag;
 
 public interface TagServiceAsync {
-	void delete(String sid, String tag, AsyncCallback<Void> callback);
+	void delete(String tag, AsyncCallback<Void> callback);
 
-	void getTagCloud(String sid, AsyncCallback<GUITag[]> callback);
+	void getTagCloud(AsyncCallback<GUITag[]> callback);
 
-	void rename(String sid, String tag, String newTag, AsyncCallback<Void> callback);
+	void rename(String tag, String newTag, AsyncCallback<Void> callback);
 
-	void addTag(String sid, String tag, AsyncCallback<Void> callback);
+	void addTag(String tag, AsyncCallback<Void> callback);
 
-	void removeTag(String sid, String tag, AsyncCallback<Void> callback);
+	void removeTag(String tag, AsyncCallback<Void> callback);
 
-	void getSettings(String sid, AsyncCallback<GUIParameter[]> callback);
+	void getSettings(AsyncCallback<GUIParameter[]> callback);
 }

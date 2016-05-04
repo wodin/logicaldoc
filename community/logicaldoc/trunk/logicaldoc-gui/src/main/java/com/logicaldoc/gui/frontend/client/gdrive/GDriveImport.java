@@ -130,33 +130,32 @@ public class GDriveImport extends Window {
 			@Override
 			protected void onSearch() {
 				ContactingServer.get().show();
-				gdocsService.search(Session.get().getSid(), this.getValueAsString(),
-						new AsyncCallback<GUIDocument[]>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								ContactingServer.get().hide();
-								Log.serverError(caught);
-							}
+				gdocsService.search(this.getValueAsString(), new AsyncCallback<GUIDocument[]>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						ContactingServer.get().hide();
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUIDocument[] hits) {
-								ContactingServer.get().hide();
-								ListGridRecord[] records = new ListGridRecord[hits.length];
-								int i = 0;
-								for (GUIDocument hit : hits) {
-									ListGridRecord record = new ListGridRecord();
-									record.setAttribute("resourceId", hit.getExtResId());
-									record.setAttribute("icon", hit.getIcon());
-									record.setAttribute("title", hit.getTitle());
-									record.setAttribute("version", hit.getVersion());
-									record.setAttribute("size", hit.getFileSize());
-									record.setAttribute("editor", hit.getPublisher());
-									record.setAttribute("lastModified", hit.getLastModified());
-									records[i++] = record;
-								}
-								grid.setData(records);
-							}
-						});
+					@Override
+					public void onSuccess(GUIDocument[] hits) {
+						ContactingServer.get().hide();
+						ListGridRecord[] records = new ListGridRecord[hits.length];
+						int i = 0;
+						for (GUIDocument hit : hits) {
+							ListGridRecord record = new ListGridRecord();
+							record.setAttribute("resourceId", hit.getExtResId());
+							record.setAttribute("icon", hit.getIcon());
+							record.setAttribute("title", hit.getTitle());
+							record.setAttribute("version", hit.getVersion());
+							record.setAttribute("size", hit.getFileSize());
+							record.setAttribute("editor", hit.getPublisher());
+							record.setAttribute("lastModified", hit.getLastModified());
+							records[i++] = record;
+						}
+						grid.setData(records);
+					}
+				});
 			}
 		});
 		toolStrip.addSeparator();
@@ -176,8 +175,8 @@ public class GDriveImport extends Window {
 					resIds[i] = selection[i].getAttributeAsString("resourceId");
 
 				ContactingServer.get().show();
-				gdocsService.importDocuments(Session.get().getSid(), resIds, Session.get().getCurrentFolder().getId(),
-						null, new AsyncCallback<Void>() {
+				gdocsService.importDocuments(resIds, Session.get().getCurrentFolder().getId(), null,
+						new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
 								ContactingServer.get().hide();

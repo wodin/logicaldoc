@@ -5,7 +5,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmailSettings;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -137,19 +136,18 @@ public class EmailPanel extends VLayout {
 							.setSecureAuth(values.get("secureAuth").toString().equals("true") ? true : false);
 					EmailPanel.this.emailSettings.setSenderEmail((String) values.get("senderEmail"));
 
-					service.saveEmailSettings(Session.get().getSid(), EmailPanel.this.emailSettings,
-							new AsyncCallback<Void>() {
+					service.saveEmailSettings(EmailPanel.this.emailSettings, new AsyncCallback<Void>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(Void ret) {
-									Log.info(I18N.message("settingssaved"), null);
-								}
-							});
+						@Override
+						public void onSuccess(Void ret) {
+							Log.info(I18N.message("settingssaved"), null);
+						}
+					});
 				}
 			}
 		});
@@ -165,7 +163,7 @@ public class EmailPanel extends VLayout {
 								@Override
 								public void execute(String value) {
 									ContactingServer.get().show();
-									service.testEmail(Session.get().getSid(), value, new AsyncCallback<Boolean>() {
+									service.testEmail(value, new AsyncCallback<Boolean>() {
 										@Override
 										public void onFailure(Throwable caught) {
 											Log.serverError(caught);

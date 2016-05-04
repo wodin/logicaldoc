@@ -4,7 +4,6 @@ import java.util.Date;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIStamp;
 import com.logicaldoc.gui.common.client.data.StampsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -99,8 +98,8 @@ public class StampsPanel extends VLayout {
 			@Override
 			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
 				if (value != null && !value.toString().trim().equals(""))
-					return "<img height='60px' src='" + Util.contextPath() + "stampimage/" + value + "?sid="
-							+ Session.get().getSid() + "&random=" + new Date().getTime() + "'/>";
+					return "<img height='60px' src='" + Util.contextPath() + "stampimage/" + value + "?random="
+							+ new Date().getTime() + "'/>";
 				else
 					return "";
 			}
@@ -173,19 +172,18 @@ public class StampsPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.getStamp(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-							new AsyncCallback<GUIStamp>() {
+					service.getStamp(Long.parseLong(record.getAttributeAsString("id")), new AsyncCallback<GUIStamp>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(GUIStamp stamp) {
-									showStampDetails(stamp);
-								}
-							});
+						@Override
+						public void onSuccess(GUIStamp stamp) {
+							showStampDetails(stamp);
+						}
+					});
 			}
 		});
 
@@ -216,7 +214,7 @@ public class StampsPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.delete(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -239,7 +237,7 @@ public class StampsPanel extends VLayout {
 		enable.setTitle(I18N.message("enable"));
 		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.changeStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), true,
+				service.changeStatus(Long.parseLong(record.getAttributeAsString("id")), true,
 						new AsyncCallback<Void>() {
 
 							@Override
@@ -260,7 +258,7 @@ public class StampsPanel extends VLayout {
 		disable.setTitle(I18N.message("disable"));
 		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.changeStatus(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")), false,
+				service.changeStatus(Long.parseLong(record.getAttributeAsString("id")), false,
 						new AsyncCallback<Void>() {
 
 							@Override

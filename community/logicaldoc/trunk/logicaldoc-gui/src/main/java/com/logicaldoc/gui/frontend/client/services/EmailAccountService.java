@@ -14,30 +14,30 @@ public interface EmailAccountService extends RemoteService {
 	/**
 	 * Deletes a given account
 	 */
-	public void delete(String sid, long id) throws ServerException;
+	public void delete(long id) throws ServerException;
 
 	/**
 	 * Creates or updates an account
 	 */
-	public GUIEmailAccount save(String sid, GUIEmailAccount account) throws ServerException;
+	public GUIEmailAccount save(GUIEmailAccount account) throws ServerException;
 
 	/**
 	 * Loads a given account from the database
 	 */
-	public GUIEmailAccount get(String sid, long id) throws ServerException;
+	public GUIEmailAccount get(long id) throws ServerException;
 
 	/**
 	 * Test the connection to the given account
 	 */
-	public boolean test(String sid, long id) throws ServerException;
+	public boolean test(long id) throws ServerException;
 
 	/**
 	 * Changes an account enabled/disabled status
 	 */
-	public void changeStatus(String sid, long id, boolean enabled) throws ServerException;
+	public void changeStatus(long id, boolean enabled) throws ServerException;
 
 	/**
 	 * Cleans the cache
 	 */
-	public void resetCache(String sid, long id) throws ServerException;
+	public void resetCache(long id) throws ServerException;
 }

@@ -13,8 +13,8 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
-import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
@@ -35,8 +35,9 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	private static Logger log = LoggerFactory.getLogger(SearchEngineServiceImpl.class);
 
 	@Override
-	public GUISearchEngine getInfo(String sid) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUISearchEngine getInfo() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
 		try {
 			GUISearchEngine searchEngine = new GUISearchEngine();
 
@@ -82,8 +83,8 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	}
 
 	@Override
-	public void rescheduleAll(String sid, final boolean dropIndex) throws ServerException {
-		final Session session = ServiceUtil.validateSession(sid);
+	public void rescheduleAll(final boolean dropIndex) throws ServerException {
+		final Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		if (dropIndex)
 			try {
@@ -114,8 +115,9 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	}
 
 	@Override
-	public void unlocks(String sid) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void unlocks() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
 		try {
 			SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 			indexer.unlock();
@@ -125,8 +127,9 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	}
 
 	@Override
-	public String check(String sid) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public String check() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
 		try {
 			SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 			return indexer.check();
@@ -136,8 +139,9 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	}
 
 	@Override
-	public void save(String sid, GUISearchEngine searchEngine) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void save(GUISearchEngine searchEngine) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
 		try {
 			ContextProperties conf = Context.get().getProperties();
 			conf.setProperty(session.getTenantName() + ".index.excludes",
@@ -160,8 +164,9 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	}
 
 	@Override
-	public void setLanguageStatus(String sid, String language, boolean active) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void setLanguageStatus(String language, boolean active) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
 		try {
 			ContextProperties conf = Context.get().getProperties();
 			conf.setProperty(session.getTenantName() + ".lang." + language, active ? "enabled" : "disabled");
@@ -172,8 +177,8 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 	}
 
 	@Override
-	public void setAliases(String sid, String extension, String aliases) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void setAliases(String extension, String aliases) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			StringTokenizer st = new StringTokenizer(aliases, ",", false);

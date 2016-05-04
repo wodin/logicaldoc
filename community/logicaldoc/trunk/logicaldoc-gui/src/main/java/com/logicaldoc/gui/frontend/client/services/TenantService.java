@@ -17,25 +17,25 @@ public interface TenantService extends RemoteService {
 	/**
 	 * Deletes a specific tenant by its ID
 	 */
-	public void delete(String sid, long tenantId) throws ServerException;
+	public void delete(long tenantId) throws ServerException;
 
 	/**
 	 * Saves/Updates a given tenant
 	 */
-	public GUITenant save(String sid, GUITenant tenant) throws ServerException;
+	public GUITenant save(GUITenant tenant) throws ServerException;
 
 	/**
 	 * Loads a given tenant
 	 */
-	public GUITenant load(String sid, long tenantId) throws ServerException;
+	public GUITenant load(long tenantId) throws ServerException;
 
 	/**
 	 * Changes the password of the administrator of the given tenant
 	 */
-	public void changeAdminPassword(String sid, String password, String tenantName) throws ServerException;
+	public void changeAdminPassword(String password, String tenantName) throws ServerException;
 	
 	/**
 	 * Change session tenant
 	 */
-	public GUITenant changeSessionTenant(String sid, long tenantId) throws ServerException;
+	public GUITenant changeSessionTenant(long tenantId) throws ServerException;
 }

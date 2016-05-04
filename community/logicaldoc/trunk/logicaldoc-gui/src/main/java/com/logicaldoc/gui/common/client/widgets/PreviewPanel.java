@@ -88,7 +88,7 @@ public class PreviewPanel extends VLayout {
 		String contents = "";
 
 		try {
-			String url = GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id;
+			String url = GWT.getHostPageBaseURL() + "download?docId=" + id;
 			if (fileVersion != null)
 				url += "&fileVersion=" + fileVersion;
 
@@ -126,7 +126,7 @@ public class PreviewPanel extends VLayout {
 		String contents = "";
 
 		try {
-			String url = Util.contextPath() + "/prev/index.jsp?sid=" + Session.get().getSid() + "&docId=" + id
+			String url = Util.contextPath() + "/prev/index.jsp?docId=" + id
 					+ (fileVersion != null ? "&fileVersion=" + fileVersion : "") + "&locale=" + I18N.getLocale();
 
 			contents = "<iframe src='" + url + "' style='border:0px solid white; width:" + (getWidth() - 1)

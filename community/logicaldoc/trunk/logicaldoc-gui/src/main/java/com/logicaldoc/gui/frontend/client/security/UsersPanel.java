@@ -149,19 +149,18 @@ public class UsersPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.getUser(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-							new AsyncCallback<GUIUser>() {
+					service.getUser(Long.parseLong(record.getAttributeAsString("id")), new AsyncCallback<GUIUser>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(GUIUser user) {
-									showUserDetails(user);
-								}
-							});
+						@Override
+						public void onSuccess(GUIUser user) {
+							showUserDetails(user);
+						}
+					});
 			}
 		});
 
@@ -226,7 +225,7 @@ public class UsersPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteUser(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.deleteUser(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -260,20 +259,19 @@ public class UsersPanel extends VLayout {
 		signature.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				service.getUser(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
-						new AsyncCallback<GUIUser>() {
+				service.getUser(Long.parseLong(record.getAttributeAsString("id")), new AsyncCallback<GUIUser>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUIUser user) {
-								MySignature mysign = new MySignature(user, true);
-								mysign.show();
-							}
-						});
+					@Override
+					public void onSuccess(GUIUser user) {
+						MySignature mysign = new MySignature(user, true);
+						mysign.show();
+					}
+				});
 			}
 		});
 

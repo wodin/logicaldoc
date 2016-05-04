@@ -36,7 +36,7 @@ public class LDSecurityContextRepository implements SecurityContextRepository {
 	@Override
 	public SecurityContext loadContext(HttpRequestResponseHolder request) {
 		String sid = SessionManager.get().getSessionId(request.getRequest());
-		if (sid == null || !SessionManager.get().isValid(sid))
+		if (sid == null || !SessionManager.get().isOpen(sid))
 			sid = null;
 
 		if (sid == null)

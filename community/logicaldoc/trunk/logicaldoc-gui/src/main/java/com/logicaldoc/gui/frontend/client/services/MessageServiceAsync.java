@@ -6,16 +6,15 @@ import com.logicaldoc.gui.common.client.beans.GUIMessageTemplate;
 
 public interface MessageServiceAsync {
 
-	void delete(String sid, long[] ids, AsyncCallback<Void> callback);
+	void delete(long[] ids, AsyncCallback<Void> callback);
 
-	void getMessage(String sid, long messageId, boolean markAsRead, AsyncCallback<GUIMessage> callback);
+	void getMessage(long messageId, boolean markAsRead, AsyncCallback<GUIMessage> callback);
 
-	void save(String sid, GUIMessage message, long[] recipientIds, AsyncCallback<Void> callback);
+	void save(GUIMessage message, long[] recipientIds, AsyncCallback<Void> callback);
 
-	void loadTemplates(String sid, String language, AsyncCallback<GUIMessageTemplate[]> callback);
+	void loadTemplates(String language, AsyncCallback<GUIMessageTemplate[]> callback);
 
-	void saveTemplates(String sid, GUIMessageTemplate[] templates, AsyncCallback<Void> callback);
+	void saveTemplates(GUIMessageTemplate[] templates, AsyncCallback<Void> callback);
 
-	void deleteTemplates(String sid, long[] ids, AsyncCallback<Void> callback);
-
+	void deleteTemplates(long[] ids, AsyncCallback<Void> callback);
 }

@@ -70,11 +70,9 @@ public class ContextMenu extends Menu {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection.length == 1) {
 					long id = selection[0].getId();
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-							+ id);
+					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id);
 				} else {
-					String url = GWT.getHostPageBaseURL() + "zip-export?sid=" + Session.get().getSid() + "&folderId="
-							+ folder.getId();
+					String url = GWT.getHostPageBaseURL() + "zip-export?folderId=" + folder.getId();
 					for (GUIDocument record : selection) {
 						url += "&docId=" + record.getId();
 					}
@@ -153,7 +151,7 @@ public class ContextMenu extends Menu {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							documentService.delete(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							documentService.delete(ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -197,7 +195,7 @@ public class ContextMenu extends Menu {
 				for (GUIDocument doc : Clipboard.getInstance())
 					inIds[i++] = doc.getId();
 
-				documentService.linkDocuments(Session.get().getSid(), inIds, selectionIds, new AsyncCallback<Void>() {
+				documentService.linkDocuments(inIds, selectionIds, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -229,23 +227,22 @@ public class ContextMenu extends Menu {
 						if (value.isEmpty())
 							SC.warn(I18N.message("commentrequired"));
 						else
-							documentService.makeImmutable(Session.get().getSid(), selectionIds, value,
-									new AsyncCallback<Void>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+							documentService.makeImmutable(selectionIds, value, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-										@Override
-										public void onSuccess(Void result) {
-											for (GUIDocument record : selection) {
-												record.setImmutable(1);
-												grid.updateDocument(record);
-											}
+								@Override
+								public void onSuccess(Void result) {
+									for (GUIDocument record : selection) {
+										record.setImmutable(1);
+										grid.updateDocument(record);
+									}
 
-											grid.selectDocument(selection[0].getId());
-										}
-									});
+									grid.selectDocument(selection[0].getId());
+								}
+							});
 					}
 
 				});
@@ -264,28 +261,25 @@ public class ContextMenu extends Menu {
 					@Override
 					public void execute(String value) {
 						if (value != null)
-							documentService.lock(Session.get().getSid(), selectionIds, value,
-									new AsyncCallback<Void>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+							documentService.lock(selectionIds, value, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-										@Override
-										public void onSuccess(Void result) {
-											for (GUIDocument record : selection) {
-												record.setLockUserId(Session.get().getUser().getId());
-												record.setStatus(Constants.DOC_LOCKED);
-												grid.updateDocument(record);
-											}
+								@Override
+								public void onSuccess(Void result) {
+									for (GUIDocument record : selection) {
+										record.setLockUserId(Session.get().getUser().getId());
+										record.setStatus(Constants.DOC_LOCKED);
+										grid.updateDocument(record);
+									}
 
-											Session.get()
-													.getUser()
-													.setLockedDocs(
-															Session.get().getUser().getLockedDocs() + selection.length);
-											grid.selectDocument(selectionIds[0]);
-										}
-									});
+									Session.get().getUser()
+											.setLockedDocs(Session.get().getUser().getLockedDocs() + selection.length);
+									grid.selectDocument(selectionIds[0]);
+								}
+							});
 					}
 
 				});
@@ -299,7 +293,7 @@ public class ContextMenu extends Menu {
 				if (selection == null)
 					return;
 
-				documentService.unlock(Session.get().getSid(), selectionIds, new AsyncCallback<Void>() {
+				documentService.unlock(selectionIds, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -327,7 +321,7 @@ public class ContextMenu extends Menu {
 		checkout.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				final GUIDocument document = grid.getSelectedDocument();
-				documentService.checkout(Session.get().getSid(), document.getId(), new AsyncCallback<Void>() {
+				documentService.checkout(document.getId(), new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -340,8 +334,7 @@ public class ContextMenu extends Menu {
 						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
 						Log.info(I18N.message("documentcheckedout"), null);
 
-						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid()
-								+ "&docId=" + document.getId());
+						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + document.getId());
 					}
 				});
 			}
@@ -356,7 +349,7 @@ public class ContextMenu extends Menu {
 					return;
 				long id = selection.getId();
 				final String filename = selection.getFileName();
-				documentService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
+				documentService.getById(id, new AsyncCallback<GUIDocument>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -389,20 +382,18 @@ public class ContextMenu extends Menu {
 						if (value.isEmpty())
 							SC.warn(I18N.message("commentrequired"));
 						else
-							documentService.archiveDocuments(Session.get().getSid(), selectionIds, value,
-									new AsyncCallback<Void>() {
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
+							documentService.archiveDocuments(selectionIds, value, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
 
-										@Override
-										public void onSuccess(Void result) {
-											grid.removeSelectedDocuments();
-											Log.info(I18N.message("documentswerearchived", "" + selectionIds.length),
-													null);
-										}
-									});
+								@Override
+								public void onSuccess(Void result) {
+									grid.removeSelectedDocuments();
+									Log.info(I18N.message("documentswerearchived", "" + selectionIds.length), null);
+								}
+							});
 					}
 
 				});
@@ -415,7 +406,7 @@ public class ContextMenu extends Menu {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection == null || selection.length == 0)
 					return;
-				documentService.addBookmarks(Session.get().getSid(), selectionIds, 0, new AsyncCallback<Void>() {
+				documentService.addBookmarks(selectionIds, 0, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -436,7 +427,7 @@ public class ContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				documentService.markUnindexable(Session.get().getSid(), selectionIds, new AsyncCallback<Void>() {
+				documentService.markUnindexable(selectionIds, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -460,7 +451,7 @@ public class ContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				documentService.markIndexable(Session.get().getSid(), selectionIds, new AsyncCallback<Void>() {
+				documentService.markIndexable(selectionIds, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -489,7 +480,7 @@ public class ContextMenu extends Menu {
 					ids[i] = selectionIds[i];
 
 				ContactingServer.get().show();
-				documentService.indexDocuments(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				documentService.indexDocuments(ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						ContactingServer.get().hide();
@@ -531,7 +522,7 @@ public class ContextMenu extends Menu {
 					dialog.show();
 				} else {
 					ContactingServer.get().show();
-					signService.signDocuments(Session.get().getSid(), selectionIds, new AsyncCallback<String>() {
+					signService.signDocuments(selectionIds, new AsyncCallback<String>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

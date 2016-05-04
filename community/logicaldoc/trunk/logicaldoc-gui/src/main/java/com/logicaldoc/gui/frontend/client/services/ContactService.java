@@ -17,22 +17,22 @@ public interface ContactService extends RemoteService {
 	/**
 	 * Deletes a selection of contacts
 	 */
-	public void delete(String sid, long[] ids) throws ServerException;
+	public void delete(long[] ids) throws ServerException;
 
 	/**
 	 * Saves a contact in the database
 	 */
-	public void save(String sid, GUIContact contact) throws ServerException;
+	public void save(GUIContact contact) throws ServerException;
 
 	/**
 	 * Loads a contact from the database
 	 */
-	public GUIContact load(String sid, long id) throws ServerException;
+	public GUIContact load(long id) throws ServerException;
 
 	/**
 	 * Reads the contacts that are about to beimported from CSV file
 	 */
-	public GUIContact[] parseContacts(String sid, boolean preview, String separator, String delimiter,
+	public GUIContact[] parseContacts(boolean preview, String separator, String delimiter,
 			boolean skipFirstRow, int firstName, int lastName, int email, int company, int phone, int mobile,
 			int address) throws ServerException;
 }

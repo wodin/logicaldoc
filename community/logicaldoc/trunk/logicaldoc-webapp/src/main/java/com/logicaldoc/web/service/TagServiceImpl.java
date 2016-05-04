@@ -32,12 +32,12 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 	protected static Logger log = LoggerFactory.getLogger(TagServiceImpl.class);
 
 	@Override
-	public GUITag[] getTagCloud(String sid) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUITag[] getTagCloud() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		try {
 			ArrayList<GUITag> ret = new ArrayList<GUITag>();
 			DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
-			List<TagCloud> list = dao.getTagCloud(sid);
+			List<TagCloud> list = dao.getTagCloud(session.getId());
 
 			for (TagCloud tagCloud : list) {
 				GUITag c = new GUITag();
@@ -54,12 +54,12 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 	}
 
 	@Override
-	public void delete(String sid, String tag) {
+	public void delete(String tag) {
 
 	}
 
 	@Override
-	public void rename(String sid, String tag, String newTag) {
+	public void rename(String tag, String newTag) {
 
 	}
 
@@ -70,18 +70,18 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 	}
 
 	@Override
-	public void addTag(String sid, String tag) throws ServerException {
+	public void addTag(String tag) throws ServerException {
 
 	}
 
 	@Override
-	public void removeTag(String sid, String tag) throws ServerException {
+	public void removeTag(String tag) throws ServerException {
 
 	}
 
 	@Override
-	public GUIParameter[] getSettings(String sid) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIParameter[] getSettings() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ContextProperties conf = Context.get().getProperties();
 

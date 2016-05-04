@@ -6,8 +6,6 @@ import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.types.VisibilityMode;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
-import com.smartgwt.client.widgets.layout.events.SectionHeaderClickEvent;
-import com.smartgwt.client.widgets.layout.events.SectionHeaderClickHandler;
 
 /**
  * The left menu in the search area

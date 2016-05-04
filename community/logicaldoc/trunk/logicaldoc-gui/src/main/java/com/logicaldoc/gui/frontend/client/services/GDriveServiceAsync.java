@@ -5,23 +5,23 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 
 public interface GDriveServiceAsync {
 
-	void checkin(String sid, long docId, String comment, boolean major, AsyncCallback<GUIDocument> callback);
+	void checkin(long docId, String comment, boolean major, AsyncCallback<GUIDocument> callback);
 
-	void upload(String sid, long docId, AsyncCallback<String> callback);
+	void upload(long docId, AsyncCallback<String> callback);
 
-	void delete(String sid, String resourceId, AsyncCallback<Void> callback);
+	void delete(String resourceId, AsyncCallback<Void> callback);
 
-	void saveSettings(String sid, String clientId, String clientSecret, AsyncCallback<String> callback);
+	void saveSettings(String clientId, String clientSecret, AsyncCallback<String> callback);
 	
-	void importDocuments(String sid, String[] resourceIds, long targetFolderId, String type,
+	void importDocuments(String[] resourceIds, long targetFolderId, String type,
 			AsyncCallback<Void> callback);
 
-	void exportDocuments(String sid, long[] ids, AsyncCallback<String[]> callback);
+	void exportDocuments(long[] ids, AsyncCallback<String[]> callback);
 
-	void search(String sid, String expression, AsyncCallback<GUIDocument[]> callback);
+	void search(String expression, AsyncCallback<GUIDocument[]> callback);
 
-	void create(String sid, String fileName, AsyncCallback<String> callback);
+	void create(String fileName, AsyncCallback<String> callback);
 
-	void loadSettings(String sid, AsyncCallback<String[]> callback);
+	void loadSettings(AsyncCallback<String[]> callback);
 
 }

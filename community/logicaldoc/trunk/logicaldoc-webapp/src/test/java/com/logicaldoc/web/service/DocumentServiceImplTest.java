@@ -58,7 +58,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testGetVersionsById() throws ServerException {
-		GUIVersion[] versions = service.getVersionsById(session.getSid(), 1, 2);
+		GUIVersion[] versions = service.getVersionsById(1, 2);
 		Assert.assertNotNull(versions);
 		Assert.assertEquals(2, versions.length);
 	}
@@ -71,7 +71,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		template.setValue("a2", 23L);
 		Assert.assertTrue(templateDao.store(template));
 
-		GUIExtendedAttribute[] extAttr = service.getAttributes(session.getSid(), template.getId());
+		GUIExtendedAttribute[] extAttr = service.getAttributes(template.getId());
 		Assert.assertEquals(GUIExtendedAttribute.TYPE_STRING, extAttr[0].getType());
 		Assert.assertEquals("a1", extAttr[0].getName());
 		Assert.assertEquals("v1", extAttr[0].getValue());
@@ -81,38 +81,38 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testGetById() throws ServerException {
-		GUIDocument doc = service.getById(session.getSid(), 1);
+		GUIDocument doc = service.getById(1);
 		Assert.assertEquals(1, doc.getId());
 		Assert.assertEquals("testDocname", doc.getTitle());
 		Assert.assertNotNull(doc.getFolder());
 		Assert.assertEquals(5, doc.getFolder().getId());
 		Assert.assertEquals("/", doc.getFolder().getName());
 
-		doc = service.getById(session.getSid(), 3);
+		doc = service.getById(3);
 		Assert.assertEquals(3, doc.getId());
 		Assert.assertEquals("testDocname3", doc.getTitle());
 
 		// Try with unexisting document
-		doc = service.getById(session.getSid(), 99);
+		doc = service.getById(99);
 		Assert.assertNull(doc);
 	}
 
 	@Test
 	public void testSave() throws Exception {
-		GUIDocument doc = service.getById(session.getSid(), 1);
+		GUIDocument doc = service.getById(1);
 
 		doc.setCoverage("xxxx");
-		doc = service.save(session.getSid(), doc);
+		doc = service.save(doc);
 		Assert.assertNotNull(doc);
 		Assert.assertEquals("testDocname", doc.getTitle());
 		Assert.assertEquals("myself", doc.getPublisher());
 		Assert.assertEquals("xxxx", doc.getCoverage());
 
-		doc = service.getById(session.getSid(), 3);
+		doc = service.getById(3);
 		Assert.assertEquals("testDocname3", doc.getTitle());
 		Assert.assertEquals("pippo", doc.getFileName());
 
-		doc = service.save(session.getSid(), doc);
+		doc = service.save(doc);
 		Assert.assertNotNull(doc);
 		Assert.assertEquals("testDocname3", doc.getTitle());
 	}
@@ -123,7 +123,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(link);
 		Assert.assertEquals("test", link.getType());
 
-		service.updateLink(session.getSid(), 1, "pippo");
+		service.updateLink(1, "pippo");
 
 		link = linkDao.findById(1);
 		Assert.assertNotNull(link);
@@ -139,7 +139,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(link);
 		Assert.assertEquals("xyz", link.getType());
 
-		service.deleteLinks(session.getSid(), new long[] { 1, 2 });
+		service.deleteLinks(new long[] { 1, 2 });
 
 		link = linkDao.findById(1);
 		Assert.assertNull(link);
@@ -160,7 +160,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(doc);
 		Assert.assertEquals("testDocname3", doc.getTitle());
 
-		service.delete(session.getSid(), new long[] { 2, 3 });
+		service.delete(new long[] { 2, 3 });
 
 		doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
@@ -177,7 +177,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertEquals(2, notes.size());
 		Assert.assertEquals("message for note 1", notes.get(0).getMessage());
 
-		service.deleteNotes(session.getSid(), new long[] { 1 });
+		service.deleteNotes(new long[] { 1 });
 
 		notes = noteDao.findByDocId(1);
 		Assert.assertNotNull(notes);
@@ -190,7 +190,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(notes);
 		Assert.assertEquals(2, notes.size());
 
-		long noteId = service.addNote(session.getSid(), 1L, "pippo");
+		long noteId = service.addNote(1L, "pippo");
 
 		DocumentNote note = noteDao.findById(noteId);
 		Assert.assertNotNull(note);
@@ -210,7 +210,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(doc);
 		Assert.assertEquals(3L, doc.getLockUserId().longValue());
 
-		service.unlock(session.getSid(), new long[] { 1, 2 });
+		service.unlock(new long[] { 1, 2 });
 
 		doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
@@ -219,7 +219,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(doc);
 		Assert.assertNull(doc.getLockUserId());
 
-		service.lock(session.getSid(), new long[] { 1, 2 }, "comment");
+		service.lock(new long[] { 1, 2 }, "comment");
 
 		doc = docDao.findById(1);
 		Assert.assertEquals(1L, doc.getLockUserId().longValue());
@@ -229,7 +229,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testLinkDocuments() throws ServerException {
-		service.linkDocuments(session.getSid(), new long[] { 1, 2 }, new long[] { 3, 4 });
+		service.linkDocuments(new long[] { 1, 2 }, new long[] { 3, 4 });
 
 		DocumentLink link = linkDao.findByDocIdsAndType(1, 3, "default");
 		Assert.assertNotNull(link);
@@ -247,7 +247,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 	public void testRestore() throws ServerException {
 		docDao.delete(4);
 		Assert.assertNull(docDao.findById(4));
-		service.restore(session.getSid(), new long[] { 4 }, 5);
+		service.restore(new long[] { 4 }, 5);
 		Assert.assertNotNull(docDao.findById(4));
 		Assert.assertNotNull(docDao.findById(4));
 		Assert.assertEquals(5L, docDao.findById(4).getFolder().getId());
@@ -255,7 +255,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testBookmarks() throws ServerException {
-		service.addBookmarks(session.getSid(), new long[] { 1, 2 }, 0);
+		service.addBookmarks(new long[] { 1, 2 }, 0);
 
 		Bookmark book = bookDao.findByUserIdAndDocId(1, 1).get(0);
 		Assert.assertNotNull(book);
@@ -267,13 +267,13 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		bookmark.setName("bookmarkTest");
 		bookmark.setDescription("bookDescr");
 
-		service.updateBookmark(session.getSid(), bookmark);
+		service.updateBookmark(bookmark);
 		book = bookDao.findById(bookmark.getId());
 		Assert.assertNotNull(book);
 		Assert.assertEquals("bookmarkTest", book.getTitle());
 		Assert.assertEquals("bookDescr", book.getDescription());
 
-		service.deleteBookmarks(session.getSid(), new long[] { 1, bookmark.getId() });
+		service.deleteBookmarks(new long[] { 1, bookmark.getId() });
 
 		book = bookDao.findById(1);
 		Assert.assertNull(book);
@@ -288,7 +288,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertEquals(1, histories.get(0).getNew());
 		Assert.assertEquals(1, histories.get(1).getNew());
 
-		service.markHistoryAsRead(session.getSid(), "data test 01");
+		service.markHistoryAsRead("data test 01");
 
 		histories = historyDao.findByUserIdAndEvent(1, "data test 01", null);
 		Assert.assertEquals(2, histories.size());
@@ -307,7 +307,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Document doc3 = docDao.findById(3);
 		Assert.assertNotNull(doc3);
 		Assert.assertEquals(AbstractDocument.INDEX_INDEXED, doc3.getIndexed());
-		service.markUnindexable(session.getSid(), new long[] { 1, 2, 3 });
+		service.markUnindexable(new long[] { 1, 2, 3 });
 
 		doc1 = docDao.findById(1);
 		Assert.assertNotNull(doc1);
@@ -319,7 +319,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 		Assert.assertNotNull(doc3);
 		Assert.assertEquals(AbstractDocument.INDEX_SKIP, doc3.getIndexed());
 
-		service.markIndexable(session.getSid(), new long[] { 1, 3 });
+		service.markIndexable(new long[] { 1, 3 });
 
 		doc1 = docDao.findById(1);
 		Assert.assertNotNull(doc1);
@@ -331,7 +331,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testCountDocuments() throws ServerException {
-		Assert.assertEquals(4, service.countDocuments(session.getSid(), new long[] { 5 }, 0));
-		Assert.assertEquals(0, service.countDocuments(session.getSid(), new long[] { 5 }, 3));
+		Assert.assertEquals(4, service.countDocuments(new long[] { 5 }, 0));
+		Assert.assertEquals(0, service.countDocuments(new long[] { 5 }, 3));
 	}
 }

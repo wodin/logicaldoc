@@ -1,10 +1,8 @@
 package com.logicaldoc.gui.common.client.i18n;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
@@ -30,6 +28,13 @@ public class I18N {
 
 	private static DateTimeFormat dateFormat = null;
 
+	public static String messageWithDefault(String key, String def) {
+		if (bundle.containsKey(key))
+			return bundle.get(key);
+		else
+			return def;
+	}
+	
 	public static String message(String key) {
 		if (bundle.containsKey(key))
 			return bundle.get(key);

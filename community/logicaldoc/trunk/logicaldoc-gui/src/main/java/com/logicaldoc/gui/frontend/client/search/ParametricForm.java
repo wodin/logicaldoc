@@ -31,10 +31,8 @@ import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.FormItemIfFunction;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -147,19 +145,18 @@ public class ParametricForm extends VLayout {
 				@Override
 				public void onChanged(ChangedEvent event) {
 					if (event.getValue() != null && !"".equals((String) event.getValue())) {
-						service.getTemplate(Session.get().getSid(), new Long((String) event.getValue()),
-								new AsyncCallback<GUITemplate>() {
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
+						service.getTemplate(new Long((String) event.getValue()), new AsyncCallback<GUITemplate>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-									@Override
-									public void onSuccess(GUITemplate result) {
-										selectedTemplate = result;
-										reloadCriteriaRows(selectedTemplate, true);
-									}
-								});
+							@Override
+							public void onSuccess(GUITemplate result) {
+								selectedTemplate = result;
+								reloadCriteriaRows(selectedTemplate, true);
+							}
+						});
 					} else {
 						selectedTemplate = null;
 						reloadCriteriaRows(selectedTemplate, true);

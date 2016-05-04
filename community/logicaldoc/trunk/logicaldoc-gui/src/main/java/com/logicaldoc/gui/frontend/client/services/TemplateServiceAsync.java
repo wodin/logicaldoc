@@ -5,15 +5,15 @@ import com.logicaldoc.gui.common.client.beans.GUITemplate;
 
 public interface TemplateServiceAsync {
 
-	void delete(String sid, long templateId, AsyncCallback<Void> callback);
+	void delete(long templateId, AsyncCallback<Void> callback);
 
-	void save(String sid, GUITemplate template, AsyncCallback<GUITemplate> callback);
+	void save(GUITemplate template, AsyncCallback<GUITemplate> callback);
 
-	void getTemplate(String sid, long templateId, AsyncCallback<GUITemplate> callback);
+	void getTemplate(long templateId, AsyncCallback<GUITemplate> callback);
 
-	void saveOptions(String sid, long templateId, String attribute, String[] values, AsyncCallback<Void> callback);
+	void saveOptions(long templateId, String attribute, String[] values, AsyncCallback<Void> callback);
 
-	void deleteOptions(String sid, long templateId, String attribute, String[] values, AsyncCallback<Void> callback);
+	void deleteOptions(long templateId, String attribute, String[] values, AsyncCallback<Void> callback);
 
-	void parseOptions(String sid, long templateId, String attribute, AsyncCallback<String[]> callback);
+	void parseOptions(long templateId, String attribute, AsyncCallback<String[]> callback);
 }

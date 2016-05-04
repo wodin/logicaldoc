@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.PropertiesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -133,7 +132,7 @@ public class ScopedPropertiesPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.makeGlobal(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							service.makeGlobal(ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -153,7 +152,7 @@ public class ScopedPropertiesPanel extends VLayout {
 				});
 			}
 		});
-		
+
 		MenuItem makelocal = new MenuItem();
 		makelocal.setTitle(I18N.message("makelocal"));
 		makelocal.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -162,7 +161,7 @@ public class ScopedPropertiesPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.makeLocal(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							service.makeLocal(ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

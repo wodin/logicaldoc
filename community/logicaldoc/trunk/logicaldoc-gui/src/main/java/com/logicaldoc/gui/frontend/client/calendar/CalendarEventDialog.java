@@ -276,7 +276,7 @@ public class CalendarEventDialog extends Window {
 
 				long id = Long.parseLong(selection.getAttribute("id"));
 
-				docService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
+				docService.getById(id, new AsyncCallback<GUIDocument>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -599,7 +599,7 @@ public class CalendarEventDialog extends Window {
 			else
 				calendarEvent.setDeadline(null);
 
-			service.saveEvent(Session.get().getSid(), calendarEvent, new AsyncCallback<Void>() {
+			service.saveEvent(calendarEvent, new AsyncCallback<Void>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);
@@ -634,7 +634,7 @@ public class CalendarEventDialog extends Window {
 									@Override
 									public void execute(Boolean value) {
 										Long id = value ? calendarEvent.getParentId() : calendarEvent.getId();
-										service.deleteEvent(Session.get().getSid(), id, new AsyncCallback<Void>() {
+										service.deleteEvent(id, new AsyncCallback<Void>() {
 											@Override
 											public void onFailure(Throwable caught) {
 												Log.serverError(caught);
@@ -648,7 +648,7 @@ public class CalendarEventDialog extends Window {
 									}
 								});
 					} else
-						service.deleteEvent(Session.get().getSid(), calendarEvent.getId(), new AsyncCallback<Void>() {
+						service.deleteEvent(calendarEvent.getId(), new AsyncCallback<Void>() {
 							@Override
 							public void onFailure(Throwable caught) {
 								Log.serverError(caught);

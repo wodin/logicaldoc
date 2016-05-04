@@ -53,8 +53,7 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 					if ("folder".equals(record.getAttribute("type")))
 						return Util.imageHTML("folder_tile.png", null, tileSize, null);
 					else
-						return Util.tileImgageHTML(Session.get().getSid(), Long.parseLong(record.getAttribute("id")),
-								null, null, tileSize);
+						return Util.tileImgageHTML(Long.parseLong(record.getAttribute("id")), null, null, tileSize);
 				} catch (Throwable e) {
 					return "";
 				}
@@ -107,7 +106,7 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 					cursor.setMessage(I18N.message("showndocuments", Integer.toString(getCount())));
 					cursor.setTotalRecords(totalRecords);
 				}
-				
+
 				sortByProperty("filename", true);
 			}
 		});

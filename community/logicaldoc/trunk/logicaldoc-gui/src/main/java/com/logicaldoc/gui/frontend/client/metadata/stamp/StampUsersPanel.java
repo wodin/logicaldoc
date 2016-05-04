@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.metadata.stamp;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.StampUsersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -75,7 +74,7 @@ public class StampUsersPanel extends VLayout {
 				for (int i = 0; i < ids.length; i++)
 					ids[i] = Long.parseLong(selection[i].getAttributeAsString("id"));
 
-				service.addUsers(Session.get().getSid(), ids, stampId, new AsyncCallback<Void>() {
+				service.addUsers(ids, stampId, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -183,7 +182,7 @@ public class StampUsersPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.removeUsers(Session.get().getSid(), ids, stampId, new AsyncCallback<Void>() {
+							service.removeUsers(ids, stampId, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

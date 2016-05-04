@@ -92,7 +92,7 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 
 	public void onSelectedDocumentHit(long id) {
 		if (id > 0) {
-			documentService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
+			documentService.getById(id, new AsyncCallback<GUIDocument>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);
@@ -112,7 +112,7 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 			details.removeMember(detailPanel);
 		detailPanel.destroy();
 		if (id > 0) {
-			folderService.getFolder(Session.get().getSid(), id, true, new AsyncCallback<GUIFolder>() {
+			folderService.getFolder(id, true, new AsyncCallback<GUIFolder>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

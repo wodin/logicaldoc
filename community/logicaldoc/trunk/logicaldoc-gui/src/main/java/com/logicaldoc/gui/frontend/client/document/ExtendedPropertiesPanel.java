@@ -9,7 +9,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -234,7 +233,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		if (templateId == null)
 			return;
 
-		documentService.getAttributes(Session.get().getSid(), templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
+		documentService.getAttributes(templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

@@ -66,8 +66,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	private static Logger log = LoggerFactory.getLogger(SystemServiceImpl.class);
 
 	@Override
-	public boolean disableTask(String sid, String taskName) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public boolean disableTask(String taskName) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 		try {
@@ -90,8 +90,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public boolean enableTask(String sid, String taskName) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public boolean enableTask(String taskName) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 		try {
@@ -114,8 +114,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUIParameter[][] getStatistics(String sid, String locale) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUIParameter[][] getStatistics(String locale) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		GenericDAO genDao = (GenericDAO) Context.get().getBean(GenericDAO.class);
 
 		GUIParameter[][] parameters = new GUIParameter[4][8];
@@ -271,8 +271,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUITask getTaskByName(String sid, String taskName, String locale) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUITask getTaskByName(String taskName, String locale) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 		try {
@@ -349,8 +349,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUITask[] loadTasks(String sid, String locale) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUITask[] loadTasks(String locale) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		if (progress >= 100)
 			progress = -1;
@@ -412,8 +412,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUITask saveTask(String sid, GUITask task, String locale) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUITask saveTask(GUITask task, String locale) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		TaskManager manager = (TaskManager) Context.get().getBean(TaskManager.class);
 
@@ -478,9 +478,9 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public GUIHistory[] search(String sid, String userName, Date from, Date till, int maxResult, String historySid,
+	public GUIHistory[] search(String userName, Date from, Date till, int maxResult, String historySid,
 			String[] event) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		HistoryDAO dao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 		List<GUIHistory> histories = new ArrayList<GUIHistory>();
@@ -673,8 +673,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public void setGUILanguageStatus(String sid, String language, boolean active) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void setGUILanguageStatus(String language, boolean active) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		try {
 			ContextProperties conf = Context.get().getProperties();
 			conf.setProperty(session.getTenantName() + ".lang." + language + ".gui", active ? "enabled" : "disabled");
@@ -685,8 +685,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public void markFeedMsgAsRead(String sid, long[] ids) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void markFeedMsgAsRead(long[] ids) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		try {
 			Context context = Context.get();
 			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
@@ -702,8 +702,9 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public void markFeedMsgAsNotRead(String sid, long[] ids) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void markFeedMsgAsNotRead(long[] ids) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
+		
 		try {
 			Context context = Context.get();
 			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);
@@ -719,8 +720,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public void deleteFeedMessages(String sid, long[] ids) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void deleteFeedMessages(long[] ids) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
 			Context context = Context.get();
@@ -734,8 +735,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	}
 
 	@Override
-	public GUIValue[] getPlugins(String sid) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUIValue[] getPlugins() throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		Collection<PluginDescriptor> descriptors = PluginRegistry.getInstance().getPlugins();
 		List<GUIValue> plugins = new ArrayList<GUIValue>();

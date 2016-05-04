@@ -194,7 +194,7 @@ public class OCRSettingsPanel extends VLayout {
 						params[10] = new GUIParameter("advancedocr.path", (String) values.get("advancedocr_path"));
 					}
 
-					service.saveSettings(Session.get().getSid(), params, new AsyncCallback<Void>() {
+					service.saveSettings(params, new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

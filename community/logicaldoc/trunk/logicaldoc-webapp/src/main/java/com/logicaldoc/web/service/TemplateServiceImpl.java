@@ -43,16 +43,16 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	private static Logger log = LoggerFactory.getLogger(TemplateServiceImpl.class);
 
 	@Override
-	public void delete(String sid, long templateId) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public void delete(long templateId) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
 		dao.delete(templateId);
 	}
 
 	@Override
-	public void saveOptions(String sid, long templateId, String attribute, String[] values) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void saveOptions(long templateId, String attribute, String[] values) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.get().getBean(
 				ExtendedAttributeOptionDAO.class);
@@ -82,8 +82,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	}
 
 	@Override
-	public void deleteOptions(String sid, long templateId, String attribute, String[] values) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public void deleteOptions(long templateId, String attribute, String[] values) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.get().getBean(
 				ExtendedAttributeOptionDAO.class);
@@ -101,8 +101,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	}
 
 	@Override
-	public GUITemplate save(String sid, GUITemplate template) throws ServerException {
-		Session session = ServiceUtil.validateSession(sid);
+	public GUITemplate save(GUITemplate template) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
 		try {
@@ -205,8 +205,8 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	}
 
 	@Override
-	public GUITemplate getTemplate(String sid, long templateId) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public GUITemplate getTemplate(long templateId) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
 		try {
@@ -281,10 +281,10 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	}
 
 	@Override
-	public String[] parseOptions(String sid, long templateId, String attribute) throws ServerException {
-		ServiceUtil.validateSession(sid);
+	public String[] parseOptions(long templateId, String attribute) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
-		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), sid);
+		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), session.getId());
 		List<String> options = new ArrayList<String>();
 
 		CSVFileReader reader = null;
@@ -318,7 +318,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 
 		String[] values = options.toArray(new String[0]);
 		if (values.length > 0)
-			saveOptions(sid, templateId, attribute, values);
+			saveOptions(templateId, attribute, values);
 		return values;
 	}
 }

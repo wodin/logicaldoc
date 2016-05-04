@@ -15,35 +15,35 @@ public interface CustomIdService extends RemoteService {
 	/**
 	 * Deletes a given configuration
 	 */
-	public void delete(String sid, long templateId, String type) throws ServerException;
+	public void delete(long templateId, String type) throws ServerException;
 
 	/**
 	 * Creates or updates a configuration
 	 */
-	public void save(String sid, GUICustomId customid) throws ServerException;
+	public void save(GUICustomId customid) throws ServerException;
 
 	/**
 	 * Loads a given configuration from the database
 	 */
-	public GUICustomId get(String sid, long templateId, String type) throws ServerException;
+	public GUICustomId get(long templateId, String type) throws ServerException;
 
 	/**
 	 * Load all CustomIds rules
 	 */
-	public GUICustomId[] load(String sid) throws ServerException;
+	public GUICustomId[] load() throws ServerException;
 
 	/**
 	 * Reset the numbering of a given sequence
 	 */
-	public void resetSequence(String sid, long sequenceId, long value) throws ServerException;
+	public void resetSequence(long sequenceId, long value) throws ServerException;
 
 	/**
 	 * Loads the list of sequences
 	 */
-	public GUISequence[] loadSequences(String sid) throws ServerException;
+	public GUISequence[] loadSequences() throws ServerException;
 
 	/**
 	 * Deletes the given sequence
 	 */
-	public void deleteSequence(String sid, long sequenceId) throws ServerException;
+	public void deleteSequence(long sequenceId) throws ServerException;
 }

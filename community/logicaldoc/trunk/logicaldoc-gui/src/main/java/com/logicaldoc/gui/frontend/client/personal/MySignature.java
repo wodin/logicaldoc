@@ -158,7 +158,7 @@ public class MySignature extends Window {
 		public void onFinish(IUploader uploader) {
 			if (uploader.getStatus() == Status.SUCCESS) {
 
-				signService.extractSubjectSignatures(Session.get().getSid(), null, null, new AsyncCallback<String[]>() {
+				signService.extractSubjectSignatures(null, null, new AsyncCallback<String[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -203,7 +203,7 @@ public class MySignature extends Window {
 
 		save.setDisabled(true);
 		ContactingServer.get().show();
-		signService.storeSignature(Session.get().getSid(), new AsyncCallback<String>() {
+		signService.storeSignature(new AsyncCallback<String>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -229,7 +229,7 @@ public class MySignature extends Window {
 	}
 
 	public void onReset() {
-		signService.resetSignature(Session.get().getSid(), currentUser.getId(), new AsyncCallback<Boolean>() {
+		signService.resetSignature(currentUser.getId(), new AsyncCallback<Boolean>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

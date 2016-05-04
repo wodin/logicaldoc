@@ -6,7 +6,6 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICalendarEvent;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -115,8 +114,8 @@ public class CalendarReport extends VLayout {
 			}
 		});
 
-		form.setItems(fromDate, toDate, deadLineFrom, deadLineTo, title, statusSelector, type, subtype, frequencySelector,
-				displayMax, searchButton);
+		form.setItems(fromDate, toDate, deadLineFrom, deadLineTo, title, statusSelector, type, subtype,
+				frequencySelector, displayMax, searchButton);
 
 		formsLayout.addMember(form);
 		formsLayout.setMembersMargin(80);
@@ -320,9 +319,8 @@ public class CalendarReport extends VLayout {
 
 			}
 
-			service.find(Session.get().getSid(), fromValue, toValue, endDateFrom, endDateTo, frequencyValue,
-					titleValue, typeValue, subtypeValue, statusValue, maxRecords,
-					new AsyncCallback<GUICalendarEvent[]>() {
+			service.find(fromValue, toValue, endDateFrom, endDateTo, frequencyValue, titleValue, typeValue,
+					subtypeValue, statusValue, maxRecords, new AsyncCallback<GUICalendarEvent[]>() {
 
 						@Override
 						public void onFailure(Throwable caught) {

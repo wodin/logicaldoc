@@ -105,8 +105,8 @@ public class BookmarksPanel extends VLayout {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
 				final ListGridRecord record = list.getSelectedRecord();
-				folderService.getFolder(Session.get().getSid(),
-						Long.parseLong(record.getAttributeAsString("folderId")), false, new AsyncCallback<GUIFolder>() {
+				folderService.getFolder(Long.parseLong(record.getAttributeAsString("folderId")), false,
+						new AsyncCallback<GUIFolder>() {
 
 							@Override
 							public void onSuccess(GUIFolder folder) {
@@ -126,8 +126,8 @@ public class BookmarksPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				final ListGridRecord record = list.getSelectedRecord();
-				folderService.getFolder(Session.get().getSid(),
-						Long.parseLong(record.getAttributeAsString("folderId")), false, new AsyncCallback<GUIFolder>() {
+				folderService.getFolder(Long.parseLong(record.getAttributeAsString("folderId")), false,
+						new AsyncCallback<GUIFolder>() {
 
 							@Override
 							public void onSuccess(GUIFolder folder) {
@@ -207,7 +207,7 @@ public class BookmarksPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							docService.deleteBookmarks(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							docService.deleteBookmarks(ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -245,7 +245,7 @@ public class BookmarksPanel extends VLayout {
 	private void download() {
 		String id = list.getSelectedRecord().getAttribute("targetId");
 		Window.open(
-				GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId=" + id + "&open=true",
+				GWT.getHostPageBaseURL() + "download?docId=" + id + "&open=true",
 				"_blank", "");
 	}
 }

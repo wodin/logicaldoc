@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.settings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIMessageTemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -106,7 +105,7 @@ public class MessageTemplatesPanel extends VLayout {
 			templates[i++] = t;
 		}
 
-		service.saveTemplates(Session.get().getSid(), templates, new AsyncCallback<Void>() {
+		service.saveTemplates(templates, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
@@ -192,7 +191,7 @@ public class MessageTemplatesPanel extends VLayout {
 						ids[i] = Long.parseLong(records[i].getAttributeAsString("id"));
 				}
 
-				service.deleteTemplates(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+				service.deleteTemplates(ids, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -215,7 +214,7 @@ public class MessageTemplatesPanel extends VLayout {
 	private void reload() {
 		String lang = langSelector.getValueAsString();
 
-		service.loadTemplates(Session.get().getSid(), lang, new AsyncCallback<GUIMessageTemplate[]>() {
+		service.loadTemplates(lang, new AsyncCallback<GUIMessageTemplate[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -162,7 +161,7 @@ public class LdapBrowser extends VLayout {
 			searchButton.setDisabled(true);
 
 			ContactingServer.get().show();
-			service.listUsers(Session.get().getSid(), username, new AsyncCallback<GUIUser[]>() {
+			service.listUsers(username, new AsyncCallback<GUIUser[]>() {
 
 				@Override
 				public void onFailure(Throwable caught) {

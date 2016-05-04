@@ -6,7 +6,6 @@ import java.util.List;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.SubscriptionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -146,8 +145,8 @@ public class DocumentSubscriptionsPanel extends DocumentDetailTab {
 				if (selectedRecord == null)
 					return;
 				long groupId = Long.parseLong(selectedRecord.getAttributeAsString("id"));
-				service.subscribeDocuments(Session.get().getSid(), new long[] { document.getId() },
-						Constants.AUDIT_DEFAULT_EVENTS, null, groupId, new AsyncCallback<Void>() {
+				service.subscribeDocuments(new long[] { document.getId() }, Constants.AUDIT_DEFAULT_EVENTS, null,
+						groupId, new AsyncCallback<Void>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -173,8 +172,8 @@ public class DocumentSubscriptionsPanel extends DocumentDetailTab {
 				if (selectedRecord == null)
 					return;
 				long userId = Long.parseLong(selectedRecord.getAttributeAsString("id"));
-				service.subscribeDocuments(Session.get().getSid(), new long[] { document.getId() },
-						Constants.AUDIT_DEFAULT_EVENTS, userId, null, new AsyncCallback<Void>() {
+				service.subscribeDocuments(new long[] { document.getId() }, Constants.AUDIT_DEFAULT_EVENTS, userId,
+						null, new AsyncCallback<Void>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
@@ -211,7 +210,7 @@ public class DocumentSubscriptionsPanel extends DocumentDetailTab {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteSubscriptions(Session.get().getSid(), ids, new AsyncCallback<Void>() {
+							service.deleteSubscriptions(ids, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

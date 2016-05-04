@@ -100,7 +100,7 @@ public class PropertiesPanel extends FolderDetailTab {
 		LinkItem barcode = ItemFactory.newLinkItem("barcode", I18N.message("generatebarcode"));
 		barcode.setTarget("_blank");
 		barcode.setTitle(I18N.message("barcode"));
-		barcode.setValue(GWT.getHostPageBaseURL() + "barcode?sid=" + Session.get().getSid() + "&code=" + folder.getId()
+		barcode.setValue(GWT.getHostPageBaseURL() + "barcode?code=" + folder.getId()
 				+ "&width=400&height=150");
 
 		StaticTextItem documents = ItemFactory.newStaticTextItem("documents", "documents",

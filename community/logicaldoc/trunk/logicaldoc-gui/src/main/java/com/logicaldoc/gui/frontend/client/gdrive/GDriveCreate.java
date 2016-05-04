@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -97,7 +96,7 @@ public class GDriveCreate extends Window {
 			return;
 		hide();
 		ContactingServer.get().show();
-		gdriveService.create(Session.get().getSid(), vm.getValueAsString("title") + "." + vm.getValueAsString("type"),
+		gdriveService.create(vm.getValueAsString("title") + "." + vm.getValueAsString("type"),
 				new AsyncCallback<String>() {
 					@Override
 					public void onFailure(Throwable caught) {

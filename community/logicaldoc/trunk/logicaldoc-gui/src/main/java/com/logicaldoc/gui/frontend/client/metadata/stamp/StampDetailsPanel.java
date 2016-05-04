@@ -5,7 +5,6 @@ import java.util.LinkedHashMap;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIStamp;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -105,7 +104,7 @@ public class StampDetailsPanel extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				if (stamp.getId() != 0) {
-					service.getStamp(Session.get().getSid(), stamp.getId(), new AsyncCallback<GUIStamp>() {
+					service.getStamp(stamp.getId(), new AsyncCallback<GUIStamp>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -276,8 +275,7 @@ public class StampDetailsPanel extends VLayout {
 	}
 
 	static String stampImageUrl(long stampId) {
-		return Util.contextPath() + "/stampimage/" + stampId + "?sid=" + Session.get().getSid() + "&random="
-				+ new Date().getTime();
+		return Util.contextPath() + "/stampimage/" + stampId + "?random=" + new Date().getTime();
 	}
 
 	public GUIStamp getStamp() {
@@ -303,12 +301,12 @@ public class StampDetailsPanel extends VLayout {
 			stamp.setOpacity(Integer.parseInt(vm.getValueAsString("opacity")));
 			stamp.setSize(Integer.parseInt(vm.getValueAsString("size")));
 			stamp.setPage(Integer.parseInt(vm.getValueAsString("page")));
-			
+
 			stamp.setDescription(vm.getValueAsString("description"));
 			stamp.setColor(vm.getValueAsString("color"));
 			stamp.setText(vm.getValueAsString("text"));
 
-			service.save(Session.get().getSid(), stamp, new AsyncCallback<GUIStamp>() {
+			service.save(stamp, new AsyncCallback<GUIStamp>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);
@@ -323,7 +321,7 @@ public class StampDetailsPanel extends VLayout {
 						stampsPanel.updateRecord(newStamp);
 						stampsPanel.showStampDetails(newStamp);
 					}
-					
+
 				}
 			});
 		}

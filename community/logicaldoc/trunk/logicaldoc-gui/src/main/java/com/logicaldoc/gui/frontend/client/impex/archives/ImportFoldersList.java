@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.impex.archives;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.data.ImpexFoldersDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -141,7 +140,7 @@ public class ImportFoldersList extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.deleteFolder(Session.get().getSid(), name, new AsyncCallback<Void>() {
+							service.deleteFolder(name, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);
@@ -167,7 +166,7 @@ public class ImportFoldersList extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.startImport(Session.get().getSid(), name, new AsyncCallback<Void>() {
+							service.startImport(name, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.warn(I18N.message("archiveimportingerror"), null);

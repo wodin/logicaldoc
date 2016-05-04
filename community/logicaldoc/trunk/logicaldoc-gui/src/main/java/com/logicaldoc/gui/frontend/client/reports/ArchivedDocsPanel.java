@@ -237,7 +237,7 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId="
 						+ id);
 			}
 		});
@@ -261,8 +261,8 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				long id = Long.parseLong(list.getSelectedRecord().getAttribute("id"));
-				
-				docService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
+
+				docService.getById(id, new AsyncCallback<GUIDocument>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -283,7 +283,7 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId="
 						+ id);
 			}
 		});
@@ -305,7 +305,7 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 				long[] docIds = new long[selection.length];
 				for (int i = 0; i < selection.length; i++)
 					docIds[i] = Long.parseLong(selection[i].getAttributeAsString("id"));
-				docService.unarchiveDocuments(Session.get().getSid(), docIds, new AsyncCallback<Void>() {
+				docService.unarchiveDocuments(docIds, new AsyncCallback<Void>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -332,7 +332,7 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							docService.delete(Session.get().getSid(), docIds, new AsyncCallback<Void>() {
+							docService.delete(docIds, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

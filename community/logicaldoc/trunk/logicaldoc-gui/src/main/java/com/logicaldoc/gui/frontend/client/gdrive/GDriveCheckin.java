@@ -78,7 +78,7 @@ public class GDriveCheckin extends Window {
 		if (!vm.validate())
 			return;
 		ContactingServer.get().show();
-		gdocsService.checkin(Session.get().getSid(), document.getId(), vm.getValueAsString("comment"),
+		gdocsService.checkin(document.getId(), vm.getValueAsString("comment"),
 				"true".equals(vm.getValueAsString("majorversion")), new AsyncCallback<GUIDocument>() {
 					@Override
 					public void onFailure(Throwable caught) {

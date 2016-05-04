@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
@@ -150,20 +149,19 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					public void onChanged(ChangedEvent event) {
 						long tenantId = Long.parseLong(event.getValue().toString());
 						if (tenantId != Session.get().getInfo().getTenant().getId())
-							tenantService.changeSessionTenant(Session.get().getSid(), tenantId,
-									new AsyncCallback<GUITenant>() {
+							tenantService.changeSessionTenant(tenantId, new AsyncCallback<GUITenant>() {
 
-										@Override
-										public void onSuccess(GUITenant tenant) {
-											Session.get().getInfo().setTenant(tenant);
-											Util.reload();
-										}
+								@Override
+								public void onSuccess(GUITenant tenant) {
+									Session.get().getInfo().setTenant(tenant);
+									Util.redirectToRoot();
+								}
 
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
-									});
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+							});
 					}
 				});
 				addFormItem(tenantItem);
@@ -221,7 +219,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		LD.ask(I18N.message("question"), I18N.message("confirmexit"), 300, new BooleanCallback() {
 			@Override
 			public void execute(Boolean value) {
-				if (value){
+				if (value) {
 					Session.get().logout();
 				}
 			}
@@ -248,7 +246,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 
 				if (document.getStatus() == 0) {
 					// Need to checkout first
-					documentService.checkout(Session.get().getSid(), document.getId(), new AsyncCallback<Void>() {
+					documentService.checkout(document.getId(), new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -297,20 +295,19 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		mySignature.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				securityService.getUser(Session.get().getSid(), Session.get().getUser().getId(),
-						new AsyncCallback<GUIUser>() {
+				securityService.getUser(Session.get().getUser().getId(), new AsyncCallback<GUIUser>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUIUser user) {
-								MySignature mysign = new MySignature(user, false);
-								mysign.show();
-							}
-						});
+					@Override
+					public void onSuccess(GUIUser user) {
+						MySignature mysign = new MySignature(user, false);
+						mysign.show();
+					}
+				});
 			}
 		});
 
@@ -323,20 +320,19 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					return;
 				}
 
-				securityService.getUser(Session.get().getSid(), Session.get().getUser().getId(),
-						new AsyncCallback<GUIUser>() {
+				securityService.getUser(Session.get().getUser().getId(), new AsyncCallback<GUIUser>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUIUser user) {
-								MyPrivateKey mykey = new MyPrivateKey(user);
-								mykey.show();
-							}
-						});
+					@Override
+					public void onSuccess(GUIUser user) {
+						MyPrivateKey mykey = new MyPrivateKey(user);
+						mykey.show();
+					}
+				});
 			}
 		});
 
@@ -356,7 +352,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		exportTo.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				dboxService.isConnected(Session.get().getSid(), new AsyncCallback<Boolean>() {
+				dboxService.isConnected(new AsyncCallback<Boolean>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -366,7 +362,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					@Override
 					public void onSuccess(Boolean connected) {
 						if (!connected)
-							dboxService.startAuthorization(Session.get().getSid(), new AsyncCallback<String>() {
+							dboxService.startAuthorization(new AsyncCallback<String>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -392,7 +388,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		importFrom.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				dboxService.isConnected(Session.get().getSid(), new AsyncCallback<Boolean>() {
+				dboxService.isConnected(new AsyncCallback<Boolean>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -402,7 +398,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 					@Override
 					public void onSuccess(Boolean connected) {
 						if (!connected)
-							dboxService.startAuthorization(Session.get().getSid(), new AsyncCallback<String>() {
+							dboxService.startAuthorization(new AsyncCallback<String>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -462,7 +458,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		account.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				sharefileService.loadSettings(Session.get().getSid(), new AsyncCallback<String[]>() {
+				sharefileService.loadSettings(new AsyncCallback<String[]>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -513,7 +509,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 				final long[] ids = grid.getSelectedIds();
 
 				ContactingServer.get().show();
-				gdriveService.exportDocuments(Session.get().getSid(), ids, new AsyncCallback<String[]>() {
+				gdriveService.exportDocuments(ids, new AsyncCallback<String[]>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);
@@ -551,7 +547,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 
 				if (document.getStatus() == 0) {
 					// Need to checkout first
-					documentService.checkout(Session.get().getSid(), document.getId(), new AsyncCallback<Void>() {
+					documentService.checkout(document.getId(), new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							Log.serverError(caught);
@@ -564,7 +560,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 							Log.info(I18N.message("documentcheckedout"), null);
 
 							ContactingServer.get().show();
-							gdriveService.upload(Session.get().getSid(), document.getId(), new AsyncCallback<String>() {
+							gdriveService.upload(document.getId(), new AsyncCallback<String>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									ContactingServer.get().hide();
@@ -671,8 +667,8 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		registration.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				settingService.loadSettingsByNames(Session.get().getSid(), new String[] { "reg.name", "reg.email",
-						"reg.organization", "reg.website" }, new AsyncCallback<GUIParameter[]>() {
+				settingService.loadSettingsByNames(new String[] { "reg.name", "reg.email", "reg.organization",
+						"reg.website" }, new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -731,20 +727,19 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 		profile.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(MenuItemClickEvent event) {
-				securityService.getUser(Session.get().getSid(), Session.get().getUser().getId(),
-						new AsyncCallback<GUIUser>() {
+				securityService.getUser(Session.get().getUser().getId(), new AsyncCallback<GUIUser>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(GUIUser user) {
-								Profile profile = new Profile(user);
-								profile.show();
-							}
-						});
+					@Override
+					public void onSuccess(GUIUser user) {
+						Profile profile = new Profile(user);
+						profile.show();
+					}
+				});
 			}
 		});
 
@@ -808,7 +803,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 				} catch (Throwable t) {
 
 				}
-	
+
 				Log.info(I18N.message("cookiesremoved"), null);
 				Session.get().logout();
 			}

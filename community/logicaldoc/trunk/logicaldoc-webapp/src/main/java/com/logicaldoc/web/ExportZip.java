@@ -18,12 +18,12 @@ import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.folder.FolderHistory;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.transfer.ZipExport;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.web.util.ServiceUtil;
+import com.logicaldoc.web.util.ServletUtil;
 
 /**
  * This servlet is responsible of zip export
@@ -44,7 +44,7 @@ public class ExportZip extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		Session session = ServiceUtil.validateSession(request);
+		Session session = ServletUtil.validateSession(request);
 
 		try {
 			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);

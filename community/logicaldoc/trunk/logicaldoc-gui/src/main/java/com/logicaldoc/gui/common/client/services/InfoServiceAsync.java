@@ -8,6 +8,6 @@ public interface InfoServiceAsync {
 
 	void getInfo(String locale, String tenant, AsyncCallback<GUIInfo> callback);
 
-	void getSessionInfo(String sid, AsyncCallback<GUIParameter[]> callback);
+	void getSessionInfo(AsyncCallback<GUIParameter[]> callback);
 
 }

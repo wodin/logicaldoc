@@ -79,7 +79,7 @@ public class ContactDetails extends Window {
 					c.setMobile(vm.getValueAsString("cell"));
 					c.setCompany(vm.getValueAsString("company"));
 
-					service.save(Session.get().getSid(), c, new AsyncCallback<Void>() {
+					service.save(c, new AsyncCallback<Void>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							SC.warn(caught.getMessage());

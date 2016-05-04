@@ -96,7 +96,7 @@ public class LinksPanel extends DocumentDetailTab {
 				public void onEditComplete(EditCompleteEvent event) {
 					long id = Long.parseLong(event.getOldValues().getAttribute("id"));
 					String type = (String) event.getNewValues().get("type");
-					documentService.updateLink(Session.get().getSid(), id, type, new AsyncCallback<Void>() {
+					documentService.updateLink(id, type, new AsyncCallback<Void>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -132,18 +132,17 @@ public class LinksPanel extends DocumentDetailTab {
 								@Override
 								public void execute(Boolean value) {
 									if (value) {
-										documentService.deleteLinks(Session.get().getSid(), ids,
-												new AsyncCallback<Void>() {
-													@Override
-													public void onFailure(Throwable caught) {
-														Log.serverError(caught);
-													}
+										documentService.deleteLinks(ids, new AsyncCallback<Void>() {
+											@Override
+											public void onFailure(Throwable caught) {
+												Log.serverError(caught);
+											}
 
-													@Override
-													public void onSuccess(Void result) {
-														listGrid.removeSelectedData();
-													}
-												});
+											@Override
+											public void onSuccess(Void result) {
+												listGrid.removeSelectedData();
+											}
+										});
 									}
 								}
 							});
@@ -201,14 +200,14 @@ public class LinksPanel extends DocumentDetailTab {
 	protected void onDownload(ListGridRecord record) {
 		if (document.getFolder().isDownload())
 			Window.open(
-					GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-							+ record.getAttribute("documentId") + "&open=true", "_blank", "");
+					GWT.getHostPageBaseURL() + "download?docId=" + record.getAttribute("documentId") + "&open=true",
+					"_blank", "");
 	}
 
 	protected void onPreview(ListGridRecord record) {
 		long id = Long.parseLong(record.getAttribute("documentId"));
 
-		documentService.getById(Session.get().getSid(), id, new AsyncCallback<GUIDocument>() {
+		documentService.getById(id, new AsyncCallback<GUIDocument>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

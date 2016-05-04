@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.metadata;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -156,7 +155,7 @@ public class TemplatesPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.getTemplate(Session.get().getSid(), Long.parseLong(record.getAttributeAsString("id")),
+					service.getTemplate(Long.parseLong(record.getAttributeAsString("id")),
 							new AsyncCallback<GUITemplate>() {
 
 								@Override
@@ -199,7 +198,7 @@ public class TemplatesPanel extends VLayout {
 					@Override
 					public void execute(Boolean value) {
 						if (value) {
-							service.delete(Session.get().getSid(), id, new AsyncCallback<Void>() {
+							service.delete(id, new AsyncCallback<Void>() {
 								@Override
 								public void onFailure(Throwable caught) {
 									Log.serverError(caught);

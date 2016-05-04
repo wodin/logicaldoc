@@ -20,7 +20,7 @@ public interface SecurityService extends RemoteService {
 	 * Logs-in a user by an existing session ID (session reuse)
 	 *
 	 */
-	public GUISession login(String sid, String locale);
+	public GUISession getSession(String locale);
 
 	/**
 	 * Changes the password of a user
@@ -38,64 +38,64 @@ public interface SecurityService extends RemoteService {
 	/**
 	 * Logs out the current user
 	 */
-	public void logout(String sid);
+	public void logout();
 
 	/**
 	 * Deletes a given user
 	 */
-	public void deleteUser(String sid, long userId) throws ServerException;
+	public void deleteUser(long userId) throws ServerException;
 
 	/**
 	 * Creates or updates a user
 	 */
-	public GUIUser saveUser(String sid, GUIUser user, GUIInfo info) throws ServerException;
+	public GUIUser saveUser(GUIUser user, GUIInfo info) throws ServerException;
 
 	/**
 	 * Saves the profile data only
 	 */
-	public GUIUser saveProfile(String sid, GUIUser user) throws ServerException;
+	public GUIUser saveProfile(GUIUser user) throws ServerException;
 
 	/**
 	 * Loads a given user from the database
 	 */
-	public GUIUser getUser(String sid, long userId) throws ServerException;
+	public GUIUser getUser(long userId) throws ServerException;
 
 	/**
 	 * Loads a given group from the database
 	 */
-	public GUIGroup getGroup(String sid, long groupId) throws ServerException;
+	public GUIGroup getGroup(long groupId) throws ServerException;
 
 	/**
 	 * Creates or updates a group
 	 */
-	public GUIGroup saveGroup(String sid, GUIGroup group) throws ServerException;
+	public GUIGroup saveGroup(GUIGroup group) throws ServerException;
 
 	/**
 	 * Deletes a given group
 	 */
-	public void deleteGroup(String sid, long groupId) throws ServerException;
+	public void deleteGroup(long groupId) throws ServerException;
 
 	/**
 	 * Removes users from a group
 	 */
-	public void removeFromGroup(String sid, long groupId, long[] userIds) throws ServerException;
+	public void removeFromGroup(long groupId, long[] userIds) throws ServerException;
 
 	/**
 	 * Adds a user to a group
 	 */
-	public void addUserToGroup(String sid, long groupId, long userId) throws ServerException;
+	public void addUserToGroup(long groupId, long userId) throws ServerException;
 
 	/**
 	 * Saves security settings
 	 * 
 	 * @return True if the application has to be restarted
 	 */
-	public boolean saveSettings(String sid, GUISecuritySettings settings) throws ServerException;
+	public boolean saveSettings(GUISecuritySettings settings) throws ServerException;
 
 	/**
 	 * Loads security settings
 	 */
-	public GUISecuritySettings loadSettings(String sid) throws ServerException;
+	public GUISecuritySettings loadSettings() throws ServerException;
 
 	/**
 	 * Kill the session with the given sid.
@@ -105,12 +105,12 @@ public interface SecurityService extends RemoteService {
 	/**
 	 * Applies all security settings to menu
 	 */
-	public void applyRights(String sid, GUIMenu menu) throws ServerException;
+	public void applyRights(GUIMenu menu) throws ServerException;
 
 	/**
 	 * Retrieves the specified menu
 	 */
-	public GUIMenu getMenu(String sid, long id) throws ServerException;
+	public GUIMenu getMenu(long id) throws ServerException;
 
 	/**
 	 * Searches for users
@@ -122,5 +122,5 @@ public interface SecurityService extends RemoteService {
 	 * @return Array of found users
 	 * @throws ServerException
 	 */
-	public GUIUser[] searchUsers(String sid, String username, String groupId) throws ServerException;
+	public GUIUser[] searchUsers(String username, String groupId) throws ServerException;
 }

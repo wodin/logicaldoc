@@ -7,7 +7,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.data.RightsDS;
@@ -427,7 +426,7 @@ public class SecurityPanel extends FolderDetailTab {
 		// Apply all rights
 		folder.setRights(this.getRights());
 
-		folderService.applyRights(Session.get().getSid(), folder, recursive, new AsyncCallback<Void>() {
+		folderService.applyRights(folder, recursive, new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

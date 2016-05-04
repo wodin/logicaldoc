@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Menu;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICustomId;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISequence;
@@ -52,7 +51,7 @@ public class MetadataMenu extends VLayout {
 		tags.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				tagService.getSettings(Session.get().getSid(), new AsyncCallback<GUIParameter[]>() {
+				tagService.getSettings(new AsyncCallback<GUIParameter[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -121,7 +120,7 @@ public class MetadataMenu extends VLayout {
 		customidAndAutonaming.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				customIdService.load(Session.get().getSid(), new AsyncCallback<GUICustomId[]>() {
+				customIdService.load(new AsyncCallback<GUICustomId[]>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -130,7 +129,7 @@ public class MetadataMenu extends VLayout {
 
 					@Override
 					public void onSuccess(final GUICustomId[] schemas) {
-						customIdService.loadSequences(Session.get().getSid(), new AsyncCallback<GUISequence[]>() {
+						customIdService.loadSequences(new AsyncCallback<GUISequence[]>() {
 							@Override
 							public void onFailure(Throwable caught) {
 								Log.serverError(caught);

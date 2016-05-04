@@ -6,7 +6,6 @@ import gwtupload.client.MultiUploader;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
@@ -104,22 +103,21 @@ public class OptionsUploader extends Window {
 			return;
 
 		ContactingServer.get().show();
-		templateService.parseOptions(Session.get().getSid(), options.getTemplateId(), options.getAttribute(),
-				new AsyncCallback<String[]>() {
+		templateService.parseOptions(options.getTemplateId(), options.getAttribute(), new AsyncCallback<String[]>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-						options.refresh();
-						ContactingServer.get().hide();
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+				options.refresh();
+				ContactingServer.get().hide();
+			}
 
-					@Override
-					public void onSuccess(String[] ret) {
-						options.refresh();
-						ContactingServer.get().hide();
-						destroy();
-					}
-				});
+			@Override
+			public void onSuccess(String[] ret) {
+				options.refresh();
+				ContactingServer.get().hide();
+				destroy();
+			}
+		});
 	}
 }

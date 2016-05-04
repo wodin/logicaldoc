@@ -9,7 +9,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -136,7 +135,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 			@Override
 			public void onClick(ClickEvent event) {
 				ContactingServer.get().show();
-				folderService.applyMetadata(Session.get().getSid(), folder.getId(), new AsyncCallback<Void>() {
+				folderService.applyMetadata(folder.getId(), new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -187,7 +186,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		if (templateId == null)
 			return;
 
-		documentService.getAttributes(Session.get().getSid(), templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
+		documentService.getAttributes(templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);

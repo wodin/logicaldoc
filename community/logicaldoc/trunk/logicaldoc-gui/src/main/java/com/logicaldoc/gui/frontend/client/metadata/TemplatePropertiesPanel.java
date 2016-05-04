@@ -6,7 +6,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -152,7 +151,7 @@ public class TemplatePropertiesPanel extends HLayout {
 
 	protected void fillAttributesList(long templateId) {
 		// Get the template attributes
-		templateService.getTemplate(Session.get().getSid(), templateId, new AsyncCallback<GUITemplate>() {
+		templateService.getTemplate(templateId, new AsyncCallback<GUITemplate>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

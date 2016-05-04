@@ -146,7 +146,7 @@ public class Profile extends Window {
 					u.setWelcomeScreen(new Integer(vm.getValueAsString("welcomescreen")));
 					u.setEmailSignature(vm.getValueAsString("signature"));
 
-					securityService.saveProfile(Session.get().getSid(), u, new AsyncCallback<GUIUser>() {
+					securityService.saveProfile(u, new AsyncCallback<GUIUser>() {
 						@Override
 						public void onFailure(Throwable caught) {
 							SC.warn(caught.getMessage());

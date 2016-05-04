@@ -13,14 +13,14 @@ import com.logicaldoc.gui.common.client.ServerException;
  */
 @RemoteServiceRelativePath("cluster")
 public interface ClusterService extends RemoteService {
-	
+
 	/**
 	 * Shares a list of configuration parameters
 	 */
-	public void makeGlobal(String sid, String[] parameters) throws ServerException;
+	public void makeGlobal(String[] parameters) throws ServerException;
 
 	/**
 	 * Unshares a list of configuration parameters
 	 */
-	public void makeLocal(String sid, String[] parameters) throws ServerException;
+	public void makeLocal(String[] parameters) throws ServerException;
 }

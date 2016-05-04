@@ -192,16 +192,15 @@ public class DocumentDetailsPanel extends VLayout {
 		prepareTabs();
 		prepareTabset();
 
-		
 	}
 
-	public void selectDeafultTab(){
+	public void selectDeafultTab() {
 		if ("preview".equals(Session.get().getInfo().getConfig("gui.document.tab")))
 			tabSet.selectTab(previewTab);
 		else
 			tabSet.selectTab(propertiesTab);
 	}
-	
+
 	protected void prepareTabs() {
 		propertiesTab = new Tab(I18N.message("properties"));
 		propertiesTabPanel = new HLayout();
@@ -461,9 +460,8 @@ public class DocumentDetailsPanel extends VLayout {
 			if (aliasesTabPanel.contains(aliasesPanel))
 				aliasesTabPanel.removeMember(aliasesPanel);
 		}
-		
 
-		if (document.getDocRef()==null && Menu.enabled(Menu.ALIASES)) {
+		if (document.getDocRef() == null && Menu.enabled(Menu.ALIASES)) {
 			aliasesPanel = new AliasesPanel(document);
 			aliasesTabPanel.addMember(aliasesPanel);
 			if (tabSet.getTab(ID_TAB_ALIASES) == null)
@@ -576,7 +574,7 @@ public class DocumentDetailsPanel extends VLayout {
 				document.setFileName(document.getTitle() + ext);
 			}
 
-			documentService.save(Session.get().getSid(), document, new AsyncCallback<GUIDocument>() {
+			documentService.save(document, new AsyncCallback<GUIDocument>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					saveForm.setValue("versionComment", "");

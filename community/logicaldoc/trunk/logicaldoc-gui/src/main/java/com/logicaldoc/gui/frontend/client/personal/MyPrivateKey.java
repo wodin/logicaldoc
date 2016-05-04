@@ -140,7 +140,7 @@ public class MyPrivateKey extends Window {
 		public void onFinish(IUploader uploader) {
 			if (uploader.getStatus() == Status.SUCCESS) {
 
-				signService.extractKeyDigest(Session.get().getSid(), new AsyncCallback<String>() {
+				signService.extractKeyDigest(new AsyncCallback<String>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -186,35 +186,34 @@ public class MyPrivateKey extends Window {
 
 		save.setDisabled(true);
 		ContactingServer.get().show();
-		signService.storePrivateKey(Session.get().getSid(), vm.getValueAsString("keyPassword"),
-				new AsyncCallback<String>() {
+		signService.storePrivateKey(vm.getValueAsString("keyPassword"), new AsyncCallback<String>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						save.setDisabled(false);
-						ContactingServer.get().hide();
-						Log.serverError(caught);
-						cancelUpload();
-						destroy();
-					}
+			@Override
+			public void onFailure(Throwable caught) {
+				save.setDisabled(false);
+				ContactingServer.get().hide();
+				Log.serverError(caught);
+				cancelUpload();
+				destroy();
+			}
 
-					@Override
-					public void onSuccess(String result) {
-						save.setDisabled(false);
-						ContactingServer.get().hide();
-						if (result == "ok") {
-							Session.get().getUser().setKeyDigest(vm.getValueAsString("keys"));
-							destroy();
-							Log.info(I18N.message("privatekeysaved"), null);
-						} else {
-							SC.warn(I18N.message(result));
-						}
-					}
-				});
+			@Override
+			public void onSuccess(String result) {
+				save.setDisabled(false);
+				ContactingServer.get().hide();
+				if (result == "ok") {
+					Session.get().getUser().setKeyDigest(vm.getValueAsString("keys"));
+					destroy();
+					Log.info(I18N.message("privatekeysaved"), null);
+				} else {
+					SC.warn(I18N.message(result));
+				}
+			}
+		});
 	}
 
 	public void onReset() {
-		signService.resetPrivateKey(Session.get().getSid(), currentUser.getId(), new AsyncCallback<Boolean>() {
+		signService.resetPrivateKey(currentUser.getId(), new AsyncCallback<Boolean>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

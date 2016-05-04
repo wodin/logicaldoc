@@ -1,7 +1,6 @@
 package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.smartgwt.client.types.ContentsType;
@@ -26,8 +25,7 @@ public class LogPanel extends VLayout {
 		htmlPane.setWidth100();
 		htmlPane.setHeight100();
 		htmlPane.setShowEdges(true);
-		htmlPane.setContentsURL(GWT.getHostPageBaseURL() + "log?sid=" + Session.get().getSid() + "&appender="
-				+ appender);
+		htmlPane.setContentsURL(GWT.getHostPageBaseURL() + "log?appender=" + appender);
 		htmlPane.setContentsType(ContentsType.PAGE);
 
 		HStack hStack = new HStack();
@@ -49,8 +47,7 @@ public class LogPanel extends VLayout {
 		download.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				try {
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "log?sid=" + Session.get().getSid()
-							+ "&appender=all");
+					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "log?appender=all");
 				} catch (Throwable t) {
 
 				}

@@ -2,7 +2,6 @@ package com.logicaldoc.gui.frontend.client.security;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIValue;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -67,7 +66,7 @@ public class LdapImportDialog extends Window {
 				long tnt = Long.parseLong(tenant.getSelectedRecord().getAttributeAsString("id"));
 
 				ContactingServer.get().show();
-				service.importUsers(Session.get().getSid(), usernames, tnt, new AsyncCallback<GUIValue[]>() {
+				service.importUsers(usernames, tnt, new AsyncCallback<GUIValue[]>() {
 					@Override
 					public void onFailure(Throwable caught) {
 						Log.serverError(caught);

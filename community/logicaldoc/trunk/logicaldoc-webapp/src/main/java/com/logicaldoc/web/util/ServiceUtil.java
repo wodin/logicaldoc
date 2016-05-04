@@ -2,7 +2,6 @@ package com.logicaldoc.web.util;
 
 import java.util.Locale;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -27,13 +26,9 @@ public class ServiceUtil {
 
 	public static final String USER = "user";
 
-	public static Session validateSession(HttpServletRequest request) throws ServletException {
-		try {
-			String sid = SessionManager.get().getSessionId(request);
-			return validateSession(sid);
-		} catch (ServerException e) {
-			throw new ServletException(e);
-		}
+	public static Session validateSession(HttpServletRequest request) throws InvalidSessionException {
+		String sid = SessionManager.get().getSessionId(request);
+		return validateSession(sid);
 	}
 
 	/**
@@ -45,7 +40,7 @@ public class ServiceUtil {
 		Session session = SessionManager.get().get(sid);
 		if (session == null)
 			throw new InvalidSessionException("Invalid Session");
-		if (!SessionManager.get().isValid(sid))
+		if (!SessionManager.get().isOpen(sid))
 			throw new InvalidSessionException("Invalid or Expired Session");
 		session.renew();
 		return session;
@@ -68,7 +63,7 @@ public class ServiceUtil {
 		return user;
 	}
 
-	public static User getSessionUser(HttpServletRequest request) throws ServletException {
+	public static User getSessionUser(HttpServletRequest request) throws InvalidSessionException {
 		Session session = validateSession(request);
 		User user = (User) session.getDictionary().get(USER);
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
