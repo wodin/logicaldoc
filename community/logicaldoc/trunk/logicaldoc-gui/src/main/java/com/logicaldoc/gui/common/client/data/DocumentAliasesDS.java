@@ -29,6 +29,6 @@ public class DocumentAliasesDS extends DataSource {
 		
 		setFields(id, icon, title, filename, path, folderId);
 		setClientOnly(true);
-		setDataURL("data/documentaliases.xml?sid=" + Session.get().getSid() + "&docId=" + docId);
+		setDataURL("data/documentaliases.xml?docId=" + docId);
 	}
 }

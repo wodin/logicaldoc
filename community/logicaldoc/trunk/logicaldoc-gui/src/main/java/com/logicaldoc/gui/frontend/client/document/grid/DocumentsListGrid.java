@@ -467,9 +467,8 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 							String fileVersion = getSelectedRecord().getAttribute("fileVersion");
 
 							if (Session.get().getCurrentFolder().isDownload())
-								WindowUtils
-										.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid()
-												+ "&docId=" + id + "&version=" + fileVersion, "_blank");
+								WindowUtils.openUrl(Util.contextPath() + "convertpdf?docId=" + id + "&version="
+										+ fileVersion, "_blank");
 						}
 					}
 					event.cancel();
