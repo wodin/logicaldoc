@@ -492,7 +492,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		exportZip.setTitle(I18N.message("exportzip"));
 		exportZip.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				Window.open(GWT.getHostPageBaseURL() + "zip-export?sid=" + Session.get().getSid() + "&folderId=" + id,
+				Window.open(Util.contextPath() + "zip-export?folderId=" + id,
 						"_blank", "");
 			}
 		});

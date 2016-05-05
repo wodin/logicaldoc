@@ -25,6 +25,6 @@ public class FolderAliasesDS extends DataSource {
 
 		setFields(id, icon, name, path);
 		setClientOnly(true);
-		setDataURL("data/folderaliases.xml?sid=" + Session.get().getSid() + "&folderId=" + folderId);
+		setDataURL("data/folderaliases.xml?folderId=" + folderId);
 	}
 }

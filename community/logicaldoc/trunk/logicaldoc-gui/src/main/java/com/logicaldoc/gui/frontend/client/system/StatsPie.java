@@ -68,8 +68,7 @@ public class StatsPie extends HLayout {
 		}
 
 		VLayout documents = new VLayout();
-		pieImage = new Image(Util.contextPath() + "stat?sid=" + Session.get().getSid() + "&chart=documents&random="
-				+ new Date().getTime());
+		pieImage = new Image(Util.contextPath() + "stat?chart=documents&random=" + new Date().getTime());
 		pieImage.setWidth("250px");
 		pieImage.setHeight("250px");
 		documents.addMember(pieImage);

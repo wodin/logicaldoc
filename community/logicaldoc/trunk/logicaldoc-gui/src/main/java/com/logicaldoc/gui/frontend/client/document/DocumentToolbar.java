@@ -155,13 +155,10 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 				long[] selection = grid.getSelectedIds();
 				if (selection.length == 1) {
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid()
-							+ "&docId=" + document.getId() + "&version=" + document.getVersion() + "&open=true",
+					WindowUtils.openUrl(Util.contextPath() + "convertpdf?docId=" + document.getId() + "&version=" + document.getVersion() + "&open=true",
 							"_blank");
 				} else {
-					String url = GWT.getHostPageBaseURL() + "convertpdf?sid=" + Session.get().getSid();
-					url += "&open=true";
-					url += "&docId=";
+					String url = Util.contextPath() + "convertpdf?open=true&docId=";
 					for (long id : selection)
 						url += Long.toString(id) + "|";
 					WindowUtils.openUrl(url, "_blank");
