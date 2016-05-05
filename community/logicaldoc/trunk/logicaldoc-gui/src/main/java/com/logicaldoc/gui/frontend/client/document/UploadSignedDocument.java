@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -74,7 +75,7 @@ public class UploadSignedDocument extends Window {
 		LinkItem downloadUrl = ItemFactory.newLinkItem("", "<b>(1)</b> " + I18N.message("downloadfiletosign"));
 		downloadUrl.setTitleOrientation(TitleOrientation.LEFT);
 		downloadUrl.setWrapTitle(false);
-		downloadUrl.setValue(GWT.getHostPageBaseURL() + "download?docId=" + id);
+		downloadUrl.setValue(Util.downloadURL(id));
 		downloadUrl.setLinkTitle(filename);
 
 		urlForm.setItems(downloadUrl);

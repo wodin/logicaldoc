@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.grid.ContextMenu;
@@ -96,7 +97,7 @@ public class DocumentsListPanel extends VLayout {
 				if (Session.get().getCurrentFolder().isDownload()
 						&& "download".equals(Session.get().getInfo().getConfig("gui.doubleclick")))
 					try {
-						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id);
+						WindowUtils.openUrl(Util.downloadURL(id));
 					} catch (Throwable t) {
 
 					}

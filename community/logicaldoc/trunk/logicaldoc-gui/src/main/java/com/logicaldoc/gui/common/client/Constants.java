@@ -146,8 +146,6 @@ public final class Constants {
 	
 	public static final String KEY = "key";
 
-	public static final String DOC_ID = "docId";
-
 	public static final String FOLDER_ID = "folderId";
 
 	public final static int DASHLET_CHECKOUT = 1;

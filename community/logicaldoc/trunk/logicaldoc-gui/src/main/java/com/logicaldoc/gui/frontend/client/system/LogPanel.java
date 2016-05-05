@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.system;
 
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.smartgwt.client.types.ContentsType;
 import com.smartgwt.client.widgets.HTMLPane;
@@ -47,7 +48,7 @@ public class LogPanel extends VLayout {
 		download.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				try {
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "log?appender=all");
+					WindowUtils.openUrl(Util.contextPath() + "log?appender=all");
 				} catch (Throwable t) {
 
 				}

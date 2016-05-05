@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.impex.archives;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.data.VersionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -138,9 +137,8 @@ public class VersionsPanel extends VLayout {
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
 				Window.open(
-						GWT.getHostPageBaseURL() + "download?docId="
-								+ record.getAttributeAsString("docid") + "&versionId=" + record.getAttribute("id")
-								+ "&open=true", "_blank", "");
+						Util.downloadURL(record.getAttributeAsLong("docid"), null, true) + "&versionId="
+								+ record.getAttribute("id"), "_blank", "");
 			}
 		});
 

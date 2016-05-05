@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.reports;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.ArchivedDocsDS;
@@ -236,9 +235,8 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 		list.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				String id = list.getSelectedRecord().getAttribute("id");
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId="
-						+ id);
+				Long id = list.getSelectedRecord().getAttributeAsLong("id");
+				WindowUtils.openUrl(Util.downloadURL(id));
 			}
 		});
 
@@ -283,8 +281,7 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId="
-						+ id);
+				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id);
 			}
 		});
 

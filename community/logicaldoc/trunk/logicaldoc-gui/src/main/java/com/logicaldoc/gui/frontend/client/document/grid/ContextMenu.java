@@ -14,6 +14,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
@@ -70,7 +71,7 @@ public class ContextMenu extends Menu {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection.length == 1) {
 					long id = selection[0].getId();
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id);
+					WindowUtils.openUrl(Util.downloadURL(id,null,false));
 				} else {
 					String url = GWT.getHostPageBaseURL() + "zip-export?folderId=" + folder.getId();
 					for (GUIDocument record : selection) {
@@ -334,7 +335,7 @@ public class ContextMenu extends Menu {
 						Session.get().getUser().setCheckedOutDocs(Session.get().getUser().getCheckedOutDocs() + 1);
 						Log.info(I18N.message("documentcheckedout"), null);
 
-						WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + document.getId());
+						WindowUtils.openUrl(Util.downloadURL(document.getId()));
 					}
 				});
 			}

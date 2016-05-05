@@ -168,8 +168,8 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 		folder.setWrap(false);
 		folder.setWidth(DEFAULT_ITEM_WIDTH);
 
-		String downloadUrl = Util.contextPath() + "download?" + Constants.DOC_ID + "=" + document.getId();
-		String detailsUrl = Util.contextPath() + "?" + Constants.DOC_ID + "=" + document.getId();
+		String downloadUrl = Util.downloadURL(document.getId());
+		String detailsUrl = Util.contextPath() + "?docId=" + document.getId();
 		String perma = "<a href='" + downloadUrl + "'>" + I18N.message("download") + "</a> | " + "<a href='"
 				+ detailsUrl + "'>" + I18N.message("details") + "</a>";
 

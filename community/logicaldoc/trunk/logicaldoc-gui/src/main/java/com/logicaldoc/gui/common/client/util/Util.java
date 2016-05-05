@@ -63,7 +63,7 @@ public class Util {
 	}
 
 	public static String downloadURL(long docId, String fileVersion, String suffix, boolean open) {
-		String url = GWT.getHostPageBaseURL() + "download?docId=" + docId;
+		String url = contextPath() + "download?docId=" + docId;
 		if (fileVersion != null)
 			url += "&fileVersion=" + fileVersion;
 		if (suffix != null)
@@ -74,14 +74,17 @@ public class Util {
 	}
 
 	public static String downloadURL(long docId, String fileVersion, boolean open) {
-		String url = GWT.getHostPageBaseURL() + "download?docId=" + docId;
-		if (fileVersion != null)
-			url += "&fileVersion=" + fileVersion;
-		if (open)
-			url += "&open=true";
-		return url;
+		return downloadURL(docId, fileVersion, null, open);
 	}
 
+	public static String downloadURL(long docId, String fileVersion) {
+		return downloadURL(docId, fileVersion, false);
+	}
+
+	public static String downloadURL(long docId) {
+		return downloadURL(docId, null, false);
+	}
+	
 	public static String webEditorUrl(long docId, String fileName, int height) {
 		String url = contextPath() + "ckeditor/index.jsp?docId=" + docId + "&lang=" + I18N.getLocale() + "&fileName="
 				+ fileName + "&height=" + height;

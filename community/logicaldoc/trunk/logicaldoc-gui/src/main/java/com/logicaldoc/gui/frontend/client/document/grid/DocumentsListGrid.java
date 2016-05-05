@@ -421,11 +421,10 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 				ListGridRecord record = event.getRecord();
 				if ("indexed".equals(getFieldName(event.getColNum()))) {
 					if ("indexed".equals(record.getAttribute("indexed"))) {
-						String id = getSelectedRecord().getAttribute("id");
+						Long id = getSelectedRecord().getAttributeAsLong("id");
 						if (Session.get().getCurrentFolder().isDownload())
 							try {
-								WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id
-										+ "&downloadText=true");
+								WindowUtils.openUrl(Util.downloadURL(id) + "&downloadText=true");
 							} catch (Throwable t) {
 
 							}
