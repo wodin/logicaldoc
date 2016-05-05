@@ -37,7 +37,7 @@
     <script>
         var fileVersion='<%=request.getParameter("fileVersion")!=null ? request.getParameter("fileVersion") : ""%>';
         var version='<%=request.getParameter("version")!=null ? request.getParameter("version") : ""%>';
-        var pdfUrl='<%=request.getContextPath()%>/convertpdf?sid=<%=request.getParameter("sid")%>&docId=<%=docId%>&control=preview';
+        var pdfUrl='<%=request.getContextPath()%>/convertpdf?docId=<%=docId%>&control=preview';
         
         if(fileVersion!=''){
                pdfUrl=pdfUrl+'&fileVersion='+fileVersion;
