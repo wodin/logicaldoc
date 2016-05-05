@@ -3,7 +3,6 @@ package com.logicaldoc.gui.frontend.client.document;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.BookmarksDS;
@@ -243,9 +242,7 @@ public class BookmarksPanel extends VLayout {
 	}
 
 	private void download() {
-		String id = list.getSelectedRecord().getAttribute("targetId");
-		Window.open(
-				GWT.getHostPageBaseURL() + "download?docId=" + id + "&open=true",
-				"_blank", "");
+		Long id = list.getSelectedRecord().getAttributeAsLong("targetId");
+		Window.open(Util.downloadURL(id, null, true), "_blank", "");
 	}
 }

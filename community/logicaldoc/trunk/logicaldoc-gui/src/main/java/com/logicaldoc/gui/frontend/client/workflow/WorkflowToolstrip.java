@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
@@ -346,7 +347,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		export.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				WindowUtils.openUrl(GWT.getHostPageBaseURL()
+				WindowUtils.openUrl(Util.contextPath()
 						+ "download?pluginId=logicaldoc-workflow&resourcePath=templates/" + currentWorkflow.getId()
 						+ ".ldpm");
 			}

@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -101,7 +102,7 @@ public class Dashlet extends Portlet {
 		download.setTitle(I18N.message("download"));
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + document.getId());
+				WindowUtils.openUrl(Util.downloadURL(document.getId(),null,false));
 			}
 		});
 		download.setEnabled(document.getFolder().isDownload());

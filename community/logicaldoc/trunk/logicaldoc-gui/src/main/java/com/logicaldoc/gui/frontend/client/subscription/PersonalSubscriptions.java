@@ -153,11 +153,11 @@ public class PersonalSubscriptions extends com.smartgwt.client.widgets.Window {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				String type = list.getSelectedRecord().getAttribute("type");
-				String id = list.getSelectedRecord().getAttribute("objectid");
+				Long id = list.getSelectedRecord().getAttributeAsLong("objectid");
 				if ("document".equals(type)) {
-					Window.open(GWT.getHostPageBaseURL() + "download?docId=" + id + "&open=true", "_blank", "");
+					Window.open(Util.downloadURL(id, null, true), "_blank", "");
 				} else
-					DocumentsPanel.get().openInFolder(Long.parseLong(id), null);
+					DocumentsPanel.get().openInFolder(id, null);
 			}
 		});
 

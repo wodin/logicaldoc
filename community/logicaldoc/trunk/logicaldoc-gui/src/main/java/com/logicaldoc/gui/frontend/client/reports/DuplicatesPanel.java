@@ -347,9 +347,8 @@ public class DuplicatesPanel extends VLayout {
 		download.setTitle(I18N.message("download"));
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				String id = list.getSelectedRecord().getAttribute("id");
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?sid=" + Session.get().getSid() + "&docId="
-						+ id);
+				Long id = list.getSelectedRecord().getAttributeAsLong("id");
+				WindowUtils.openUrl(Util.downloadURL(id));
 			}
 		});
 

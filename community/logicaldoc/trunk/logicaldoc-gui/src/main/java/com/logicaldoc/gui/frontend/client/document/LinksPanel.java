@@ -199,9 +199,7 @@ public class LinksPanel extends DocumentDetailTab {
 
 	protected void onDownload(ListGridRecord record) {
 		if (document.getFolder().isDownload())
-			Window.open(
-					GWT.getHostPageBaseURL() + "download?docId=" + record.getAttribute("documentId") + "&open=true",
-					"_blank", "");
+			Window.open(Util.downloadURL(record.getAttributeAsLong("documentId"), null, true), "_blank", "");
 	}
 
 	protected void onPreview(ListGridRecord record) {

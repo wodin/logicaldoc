@@ -395,8 +395,7 @@ public class ReportsPanel extends VLayout {
 		download.setTitle(I18N.message("download"));
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId="
-						+ outputDocId);
+				WindowUtils.openUrl(Util.downloadURL(outputDocId));
 			}
 		});
 

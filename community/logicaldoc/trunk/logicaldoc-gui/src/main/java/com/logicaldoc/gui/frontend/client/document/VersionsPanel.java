@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -96,10 +97,8 @@ public class VersionsPanel extends DocumentDetailTab {
 
 	protected void onDownload(final GUIDocument document, ListGridRecord record) {
 		if (document.getFolder().isDownload()) {
-			Window.open(
-					GWT.getHostPageBaseURL() + "download?docId="
-							+ (document.getDocRef() != null ? document.getDocRef() : document.getId()) + "&versionId="
-							+ record.getAttribute("id"), "_blank", "");
+			Window.open(Util.downloadURL(document.getDocRef() != null ? document.getDocRef() : document.getId())
+					+ "&versionId=" + record.getAttribute("id"), "_blank", "");
 		}
 	}
 

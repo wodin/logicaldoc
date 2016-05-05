@@ -238,8 +238,8 @@ public class LockedDocsPanel extends VLayout {
 		list.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				String id = list.getSelectedRecord().getAttribute("id");
-				WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id + "&open=true");
+				Long id = list.getSelectedRecord().getAttributeAsLong("id");
+				WindowUtils.openUrl(Util.downloadURL(id, null, true));
 			}
 		});
 

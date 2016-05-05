@@ -88,9 +88,7 @@ public class PreviewPanel extends VLayout {
 		String contents = "";
 
 		try {
-			String url = GWT.getHostPageBaseURL() + "download?docId=" + id;
-			if (fileVersion != null)
-				url += "&fileVersion=" + fileVersion;
+			String url = Util.downloadURL(id, fileVersion, false);
 
 			if (Util.isAudioFile(fileName))
 				contents = Util.audioHTML(url);
