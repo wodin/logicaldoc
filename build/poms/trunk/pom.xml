@@ -75,8 +75,8 @@
     <ehcache.version>2.6.6</ehcache.version>
     <lucene.version>4.9.0</lucene.version>
     <solr.version>4.9.0</solr.version>
-    <gwt.version>2.7.0</gwt.version>
-    <smartgwt.version>6.0p</smartgwt.version>
+    <gwt.version>2.6.1</gwt.version>
+    <smartgwt.version>5.0p</smartgwt.version>
     <cxf.version>3.1.6</cxf.version>
     <slf4j.version>1.7.7</slf4j.version>
     <ant.version>1.8.2</ant.version>
