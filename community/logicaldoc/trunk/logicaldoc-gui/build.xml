@@ -20,7 +20,6 @@
 	<target name="deploy-resources">
 	    <copy todir="${logicaldoc.webroot}">
 	    	<fileset dir="war">
-	    		<exclude name="*.jsp"/>
 	    		<exclude name="common/"/>
 	    		<exclude name="WEB-INF/**"/>
 	    	</fileset>

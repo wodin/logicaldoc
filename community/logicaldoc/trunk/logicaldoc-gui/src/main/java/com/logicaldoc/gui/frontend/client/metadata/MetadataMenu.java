@@ -6,7 +6,6 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Menu;
 import com.logicaldoc.gui.common.client.beans.GUICustomId;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
-import com.logicaldoc.gui.common.client.beans.GUISequence;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -129,17 +128,7 @@ public class MetadataMenu extends VLayout {
 
 					@Override
 					public void onSuccess(final GUICustomId[] schemas) {
-						customIdService.loadSequences(new AsyncCallback<GUISequence[]>() {
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
-
-							@Override
-							public void onSuccess(GUISequence[] sequences) {
-								AdminPanel.get().setContent(new CustomIdPanel(schemas, sequences));
-							}
-						});
+						AdminPanel.get().setContent(new CustomIdPanel(schemas));
 					}
 				});
 			}

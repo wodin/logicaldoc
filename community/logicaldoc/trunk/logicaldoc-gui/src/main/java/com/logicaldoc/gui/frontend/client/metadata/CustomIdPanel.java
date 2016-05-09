@@ -18,6 +18,8 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.HTMLFlow;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -32,6 +34,8 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * Shows the set of filters associated to the current account
@@ -44,7 +48,9 @@ public class CustomIdPanel extends VLayout {
 
 	private ListGrid sequences;
 
-	public CustomIdPanel(GUICustomId[] schemesData, GUISequence[] sequencesData) {
+	private VLayout sequencesPanel;
+
+	public CustomIdPanel(GUICustomId[] schemesData) {
 		setWidth100();
 		setHeight100();
 		setMembersMargin(5);
@@ -65,8 +71,7 @@ public class CustomIdPanel extends VLayout {
 
 		Tab sequencesTab = new Tab();
 		sequencesTab.setTitle(I18N.message("sequences"));
-		setupSequencesPanel(sequencesData);
-		sequencesTab.setPane(sequences);
+		sequencesTab.setPane(setupSequencesPanel());
 
 		ArrayList<Tab> tbs = new ArrayList<Tab>();
 		if (Feature.enabled(Feature.CUSTOMID))
@@ -169,7 +174,45 @@ public class CustomIdPanel extends VLayout {
 		return sc;
 	}
 
-	private void setupSequencesPanel(GUISequence[] data) {
+	private VLayout setupSequencesPanel() {
+		ToolStrip toolStrip = new ToolStrip();
+		toolStrip.setHeight(20);
+		toolStrip.setWidth100();
+
+		ToolStripButton refresh = new ToolStripButton(I18N.message("refresh"));
+		refresh.setAutoFit(true);
+		refresh.addClickHandler(new ClickHandler() {
+			public void onClick(ClickEvent event) {
+				refreshSequences();
+			}
+		});
+		toolStrip.addButton(refresh);
+
+		sequencesPanel = new VLayout();
+		sequencesPanel.setMembers(toolStrip);
+		refreshSequences();
+
+		return sequencesPanel;
+	}
+
+	private void refreshSequences() {
+		service.loadSequences(new AsyncCallback<GUISequence[]>() {
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUISequence[] sequences) {
+				setupSequencesGrid(sequences);
+			}
+		});
+	}
+
+	private void setupSequencesGrid(GUISequence[] data) {
+		if (sequences != null)
+			sequencesPanel.removeMember(sequences);
+		
 		ListGridField id = new ListGridField("id", I18N.message("id"));
 		id.setWidth(60);
 		id.setCanEdit(false);
@@ -243,6 +286,8 @@ public class CustomIdPanel extends VLayout {
 				event.cancel();
 			}
 		});
+
+		sequencesPanel.addMember(sequences);
 	}
 
 	private void showSchemeContextMenu(final ListGrid schemes) {

@@ -71,7 +71,7 @@ public class AccountStandardProperties extends AccountDetailsTab {
 		mailaddress.addChangedHandler(changedHandler);
 		mailaddress.setRequired(true);
 
-		TextItem username = ItemFactory.newTextItem("username", "username", account.getUserName());
+		TextItem username = ItemFactory.newTextItem("username", "username", account.getUsername());
 		username.addChangedHandler(changedHandler);
 		username.setWidth(180);
 
@@ -119,7 +119,7 @@ public class AccountStandardProperties extends AccountDetailsTab {
 		if (!form.hasErrors()) {
 			account.setMailAddress((String) values.get("mailaddress"));
 			account.setHost((String) values.get("server"));
-			account.setUserName((String) values.get("username"));
+			account.setUsername((String) values.get("username"));
 			account.setPassword((String) values.get("password"));
 			account.setTarget(targetSelector.getFolder());
 			account.setLanguage((String) values.get("language"));

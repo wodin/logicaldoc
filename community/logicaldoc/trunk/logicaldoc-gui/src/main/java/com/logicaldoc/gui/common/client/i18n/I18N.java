@@ -149,7 +149,7 @@ public class I18N {
 		setLanguages(info.getSupportedLanguages());
 		setGuiLanguages(info.getSupportedGUILanguages());
 		initBundle(info.getBundle());
-
+		
 		/*
 		 * Prepare the date formatters
 		 */

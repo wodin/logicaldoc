@@ -27,35 +27,25 @@ import com.logicaldoc.gui.common.client.widgets.MessageLabel;
 import com.logicaldoc.gui.login.client.services.LoginService;
 import com.logicaldoc.gui.login.client.services.LoginServiceAsync;
 import com.smartgwt.client.types.Alignment;
-import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.Button;
-import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.Img;
-import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.events.MouseOutEvent;
-import com.smartgwt.client.widgets.events.MouseOutHandler;
-import com.smartgwt.client.widgets.events.MouseOverEvent;
-import com.smartgwt.client.widgets.events.MouseOverHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SpacerItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
-import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
-import com.smartgwt.client.widgets.layout.VStack;
 
 /**
  * The panel showing the login form
@@ -64,6 +54,10 @@ import com.smartgwt.client.widgets.layout.VStack;
  * @since 7.5
  */
 public class LoginPanel extends VLayout {
+
+	protected static final int FORM_WIDTH = 280;
+
+	private static final int COLUMN_WIDTH = FORM_WIDTH + 20;
 
 	protected static final String PARAM_SUCCESSURL = "j_successurl";
 
@@ -75,20 +69,18 @@ public class LoginPanel extends VLayout {
 
 	protected PasswordItem password = new PasswordItem();
 
-	protected CheckboxItem rememberMe = new CheckboxItem();
-
 	protected SelectItem language;
 
+	protected CheckboxItem rememberMe = new CheckboxItem();
+
 	protected Window messagesWindow = new Window();
+
+	protected VLayout mainPanel = null;
 
 	// Flag used to handle double clicks on the login button
 	protected static boolean loggingIn = false;
 
-	private HTMLFlow reflections = null;
-
-	protected Canvas licensingCanvas = new Canvas();
-
-	protected VLayout formLayout = new VLayout();
+	protected DynamicForm form = new DynamicForm();
 
 	protected GUIInfo info = null;
 
@@ -101,9 +93,16 @@ public class LoginPanel extends VLayout {
 		this.info = info;
 	}
 
-	protected void initGUI() {
+	protected void initGUI(boolean saveLoginEnabled) {
+		HLayout spacer15 = new HLayout();
+		spacer15.setHeight(15);
+		spacer15.setWidth(15);
 
-		// Prepare the logo to show on the top
+		HLayout spacer10 = new HLayout();
+		spacer10.setHeight(10);
+		spacer10.setWidth(10);
+
+		// Prepare the logo to show on the top of the page
 		Img logoTop = ItemFactory.newBrandImg(info.isLogoOemCustomized() ? "logo_head.png" : "logo_oem.png", info);
 		logoTop.setWidth(205);
 		logoTop.setHeight(40);
@@ -113,8 +112,8 @@ public class LoginPanel extends VLayout {
 		 */
 		HLayout top = new HLayout();
 		top.setMargin(10);
-		top.setHeight(100);
-		top.setMembersMargin(10);
+		top.setHeight(60);
+		top.setMembersMargin(0);
 		top.setMembers(logoTop);
 
 		// Prepare the logo to show in the login form
@@ -129,39 +128,18 @@ public class LoginPanel extends VLayout {
 		 */
 		String productInfoHtml = "<b>" + info.getProductName() + " " + info.getRelease() + "</b>";
 		if (info.getUrl() != null && !"-".equals(info.getUrl()))
-			productInfoHtml = "<a href='" + info.getUrl() + "' target='_blank'>" + productInfoHtml + "</a>";
+			productInfoHtml = "<a href='" + info.getUrl() + "' target='_blank' class='login-link'>" + productInfoHtml
+					+ "</a>";
 		HTMLFlow productInfo = new HTMLFlow(productInfoHtml);
-		productInfo.setStyleName("login-product-info");
 		productInfo.setHeight(16);
-		productInfo.setWidth100();
-
-		HLayout spacer15 = new HLayout();
-		spacer15.setHeight(15);
-		spacer15.setWidth(15);
-
-		HLayout spacer10 = new HLayout();
-		spacer10.setHeight(10);
-		spacer10.setWidth(10);
-
-		HLayout spacer30 = new HLayout();
-		spacer30.setHeight(30);
-		spacer30.setWidth(30);
-
-		HLayout ieSpacer15 = new HLayout();
-		ieSpacer15.setHeight(15);
-		ieSpacer15.setWidth(15);
-		ieSpacer15.setStyleName("ie-special-spacer");
-
-		Label loginLabel = new Label(I18N.message("login"));
-		loginLabel.setStyleName("login-label");
-		loginLabel.setHeight(38);
-		loginLabel.setWidth(270);
+		productInfo.setWidth(COLUMN_WIDTH);
+		productInfo.setStyleName("login-product");
 
 		// Prepare the Form and all its fields
-		final DynamicForm form = new DynamicForm();
+		form = new DynamicForm();
 		form.setAlign(Alignment.CENTER);
-		form.setWidth100();
-		form.setNumCols(1);
+		form.setWidth(FORM_WIDTH);
+		form.setNumCols(saveLoginEnabled ? 3 : 1);
 		form.setTitleWidth(0);
 		form.setMargin(0);
 		form.setCellPadding(0);
@@ -171,48 +149,58 @@ public class LoginPanel extends VLayout {
 		username.setHint(I18N.message("username").toLowerCase());
 		username.setShowHintInField(true);
 		username.setWrapTitle(false);
+		username.setRequired(true);
 		username.setHeight(34);
-		username.setWidth(280);
-		username.setAlign(Alignment.CENTER);
-		username.setTextBoxStyle("login-input");
+		username.setWidth(FORM_WIDTH);
+		username.setAlign(Alignment.LEFT);
+		username.setTextBoxStyle("login-field");
+		username.setColSpan(saveLoginEnabled ? 3 : 1);
 		username.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase()))
-					onLoginClicked();
+					onSigninClicked();
 			}
 		});
 
 		password = ItemFactory.newPasswordItem("password", "password", null);
 		password.setShowTitle(false);
+		password.setHint(I18N.message("password").toLowerCase());
+		password.setShowHintInField(true);
+		password.setRequired(true);
 		password.setHeight(34);
-		password.setWidth(280);
-		password.setTextBoxStyle("login-input");
-		password.setAlign(Alignment.CENTER);
+		password.setWidth(FORM_WIDTH);
+		password.setTextBoxStyle("login-field");
+		password.setAlign(Alignment.LEFT);
 		password.setWrapTitle(false);
+		password.setColSpan(saveLoginEnabled ? 3 : 1);
 		password.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
 				if (event.getKeyName() != null && "enter".equals(event.getKeyName().toLowerCase()))
-					onLoginClicked();
+					onSigninClicked();
 			}
 		});
+
+		// If the case, initialize the credentials from client's cookies
+		if (saveLoginEnabled && rememberMe.getValueAsBoolean()) {
+			username.setValue(Offline.get(Constants.COOKIE_USER));
+			password.setValue(Offline.get(Constants.COOKIE_PASSWORD));
+		}
 
 		language = ItemFactory.newLanguageSelector("language", true, true);
 		language.setShowTitle(false);
 		language.setDefaultValue("");
-		language.setWidth(280);
-		language.setHeight(36);
-		language.setAlign(Alignment.CENTER);
+		language.setControlStyle("login-language");
+		language.setWidth(FORM_WIDTH - 4);
+		language.setHeight(34);
+		language.setAlign(Alignment.LEFT);
 		language.setHint(I18N.message("chooseyourlanguage"));
 		language.setShowHintInField(true);
-		language.setControlStyle("login-lang");
-		language.setTextBoxStyle("login-lang-text");
-		language.setPickerIconStyle("login-lang-picker");
-		language.setPickerIconName("login-lang-picker");
-		language.setPickerIconSrc(Util.imageUrl("langpick.png"));
-		language.setPickerIconHeight(36);
-		language.setPickerIconWidth(50);
+		language.setControlStyle("login-language");
+		language.setTextBoxStyle("login-language-text");
+		language.setPickerIconStyle("login-language-picker");
+		language.setColSpan(saveLoginEnabled ? 3 : 1);
 
 		RequestInfo request = WindowUtils.getRequestInfo();
 
@@ -229,165 +217,165 @@ public class LoginPanel extends VLayout {
 			}
 		}
 
-		SpacerItem spacerItem = new SpacerItem();
-		spacerItem.setHeight(12);
+		SpacerItem spacerItem12 = new SpacerItem();
+		spacerItem12.setHeight(12);
+		spacerItem12.setColSpan(saveLoginEnabled ? 3 : 1);
 
-		form.setFields(username, spacerItem, password, language);
-
-		Button signIn = new Button(I18N.message("signin"));
-		signIn.setBaseStyle("login-signin");
-		signIn.setLayoutAlign(Alignment.CENTER);
-		signIn.setWidth(283);
-		signIn.setHeight(43);
-		signIn.setAlign(Alignment.CENTER);
-		signIn.addClickHandler(new ClickHandler() {
-			public void onClick(ClickEvent event) {
-				onLoginClicked();
+		ButtonItem signIn = new ButtonItem(I18N.message("signin"));
+		signIn.setBaseStyle("btn");
+		signIn.setHoverStyle("btn");
+		signIn.setHeight(34);
+		signIn.setAlign(Alignment.RIGHT);
+		signIn.setStartRow(false);
+		signIn.setWidth(saveLoginEnabled ? 100 : FORM_WIDTH);
+		signIn.setColSpan(saveLoginEnabled ? 1 : 3);
+		signIn.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+				onSigninClicked();
 			}
 		});
 
 		rememberMe.setTitle(I18N.message("rememberme"));
 		rememberMe.setRequired(false);
-		rememberMe.setWrapTitle(false);
+		rememberMe.setShowTitle(false);
 		rememberMe.setValue("true".equals(Offline.get(Constants.COOKIE_SAVELOGIN)));
-		rememberMe.setDisabled(!"true".equals(info.getConfig("gui.savelogin")));
-		rememberMe.setTextBoxStyle("login-remember");
-		rememberMe.setEndRow(false);
+		rememberMe.setTextBoxStyle("login-field");
 		rememberMe.setAlign(Alignment.LEFT);
-		rememberMe.setWidth(140);
-		rememberMe.addChangedHandler(new ChangedHandler() {
-			@Override
-			public void onChanged(ChangedEvent event) {
-				updateReflections(false);
-			}
-		});
+		rememberMe.setEndRow(false);
+		rememberMe.setColSpan(2);
 
-		HTMLFlow forgot = new HTMLFlow("<div class='login-forgot'><a href=\"javascript:showForgotDialog('"
-				+ info.getProductName() + "')\">" + I18N.message("forgotpassword") + "</a></div>");
-		forgot.setAlign(Alignment.RIGHT);
-		forgot.setWidth(140);
-		forgot.setHoverDelay(0);
-		forgot.addClickHandler(new ClickHandler() {
+		if (saveLoginEnabled)
+			form.setFields(username, spacerItem12, password, spacerItem12, language, spacerItem12, rememberMe, signIn);
+		else
+			form.setFields(username, spacerItem12, password, spacerItem12, language, spacerItem12, signIn);
+
+		HTMLFlow lostPassword = new HTMLFlow("<div><a href=\"javascript:showLostDialog('" + info.getProductName()
+				+ "')\" class='login-lost'>" + I18N.message("lostpassword") + "</a></div>");
+		lostPassword.setLayoutAlign(Alignment.RIGHT);
+		lostPassword.setHoverDelay(0);
+		lostPassword.setMargin(0);
+		lostPassword.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				onForgottenPwd(info.getProductName());
+				showLostDialog(info.getProductName());
 			}
 		});
-		forgot.addMouseOverHandler(new MouseOverHandler() {
-
-			@Override
-			public void onMouseOver(MouseOverEvent event) {
-				updateReflections(true);
-			}
-		});
-		forgot.addMouseOutHandler(new MouseOutHandler() {
-
-			@Override
-			public void onMouseOut(MouseOutEvent event) {
-				updateReflections(false);
-			}
-		});
-
-		final DynamicForm footerForm1 = new DynamicForm();
-		footerForm1.setTitleWidth(0);
-		footerForm1.setWidth(140);
-		footerForm1.setFields(rememberMe);
-		footerForm1.setMargin(0);
-		footerForm1.setNumCols(1);
-		footerForm1.setShowTitlesWithErrorMessages(false);
-		footerForm1.setColWidths(0, 140);
-
-		// This panel contains the Forgot password link
-		HLayout footer = new HLayout();
-		footer.setWidth100();
-		footer.setMargin(0);
-		footer.setMembersMargin(0);
-		footer.setAlign(VerticalAlignment.CENTER);
-		footer.setMembers(footerForm1, forgot);
-
-		// If the case, initialize the credentials from client's cookies
-		if ("true".equals(info.getConfig("gui.savelogin")) && rememberMe.getValueAsBoolean()) {
-			username.setValue(Offline.get(Constants.COOKIE_USER));
-			password.setValue(Offline.get(Constants.COOKIE_PASSWORD));
-		}
-
-		// Panel containing the login form
-		formLayout.setLayoutAlign(VerticalAlignment.TOP);
-		formLayout.setLayoutAlign(Alignment.CENTER);
-		formLayout.setAlign(VerticalAlignment.TOP);
-		formLayout.setWidth(298);
-		formLayout.setHeight(480);
-		formLayout.setMembersMargin(0);
-		formLayout.setMembers(productInfo, spacer15, spacer10, logoLogin, spacer30, loginLabel, form, spacer30, signIn,
-				spacer10, footer, ieSpacer15);
-		updateReflections(false);
-
-		// Main Panel (covers 100% of the screen)
-		VLayout mainPanel = new VLayout();
-		mainPanel.setWidth100();
-		mainPanel.setHeight100();
-		mainPanel.setStyleName("login-body");
-		mainPanel.setLayoutAlign(VerticalAlignment.TOP);
-		mainPanel.setMembers(top, formLayout);
-		addMember(mainPanel);
-
-		form.focusInItem(username);
-		form.setAutoFocus(true);
-		form.focus();
 
 		/*
 		 * Prepare the licensing canvas
 		 */
-		String copyrightHtml = "\u00A9 " + info.getYear() + " " + info.getVendor();
+		String copyrightHtml = "<div>\u00A9 " + info.getYear() + " " + info.getVendor();
 		if (info.getUrl() != null && !"-".equals(info.getUrl()))
-			copyrightHtml = "<a href='" + info.getUrl() + "' target='_blank'>" + copyrightHtml + "</a>";
-		String licenseeHtml = "<br/>";
+			copyrightHtml = "<a href='" + info.getUrl() + "' target='_blank' class='login-copyright-link'>"
+					+ copyrightHtml + "</a></div>";
+		String licenseeHtml = "";
 		if (info.getLicensee() != null && !"".equals(info.getLicensee().trim()))
-			licenseeHtml += I18N.message("licensedto") + " " + info.getLicensee();
+			licenseeHtml += "<div>" + I18N.message("licensedto") + " <b>" + info.getLicensee() + "</b></div>";
 
 		HTMLFlow licensing = new HTMLFlow(copyrightHtml + licenseeHtml);
 		licensing.setStyleName("login-copyright");
-		licensing.setMargin(10);
-		licensing.setLayoutAlign(VerticalAlignment.BOTTOM);
-		licensing.setTop(420);
-		licensing.setLeft(10);
 
-		licensingCanvas.addChild(licensing);
-		licensingCanvas.draw();
-		licensingCanvas.bringToFront();
+		// Panel containing the inputs
+		VLayout inputsForm = new VLayout();
+		inputsForm.setMargin(0);
+		inputsForm.setWidth(FORM_WIDTH);
+		inputsForm.setStyleName("control-group");
+		inputsForm.setMembers(logoLogin, spacer15, form, lostPassword, licensing);
 
-		showMessages(info);
+		// Panel containing the login form
+		VLayout loginForm = new VLayout();
+		loginForm.setLayoutAlign(VerticalAlignment.TOP);
+		loginForm.setLayoutAlign(Alignment.CENTER);
+		loginForm.setAlign(VerticalAlignment.TOP);
+		loginForm.setMembersMargin(0);
+		loginForm.setMargin(0);
+		loginForm.setWidth(FORM_WIDTH);
+		loginForm.setStyleName("login-form");
+		loginForm.setMembers(inputsForm);
+
+		// The login screen
+		VLayout loginScreen = new VLayout();
+		loginScreen.setMembersMargin(0);
+		loginScreen.setMargin(0);
+		loginScreen.setStyleName("login-screen");
+		loginScreen.setMembers(loginForm);
+
+		// The center column with login screen and product info
+		VLayout centerColumn = new VLayout();
+		centerColumn.setMembersMargin(0);
+		centerColumn.setMargin(0);
+		centerColumn.setWidth(COLUMN_WIDTH);
+		centerColumn.setHeight(330);
+		centerColumn.setLayoutAlign(VerticalAlignment.TOP);
+		centerColumn.setLayoutAlign(Alignment.CENTER);
+		centerColumn.setAlign(VerticalAlignment.TOP);
+		centerColumn.setMembers(productInfo, loginScreen);
+
+		// Main Panel (covers 100% of the screen)
+		mainPanel = new VLayout();
+		mainPanel.setLayoutAlign(VerticalAlignment.TOP);
+		mainPanel.setMembers(top, centerColumn);
+		addMember(mainPanel);
+
+		prepareMessages();
+
+		prepareSwitchViewLink();
 	}
 
-	private void updateReflections(boolean underline) {
-		if (reflections != null) {
-			try {
-				formLayout.removeMember(reflections);
-			} catch (Throwable t) {
-			}
-		}
-
-		reflections = new HTMLFlow("<div id='"
-				+ (rememberMe.getValueAsBoolean() ? "login-checked-reflection" : "login-unchecked-reflection")
-				+ "'></div>" + "<div id='login-remember-reflection'>" + I18N.message("rememberme") + "</div>"
-				+ "<div id='" + (underline ? "login-forgot-reflection-underline" : "login-forgot-reflection") + "'>"
-				+ I18N.message("forgotpassword") + "</div><div id='login-signin-reflection'>" + I18N.message("signin")
-				+ "</div></div>");
-		reflections.setStyleName("login-reflections");
-		reflections.setWidth100();
-		reflections.setHeight(150);
-		reflections.setMargin(0);
-		formLayout.addMember(reflections);
+	protected void initGUI() {
+		boolean saveLoginEnabled = "true".equals(info.getConfig("gui.savelogin"));
+		initGUI(saveLoginEnabled);
 	}
 
-	protected void showMessages(final GUIInfo info) {
+	protected void prepareSwitchViewLink() {
+		String url = "mobile".equals(Util.getJavascriptVariable("j_layout")) ? (Util.contextPath() + "login.jsp")
+				: (Util.contextPath() + "login-mobile.jsp");
+		String label = "mobile".equals(Util.getJavascriptVariable("j_layout")) ? I18N.message("viewclassicweb") : I18N
+				.message("viewmobileweb");
+
+		/*
+		 * A link to the alternative login page
+		 */
+		HTMLFlow switchLink = new HTMLFlow("<a href='" + url + "' class='login-switchview'>" + label + "</a>");
+		switchLink.setHeight(16);
+		switchLink.setWidth(COLUMN_WIDTH + 20);
+		switchLink.setStyleName("login-switchview");
+
+		HLayout spacer10 = new HLayout();
+		spacer10.setHeight(10);
+		spacer10.setWidth(10);
+
+		VLayout link = new VLayout();
+		link.setMembersMargin(0);
+		link.setMargin(0);
+		link.setStyleName("login-switchview");
+		link.setMembers(spacer10, switchLink);
+		link.setLayoutAlign(VerticalAlignment.TOP);
+		link.setLayoutAlign(Alignment.CENTER);
+		link.setWidth(COLUMN_WIDTH + 20);
+		link.setHeight(18);
+
+		mainPanel.addMember(link);
+	}
+
+	/**
+	 * Prepares the panel to show messages
+	 */
+	protected void prepareMessages() {
+		if (info.getMessages() == null || info.getMessages().length == 0)
+			return;
+
+		int height = 0;
+
 		List<MessageLabel> messages = new ArrayList<MessageLabel>();
 		if (info.getMessages().length > 0) {
 			for (GUIMessage message : info.getMessages()) {
 				MessageLabel label = new MessageLabel(message, info.getTenant().getId() == 1L);
 				label.setStyleName("loginMemesage");
 				messages.add(label);
+				height += label.getHeight();
 			}
 		}
 
@@ -397,36 +385,34 @@ public class LoginPanel extends VLayout {
 			demoRunLevelMessage.setPriority(GUIMessage.PRIO_WARN);
 			MessageLabel demoRunLevel = new MessageLabel(demoRunLevelMessage, info.getTenant().getId() == 1L);
 			messages.add(demoRunLevel);
+			height += demoRunLevel.getHeight();
 		}
 
-		if (!messages.isEmpty()) {
-			VStack messagesPanel = new VStack();
-			messagesPanel.setMembers(messages.toArray(new MessageLabel[0]));
-			messagesPanel.setMargin(6);
-			messagesPanel.setTop(15);
-			messagesPanel.setLeft(2);
+		HLayout spacer15 = new HLayout();
+		spacer15.setHeight(15);
+		spacer15.setWidth(15);
 
-			messagesWindow.setTitle(I18N.message("alerts"));
-			messagesWindow.setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
-			messagesWindow.setShowHeader(true);
-			messagesWindow.setShowFooter(true);
-			messagesWindow.setShowTitle(true);
-			messagesWindow.setCanDragResize(true);
-			messagesWindow.setIsModal(false);
-			messagesWindow.setMargin(5);
-			messagesWindow.setWidth(Math.max(
-					Math.round((float) com.google.gwt.user.client.Window.getClientWidth() / 3.6F), 270));
-			messagesWindow.setHeight(200);
-			messagesWindow.setMinHeight(200);
-			messagesWindow.setMinWidth(270);
-			messagesWindow.setTop(180);
-			messagesWindow.setLeft(5);
-			messagesWindow.addItem(messagesPanel);
-			messagesWindow.show();
-		}
+		// The messages screen
+		VLayout messagesScreen = new VLayout();
+		messagesScreen.setMembersMargin(0);
+		messagesScreen.setMargin(0);
+		messagesScreen.setStyleName("login-screen");
+		messagesScreen.setMembers(messages.toArray(new MessageLabel[0]));
+		messagesScreen.setLayoutAlign(VerticalAlignment.TOP);
+		messagesScreen.setLayoutAlign(Alignment.CENTER);
+		messagesScreen.setWidth(COLUMN_WIDTH + 20);
+		messagesScreen.setHeight(height);
+
+		mainPanel.addMember(spacer15);
+		mainPanel.addMember(messagesScreen);
 	}
 
-	protected void onLoginClicked() {
+	protected void onSigninClicked() {
+		if (!form.validate()){
+			onAuthenticationFailure();
+			return;
+		}
+
 		if (loggingIn == true)
 			return;
 		else
@@ -473,14 +459,13 @@ public class LoginPanel extends VLayout {
 		}
 	}
 
-	public static void onForgottenPwd(String productName) {
+	public static void showLostDialog(String productName) {
 		ResetPassword pwdReset = new ResetPassword(productName);
 		pwdReset.show();
 	}
 
 	protected void onAuthenticationSuccess(String sid) {
 		try {
-			licensingCanvas.destroy();
 			messagesWindow.destroy();
 		} catch (Throwable e) {
 			SC.warn(e.getMessage());
@@ -509,7 +494,7 @@ public class LoginPanel extends VLayout {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					SC.warn(caught.getMessage());
+					SC.warn(I18N.message("accesdenied"));
 				}
 
 				@Override

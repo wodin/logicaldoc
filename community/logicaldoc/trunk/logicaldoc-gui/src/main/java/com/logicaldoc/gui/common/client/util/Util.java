@@ -84,7 +84,7 @@ public class Util {
 	public static String downloadURL(long docId) {
 		return downloadURL(docId, null, false);
 	}
-	
+
 	public static String webEditorUrl(long docId, String fileName, int height) {
 		String url = contextPath() + "ckeditor/index.jsp?docId=" + docId + "&lang=" + I18N.getLocale() + "&fileName="
 				+ fileName + "&height=" + height;
@@ -679,17 +679,25 @@ public class Util {
 		return tenant;
 	}
 
+	public static String getLocaleInRequest() {
+		RequestInfo request = WindowUtils.getRequestInfo();
+		String locale = null;
+		if (request.getParameter(Constants.LOCALE) != null && !request.getParameter(Constants.LOCALE).equals("")) {
+			locale = request.getParameter(Constants.LOCALE);
+		}
+		return locale;
+	}
+
 	/**
 	 * Detect locale specification from the request
 	 */
 	public static String detectLocale() {
-		RequestInfo request = WindowUtils.getRequestInfo();
+		String locale = Util.getLocaleInRequest();
+
 		// Tries to capture locale parameter
-		String locale = Util.getBrowserLanguage();
-		;
-		if (request.getParameter(Constants.LOCALE) != null && !request.getParameter(Constants.LOCALE).equals("")) {
-			locale = request.getParameter(Constants.LOCALE);
-		}
+		if (locale == null)
+			locale = Util.getBrowserLanguage();
+
 		return locale;
 	}
 
