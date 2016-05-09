@@ -86,7 +86,7 @@ public class Frontend implements EntryPoint {
 		declareGetCurrentFolderId(this);
 		declareCheckPermission(this);
 
-		infoService.getInfo(I18N.getLocale(), tenant, new AsyncCallback<GUIInfo>() {
+		infoService.getInfo(Util.getLocaleInRequest(), tenant, new AsyncCallback<GUIInfo>() {
 			@Override
 			public void onFailure(Throwable error) {
 				SC.warn(error.getMessage());
@@ -110,7 +110,7 @@ public class Frontend implements EntryPoint {
 				if (sid == null || "".equals(sid))
 					SC.warn(I18N.message("accessdenied"));
 
-				securityService.getSession(locale, new AsyncCallback<GUISession>() {
+				securityService.getSession(Util.getLocaleInRequest(), new AsyncCallback<GUISession>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -123,6 +123,7 @@ public class Frontend implements EntryPoint {
 							SC.warn(I18N.message("accessdenied"));
 						} else {
 							Session.get().init(session);
+							I18N.setLocale(session.getUser().getLanguage());
 							showMain();
 							declareReloadTrigger(Frontend.this);
 						}

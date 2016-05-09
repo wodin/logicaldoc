@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 
 <!--add loading indicator while the app is being loaded-->
+<body>
 <div id="loadingwrapper-<%=MODULE%>">
 	<div id="loading">
 		<div class="loadingIndicator">
@@ -13,7 +14,7 @@
 		</div>
 	</div>
 </div>
-
+</body>
 <script type="text/javascript">
 	document.getElementById('loadingTitle').innerHTML = 'Loading';
 </script>

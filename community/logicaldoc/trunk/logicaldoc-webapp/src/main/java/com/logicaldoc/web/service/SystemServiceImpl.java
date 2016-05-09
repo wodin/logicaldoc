@@ -28,9 +28,9 @@ import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.rss.FeedMessage;
 import com.logicaldoc.core.rss.dao.FeedMessageDAO;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.stats.StatsCollector;
 import com.logicaldoc.core.task.Task;
@@ -478,8 +478,8 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public GUIHistory[] search(String userName, Date from, Date till, int maxResult, String historySid,
-			String[] event) throws ServerException {
+	public GUIHistory[] search(String userName, Date from, Date till, int maxResult, String historySid, String[] event)
+			throws ServerException {
 		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		HistoryDAO dao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
@@ -606,7 +606,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 				@Override
 				public GUIHistory mapRow(ResultSet rs, int arg1) throws SQLException {
 					GUIHistory history = new GUIHistory();
-					history.setUserName(rs.getString(1));
+					history.setUsername(rs.getString(1));
 					history.setEvent(rs.getString(2));
 					if (rs.getObject(3) instanceof Timestamp)
 						history.setDate(rs.getTimestamp(3));
@@ -704,7 +704,7 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 	@Override
 	public void markFeedMsgAsNotRead(long[] ids) throws ServerException {
 		ServiceUtil.validateSession(getThreadLocalRequest());
-		
+
 		try {
 			Context context = Context.get();
 			FeedMessageDAO dao = (FeedMessageDAO) context.getBean(FeedMessageDAO.class);

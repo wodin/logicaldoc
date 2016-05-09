@@ -54,7 +54,7 @@ public class Login implements EntryPoint {
 
 		instance = this;
 
-		declareShowForgotDialog(this);
+		declareShowLostDialog(this);
 
 		// Tries to capture locale parameter
 		final String lang = Util.detectLocale();
@@ -89,8 +89,8 @@ public class Login implements EntryPoint {
 
 				WindowUtils.setFavicon(info);
 
-				if ("minimal".equals(Util.getJavascriptVariable("j_layout")))
-					loginPanel = new MinimalLoginPanel(info);
+				if ("mobile".equals(Util.getJavascriptVariable("j_layout")))
+					loginPanel = new MobileLoginPanel(info);
 				else
 					loginPanel = new LoginPanel(info);
 
@@ -102,7 +102,7 @@ public class Login implements EntryPoint {
 
 	// Setup the initial visualization of the login panel
 	private void showLogin() {
-		RootPanel.get().add(loginPanel);
+		//RootPanel.get().add(loginPanel);
 
 		// Remove the loading frame
 		RootPanel.getBodyElement().removeChild(RootPanel.get("loadingwrapper-login").getElement());
@@ -111,17 +111,17 @@ public class Login implements EntryPoint {
 		loginPanel.show();
 	}
 
-	public void showForgotDialog(String productName) {
-		LoginPanel.onForgottenPwd(productName);
+	public void showLostDialog(String productName) {
+		LoginPanel.showLostDialog(productName);
 	}
 
 	/**
-	 * Declares the javascript function used to display the forgot password
+	 * Declares the javascript function used to display the lost password
 	 * popup
 	 */
-	public static native void declareShowForgotDialog(Login login) /*-{
-		$wnd.showForgotDialog = function(productName) {
-			return login.@com.logicaldoc.gui.login.client.Login::showForgotDialog(Ljava/lang/String;)(productName);
+	public static native void declareShowLostDialog(Login login) /*-{
+		$wnd.showLostDialog = function(productName) {
+			return login.@com.logicaldoc.gui.login.client.Login::showLostDialog(Ljava/lang/String;)(productName);
 		};
 	}-*/;
 }

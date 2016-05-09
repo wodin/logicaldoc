@@ -308,7 +308,7 @@ public class LastChangesPanel extends VLayout {
 									ListGridRecord record = new ListGridRecord();
 									record.setAttribute("event", I18N.message(result[i].getEvent()));
 									record.setAttribute("date", result[i].getDate());
-									record.setAttribute("user", result[i].getUserName());
+									record.setAttribute("user", result[i].getUsername());
 									record.setAttribute("name", result[i].getTitle());
 									record.setAttribute("folder", result[i].getPath());
 									record.setAttribute("sid", result[i].getSessionId());
