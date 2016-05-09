@@ -326,15 +326,15 @@ public class DocumentsDataServlet extends HttpServlet {
 						writer.print("<immutable>blank</immutable>");
 					else if (doc.getImmutable() == 1)
 						writer.print("<immutable>stop</immutable>");
-					if (doc.getIndexed() == Constants.INDEX_TO_INDEX)
+					if (doc.getIndexed() == AbstractDocument.INDEX_TO_INDEX)
 						writer.print("<indexed>blank</indexed>");
-					else if (doc.getIndexed() == Constants.INDEX_INDEXED)
+					else if (doc.getIndexed() == AbstractDocument.INDEX_INDEXED)
 						writer.print("<indexed>indexed</indexed>");
-					else if (doc.getIndexed() == Constants.INDEX_SKIP)
+					else if (doc.getIndexed() == AbstractDocument.INDEX_SKIP)
 						writer.print("<indexed>unindexable</indexed>");
-					if (doc.getStatus() == Constants.DOC_LOCKED)
+					if (doc.getStatus() == AbstractDocument.DOC_LOCKED)
 						writer.print("<locked>lock</locked>");
-					else if (doc.getStatus() == Constants.DOC_CHECKED_OUT)
+					else if (doc.getStatus() == AbstractDocument.DOC_CHECKED_OUT)
 						writer.print("<locked>page_edit</locked>");
 					else
 						writer.print("<locked>blank</locked>");

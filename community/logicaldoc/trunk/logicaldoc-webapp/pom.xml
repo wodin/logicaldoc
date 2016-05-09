@@ -20,7 +20,6 @@
         <dependency>
             <groupId>com.google.gwt</groupId>
             <artifactId>gwt-servlet</artifactId>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.googlecode.gwtupload</groupId>
