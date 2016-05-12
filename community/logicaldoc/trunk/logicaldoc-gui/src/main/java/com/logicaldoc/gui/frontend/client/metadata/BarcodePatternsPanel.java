@@ -214,7 +214,7 @@ public class BarcodePatternsPanel extends VLayout {
 			ListGridRecord record = new ListGridRecord();
 			record.setAttribute("position", pat.getPosition());
 			record.setAttribute("pattern", pat.getPattern());
-			record.setAttribute("template", pat.getTemplateId());
+			record.setAttribute("attributeSet", pat.getTemplateId());
 			records[i++] = record;
 		}
 		patternsGrid.setData(records);

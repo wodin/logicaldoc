@@ -6,14 +6,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
 public interface DocumentServiceAsync {
 	void getVersionsById(long id1, long id2, AsyncCallback<GUIVersion[]> callback);
 
-	void getAttributes(long templateId, AsyncCallback<GUIExtendedAttribute[]> callback);
+	void getAttributes(long templateId, AsyncCallback<GUIAttribute[]> callback);
 
 	void getById(long docId, AsyncCallback<GUIDocument> callback);
 

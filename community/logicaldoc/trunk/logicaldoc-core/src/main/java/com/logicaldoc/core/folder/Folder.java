@@ -4,8 +4,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.logicaldoc.core.ExtensibleObject;
-import com.logicaldoc.core.document.DocumentTemplate;
+import com.logicaldoc.core.metadata.ExtensibleObject;
+import com.logicaldoc.core.metadata.Template;
 
 /**
  * This class represents the key concept of security of documents. The Folder is
@@ -60,7 +60,7 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	/**
 	 * Optional default template for this folder
 	 */
-	private DocumentTemplate template;
+	private Template template;
 
 	/**
 	 * If 1, the users cannot change the template of the contained documents
@@ -225,11 +225,11 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 		this.creatorId = creatorId;
 	}
 
-	public DocumentTemplate getTemplate() {
+	public Template getTemplate() {
 		return template;
 	}
 
-	public void setTemplate(DocumentTemplate template) {
+	public void setTemplate(Template template) {
 		this.template = template;
 	}
 

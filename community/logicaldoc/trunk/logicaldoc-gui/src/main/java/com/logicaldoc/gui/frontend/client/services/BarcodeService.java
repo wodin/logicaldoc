@@ -35,12 +35,12 @@ public interface BarcodeService extends RemoteService {
 	public void markUnprocessable(long[] ids) throws ServerException;
 
 	/**
-	 * Loads the patterns configured for a given template.
+	 * Loads the patterns configured for a given attributeSet.
 	 */
 	public GUIBarcodePattern[] loadPatterns(Long templateId) throws ServerException;
 
 	/**
-	 * Saves the patterns for the given template ordered by position
+	 * Saves the patterns for the given attributeSet ordered by position
 	 */
 	public void savePatterns(String[] patterns, Long templateId) throws ServerException;
 

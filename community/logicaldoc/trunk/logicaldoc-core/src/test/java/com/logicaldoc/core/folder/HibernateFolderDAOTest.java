@@ -15,15 +15,15 @@ import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
-import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.folder.FolderEvent;
 import com.logicaldoc.core.folder.FolderHistory;
 import com.logicaldoc.core.folder.FolderHistoryDAO;
+import com.logicaldoc.core.metadata.TemplateDAO;
+import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
@@ -48,7 +48,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 	private FolderHistoryDAO historyDao;
 
-	private DocumentTemplateDAO templateDao;
+	private TemplateDAO templateDao;
 
 	@Before
 	public void setUp() throws Exception {
@@ -60,7 +60,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		userDao = (UserDAO) context.getBean("UserDAO");
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
 		historyDao = (FolderHistoryDAO) context.getBean("FolderHistoryDAO");
-		templateDao = (DocumentTemplateDAO) context.getBean("DocumentTemplateDAO");
+		templateDao = (TemplateDAO) context.getBean("TemplateDAO");
 		docManager = (DocumentManager) context.getBean("DocumentManager");
 	}
 
@@ -825,7 +825,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		folder = dao.findById(1200);
 		dao.initialize(folder);
 
-		DocumentTemplate template = templateDao.findById(1L);
+		Template template = templateDao.findById(1L);
 		folder.setTemplate(template);
 		folder.setValue("attr1", "test");
 

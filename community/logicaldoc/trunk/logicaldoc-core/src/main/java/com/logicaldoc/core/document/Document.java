@@ -3,7 +3,7 @@ package com.logicaldoc.core.document;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import com.logicaldoc.core.ExtendedAttribute;
+import com.logicaldoc.core.metadata.Attribute;
 
 /**
  * Basic concrete implementation of <code>AbstractDocument</code>
@@ -51,7 +51,7 @@ public class Document extends AbstractDocument {
 		setFolder(docVO.getFolder());
 		setTemplate(docVO.getTemplate());
 
-		setAttributes(new HashMap<String, ExtendedAttribute>());
+		setAttributes(new HashMap<String, Attribute>());
 		for (String name : docVO.getAttributes().keySet()) {
 			getAttributes().put(name, docVO.getAttributes().get(name));
 		}

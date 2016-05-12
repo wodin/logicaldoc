@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.metadata.form.FormsPanel;
 import com.logicaldoc.gui.frontend.client.metadata.stamp.StampsPanel;
+import com.logicaldoc.gui.frontend.client.metadata.template.TemplatesAndAttributesPanel;
 import com.logicaldoc.gui.frontend.client.services.CustomIdService;
 import com.logicaldoc.gui.frontend.client.services.CustomIdServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.TagService;
@@ -79,7 +80,7 @@ public class MetadataMenu extends VLayout {
 		templates.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				AdminPanel.get().setContent(new TemplatesPanel());
+				AdminPanel.get().setContent(new TemplatesAndAttributesPanel());
 			}
 		});
 

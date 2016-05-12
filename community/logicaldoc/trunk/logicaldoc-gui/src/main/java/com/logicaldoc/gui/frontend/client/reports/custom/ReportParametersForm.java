@@ -8,7 +8,7 @@ import java.util.Map;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIReport;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -48,7 +48,7 @@ public class ReportParametersForm extends Window {
 
 	private GUIReport report;
 
-	private GUIExtendedAttribute[] parameters;
+	private GUIAttribute[] parameters;
 
 	private ReportsPanel panel;
 
@@ -64,7 +64,7 @@ public class ReportParametersForm extends Window {
 		setShowModalMask(true);
 		centerInPage();
 
-		service.getReportParameters(form.getId(), new AsyncCallback<GUIExtendedAttribute[]>() {
+		service.getReportParameters(form.getId(), new AsyncCallback<GUIAttribute[]>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -72,7 +72,7 @@ public class ReportParametersForm extends Window {
 			}
 
 			@Override
-			public void onSuccess(GUIExtendedAttribute[] parameters) {
+			public void onSuccess(GUIAttribute[] parameters) {
 				ReportParametersForm.this.parameters = parameters;
 				init();
 			}
@@ -87,24 +87,24 @@ public class ReportParametersForm extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		List<FormItem> items = new ArrayList<FormItem>();
-		for (GUIExtendedAttribute att : parameters) {
-			if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
+		for (GUIAttribute att : parameters) {
+			if (att.getType() == GUIAttribute.TYPE_STRING) {
 				FormItem item = ItemFactory.newStringItemForExtendedAttribute(null, att);
 				items.add(item);
-			} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+			} else if (att.getType() == GUIAttribute.TYPE_INT) {
 				IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(), att.getLabel(), null);
 				item.setRequired(att.isMandatory());
 				items.add(item);
-			} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+			} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 				SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(), att.getLabel(),
 						!att.isMandatory());
 				item.setRequired(att.isMandatory());
 				items.add(item);
-			} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+			} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
 				FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(), null);
 				item.setRequired(att.isMandatory());
 				items.add(item);
-			} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+			} else if (att.getType() == GUIAttribute.TYPE_DATE) {
 				final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
 				item.setRequired(att.isMandatory());
 				item.addKeyPressHandler(new KeyPressHandler() {
@@ -161,8 +161,8 @@ public class ReportParametersForm extends Window {
 		addItem(layout);
 	}
 
-	private GUIExtendedAttribute getParameter(String name) {
-		for (GUIExtendedAttribute param : parameters) {
+	private GUIAttribute getParameter(String name) {
+		for (GUIAttribute param : parameters) {
 			if (param.getName().equals(name))
 				return param;
 		}
@@ -176,39 +176,39 @@ public class ReportParametersForm extends Window {
 
 		Map<String, Object> values = (Map<String, Object>) form.getValues();
 
-		ArrayList<GUIExtendedAttribute> parameters = new ArrayList<GUIExtendedAttribute>();
+		ArrayList<GUIAttribute> parameters = new ArrayList<GUIAttribute>();
 
 		for (String name : values.keySet()) {
 			if (name.startsWith("_")) {
 				Object val = values.get(name);
 				String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-				GUIExtendedAttribute att = getParameter(nm);
+				GUIAttribute att = getParameter(nm);
 				if (att == null)
 					continue;
 
 				if (val != null) {
-					if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+					if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 						if (!(val == null || "".equals(val.toString().trim())))
 							att.setValue("1".equals(val.toString().trim()) ? true : false);
 						else if (getParameter(nm) != null) {
-							GUIExtendedAttribute at = getParameter(nm);
+							GUIAttribute at = getParameter(nm);
 							at.setBooleanValue(null);
-							at.setType(GUIExtendedAttribute.TYPE_BOOLEAN);
+							at.setType(GUIAttribute.TYPE_BOOLEAN);
 						}
 					} else
 						att.setValue(val);
 				} else {
 					if (att != null) {
-						if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+						if (att.getType() == GUIAttribute.TYPE_INT) {
 							getParameter(nm).setIntValue(null);
 							break;
-						} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+						} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 							getParameter(nm).setBooleanValue(null);
 							break;
-						} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+						} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
 							getParameter(nm).setDoubleValue(null);
 							break;
-						} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+						} else if (att.getType() == GUIAttribute.TYPE_DATE) {
 							getParameter(nm).setDateValue(null);
 							break;
 						} else {
@@ -221,7 +221,7 @@ public class ReportParametersForm extends Window {
 			}
 		}
 
-		service.execute(report.getId(), parameters.toArray(new GUIExtendedAttribute[0]), new AsyncCallback<Void>() {
+		service.execute(report.getId(), parameters.toArray(new GUIAttribute[0]), new AsyncCallback<Void>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

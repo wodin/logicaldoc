@@ -9,10 +9,10 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
+import com.logicaldoc.gui.frontend.client.services.AttributeSetService;
+import com.logicaldoc.gui.frontend.client.services.AttributeSetServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.logicaldoc.gui.frontend.client.services.TemplateService;
-import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.DragDataAction;
 import com.smartgwt.client.types.HeaderControls;
@@ -43,22 +43,22 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
  * @since 7.1
  */
 public class Options extends com.smartgwt.client.widgets.Window {
-	private TemplateServiceAsync templateService = (TemplateServiceAsync) GWT.create(TemplateService.class);
+	private AttributeSetServiceAsync service = (AttributeSetServiceAsync) GWT.create(AttributeSetService.class);
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private ListGrid list;
 
-	private long templateId;
+	private long setId;
 
 	private String attribute;
 
 	private boolean readOnly = false;
 
-	public Options(final long templteId, final String attribute, final boolean readOnly) {
+	public Options(final long setId, final String attribute, final boolean readOnly) {
 		super();
 
-		this.templateId = templteId;
+		this.setId = setId;
 		this.attribute = attribute;
 		this.readOnly = readOnly;
 
@@ -102,7 +102,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 							return;
 						Record rec = new ListGridRecord();
 						rec.setAttribute("value", value.trim());
-						rec.setAttribute("templateId", Long.toString(templateId));
+						rec.setAttribute("setId", Long.toString(setId));
 						rec.setAttribute("attribute", attribute);
 						list.addData(rec);
 					}
@@ -191,7 +191,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(false);
-		list.setDataSource(new ExtendedAttributeOptionsDS(templateId, attribute, false));
+		list.setDataSource(new ExtendedAttributeOptionsDS(setId, attribute, false));
 		list.setCanReorderRecords(!readOnly);
 		list.setCanDragRecordsOut(!readOnly);
 		list.setCanAcceptDroppedRecords(!readOnly);
@@ -229,7 +229,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 			values[i++] = record.getAttributeAsString("value");
 
 		ContactingServer.get().show();
-		templateService.saveOptions(templateId, attribute, values, new AsyncCallback<Void>() {
+		service.saveOptions(setId, attribute, values, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				ContactingServer.get().hide();
@@ -255,7 +255,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 		for (int i = 0; i < selection.length; i++)
 			values[i] = selection[i].getAttributeAsString("value");
 
-		templateService.deleteOptions(templateId, attribute, values, new AsyncCallback<Void>() {
+		service.deleteOptions(setId, attribute, values, new AsyncCallback<Void>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
@@ -270,7 +270,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 	}
 
 	public void refresh() {
-		list.setDataSource(new ExtendedAttributeOptionsDS(templateId, attribute, false));
+		list.setDataSource(new ExtendedAttributeOptionsDS(setId, attribute, false));
 		list.fetchData();
 	}
 
@@ -300,7 +300,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 		return attribute;
 	}
 
-	public long getTemplateId() {
-		return templateId;
+	public long getSetId() {
+		return setId;
 	}
 }

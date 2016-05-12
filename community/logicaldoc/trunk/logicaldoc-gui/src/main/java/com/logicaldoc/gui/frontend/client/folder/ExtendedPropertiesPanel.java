@@ -9,7 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -41,7 +41,7 @@ import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 /**
- * Shows folder's optional template metadata
+ * Shows folder's optional attributeSet metadata
  * 
  * @author Marco Meschieri - LogicalDOC
  * @since 6.0
@@ -53,7 +53,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 
 	private ValuesManager vm = new ValuesManager();
 
-	private GUIExtendedAttribute[] currentExtAttributes = null;
+	private GUIAttribute[] currentExtAttributes = null;
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -112,10 +112,10 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 			@Override
 			public void onChanged(ChangedEvent event) {
 				if (templateItem.getValue() != null && !"".equals(templateItem.getValue().toString())) {
-					folder.setAttributes(new GUIExtendedAttribute[0]);
+					folder.setAttributes(new GUIAttribute[0]);
 					prepareExtendedAttributes(new Long(event.getValue().toString()));
 				} else {
-					folder.setAttributes(new GUIExtendedAttribute[0]);
+					folder.setAttributes(new GUIAttribute[0]);
 					prepareExtendedAttributes(null);
 				}
 			}
@@ -186,19 +186,19 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		if (templateId == null)
 			return;
 
-		documentService.getAttributes(templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
+		documentService.getAttributes(templateId, new AsyncCallback<GUIAttribute[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
 			}
 
 			@Override
-			public void onSuccess(GUIExtendedAttribute[] result) {
+			public void onSuccess(GUIAttribute[] result) {
 				currentExtAttributes = result;
 				extendedItems.clear();
 
-				for (GUIExtendedAttribute att : result) {
-					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
+				for (GUIAttribute att : result) {
+					if (att.getType() == GUIAttribute.TYPE_STRING) {
 						FormItem item = ItemFactory.newStringItemForExtendedAttribute(templateId, att);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((String) folder.getValue(att.getName()));
@@ -206,7 +206,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setDisabled(!update);
 						item.setRequired(false);
 						extendedItems.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+					} else if (att.getType() == GUIAttribute.TYPE_INT) {
 						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(),
 								att.getLabel(), null);
 						if (folder.getValue(att.getName()) != null)
@@ -215,7 +215,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setDisabled(!update);
 						item.setRequired(false);
 						extendedItems.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+					} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 						SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(),
 								att.getLabel(), true);
 						if (folder.getValue(att.getName()) != null)
@@ -224,7 +224,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setDisabled(!update);
 						item.setRequired(false);
 						extendedItems.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+					} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
 						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
 								null);
 						if (folder.getValue(att.getName()) != null)
@@ -233,7 +233,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setDisabled(!update);
 						item.setRequired(false);
 						extendedItems.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+					} else if (att.getType() == GUIAttribute.TYPE_DATE) {
 						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((Date) folder.getValue(att.getName()));
@@ -254,7 +254,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setDisabled(!update);
 						item.setRequired(false);
 						extendedItems.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
+					} else if (att.getType() == GUIAttribute.TYPE_USER) {
 						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(),
 								att.getLabel(),
 								(att.getOptions() != null && att.getOptions().length > 0) ? att.getOptions()[0] : null);
@@ -271,9 +271,9 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		});
 	}
 
-	private GUIExtendedAttribute getExtendedAttribute(String name) {
+	private GUIAttribute getExtendedAttribute(String name) {
 		if (currentExtAttributes != null)
-			for (GUIExtendedAttribute extAttr : currentExtAttributes)
+			for (GUIAttribute extAttr : currentExtAttributes)
 				if (extAttr.getName().equals(name))
 					return extAttr;
 		return null;
@@ -305,11 +305,11 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		if (!vm.hasErrors()) {
 
 			if (Feature.enabled(Feature.TEMPLATE)) {
-				if (values.get("template") == null || "".equals(values.get("template"))) {
+				if (values.get("attributeSet") == null || "".equals(values.get("attributeSet"))) {
 					folder.setTemplateId(null);
 					folder.setTemplateLocked(0);
 				} else {
-					folder.setTemplateId(Long.parseLong(values.get("template").toString()));
+					folder.setTemplateId(Long.parseLong(values.get("attributeSet").toString()));
 					folder.setTemplateLocked("yes".equals(values.get("locked")) ? 1 : 0);
 				}
 				for (String name : values.keySet()) {
@@ -317,12 +317,12 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						if (name.startsWith("_")) {
 							Object val = values.get(name);
 							String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-							GUIExtendedAttribute att = getExtendedAttribute(nm);
+							GUIAttribute att = getExtendedAttribute(nm);
 							if (att == null)
 								continue;
 
 							if (val != null) {
-								if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
+								if (att.getType() == GUIAttribute.TYPE_USER) {
 									SelectItem userItem = (SelectItem) form2.getItem(name);
 
 									if (userItem.getValue() != null && !"".equals(userItem.getValue())) {
@@ -337,36 +337,36 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 										dummy.setName(sel.getAttributeAsString("name"));
 										folder.setValue(nm, dummy);
 									} else {
-										GUIExtendedAttribute at = folder.getExtendedAttribute(nm);
+										GUIAttribute at = folder.getExtendedAttribute(nm);
 										at.setIntValue(null);
 										at.setStringValue(null);
-										at.setType(GUIExtendedAttribute.TYPE_USER);
+										at.setType(GUIAttribute.TYPE_USER);
 									}
-								} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+								} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 									if (!(val == null || "".equals(val.toString().trim())))
 										folder.setValue(nm, "1".equals(val.toString().trim()) ? true : false);
 									else if (folder.getExtendedAttribute(nm) != null) {
-										GUIExtendedAttribute at = folder.getExtendedAttribute(nm);
+										GUIAttribute at = folder.getExtendedAttribute(nm);
 										at.setBooleanValue(null);
-										at.setType(GUIExtendedAttribute.TYPE_BOOLEAN);
+										at.setType(GUIAttribute.TYPE_BOOLEAN);
 									}
 								} else
 									folder.setValue(nm, val);
 							} else {
 								if (att != null) {
-									if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+									if (att.getType() == GUIAttribute.TYPE_INT) {
 										folder.getExtendedAttribute(nm).setIntValue(null);
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+									} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 										folder.getExtendedAttribute(nm).setBooleanValue(null);
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+									} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
 										folder.getExtendedAttribute(nm).setDoubleValue(null);
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+									} else if (att.getType() == GUIAttribute.TYPE_DATE) {
 										folder.getExtendedAttribute(nm).setDateValue(null);
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
-										GUIExtendedAttribute at = folder.getExtendedAttribute(nm);
+									} else if (att.getType() == GUIAttribute.TYPE_USER) {
+										GUIAttribute at = folder.getExtendedAttribute(nm);
 										at.setIntValue(null);
 										at.setStringValue(null);
-										at.setType(GUIExtendedAttribute.TYPE_USER);
+										at.setType(GUIAttribute.TYPE_USER);
 									} else {
 										folder.setValue(nm, "");
 									}

@@ -1,16 +1,17 @@
-package com.logicaldoc.gui.frontend.client.metadata;
+package com.logicaldoc.gui.frontend.client.metadata.template;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.beans.GUIAttributeSet;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
-import com.logicaldoc.gui.common.client.data.TemplatesDS;
+import com.logicaldoc.gui.common.client.data.AttributeSetsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
-import com.logicaldoc.gui.frontend.client.services.TemplateService;
-import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.AttributeSetService;
+import com.logicaldoc.gui.frontend.client.services.AttributeSetServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.SelectionStyle;
@@ -36,13 +37,13 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
- * Panel showing the list of templates
+ * Panel showing the list of attribute sets
  * 
- * @author Matteo Caruso - Logical Objects
- * @since 6.0
+ * @author Marco Meschieri - LogicalDOC
+ * @since 7.5
  */
-public class TemplatesPanel extends VLayout {
-	private TemplateServiceAsync service = (TemplateServiceAsync) GWT.create(TemplateService.class);
+public class AttributeSetsPanel extends VLayout {
+	private AttributeSetServiceAsync service = (AttributeSetServiceAsync) GWT.create(AttributeSetService.class);
 
 	private Layout listing;
 
@@ -50,23 +51,23 @@ public class TemplatesPanel extends VLayout {
 
 	protected ListGrid list;
 
-	protected Canvas details = SELECT_TEMPLATE;
+	protected Canvas details = SELECT_SET;
 
 	private InfoPanel infoPanel;
 
 	private ToolStrip toolStrip;
 
-	final static Canvas SELECT_TEMPLATE = new HTMLPanel("&nbsp;" + I18N.message("selecttemplate"));
+	final static Canvas SELECT_SET = new HTMLPanel("&nbsp;" + I18N.message("selecttattributeset"));
 
-	public TemplatesPanel() {
+	public AttributeSetsPanel() {
 		setWidth100();
 
 		infoPanel = new InfoPanel("");
 
-		refresh(GUITemplate.TYPE_DEFAULT);
+		refresh();
 	}
 
-	protected void refresh(int type) {
+	protected void refresh() {
 		Canvas[] members = getMembers();
 		for (Canvas canvas : members) {
 			removeMember(canvas);
@@ -74,7 +75,7 @@ public class TemplatesPanel extends VLayout {
 
 		listing = new VLayout();
 		detailsContainer = new VLayout();
-		details = SELECT_TEMPLATE;
+		details = SELECT_SET;
 
 		// Initialize the listing panel
 		listing.setAlign(Alignment.CENTER);
@@ -95,13 +96,8 @@ public class TemplatesPanel extends VLayout {
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 100);
 		documents.setCanSort(true);
 
-		ListGridField typeTemplate = new ListGridField("type", I18N.message("type"), 100);
-		typeTemplate.setHidden(true);
-
-		ListGridField category = new ListGridField("category", I18N.message("category"), 300);
-		category.setCanFilter(true);
-		category.setCanSort(false);
-		category.setHidden(type == GUITemplate.TYPE_DEFAULT);
+		ListGridField typeSet = new ListGridField("type", I18N.message("type"), 100);
+		typeSet.setHidden(true);
 
 		ListGridField signRequired = new ListGridField("signRequired", I18N.message("signrequired"), 100);
 		signRequired.setHidden(true);
@@ -112,13 +108,13 @@ public class TemplatesPanel extends VLayout {
 		list.setAutoFetchData(true);
 		list.setWidth100();
 		list.setHeight100();
-		list.setFields(name, description, documents, category);
+		list.setFields(name, description, documents);
 		list.setSelectionType(SelectionStyle.SINGLE);
 		list.setShowRecordComponents(true);
 		list.setShowRecordComponentsByCell(true);
 		list.setCanFreezeFields(true);
 		list.setFilterOnKeypress(true);
-		list.setDataSource(new TemplatesDS(false, null, type, true));
+		list.setDataSource(new AttributeSetsDS(false, GUITemplate.TYPE_DEFAULT));
 		list.setShowFilterEditor(true);
 
 		listing.addMember(infoPanel);
@@ -128,15 +124,27 @@ public class TemplatesPanel extends VLayout {
 		toolStrip.setHeight(20);
 		toolStrip.setWidth100();
 		toolStrip.addSpacer(2);
+
+		ToolStripButton refresh = new ToolStripButton();
+		refresh.setTitle(I18N.message("refresh"));
+		refresh.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				refresh();
+			}
+		});
+		toolStrip.addButton(refresh);
+
 		ToolStripButton add = new ToolStripButton();
-		add.setTitle(I18N.message("addtemplate"));
+		add.setTitle(I18N.message("addattributeset"));
 		toolStrip.addButton(add);
 		add.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				onAddingTemplate();
+				onAddAttributeSet();
 			}
 		});
+
 		toolStrip.addFill();
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
@@ -155,26 +163,25 @@ public class TemplatesPanel extends VLayout {
 			public void onSelectionChanged(SelectionEvent event) {
 				Record record = list.getSelectedRecord();
 				if (record != null)
-					service.getTemplate(Long.parseLong(record.getAttributeAsString("id")),
-							new AsyncCallback<GUITemplate>() {
+					service.getAttributeSet(record.getAttributeAsLong("id"), new AsyncCallback<GUIAttributeSet>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
 
-								@Override
-								public void onSuccess(GUITemplate template) {
-									showTemplateDetails(template);
-								}
-							});
+						@Override
+						public void onSuccess(GUIAttributeSet attSet) {
+							showSetDetails(attSet);
+						}
+					});
 			}
 		});
 
 		list.addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				infoPanel.setMessage(I18N.message("showtemplates", Integer.toString(list.getTotalRows())));
+				infoPanel.setMessage(I18N.message("showattributesets", Integer.toString(list.getTotalRows())));
 			}
 		});
 
@@ -208,7 +215,7 @@ public class TemplatesPanel extends VLayout {
 								public void onSuccess(Void result) {
 									list.removeSelectedData();
 									list.deselectAllRecords();
-									showTemplateDetails(null);
+									showSetDetails(null);
 								}
 							});
 						}
@@ -224,13 +231,13 @@ public class TemplatesPanel extends VLayout {
 		contextMenu.showContextMenu();
 	}
 
-	protected void showTemplateDetails(GUITemplate template) {
-		if (!(details instanceof TemplateDetailsPanel)) {
+	protected void showSetDetails(GUIAttributeSet attSet) {
+		if (!(details instanceof AttributeSetDetailsPanel)) {
 			detailsContainer.removeMember(details);
-			details = new TemplateDetailsPanel(this);
+			details = new AttributeSetDetailsPanel(this);
 			detailsContainer.addMember(details);
 		}
-		((TemplateDetailsPanel) details).setTemplate(template);
+		((AttributeSetDetailsPanel) details).setAttributeSet(attSet);
 	}
 
 	public ListGrid getList() {
@@ -240,29 +247,28 @@ public class TemplatesPanel extends VLayout {
 	/**
 	 * Updates the selected record with new data
 	 */
-	public void updateRecord(GUITemplate template) {
+	public void updateRecord(GUIAttributeSet set) {
 		ListGridRecord record = list.getSelectedRecord();
 		if (record == null)
 			record = new ListGridRecord();
 
-		record.setAttribute("name", template.getName());
-		record.setAttribute("description", template.getDescription());
+		record.setAttribute("name", set.getName());
+		record.setAttribute("description", set.getDescription());
 
 		if (record.getAttributeAsString("id") != null
-				&& (template.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
+				&& (set.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
 			list.refreshRow(list.getRecordIndex(record));
 		} else {
 			// Append a new record
-			record.setAttribute("id", template.getId());
-			record.setAttribute("readonly", "" + template.isReadonly());
-			record.setAttribute("documents", "" + 0);
+			record.setAttribute("id", set.getId());
+			record.setAttribute("readonly", "" + set.isReadonly());
 			list.addData(record);
 			list.selectRecord(record);
 		}
 	}
 
-	protected void onAddingTemplate() {
+	protected void onAddAttributeSet() {
 		list.deselectAllRecords();
-		showTemplateDetails(new GUITemplate());
+		showSetDetails(new GUIAttributeSet());
 	}
 }

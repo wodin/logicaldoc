@@ -7,7 +7,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.i18n.client.NumberFormat;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -125,42 +125,42 @@ public class MetadataDiff extends Window {
 		List<String> names = new ArrayList<String>();
 
 		// Collect all attribute names from version1
-		for (GUIExtendedAttribute att : version1.getAttributes()) {
+		for (GUIAttribute att : version1.getAttributes()) {
 			if (!names.contains(att.getName()))
 				names.add(att.getName());
 		}
 		// Collect all attribute names from version2
-		for (GUIExtendedAttribute att : version2.getAttributes()) {
+		for (GUIAttribute att : version2.getAttributes()) {
 			if (!names.contains(att.getName()))
 				names.add(att.getName());
 		}
 
 		for (String name : names) {
-			GUIExtendedAttribute att = version1.getExtendedAttribute(name);
+			GUIAttribute att = version1.getExtendedAttribute(name);
 			String val1 = "";
 			if (att != null)
-				if ((att.getType() == GUIExtendedAttribute.TYPE_STRING || att.getType() == GUIExtendedAttribute.TYPE_USER)
+				if ((att.getType() == GUIAttribute.TYPE_STRING || att.getType() == GUIAttribute.TYPE_USER)
 						&& att.getStringValue() != null) {
 					val1 = att.getStringValue();
-				} else if (att.getType() == GUIExtendedAttribute.TYPE_INT && att.getValue() != null) {
+				} else if (att.getType() == GUIAttribute.TYPE_INT && att.getValue() != null) {
 					val1 = Long.toString(att.getIntValue());
-				} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE && att.getValue() != null) {
+				} else if (att.getType() == GUIAttribute.TYPE_DOUBLE && att.getValue() != null) {
 					val1 = numberFormat.format(att.getDoubleValue());
-				} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE && att.getValue() != null) {
+				} else if (att.getType() == GUIAttribute.TYPE_DATE && att.getValue() != null) {
 					val1 = dateFormat.format(att.getDateValue());
 				}
 
 			att = version2.getExtendedAttribute(name);
 			String val2 = "";
 			if (att != null)
-				if ((att.getType() == GUIExtendedAttribute.TYPE_STRING || att.getType() == GUIExtendedAttribute.TYPE_USER)
+				if ((att.getType() == GUIAttribute.TYPE_STRING || att.getType() == GUIAttribute.TYPE_USER)
 						&& att.getStringValue() != null) {
 					val2 = att.getStringValue();
-				} else if (att.getType() == GUIExtendedAttribute.TYPE_INT && att.getValue() != null) {
+				} else if (att.getType() == GUIAttribute.TYPE_INT && att.getValue() != null) {
 					val2 = Long.toString(att.getIntValue());
-				} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE && att.getValue() != null) {
+				} else if (att.getType() == GUIAttribute.TYPE_DOUBLE && att.getValue() != null) {
 					val2 = numberFormat.format(att.getDoubleValue());
-				} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE && att.getValue() != null) {
+				} else if (att.getType() == GUIAttribute.TYPE_DATE && att.getValue() != null) {
 					val2 = dateFormat.format(att.getDateValue());
 				}
 

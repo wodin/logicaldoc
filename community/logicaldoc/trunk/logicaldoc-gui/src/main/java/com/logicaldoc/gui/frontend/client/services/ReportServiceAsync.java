@@ -1,7 +1,7 @@
 package com.logicaldoc.gui.frontend.client.services;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIReport;
 
 public interface ReportServiceAsync {
@@ -12,7 +12,7 @@ public interface ReportServiceAsync {
 
 	void getReport(long id, boolean withLog, AsyncCallback<GUIReport> callback);
 
-	void execute(long id, GUIExtendedAttribute[] paremeters, AsyncCallback<Void> callback);
+	void execute(long id, GUIAttribute[] paremeters, AsyncCallback<Void> callback);
 
 	void save(GUIReport report, AsyncCallback<GUIReport> callback);
 
@@ -20,7 +20,7 @@ public interface ReportServiceAsync {
 
 	void getReports(AsyncCallback<GUIReport[]> callback);
 
-	void getReportParameters(long id, AsyncCallback<GUIExtendedAttribute[]> callback);
+	void getReportParameters(long id, AsyncCallback<GUIAttribute[]> callback);
 
 	void storeUploadedDesign(long id, AsyncCallback<Void> callback);
 }

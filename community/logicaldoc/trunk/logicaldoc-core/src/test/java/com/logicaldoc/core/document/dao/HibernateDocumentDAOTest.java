@@ -318,7 +318,13 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		// Try to store it inside a folder with extended attributes
 		folder = folderDao.findById(1202);
 		doc.setFolder(folder);
+
+		doc.setValue("object", "test");
 		dao.store(doc);
+		doc = dao.findById(doc.getId());
+		dao.initialize(doc);
+		Assert.assertEquals("test", doc.getObject());
+		Assert.assertNull(doc.getAttribute("object"));
 
 		// Check if the defaults were applied
 		doc = dao.findById(1);
@@ -331,7 +337,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	public void testFindTags() {
 		TagsProcessor processor = (TagsProcessor) context.getBean("TagsProcessor");
 		processor.run();
-		
+
 		Collection<String> tags = dao.findTags("a", 1L).keySet();
 		Assert.assertNotNull(tags);
 		Assert.assertEquals(2, tags.size());
@@ -350,7 +356,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	public void testFindAllTags() {
 		TagsProcessor processor = (TagsProcessor) context.getBean("TagsProcessor");
 		processor.run();
-		
+
 		Collection<String> tags = dao.findAllTags("a", 1L);
 		Assert.assertNotNull(tags);
 		Assert.assertEquals(2, tags.size());

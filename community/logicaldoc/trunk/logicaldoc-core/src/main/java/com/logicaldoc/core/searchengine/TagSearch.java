@@ -8,9 +8,9 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.document.AbstractDocument;
-import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.util.Context;
 
@@ -174,7 +174,7 @@ public class TagSearch extends Search {
 			hit.setFolder(folder);
 
 			if (rs.getLong(36) != 0L) {
-				DocumentTemplate t = new DocumentTemplate();
+				Template t = new Template();
 				t.setId(rs.getLong(36));
 				t.setName(rs.getString(37));
 				hit.setTemplate(t);

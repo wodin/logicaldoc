@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.Document;
@@ -29,6 +28,7 @@ import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.User;
@@ -1057,7 +1057,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				folder.setTemplate(parent.getTemplate());
 				folder.setTemplateLocked(parent.getTemplateLocked());
 				for (String name : parent.getAttributeNames()) {
-					ExtendedAttribute ext = (ExtendedAttribute) parent.getAttributes().get(name).clone();
+					Attribute ext = (Attribute) parent.getAttributes().get(name).clone();
 					folder.getAttributes().put(name, ext);
 				}
 
@@ -1172,9 +1172,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			folder.setTemplate(parent.getTemplate());
 			try {
 				for (String att : parent.getAttributeNames()) {
-					ExtendedAttribute ext = null;
+					Attribute ext = null;
 					try {
-						ext = (ExtendedAttribute) parent.getAttributes().get(att).clone();
+						ext = (Attribute) parent.getAttributes().get(att).clone();
 					} catch (CloneNotSupportedException e) {
 
 					}

@@ -8,7 +8,7 @@ import com.logicaldoc.gui.common.client.ServerException;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
@@ -35,9 +35,9 @@ public interface DocumentService extends RemoteService {
 	public GUIDocument save(GUIDocument document) throws Exception;
 
 	/**
-	 * Retrieves all attributes of the specified template
+	 * Retrieves all attributes of the specified attributeSet
 	 */
-	public GUIExtendedAttribute[] getAttributes(long templateId) throws ServerException;
+	public GUIAttribute[] getAttributes(long templateId) throws ServerException;
 
 	/**
 	 * Retrieves two specific versions by its ID
@@ -133,7 +133,7 @@ public interface DocumentService extends RemoteService {
 	 * @param importZip If .zip files have to be unpacked and the contained
 	 *        documents imported
 	 * @param immediteIndexing If the documents must be immediately indexed
-	 * @param templateId The documents template
+	 * @param templateId The documents attributeSet
 	 * 
 	 * @return The list of created documents
 	 */

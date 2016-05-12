@@ -71,7 +71,8 @@
     <map name="attributes" table="ld_version_ext" lazy="true" cascade="all" order-by="ld_position asc">
       <key column="ld_versionid" />
       <map-key type="string" column="ld_name" length="255" />
-      <composite-element class="com.logicaldoc.core.ExtendedAttribute">
+      <composite-element class="com.logicaldoc.core.metadata.Attribute">
+        <property name="setId" type="long" column="ld_setid" />
       	<property name="label" type="string" column="ld_label" length="255"/>
         <property name="mandatory" type="int" column="ld_mandatory" not-null="true"/>
         <property name="type" type="int" column="ld_type" not-null="true" />

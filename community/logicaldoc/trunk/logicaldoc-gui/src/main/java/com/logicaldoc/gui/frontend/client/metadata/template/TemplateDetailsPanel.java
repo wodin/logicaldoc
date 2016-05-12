@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.metadata;
+package com.logicaldoc.gui.frontend.client.metadata.template;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -27,7 +27,7 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
 /**
- * This panel collects all template details
+ * This panel collects all attributeSet details
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.0

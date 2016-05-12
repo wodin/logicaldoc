@@ -9,7 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -235,8 +235,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		}
 
-		if (values.containsKey("template") && !((String) values.get("template")).isEmpty())
-			options.setTemplate(new Long((String) values.get("template")));
+		if (values.containsKey("attributeSet") && !((String) values.get("attributeSet")).isEmpty())
+			options.setTemplate(new Long((String) values.get("attributeSet")));
 
 		String[] fields = searchinItem.getValues();
 		options.setFields(fields);
@@ -299,17 +299,17 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		if (templateId == null)
 			return;
 
-		documentService.getAttributes(templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
+		documentService.getAttributes(templateId, new AsyncCallback<GUIAttribute[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
 			}
 
 			@Override
-			public void onSuccess(GUIExtendedAttribute[] result) {
-				for (GUIExtendedAttribute att : result) {
-					if (att.getType() == GUIExtendedAttribute.TYPE_STRING
-							|| att.getType() == GUIExtendedAttribute.TYPE_USER) {
+			public void onSuccess(GUIAttribute[] result) {
+				for (GUIAttribute att : result) {
+					if (att.getType() == GUIAttribute.TYPE_STRING
+							|| att.getType() == GUIAttribute.TYPE_USER) {
 						fieldsMap.put("ext_" + att.getName(), att.getName());
 					}
 				}

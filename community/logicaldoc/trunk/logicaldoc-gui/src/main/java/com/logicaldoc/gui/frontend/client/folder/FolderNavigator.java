@@ -666,7 +666,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	}
 
 	/**
-	 * Allows the selection of a folders template to apply to the current node
+	 * Allows the selection of a folders attributeSet to apply to the current node
 	 */
 	private void onApplyTemplate() {
 		ApplyTemplateDialog dialog = new ApplyTemplateDialog();

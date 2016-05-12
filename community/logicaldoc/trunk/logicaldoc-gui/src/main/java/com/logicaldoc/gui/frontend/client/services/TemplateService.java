@@ -12,32 +12,17 @@ import com.logicaldoc.gui.common.client.beans.GUITemplate;
 @RemoteServiceRelativePath("template")
 public interface TemplateService extends RemoteService {
 	/**
-	 * Deletes a given template
+	 * Deletes a given attributeSet
 	 */
 	public void delete(long templateId) throws ServerException;
 
 	/**
-	 * Creates or updates a template
+	 * Creates or updates a attributeSet
 	 */
 	public GUITemplate save(GUITemplate template) throws ServerException;
 
 	/**
-	 * Loads a given template from the database
+	 * Loads a given attributeSet from the database
 	 */
 	public GUITemplate getTemplate(long templateId) throws ServerException;
-
-	/**
-	 * Saves the list of all possible options
-	 */
-	public void saveOptions(long templateId, String attribute, String[] values) throws ServerException;
-
-	/**
-	 * Delete a selection of options
-	 */
-	public void deleteOptions(long templateId, String attribute, String[] values) throws ServerException;
-
-	/**
-	 * Reads the contacts that are about to beimported from CSV
-	 */
-	public String[] parseOptions(long templateId, String attribute) throws ServerException;
 }

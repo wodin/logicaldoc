@@ -234,13 +234,19 @@ values   (3,'2008-10-22 00:00:00',0,1,2,'xxx',1,1);
 insert into ld_link(ld_id, ld_lastmodified,ld_deleted, ld_docid1, ld_docid2,ld_type,ld_tenantid,ld_recordversion)
 values   (4,'2008-10-22 00:00:00',0,2,1,'',1,1);
 
-insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_category, ld_signrequired,ld_tenantid,ld_recordversion)
-values (1, '2008-11-07 00:00:00',0,'test1','test1_desc',0,0,0,0,1,1);
+insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_tenantid,ld_recordversion)
+values (5, '2008-11-07 00:00:00',0,'test1','test1_desc',0,0,1,1);
 insert into ld_template_ext (ld_templateid, ld_mandatory, ld_position, ld_type, ld_stringvalue, ld_name, ld_editor)
-values (1, 0, 0, 0, 'val1', 'attr1', 0);
+values (5, 0, 0, 0, 'val1', 'attr1', 0);
 
-insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_category, ld_signrequired,ld_tenantid,ld_recordversion)
-values (2, '2008-11-07 00:00:00',0,'test2','test2_desc',0,0,0,0,1,1);
+insert into ld_attributeset (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_tenantid,ld_recordversion)
+values (5, '2008-11-07 00:00:00',0,'test1','test1_desc',0,0,1,1);
+insert into ld_attributeset_ext (ld_attsetid, ld_mandatory, ld_position, ld_type, ld_stringvalue, ld_name, ld_editor, ld_setid)
+values (5, 0, 0, 0, 'val1', 'attr1', 0, 5);
+
+insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_tenantid,ld_recordversion)
+values (6, '2008-11-07 00:00:00',0,'test2','test2_desc',0,0,1,1);
+
 
 insert into ld_generic(ld_id, ld_lastmodified, ld_deleted, ld_type, ld_subtype, ld_string1, ld_string2, ld_integer1, ld_integer2, ld_double1, ld_double2, ld_date1, ld_date2,ld_tenantid,ld_recordversion)
 values(1, '2008-11-19 00:00:00',0,'a','a1','str1','str2',0,1,1.5,1.6,'2008-11-20 00:00:00','2008-11-20 00:00:00',1,1);

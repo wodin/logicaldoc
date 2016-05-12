@@ -1,28 +1,15 @@
 package com.logicaldoc.gui.common.client.beans;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GUITemplate implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	public static int TYPE_DEFAULT = 0;
-
-	public static int TYPE_AOS = 1;
-
-	public static int CATEGORY_GENERIC = 0;
-
-	public static int CATEGORY_ACTIVE_INVOICE = 1;
-
-	public static int CATEGORY_PASSIVE_INVOICE = 2;
-
-	public static int CATEGORY_DDT = 3;
-
-	public static int CATEGORY_CONTRACT = 4;
-
-	public static int SIGNED_NO = 0;
-
-	public static int SIGNED_REQUIRED = 1;
 
 	private long id = 0;
 
@@ -34,11 +21,7 @@ public class GUITemplate implements Serializable {
 
 	private int type = TYPE_DEFAULT;
 
-	private int category = CATEGORY_GENERIC;
-
-	private GUIExtendedAttribute[] attributes;
-
-	private int signRequired = SIGNED_NO;
+	private GUIAttribute[] attributes;
 
 	public long getId() {
 		return id;
@@ -64,11 +47,51 @@ public class GUITemplate implements Serializable {
 		this.description = description;
 	}
 
-	public GUIExtendedAttribute[] getAttributes() {
+	public GUIAttribute getAttribute(String name) {
+		if (getAttributes() != null)
+			for (GUIAttribute att : getAttributes()) {
+				if (att.getName().equals(name))
+					return att;
+			}
+		return null;
+	}
+
+	public void appendAttribute(GUIAttribute a) {
+		List<GUIAttribute> newAttrs = new ArrayList<GUIAttribute>();
+		if (getAttributes() != null)
+			newAttrs.addAll(Arrays.asList(getAttributes()));
+		newAttrs.add(a);
+		attributes = newAttrs.toArray(new GUIAttribute[0]);
+	}
+
+	public void removeAttribute(String name) {
+		if (getAttribute(name) == null)
+			return;
+
+		List<GUIAttribute> newAttrs = new ArrayList<GUIAttribute>();
+		for (GUIAttribute att : getAttributes())
+			if (!att.getName().equals(name))
+				newAttrs.add(att);
+
+		attributes = newAttrs.toArray(new GUIAttribute[0]);
+	}
+
+	public void reorderAttributes(List<String> names) {
+		List<GUIAttribute> newAttrs = new ArrayList<GUIAttribute>();
+		int i = 0;
+		for (String name : names) {
+			GUIAttribute att = getAttribute(name);
+			att.setPosition(i++);
+			newAttrs.add(att);
+		}
+		attributes = newAttrs.toArray(new GUIAttribute[0]);
+	}
+
+	public GUIAttribute[] getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(GUIExtendedAttribute[] attributes) {
+	public void setAttributes(GUIAttribute[] attributes) {
 		this.attributes = attributes;
 	}
 
@@ -86,21 +109,5 @@ public class GUITemplate implements Serializable {
 
 	public void setType(int type) {
 		this.type = type;
-	}
-
-	public int getCategory() {
-		return category;
-	}
-
-	public void setCategory(int category) {
-		this.category = category;
-	}
-
-	public int getSignRequired() {
-		return signRequired;
-	}
-
-	public void setSignRequired(int signRequired) {
-		this.signRequired = signRequired;
 	}
 }

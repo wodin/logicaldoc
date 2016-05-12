@@ -147,10 +147,10 @@ public class ImportFolderAdvancedProperties extends ImportFolderDetailsTab {
 			importFolder.setDepth(Integer.parseInt(values.get("depth").toString()));
 			importFolder.setUpdatePolicy(Integer.parseInt(values.get("updatePolicy").toString()));
 			
-			if (values.get("template") == null || "".equals((String) values.get("template")))
+			if (values.get("attributeSet") == null || "".equals((String) values.get("attributeSet")))
 				importFolder.setTemplateId(null);
 			else
-				importFolder.setTemplateId(Long.parseLong((String) values.get("template")));
+				importFolder.setTemplateId(Long.parseLong((String) values.get("attributeSet")));
 			importFolder.setDelImport((Boolean) values.get("delImport"));
 			importFolder.setInheritRights((Boolean) values.get("inheritRights"));
 			importFolder.setImportEmpty((Boolean) values.get("importEmpty"));

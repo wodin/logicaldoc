@@ -28,7 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailAttachment;
 import com.logicaldoc.core.communication.EMailSender;
@@ -42,7 +41,6 @@ import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.DocumentNote;
-import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Rating;
 import com.logicaldoc.core.document.Version;
@@ -50,7 +48,6 @@ import com.logicaldoc.core.document.dao.BookmarkDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DocumentNoteDAO;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.RatingDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
@@ -58,6 +55,9 @@ import com.logicaldoc.core.document.pdf.PdfConverterManager;
 import com.logicaldoc.core.document.thumbnail.ThumbnailManager;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.metadata.Attribute;
+import com.logicaldoc.core.metadata.Template;
+import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.User;
@@ -69,10 +69,10 @@ import com.logicaldoc.core.transfer.ZipExport;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.ServerException;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
@@ -409,26 +409,27 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public GUIExtendedAttribute[] getAttributes(long templateId) throws ServerException {
+	public GUIAttribute[] getAttributes(long templateId) throws ServerException {
 		ServiceUtil.validateSession(getThreadLocalRequest());
 
-		DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
-		DocumentTemplate template = templateDao.findById(templateId);
+		TemplateDAO templateDao = (TemplateDAO) Context.get().getBean(TemplateDAO.class);
+		Template template = templateDao.findById(templateId);
 
-		GUIExtendedAttribute[] attributes = prepareGUIAttributes(template, null);
+		GUIAttribute[] attributes = prepareGUIAttributes(template, null);
 
 		return attributes;
 	}
 
-	private static GUIExtendedAttribute[] prepareGUIAttributes(DocumentTemplate template, Document doc) {
+	private static GUIAttribute[] prepareGUIAttributes(Template template, Document doc) {
 		try {
 			if (template != null) {
-				GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
+				GUIAttribute[] attributes = new GUIAttribute[template.getAttributeNames().size()];
 				int i = 0;
 				for (String attrName : template.getAttributeNames()) {
-					ExtendedAttribute extAttr = template.getAttributes().get(attrName);
-					GUIExtendedAttribute att = new GUIExtendedAttribute();
+					Attribute extAttr = template.getAttributes().get(attrName);
+					GUIAttribute att = new GUIAttribute();
 					att.setName(attrName);
+					att.setSetId(extAttr.getSetId());
 					att.setPosition(extAttr.getPosition());
 					att.setLabel(extAttr.getLabel());
 					att.setMandatory(extAttr.getMandatory() == 1);
@@ -449,10 +450,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				}
 				return attributes;
 			} else {
-				List<GUIExtendedAttribute> list = new ArrayList<GUIExtendedAttribute>();
+				List<GUIAttribute> list = new ArrayList<GUIAttribute>();
 				for (String name : doc.getAttributeNames()) {
-					ExtendedAttribute e = doc.getAttributes().get(name);
-					GUIExtendedAttribute ext = new GUIExtendedAttribute();
+					Attribute e = doc.getAttributes().get(name);
+					GUIAttribute ext = new GUIAttribute();
 					ext.setName(name);
 					ext.setDateValue(e.getDateValue());
 					ext.setStringValue(e.getStringValue());
@@ -462,7 +463,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					ext.setType(e.getType());
 					list.add(ext);
 				}
-				return list.toArray(new GUIExtendedAttribute[0]);
+				return list.toArray(new GUIAttribute[0]);
 			}
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
@@ -580,7 +581,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		}
 
 		if (doc.getAttributes() != null && !doc.getAttributes().isEmpty()) {
-			GUIExtendedAttribute[] attributes = prepareGUIAttributes(doc.getTemplate(), doc);
+			GUIAttribute[] attributes = prepareGUIAttributes(doc.getTemplate(), doc);
 			document.setAttributes(attributes);
 		}
 
@@ -644,7 +645,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version1.setTemplate(docVersion.getTemplateName());
 				versDao.initialize(docVersion);
 				for (String attrName : docVersion.getAttributeNames()) {
-					ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
+					Attribute extAttr = docVersion.getAttributes().get(attrName);
 					version1.setValue(attrName, extAttr.getValue());
 				}
 				GUIFolder folder1 = new GUIFolder();
@@ -696,7 +697,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version2.setTemplate(docVersion.getTemplateName());
 				versDao.initialize(docVersion);
 				for (String attrName : docVersion.getAttributeNames()) {
-					ExtendedAttribute extAttr = docVersion.getAttributes().get(attrName);
+					Attribute extAttr = docVersion.getAttributes().get(attrName);
 					version2.setValue(attrName, extAttr.getValue());
 				}
 				GUIFolder folder2 = new GUIFolder();
@@ -938,12 +939,12 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 		if (document.getTemplateId() != null) {
 			docVO.setTemplateId(document.getTemplateId());
-			DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
-			DocumentTemplate template = templateDao.findById(document.getTemplateId());
+			TemplateDAO templateDao = (TemplateDAO) Context.get().getBean(TemplateDAO.class);
+			Template template = templateDao.findById(document.getTemplateId());
 			docVO.setTemplate(template);
 			if (document.getAttributes().length > 0) {
-				for (GUIExtendedAttribute attr : document.getAttributes()) {
-					ExtendedAttribute templateAttribute = template.getAttributes().get(attr.getName());
+				for (GUIAttribute attr : document.getAttributes()) {
+					Attribute templateAttribute = template.getAttributes().get(attr.getName());
 					// This control is necessary because, changing
 					// the template, the values of the old template
 					// attributes keys remains on the form value
@@ -954,7 +955,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					if (templateAttribute == null)
 						continue;
 
-					ExtendedAttribute extAttr = new ExtendedAttribute();
+					Attribute extAttr = new Attribute();
 					int templateType = templateAttribute.getType();
 					int extAttrType = attr.getType();
 
@@ -964,53 +965,52 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						// attributes keys that remains on the form
 						// value manager
 						if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
-							if (templateType == ExtendedAttribute.TYPE_INT
-									|| templateType == ExtendedAttribute.TYPE_BOOLEAN) {
+							if (templateType == Attribute.TYPE_INT || templateType == Attribute.TYPE_BOOLEAN) {
 								extAttr.setIntValue(null);
-							} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
+							} else if (templateType == Attribute.TYPE_DOUBLE) {
 								extAttr.setDoubleValue(null);
-							} else if (templateType == ExtendedAttribute.TYPE_DATE) {
+							} else if (templateType == Attribute.TYPE_DATE) {
 								extAttr.setDateValue(null);
 							}
-						} else if (templateType == GUIExtendedAttribute.TYPE_DOUBLE) {
+						} else if (templateType == GUIAttribute.TYPE_DOUBLE) {
 							extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
-						} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
+						} else if (templateType == GUIAttribute.TYPE_INT) {
 							extAttr.setValue(Long.parseLong(attr.getValue().toString()));
-						} else if (templateType == GUIExtendedAttribute.TYPE_BOOLEAN) {
+						} else if (templateType == GUIAttribute.TYPE_BOOLEAN) {
 							extAttr.setValue(attr.getBooleanValue());
-							extAttr.setType(ExtendedAttribute.TYPE_BOOLEAN);
-						} else if (templateType == GUIExtendedAttribute.TYPE_USER) {
+							extAttr.setType(Attribute.TYPE_BOOLEAN);
+						} else if (templateType == GUIAttribute.TYPE_USER) {
 							extAttr.setIntValue(attr.getIntValue());
 							extAttr.setStringValue(attr.getStringValue());
 							extAttr.setType(templateType);
 						}
 					} else {
-						if (templateType == ExtendedAttribute.TYPE_INT) {
+						if (templateType == Attribute.TYPE_INT) {
 							if (attr.getValue() != null)
 								extAttr.setIntValue((Long) attr.getValue());
 							else
 								extAttr.setIntValue(null);
-						} else if (templateType == ExtendedAttribute.TYPE_BOOLEAN) {
+						} else if (templateType == Attribute.TYPE_BOOLEAN) {
 							if (attr.getBooleanValue() != null)
 								extAttr.setValue(attr.getBooleanValue());
 							else
 								extAttr.setBooleanValue(null);
-						} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
+						} else if (templateType == Attribute.TYPE_DOUBLE) {
 							if (attr.getValue() != null)
 								extAttr.setDoubleValue((Double) attr.getValue());
 							else
 								extAttr.setDoubleValue(null);
-						} else if (templateType == ExtendedAttribute.TYPE_DATE) {
+						} else if (templateType == Attribute.TYPE_DATE) {
 							if (attr.getValue() != null)
 								extAttr.setDateValue((Date) attr.getValue());
 							else
 								extAttr.setDateValue(null);
-						} else if (templateType == ExtendedAttribute.TYPE_STRING) {
+						} else if (templateType == Attribute.TYPE_STRING) {
 							if (attr.getValue() != null)
 								extAttr.setStringValue((String) attr.getValue());
 							else
 								extAttr.setStringValue(null);
-						} else if (templateType == ExtendedAttribute.TYPE_USER) {
+						} else if (templateType == Attribute.TYPE_USER) {
 							if (attr.getValue() != null) {
 								extAttr.setIntValue(attr.getIntValue());
 								extAttr.setStringValue(attr.getStringValue());
@@ -1026,6 +1026,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					extAttr.setType(templateType);
 					extAttr.setPosition(attr.getPosition());
 					extAttr.setMandatory(attr.isMandatory() ? 1 : 0);
+					extAttr.setSetId(templateAttribute.getSetId());
 
 					docVO.getAttributes().put(attr.getName(), extAttr);
 				}

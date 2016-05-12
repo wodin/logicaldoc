@@ -20,7 +20,7 @@ public class RetentionPoliciesDS extends DataSource {
 		DataSourceTextField name = new DataSourceTextField("name");
 		DataSourceTextField days = new DataSourceTextField("days");
 		DataSourceTextField dateOption = new DataSourceTextField("dateOption");
-		DataSourceTextField template = new DataSourceTextField("template");
+		DataSourceTextField template = new DataSourceTextField("attributeSet");
 		DataSourceTextField action = new DataSourceTextField("action");
 		DataSourceImageField enabled = new DataSourceImageField("eenabled");
 

@@ -12,18 +12,19 @@ import com.logicaldoc.core.document.Bookmark;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentLink;
 import com.logicaldoc.core.document.DocumentNote;
-import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.BookmarkDAO;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentLinkDAO;
 import com.logicaldoc.core.document.dao.DocumentNoteDAO;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
+import com.logicaldoc.core.metadata.AttributeSetDAO;
+import com.logicaldoc.core.metadata.Template;
+import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.gui.common.client.ServerException;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 import com.logicaldoc.web.AbstractWebappTCase;
 
@@ -36,7 +37,7 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	private DocumentLinkDAO linkDao;
 
-	private DocumentTemplateDAO templateDao;
+	private TemplateDAO templateDao;
 
 	private DocumentNoteDAO noteDao;
 
@@ -44,12 +45,15 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	private HistoryDAO historyDao;
 
+	private AttributeSetDAO setDao;
+
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
 
 		docDao = (DocumentDAO) context.getBean("DocumentDAO");
-		templateDao = (DocumentTemplateDAO) context.getBean("DocumentTemplateDAO");
+		templateDao = (TemplateDAO) context.getBean("TemplateDAO");
+		setDao = (AttributeSetDAO) context.getBean("AttributeSetDAO");
 		linkDao = (DocumentLinkDAO) context.getBean("DocumentLinkDAO");
 		noteDao = (DocumentNoteDAO) context.getBean("DocumentNoteDAO");
 		bookDao = (BookmarkDAO) context.getBean("BookmarkDAO");
@@ -65,18 +69,16 @@ public class DocumentServiceImplTest extends AbstractWebappTCase {
 
 	@Test
 	public void testGetAttributes() throws ServerException {
-		DocumentTemplate template = new DocumentTemplate();
+		Template template = new Template();
 		template.setName("test3");
-		template.setValue("a1", "v1");
+		template.setValue("attr1", "v1");
 		template.setValue("a2", 23L);
 		Assert.assertTrue(templateDao.store(template));
 
-		GUIExtendedAttribute[] extAttr = service.getAttributes(template.getId());
-		Assert.assertEquals(GUIExtendedAttribute.TYPE_STRING, extAttr[0].getType());
-		Assert.assertEquals("a1", extAttr[0].getName());
+		GUIAttribute[] extAttr = service.getAttributes(template.getId());
+		Assert.assertEquals("attr1", extAttr[0].getName());
 		Assert.assertEquals("v1", extAttr[0].getValue());
-		Assert.assertEquals("a2", extAttr[1].getName());
-		Assert.assertEquals(23L, extAttr[1].getValue());
+		Assert.assertEquals(GUIAttribute.TYPE_STRING, extAttr[0].getType());
 	}
 
 	@Test

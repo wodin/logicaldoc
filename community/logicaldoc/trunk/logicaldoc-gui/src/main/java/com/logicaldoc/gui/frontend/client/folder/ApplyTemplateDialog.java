@@ -22,7 +22,7 @@ import com.smartgwt.client.widgets.tree.TreeGrid;
 import com.smartgwt.client.widgets.tree.TreeNode;
 
 /**
- * This is the form used to apply a folder template
+ * This is the form used to apply a folder attributeSet
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 7.1

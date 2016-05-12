@@ -31,7 +31,7 @@ public class VersionsDS extends DataSource {
 		DataSourceTextField title = new DataSourceTextField("title");
 		DataSourceFloatField size = new DataSourceFloatField("size");
 		DataSourceImageField icon = new DataSourceImageField("icon");
-		DataSourceTextField template = new DataSourceTextField("template");
+		DataSourceTextField template = new DataSourceTextField("attributeSet");
 		DataSourceTextField type = new DataSourceTextField("type");
 
 		setFields(id, user, event, version, fileVersion, date, comment, docid, customid, title, type, size, icon,

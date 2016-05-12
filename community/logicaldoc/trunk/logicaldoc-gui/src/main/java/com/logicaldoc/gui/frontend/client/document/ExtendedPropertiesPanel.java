@@ -10,7 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -49,7 +49,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 	private ValuesManager vm = new ValuesManager();
 
-	private GUIExtendedAttribute[] currentExtAttributes = null;
+	private GUIAttribute[] currentExtAttributes = null;
 
 	private List<FormItem> standardItems = new ArrayList<FormItem>();
 
@@ -92,9 +92,9 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		}
 	}
 
-	private GUIExtendedAttribute getExtendedAttribute(String name) {
+	private GUIAttribute getExtendedAttribute(String name) {
 		if (currentExtAttributes != null)
-			for (GUIExtendedAttribute extAttr : currentExtAttributes)
+			for (GUIAttribute extAttr : currentExtAttributes)
 				if (extAttr.getName().equals(name))
 					return extAttr;
 		return null;
@@ -179,10 +179,10 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			@Override
 			public void onChanged(ChangedEvent event) {
 				if (templateItem.getValue() != null && !"".equals(templateItem.getValue().toString())) {
-					document.setAttributes(new GUIExtendedAttribute[0]);
+					document.setAttributes(new GUIAttribute[0]);
 					prepareExtendedAttributes(new Long(event.getValue().toString()));
 				} else {
-					document.setAttributes(new GUIExtendedAttribute[0]);
+					document.setAttributes(new GUIAttribute[0]);
 					prepareExtendedAttributes(null);
 				}
 			}
@@ -233,25 +233,25 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		if (templateId == null)
 			return;
 
-		documentService.getAttributes(templateId, new AsyncCallback<GUIExtendedAttribute[]>() {
+		documentService.getAttributes(templateId, new AsyncCallback<GUIAttribute[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
 			}
 
 			@Override
-			public void onSuccess(GUIExtendedAttribute[] result) {
+			public void onSuccess(GUIAttribute[] result) {
 				currentExtAttributes = result;
 				extendedItems.clear();
-				for (GUIExtendedAttribute att : result) {
-					if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
+				for (GUIAttribute att : result) {
+					if (att.getType() == GUIAttribute.TYPE_STRING) {
 						FormItem item = ItemFactory.newStringItemForExtendedAttribute(templateId, att);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((String) document.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+					} else if (att.getType() == GUIAttribute.TYPE_INT) {
 						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(),
 								att.getLabel(), null);
 						if (document.getValue(att.getName()) != null)
@@ -260,7 +260,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+					} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 						SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(),
 								att.getLabel(), !att.isMandatory());
 						if (document.getValue(att.getName()) != null)
@@ -269,7 +269,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+					} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
 						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
 								null);
 						if (document.getValue(att.getName()) != null)
@@ -278,7 +278,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+					} else if (att.getType() == GUIAttribute.TYPE_DATE) {
 						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Date) document.getValue(att.getName()));
@@ -299,7 +299,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						});
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
+					} else if (att.getType() == GUIAttribute.TYPE_USER) {
 						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(),
 								att.getLabel(),
 								(att.getOptions() != null && att.getOptions().length > 0) ? att.getOptions()[0] : null);
@@ -342,12 +342,12 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						if (name.startsWith("_")) {
 							Object val = values.get(name);
 							String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-							GUIExtendedAttribute att = getExtendedAttribute(nm);
+							GUIAttribute att = getExtendedAttribute(nm);
 							if (att == null)
 								continue;
 
 							if (val != null) {
-								if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
+								if (att.getType() == GUIAttribute.TYPE_USER) {
 									SelectItem userItem = (SelectItem) form2.getItem(name);
 									if (userItem.getValue() != null && !"".equals(userItem.getValue())) {
 										ListGridRecord sel = userItem.getSelectedRecord();
@@ -361,36 +361,36 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 										dummy.setName(sel.getAttributeAsString("name"));
 										document.setValue(nm, dummy);
 									} else {
-										GUIExtendedAttribute at = document.getExtendedAttribute(nm);
+										GUIAttribute at = document.getExtendedAttribute(nm);
 										at.setIntValue(null);
 										at.setStringValue(null);
-										at.setType(GUIExtendedAttribute.TYPE_USER);
+										at.setType(GUIAttribute.TYPE_USER);
 									}
-								} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+								} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 									if (!(val == null || "".equals(val.toString().trim())))
 										document.setValue(nm, "1".equals(val.toString().trim()) ? true : false);
 									else if (document.getExtendedAttribute(nm) != null) {
-										GUIExtendedAttribute at = document.getExtendedAttribute(nm);
+										GUIAttribute at = document.getExtendedAttribute(nm);
 										at.setBooleanValue(null);
-										at.setType(GUIExtendedAttribute.TYPE_BOOLEAN);
+										at.setType(GUIAttribute.TYPE_BOOLEAN);
 									}
 								} else
 									document.setValue(nm, val);
 							} else {
 								if (att != null) {
-									if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+									if (att.getType() == GUIAttribute.TYPE_INT) {
 										document.getExtendedAttribute(nm).setIntValue(null);
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+									} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 										document.getExtendedAttribute(nm).setBooleanValue(null);
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+									} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
 										document.getExtendedAttribute(nm).setDoubleValue(null);
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+									} else if (att.getType() == GUIAttribute.TYPE_DATE) {
 										document.getExtendedAttribute(nm).setDateValue(null);
-									} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
-										GUIExtendedAttribute at = document.getExtendedAttribute(nm);
+									} else if (att.getType() == GUIAttribute.TYPE_USER) {
+										GUIAttribute at = document.getExtendedAttribute(nm);
 										at.setIntValue(null);
 										at.setStringValue(null);
-										at.setType(GUIExtendedAttribute.TYPE_USER);
+										at.setType(GUIAttribute.TYPE_USER);
 									} else {
 										document.setValue(nm, (String)null);
 									}

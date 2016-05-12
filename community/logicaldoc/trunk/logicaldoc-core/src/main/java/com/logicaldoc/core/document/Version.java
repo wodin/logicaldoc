@@ -8,7 +8,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.ibm.icu.util.StringTokenizer;
-import com.logicaldoc.core.ExtendedAttribute;
+import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -205,7 +205,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 			version.setTemplateName(document.getTemplate().getName());
 		}
 
-		version.setAttributes(new HashMap<String, ExtendedAttribute>());
+		version.setAttributes(new HashMap<String, Attribute>());
 		if (document.getAttributes() != null) {
 			try {
 				for (String name : document.getAttributeNames()) {

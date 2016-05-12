@@ -16,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.TenantDAO;
@@ -161,7 +161,7 @@ public abstract class Search {
 			log.debug("Start searching for extended attributes: " + attrs);
 
 			// Search for extended attributes, key is docId-name
-			final Map<String, ExtendedAttribute> extAtt = new HashMap<String, ExtendedAttribute>();
+			final Map<String, Attribute> extAtt = new HashMap<String, Attribute>();
 
 			DocumentDAO ddao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 			StringBuffer query = new StringBuffer(
@@ -177,7 +177,7 @@ public abstract class Search {
 					Long docId = rs.getLong(1);
 					String name = rs.getString(2);
 
-					ExtendedAttribute ext = new ExtendedAttribute();
+					Attribute ext = new Attribute();
 					ext.setStringValue(rs.getString(4));
 					ext.setIntValue(rs.getLong(5));
 					ext.setDoubleValue(rs.getDouble(6));
@@ -190,7 +190,7 @@ public abstract class Search {
 
 			for (Hit h : hits) {
 				for (String name : attrs) {
-					ExtendedAttribute att = extAtt.get(h.getId() + "-" + name);
+					Attribute att = extAtt.get(h.getId() + "-" + name);
 					if (att == null)
 						att = extAtt.get(h.getDocRef() + "-" + name);
 					if (att != null) {

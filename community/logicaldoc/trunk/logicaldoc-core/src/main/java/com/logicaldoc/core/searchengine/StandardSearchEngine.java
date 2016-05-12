@@ -28,9 +28,9 @@ import org.apache.solr.update.SolrIndexWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.util.StringUtil;
@@ -134,9 +134,9 @@ public class StandardSearchEngine implements SearchEngine {
 			hit.addField(Fields.TEMPLATE_ID.getName(), doc.getTemplateId());
 
 			for (String attribute : doc.getAttributeNames()) {
-				ExtendedAttribute ext = doc.getExtendedAttribute(attribute);
+				Attribute ext = doc.getAttribute(attribute);
 				// Skip all non-string attributes
-				if ((ext.getType() == ExtendedAttribute.TYPE_STRING || ext.getType() == ExtendedAttribute.TYPE_USER)
+				if ((ext.getType() == Attribute.TYPE_STRING || ext.getType() == Attribute.TYPE_USER)
 						&& StringUtils.isNotEmpty(ext.getStringValue())) {
 
 					// Prefix all extended attributes with 'ext_' in order to

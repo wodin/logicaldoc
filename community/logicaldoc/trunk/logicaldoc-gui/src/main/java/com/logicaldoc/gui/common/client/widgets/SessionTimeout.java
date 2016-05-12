@@ -1,16 +1,11 @@
 package com.logicaldoc.gui.common.client.widgets;
 
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Dialog;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Label;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 
 /**
  * This is the panel shown when the session timeout occurs.
@@ -52,24 +47,6 @@ public class SessionTimeout extends Dialog {
 		message.setHeight(50);
 		message.setBackgroundColor("white");
 
-		IButton ok = new IButton(I18N.message("ok"));
-		ok.setLayoutAlign(Alignment.CENTER);
-		ok.setLayoutAlign(VerticalAlignment.CENTER);
-		ok.addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				try {
-					Session.get().logout();
-				} catch (Throwable t) {
-					
-				}
-				
-				Util.redirectToLoginUrl();
-			}
-		});
-
 		addMember(message);
-		addMember(ok);
 	}
 }
