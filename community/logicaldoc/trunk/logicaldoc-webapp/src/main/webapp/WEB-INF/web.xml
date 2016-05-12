@@ -135,6 +135,10 @@
     <servlet-class>com.logicaldoc.web.service.TemplateServiceImpl</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>AttributeSetService</servlet-name>
+    <servlet-class>com.logicaldoc.web.service.AttributeSetServiceImpl</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>MessageService</servlet-name>
     <servlet-class>com.logicaldoc.web.service.MessageServiceImpl</servlet-class>
   </servlet>
@@ -210,6 +214,10 @@
     <servlet-name>TemplatesData</servlet-name>
     <servlet-class>com.logicaldoc.web.data.TemplatesDataServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>AttributeSetsData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.AttributeSetsDataServlet</servlet-class>
+  </servlet>  
   <servlet>
     <servlet-name>Thumbnail</servlet-name>
     <servlet-class>com.logicaldoc.web.ThumbnailServlet</servlet-class>
@@ -388,6 +396,10 @@
     <url-pattern>/frontend/template</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
+    <servlet-name>AttributeSetService</servlet-name>
+    <url-pattern>/frontend/attributeset</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
     <servlet-name>MessageService</servlet-name>
     <url-pattern>/frontend/message</url-pattern>
   </servlet-mapping>
@@ -470,6 +482,10 @@
   <servlet-mapping>
     <servlet-name>TemplatesData</servlet-name>
     <url-pattern>/data/templates.xml</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AttributeSetsData</servlet-name>
+    <url-pattern>/data/attributesets.xml</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>MessagesData</servlet-name>

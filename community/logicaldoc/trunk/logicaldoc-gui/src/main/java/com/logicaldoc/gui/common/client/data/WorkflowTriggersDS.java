@@ -24,7 +24,7 @@ public class WorkflowTriggersDS extends DataSource {
 		DataSourceTextField templateId = new DataSourceTextField("templateId");
 		templateId.setHidden(true);
 		DataSourceTextField workflow = new DataSourceTextField("workflow", I18N.message("workflow"));
-		DataSourceTextField template = new DataSourceTextField("template", I18N.message("template"));
+		DataSourceTextField template = new DataSourceTextField("attributeSet", I18N.message("attributeSet"));
 		DataSourceBooleanField checkin = new DataSourceBooleanField("triggerAtCheckin",
 				I18N.message("triggeratcheckin"));
 		setFields(id, workflowId, templateId, workflow, template, checkin);

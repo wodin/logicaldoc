@@ -227,7 +227,7 @@ public class LoginPanel extends VLayout {
 		signIn.setHeight(34);
 		signIn.setAlign(Alignment.RIGHT);
 		signIn.setStartRow(false);
-		signIn.setWidth(saveLoginEnabled ? 100 : FORM_WIDTH);
+		signIn.setWidth(saveLoginEnabled ? 120 : FORM_WIDTH);
 		signIn.setColSpan(saveLoginEnabled ? 1 : 3);
 		signIn.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 			@Override

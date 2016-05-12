@@ -196,10 +196,10 @@ public class RetentionPolicyDetailsPanel extends VLayout {
 			policy.setRetentionDays(Integer.parseInt(form.getValueAsString("days")));
 			policy.setDateOption(Integer.parseInt(form.getValueAsString("dateoption")));
 			policy.setAction(Integer.parseInt(form.getValueAsString("action")));
-			if (form.getValue("template") == null || "".equals(form.getValueAsString("template")))
+			if (form.getValue("attributeSet") == null || "".equals(form.getValueAsString("attributeSet")))
 				policy.setTemplateId(null);
 			else
-				policy.setTemplateId(Long.parseLong(form.getValueAsString("template")));
+				policy.setTemplateId(Long.parseLong(form.getValueAsString("attributeSet")));
 
 			service.save(policy, new AsyncCallback<GUIRetentionPolicy>() {
 				@Override

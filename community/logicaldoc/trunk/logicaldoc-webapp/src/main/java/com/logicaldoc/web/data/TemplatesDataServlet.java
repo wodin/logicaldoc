@@ -14,17 +14,16 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.document.DocumentTemplate;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.metadata.Template;
+import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.security.Session;
-import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
 
 /**
- * This servlet is responsible for document templates data.
+ * This servlet is responsible for templates data.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.0
@@ -45,8 +44,8 @@ public class TemplatesDataServlet extends HttpServlet {
 			boolean count = "true".equals(request.getParameter("count"));
 
 			Integer type = null;
-			if (request.getParameter("templateType") != null)
-				type = new Integer(request.getParameter("templateType"));
+			if (request.getParameter("type") != null)
+				type = new Integer(request.getParameter("type"));
 
 			List<Long> templateIds = new ArrayList<Long>();
 			if (StringUtils.isNotEmpty(folderId)) {
@@ -84,8 +83,8 @@ public class TemplatesDataServlet extends HttpServlet {
 				writer.print("</template>");
 			}
 
-			DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
-			List<DocumentTemplate> templates = null;
+			TemplateDAO dao = (TemplateDAO) Context.get().getBean(TemplateDAO.class);
+			List<Template> templates = null;
 			if (type != null)
 				templates = dao.findByType(type, session.getTenantId());
 			else
@@ -94,7 +93,7 @@ public class TemplatesDataServlet extends HttpServlet {
 			/*
 			 * Iterate over the collection of templates
 			 */
-			for (DocumentTemplate template : templates) {
+			for (Template template : templates) {
 				if (templateIds.contains(template.getId()))
 					continue;
 
@@ -105,9 +104,6 @@ public class TemplatesDataServlet extends HttpServlet {
 				writer.print("<description><![CDATA[" + template.getDescription() + "]]></description>");
 				writer.print("<readonly>" + Boolean.toString(template.getReadonly() == 1) + "</readonly>");
 				writer.print("<type>" + template.getType() + "</type>");
-				writer.print("<category><![CDATA[" + I18N.message("sostdoctype." + template.getCategory())
-						+ "]]></category>");
-				writer.print("<signrequired>" + template.getSignRequired() + "</signrequired>");
 				writer.print("</template>");
 			}
 

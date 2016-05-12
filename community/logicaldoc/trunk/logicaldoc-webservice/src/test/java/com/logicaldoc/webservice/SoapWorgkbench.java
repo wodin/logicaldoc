@@ -2,7 +2,7 @@ package com.logicaldoc.webservice;
 
 import java.io.File;
 
-import com.logicaldoc.core.ExtendedAttribute;
+import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.webservice.model.WSAttribute;
 import com.logicaldoc.webservice.model.WSDocument;
@@ -138,7 +138,7 @@ public class SoapWorgkbench {
 		WSAttribute[] att = new WSAttribute[1];
 		att[0] = new WSAttribute();
 		att[0].setName("from");
-		att[0].setType(ExtendedAttribute.TYPE_STRING);
+		att[0].setType(Attribute.TYPE_STRING);
 		att[0].setStringValue("pippo");
 		newFolder.setExtendedAttributes(att);
 

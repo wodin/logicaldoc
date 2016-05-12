@@ -11,10 +11,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.ExtendedAttribute;
-import com.logicaldoc.core.document.DocumentTemplate;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.metadata.Attribute;
+import com.logicaldoc.core.metadata.TemplateDAO;
+import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
 
@@ -104,14 +104,14 @@ public class WSFolder implements Serializable {
 			attributes = new WSAttribute[folder.getAttributeNames().size()];
 			int i = 0;
 			for (String name : folder.getAttributeNames()) {
-				ExtendedAttribute attr = folder.getExtendedAttribute(name);
+				Attribute attr = folder.getAttribute(name);
 				WSAttribute attribute = new WSAttribute();
 				attribute.setName(name);
 				attribute.setMandatory(attr.getMandatory());
 				attribute.setPosition(attr.getPosition());
 				attribute.setValue(attr.getValue());
 
-				if (attr.getType() == ExtendedAttribute.TYPE_USER) {
+				if (attr.getType() == Attribute.TYPE_USER) {
 					attribute.setIntValue(attr.getIntValue());
 					attribute.setStringValue(attr.getStringValue());
 				}
@@ -126,16 +126,16 @@ public class WSFolder implements Serializable {
 	}
 
 	public void updateExtendedAttributes(Folder folder) {
-		DocumentTemplate template = null;
+		Template template = null;
 		if (templateId != null) {
 			folder.getAttributes().clear();
-			DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.get().getBean(
-					DocumentTemplateDAO.class);
+			TemplateDAO templDao = (TemplateDAO) Context.get().getBean(
+					TemplateDAO.class);
 			template = templDao.findById(templateId);
 			if (template != null) {
 				if (extendedAttributes != null && extendedAttributes.length > 0) {
 					for (int i = 0; i < extendedAttributes.length; i++) {
-						ExtendedAttribute extAttribute = new ExtendedAttribute();
+						Attribute extAttribute = new Attribute();
 						extAttribute.setMandatory(extendedAttributes[i].getMandatory());
 						extAttribute.setPosition(extendedAttributes[i].getPosition());
 						extAttribute.setIntValue(extendedAttributes[i].getIntValue());

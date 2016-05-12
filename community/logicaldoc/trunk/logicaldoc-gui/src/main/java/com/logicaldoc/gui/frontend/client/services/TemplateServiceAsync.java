@@ -10,10 +10,4 @@ public interface TemplateServiceAsync {
 	void save(GUITemplate template, AsyncCallback<GUITemplate> callback);
 
 	void getTemplate(long templateId, AsyncCallback<GUITemplate> callback);
-
-	void saveOptions(long templateId, String attribute, String[] values, AsyncCallback<Void> callback);
-
-	void deleteOptions(long templateId, String attribute, String[] values, AsyncCallback<Void> callback);
-
-	void parseOptions(long templateId, String attribute, AsyncCallback<String[]> callback);
 }

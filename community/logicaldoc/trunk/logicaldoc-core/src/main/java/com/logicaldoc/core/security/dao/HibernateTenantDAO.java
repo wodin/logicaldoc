@@ -7,9 +7,10 @@ import java.util.Set;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.communication.MessageTemplateDAO;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.metadata.AttributeSetDAO;
+import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.sql.SqlUtil;
@@ -33,7 +34,10 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 	private GenericDAO genericDao;
 
 	@SuppressWarnings("unused")
-	private DocumentTemplateDAO templateDao;
+	private TemplateDAO templateDao;
+
+	@SuppressWarnings("unused")
+	private AttributeSetDAO attributeSetDao;
 
 	@SuppressWarnings("unused")
 	private MessageTemplateDAO messageTemplateDao;
@@ -81,7 +85,7 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 		this.genericDao = genericDao;
 	}
 
-	public void setTemplateDao(DocumentTemplateDAO templateDao) {
+	public void setTemplateDao(TemplateDAO templateDao) {
 		this.templateDao = templateDao;
 	}
 
@@ -102,5 +106,9 @@ public class HibernateTenantDAO extends HibernatePersistentObjectDAO<Tenant> imp
 	@Override
 	public boolean store(Tenant entity) {
 		throw new RuntimeException("Feature not enabled");
+	}
+
+	public void setAttributeSetDao(AttributeSetDAO attributeSetDao) {
+		this.attributeSetDao = attributeSetDao;
 	}
 }

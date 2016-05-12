@@ -87,7 +87,7 @@ public class CustomIdPanel extends VLayout {
 	}
 
 	private VLayout setupSchemesPanel(GUICustomId[] data, String type) {
-		ListGridField template = new ListGridField("templateName", I18N.message("template"));
+		ListGridField template = new ListGridField("templateName", I18N.message("attributeSet"));
 		template.setWidth(120);
 		template.setCanEdit(false);
 
@@ -222,7 +222,7 @@ public class CustomIdPanel extends VLayout {
 		frequency.setWidth(80);
 		frequency.setCanEdit(false);
 
-		ListGridField template = new ListGridField("template", I18N.message("template"));
+		ListGridField template = new ListGridField("attributeSet", I18N.message("attributeSet"));
 		template.setWidth(200);
 		template.setCanEdit(false);
 
@@ -248,7 +248,7 @@ public class CustomIdPanel extends VLayout {
 		if (data != null)
 			for (GUISequence cid : data) {
 				ListGridRecord record = new ListGridRecord();
-				record.setAttribute("template", Util.strip(cid.getTemplate()));
+				record.setAttribute("attributeSet", Util.strip(cid.getTemplate()));
 				record.setAttribute("frequency", I18N.message(cid.getFrequency()));
 				record.setAttribute("year", cid.getYear());
 				record.setAttribute("month", cid.getMonth());

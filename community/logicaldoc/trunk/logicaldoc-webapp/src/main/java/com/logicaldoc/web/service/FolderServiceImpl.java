@@ -14,26 +14,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
-import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.folder.FolderEvent;
 import com.logicaldoc.core.folder.FolderGroup;
 import com.logicaldoc.core.folder.FolderHistory;
+import com.logicaldoc.core.metadata.Attribute;
+import com.logicaldoc.core.metadata.TemplateDAO;
+import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.sequence.SequenceDAO;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.ServerException;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUIRight;
 import com.logicaldoc.gui.common.client.beans.GUIValue;
@@ -200,7 +200,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				f.setTemplateId(folder.getTemplate().getId());
 				f.setTemplate(folder.getTemplate().getName());
 				f.setTemplateLocked(folder.getTemplateLocked());
-				GUIExtendedAttribute[] attributes = prepareGUIAttributes(folder.getTemplate(), folder);
+				GUIAttribute[] attributes = prepareGUIAttributes(folder.getTemplate(), folder);
 				f.setAttributes(attributes);
 			}
 
@@ -795,15 +795,15 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 	 */
 	private void updateExtendedAttributes(Folder folder, GUIFolder f) {
 		if (f.getTemplateId() != null) {
-			DocumentTemplateDAO templateDao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
-			DocumentTemplate template = templateDao.findById(f.getTemplateId());
+			TemplateDAO templateDao = (TemplateDAO) Context.get().getBean(TemplateDAO.class);
+			Template template = templateDao.findById(f.getTemplateId());
 			folder.setTemplate(template);
 			folder.setTemplateLocked(f.getTemplateLocked());
 			folder.getAttributes().clear();
 
 			if (f.getAttributes() != null && f.getAttributes().length > 0) {
-				for (GUIExtendedAttribute attr : f.getAttributes()) {
-					ExtendedAttribute templateAttribute = template.getAttributes().get(attr.getName());
+				for (GUIAttribute attr : f.getAttributes()) {
+					Attribute templateAttribute = template.getAttributes().get(attr.getName());
 					// This control is necessary because, changing
 					// the template, the values of the old template
 					// attributes keys remains on the form value
@@ -814,7 +814,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					if (templateAttribute == null)
 						continue;
 
-					ExtendedAttribute extAttr = new ExtendedAttribute();
+					Attribute extAttr = new Attribute();
 					int templateType = templateAttribute.getType();
 					int extAttrType = attr.getType();
 
@@ -824,52 +824,52 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 						// attributes keys that remains on the form
 						// value manager
 						if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
-							if (templateType == ExtendedAttribute.TYPE_INT
-									|| templateType == ExtendedAttribute.TYPE_BOOLEAN) {
+							if (templateType == Attribute.TYPE_INT
+									|| templateType == Attribute.TYPE_BOOLEAN) {
 								extAttr.setIntValue(null);
-							} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
+							} else if (templateType == Attribute.TYPE_DOUBLE) {
 								extAttr.setDoubleValue(null);
-							} else if (templateType == ExtendedAttribute.TYPE_DATE) {
+							} else if (templateType == Attribute.TYPE_DATE) {
 								extAttr.setDateValue(null);
 							}
-						} else if (templateType == GUIExtendedAttribute.TYPE_DOUBLE) {
+						} else if (templateType == GUIAttribute.TYPE_DOUBLE) {
 							extAttr.setValue(Double.parseDouble(attr.getValue().toString()));
-						} else if (templateType == GUIExtendedAttribute.TYPE_INT) {
+						} else if (templateType == GUIAttribute.TYPE_INT) {
 							extAttr.setValue(Long.parseLong(attr.getValue().toString()));
-						} else if (templateType == GUIExtendedAttribute.TYPE_BOOLEAN) {
+						} else if (templateType == GUIAttribute.TYPE_BOOLEAN) {
 							extAttr.setValue(attr.getBooleanValue());
-							extAttr.setType(ExtendedAttribute.TYPE_BOOLEAN);
-						} else if (templateType == GUIExtendedAttribute.TYPE_USER) {
+							extAttr.setType(Attribute.TYPE_BOOLEAN);
+						} else if (templateType == GUIAttribute.TYPE_USER) {
 							extAttr.setIntValue(attr.getIntValue());
 							extAttr.setStringValue(attr.getStringValue());
 						}
 					} else {
-						if (templateType == ExtendedAttribute.TYPE_INT) {
+						if (templateType == Attribute.TYPE_INT) {
 							if (attr.getValue() != null)
 								extAttr.setIntValue((Long) attr.getValue());
 							else
 								extAttr.setIntValue(null);
-						} else if (templateType == ExtendedAttribute.TYPE_BOOLEAN) {
+						} else if (templateType == Attribute.TYPE_BOOLEAN) {
 							if (attr.getBooleanValue() != null)
 								extAttr.setValue(attr.getBooleanValue());
 							else
 								extAttr.setBooleanValue(null);
-						} else if (templateType == ExtendedAttribute.TYPE_DOUBLE) {
+						} else if (templateType == Attribute.TYPE_DOUBLE) {
 							if (attr.getValue() != null)
 								extAttr.setDoubleValue((Double) attr.getValue());
 							else
 								extAttr.setDoubleValue(null);
-						} else if (templateType == ExtendedAttribute.TYPE_DATE) {
+						} else if (templateType == Attribute.TYPE_DATE) {
 							if (attr.getValue() != null)
 								extAttr.setDateValue((Date) attr.getValue());
 							else
 								extAttr.setDateValue(null);
-						} else if (templateType == ExtendedAttribute.TYPE_STRING) {
+						} else if (templateType == Attribute.TYPE_STRING) {
 							if (attr.getValue() != null)
 								extAttr.setStringValue((String) attr.getValue());
 							else
 								extAttr.setStringValue(null);
-						} else if (templateType == ExtendedAttribute.TYPE_USER) {
+						} else if (templateType == Attribute.TYPE_USER) {
 							if (attr.getValue() != null) {
 								extAttr.setStringValue((String) attr.getStringValue());
 								extAttr.setIntValue((Long) attr.getIntValue());
@@ -894,13 +894,13 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		}
 	}
 
-	private static GUIExtendedAttribute[] prepareGUIAttributes(DocumentTemplate template, Folder folder) {
+	private static GUIAttribute[] prepareGUIAttributes(Template template, Folder folder) {
 		try {
-			GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[template.getAttributeNames().size()];
+			GUIAttribute[] attributes = new GUIAttribute[template.getAttributeNames().size()];
 			int i = 0;
 			for (String attrName : template.getAttributeNames()) {
-				ExtendedAttribute extAttr = template.getAttributes().get(attrName);
-				GUIExtendedAttribute att = new GUIExtendedAttribute();
+				Attribute extAttr = template.getAttributes().get(attrName);
+				GUIAttribute att = new GUIAttribute();
 				att.setName(attrName);
 				att.setPosition(extAttr.getPosition());
 				att.setLabel(extAttr.getLabel());
@@ -908,7 +908,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				att.setEditor(extAttr.getEditor());
 
 				// If the case, populate the options
-				if (att.getEditor() == ExtendedAttribute.EDITOR_LISTBOX) {
+				if (att.getEditor() == Attribute.EDITOR_LISTBOX) {
 					String buf = (String) extAttr.getStringValue();
 					List<String> list = new ArrayList<String>();
 					if (buf != null) {

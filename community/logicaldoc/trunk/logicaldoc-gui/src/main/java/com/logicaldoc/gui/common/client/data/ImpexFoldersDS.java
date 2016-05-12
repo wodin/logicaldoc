@@ -14,7 +14,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
 public class ImpexFoldersDS extends DataSource {
 
 	public ImpexFoldersDS() {
-		setTitleField("template");
+		setTitleField("attributeSet");
 		setRecordXPath("/list/folder");
 		DataSourceTextField name = new DataSourceTextField("name");
 		name.setPrimaryKey(true);

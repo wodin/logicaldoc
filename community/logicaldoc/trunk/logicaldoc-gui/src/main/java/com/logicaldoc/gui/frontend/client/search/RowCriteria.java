@@ -2,7 +2,7 @@ package com.logicaldoc.gui.frontend.client.search;
 
 import java.util.LinkedHashMap;
 
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -154,8 +154,8 @@ public class RowCriteria extends HLayout {
 			return map;
 
 		if (criteriaField.equals("id") || criteriaField.equals("fileSize") || criteriaField.equals("rating")
-				|| criteriaField.equals("published") || criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_INT)
-				|| criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_DOUBLE)) {
+				|| criteriaField.equals("published") || criteriaField.endsWith("type:" + GUIAttribute.TYPE_INT)
+				|| criteriaField.endsWith("type:" + GUIAttribute.TYPE_DOUBLE)) {
 			map.put("greaterthan", I18N.message("greaterthan"));
 			map.put("lessthan", I18N.message("lessthan"));
 			map.put("equals", I18N.message("equals"));
@@ -163,12 +163,12 @@ public class RowCriteria extends HLayout {
 		} else if (criteriaField.equals("sourceDate") || criteriaField.equals("lastModified")
 				|| criteriaField.equals("date") || criteriaField.equals("creation")
 				|| criteriaField.equals("startPublishing") || criteriaField.equals("stopPublishing")
-				|| criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_DATE)) {
+				|| criteriaField.endsWith("type:" + GUIAttribute.TYPE_DATE)) {
 			map.put("greaterthan", I18N.message("greaterthan"));
 			map.put("lessthan", I18N.message("lessthan"));
-		} else if (criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_BOOLEAN)) {
+		} else if (criteriaField.endsWith("type:" + GUIAttribute.TYPE_BOOLEAN)) {
 			map.put("equals", I18N.message("equals"));
-		} else if (criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET)) {
+		} else if (criteriaField.endsWith("type:" + GUIAttribute.TYPE_STRING_PRESET)) {
 			map.put("equals", I18N.message("equals"));
 			map.put("notequal", I18N.message("notequal"));
 		} else {
@@ -183,14 +183,14 @@ public class RowCriteria extends HLayout {
 
 	private FormItem valueItemFor(String criteriaField) {
 		if (criteriaField.equals("id") || criteriaField.equals("fileSize") || criteriaField.equals("rating")
-				|| criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_INT)
-				|| criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_DOUBLE)) {
+				|| criteriaField.endsWith("type:" + GUIAttribute.TYPE_INT)
+				|| criteriaField.endsWith("type:" + GUIAttribute.TYPE_DOUBLE)) {
 			return ItemFactory.newIntegerItem("value", "integer", null);
-		} else if (criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_BOOLEAN)) {
+		} else if (criteriaField.endsWith("type:" + GUIAttribute.TYPE_BOOLEAN)) {
 			FormItem item = ItemFactory.newBooleanSelector("value", "boolean");
 			item.setValue("yes");
 			return item;
-		} else if (criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET)) {
+		} else if (criteriaField.endsWith("type:" + GUIAttribute.TYPE_STRING_PRESET)) {
 			String attributeName = criteriaField.substring(0, criteriaField.lastIndexOf(':') - 4).replaceAll("_", "");
 			FormItem item = ItemFactory.newStringItemForPresetExtendedAttribute(template.getId(), attributeName);
 			item.setName("value");
@@ -198,7 +198,7 @@ public class RowCriteria extends HLayout {
 		} else if (criteriaField.equals("sourceDate") || criteriaField.equals("lastModified")
 				|| criteriaField.equals("date") || criteriaField.equals("creation")
 				|| criteriaField.equals("startPublishing") || criteriaField.equals("stopPublishing")
-				|| criteriaField.endsWith("type:" + GUIExtendedAttribute.TYPE_DATE)) {
+				|| criteriaField.endsWith("type:" + GUIAttribute.TYPE_DATE)) {
 			return ItemFactory.newDateItem("value", "date");
 		} else {
 			return ItemFactory.newTextItem("value", "text", null);

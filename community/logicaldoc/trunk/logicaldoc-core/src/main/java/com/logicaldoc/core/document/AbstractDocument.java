@@ -8,9 +8,10 @@ import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 
-import com.logicaldoc.core.ExtensibleObject;
 import com.logicaldoc.core.TransactionalObject;
 import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.metadata.ExtensibleObject;
+import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.LocaleUtil;
 
@@ -108,18 +109,20 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	private String sourceAuthor;
 
+	private String sourceType;
+	
 	private Date sourceDate;
 
 	private String sourceId;
 
 	private String object;
 
-	private Date creation = new Date();
-
-	private String sourceType;
-
 	private String coverage;
 
+	private String recipient;
+	
+	private Date creation = new Date();
+	
 	private String language;
 
 	private String fileName;
@@ -136,15 +139,13 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	private Folder folder;
 
-	private DocumentTemplate template;
+	private Template template;
 
 	private String customId;
 
 	private int immutable = 0;
 
 	private String digest;
-
-	private String recipient;
 
 	private String exportName;
 
@@ -495,11 +496,11 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 		return FilenameUtils.getExtension(getFileName());
 	}
 
-	public DocumentTemplate getTemplate() {
+	public Template getTemplate() {
 		return template;
 	}
 
-	public void setTemplate(DocumentTemplate template) {
+	public void setTemplate(Template template) {
 		this.template = template;
 	}
 

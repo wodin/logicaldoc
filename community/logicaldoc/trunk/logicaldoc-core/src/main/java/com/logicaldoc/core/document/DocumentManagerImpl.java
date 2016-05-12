@@ -23,13 +23,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.DocumentNoteDAO;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.metadata.Attribute;
+import com.logicaldoc.core.metadata.TemplateDAO;
+import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
@@ -57,7 +58,7 @@ public class DocumentManagerImpl implements DocumentManager {
 
 	private FolderDAO folderDAO;
 
-	private DocumentTemplateDAO documentTemplateDAO;
+	private TemplateDAO templateDAO;
 
 	private DocumentListenerManager listenerManager;
 
@@ -79,8 +80,8 @@ public class DocumentManagerImpl implements DocumentManager {
 		this.documentDAO = documentDAO;
 	}
 
-	public void setDocumentTemplateDAO(DocumentTemplateDAO documentTemplateDAO) {
-		this.documentTemplateDAO = documentTemplateDAO;
+	public void setTemplateDAO(TemplateDAO templateDAO) {
+		this.templateDAO = templateDAO;
 	}
 
 	public void setIndexer(SearchEngine indexer) {
@@ -410,9 +411,9 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.clearTags();
 				doc.setTags(docVO.getTags());
 
-				DocumentTemplate template = docVO.getTemplate();
+				Template template = docVO.getTemplate();
 				if (template == null && docVO.getTemplateId() != null)
-					template = documentTemplateDAO.findById(docVO.getTemplateId());
+					template = templateDAO.findById(docVO.getTemplateId());
 
 				// Change the template and attributes
 				if (template != null) {
@@ -422,8 +423,8 @@ public class DocumentManagerImpl implements DocumentManager {
 						doc.getAttributes().clear();
 						for (String attrName : docVO.getAttributes().keySet()) {
 							if (template.getAttributes().get(attrName) != null) {
-								ExtendedAttribute templateExtAttribute = template.getAttributes().get(attrName);
-								ExtendedAttribute docExtendedAttribute = docVO.getAttributes().get(attrName);
+								Attribute templateExtAttribute = template.getAttributes().get(attrName);
+								Attribute docExtendedAttribute = docVO.getAttributes().get(attrName);
 								docExtendedAttribute.setMandatory(templateExtAttribute.getMandatory());
 								docExtendedAttribute.setLabel(templateExtAttribute.getLabel());
 								if (templateExtAttribute.getType() == docExtendedAttribute.getType()) {
@@ -566,14 +567,14 @@ public class DocumentManagerImpl implements DocumentManager {
 			docVO.setFileSize(file.length());
 
 			if (docVO.getTemplate() == null && docVO.getTemplateId() != null)
-				docVO.setTemplate(documentTemplateDAO.findById(docVO.getTemplateId()));
+				docVO.setTemplate(templateDAO.findById(docVO.getTemplateId()));
 
 			/* Set template and extended attributes */
 			if (docVO.getTemplate() != null) {
 				for (String attrName : docVO.getAttributeNames()) {
 					if (docVO.getTemplate().getAttributes().get(attrName) != null) {
-						ExtendedAttribute templateExtAttribute = docVO.getTemplate().getAttributes().get(attrName);
-						ExtendedAttribute docExtendedAttribute = docVO.getExtendedAttribute(attrName);
+						Attribute templateExtAttribute = docVO.getTemplate().getAttributes().get(attrName);
+						Attribute docExtendedAttribute = docVO.getAttribute(attrName);
 						if (templateExtAttribute.getType() == docExtendedAttribute.getType()) {
 							docVO.getAttributes().put(attrName, docExtendedAttribute);
 						} else {

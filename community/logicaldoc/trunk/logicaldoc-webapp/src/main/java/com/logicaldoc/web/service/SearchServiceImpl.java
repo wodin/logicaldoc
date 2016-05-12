@@ -14,9 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.searchengine.FolderSearchOptions;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
@@ -25,9 +25,9 @@ import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.ServerException;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIResult;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
@@ -98,11 +98,12 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 				 * hits may have not been fully compiled so the
 				 * DocumentServiceImpl.fromDocument doesn't do the job
 				 */
-				List<GUIExtendedAttribute> extList = new ArrayList<GUIExtendedAttribute>();
+				List<GUIAttribute> extList = new ArrayList<GUIAttribute>();
 				for (String name : hit.getAttributeNames()) {
-					ExtendedAttribute e = hit.getAttributes().get(name);
-					GUIExtendedAttribute ext = new GUIExtendedAttribute();
+					Attribute e = hit.getAttributes().get(name);
+					GUIAttribute ext = new GUIAttribute();
 					ext.setName(name);
+					ext.setSetId(e.getSetId());
 					ext.setDateValue(e.getDateValue());
 					ext.setStringValue(e.getStringValue());
 					ext.setIntValue(e.getIntValue());
@@ -111,7 +112,7 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 					ext.setType(e.getType());
 					extList.add(ext);
 				}
-				h.setAttributes(extList.toArray(new GUIExtendedAttribute[0]));
+				h.setAttributes(extList.toArray(new GUIAttribute[0]));
 
 				if ("folder".equals(hit.getType()))
 					h.setIcon("folder_closed");

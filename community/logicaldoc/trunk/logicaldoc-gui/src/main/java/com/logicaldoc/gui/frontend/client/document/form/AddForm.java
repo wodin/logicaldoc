@@ -4,7 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -89,14 +89,14 @@ public class AddForm extends Window {
 		if (templateIdString != null && !templateIdString.isEmpty()) {
 			frm.setTemplateId(Long.parseLong(templateIdString));
 
-			docService.getAttributes(Long.parseLong(templateIdString), new AsyncCallback<GUIExtendedAttribute[]>() {
+			docService.getAttributes(Long.parseLong(templateIdString), new AsyncCallback<GUIAttribute[]>() {
 				@Override
 				public void onFailure(Throwable caught) {
 					Log.serverError(caught);
 				}
 
 				@Override
-				public void onSuccess(GUIExtendedAttribute[] attributes) {
+				public void onSuccess(GUIAttribute[] attributes) {
 					frm.setAttributes(attributes);
 					FillForm fillForm = new FillForm(frm);
 					fillForm.show();

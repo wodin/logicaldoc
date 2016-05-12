@@ -9,7 +9,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -69,24 +69,24 @@ public class FillForm extends Window {
 		centerInPage();
 
 		List<FormItem> items = new ArrayList<FormItem>();
-		for (GUIExtendedAttribute att : frm.getAttributes()) {
-			if (att.getType() == GUIExtendedAttribute.TYPE_STRING) {
+		for (GUIAttribute att : frm.getAttributes()) {
+			if (att.getType() == GUIAttribute.TYPE_STRING) {
 				FormItem item = ItemFactory.newStringItemForExtendedAttribute(frm.getTemplateId(), att);
 				items.add(item);
-			} else if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+			} else if (att.getType() == GUIAttribute.TYPE_INT) {
 				IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(), att.getLabel(), null);
 				item.setRequired(att.isMandatory());
 				items.add(item);
-			} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+			} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 				SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(), att.getLabel(),
 						!att.isMandatory());
 				item.setRequired(att.isMandatory());
 				items.add(item);
-			} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+			} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
 				FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(), null);
 				item.setRequired(att.isMandatory());
 				items.add(item);
-			} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+			} else if (att.getType() == GUIAttribute.TYPE_DATE) {
 				final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
 				item.setRequired(att.isMandatory());
 				item.addKeyPressHandler(new KeyPressHandler() {
@@ -100,7 +100,7 @@ public class FillForm extends Window {
 					}
 				});
 				items.add(item);
-			} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
+			} else if (att.getType() == GUIAttribute.TYPE_USER) {
 				SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(), att.getLabel(),
 						(att.getOptions() != null && att.getOptions().length > 0) ? att.getOptions()[0] : null);
 				item.setRequired(att.isMandatory());
@@ -151,12 +151,12 @@ public class FillForm extends Window {
 			if (name.startsWith("_")) {
 				Object val = values.get(name);
 				String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-				GUIExtendedAttribute att = frm.getExtendedAttribute(nm);
+				GUIAttribute att = frm.getExtendedAttribute(nm);
 				if (att == null)
 					continue;
 
 				if (val != null) {
-					if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
+					if (att.getType() == GUIAttribute.TYPE_USER) {
 						SelectItem userItem = (SelectItem) form.getItem(name);
 						if (userItem.getValue() != null && !"".equals(userItem.getValue())) {
 							ListGridRecord sel = userItem.getSelectedRecord();
@@ -170,40 +170,40 @@ public class FillForm extends Window {
 							dummy.setName(sel.getAttributeAsString("name"));
 							frm.setValue(nm, dummy);
 						} else {
-							GUIExtendedAttribute at = frm.getExtendedAttribute(nm);
+							GUIAttribute at = frm.getExtendedAttribute(nm);
 							at.setIntValue(null);
 							at.setStringValue(null);
-							at.setType(GUIExtendedAttribute.TYPE_USER);
+							at.setType(GUIAttribute.TYPE_USER);
 						}
-					} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+					} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 						if (!(val == null || "".equals(val.toString().trim())))
 							frm.setValue(nm, "1".equals(val.toString().trim()) ? true : false);
 						else if (frm.getExtendedAttribute(nm) != null) {
-							GUIExtendedAttribute at = frm.getExtendedAttribute(nm);
+							GUIAttribute at = frm.getExtendedAttribute(nm);
 							at.setBooleanValue(null);
-							at.setType(GUIExtendedAttribute.TYPE_BOOLEAN);
+							at.setType(GUIAttribute.TYPE_BOOLEAN);
 						}
 					} else
 						frm.setValue(nm, val);
 				} else {
 					if (att != null) {
-						if (att.getType() == GUIExtendedAttribute.TYPE_INT) {
+						if (att.getType() == GUIAttribute.TYPE_INT) {
 							frm.getExtendedAttribute(nm).setIntValue(null);
 							break;
-						} else if (att.getType() == GUIExtendedAttribute.TYPE_BOOLEAN) {
+						} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 							frm.getExtendedAttribute(nm).setBooleanValue(null);
 							break;
-						} else if (att.getType() == GUIExtendedAttribute.TYPE_DOUBLE) {
+						} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
 							frm.getExtendedAttribute(nm).setDoubleValue(null);
 							break;
-						} else if (att.getType() == GUIExtendedAttribute.TYPE_DATE) {
+						} else if (att.getType() == GUIAttribute.TYPE_DATE) {
 							frm.getExtendedAttribute(nm).setDateValue(null);
 							break;
-						} else if (att.getType() == GUIExtendedAttribute.TYPE_USER) {
-							GUIExtendedAttribute at = frm.getExtendedAttribute(nm);
+						} else if (att.getType() == GUIAttribute.TYPE_USER) {
+							GUIAttribute at = frm.getExtendedAttribute(nm);
 							at.setIntValue(null);
 							at.setStringValue(null);
-							at.setType(GUIExtendedAttribute.TYPE_USER);
+							at.setType(GUIAttribute.TYPE_USER);
 							break;
 						} else {
 							frm.setValue(nm, "");

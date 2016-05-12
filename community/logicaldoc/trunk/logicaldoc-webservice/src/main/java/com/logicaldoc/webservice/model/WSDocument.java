@@ -16,13 +16,13 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.document.DocumentTemplate;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.metadata.Attribute;
+import com.logicaldoc.core.metadata.TemplateDAO;
+import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.webservice.AbstractService;
@@ -250,7 +250,7 @@ public class WSDocument implements Serializable {
 					attributes = new WSAttribute[document.getAttributeNames().size()];
 					int i = 0;
 					for (String name : document.getAttributeNames()) {
-						ExtendedAttribute attr = document.getExtendedAttribute(name);
+						Attribute attr = document.getAttribute(name);
 
 						WSAttribute attribute = new WSAttribute();
 						attribute.setName(name);
@@ -259,7 +259,7 @@ public class WSDocument implements Serializable {
 						attribute.setType(attr.getType());
 						attribute.setValue(attr.getValue());
 
-						if (attr.getType() == ExtendedAttribute.TYPE_USER) {
+						if (attr.getType() == Attribute.TYPE_USER) {
 							attribute.setIntValue(attr.getIntValue());
 							attribute.setStringValue(attr.getStringValue());
 						}
@@ -322,16 +322,16 @@ public class WSDocument implements Serializable {
 			}
 		}
 
-		DocumentTemplate template = null;
-		Map<String, ExtendedAttribute> attributes = new HashMap<String, ExtendedAttribute>();
+		Template template = null;
+		Map<String, Attribute> attributes = new HashMap<String, Attribute>();
 		if (templateId != null) {
-			DocumentTemplateDAO templDao = (DocumentTemplateDAO) Context.get().getBean(
-					DocumentTemplateDAO.class);
+			TemplateDAO templDao = (TemplateDAO) Context.get().getBean(
+					TemplateDAO.class);
 			template = templDao.findById(templateId);
 			if (template != null) {
 				if (extendedAttributes != null && extendedAttributes.length > 0) {
 					for (int i = 0; i < extendedAttributes.length; i++) {
-						ExtendedAttribute extAttribute = new ExtendedAttribute();
+						Attribute extAttribute = new Attribute();
 						extAttribute.setMandatory(extendedAttributes[i].getMandatory());
 						extAttribute.setPosition(extendedAttributes[i].getPosition());
 						extAttribute.setIntValue(extendedAttributes[i].getIntValue());

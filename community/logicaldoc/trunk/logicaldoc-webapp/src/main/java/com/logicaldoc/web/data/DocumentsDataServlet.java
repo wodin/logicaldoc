@@ -26,15 +26,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.ibm.icu.util.StringTokenizer;
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.util.IconSelector;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
@@ -185,17 +184,17 @@ public class DocumentsDataServlet extends HttpServlet {
 
 							String key = docId + "-" + name;
 
-							if (type == ExtendedAttribute.TYPE_STRING) {
+							if (type == Attribute.TYPE_STRING) {
 								extValues.put(key, rs.getString(4));
-							} else if (type == ExtendedAttribute.TYPE_INT) {
+							} else if (type == Attribute.TYPE_INT) {
 								extValues.put(key, Long.toString(rs.getLong(5)));
-							} else if (type == ExtendedAttribute.TYPE_DOUBLE) {
+							} else if (type == Attribute.TYPE_DOUBLE) {
 								extValues.put(key, Double.toString(rs.getDouble(6)));
-							} else if (type == ExtendedAttribute.TYPE_DATE) {
+							} else if (type == Attribute.TYPE_DATE) {
 								extValues.put(key, rs.getDate(7) != null ? edf.format(rs.getDate(7)) : "");
-							} else if (type == ExtendedAttribute.TYPE_USER) {
+							} else if (type == Attribute.TYPE_USER) {
 								extValues.put(key, rs.getString(4));
-							} else if (type == ExtendedAttribute.TYPE_BOOLEAN) {
+							} else if (type == Attribute.TYPE_BOOLEAN) {
 								extValues.put(key,
 										rs.getLong(5) == 1L ? I18N.message("true", l) : I18N.message("false", l));
 							}

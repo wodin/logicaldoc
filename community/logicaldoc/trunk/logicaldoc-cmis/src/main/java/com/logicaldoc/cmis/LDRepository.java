@@ -109,17 +109,14 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
-import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.folder.Folder;
@@ -128,6 +125,9 @@ import com.logicaldoc.core.folder.FolderEvent;
 import com.logicaldoc.core.folder.FolderHistory;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.metadata.Attribute;
+import com.logicaldoc.core.metadata.TemplateDAO;
+import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
@@ -191,7 +191,7 @@ public class LDRepository {
 
 	private HistoryDAO historyDao;
 
-	private DocumentTemplateDAO templateDao;
+	private TemplateDAO templateDao;
 
 	private VersionDAO versionDao;
 
@@ -215,7 +215,7 @@ public class LDRepository {
 		folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		documentDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		documentManager = (DocumentManager) Context.get().getBean(DocumentManager.class);
-		templateDao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
+		templateDao = (TemplateDAO) Context.get().getBean(TemplateDAO.class);
 		versionDao = (VersionDAO) Context.get().getBean(VersionDAO.class);
 		historyDao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 
@@ -1809,7 +1809,7 @@ public class LDRepository {
 					log.error(e.getMessage(), e);
 				}
 
-				DocumentTemplate template = doc.getTemplate();
+				Template template = doc.getTemplate();
 				if (doc instanceof Version && ((Version) doc).getTemplateName() != null)
 					template = templateDao.findByName(((Version) doc).getTemplateName(), doc.getTenantId());
 
@@ -1824,26 +1824,26 @@ public class LDRepository {
 
 					// Now load the extended properties
 					// dao.initialize(template);
-					Map<String, ExtendedAttribute> attributes = doc.getAttributes();
+					Map<String, Attribute> attributes = doc.getAttributes();
 					for (String attrName : attributes.keySet()) {
-						ExtendedAttribute attribute = attributes.get(attrName);
+						Attribute attribute = attributes.get(attrName);
 						String stringValue = null;
 						if (attribute.getValue() != null)
 							switch (attribute.getType()) {
-							case ExtendedAttribute.TYPE_BOOLEAN:
+							case Attribute.TYPE_BOOLEAN:
 								stringValue = Long.toString(attribute.getIntValue());
 								break;
-							case ExtendedAttribute.TYPE_DATE:
+							case Attribute.TYPE_DATE:
 								stringValue = df.format(attribute.getDateValue());
 								break;
-							case ExtendedAttribute.TYPE_DOUBLE:
+							case Attribute.TYPE_DOUBLE:
 								stringValue = attribute.getDoubleValue() != null ? attribute.getDoubleValue()
 										.toString() : null;
 								break;
-							case ExtendedAttribute.TYPE_INT:
+							case Attribute.TYPE_INT:
 								stringValue = Long.toString(attribute.getIntValue());
 								break;
-							case ExtendedAttribute.TYPE_USER:
+							case Attribute.TYPE_USER:
 								stringValue = Long.toString(attribute.getIntValue());
 								break;
 							default:
@@ -1976,7 +1976,7 @@ public class LDRepository {
 					else
 						((Version) doc).setTemplateName(null);
 				} else {
-					DocumentTemplate template = templateDao.findByName((String) p.getFirstValue(), doc.getTenantId());
+					Template template = templateDao.findByName((String) p.getFirstValue(), doc.getTenantId());
 					if (template == null) {
 						doc.setTemplate(null);
 						if (doc instanceof Document)
@@ -1996,7 +1996,7 @@ public class LDRepository {
 				 * This is an extended attribute, so try to load the document
 				 * template first
 				 */
-				DocumentTemplate template = null;
+				Template template = null;
 				PropertyData<?> tp = properties.getProperties().get(TypeManager.PROP_TEMPLATE);
 				if (tp != null)
 					template = templateDao.findByName((String) tp.getFirstValue(), doc.getTenantId());
@@ -2007,17 +2007,17 @@ public class LDRepository {
 					String attributeName = p.getId().substring(TypeManager.PROP_EXT.length());
 					String stringValue = (String) p.getFirstValue();
 
-					ExtendedAttribute attribute = template.getExtendedAttribute(attributeName);
+					Attribute attribute = template.getAttribute(attributeName);
 
 					switch (attribute.getType()) {
-					case ExtendedAttribute.TYPE_BOOLEAN:
+					case Attribute.TYPE_BOOLEAN:
 						if (StringUtils.isNotEmpty(stringValue))
 							doc.setValue(attributeName,
 									new Boolean("1".equals(stringValue) || "true".equals(stringValue)));
 						else
 							doc.setValue(attributeName, (Boolean) null);
 						break;
-					case ExtendedAttribute.TYPE_DATE:
+					case Attribute.TYPE_DATE:
 						if (StringUtils.isNotEmpty(stringValue))
 							try {
 								doc.setValue(attributeName, df.parse(stringValue));
@@ -2028,25 +2028,25 @@ public class LDRepository {
 						else
 							doc.setValue(attributeName, (Date) null);
 						break;
-					case ExtendedAttribute.TYPE_DOUBLE:
+					case Attribute.TYPE_DOUBLE:
 						if (StringUtils.isNotEmpty(stringValue))
 							doc.setValue(attributeName, Double.parseDouble(stringValue));
 						else
 							doc.setValue(attributeName, (Double) null);
 						break;
-					case ExtendedAttribute.TYPE_INT:
+					case Attribute.TYPE_INT:
 						if (StringUtils.isNotEmpty(stringValue))
 							doc.setValue(attributeName, Long.parseLong(stringValue));
 						else
 							doc.setValue(attributeName, (Long) null);
 						break;
-					case ExtendedAttribute.TYPE_USER:
+					case Attribute.TYPE_USER:
 						if (StringUtils.isNotEmpty(stringValue)) {
 							doc.setValue(attributeName, userDao.findById(Long.parseLong(stringValue)));
 						} else
 							doc.setValue(attributeName, (User) null);
 						break;
-					case ExtendedAttribute.TYPE_STRING:
+					case Attribute.TYPE_STRING:
 						doc.setValue(attributeName, stringValue);
 						break;
 					}
@@ -2649,7 +2649,7 @@ public class LDRepository {
 		return out;
 	}
 
-	public void setTemplateDao(DocumentTemplateDAO templateDao) {
+	public void setTemplateDao(TemplateDAO templateDao) {
 		this.templateDao = templateDao;
 	}
 

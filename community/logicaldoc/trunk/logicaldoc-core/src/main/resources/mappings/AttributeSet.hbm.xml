@@ -2,7 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping default-lazy="false">
-  <class name="com.logicaldoc.core.document.DocumentTemplate" table="ld_template" where="ld_deleted=0">
+  <class name="com.logicaldoc.core.metadata.AttributeSet" table="ld_attributeset" where="ld_deleted=0">
     <cache usage="read-write" />
     <id name="id" type="long" column="ld_id" unsaved-value="0">
       <generator class="hilo" />
@@ -15,12 +15,11 @@
     <property name="description" type="string" column="ld_description" length="2000" />
     <property name="readonly" type="int" column="ld_readonly" not-null="true" />
     <property name="type" type="int" column="ld_type" not-null="true" />
-    <property name="category" type="int" column="ld_category" not-null="true" />
-    <property name="signRequired" type="int" column="ld_signrequired" not-null="true" />
-    <map name="attributes" table="ld_template_ext" lazy="false" cascade="all" order-by="ld_position asc">
-      <key column="ld_templateid" />
+    <map name="attributes" table="ld_attributeset_ext" lazy="false" cascade="all" order-by="ld_position asc">
+      <key column="ld_attsetid" />
       <map-key type="string" column="ld_name" length="255" />
-      <composite-element class="com.logicaldoc.core.ExtendedAttribute">
+      <composite-element class="com.logicaldoc.core.metadata.Attribute">
+        <property name="setId" type="long" column="ld_setid" />
         <property name="label" type="string" column="ld_label" length="255"/>
         <property name="mandatory" type="int" column="ld_mandatory" not-null="true" />
         <property name="type" type="int" column="ld_type" not-null="true" />

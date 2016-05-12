@@ -74,8 +74,7 @@
         parent="ApplicationBaseTransactionProxy">
         <property name="target">
             <bean abstract="false" autowire="default"
-                class="com.logicaldoc.core.folder.HibernateFolderDAO"
-                lazy-init="default">
+                class="com.logicaldoc.core.folder.HibernateFolderDAO" lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
                 <property name="userDAO" ref="UserDAO" />
                 <property name="historyDAO" ref="FolderHistoryDAO" />
@@ -148,24 +147,35 @@
             </bean>
         </property>
     </bean>
-    <bean id="ExtendedAttributeOptionDAO" abstract="false" autowire="default"
+    <bean id="AttributeOptionDAO" abstract="false" autowire="default"
         lazy-init="default" parent="ApplicationBaseTransactionProxy">
         <property name="target">
             <bean abstract="false" autowire="default"
-                class="com.logicaldoc.core.document.dao.HibernateExtendedAttributeOptionDAO"
+                class="com.logicaldoc.core.metadata.HibernateAttributeOptionDAO"
                 lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
-    <bean id="DocumentTemplateDAO" abstract="false" autowire="default"
+    <bean id="AttributeSetDAO" abstract="false" autowire="default"
         lazy-init="default" parent="ApplicationBaseTransactionProxy">
         <property name="target">
             <bean abstract="false" autowire="default"
-                class="com.logicaldoc.core.document.dao.HibernateDocumentTemplateDAO"
+                class="com.logicaldoc.core.metadata.HibernateAttributeSetDAO"
                 lazy-init="default">
                 <property name="sessionFactory" ref="SessionFactory" />
-                <property name="optionsDao" ref="ExtendedAttributeOptionDAO" />
+                <property name="optionsDao" ref="AttributeOptionDAO" />
+                <property name="templateDao" ref="TemplateDAO" />
+            </bean>
+        </property>
+    </bean>
+    <bean id="TemplateDAO" abstract="false" autowire="default" lazy-init="default"
+        parent="ApplicationBaseTransactionProxy">
+        <property name="target">
+            <bean abstract="false" autowire="default"
+                class="com.logicaldoc.core.metadata.HibernateTemplateDAO"
+                lazy-init="default">
+                <property name="sessionFactory" ref="SessionFactory" />
             </bean>
         </property>
     </bean>
@@ -292,8 +302,9 @@
                 <property name="userDao" ref="UserDAO" />
                 <property name="groupDao" ref="GroupDAO" />
                 <property name="folderDao" ref="FolderDAO" />
-                <property name="templateDao" ref="DocumentTemplateDAO" />
+                <property name="templateDao" ref="TemplateDAO" />
                 <property name="messageTemplateDao" ref="MessageTemplateDAO" />
+                <property name="attributeSetDao" ref="AttributeSetDAO" />
             </bean>
         </property>
     </bean>
@@ -322,7 +333,7 @@
                 <property name="folderDAO" ref="FolderDAO" />
                 <property name="versionDAO" ref="VersionDAO" />
                 <property name="userDAO" ref="UserDAO" />
-                <property name="documentTemplateDAO" ref="DocumentTemplateDAO" />
+                <property name="templateDAO" ref="TemplateDAO" />
                 <property name="storer" ref="Storer" />
                 <property name="indexer" ref="SearchEngine" />
                 <property name="listenerManager" ref="DocumentListenerManager" />

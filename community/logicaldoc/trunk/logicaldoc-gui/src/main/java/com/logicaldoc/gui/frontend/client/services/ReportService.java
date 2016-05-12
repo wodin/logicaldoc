@@ -3,7 +3,7 @@ package com.logicaldoc.gui.frontend.client.services;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.ServerException;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIReport;
 
 /**
@@ -45,7 +45,7 @@ public interface ReportService extends RemoteService {
 	/**
 	 * Loads the attributes defined in the given report
 	 */
-	public GUIExtendedAttribute[] getReportParameters(long id) throws ServerException;
+	public GUIAttribute[] getReportParameters(long id) throws ServerException;
 
 	/**
 	 * Changes a report enabled/disabled status
@@ -55,5 +55,5 @@ public interface ReportService extends RemoteService {
 	/**
 	 * Processes a report
 	 */
-	public void execute(long id, GUIExtendedAttribute[] parameters) throws ServerException;
+	public void execute(long id, GUIAttribute[] parameters) throws ServerException;
 }

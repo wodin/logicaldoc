@@ -116,12 +116,12 @@ insert into ld_group
 values     (10,'2008-10-22 00:00:00',0,1,'testGroup','Group for tests',0,1);
 
 
-insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_category, ld_signrequired,ld_tenantid,ld_recordversion)
-values (1, '2008-11-07 00:00:00',0,'test1','test1_desc',0,0,0,0,1,1);
+insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_tenantid,ld_recordversion)
+values (1, '2008-11-07 00:00:00',0,'test1','test1_desc',0,0,1,1);
 insert into ld_template_ext (ld_templateid, ld_mandatory, ld_position, ld_type, ld_stringvalue, ld_name, ld_editor)
 values (1, 0, 0, 0, 'val1', 'attr1',0);
-insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_category, ld_signrequired,ld_tenantid,ld_recordversion)
-values (2, '2008-11-07 00:00:00',0,'test2','test2_desc',0,0,0,0,1,1);
+insert into ld_template (ld_id, ld_lastmodified,ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_tenantid,ld_recordversion)
+values (2, '2008-11-07 00:00:00',0,'test2','test2_desc',0,0,1,1);
 
 
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_templocked,ld_tenantid,ld_recordversion,ld_position,ld_hidden)
@@ -383,8 +383,8 @@ insert into ld_contact(ld_id, ld_lastmodified, ld_deleted, ld_userid, ld_firstna
 values(3, CURRENT_TIMESTAMP, 0, 1, 'Alessandro', 'alessandro@acme.com',1,1);
 
 insert into ld_template
-			(ld_id, ld_lastmodified, ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_category, ld_signrequired, ld_tenantid,ld_recordversion)
-values (100,CURRENT_TIMESTAMP,0,'email','email',0,0,0,0,1,1);
+			(ld_id, ld_lastmodified, ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_tenantid, ld_recordversion)
+values (100,CURRENT_TIMESTAMP,0,'email','email',0,0,1,1);
 insert into ld_template_ext(ld_templateid, ld_mandatory, ld_type, ld_position, ld_stringvalue, ld_name, ld_label, ld_editor)
 values (100,0,0,0,'','sendername', 'Sender Name', 0);
 
@@ -395,14 +395,14 @@ values(2, '2010-04-23 00:00:00',0,1,1,'customid-month_seq',3,0);
 
 
 insert into ld_extoption
-			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_templateid, ld_attribute, ld_value, ld_label, ld_position)
+			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_setid, ld_attribute, ld_value, ld_label, ld_position)
 values(1, '2014-08-07 00:00:00',1,0,1,1,'att1','value1','value1 label',1);
 insert into ld_extoption
-			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_templateid, ld_attribute,ld_value, ld_label, ld_position)
+			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_setid, ld_attribute,ld_value, ld_label, ld_position)
 values(2, '2014-08-07 00:00:00',1,0,1,1,'att1','value2','value2 label',2);
 insert into ld_extoption
-			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_templateid, ld_attribute,ld_value, ld_label, ld_position)
+			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_setid, ld_attribute,ld_value, ld_label, ld_position)
 values(3, '2014-08-07 00:00:00',1,0,1,1,'att2','value3','value3 label',3);
 insert into ld_extoption
-			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_templateid, ld_attribute,ld_value, ld_label, ld_position)
+			(ld_id, ld_lastmodified, ld_recordversion, ld_deleted, ld_tenantid, ld_setid, ld_attribute,ld_value, ld_label, ld_position)
 values(4, '2014-08-07 00:00:00',1,0,1,2,'att1','value4','value4 label',1);			

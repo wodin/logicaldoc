@@ -4,7 +4,7 @@ import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.logicaldoc.core.ExtensibleObject;
+import com.logicaldoc.core.metadata.ExtensibleObject;
 
 /**
  * Instances of this class represents generic informations in the database. Use

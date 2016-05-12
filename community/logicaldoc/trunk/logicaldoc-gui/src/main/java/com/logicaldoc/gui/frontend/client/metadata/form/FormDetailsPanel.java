@@ -199,8 +199,8 @@ public class FormDetailsPanel extends VLayout {
 	public void onSave() {
 		if (vm.validate()) {
 			form.setTitle(vm.getValueAsString("name"));
-			if (vm.getValueAsString("template") != null)
-				form.setTemplateId(Long.parseLong(vm.getValueAsString("template")));
+			if (vm.getValueAsString("attributeSet") != null)
+				form.setTemplateId(Long.parseLong(vm.getValueAsString("attributeSet")));
 			else
 				form.setTemplateId(null);
 			form.setNature(Constants.NATURE_FORM);

@@ -9,8 +9,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
-import com.logicaldoc.gui.frontend.client.services.TemplateService;
-import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.AttributeSetService;
+import com.logicaldoc.gui.frontend.client.services.AttributeSetServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.util.SC;
@@ -28,7 +28,7 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
  * @since 7.1.2
  */
 public class OptionsUploader extends Window {
-	private TemplateServiceAsync templateService = (TemplateServiceAsync) GWT.create(TemplateService.class);
+	private AttributeSetServiceAsync service = (AttributeSetServiceAsync) GWT.create(AttributeSetService.class);
 
 	private SubmitItem sendButton;
 
@@ -103,7 +103,7 @@ public class OptionsUploader extends Window {
 			return;
 
 		ContactingServer.get().show();
-		templateService.parseOptions(options.getTemplateId(), options.getAttribute(), new AsyncCallback<String[]>() {
+		service.parseOptions(options.getSetId(), options.getAttribute(), new AsyncCallback<String[]>() {
 
 			@Override
 			public void onFailure(Throwable caught) {

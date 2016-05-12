@@ -12,8 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.ExtendedAttributeOption;
-import com.logicaldoc.core.document.dao.ExtendedAttributeOptionDAO;
+import com.logicaldoc.core.metadata.AttributeOption;
+import com.logicaldoc.core.metadata.AttributeOptionDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
 
@@ -50,9 +50,9 @@ public class ExtendedAttributeOptionsDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			ExtendedAttributeOptionDAO dao = (ExtendedAttributeOptionDAO) Context.get().getBean(
-					ExtendedAttributeOptionDAO.class);
-			List<ExtendedAttributeOption> options = dao.findByTemplateAndAttribute(templateId, attribute);
+			AttributeOptionDAO dao = (AttributeOptionDAO) Context.get().getBean(
+					AttributeOptionDAO.class);
+			List<AttributeOption> options = dao.findBySetIdAndAttribute(templateId, attribute);
 
 			if(withempty){
 				writer.print("<option>");
@@ -63,7 +63,7 @@ public class ExtendedAttributeOptionsDataServlet extends HttpServlet {
 				writer.print("</option>");
 			}
 			
-			for (ExtendedAttributeOption option : options) {
+			for (AttributeOption option : options) {
 				writer.print("<option>");
 				writer.print("<id>" + option.getId() + "</id>");
 				writer.print("<attribute><![CDATA[" + option.getAttribute() + "]]></attribute>");

@@ -6,10 +6,12 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttributeSet;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIRetentionPolicy;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
+import com.logicaldoc.gui.common.client.data.AttributeSetsDS;
 import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.ExtendedAttributeOptionsDS;
@@ -529,12 +531,12 @@ public class ItemFactory {
 	/**
 	 * Creates a new TextItem for the Extended Attributes.
 	 */
-	public static FormItem newStringItemForExtendedAttribute(Long templateId, GUIExtendedAttribute att) {
+	public static FormItem newStringItemForExtendedAttribute(Long templateId, GUIAttribute att) {
 		// We cannot use spaces in items name
 		String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		FormItem item = new TextItem();
 
-		if (att.getEditor() == GUIExtendedAttribute.EDITOR_LISTBOX && templateId != null) {
+		if (att.getEditor() == GUIAttribute.EDITOR_LISTBOX && templateId != null) {
 			item = new SelectItem();
 			item.setOptionDataSource(new ExtendedAttributeOptionsDS(templateId, att.getName(), !att.isMandatory()));
 
@@ -827,6 +829,7 @@ public class ItemFactory {
 		templateItem.setValueField("id");
 		templateItem.setPickListWidth(250);
 		templateItem.setMultiple(false);
+		templateItem.setWrapTitle(false);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
 		templateItem.setOptionDataSource(new TemplatesDS(withEmpty, templateId, null, false));
 
@@ -837,6 +840,21 @@ public class ItemFactory {
 			templateItem.setValue(templateId.toString());
 		return templateItem;
 	}
+	
+	public static SelectItem newAttributeSetSelector() {
+		final SelectItem selectItem = new SelectItem("attributeset", I18N.message("attributeset"));
+		selectItem.setMultiple(false);
+		selectItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
+		selectItem.setDisplayField("name");
+		selectItem.setValueField("id");
+		selectItem.setPickListWidth(250);
+		selectItem.setOptionDataSource(new AttributeSetsDS(false, GUIAttributeSet.TYPE_DEFAULT));
+		selectItem.setHintStyle("hint");
+		selectItem.setWrapTitle(false);
+
+		return selectItem;
+	}
+
 
 	public static SelectItem newFrequencySelector(String name, String title) {
 		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));

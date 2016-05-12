@@ -1,9 +1,8 @@
-package com.logicaldoc.core.document.dao;
+package com.logicaldoc.core.metadata;
 
 import java.util.List;
 
 import com.logicaldoc.core.PersistentObjectDAO;
-import com.logicaldoc.core.document.DocumentTemplate;
 
 /**
  * This class is a DAO-service for document templates.
@@ -11,16 +10,16 @@ import com.logicaldoc.core.document.DocumentTemplate;
  * @author Marco Meschieri - Logical Objects
  * @version 1.0
  */
-public interface DocumentTemplateDAO extends PersistentObjectDAO<DocumentTemplate> {
+public interface TemplateDAO extends PersistentObjectDAO<Template> {
 	/**
 	 * This method finds a template by name
 	 * 
 	 * @param name Name of the template
 	 * @param tenantId ID of the owning tenant
 	 * 
-	 * @return DocumentTemplate with given name
+	 * @return Template with given name
 	 */
-	public DocumentTemplate findByName(String name, long tenantId);
+	public Template findByName(String name, long tenantId);
 
 	/**
 	 * Counts the total number of documents using this template
@@ -36,7 +35,7 @@ public interface DocumentTemplateDAO extends PersistentObjectDAO<DocumentTemplat
 	 * @param type Type of the template
 	 * @param tenantId ID of the owning tenant
 	 * 
-	 * @return DocumentTemplate with given type
+	 * @return Template with given type
 	 */
-	public List<DocumentTemplate> findByType(int type, long tenantId);
+	public List<Template> findByType(int type, long tenantId);
 }

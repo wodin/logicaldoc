@@ -80,8 +80,8 @@ public class IncrementalSettingsPanel extends VLayout {
 			incremental.setFrequency(Integer.parseInt(vm.getValueAsString("frequency")));
 			incremental.setFolder(folderSelector.getFolder());
 
-			if (vm.getValues().get("template") != null) {
-				String templateIdString = vm.getValues().get("template").toString().trim().replace("[", "")
+			if (vm.getValues().get("attributeSet") != null) {
+				String templateIdString = vm.getValues().get("attributeSet").toString().trim().replace("[", "")
 						.replace("]", "");
 				if (!templateIdString.isEmpty()) {
 					String[] selection = templateIdString.split(",");

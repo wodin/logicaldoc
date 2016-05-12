@@ -14,7 +14,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIExtendedAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -192,7 +192,7 @@ public class ParametricForm extends VLayout {
 	}
 
 	public void reloadCriteriaRows(GUITemplate template, boolean reload) {
-		// When the selected template change, we have to retrieve the correct
+		// When the selected attributeSet change, we have to retrieve the correct
 		// criteria row,because someone has been deleted
 		if (criteriaRows != null && reload) {
 			criteriaRows.clear();
@@ -216,7 +216,7 @@ public class ParametricForm extends VLayout {
 			criteriaRows.add(new RowCriteria(template, 0));
 		}
 
-		// When the selected template change, we must reload the criteria
+		// When the selected attributeSet change, we must reload the criteria
 		// field,so we reload all criteria rows
 		if (reload) {
 			int count = criteriaRows.size();
@@ -278,9 +278,9 @@ public class ParametricForm extends VLayout {
 			options.setLanguage(vm.getValueAsString("language"));
 		options.setExpressionLanguage(I18N.getLocale());
 
-		if (values.containsKey("template") && values.get("template") != null
-				&& !((String) values.get("template")).isEmpty())
-			options.setTemplate(new Long((String) values.get("template")));
+		if (values.containsKey("attributeSet") && values.get("attributeSet") != null
+				&& !((String) values.get("attributeSet")).isEmpty())
+			options.setTemplate(new Long((String) values.get("attributeSet")));
 
 		options.setTopOperator((String) values.get("match"));
 
@@ -304,16 +304,16 @@ public class ParametricForm extends VLayout {
 			if (row.getValueFieldsItem() instanceof IntegerItem)
 				fieldValue = Long.parseLong(fieldValue.toString());
 
-			if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_INT)
-					|| fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_DOUBLE))
+			if (fieldName.endsWith("type:" + GUIAttribute.TYPE_INT)
+					|| fieldName.endsWith("type:" + GUIAttribute.TYPE_DOUBLE))
 				fieldValue = Long.parseLong(fieldValue.toString());
-			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_BOOLEAN))
+			else if (fieldName.endsWith("type:" + GUIAttribute.TYPE_BOOLEAN))
 				fieldValue = fieldValue.toString().equals("yes") ? 1L : 0L;
-			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_DATE))
+			else if (fieldName.endsWith("type:" + GUIAttribute.TYPE_DATE))
 				fieldValue = (Date) fieldValue;
-			else if (fieldName.endsWith("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET)) {
-				fieldName = fieldName.replaceAll("type:" + GUIExtendedAttribute.TYPE_STRING_PRESET, "type:"
-						+ GUIExtendedAttribute.TYPE_STRING);
+			else if (fieldName.endsWith("type:" + GUIAttribute.TYPE_STRING_PRESET)) {
+				fieldName = fieldName.replaceAll("type:" + GUIAttribute.TYPE_STRING_PRESET, "type:"
+						+ GUIAttribute.TYPE_STRING);
 			}
 
 			GUICriterion criterion = new GUICriterion();

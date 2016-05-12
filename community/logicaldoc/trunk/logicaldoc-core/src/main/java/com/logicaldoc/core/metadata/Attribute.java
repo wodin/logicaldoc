@@ -1,4 +1,4 @@
-package com.logicaldoc.core;
+package com.logicaldoc.core.metadata;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import com.logicaldoc.core.security.User;
  * @author Matteo Caruso - Logical Objects
  * @since 4.5.1
  */
-public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
+public class Attribute implements Comparable<Attribute> {
 
 	public static final int TYPE_STRING = 0;
 
@@ -47,6 +47,11 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 	private int position = 0;
 
 	private int editor = EDITOR_DEFAULT;
+
+	/**
+	 * Reference to the Attribute Set
+	 */
+	private Long setId;
 
 	public String getStringValue() {
 		return stringValue;
@@ -188,7 +193,7 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 	}
 
 	@Override
-	public int compareTo(ExtendedAttribute o) {
+	public int compareTo(Attribute o) {
 		return new Integer(getPosition()).compareTo(o.getPosition());
 	}
 
@@ -210,7 +215,7 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 
 	@Override
 	public Object clone() throws CloneNotSupportedException {
-		ExtendedAttribute clone = new ExtendedAttribute();
+		Attribute clone = new Attribute();
 		clone.setDateValue(dateValue);
 		clone.setDoubleValue(doubleValue);
 		clone.setEditor(editor);
@@ -220,6 +225,15 @@ public class ExtendedAttribute implements Comparable<ExtendedAttribute> {
 		clone.setPosition(position);
 		clone.setType(type);
 		clone.setStringValue(stringValue);
+		clone.setSetId(setId);
 		return clone;
+	}
+
+	public Long getSetId() {
+		return setId;
+	}
+
+	public void setSetId(Long setId) {
+		this.setId = setId;
 	}
 }

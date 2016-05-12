@@ -16,10 +16,10 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.ibm.icu.text.SimpleDateFormat;
 import com.logicaldoc.core.document.AbstractDocument;
-import com.logicaldoc.core.document.DocumentTemplate;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.util.Context;
@@ -97,7 +97,7 @@ public class FulltextSearch extends Search {
 			hit.setFolder(folder);
 
 			if (rs.getLong(37) != 0L) {
-				DocumentTemplate t = new DocumentTemplate();
+				Template t = new Template();
 				t.setId(rs.getLong(37));
 				t.setName(rs.getString(38));
 				hit.setTemplate(t);

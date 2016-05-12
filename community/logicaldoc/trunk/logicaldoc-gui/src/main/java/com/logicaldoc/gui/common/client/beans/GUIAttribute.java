@@ -11,7 +11,7 @@ import java.util.Date;
  * @author Matteo Caruso - Logical Objects
  * @since 4.5.1
  */
-public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, Serializable {
+public class GUIAttribute implements Comparable<GUIAttribute>, Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -54,6 +54,10 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 	private String name;
 
 	private String label;
+	
+	private String set;
+	
+	private Long setId;
 
 	// Optional array of possible values
 	private String[] options;
@@ -181,7 +185,7 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 	}
 
 	@Override
-	public int compareTo(GUIExtendedAttribute o) {
+	public int compareTo(GUIAttribute o) {
 		return new Integer(getPosition()).compareTo(o.getPosition());
 	}
 
@@ -223,5 +227,21 @@ public class GUIExtendedAttribute implements Comparable<GUIExtendedAttribute>, S
 
 	public void setBooleanValue(Boolean booleanValue) {
 		this.booleanValue = booleanValue;
+	}
+
+	public String getSet() {
+		return set;
+	}
+
+	public void setSet(String set) {
+		this.set = set;
+	}
+
+	public Long getSetId() {
+		return setId;
+	}
+
+	public void setSetId(Long setId) {
+		this.setId = setId;
 	}
 }

@@ -1,14 +1,16 @@
-package com.logicaldoc.core;
+package com.logicaldoc.core.metadata;
+
+import com.logicaldoc.core.PersistentObject;
 
 /**
- * Represents an option for a multi/choice extended attribute
+ * Represents an option for a multi-choice attribute
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 7.1
  */
-public class ExtendedAttributeOption extends PersistentObject implements Comparable<ExtendedAttributeOption> {
+public class AttributeOption extends PersistentObject implements Comparable<AttributeOption> {
 
-	private long templateId;
+	private long setId;
 
 	private String attribute;
 
@@ -18,22 +20,22 @@ public class ExtendedAttributeOption extends PersistentObject implements Compara
 
 	private int position = 0;
 
-	public ExtendedAttributeOption() {
+	public AttributeOption() {
 	}
 
-	public ExtendedAttributeOption(long templateId, String attribute, String value) {
+	public AttributeOption(long setId, String attribute, String value) {
 		this();
-		this.templateId = templateId;
+		this.setId = setId;
 		this.attribute = attribute;
 		this.value = value;
 	}
 
-	public long getTemplateId() {
-		return templateId;
+	public long getSetId() {
+		return setId;
 	}
 
-	public void setTemplateId(long templateId) {
-		this.templateId = templateId;
+	public void setSetId(long setId) {
+		this.setId = setId;
 	}
 
 	public String getAttribute() {
@@ -69,7 +71,7 @@ public class ExtendedAttributeOption extends PersistentObject implements Compara
 	}
 
 	@Override
-	public int compareTo(ExtendedAttributeOption other) {
+	public int compareTo(AttributeOption other) {
 		return new Integer(position).compareTo(new Integer(other.position));
 	}
 }

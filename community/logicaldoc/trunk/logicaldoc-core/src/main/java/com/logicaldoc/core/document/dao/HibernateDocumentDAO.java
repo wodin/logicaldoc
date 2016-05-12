@@ -21,7 +21,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.ibm.icu.util.Calendar;
-import com.logicaldoc.core.ExtendedAttribute;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.document.AbstractDocument;
@@ -38,10 +37,11 @@ import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.generic.GenericDAO;
+import com.logicaldoc.core.metadata.Attribute;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
-import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
@@ -243,6 +243,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return store(doc, null);
 	}
 
+	private boolean isStandardAttribute(String name) {
+		return name.equals("object") || name.equals("source") || name.equals("sourceDate")
+				|| name.equals("sourceAuthor") || name.equals("sourceType") || name.equals("sourceId")
+				|| name.equals("coverage") || name.equals("recipient");
+	}
+
 	public boolean store(Document doc, final History transaction) {
 		boolean result = true;
 		try {
@@ -316,12 +322,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					doc.setTemplate(doc.getFolder().getTemplate());
 					try {
 						for (String name : doc.getFolder().getAttributeNames()) {
-							ExtendedAttribute fAtt = doc.getFolder().getExtendedAttribute(name);
+							Attribute fAtt = doc.getFolder().getAttribute(name);
 							if (fAtt.getValue() == null || StringUtils.isEmpty(fAtt.getValue().toString()))
 								continue;
-							ExtendedAttribute dAtt = doc.getExtendedAttribute(name);
+							Attribute dAtt = doc.getAttribute(name);
 							if (dAtt == null) {
-								dAtt = new ExtendedAttribute();
+								dAtt = new Attribute();
 								dAtt.setType(fAtt.getType());
 								dAtt.setEditor(fAtt.getEditor());
 								dAtt.setLabel(fAtt.getLabel());
@@ -343,6 +349,44 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					}
 				}
 			}
+
+			/*
+			 * Filter the attributes putting the 'default' ones in the
+			 * document's main object
+			 */
+			if (doc.getAttributes() != null)
+				for (String name : doc.getAttributeNames()) {
+					if (isStandardAttribute(name)) {
+						Attribute att = doc.getAttribute(name);
+						switch (name) {
+						case "object":
+							doc.setObject(att.getStringValue());
+							break;
+						case "coverage":
+							doc.setCoverage(att.getStringValue());
+							break;
+						case "recipient":
+							doc.setRecipient(att.getStringValue());
+							break;
+						case "source":
+							doc.setSource(att.getStringValue());
+							break;
+						case "sourceId":
+							doc.setSourceId(att.getStringValue());
+							break;
+						case "sourceAuthor":
+							doc.setSourceAuthor(att.getStringValue());
+							break;
+						case "sourceType":
+							doc.setSourceType(att.getStringValue());
+							break;
+						case "sourceDate":
+							doc.setSourceDate(att.getDateValue());
+							break;
+						}
+						doc.getAttributes().remove(name);
+					}
+				}
 
 			if ("bulkload".equals(config.getProperty("runlevel")))
 				doc.setCustomId(UUID.randomUUID().toString());

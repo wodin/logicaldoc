@@ -38,9 +38,9 @@ import org.apache.chemistry.opencmis.commons.server.CallContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.ExtendedAttribute;
-import com.logicaldoc.core.document.DocumentTemplate;
-import com.logicaldoc.core.document.dao.DocumentTemplateDAO;
+import com.logicaldoc.core.metadata.Attribute;
+import com.logicaldoc.core.metadata.TemplateDAO;
+import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.util.Context;
 
 /**
@@ -365,11 +365,11 @@ public class TypeManager {
 		/*
 		 * Extended properties
 		 */
-		DocumentTemplateDAO dao = (DocumentTemplateDAO) Context.get().getBean(DocumentTemplateDAO.class);
-		List<DocumentTemplate> templates = dao.findAll();
-		for (DocumentTemplate template : templates) {
+		TemplateDAO dao = (TemplateDAO) Context.get().getBean(TemplateDAO.class);
+		List<Template> templates = dao.findAll();
+		for (Template template : templates) {
 			dao.initialize(template);
-			Map<String, ExtendedAttribute> attributes = template.getAttributes();
+			Map<String, Attribute> attributes = template.getAttributes();
 			for (String name : attributes.keySet()) {
 				type.addPropertyDefinition(createPropDef(PROP_EXT + name, name, name, PropertyType.STRING,
 						Cardinality.SINGLE, Updatability.READWRITE, false, false));

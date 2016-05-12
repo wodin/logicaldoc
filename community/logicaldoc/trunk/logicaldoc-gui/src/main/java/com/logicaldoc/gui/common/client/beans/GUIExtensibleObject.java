@@ -15,7 +15,7 @@ public class GUIExtensibleObject implements Serializable {
 
 	private Long templateId;
 
-	private GUIExtendedAttribute[] attributes = new GUIExtendedAttribute[0];
+	private GUIAttribute[] attributes = new GUIAttribute[0];
 
 	public String getTemplate() {
 		return template;
@@ -33,38 +33,38 @@ public class GUIExtensibleObject implements Serializable {
 		this.templateId = templateId;
 	}
 
-	public GUIExtendedAttribute[] getAttributes() {
+	public GUIAttribute[] getAttributes() {
 		return attributes;
 	}
 
-	public void setAttributes(GUIExtendedAttribute[] attributes) {
+	public void setAttributes(GUIAttribute[] attributes) {
 		this.attributes = attributes;
 	}
 
 	public Object getValue(String attributeName) {
-		for (GUIExtendedAttribute att : attributes) {
+		for (GUIAttribute att : attributes) {
 			if (att.getName().equals(attributeName) && att.getValue() != null)
 				return att.getValue();
 		}
 		return null;
 	}
 
-	public GUIExtendedAttribute getExtendedAttribute(String attributeName) {
-		for (GUIExtendedAttribute att : attributes) {
+	public GUIAttribute getExtendedAttribute(String attributeName) {
+		for (GUIAttribute att : attributes) {
 			if (att.getName().equals(attributeName))
 				return att;
 		}
 		return null;
 	}
 
-	public GUIExtendedAttribute setValue(String name, Object value) {
-		GUIExtendedAttribute[] tmp = new GUIExtendedAttribute[attributes.length + 1];
+	public GUIAttribute setValue(String name, Object value) {
+		GUIAttribute[] tmp = new GUIAttribute[attributes.length + 1];
 		int i = 0;
-		for (GUIExtendedAttribute a : attributes) {
+		for (GUIAttribute a : attributes) {
 			tmp[i++] = a;
 		}
 
-		GUIExtendedAttribute ext = new GUIExtendedAttribute();
+		GUIAttribute ext = new GUIAttribute();
 		ext.setName(name);
 		ext.setValue(value);
 		tmp[i] = ext;

@@ -81,10 +81,10 @@ public class FormCreate extends Window {
 
 		GUIDocument vo = new GUIDocument();
 		vo.setTitle(vm.getValueAsString("name").trim());
-		if (vm.getValueAsString("template") == null || "".equals(vm.getValueAsString("template").toString()))
+		if (vm.getValueAsString("attributeSet") == null || "".equals(vm.getValueAsString("attributeSet").toString()))
 			vo.setTemplateId(null);
 		else
-			vo.setTemplateId(Long.parseLong(vm.getValueAsString("template").toString()));
+			vo.setTemplateId(Long.parseLong(vm.getValueAsString("attributeSet").toString()));
 
 		if (vo.getTitle().lastIndexOf('.') != -1)
 			vo.setTitle(vo.getTitle().substring(0, vo.getTitle().lastIndexOf('.')));
