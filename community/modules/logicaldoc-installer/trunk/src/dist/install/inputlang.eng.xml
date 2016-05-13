@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
 
-<langpack>
+<izpack:langpack version="5.0"
+                 xmlns:izpack="http://izpack.org/schema/langpack"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://izpack.org/schema/langpack http://izpack.org/schema/5.0/izpack-langpack-5.0.xsd">
+
   <str id="registration" txt="Registration"/>
   <str id="activationcode" txt="Activation Code"/>
   <str id="name" txt="Name"/>
@@ -24,4 +28,5 @@
   <str id="dbmanualurl" txt="Manual specification of the database connection URL"/>
   <str id="setuppasswordreq" txt="Please enter a password composed by at least 6 characters" />
   <str id="setuppassword" txt="Setup password" />
-</langpack>
+  
+</izpack:langpack>

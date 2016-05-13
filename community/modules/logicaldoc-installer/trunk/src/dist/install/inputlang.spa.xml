@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
 
-<langpack>
+<izpack:langpack version="5.0"
+                 xmlns:izpack="http://izpack.org/schema/langpack"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://izpack.org/schema/langpack http://izpack.org/schema/5.0/izpack-langpack-5.0.xsd">
+                 
   <str id="registration" txt="Registration"/>
   <str id="activationcode" txt="Código de Activación"/>
   <str id="name" txt="Nombre"/>
   <str id="organization" txt="Organización"/>
   <str id="database" txt="Base de datos"/>
   <str id="invalidport" txt="Puerto invalido o ya usado"/>
-</langpack>
+  
+</izpack:langpack>

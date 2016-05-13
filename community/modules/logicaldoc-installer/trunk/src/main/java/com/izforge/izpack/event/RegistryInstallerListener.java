@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.IOUtils;
 
 import com.izforge.izpack.api.adaptator.IXMLElement;
 import com.izforge.izpack.api.data.InstallData;
@@ -537,8 +538,10 @@ public class RegistryInstallerListener extends AbstractProgressInstallerListener
 		} catch (IOException exception) {
 			throw new InstallerException(exception);
 		} finally {
-			FileUtils.close(in);
-			FileUtils.close(out);
+			//FileUtils.close(in);
+			//FileUtils.close(out);
+			IOUtils.closeQuietly(in);
+			IOUtils.closeQuietly(out);
 		}
 	}
 
