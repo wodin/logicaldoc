@@ -243,7 +243,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return store(doc, null);
 	}
 
-	private boolean isStandardAttribute(String name) {
+	private boolean isLegacyAttribute(String name) {
 		return name.equals("object") || name.equals("source") || name.equals("sourceDate")
 				|| name.equals("sourceAuthor") || name.equals("sourceType") || name.equals("sourceId")
 				|| name.equals("coverage") || name.equals("recipient");
@@ -351,12 +351,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			}
 
 			/*
-			 * Filter the attributes putting the 'default' ones in the
+			 * Filter the attributes putting the 'legacy' ones in the
 			 * document's main object
 			 */
 			if (doc.getAttributes() != null)
 				for (String name : doc.getAttributeNames()) {
-					if (isStandardAttribute(name)) {
+					if (isLegacyAttribute(name)) {
 						Attribute att = doc.getAttribute(name);
 						switch (name) {
 						case "object":

@@ -421,10 +421,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	private static GUIAttribute[] prepareGUIAttributes(Template template, Document doc) {
+		List<GUIAttribute> attributes = new ArrayList<GUIAttribute>();
 		try {
 			if (template != null) {
-				GUIAttribute[] attributes = new GUIAttribute[template.getAttributeNames().size()];
-				int i = 0;
 				for (String attrName : template.getAttributeNames()) {
 					Attribute extAttr = template.getAttributes().get(attrName);
 					GUIAttribute att = new GUIAttribute();
@@ -445,26 +444,70 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						att.setValue(extAttr.getValue());
 					att.setType(extAttr.getType());
 
-					attributes[i] = att;
-					i++;
+					attributes.add(att);
 				}
-				return attributes;
 			} else {
-				List<GUIAttribute> list = new ArrayList<GUIAttribute>();
 				for (String name : doc.getAttributeNames()) {
 					Attribute e = doc.getAttributes().get(name);
-					GUIAttribute ext = new GUIAttribute();
-					ext.setName(name);
-					ext.setDateValue(e.getDateValue());
-					ext.setStringValue(e.getStringValue());
-					ext.setIntValue(e.getIntValue());
-					ext.setDoubleValue(e.getDoubleValue());
-					ext.setBooleanValue(e.getBooleanValue());
-					ext.setType(e.getType());
-					list.add(ext);
+					GUIAttribute att = new GUIAttribute();
+					att.setName(name);
+					att.setDateValue(e.getDateValue());
+					att.setStringValue(e.getStringValue());
+					att.setIntValue(e.getIntValue());
+					att.setDoubleValue(e.getDoubleValue());
+					att.setBooleanValue(e.getBooleanValue());
+					att.setType(e.getType());
+					attributes.add(att);
 				}
-				return list.toArray(new GUIAttribute[0]);
 			}
+
+			/*
+			 * Append the standard attributes
+			 */
+			if (doc != null) {
+				GUIAttribute att = new GUIAttribute();
+				att.setName("source");
+				att.setStringValue(doc.getSource());
+				attributes.add(att);
+
+				att = new GUIAttribute();
+				att.setName("sourceAuthor");
+				att.setStringValue(doc.getSourceAuthor());
+				attributes.add(att);
+
+				att = new GUIAttribute();
+				att.setName("sourceId");
+				att.setStringValue(doc.getSourceId());
+				attributes.add(att);
+
+				att = new GUIAttribute();
+				att.setName("sourceType");
+				att.setStringValue(doc.getSourceType());
+				attributes.add(att);
+
+				att = new GUIAttribute();
+				att.setName("sourceDate");
+				att.setDateValue(doc.getSourceDate());
+				att.setType(Attribute.TYPE_DATE);
+				attributes.add(att);
+
+				att = new GUIAttribute();
+				att.setName("coverage");
+				att.setStringValue(doc.getCoverage());
+				attributes.add(att);
+
+				att = new GUIAttribute();
+				att.setName("recipient");
+				att.setStringValue(doc.getCoverage());
+				attributes.add(att);
+
+				att = new GUIAttribute();
+				att.setName("object");
+				att.setStringValue(doc.getObject());
+				attributes.add(att);
+			}
+
+			return attributes.toArray(new GUIAttribute[0]);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
 			return null;
@@ -536,15 +579,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setPublisher(doc.getPublisher());
 		document.setFileVersion(doc.getFileVersion());
 		document.setLanguage(doc.getLanguage());
-		document.setSource(doc.getSource());
-		document.setRecipient(doc.getRecipient());
 		document.setTemplateId(doc.getTemplateId());
-		document.setSourceType(doc.getSourceType());
-		document.setObject(doc.getObject());
-		document.setCoverage(doc.getCoverage());
-		document.setSourceAuthor(doc.getSourceAuthor());
-		document.setSourceDate(doc.getSourceDate());
-		document.setSourceId(doc.getSourceId());
 		document.setLastModified(doc.getLastModified());
 		document.setLockUserId(doc.getLockUserId());
 		document.setLockUser(doc.getLockUser());
@@ -567,6 +602,18 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setIcon(FilenameUtils.getBaseName(IconSelector.selectIcon(
 				FilenameUtils.getExtension(document.getFileName()), document.getDocRef() != null)));
 
+		// Standard attributes
+		{
+			document.setSource(doc.getSource());
+			document.setSourceType(doc.getSourceType());
+			document.setSourceAuthor(doc.getSourceAuthor());
+			document.setSourceDate(doc.getSourceDate());
+			document.setSourceId(doc.getSourceId());
+			document.setRecipient(doc.getRecipient());
+			document.setObject(doc.getObject());
+			document.setCoverage(doc.getCoverage());
+		}
+
 		if (doc.getRating() != null)
 			document.setRating(doc.getRating());
 
@@ -580,10 +627,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			document.setTemplateId(doc.getTemplate().getId());
 		}
 
-		if (doc.getAttributes() != null && !doc.getAttributes().isEmpty()) {
-			GUIAttribute[] attributes = prepareGUIAttributes(doc.getTemplate(), doc);
-			document.setAttributes(attributes);
-		}
+		GUIAttribute[] attributes = prepareGUIAttributes(doc.getTemplate(), doc);
+		document.setAttributes(attributes);
 
 		if (folder != null) {
 			document.setFolder(folder);
@@ -964,7 +1009,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						// related to the old template
 						// attributes keys that remains on the form
 						// value manager
-						if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
+						if (attr.getValue() != null && attr.getValue().toString().trim().isEmpty() && templateType != 0) {
 							if (templateType == Attribute.TYPE_INT || templateType == Attribute.TYPE_BOOLEAN) {
 								extAttr.setIntValue(null);
 							} else if (templateType == Attribute.TYPE_DOUBLE) {

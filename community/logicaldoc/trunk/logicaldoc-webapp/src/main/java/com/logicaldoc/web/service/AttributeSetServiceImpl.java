@@ -3,7 +3,6 @@ package com.logicaldoc.web.service;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -161,6 +160,16 @@ public class AttributeSetServiceImpl extends RemoteServiceServlet implements Att
 		return attributeSet;
 	}
 
+	public GUIAttributeSet getAttributeSet(String name) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+		AttributeSetDAO dao = (AttributeSetDAO) Context.get().getBean(AttributeSetDAO.class);
+		AttributeSet set = dao.findByName(name, session.getTenantId());
+		if (set != null)
+			return getAttributeSet(set.getId());
+		else
+			return null;
+	}
+
 	@Override
 	public GUIAttributeSet getAttributeSet(long setId) throws ServerException {
 		ServiceUtil.validateSession(getThreadLocalRequest());
@@ -276,22 +285,5 @@ public class AttributeSetServiceImpl extends RemoteServiceServlet implements Att
 		if (values.length > 0)
 			saveOptions(setId, attribute, values);
 		return values;
-	}
-
-	@Override
-	public GUIAttribute[] getAttributes(Long[] setIds) throws ServerException {
-		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
-		try {
-			List<GUIAttribute> attributes = new ArrayList<GUIAttribute>();
-			for (Long id : setIds) {
-				GUIAttributeSet set = getAttributeSet(id);
-				if(set!=null && set.getAttributes()!=null)
-					attributes.addAll(Arrays.asList(set.getAttributes()));
-			}
-
-			return attributes.toArray(new GUIAttribute[0]);
-		} catch (Throwable e) {
-			return (GUIAttribute[]) ServiceUtil.throwServerException(session, log, e);
-		}
 	}
 }

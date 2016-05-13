@@ -1,6 +1,7 @@
 package com.logicaldoc.web.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -174,8 +175,10 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				attributes[i] = att;
 				i++;
 			}
-			if (attributes.length > 0)
+			if (attributes.length > 0){
+				Arrays.sort(attributes);
 				templ.setAttributes(attributes);
+			}
 
 			return templ;
 		} catch (Throwable t) {

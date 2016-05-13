@@ -97,16 +97,26 @@ public class HibernateAttributeSetDAO extends HibernatePersistentObjectDAO<Attri
 		super.store(set);
 		optionsDao.deleteOrphaned(set.getId(), set.getAttributeNames());
 
+		/*
+		 * Update the attributes referenced in the templates
+		 */
 		List<Template> templates = templateDao.findAll(set.getTenantId());
 		for (Template template : templates) {
 			templateDao.initialize(template);
 			List<String> names = template.getAttributeNames(set.getId());
 			for (String name : names) {
-				if (set.getAttribute(name) != null) {
+				Attribute setAttribute = set.getAttribute(name);
+				if (setAttribute != null) {
 					// the attribute exists both in template and set so update
-					// it
+					// it but preserve the position declared in the template
+
+					Attribute templateAttribute = template.getAttribute(name);
+					int actualPosition = templateAttribute.getPosition();
+
 					try {
-						template.getAttributes().put(name, (Attribute) set.getAttribute(name).clone());
+						Attribute clonedAttribute = (Attribute) setAttribute.clone();
+						clonedAttribute.setPosition(actualPosition);
+						template.getAttributes().put(name, clonedAttribute);
 					} catch (CloneNotSupportedException e) {
 
 					}

@@ -39,18 +39,6 @@ public abstract class ExtensibleObject extends PersistentObject {
 			return null;
 	}
 
-	public List<String> getAttributeNames(long setId) {
-		List<String> names = new ArrayList<String>();
-		if (attributes != null) {
-			for (String name : attributes.keySet()) {
-				Attribute att = getAttribute(name);
-				if (att.getSetId() != null && setId == att.getSetId())
-					names.add(name);
-			}
-		}
-		return names;
-	}
-
 	public Attribute setValue(String name, Object value) {
 		Attribute ext = getAttribute(name);
 		if (ext == null) {
@@ -65,6 +53,18 @@ public abstract class ExtensibleObject extends PersistentObject {
 		List<String> names = new ArrayList<String>();
 		if (attributes != null)
 			names.addAll(attributes.keySet());
+		return names;
+	}
+	
+	public List<String> getAttributeNames(long setId) {
+		List<String> names = new ArrayList<String>();
+		if (attributes != null) {
+			for (String name : attributes.keySet()) {
+				Attribute att = getAttribute(name);
+				if (att.getSetId() != null && setId == att.getSetId())
+					names.add(name);
+			}
+		}
 		return names;
 	}
 
