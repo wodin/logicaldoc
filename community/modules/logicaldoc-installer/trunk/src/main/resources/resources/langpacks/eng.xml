@@ -350,5 +350,5 @@ for each category (message/warning/error) start at 0 -->
     <str id="ConsoleInstaller.redisplayQuit" txt="Input 1(See Again), 2(Exit): " />
     
     <str id="TargetPanel.existingLogicalDOC"
-         txt="Existing installation detected! Please apply the appropriate update package if you want to update your system."/>
+         txt="Existing installation detected! Please apply the appropriate update package if you want to update your system."/>         
 </izpack:langpack>

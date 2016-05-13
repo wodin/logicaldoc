@@ -1,5 +1,9 @@
-<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
-<userInput>
+<?xml version="1.0" encoding="UTF-8"?>
+<izpack:userinput version="5.0"
+                  xmlns:izpack="http://izpack.org/schema/userinput"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://izpack.org/schema/userinput http://izpack.org/schema/5.0/izpack-userinput-5.0.xsd">
+                  
     <panel id="panel_registration">
         <field type="title" align="left" bold="true" txt=""
             id="registration">
@@ -33,7 +37,7 @@
         
         <field type="space" />
         <field type="combo" variable="dbengine">
-            <description align="left" txt="Engine" id="dbengine"/>
+            <description txt="Engine" id="dbengine"/>
             <spec>
                 <choice txt="MySQL (suggested choice for production)" id="mysql" value="mysql" set="true" />
                 <choice txt="Oracle" id="oracle" value="oracle" />
@@ -125,7 +129,9 @@
             <spec txt="HTTP Port" id="httpport" size="10" set="8080" />
             <validator class="com.logicaldoc.installer.PortValidator"
                 id="invalidhttpport" txt="Invalid HTTP port" >
+                <!-- 
                 <spec txt="" id="invalidhttpport" />
+                -->
             </validator>
         </field>
         
@@ -134,7 +140,9 @@
             <spec txt="HTTPS Port" id="httpsport" size="10" set="8443" />
             <validator class="com.logicaldoc.installer.PortValidator"
                 id="invalidhttpsport" txt="Invalid HTTPS port">
+                <!-- 
                 <spec txt="" id="invalidhttpsport" />
+                -->
             </validator>
         </field>
         
@@ -143,13 +151,15 @@
             <spec txt="Shutdown Port" id="shutdownport" size="10" set="9005" />
             <validator class="com.logicaldoc.installer.PortValidator"
                 id="invalidshutdownport" txt="Invalid Shutdown port">
+                <!--
                 <spec txt="" id="invalidshutdownport" />
+                -->
             </validator>
         </field>
         
         <field type="space" />
         <field type="radio" variable="architecture">
-            <description align="left" txt="Architecture" id="architecture"/>
+            <description txt="Architecture" id="architecture"/>
             <spec set="${architecture}">
                 <choice txt="32bit" id="32bit" value="32bit" />
                 <choice txt="64bit" id="64bit" value="64bit" />
@@ -190,4 +200,4 @@
             <spec txt="OpenSSL" id="openssl" size="50" set="${openssl}" />
         </field>
     </panel>
-</userInput>
+</izpack:userinput>
