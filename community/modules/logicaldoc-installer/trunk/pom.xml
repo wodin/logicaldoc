@@ -26,7 +26,10 @@
         <dependency>
             <groupId>org.codehaus.izpack</groupId>
             <artifactId>izpack-maven-plugin</artifactId>
+            <version>5.0.8</version>
+            <!--
             <version>5.0.0-rc1</version>
+            -->
         </dependency>
     </dependencies>
 </project>
