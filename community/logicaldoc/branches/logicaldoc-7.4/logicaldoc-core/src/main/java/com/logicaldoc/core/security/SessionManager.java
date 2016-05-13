@@ -1,18 +1,12 @@
 package com.logicaldoc.core.security;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.logicaldoc.util.config.ContextProperties;
-import com.logicaldoc.util.time.TimeDiff;
-import com.logicaldoc.util.time.TimeDiff.TimeField;
 
 /**
  * Repository of all current user sessions.
@@ -88,48 +82,22 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	}
 
 	/**
-	 * Checks if a sessions is valid or not. A valid session is a one that
-	 * exists and is in state OPEN
+	 * Checks if a session is valid or not. A valid session is a one that exists
+	 * and is in state OPEN
 	 * 
 	 * @param sessionId The session identifier
 	 * @return true only if the session exists
 	 */
 	public boolean isValid(String sessionId) {
+		if (sessionId == null)
+			return false;
 		UserSession session = get(sessionId);
-		return session != null && !isExpired(session) && session.getStatus() == UserSession.STATUS_OPEN;
-	}
-
-	/**
-	 * Checks if the session is expired. Note that if timeout occurred after the
-	 * last renewal, the session state will be set to EXPIRED.
-	 */
-	private boolean isExpired(UserSession session) {
-		if (session == null || session.getStatus() != UserSession.STATUS_OPEN)
-			return true;
-
-		Date lastRenew = session.getLastRenew();
-		int timeout = 30;
-		try {
-			ContextProperties config = new ContextProperties();
-			if (config.getInt(session.getTenantName() + ".session.timeout") > 0)
-				timeout = config.getInt(session.getTenantName() + ".session.timeout");
-		} catch (IOException e) {
-		}
-		Date now = new Date();
-
-		// long offset = now.getTime() - lastRenew.getTime();
-		long offset = Math.abs(TimeDiff.getTimeDifference(lastRenew, now, TimeField.MINUTE));
-
-		boolean expired = offset > timeout;
-		if (expired)
-			session.setExpired();
-		return expired;
+		return session != null && (session.getStatus() == UserSession.STATUS_OPEN);
 	}
 
 	@Override
 	public UserSession get(Object sessionId) {
 		UserSession session = super.get(sessionId);
-		isExpired(session);
 		return session;
 	}
 
@@ -139,7 +107,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	public int countOpened() {
 		int count = 0;
 		for (UserSession session : getSessions()) {
-			if (!isExpired(session))
+			if (isValid(session.getId()))
 				count++;
 		}
 		return count;
@@ -151,7 +119,7 @@ public class SessionManager extends ConcurrentHashMap<String, UserSession> {
 	public int countOpened(long tenantId) {
 		int count = 0;
 		for (UserSession session : getSessions()) {
-			if (!isExpired(session) && session.getTenantId() == tenantId)
+			if (isValid(session.getId()) && session.getTenantId() == tenantId)
 				count++;
 		}
 		return count;
