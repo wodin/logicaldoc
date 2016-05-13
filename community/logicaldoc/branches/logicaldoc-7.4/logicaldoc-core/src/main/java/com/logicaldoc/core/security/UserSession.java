@@ -6,6 +6,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -64,6 +69,16 @@ public class UserSession implements Comparable<UserSession> {
 
 	private List<Log> logs = new ArrayList<Log>();
 
+	/**
+	 * This executor will be used to execute timeout checks in the future
+	 */
+	private static ScheduledExecutorService executor = Executors.newScheduledThreadPool(5);
+
+	/**
+	 * Represents the action to be taken in the future when the timeout occurs
+	 */
+	private FutureTask timeoutTask;
+
 	public Map<String, Object> getDictionary() {
 		return dictionary;
 	}
@@ -90,6 +105,24 @@ public class UserSession implements Comparable<UserSession> {
 	public void renew() {
 		if (status == STATUS_OPEN)
 			lastRenew = new Date();
+		else
+			return;
+
+		stopTimeout();
+
+		int timeout = 30;
+		ContextProperties config = (ContextProperties) Context.getInstance().getBean(ContextProperties.class);
+		if (config.getInt(getTenantName() + ".session.timeout") > 0)
+			timeout = config.getInt(getTenantName() + ".session.timeout");
+
+		if (timeout > 0) {
+			try {
+				timeoutTask = new FutureTask<String>(new SessionTimeout());
+				executor.schedule(timeoutTask, timeout, TimeUnit.MINUTES);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public int getStatus() {
@@ -98,6 +131,7 @@ public class UserSession implements Comparable<UserSession> {
 
 	public void setExpired() {
 		this.status = STATUS_EXPIRED;
+		stopTimeout();
 		externalSession = null;
 		// Add a user history entry
 		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -107,6 +141,7 @@ public class UserSession implements Comparable<UserSession> {
 
 	public void setClosed() {
 		this.status = STATUS_CLOSED;
+		stopTimeout();
 		externalSession = null;
 		// Add a user history entry
 		UserDAO userDAO = (UserDAO) Context.getInstance().getBean(UserDAO.class);
@@ -323,5 +358,26 @@ public class UserSession implements Comparable<UserSession> {
 
 	public void setKey(String key) {
 		this.key = key;
+	}
+
+	private void stopTimeout() {
+		if (timeoutTask != null)
+			timeoutTask.cancel(true);
+	}
+
+	/**
+	 * This is invoked at the session timeout
+	 * 
+	 * @author Marco Meschieri - LogicalDOC
+	 * @since 7.5
+	 */
+	class SessionTimeout implements Callable<String> {
+
+		@Override
+		public String call() throws Exception {
+			UserSession.this.setExpired();
+			return "done";
+		}
+
 	}
 }
