@@ -8,17 +8,26 @@
                       http://www.logicaldoc.com                    
 
                     LogicalDOC Community Edition
-                    
-LogicalDOC 7.4.3 (2016-03-31; logicaldoc-7.4.3)
+
+
+LogicalDOC 7.4.3 (2016-05-10; logicaldoc-7.4.3)
 ==============================================================
-629 - Removed support for Internet Explorer 9 - deprecation - User Interface                     
-                    
-LogicalDOC 7.4.2 (2016-02-10; logicaldoc-7.4.2)
+Support and optimization for CMIS Synch - New feature - CMIS
+Fixed issues with scheduled Tasks (elapsed time computation) - Bug - Core
+Correctly display the preview in case of alias - Improvement - User Interface
+Detect default architecture - Improvement - User Interface
+Optimization in webservice unlock method - Improvement - Web Services
+619 -	Updated HTML5 document's preview framework - Improvement - User Interface
+629 - Removed support for Internet Explorer 9 - deprecation - User Interface
+
+
+LogicalDOC 7.4.2 (2016-02-15; logicaldoc-7.4.2)
 ==============================================================
-619 - Full HTML5 preview - Improvement - User Interface
-367 - Ability to send messages to groups of users - New FeaturevCore
-456 - Update WebDAV API - Task - WebDAV
-620 - Removed the support for Internet Explorer 8 - Deprecation - User Interface 
+619 -	Full HTML5 preview - Improvement - User Interface
+367 -	Ability to send messages to groups of users -	New Feature - Core
+456 -	Update WebDAV API - WebDAV
+620 -	Removed support for Internet Explorer 8 - User Interface
+
 
 LogicalDOC 7.4.1 (2016-01-15; logicaldoc-7.4.1)
 ==============================================================
@@ -554,7 +563,7 @@ Active Directory full compliance and easy configuration (Enterprise edition)
 New Datailed view of the search results (Enterprise edition)
 Improved parametric search (Enterprise edition)
 DATABASE CHANGES: This release is not compatible with the database of LogicalDOC 4.5!
-Improved French Localization (Thanks to Manuel Le Boette, Maxime Leboeuf and Fran√ßois Blondel)
+Improved French Localization (Thanks to Manuel Le Boette, Maxime Leboeuf and Fran+ßois Blondel)
 Support for CCs in email sending
 Extended attributes are now typed(Double, Integer, String, Date)
 Automatic notification when the zip import is completed
