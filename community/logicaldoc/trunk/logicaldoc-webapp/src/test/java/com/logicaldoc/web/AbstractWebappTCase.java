@@ -87,7 +87,7 @@ public abstract class AbstractWebappTCase {
 			LDAuthenticationToken token = new LDAuthenticationToken("admin");
 			token.setSid(sess.getId());
 			SecurityContextHolder.getContext().setAuthentication(token);
-			session = new SecurityServiceImpl().internalLogin(sess, null);
+			session = new SecurityServiceImpl().loadSession(sess, null);
 		}
 
 		return session;

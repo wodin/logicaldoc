@@ -8,6 +8,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIAttributeSet;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -70,6 +71,8 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		setAutoFetchData(true);
 		setFilterOnKeypress(true);
 
+		GUIAttributeSet defaultAttributes = Session.get().getInfo().getDefaultAttributeSet();
+
 		ListGridField id = new ListGridField("id", I18N.message("id"), 50);
 		id.setHidden(true);
 
@@ -125,17 +128,50 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		created.setCanFilter(false);
 		created.setHidden(true);
 
-		ListGridField sourceDate = new ListGridField("sourceDate", I18N.message("date"), 110);
+		/*
+		 * Standard Attributes
+		 */
+		ListGridField sourceDate = new ListGridField("sourceDate", defaultAttributes.getAttribute("sourceDate")
+				.getDisplayName(), 110);
 		sourceDate.setAlign(Alignment.CENTER);
 		sourceDate.setType(ListGridFieldType.DATE);
 		sourceDate.setCellFormatter(new DateCellFormatter(true));
 		sourceDate.setCanFilter(false);
 		sourceDate.setHidden(true);
 
-		ListGridField sourceAuthor = new ListGridField("sourceAuthor", I18N.message("author"), 90);
+		ListGridField sourceAuthor = new ListGridField("sourceAuthor", defaultAttributes.getAttribute("sourceAuthor")
+				.getDisplayName(), 90);
 		sourceAuthor.setAlign(Alignment.CENTER);
 		sourceAuthor.setCanFilter(true);
 		sourceAuthor.setHidden(true);
+
+		ListGridField source = new ListGridField("source", defaultAttributes.getAttribute("source").getDisplayName(),
+				100);
+		source.setHidden(true);
+		source.setCanFilter(true);
+
+		ListGridField sourceId = new ListGridField("sourceId", defaultAttributes.getAttribute("sourceId")
+				.getDisplayName(), 100);
+		sourceId.setHidden(true);
+		sourceId.setCanFilter(true);
+
+		ListGridField recipient = new ListGridField("recipient", defaultAttributes.getAttribute("recipient")
+				.getDisplayName(), 100);
+		recipient.setHidden(true);
+		recipient.setCanFilter(true);
+
+		ListGridField object = new ListGridField("object", defaultAttributes.getAttribute("object").getDisplayName(),
+				100);
+		object.setHidden(true);
+		object.setCanFilter(true);
+
+		ListGridField coverage = new ListGridField("coverage", defaultAttributes.getAttribute("coverage")
+				.getDisplayName(), 100);
+		coverage.setHidden(true);
+		coverage.setCanFilter(true);
+		/*
+		 * End of standard attributes
+		 */
 
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
@@ -226,26 +262,6 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"), 300);
 		comment.setHidden(true);
 		comment.setCanFilter(true);
-
-		ListGridField source = new ListGridField("source", I18N.message("source"), 100);
-		source.setHidden(true);
-		source.setCanFilter(true);
-
-		ListGridField sourceId = new ListGridField("sourceId", I18N.message("sourceid"), 100);
-		sourceId.setHidden(true);
-		sourceId.setCanFilter(true);
-
-		ListGridField recipient = new ListGridField("recipient", I18N.message("recipient"), 100);
-		recipient.setHidden(true);
-		recipient.setCanFilter(true);
-
-		ListGridField object = new ListGridField("object", I18N.message("object"), 100);
-		object.setHidden(true);
-		object.setCanFilter(true);
-
-		ListGridField coverage = new ListGridField("coverage", I18N.message("coverage"), 100);
-		coverage.setHidden(true);
-		coverage.setCanFilter(true);
 
 		ListGridField wfStatus = new ListGridField("workflowStatus", I18N.message("workflowstatus"), 100);
 		wfStatus.setHidden(true);

@@ -16,7 +16,7 @@ public class GUIAttribute implements Comparable<GUIAttribute>, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final int TYPE_STRING_PRESET = -1;
-	
+
 	public static final int TYPE_STRING = 0;
 
 	public static final int TYPE_INT = 1;
@@ -54,9 +54,9 @@ public class GUIAttribute implements Comparable<GUIAttribute>, Serializable {
 	private String name;
 
 	private String label;
-	
+
 	private String set;
-	
+
 	private Long setId;
 
 	// Optional array of possible values
@@ -142,7 +142,7 @@ public class GUIAttribute implements Comparable<GUIAttribute>, Serializable {
 			setIntValue(new Long(((Integer) value).intValue()));
 		} else if (value instanceof Boolean) {
 			this.type = TYPE_BOOLEAN;
-			setBooleanValue((Boolean)value);
+			setBooleanValue((Boolean) value);
 		} else if (value instanceof Double) {
 			this.type = TYPE_DOUBLE;
 			setDoubleValue((Double) value);
@@ -243,5 +243,12 @@ public class GUIAttribute implements Comparable<GUIAttribute>, Serializable {
 
 	public void setSetId(Long setId) {
 		this.setId = setId;
+	}
+
+	public String getDisplayName() {
+		String display = getName();
+		if (getLabel() != null && !"".equals(getLabel()))
+			display = getLabel();
+		return display;
 	}
 }

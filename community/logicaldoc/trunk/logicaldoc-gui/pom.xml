@@ -180,6 +180,7 @@
                 <delete dir="war/common" quiet="true" />
                 <delete dir="war/frontend" quiet="true" />
                 <delete dir="war/setup" quiet="true" />
+                <delete dir="war/login" quiet="true" />
                 <delete dir="war/WEB-INF/deploy" quiet="true" />
               </tasks>
             </configuration>

@@ -121,7 +121,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	 * Used internally by login procedures, instantiates a new GUISession by a
 	 * given authenticated user.
 	 */
-	public GUISession internalLogin(Session sess, String locale) {
+	public GUISession loadSession(Session sess, String locale) {
 		GUIUser guiUser = new GUIUser();
 		GUISession session = new GUISession();
 		session.setSid(sess.getId());
@@ -237,7 +237,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 		try {
 			Session sess = ServiceUtil.validateSession(getThreadLocalRequest());
 
-			GUISession session = internalLogin(sess, locale);
+			GUISession session = loadSession(sess, locale);
 			return session;
 		} catch (Throwable e) {
 			log.debug(e.getMessage());

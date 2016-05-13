@@ -9,8 +9,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -113,60 +113,12 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form1 = new DynamicForm();
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.TOP);
-		form1.setNumCols(3);
+		form1.setNumCols(1);
 		standardItems.clear();
-
-		TextItem sourceItem = ItemFactory.newTextItem("source", "source", document.getSource());
-		sourceItem.addChangedHandler(changedHandler);
-		sourceItem.setDisabled(!updateEnabled);
 
 		TextItem customId = ItemFactory.newTextItem("customid", "customid", document.getCustomId());
 		customId.addChangedHandler(changedHandler);
 		customId.setDisabled(!updateEnabled);
-
-		TextItem sourceId = ItemFactory.newTextItem("sourceid", "sourceid", document.getSourceId());
-		sourceId.addChangedHandler(changedHandler);
-		sourceId.setDisabled(!updateEnabled);
-
-		final DateItem sourceDate = ItemFactory.newDateItem("date", "date");
-		sourceDate.setValue(document.getSourceDate());
-		sourceDate.addChangedHandler(changedHandler);
-		sourceDate.setDisabled(!updateEnabled);
-		sourceDate.setUseMask(false);
-		sourceDate.setShowPickerIcon(true);
-		sourceDate.addKeyPressHandler(new KeyPressHandler() {
-			@Override
-			public void onKeyPress(KeyPressEvent event) {
-				if ("backspace".equals(event.getKeyName().toLowerCase())
-						|| "delete".equals(event.getKeyName().toLowerCase())) {
-					sourceDate.clearValue();
-					sourceDate.setValue((Date) null);
-					changedHandler.onChanged(null);
-				} else {
-					changedHandler.onChanged(null);
-				}
-			}
-		});
-
-		TextItem authorItem = ItemFactory.newTextItem("author", "author", document.getSourceAuthor());
-		authorItem.addChangedHandler(changedHandler);
-		authorItem.setDisabled(!updateEnabled);
-
-		TextItem typeItem = ItemFactory.newTextItem("type", "type", document.getSourceType());
-		typeItem.addChangedHandler(changedHandler);
-		typeItem.setDisabled(!updateEnabled);
-
-		TextItem recipientItem = ItemFactory.newTextItem("recipient", "recipient", document.getRecipient());
-		recipientItem.addChangedHandler(changedHandler);
-		recipientItem.setDisabled(!updateEnabled);
-
-		TextItem objectItem = ItemFactory.newTextItem("object", "object", document.getObject());
-		objectItem.addChangedHandler(changedHandler);
-		objectItem.setDisabled(!updateEnabled);
-
-		TextItem coverageItem = ItemFactory.newTextItem("coverage", "coverage", document.getCoverage());
-		coverageItem.addChangedHandler(changedHandler);
-		coverageItem.setDisabled(!updateEnabled);
 
 		templateItem = ItemFactory.newTemplateSelector(true, null);
 		templateItem.addChangedHandler(changedHandler);
@@ -189,7 +141,6 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		});
 
 		standardItems.add(customId);
-		standardItems.add(sourceItem);
 
 		if (Feature.visible(Feature.TEMPLATE)) {
 			standardItems.add(templateItem);
@@ -200,14 +151,6 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			}
 		}
 
-		standardItems.add(sourceId);
-		standardItems.add(recipientItem);
-		standardItems.add(objectItem);
-		standardItems.add(typeItem);
-		standardItems.add(coverageItem);
-		standardItems.add(sourceDate);
-
-		standardItems.add(authorItem);
 		form1.setItems(standardItems.toArray(new FormItem[0]));
 		addMember(form1);
 
@@ -392,13 +335,13 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 										at.setStringValue(null);
 										at.setType(GUIAttribute.TYPE_USER);
 									} else {
-										document.setValue(nm, (String)null);
+										document.setValue(nm, (String) null);
 									}
 								}
 							}
 						}
 					} catch (Throwable t) {
-						
+
 					}
 				}
 			}

@@ -8,8 +8,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIAttribute;
+import com.logicaldoc.gui.common.client.beans.GUIAttributeSet;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -283,13 +284,16 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		fieldsMap.put("content", I18N.message("content"));
 		fieldsMap.put("tags", I18N.message("tags"));
 		fieldsMap.put("customId", I18N.message("customid"));
-		fieldsMap.put("coverage", I18N.message("coverage"));
-		fieldsMap.put("source", I18N.message("source"));
-		fieldsMap.put("sourceAuthor", I18N.message("author"));
-		fieldsMap.put("sourceType", I18N.message("type"));
-		fieldsMap.put("recipient", I18N.message("recipient"));
-		fieldsMap.put("object", I18N.message("object"));
 		fieldsMap.put("comment", I18N.message("comment"));
+
+		GUIAttributeSet defaultAttributes = Session.get().getInfo().getDefaultAttributeSet();
+		fieldsMap.put("coverage", defaultAttributes.getAttribute("coverage").getDisplayName());
+		fieldsMap.put("source", defaultAttributes.getAttribute("source").getDisplayName());
+		fieldsMap.put("sourceAuthor", defaultAttributes.getAttribute("sourceAuthor").getDisplayName());
+		fieldsMap.put("sourceType", defaultAttributes.getAttribute("sourceType").getDisplayName());
+		fieldsMap.put("sourceId", defaultAttributes.getAttribute("sourceId").getDisplayName());
+		fieldsMap.put("recipient", defaultAttributes.getAttribute("recipient").getDisplayName());
+		fieldsMap.put("object", defaultAttributes.getAttribute("object").getDisplayName());
 
 		searchinItem.setValueMap(fieldsMap);
 		searchinItem.setValue(new String[] { "title", "content", "tags" });
@@ -308,8 +312,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			@Override
 			public void onSuccess(GUIAttribute[] result) {
 				for (GUIAttribute att : result) {
-					if (att.getType() == GUIAttribute.TYPE_STRING
-							|| att.getType() == GUIAttribute.TYPE_USER) {
+					if (att.getType() == GUIAttribute.TYPE_STRING || att.getType() == GUIAttribute.TYPE_USER) {
 						fieldsMap.put("ext_" + att.getName(), att.getName());
 					}
 				}

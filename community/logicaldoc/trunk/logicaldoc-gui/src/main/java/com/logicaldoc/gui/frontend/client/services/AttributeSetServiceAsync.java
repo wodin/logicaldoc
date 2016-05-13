@@ -17,6 +17,4 @@ public interface AttributeSetServiceAsync {
 	void save(GUIAttributeSet set, AsyncCallback<GUIAttributeSet> callback);
 
 	void saveOptions(long setId, String attribute, String[] values, AsyncCallback<Void> callback);
-
-	void getAttributes(Long[] setIds, AsyncCallback<GUIAttribute[]> callback);
 }

@@ -1,14 +1,12 @@
 package com.logicaldoc.gui.frontend.client.metadata.template;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.smartgwt.client.types.SelectionStyle;
@@ -29,8 +27,6 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.grid.events.CellSavedEvent;
-import com.smartgwt.client.widgets.grid.events.CellSavedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.SectionStack;
 import com.smartgwt.client.widgets.layout.SectionStackSection;
@@ -53,9 +49,6 @@ public class TemplatePropertiesPanel extends HLayout {
 	protected GUITemplate template;
 
 	protected ChangedHandler changedHandler;
-
-	// Useful map to retrieve the extended attribute values
-	protected Map<String, GUIAttribute> guiAttributes = new HashMap<String, GUIAttribute>();
 
 	public String updatingAttributeName = "";
 
@@ -91,11 +84,8 @@ public class TemplatePropertiesPanel extends HLayout {
 			att.setName(rec.getAttributeAsString("name"));
 			att.setLabel(rec.getAttributeAsString("label"));
 			att.setType(Integer.parseInt(rec.getAttributeAsString("type")));
-			Log.info("5", null);
 			att.setSet(rec.getAttributeAsString("set"));
-			Log.info("6", null);
 			att.setSetId(Long.parseLong(rec.getAttributeAsString("setId")));
-			Log.info("7", null);
 
 			template.appendAttribute(att);
 
@@ -123,7 +113,7 @@ public class TemplatePropertiesPanel extends HLayout {
 		attributesList.setLeaveScrollbarGap(false);
 		attributesList.setShowHeader(true);
 		attributesList.setSelectionType(SelectionStyle.MULTIPLE);
-		attributesList.setCanEdit(true);
+		attributesList.setCanEdit(false);
 		attributesList.setShowRowNumbers(true);
 		attributesList.setCanReorderRecords(true);
 		attributesList.setCanAcceptDroppedRecords(true);
@@ -143,17 +133,10 @@ public class TemplatePropertiesPanel extends HLayout {
 		name.setWidth(100);
 
 		ListGridField label = new ListGridField("label", I18N.message("label"));
-		label.setCanEdit(true);
+		label.setCanEdit(false);
 		label.setCanSort(false);
 		label.setWidth(150);
-		label.addCellSavedHandler(new CellSavedHandler() {
 
-			@Override
-			public void onCellSaved(CellSavedEvent event) {
-				guiAttributes.get(event.getRecord().getAttribute("name")).setLabel((String) event.getNewValue());
-				TemplatePropertiesPanel.this.changedHandler.onChanged(null);
-			}
-		});
 		ListGridField set = new ListGridField("set", I18N.message("set"));
 		set.setCanEdit(false);
 		set.setCanSort(false);
@@ -253,7 +236,7 @@ public class TemplatePropertiesPanel extends HLayout {
 					public void execute(Boolean value) {
 						if (value) {
 							for (String attrName : names)
-								guiAttributes.remove(attrName);
+								template.removeAttribute(attrName);
 							attributesList.removeSelectedData();
 							if (TemplatePropertiesPanel.this.changedHandler != null)
 								TemplatePropertiesPanel.this.changedHandler.onChanged(null);
@@ -284,7 +267,6 @@ public class TemplatePropertiesPanel extends HLayout {
 			record.setAttribute("set", att.getSet());
 			record.setAttribute("setId", att.getSet());
 			record.setAttribute("type", att.getType());
-			guiAttributes.put(att.getName(), att);
 			attributesList.getRecordList().add(record);
 		}
 	}
@@ -344,21 +326,6 @@ public class TemplatePropertiesPanel extends HLayout {
 		if (!vm.hasErrors()) {
 			template.setName((String) values.get("name"));
 			template.setDescription((String) values.get("description"));
-		}
-
-		if (guiAttributes.size() > 0) {
-			for (String attrName : guiAttributes.keySet()) {
-				for (ListGridRecord record : attributesList.getRecords()) {
-					int idx = attributesList.getRecordIndex(record);
-					if (record.getAttributeAsString("name").equals(attrName)) {
-						GUIAttribute extAttr = guiAttributes.get(attrName);
-						extAttr.setPosition(idx);
-						guiAttributes.remove(attrName);
-						guiAttributes.put(attrName, extAttr);
-					}
-				}
-			}
-			template.setAttributes(guiAttributes.values().toArray(new GUIAttribute[0]));
 		}
 
 		return !vm.hasErrors();

@@ -41,9 +41,4 @@ public interface AttributeSetService extends RemoteService {
 	 * Reads the contacts that are about to be imported from CSV
 	 */
 	public String[] parseOptions(long setId, String attribute) throws ServerException;
-
-	/**
-	 * Loads all the attributes of the specified sets
-	 */
-	public GUIAttribute[] getAttributes(Long[] setIds) throws ServerException;
 }

@@ -22,6 +22,7 @@ import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
+import com.logicaldoc.gui.common.client.beans.GUIAttributeSet;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
@@ -204,6 +205,15 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			throw new RuntimeException(t.getMessage(), t);
 		}
 
+		/*
+		 * Loads the default attribute set
+		 */
+		try {
+			GUIAttributeSet defaultSet = new AttributeSetServiceImpl().getAttributeSet("default");
+			info.setDefaultAttributeSet(defaultSet);
+		} catch (Throwable t) {
+		}
+		
 		return info;
 	}
 
