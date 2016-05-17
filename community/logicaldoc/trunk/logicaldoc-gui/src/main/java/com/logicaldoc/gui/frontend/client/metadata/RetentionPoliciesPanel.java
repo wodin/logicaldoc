@@ -111,7 +111,7 @@ public class RetentionPoliciesPanel extends VLayout {
 			}
 		});
 
-		ListGridField template = new ListGridField("attributeSet", I18N.message("attributeSet"), 150);
+		ListGridField template = new ListGridField("template", I18N.message("template"), 150);
 		template.setCanFilter(false);
 
 		ListGridField action = new ListGridField("action", I18N.message("action"), 150);
@@ -359,7 +359,7 @@ public class RetentionPoliciesPanel extends VLayout {
 		record.setAttribute("name", policy.getName());
 		record.setAttribute("days", "" + policy.getRetentionDays());
 		record.setAttribute("dateOption", "" + policy.getDateOption());
-		record.setAttribute("attributeSet", policy.getTemplateName() != null ? policy.getTemplateName() : null);
+		record.setAttribute("template", policy.getTemplateName() != null ? policy.getTemplateName() : null);
 		record.setAttribute("position", "" + policy.getPosition());
 		record.setAttribute("action", "" + policy.getAction());
 

@@ -15,6 +15,8 @@ import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.frontend.client.services.AttributeSetService;
+import com.logicaldoc.gui.frontend.client.services.AttributeSetServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
@@ -188,14 +190,14 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 				extendedItems.clear();
 				for (GUIAttribute att : result) {
 					if (att.getType() == GUIAttribute.TYPE_STRING) {
-						FormItem item = ItemFactory.newStringItemForExtendedAttribute(templateId, att);
+						FormItem item = ItemFactory.newStringItemForAttribute(att);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((String) document.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_INT) {
-						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(),
+						IntegerItem item = ItemFactory.newIntegerItemForAttribute(att.getName(),
 								att.getLabel(), null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Long) document.getValue(att.getName()));
@@ -204,7 +206,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
-						SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(),
+						SelectItem item = ItemFactory.newBooleanSelectorForAttribute(att.getName(),
 								att.getLabel(), !att.isMandatory());
 						if (document.getValue(att.getName()) != null)
 							item.setValue(((Boolean) document.getValue(att.getName())).booleanValue() ? "1" : "0");
@@ -213,7 +215,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
-						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
+						FloatItem item = ItemFactory.newFloatItemForAttribute(att.getName(), att.getLabel(),
 								null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Double) document.getValue(att.getName()));
@@ -222,7 +224,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_DATE) {
-						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
+						final DateItem item = ItemFactory.newDateItemForAttribute(att.getName(), att.getLabel());
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Date) document.getValue(att.getName()));
 						item.setRequired(att.isMandatory());
@@ -243,7 +245,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_USER) {
-						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(),
+						SelectItem item = ItemFactory.newUserSelectorForAttribute(att.getName(),
 								att.getLabel(),
 								(att.getOptions() != null && att.getOptions().length > 0) ? att.getOptions()[0] : null);
 						if (document.getValue(att.getName()) != null)

@@ -133,7 +133,6 @@ public class FolderSearch extends Search {
 			hit.setCustomId(Long.toString(rs.getLong(1)));
 			hit.setDate(rs.getTimestamp(6));
 			hit.setCreation(rs.getTimestamp(5));
-			hit.setSource(null);
 			hit.setComment(rs.getString(4));
 			hit.setPublished(1);
 

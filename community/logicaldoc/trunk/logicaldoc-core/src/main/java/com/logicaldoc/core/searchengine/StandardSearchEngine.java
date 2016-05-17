@@ -98,17 +98,10 @@ public class StandardSearchEngine implements SearchEngine {
 		hit.addField(Fields.TITLE.getName(), doc.getTitle());
 		hit.addField(Fields.SIZE.getName(), doc.getFileSize());
 		hit.addField(Fields.DATE.getName(), doc.getDate());
-		hit.addField(Fields.SOURCE_DATE.getName(), doc.getSourceDate());
-		hit.addField(Fields.SOURCE_ID.getName(), doc.getSourceId());
-		hit.addField(Fields.RECIPIENT.getName(), doc.getRecipient());
 		hit.addField(Fields.CREATION.getName(), doc.getCreation());
 		hit.addField(Fields.CUSTOM_ID.getName(), doc.getCustomId());
-		hit.addField(Fields.SOURCE.getName(), doc.getSource());
 		hit.addField(Fields.COMMENT.getName(), doc.getComment());
 		hit.addField(Fields.TAGS.getName(), doc.getTagsString());
-		hit.addField(Fields.COVERAGE.getName(), doc.getCoverage());
-		hit.addField(Fields.SOURCE_AUTHOR.getName(), doc.getSourceAuthor());
-		hit.addField(Fields.SOURCE_TYPE.getName(), doc.getSourceType());
 		hit.addField(Fields.DOC_REF.getName(), doc.getDocRef());
 
 		int maxText = -1;

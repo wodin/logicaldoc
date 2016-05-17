@@ -243,12 +243,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		return store(doc, null);
 	}
 
-	private boolean isLegacyAttribute(String name) {
-		return name.equals("object") || name.equals("source") || name.equals("sourceDate")
-				|| name.equals("sourceAuthor") || name.equals("sourceType") || name.equals("sourceId")
-				|| name.equals("coverage") || name.equals("recipient");
-	}
-
 	public boolean store(Document doc, final History transaction) {
 		boolean result = true;
 		try {
@@ -349,44 +343,6 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 					}
 				}
 			}
-
-			/*
-			 * Filter the attributes putting the 'legacy' ones in the
-			 * document's main object
-			 */
-			if (doc.getAttributes() != null)
-				for (String name : doc.getAttributeNames()) {
-					if (isLegacyAttribute(name)) {
-						Attribute att = doc.getAttribute(name);
-						switch (name) {
-						case "object":
-							doc.setObject(att.getStringValue());
-							break;
-						case "coverage":
-							doc.setCoverage(att.getStringValue());
-							break;
-						case "recipient":
-							doc.setRecipient(att.getStringValue());
-							break;
-						case "source":
-							doc.setSource(att.getStringValue());
-							break;
-						case "sourceId":
-							doc.setSourceId(att.getStringValue());
-							break;
-						case "sourceAuthor":
-							doc.setSourceAuthor(att.getStringValue());
-							break;
-						case "sourceType":
-							doc.setSourceType(att.getStringValue());
-							break;
-						case "sourceDate":
-							doc.setSourceDate(att.getDateValue());
-							break;
-						}
-						doc.getAttributes().remove(name);
-					}
-				}
 
 			if ("bulkload".equals(config.getProperty("runlevel")))
 				doc.setCustomId(UUID.randomUUID().toString());

@@ -27,6 +27,7 @@ import com.logicaldoc.core.document.TagsProcessor;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.lock.LockManager;
+import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
 
@@ -45,6 +46,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	private LockManager lockManager;
 
+	private TemplateDAO templateDao;
+
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
@@ -53,6 +56,7 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		// it is an HibernateDocumentDAO
 		dao = (DocumentDAO) context.getBean("DocumentDAO");
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
+		templateDao = (TemplateDAO) context.getBean("TemplateDAO");
 		lockManager = (LockManager) context.getBean("LockManager");
 	}
 
@@ -323,8 +327,8 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		dao.store(doc);
 		doc = dao.findById(doc.getId());
 		dao.initialize(doc);
-		Assert.assertEquals("test", doc.getObject());
-		Assert.assertNull(doc.getAttribute("object"));
+		Assert.assertNull("test", doc.getObject());
+		Assert.assertEquals("test", doc.getAttributes().get("object").getStringValue());
 
 		// Check if the defaults were applied
 		doc = dao.findById(1);

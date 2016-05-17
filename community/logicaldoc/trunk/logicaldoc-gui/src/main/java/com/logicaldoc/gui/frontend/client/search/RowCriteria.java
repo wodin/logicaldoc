@@ -28,13 +28,13 @@ public class RowCriteria extends HLayout {
 
 	private ImgButton removeImg = null;
 
-	private DynamicForm criteriaForm = null;
+	private DynamicForm form = null;
 
-	private SelectItem criteriaFieldsItem = null;
+	private SelectItem attribute = null;
 
-	private SelectItem operatorsFieldsItem = null;
+	private SelectItem operator = null;
 
-	private FormItem valueFieldsItem = null;
+	private FormItem value = null;
 
 	private GUITemplate template = null;
 
@@ -55,11 +55,11 @@ public class RowCriteria extends HLayout {
 	public void reload() {
 		if (removeImg != null)
 			removeMember(removeImg);
-		if (criteriaForm != null) {
-			criteriaFieldsItem.clearValue();
-			operatorsFieldsItem.clearValue();
-			valueFieldsItem.clearValue();
-			removeMember(criteriaForm);
+		if (form != null) {
+			attribute.clearValue();
+			operator.clearValue();
+			value.clearValue();
+			removeMember(form);
 		}
 
 		removeImg = new ImgButton();
@@ -78,17 +78,17 @@ public class RowCriteria extends HLayout {
 			}
 		});
 
-		criteriaForm = new DynamicForm();
-		criteriaForm.setTitleOrientation(TitleOrientation.TOP);
-		criteriaForm.setNumCols(4);
-		criteriaForm.setWidth(300);
-		criteriaForm.setHeight(20);
+		form = new DynamicForm();
+		form.setTitleOrientation(TitleOrientation.TOP);
+		form.setNumCols(4);
+		form.setWidth(300);
+		form.setHeight(20);
 
-		criteriaFieldsItem = new SelectItem("fields", "fields");
-		criteriaFieldsItem.setShowTitle(false);
-		criteriaFieldsItem.setPickListWidth(120);
-		criteriaFieldsItem.setWidth(120);
-		criteriaFieldsItem.setMultiple(false);
+		attribute = new SelectItem("fields", "fields");
+		attribute.setShowTitle(false);
+		attribute.setPickListWidth(120);
+		attribute.setWidth(120);
+		attribute.setMultiple(false);
 		DataSource ds = null;
 		if (template != null)
 			ds = new DocumentFieldsDS(template);
@@ -100,16 +100,16 @@ public class RowCriteria extends HLayout {
 		for (DataSourceField sourceField : ds.getFields()) {
 			fieldsMap.put(sourceField.getName(), I18N.message(sourceField.getTitle()));
 		}
-		criteriaFieldsItem.setValueMap(fieldsMap);
-		criteriaFieldsItem.setValue(fieldSelected);
-		criteriaFieldsItem.setColSpan(1);
+		attribute.setValueMap(fieldsMap);
+		attribute.setValue(fieldSelected);
+		attribute.setColSpan(1);
 
-		operatorsFieldsItem = new SelectItem("operators", "operators");
-		operatorsFieldsItem.setPickListWidth(90);
-		operatorsFieldsItem.setWidth(90);
-		operatorsFieldsItem.setMultiple(false);
-		operatorsFieldsItem.setShowTitle(false);
-		operatorsFieldsItem.setColSpan(1);
+		operator = new SelectItem("operators", "operators");
+		operator.setPickListWidth(90);
+		operator.setWidth(90);
+		operator.setMultiple(false);
+		operator.setShowTitle(false);
+		operator.setColSpan(1);
 
 		LinkedHashMap<String, String> operatorsMap = null;
 
@@ -117,11 +117,11 @@ public class RowCriteria extends HLayout {
 			operatorsMap = operatorsFor(fieldSelected);
 		else
 			operatorsMap = operatorsFor(null);
-		operatorsFieldsItem.setValueMap(operatorsMap);
+		operator.setValueMap(operatorsMap);
 		if (!operatorsMap.isEmpty())
-			operatorsFieldsItem.setValue(operatorsMap.keySet().iterator().next());
+			operator.setValue(operatorsMap.keySet().iterator().next());
 
-		criteriaFieldsItem.addChangedHandler(new ChangedHandler() {
+		attribute.addChangedHandler(new ChangedHandler() {
 
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -133,19 +133,19 @@ public class RowCriteria extends HLayout {
 		});
 
 		if (fieldSelected != null && !fieldSelected.trim().isEmpty()) {
-			valueFieldsItem = valueItemFor(fieldSelected);
+			value = valueItemFor(fieldSelected);
 		} else {
-			valueFieldsItem = ItemFactory.newTextItem("value", "value", null);
+			value = ItemFactory.newTextItem("value", "value", null);
 		}
-		valueFieldsItem.setRequired(true);
-		valueFieldsItem.setEndRow(true);
-		valueFieldsItem.setShowTitle(false);
-		valueFieldsItem.setWidth(100);
-		valueFieldsItem.setColSpan(1);
+		value.setRequired(true);
+		value.setEndRow(true);
+		value.setShowTitle(false);
+		value.setWidth(100);
+		value.setColSpan(1);
 
-		criteriaForm.setItems(criteriaFieldsItem, operatorsFieldsItem, valueFieldsItem);
+		form.setItems(attribute, operator, value);
 
-		setMembers(removeImg, criteriaForm);
+		setMembers(removeImg, form);
 	}
 
 	private LinkedHashMap<String, String> operatorsFor(String criteriaField) {
@@ -192,7 +192,7 @@ public class RowCriteria extends HLayout {
 			return item;
 		} else if (criteriaField.endsWith("type:" + GUIAttribute.TYPE_STRING_PRESET)) {
 			String attributeName = criteriaField.substring(0, criteriaField.lastIndexOf(':') - 4).replaceAll("_", "");
-			FormItem item = ItemFactory.newStringItemForPresetExtendedAttribute(template.getId(), attributeName);
+			FormItem item = ItemFactory.newStringItemForAttribute(template.getAttribute(attributeName));
 			item.setName("value");
 			return item;
 		} else if (criteriaField.equals("sourceDate") || criteriaField.equals("lastModified")
@@ -206,15 +206,15 @@ public class RowCriteria extends HLayout {
 	}
 
 	public SelectItem getCriteriaFieldsItem() {
-		return criteriaFieldsItem;
+		return attribute;
 	}
 
 	public SelectItem getOperatorsFieldsItem() {
-		return operatorsFieldsItem;
+		return operator;
 	}
 
 	public FormItem getValueFieldsItem() {
-		return valueFieldsItem;
+		return value;
 	}
 
 	public int getRowPosition() {

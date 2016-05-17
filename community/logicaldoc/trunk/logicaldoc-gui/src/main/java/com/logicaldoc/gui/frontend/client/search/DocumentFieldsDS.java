@@ -32,24 +32,8 @@ public class DocumentFieldsDS extends DataSource {
 		DataSourceIntegerField id = new DataSourceIntegerField("id", I18N.message("id"));
 		id.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
 
-		DataSourceTextField author = new DataSourceTextField("sourceAuthor", I18N.message("author"));
-		author.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
-				OperatorId.NOT_EQUAL);
-
-		DataSourceTextField object = new DataSourceTextField("object", I18N.message("object"));
-		object.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
-				OperatorId.NOT_EQUAL);
-
-		DataSourceTextField sourceType = new DataSourceTextField("sourceType", I18N.message("type"));
-		sourceType.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
-				OperatorId.NOT_EQUAL);
-
 		DataSourceTextField extension = new DataSourceTextField("type", I18N.message("fileext"));
 		extension.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
-				OperatorId.NOT_EQUAL);
-
-		DataSourceTextField coverage = new DataSourceTextField("coverage", I18N.message("coverage"));
-		coverage.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
 				OperatorId.NOT_EQUAL);
 
 		DataSourceTextField customId = new DataSourceTextField("customId", I18N.message("customid"));
@@ -68,24 +52,9 @@ public class DocumentFieldsDS extends DataSource {
 		creator.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
 				OperatorId.NOT_EQUAL);
 
-		DataSourceTextField recipient = new DataSourceTextField("recipient", I18N.message("recipient"));
-		recipient.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
-				OperatorId.NOT_EQUAL);
-
-		DataSourceTextField source = new DataSourceTextField("source", I18N.message("source"));
-		source.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
-				OperatorId.NOT_EQUAL);
-
-		DataSourceTextField sourceid = new DataSourceTextField("sourceid", I18N.message("sourceid"));
-		sourceid.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
-				OperatorId.NOT_EQUAL);
-
 		DataSourceIntegerField fileSize = new DataSourceIntegerField("fileSize", I18N.message("size"));
 		fileSize.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS,
 				OperatorId.NOT_EQUAL);
-
-		DataSourceDateTimeField sourceDate = new DataSourceDateTimeField("sourceDate", I18N.message("date"));
-		sourceDate.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN);
 
 		DataSourceDateTimeField lastModified = new DataSourceDateTimeField("lastModified", I18N.message("lastmodified"));
 		lastModified.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN);
@@ -104,7 +73,7 @@ public class DocumentFieldsDS extends DataSource {
 		rating.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
 
 		DataSourceTextField tags = new DataSourceTextField("tags", I18N.message("tags"));
-		sourceid.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS);
+		tags.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS);
 
 		DataSourceTextField comment = new DataSourceTextField("comment", I18N.message("comment"));
 		comment.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
@@ -125,9 +94,15 @@ public class DocumentFieldsDS extends DataSource {
 		DataSourceIntegerField publishedStatus = new DataSourceIntegerField("published", I18N.message("published"));
 		publishedStatus.setValidOperators(OperatorId.EQUALS, OperatorId.NOT_EQUAL);
 
-		setFields(author, coverage, id, title, object, fileSize, publisher, version, sourceDate, lastModified,
-				published, created, creator, customId, filename, extension, recipient, source, sourceid, sourceType,
-				rating, tags, comment, wfStatus, publishedStatus, startPublishing, stopPublishing);
+		setFields(id, title, fileSize, publisher, version, lastModified, published, created, creator, customId,
+				filename, extension, rating, tags, comment, wfStatus, publishedStatus, startPublishing, stopPublishing);
+
+		// setFields(author, coverage, id, title, object, fileSize, publisher,
+		// version, sourceDate, lastModified,
+		// published, created, creator, customId, filename, extension,
+		// recipient, source, sourceid, sourceType,
+		// rating, tags, comment, wfStatus, publishedStatus, startPublishing,
+		// stopPublishing);
 
 		/*
 		 * Define extended attributes

@@ -132,6 +132,7 @@ public class FulltextSearch extends Search {
 		for (String field : opt.getFields()) {
 			if (query.length() > 0)
 				query.append(" OR ");
+
 			query.append(field + ":(" + opt.getExpression() + ")");
 		}
 
@@ -148,41 +149,32 @@ public class FulltextSearch extends Search {
 			tenantId = searchUser.getTenantId();
 
 		if (searchUser != null && tdao.count() > 1)
-			filters.add(Fields.TENANT_ID + ":" + tenantId);
+			filters.add(Fields.TENANT_ID + ":" + (tenantId < 0 ? "\\" : "") + tenantId);
 
 		if (opt.getTemplate() != null)
-			filters.add(Fields.TEMPLATE_ID + ":" + opt.getTemplate());
+			filters.add(Fields.TEMPLATE_ID + ":" + (opt.getTemplate() < 0 ? "\\" : "") + opt.getTemplate());
 
 		if (StringUtils.isNotEmpty(opt.getLanguage()))
 			filters.add(Fields.LANGUAGE + ":" + opt.getLanguage());
 
-		if (opt.getSizeMin() != null) {
+		if (opt.getSizeMin() != null)
 			filters.add(Fields.SIZE + ":[" + opt.getSizeMin() + " TO *]");
-		}
 
-		if (opt.getSizeMax() != null) {
+		if (opt.getSizeMax() != null)
 			filters.add(Fields.SIZE + ":[* TO " + opt.getSizeMax() + "]");
-		}
 
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		if (opt.getDateFrom() != null) {
+		if (opt.getDateFrom() != null)
 			filters.add(Fields.DATE + ":[" + df.format(opt.getDateFrom()) + "T00:00:00Z TO *]");
-		}
-		if (opt.getDateTo() != null) {
+
+		if (opt.getDateTo() != null)
 			filters.add(Fields.DATE + ":[* TO " + df.format(opt.getDateTo()) + "T00:00:00Z]");
-		}
-		if (opt.getSourceDateFrom() != null) {
-			filters.add(Fields.SOURCE_DATE + ":[" + df.format(opt.getSourceDateFrom()) + "T00:00:00Z TO *]");
-		}
-		if (opt.getSourceDateTo() != null) {
-			filters.add(Fields.SOURCE_DATE + ":[* TO " + df.format(opt.getSourceDateTo()) + "T00:00:00Z]");
-		}
-		if (opt.getCreationFrom() != null) {
+
+		if (opt.getCreationFrom() != null)
 			filters.add(Fields.CREATION + ":[" + df.format(opt.getCreationFrom()) + "T00:00:00Z TO *]");
-		}
-		if (opt.getCreationTo() != null) {
+
+		if (opt.getCreationTo() != null)
 			filters.add(Fields.CREATION + ":[* TO " + df.format(opt.getCreationTo()) + "T00:00:00Z]");
-		}
 
 		/*
 		 * We have to see what folders the user can access. But we need to
@@ -206,7 +198,7 @@ public class FulltextSearch extends Search {
 			for (Long id : accessibleFolderIds) {
 				if (folderFilter.length() > 0)
 					folderFilter.append(" or ");
-				folderFilter.append(Fields.FOLDER_ID + ":" + id);
+				folderFilter.append(Fields.FOLDER_ID + ":" + (id < 0 ? "\\" : "") + id);
 			}
 			filters.add(folderFilter.toString());
 		}

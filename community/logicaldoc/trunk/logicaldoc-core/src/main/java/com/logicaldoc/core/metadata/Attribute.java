@@ -216,16 +216,17 @@ public class Attribute implements Comparable<Attribute> {
 	@Override
 	public Object clone() throws CloneNotSupportedException {
 		Attribute clone = new Attribute();
+		clone.setStringValue(stringValue);
 		clone.setDateValue(dateValue);
 		clone.setDoubleValue(doubleValue);
-		clone.setEditor(editor);
 		clone.setIntValue(intValue);
 		clone.setLabel(label);
 		clone.setMandatory(mandatory);
 		clone.setPosition(position);
+		clone.setEditor(editor);
 		clone.setType(type);
-		clone.setStringValue(stringValue);
 		clone.setSetId(setId);
+
 		return clone;
 	}
 

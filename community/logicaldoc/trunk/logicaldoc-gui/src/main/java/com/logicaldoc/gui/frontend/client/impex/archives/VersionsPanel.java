@@ -121,7 +121,7 @@ public class VersionsPanel extends VLayout {
 		icon.setImageURLSuffix(".png");
 		icon.setCanFilter(false);
 
-		ListGridField template = new ListGridField("attributeSet", I18N.message("attributeSet"), 200);
+		ListGridField template = new ListGridField("template", I18N.message("template"), 200);
 
 		listGrid = new ListGrid();
 		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));

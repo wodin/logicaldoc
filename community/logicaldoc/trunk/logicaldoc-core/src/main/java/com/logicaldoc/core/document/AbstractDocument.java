@@ -105,24 +105,32 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	private String lockUser;
 
+	@Deprecated
 	private String source;
 
+	@Deprecated
 	private String sourceAuthor;
 
+	@Deprecated
 	private String sourceType;
-	
+
+	@Deprecated
 	private Date sourceDate;
 
+	@Deprecated
 	private String sourceId;
 
+	@Deprecated
 	private String object;
 
+	@Deprecated
 	private String coverage;
 
+	@Deprecated
 	private String recipient;
-	
+
 	private Date creation = new Date();
-	
+
 	private String language;
 
 	private String fileName;
@@ -183,6 +191,18 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private int nature = NATURE_DOC;
 
 	private Long formId = null;
+
+	@Deprecated
+	public static String[] lEGACY_ATTRIBUTES = new String[] { "object", "source", "sourceDate", "sourceAuthor",
+			"sourceType", "sourceId", "coverage", "recipient" };
+
+	@Deprecated
+	public static boolean isLegacyAttribute(String name) {
+		for (String att : lEGACY_ATTRIBUTES)
+			if (att.equals(name))
+				return true;
+		return false;
+	}
 
 	public Long getDeleteUserId() {
 		return deleteUserId;
@@ -299,10 +319,12 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	/**
 	 * Indication of the document's source
 	 */
+	@Deprecated
 	public String getSource() {
 		return source;
 	}
 
+	@Deprecated
 	public void setSource(String source) {
 		this.source = source;
 	}
@@ -310,10 +332,12 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	/**
 	 * The author of the document (form document's metadata)
 	 */
+	@Deprecated
 	public String getSourceAuthor() {
 		return sourceAuthor;
 	}
 
+	@Deprecated
 	public void setSourceAuthor(String sourceAuthor) {
 		this.sourceAuthor = sourceAuthor;
 	}
@@ -321,10 +345,12 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	/**
 	 * The date of the document (form document's metadata)
 	 */
+	@Deprecated
 	public Date getSourceDate() {
 		return sourceDate;
 	}
 
+	@Deprecated
 	public void setSourceDate(Date sourceDate) {
 		this.sourceDate = sourceDate;
 	}
@@ -332,10 +358,12 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	/**
 	 * The type of the document (form document's metadata)
 	 */
+	@Deprecated
 	public String getSourceType() {
 		return sourceType;
 	}
 
+	@Deprecated
 	public void setSourceType(String sourceType) {
 		this.sourceType = sourceType;
 	}
@@ -343,10 +371,12 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	/**
 	 * The coverage of the document (form document's metadata)
 	 */
+	@Deprecated
 	public String getCoverage() {
 		return coverage;
 	}
 
+	@Deprecated
 	public void setCoverage(String coverage) {
 		this.coverage = coverage;
 	}
@@ -450,7 +480,7 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 		String icon = IconSelector.selectIcon("", docRef != null);
 		try {
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
-			icon = IconSelector.selectIcon(extension, docRef != null && docRef.longValue()!=0L);
+			icon = IconSelector.selectIcon(extension, docRef != null && docRef.longValue() != 0L);
 		} catch (Exception e) {
 		}
 		return icon;
@@ -537,18 +567,22 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 		this.immutable = immutable;
 	}
 
+	@Deprecated
 	public String getSourceId() {
 		return sourceId;
 	}
 
+	@Deprecated
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
 	}
 
+	@Deprecated
 	public String getObject() {
 		return object;
 	}
 
+	@Deprecated
 	public void setObject(String object) {
 		this.object = object;
 	}
@@ -567,10 +601,12 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	/**
 	 * The document's recipient
 	 */
+	@Deprecated
 	public String getRecipient() {
 		return recipient;
 	}
 
+	@Deprecated
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
 	}

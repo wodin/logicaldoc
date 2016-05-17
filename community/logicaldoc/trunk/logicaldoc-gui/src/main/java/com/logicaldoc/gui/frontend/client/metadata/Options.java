@@ -3,7 +3,7 @@ package com.logicaldoc.gui.frontend.client.metadata;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.data.ExtendedAttributeOptionsDS;
+import com.logicaldoc.gui.common.client.data.AttributeOptionsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
@@ -191,7 +191,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 		list.setSelectionType(SelectionStyle.MULTIPLE);
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(false);
-		list.setDataSource(new ExtendedAttributeOptionsDS(setId, attribute, false));
+		list.setDataSource(new AttributeOptionsDS(setId, attribute, false));
 		list.setCanReorderRecords(!readOnly);
 		list.setCanDragRecordsOut(!readOnly);
 		list.setCanAcceptDroppedRecords(!readOnly);
@@ -270,7 +270,7 @@ public class Options extends com.smartgwt.client.widgets.Window {
 	}
 
 	public void refresh() {
-		list.setDataSource(new ExtendedAttributeOptionsDS(setId, attribute, false));
+		list.setDataSource(new AttributeOptionsDS(setId, attribute, false));
 		list.fetchData();
 	}
 

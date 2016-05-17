@@ -11,8 +11,8 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class FolderTemplatesDS extends DataSource {
 	public FolderTemplatesDS() {
-		setTitleField("attributeSet");
-		setRecordXPath("/list/attributeSet");
+		setTitleField("template");
+		setRecordXPath("/list/template");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		DataSourceTextField name = new DataSourceTextField("name");

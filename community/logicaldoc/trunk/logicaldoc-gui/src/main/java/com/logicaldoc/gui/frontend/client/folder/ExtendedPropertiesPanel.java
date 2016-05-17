@@ -72,7 +72,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		setMembersMargin(20);
 		update = folder.hasPermission(Constants.PERMISSION_RENAME);
 		refresh();
-		
+
 		addResizedHandler(new ResizedHandler() {
 
 			@Override
@@ -98,7 +98,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		form1.setValuesManager(vm);
 		form2.setBorder("1px solid red");
 		form1.setTitleOrientation(TitleOrientation.TOP);
-		
+
 		List<FormItem> items = new ArrayList<FormItem>();
 
 		templateItem = ItemFactory.newTemplateSelector(true, null);
@@ -199,7 +199,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 
 				for (GUIAttribute att : result) {
 					if (att.getType() == GUIAttribute.TYPE_STRING) {
-						FormItem item = ItemFactory.newStringItemForExtendedAttribute(templateId, att);
+						FormItem item = ItemFactory.newStringItemForAttribute(att);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((String) folder.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);
@@ -207,7 +207,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setRequired(false);
 						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_INT) {
-						IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(),
+						IntegerItem item = ItemFactory.newIntegerItemForAttribute(att.getName(),
 								att.getLabel(), null);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((Long) folder.getValue(att.getName()));
@@ -216,7 +216,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setRequired(false);
 						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
-						SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(),
+						SelectItem item = ItemFactory.newBooleanSelectorForAttribute(att.getName(),
 								att.getLabel(), true);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue(((Boolean) folder.getValue(att.getName())).booleanValue() ? "1" : "0");
@@ -225,7 +225,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setRequired(false);
 						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
-						FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(),
+						FloatItem item = ItemFactory.newFloatItemForAttribute(att.getName(), att.getLabel(),
 								null);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((Double) folder.getValue(att.getName()));
@@ -234,7 +234,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setRequired(false);
 						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_DATE) {
-						final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
+						final DateItem item = ItemFactory.newDateItemForAttribute(att.getName(), att.getLabel());
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((Date) folder.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);
@@ -255,7 +255,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 						item.setRequired(false);
 						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_USER) {
-						SelectItem item = ItemFactory.newUserSelectorForExtendedAttribute(att.getName(),
+						SelectItem item = ItemFactory.newUserSelectorForAttribute(att.getName(),
 								att.getLabel(),
 								(att.getOptions() != null && att.getOptions().length > 0) ? att.getOptions()[0] : null);
 						if (folder.getValue(att.getName()) != null)
@@ -305,11 +305,11 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 		if (!vm.hasErrors()) {
 
 			if (Feature.enabled(Feature.TEMPLATE)) {
-				if (values.get("attributeSet") == null || "".equals(values.get("attributeSet"))) {
+				if (values.get("template") == null || "".equals(values.get("template"))) {
 					folder.setTemplateId(null);
 					folder.setTemplateLocked(0);
 				} else {
-					folder.setTemplateId(Long.parseLong(values.get("attributeSet").toString()));
+					folder.setTemplateId(Long.parseLong(values.get("template").toString()));
 					folder.setTemplateLocked("yes".equals(values.get("locked")) ? 1 : 0);
 				}
 				for (String name : values.keySet()) {

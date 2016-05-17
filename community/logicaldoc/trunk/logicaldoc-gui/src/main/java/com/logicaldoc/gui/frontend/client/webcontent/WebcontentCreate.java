@@ -77,10 +77,10 @@ public class WebcontentCreate extends Window {
 			return;
 		GUIDocument vo = new GUIDocument();
 		vo.setTitle(vm.getValueAsString("title").trim());
-		if (vm.getValueAsString("attributeSet") == null || "".equals(vm.getValueAsString("attributeSet").toString()))
+		if (vm.getValueAsString("template") == null || "".equals(vm.getValueAsString("template").toString()))
 			vo.setTemplateId(null);
 		else {
-			vo.setTemplateId(Long.parseLong(vm.getValueAsString("attributeSet").toString()));
+			vo.setTemplateId(Long.parseLong(vm.getValueAsString("template").toString()));
 		}
 
 		if (vo.getTitle().lastIndexOf('.') != -1) {

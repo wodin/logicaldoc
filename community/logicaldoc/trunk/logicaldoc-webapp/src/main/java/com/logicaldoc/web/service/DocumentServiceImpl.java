@@ -462,7 +462,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			}
 
 			/*
-			 * Append the standard attributes
+			 * Append the legacy attributes
 			 */
 			if (doc != null) {
 				GUIAttribute att = new GUIAttribute();
@@ -498,7 +498,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 				att = new GUIAttribute();
 				att.setName("recipient");
-				att.setStringValue(doc.getCoverage());
+				att.setStringValue(doc.getRecipient());
 				attributes.add(att);
 
 				att = new GUIAttribute();
@@ -602,7 +602,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setIcon(FilenameUtils.getBaseName(IconSelector.selectIcon(
 				FilenameUtils.getExtension(document.getFileName()), document.getDocRef() != null)));
 
-		// Standard attributes
+		// Legacy attributes
 		{
 			document.setSource(doc.getSource());
 			document.setSourceType(doc.getSourceType());
@@ -952,7 +952,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 		docVO.setTitle(document.getTitle());
 		docVO.setCustomId(document.getCustomId());
-		docVO.setSourceType(document.getSourceType());
 		docVO.setFileName(document.getFileName());
 		docVO.setVersion(document.getVersion());
 		docVO.setCreation(document.getCreation());
@@ -963,13 +962,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		docVO.setLanguage(document.getLanguage());
 		if (document.getFileSize() != null)
 			docVO.setFileSize(document.getFileSize().longValue());
-		docVO.setSource(document.getSource());
-		docVO.setRecipient(document.getRecipient());
-		docVO.setObject(document.getObject());
-		docVO.setCoverage(document.getCoverage());
-		docVO.setSourceAuthor(document.getSourceAuthor());
-		docVO.setSourceDate(document.getSourceDate());
-		docVO.setSourceId(document.getSourceId());
+
 		docVO.setRating(document.getRating());
 		docVO.setComment(document.getComment());
 		docVO.setWorkflowStatus(document.getWorkflowStatus());
@@ -1076,6 +1069,18 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					docVO.getAttributes().put(attr.getName(), extAttr);
 				}
 			}
+		}
+
+		// The legacy attributes
+		{
+			docVO.setSource(document.getSource());
+			docVO.setSourceAuthor(document.getSourceAuthor());
+			docVO.setSourceDate(document.getSourceDate());
+			docVO.setSourceId(document.getSourceId());
+			docVO.setSourceType(document.getSourceType());
+			docVO.setRecipient(document.getRecipient());
+			docVO.setObject(document.getObject());
+			docVO.setCoverage(document.getCoverage());
 		}
 
 		docVO.setStatus(document.getStatus());

@@ -23,11 +23,11 @@ import com.logicaldoc.web.util.ServiceUtil;
  * @author Marco Meschieri - Logical Objects
  * @since 7.1
  */
-public class ExtendedAttributeOptionsDataServlet extends HttpServlet {
+public class AttributeOptionsDataServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static Logger log = LoggerFactory.getLogger(ExtendedAttributeOptionsDataServlet.class);
+	private static Logger log = LoggerFactory.getLogger(AttributeOptionsDataServlet.class);
 
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -43,7 +43,7 @@ public class ExtendedAttributeOptionsDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "no-store");
 			response.setDateHeader("Expires", 0);
 
-			long templateId = Long.parseLong(request.getParameter("templateId"));
+			long setId = Long.parseLong(request.getParameter("setId"));
 			String attribute = request.getParameter("attribute");
 			boolean withempty = "true".equals(request.getParameter("withempty"));
 
@@ -52,7 +52,7 @@ public class ExtendedAttributeOptionsDataServlet extends HttpServlet {
 
 			AttributeOptionDAO dao = (AttributeOptionDAO) Context.get().getBean(
 					AttributeOptionDAO.class);
-			List<AttributeOption> options = dao.findBySetIdAndAttribute(templateId, attribute);
+			List<AttributeOption> options = dao.findBySetIdAndAttribute(setId, attribute);
 
 			if(withempty){
 				writer.print("<option>");

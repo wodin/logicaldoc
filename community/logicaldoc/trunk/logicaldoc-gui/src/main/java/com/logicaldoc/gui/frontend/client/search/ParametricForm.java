@@ -278,9 +278,9 @@ public class ParametricForm extends VLayout {
 			options.setLanguage(vm.getValueAsString("language"));
 		options.setExpressionLanguage(I18N.getLocale());
 
-		if (values.containsKey("attributeSet") && values.get("attributeSet") != null
-				&& !((String) values.get("attributeSet")).isEmpty())
-			options.setTemplate(new Long((String) values.get("attributeSet")));
+		if (values.containsKey("template") && values.get("template") != null
+				&& !((String) values.get("template")).isEmpty())
+			options.setTemplate(new Long((String) values.get("template")));
 
 		options.setTopOperator((String) values.get("match"));
 

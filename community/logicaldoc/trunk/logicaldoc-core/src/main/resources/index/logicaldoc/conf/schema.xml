@@ -15,22 +15,12 @@
         required="false" />
     <field name="size" type="long" indexed="true" stored="false" required="true" />
     <field name="date" type="date" indexed="true" stored="false" required="false" />
-    <field name="sourceDate" type="date" indexed="true" stored="false"
-        required="false" />
     <field name="creation" type="date" indexed="true" stored="false"
         required="false" />
     <field name="customId" type="string" indexed="true" stored="false"
         required="false" />
-    <field name="source" type="string" indexed="true" stored="false"
-        required="false" />
     <field name="comment" type="text_general" indexed="true" stored="false" />
     <field name="tags" type="text_general" indexed="true" stored="false" />
-    <field name="coverage" type="text_general" indexed="true" stored="false" />
-    <field name="object" type="text_general" indexed="true" stored="false" />
-    <field name="sourceId" type="text_general" indexed="true" stored="false" />
-    <field name="recipient" type="text_general" indexed="true" stored="false" />
-    <field name="sourceAuthor" type="string" indexed="true" stored="false" />
-    <field name="sourceType" type="string" indexed="true" stored="false" />
     <field name="docRef" type="long" indexed="true" stored="true"
         required="false" />
     <field name="content" type="text_std" indexed="true" stored="true" />

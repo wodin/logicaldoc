@@ -22,6 +22,7 @@ import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.model.WSSearchOptions;
 import com.logicaldoc.webservice.model.WSSearchResult;
 import com.logicaldoc.webservice.model.WSTagCloud;
+import com.logicaldoc.webservice.model.WSUtil;
 import com.logicaldoc.webservice.soap.SearchService;
 
 /**
@@ -49,7 +50,7 @@ public class SoapSearchService extends AbstractService implements SearchService 
 
 		List<WSDocument> docs = new ArrayList<WSDocument>();
 		for (Hit hit : hitsList) {
-			WSDocument doc = WSDocument.fromDocument(hit);
+			WSDocument doc = WSUtil.toWSDocument(hit);
 			doc.setScore(hit.getScore());
 			doc.setSummary(hit.getSummary());
 			docs.add(doc);
@@ -83,7 +84,7 @@ public class SoapSearchService extends AbstractService implements SearchService 
 				continue;
 			}
 			docDao.initialize(docs.get(i));
-			wsDocs[i] = WSDocument.fromDocument(docs.get(i));
+			wsDocs[i] = WSUtil.toWSDocument(docs.get(i));
 		}
 
 		return wsDocs;
@@ -104,7 +105,7 @@ public class SoapSearchService extends AbstractService implements SearchService 
 				continue;
 			}
 			docDao.initialize(docs.get(i));
-			wsDocs[i] = WSDocument.fromDocument(docs.get(i));
+			wsDocs[i] = WSUtil.toWSDocument(docs.get(i));
 		}
 
 		return wsDocs;
