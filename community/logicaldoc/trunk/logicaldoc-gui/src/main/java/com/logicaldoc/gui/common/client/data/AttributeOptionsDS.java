@@ -10,8 +10,8 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @author Marco Meschieri - Logical Objects
  * @since 7.1
  */
-public class ExtendedAttributeOptionsDS extends DataSource {
-	public ExtendedAttributeOptionsDS(long templateId, String attribute, boolean withEmpty) {
+public class AttributeOptionsDS extends DataSource {
+	public AttributeOptionsDS(long setId, String attribute, boolean withEmpty) {
 		setRecordXPath("/list/option");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
@@ -31,7 +31,7 @@ public class ExtendedAttributeOptionsDS extends DataSource {
 		setFields(id, _attribute, value, position, _templateId);
 		setClientOnly(true);
 
-		setDataURL("data/extoptions.xml?templateId=" + templateId + "&" + "attribute=" + attribute + "&withempty="
+		setDataURL("data/attributeoptions.xml?setId=" + setId + "&" + "attribute=" + attribute + "&withempty="
 				+ withEmpty);
 	}
 }

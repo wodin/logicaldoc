@@ -54,6 +54,7 @@ public class HibernateSequenceDAO extends HibernatePersistentObjectDAO<Sequence>
 			seq.setTenantId(tenantId);
 			seq.setValue(seq.getValue() + increment);
 			store(seq);
+			flush();
 			return seq.getValue();
 		}
 	}

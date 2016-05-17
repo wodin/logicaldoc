@@ -49,6 +49,8 @@ public class WSAttribute implements Serializable {
 	private String label;
 
 	private int editor = 0;
+	
+	private Long setId;
 
 	public WSAttribute() {
 	}
@@ -212,5 +214,13 @@ public class WSAttribute implements Serializable {
 
 	public void setEditor(int editor) {
 		this.editor = editor;
+	}
+
+	public Long getSetId() {
+		return setId;
+	}
+
+	public void setSetId(Long setId) {
+		this.setId = setId;
 	}
 }

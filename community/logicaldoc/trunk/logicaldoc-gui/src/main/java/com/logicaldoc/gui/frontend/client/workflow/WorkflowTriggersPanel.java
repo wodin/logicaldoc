@@ -194,7 +194,7 @@ public class WorkflowTriggersPanel extends VLayout {
 		ListGridField workflow = new ListGridField("workflow", I18N.message("workflow"), 200);
 		workflow.setCanFilter(true);
 
-		ListGridField template = new ListGridField("attributeSet", I18N.message("attributeSet"), 200);
+		ListGridField template = new ListGridField("template", I18N.message("template"), 200);
 		template.setCanFilter(true);
 
 		ListGridField checkin = new ListGridField("triggerAtCheckin", I18N.message("triggeratcheckin"));

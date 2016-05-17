@@ -26,27 +26,18 @@ public abstract class ExtensibleObject extends PersistentObject {
 	}
 
 	public Object getValue(String name) {
-		if (attributes != null && attributes.get(name) != null)
-			return attributes.get(name).getValue();
+		Attribute att = getAttribute(name);
+		if (att != null)
+			return att.getValue();
 		else
 			return null;
 	}
 
 	public Attribute getAttribute(String name) {
-		if (attributes.get(name) != null)
+		if (attributes != null && attributes.get(name) != null)
 			return attributes.get(name);
 		else
 			return null;
-	}
-
-	public Attribute setValue(String name, Object value) {
-		Attribute ext = getAttribute(name);
-		if (ext == null) {
-			ext = new Attribute();
-			ext.setPosition(getLastPosition() + 1);
-		}
-		ext.setValue(value);
-		return attributes.put(name, ext);
 	}
 
 	public List<String> getAttributeNames() {
@@ -55,7 +46,7 @@ public abstract class ExtensibleObject extends PersistentObject {
 			names.addAll(attributes.keySet());
 		return names;
 	}
-	
+
 	public List<String> getAttributeNames(long setId) {
 		List<String> names = new ArrayList<String>();
 		if (attributes != null) {
@@ -109,6 +100,16 @@ public abstract class ExtensibleObject extends PersistentObject {
 		}
 	}
 
+	public Attribute setValue(String name, Object value) {
+		Attribute ext = getAttribute(name);
+		if (ext == null) {
+			ext = new Attribute();
+			ext.setPosition(getLastPosition() + 1);
+		}
+		ext.setValue(value);
+		return attributes.put(name, ext);
+	}
+	
 	private int getLastPosition() {
 		int position = 0;
 

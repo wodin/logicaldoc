@@ -89,23 +89,23 @@ public class ReportParametersForm extends Window {
 		List<FormItem> items = new ArrayList<FormItem>();
 		for (GUIAttribute att : parameters) {
 			if (att.getType() == GUIAttribute.TYPE_STRING) {
-				FormItem item = ItemFactory.newStringItemForExtendedAttribute(null, att);
+				FormItem item = ItemFactory.newStringItemForAttribute(att);
 				items.add(item);
 			} else if (att.getType() == GUIAttribute.TYPE_INT) {
-				IntegerItem item = ItemFactory.newIntegerItemForExtendedAttribute(att.getName(), att.getLabel(), null);
+				IntegerItem item = ItemFactory.newIntegerItemForAttribute(att.getName(), att.getLabel(), null);
 				item.setRequired(att.isMandatory());
 				items.add(item);
 			} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
-				SelectItem item = ItemFactory.newBooleanSelectorForExtendedAttribute(att.getName(), att.getLabel(),
+				SelectItem item = ItemFactory.newBooleanSelectorForAttribute(att.getName(), att.getLabel(),
 						!att.isMandatory());
 				item.setRequired(att.isMandatory());
 				items.add(item);
 			} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
-				FloatItem item = ItemFactory.newFloatItemForExtendedAttribute(att.getName(), att.getLabel(), null);
+				FloatItem item = ItemFactory.newFloatItemForAttribute(att.getName(), att.getLabel(), null);
 				item.setRequired(att.isMandatory());
 				items.add(item);
 			} else if (att.getType() == GUIAttribute.TYPE_DATE) {
-				final DateItem item = ItemFactory.newDateItemForExtendedAttribute(att.getName(), att.getLabel());
+				final DateItem item = ItemFactory.newDateItemForAttribute(att.getName(), att.getLabel());
 				item.setRequired(att.isMandatory());
 				item.addKeyPressHandler(new KeyPressHandler() {
 					@Override

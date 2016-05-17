@@ -11,10 +11,10 @@ import com.logicaldoc.gui.common.client.beans.GUIAttributeSet;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIRetentionPolicy;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
+import com.logicaldoc.gui.common.client.data.AttributeOptionsDS;
 import com.logicaldoc.gui.common.client.data.AttributeSetsDS;
 import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
-import com.logicaldoc.gui.common.client.data.ExtendedAttributeOptionsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
 import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
@@ -101,7 +101,7 @@ public class ItemFactory {
 	 * 
 	 * @param name The item name (mandatory)
 	 */
-	public static DateItem newDateItemForExtendedAttribute(String name, String label) {
+	public static DateItem newDateItemForAttribute(String name, String label) {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		final DateItem date = new DateItem(itemName);
@@ -121,7 +121,7 @@ public class ItemFactory {
 		return date;
 	}
 
-	public static SelectItem newUserSelectorForExtendedAttribute(String name, String title, String groupIdOrName) {
+	public static SelectItem newUserSelectorForAttribute(String name, String title, String groupIdOrName) {
 		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title,
 				groupIdOrName, false);
 		return item;
@@ -531,14 +531,14 @@ public class ItemFactory {
 	/**
 	 * Creates a new TextItem for the Extended Attributes.
 	 */
-	public static FormItem newStringItemForExtendedAttribute(Long templateId, GUIAttribute att) {
+	public static FormItem newStringItemForAttribute(GUIAttribute att) {
 		// We cannot use spaces in items name
 		String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		FormItem item = new TextItem();
 
-		if (att.getEditor() == GUIAttribute.EDITOR_LISTBOX && templateId != null) {
+		if (att.getEditor() == GUIAttribute.EDITOR_LISTBOX && att.getSetId()!= null) {
 			item = new SelectItem();
-			item.setOptionDataSource(new ExtendedAttributeOptionsDS(templateId, att.getName(), !att.isMandatory()));
+			item.setOptionDataSource(new AttributeOptionsDS(att.getSetId(), att.getName(), !att.isMandatory()));
 
 			ListGridField value = new ListGridField("value", I18N.message("value"));
 			((SelectItem) item).setPickListWidth(200);
@@ -556,29 +556,6 @@ public class ItemFactory {
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		item.setHintStyle("hint");
 		item.setRequired(att.isMandatory());
-
-		return item;
-	}
-
-	/**
-	 * Creates a new TextItem for the Extended Attributes.
-	 */
-	public static FormItem newStringItemForPresetExtendedAttribute(Long templateId, String attributeName) {
-		// We cannot use spaces in items name
-		String itemName = attributeName.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
-		FormItem item = new SelectItem();
-		item.setOptionDataSource(new ExtendedAttributeOptionsDS(templateId, attributeName, false));
-
-		ListGridField value = new ListGridField("value", I18N.message("value"));
-		((SelectItem) item).setPickListWidth(200);
-		((SelectItem) item).setPickListFields(value);
-		((SelectItem) item).setValueField("value");
-		((SelectItem) item).setDisplayField("value");
-
-		item.setName(itemName);
-		item.setWrapTitle(false);
-		item.setRequiredMessage(I18N.message("fieldrequired"));
-		item.setHintStyle("hint");
 
 		return item;
 	}
@@ -690,7 +667,7 @@ public class ItemFactory {
 	 * @param name The item name (mandatory)
 	 * @param value The item value (optional)
 	 */
-	public static IntegerItem newIntegerItemForExtendedAttribute(String name, String label, Integer value) {
+	public static IntegerItem newIntegerItemForAttribute(String name, String label, Integer value) {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		IntegerItem item = newIntegerItem(itemName, label, value);
@@ -700,7 +677,7 @@ public class ItemFactory {
 	/**
 	 * Simple boolean selector for Extended Attribute
 	 */
-	public static SelectItem newBooleanSelectorForExtendedAttribute(String name, String title, boolean allowEmpty) {
+	public static SelectItem newBooleanSelectorForAttribute(String name, String title, boolean allowEmpty) {
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		SelectItem select = new SelectItem();
 		select.setName(itemName);
@@ -840,7 +817,7 @@ public class ItemFactory {
 			templateItem.setValue(templateId.toString());
 		return templateItem;
 	}
-	
+
 	public static SelectItem newAttributeSetSelector() {
 		final SelectItem selectItem = new SelectItem("attributeset", I18N.message("attributeset"));
 		selectItem.setMultiple(false);
@@ -854,7 +831,6 @@ public class ItemFactory {
 
 		return selectItem;
 	}
-
 
 	public static SelectItem newFrequencySelector(String name, String title) {
 		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
@@ -1062,7 +1038,7 @@ public class ItemFactory {
 	 * @param name The item name (mandatory)
 	 * @param value The item value (optional)
 	 */
-	public static FloatItem newFloatItemForExtendedAttribute(String name, String label, Float value) {
+	public static FloatItem newFloatItemForAttribute(String name, String label, Float value) {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		FloatItem item = newFloatItem(itemName, label, value);

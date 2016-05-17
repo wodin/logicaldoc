@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
                        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -275,8 +276,8 @@
     <servlet-class>com.logicaldoc.dropbox.DropboxDataServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>ExtendedAttributeOptionsData</servlet-name>
-    <servlet-class>com.logicaldoc.web.data.ExtendedAttributeOptionsDataServlet</servlet-class>
+    <servlet-name>AttributeOptionsData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.AttributeOptionsDataServlet</servlet-class>
   </servlet>
   <servlet>
     <servlet-name>Log</servlet-name>
@@ -528,8 +529,8 @@
     <url-pattern>/data/deleteddocs.xml</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>ExtendedAttributeOptionsData</servlet-name>
-    <url-pattern>/data/extoptions.xml</url-pattern>
+    <servlet-name>AttributeOptionsData</servlet-name>
+    <url-pattern>/data/attributeoptions.xml</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>Thumbnail</servlet-name>

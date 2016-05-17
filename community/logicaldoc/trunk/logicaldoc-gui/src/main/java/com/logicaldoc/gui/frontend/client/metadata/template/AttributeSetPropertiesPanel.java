@@ -118,6 +118,7 @@ public class AttributeSetPropertiesPanel extends HLayout {
 		ListGridField name = new ListGridField("name", I18N.message("name"));
 		name.setWidth(150);
 		name.setCanEdit(false);
+		name.setCanSort(false);
 		attributesList.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
@@ -129,6 +130,7 @@ public class AttributeSetPropertiesPanel extends HLayout {
 
 		ListGridField label = new ListGridField("label", I18N.message("label"));
 		label.setCanEdit(true);
+		label.setCanSort(false);
 		label.addCellSavedHandler(new CellSavedHandler() {
 
 			@Override

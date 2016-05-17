@@ -50,6 +50,7 @@ import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.webservice.AbstractService;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSLink;
+import com.logicaldoc.webservice.model.WSUtil;
 import com.logicaldoc.webservice.soap.DocumentService;
 
 /**
@@ -81,7 +82,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 		}
 		fdao.initialize(folder);
 
-		Document doc = document.toDocument();
+		Document doc = WSUtil.toDocument(document);
 		doc.setTenantId(user.getTenantId());
 
 		// Create the document history event
@@ -96,7 +97,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 
 		DocumentManager documentManager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 		doc = documentManager.create(stream, doc, transaction);
-		return WSDocument.fromDocument(doc);
+		return WSUtil.toWSDocument(doc);
 	}
 
 	@Override
@@ -126,8 +127,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 
 				// checkin the document; throws an exception if
 				// something goes wrong
-				DocumentManager documentManager = (DocumentManager) Context.get()
-						.getBean(DocumentManager.class);
+				DocumentManager documentManager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 				documentManager.checkin(document.getId(), stream, filename, release, null, transaction);
 
 				/* create positive log message */
@@ -272,8 +272,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 			if (doc.getDocRef() != null)
 				doc = docDao.findById(doc.getDocRef());
 
-			PdfConverterManager manager = (PdfConverterManager) Context.get()
-					.getBean(PdfConverterManager.class);
+			PdfConverterManager manager = (PdfConverterManager) Context.get().getBean(PdfConverterManager.class);
 			manager.createPdf(doc, fileVersion, sid);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
@@ -327,7 +326,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 		checkPublished(user, doc);
 
 		docDao.initialize(doc);
-		return WSDocument.fromDocument(doc);
+		return WSUtil.toWSDocument(doc);
 	}
 
 	@Override
@@ -341,7 +340,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 		checkPublished(user, doc);
 
 		docDao.initialize(doc);
-		return WSDocument.fromDocument(doc);
+		return WSUtil.toWSDocument(doc);
 	}
 
 	@Override
@@ -458,10 +457,10 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		Document doc = docDao.findById(docId);
 		checkLocked(user, doc);
-    
-    // Document is already unlocked, no need to do anything else
-    if (doc.getStatus() == Document.DOC_UNLOCKED)
-        return;    
+
+		// Document is already unlocked, no need to do anything else
+		if (doc.getStatus() == Document.DOC_UNLOCKED)
+			return;
 
 		// Create the document history event
 		History transaction = new History();
@@ -502,7 +501,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 		transaction.setComment(document.getComment());
 		transaction.setUser(user);
 
-		manager.update(doc, document.toDocument(), transaction);
+		manager.update(doc, WSUtil.toDocument(document), transaction);
 	}
 
 	@Override
@@ -533,7 +532,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 				continue;
 
 			docDao.initialize(doc);
-			wsDocs.add(WSDocument.fromDocument(doc));
+			wsDocs.add(WSUtil.toWSDocument(doc));
 		}
 
 		return wsDocs.toArray(new WSDocument[0]);
@@ -562,7 +561,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 			}
 			docDao.initialize(docs.get(i));
 			if (folderIds.contains(docs.get(i).getFolder().getId()))
-				wsDocs.add(WSDocument.fromDocument(docs.get(i)));
+				wsDocs.add(WSUtil.toWSDocument(docs.get(i)));
 		}
 
 		return wsDocs.toArray(new WSDocument[0]);
@@ -584,7 +583,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 		WSDocument[] wsVersions = new WSDocument[versions.size()];
 		for (int i = 0; i < versions.size(); i++) {
 			versDao.initialize(versions.get(i));
-			wsVersions[i] = WSDocument.fromDocument(versions.get(i));
+			wsVersions[i] = WSUtil.toWSDocument(versions.get(i));
 			wsVersions[i].setComment(versions.get(i).getComment());
 		}
 
@@ -745,7 +744,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 
 		checkPublished(user, doc);
 
-		return WSDocument.fromDocument(doc);
+		return WSUtil.toWSDocument(doc);
 	}
 
 	@Override
@@ -777,7 +776,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 		for (int i = 0; i < docs.size(); i++) {
 			docDao.initialize(docs.get(i));
 			if (user.isInGroup("admin") || folderIds.contains(docs.get(i).getFolder().getId()))
-				wsDocs.add(WSDocument.fromDocument(docs.get(i)));
+				wsDocs.add(WSUtil.toWSDocument(docs.get(i)));
 		}
 
 		return wsDocs.toArray(new WSDocument[0]);
@@ -802,7 +801,7 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 			else
 				doc.setLanguage(language);
 
-//			Session session = SessionManager.getInstance().get(sid);
+			// Session session = SessionManager.getInstance().get(sid);
 
 			return create(sid, doc, content).getId();
 		}

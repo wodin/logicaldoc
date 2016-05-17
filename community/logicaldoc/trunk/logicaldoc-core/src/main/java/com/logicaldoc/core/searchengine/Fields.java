@@ -12,10 +12,8 @@ import java.util.Set;
  */
 public enum Fields {
 	ID("id"), TITLE("title"), FOLDER_ID("folderId"), CONTENT("content"), TAGS("tags"), TEMPLATE_ID("templateId"), FOLDER_NAME(
-			"folderName"), CREATION("creation"), DATE("date"), SOURCE_DATE("sourceDate"), COVERAGE("coverage"), SOURCE_AUTHOR(
-			"sourceAuthor"), SOURCE_TYPE("sourceType"), SOURCE("source"), RECIPIENT("recipient"), SOURCE_ID("sourceId"), SIZE(
-			"size"), CUSTOM_ID("customId"), DOC_REF("docRef"), COMMENT("comment"), LANGUAGE("language"), TENANT_ID(
-			"tenantId");
+			"folderName"), CREATION("creation"), DATE("date"), SIZE("size"), CUSTOM_ID("customId"), DOC_REF("docRef"), COMMENT(
+			"comment"), LANGUAGE("language"), TENANT_ID("tenantId");
 
 	private final String name;
 
@@ -38,12 +36,6 @@ public enum Fields {
 		fields.add(FOLDER_NAME);
 		fields.add(CREATION);
 		fields.add(DATE);
-		fields.add(SOURCE_DATE);
-		fields.add(COVERAGE);
-		fields.add(SOURCE_AUTHOR);
-		fields.add(SOURCE);
-		fields.add(SOURCE_ID);
-		fields.add(RECIPIENT);
 		fields.add(CUSTOM_ID);
 		fields.add(DOC_REF);
 		fields.add(COMMENT);

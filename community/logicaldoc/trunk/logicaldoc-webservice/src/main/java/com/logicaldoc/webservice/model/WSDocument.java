@@ -21,8 +21,8 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.metadata.Attribute;
-import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.metadata.Template;
+import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.webservice.AbstractService;
@@ -141,7 +141,7 @@ public class WSDocument implements Serializable {
 
 	private Long deleteUserId;
 
-	private WSAttribute[] extendedAttributes = new WSAttribute[0];
+	private WSAttribute[] attributes = new WSAttribute[0];
 
 	private String language;
 
@@ -174,242 +174,22 @@ public class WSDocument implements Serializable {
 
 	private Long formId = null;
 
-	public static WSDocument fromDocument(AbstractDocument document) {
-		WSDocument wsDoc = new WSDocument();
 
-		try {
-			wsDoc.setId(document.getId());
-			wsDoc.setCustomId(document.getCustomId());
-			wsDoc.setTitle(document.getTitle());
-			wsDoc.setSource(document.getSource());
-			wsDoc.setSourceAuthor(document.getSourceAuthor());
-			wsDoc.setSourceType(document.getSourceType());
-			wsDoc.setCoverage(document.getCoverage());
-			wsDoc.setLanguage(document.getLanguage());
-			wsDoc.setSourceId(document.getSourceId());
-			wsDoc.setObject(document.getObject());
-			wsDoc.setRecipient(document.getRecipient());
-			wsDoc.setComment(document.getComment());
-			wsDoc.setWorkflowStatus(document.getWorkflowStatus());
-			if (document.getTemplate() != null)
-				wsDoc.setTemplateId(document.getTemplate().getId());
-			wsDoc.setImmutable(document.getImmutable());
-			if (document.getFolder() != null)
-				wsDoc.setFolderId(document.getFolder().getId());
-			if (document.getIndexed() != INDEX_INDEXED)
-				wsDoc.setIndexed(document.getIndexed());
-			wsDoc.setVersion(document.getVersion());
-			wsDoc.setFileVersion(document.getFileVersion());
-			wsDoc.setPublisher(document.getPublisher());
-			wsDoc.setPublisherId(document.getPublisherId());
-			wsDoc.setCreator(document.getCreator());
-			wsDoc.setCreatorId(document.getCreatorId());
-			wsDoc.setStatus(document.getStatus());
-			wsDoc.setType(document.getType());
-			wsDoc.setLockUserId(document.getLockUserId());
-			wsDoc.setFileName(document.getFileName());
-			wsDoc.setFileSize(document.getFileSize());
-			wsDoc.setDigest(document.getDigest());
-			wsDoc.setRecipient(document.getRecipient());
-			wsDoc.setDocRef(document.getDocRef());
-			wsDoc.setDocRefType(document.getDocRefType());
-			wsDoc.setLastModified(AbstractService.convertDateToString(document.getLastModified()));
-			wsDoc.setRating(document.getRating());
-			wsDoc.setPages(document.getPages());
-			wsDoc.setSigned(document.getSigned());
-			wsDoc.setStamped(document.getStamped());
-			wsDoc.setNature(document.getNature());
-			wsDoc.setFormId(document.getFormId());
-			
-			
-			String date = null;
-			if (document.getSourceDate() != null)
-				date = AbstractService.convertDateToString(document.getSourceDate());
-			wsDoc.setSourceDate(date);
-			date = null;
-			if (document.getDate() != null)
-				date = AbstractService.convertDateToString(document.getDate());
-			wsDoc.setDate(date);
-			date = null;
-			if (document.getCreation() != null)
-				date = AbstractService.convertDateToString(document.getCreation());
-			wsDoc.setCreation(date);
-			date = null;
-			if (document.getStartPublishing() != null)
-				date = AbstractService.convertDateToString(document.getStartPublishing());
-			wsDoc.setStartPublishing(date);
-			date = null;
-			if (document.getStopPublishing() != null)
-				date = AbstractService.convertDateToString(document.getStopPublishing());
-			wsDoc.setStopPublishing(date);
-
-			// Populate extended attributes
-			WSAttribute[] attributes = new WSAttribute[0];
-			try {
-				if (document.getAttributes() != null && document.getAttributes().size() > 0) {
-					attributes = new WSAttribute[document.getAttributeNames().size()];
-					int i = 0;
-					for (String name : document.getAttributeNames()) {
-						Attribute attr = document.getAttribute(name);
-
-						WSAttribute attribute = new WSAttribute();
-						attribute.setName(name);
-						attribute.setMandatory(attr.getMandatory());
-						attribute.setPosition(attr.getPosition());
-						attribute.setType(attr.getType());
-						attribute.setValue(attr.getValue());
-
-						if (attr.getType() == Attribute.TYPE_USER) {
-							attribute.setIntValue(attr.getIntValue());
-							attribute.setStringValue(attr.getStringValue());
-						}
-
-						attribute.setType(attr.getType());
-						attributes[i++] = attribute;
-					}
-				}
-			} catch (Throwable t) {
-			}
-			wsDoc.setExtendedAttributes(attributes);
-
-			String[] tags = new String[0];
-			if (document.getTags() != null && document.getTags().size() > 0) {
-				tags = new String[document.getTags().size()];
-				List<String> docTags = new ArrayList<String>(document.getTagsAsWords());
-				if (docTags != null && docTags.size() > 0) {
-					for (int j = 0; j < docTags.size(); j++) {
-						tags[j] = docTags.get(j);
-					}
-				}
-			}
-			wsDoc.setTags(tags);
-		} catch (Throwable e) {
-			e.printStackTrace();
-		}
-
-		return wsDoc;
-	}
 
 	public Collection<String> listAttributeNames() {
 		List<String> names = new ArrayList<String>();
-		for (WSAttribute att : getExtendedAttributes()) {
+		for (WSAttribute att : getAttributes()) {
 			names.add(att.getName());
 		}
 		return names;
 	}
 
 	public WSAttribute attribute(String name) {
-		for (WSAttribute att : getExtendedAttributes()) {
+		for (WSAttribute att : getAttributes()) {
 			if (att.getName().equals(name))
 				return att;
 		}
 		return null;
-	}
-
-	public Document toDocument() throws Exception {
-		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
-		Folder folder = fdao.findById(folderId);
-		if (folder == null) {
-			log.error("Folder " + folder + " not found");
-			throw new Exception("error - folder not found");
-		}
-		fdao.initialize(folder);
-
-		Set<String> setTags = new TreeSet<String>();
-		if (getTags() != null) {
-			for (int i = 0; i < getTags().length; i++) {
-				setTags.add(getTags()[i]);
-			}
-		}
-
-		Template template = null;
-		Map<String, Attribute> attributes = new HashMap<String, Attribute>();
-		if (templateId != null) {
-			TemplateDAO templDao = (TemplateDAO) Context.get().getBean(
-					TemplateDAO.class);
-			template = templDao.findById(templateId);
-			if (template != null) {
-				if (extendedAttributes != null && extendedAttributes.length > 0) {
-					for (int i = 0; i < extendedAttributes.length; i++) {
-						Attribute extAttribute = new Attribute();
-						extAttribute.setMandatory(extendedAttributes[i].getMandatory());
-						extAttribute.setPosition(extendedAttributes[i].getPosition());
-						extAttribute.setIntValue(extendedAttributes[i].getIntValue());
-						extAttribute.setStringValue(extendedAttributes[i].getStringValue());
-						extAttribute.setDoubleValue(extendedAttributes[i].getDoubleValue());
-						extAttribute.setDateValue(AbstractService.convertStringToDate(extendedAttributes[i]
-								.getDateValue()));
-						extAttribute.setType(extendedAttributes[i].getType());
-
-						attributes.put(extendedAttributes[i].getName(), extAttribute);
-					}
-				}
-			}
-		}
-
-		Document doc = new Document();
-		doc.setTitle(title);
-		doc.setFileName(fileName);
-		doc.setFolder(folder);
-		doc.setComment(comment);
-		doc.setWorkflowStatus(workflowStatus);
-		doc.setLocale(LocaleUtil.toLocale(language));
-		Date sdate = null;
-		if (StringUtils.isNotEmpty(sourceDate))
-			sdate = AbstractService.convertStringToDate(sourceDate);
-		doc.setSourceDate(sdate);
-		doc.setSource(source);
-		doc.setSourceAuthor(sourceAuthor);
-		doc.setSourceType(sourceType);
-		doc.setCoverage(coverage);
-		doc.setTagsFromWords(setTags);
-		doc.setTemplate(template);
-		if (template != null)
-			doc.setTemplateId(template.getId());
-		doc.setAttributes(attributes);
-		doc.setSourceId(sourceId);
-		doc.setObject(object);
-		doc.setCustomId(customId);
-		doc.setLanguage(language);
-		doc.setRecipient(recipient);
-		doc.setImmutable(immutable);
-		if (indexed != INDEX_INDEXED)
-			doc.setIndexed(indexed);
-		doc.setVersion(version);
-		doc.setFileVersion(fileVersion);
-		Date newdate = null;
-		if (StringUtils.isNotEmpty(date))
-			newdate = AbstractService.convertStringToDate(date);
-		doc.setDate(newdate);
-		doc.setPages(pages);
-		doc.setNature(nature);
-		doc.setFormId(formId);
-
-		Date creationDate = null;
-		if (StringUtils.isNotEmpty(creation))
-			creationDate = AbstractService.convertStringToDate(creation);
-		doc.setCreation(creationDate);
-
-		doc.setPublisher(publisher);
-		doc.setPublisherId(publisherId);
-		doc.setCreator(creator);
-		doc.setCreatorId(creatorId);
-		doc.setStatus(status);
-		doc.setType(type);
-		doc.setLockUserId(lockUserId);
-		doc.setFileSize(fileSize);
-		doc.setDigest(digest);
-		doc.setDocRef(docRef);
-		doc.setDocRefType(docRefType);
-		if (rating != null)
-			doc.setRating(rating);
-		doc.setPublished(published);
-		if (StringUtils.isNotEmpty(startPublishing))
-			doc.setStartPublishing(AbstractService.convertStringToDate(startPublishing));
-		if (StringUtils.isNotEmpty(stopPublishing))
-			doc.setStopPublishing(AbstractService.convertStringToDate(stopPublishing));
-
-		return doc;
 	}
 
 	public long getFileSize() {
@@ -708,12 +488,22 @@ public class WSDocument implements Serializable {
 		this.creation = creation;
 	}
 
-	public WSAttribute[] getExtendedAttributes() {
-		return extendedAttributes;
+	public WSAttribute[] getAttributes() {
+		return attributes;
 	}
 
-	public void setExtendedAttributes(WSAttribute[] extendedAttributes) {
-		this.extendedAttributes = extendedAttributes;
+	public WSAttribute getAttribute(String name) {
+		if (attributes == null)
+			return null;
+		for (WSAttribute att : attributes) {
+			if (att.getName().equals(name))
+				return att;
+		}
+		return null;
+	}
+
+	public void setAttributes(WSAttribute[] attributes) {
+		this.attributes = attributes;
 	}
 
 	public String getLanguage() {
@@ -780,14 +570,14 @@ public class WSDocument implements Serializable {
 		this.rating = rating;
 	}
 
-	public void addExtendedAttribute(WSAttribute att) {
-		if (extendedAttributes == null)
-			extendedAttributes = new WSAttribute[0];
+	public void addAttribute(WSAttribute att) {
+		if (attributes == null)
+			attributes = new WSAttribute[0];
 		List<WSAttribute> buf = new ArrayList<WSAttribute>();
-		for (WSAttribute tmp : extendedAttributes)
+		for (WSAttribute tmp : attributes)
 			buf.add(tmp);
 		buf.add(att);
-		setExtendedAttributes(buf.toArray(new WSAttribute[0]));
+		setAttributes(buf.toArray(new WSAttribute[0]));
 	}
 
 	public String getWorkflowStatus() {

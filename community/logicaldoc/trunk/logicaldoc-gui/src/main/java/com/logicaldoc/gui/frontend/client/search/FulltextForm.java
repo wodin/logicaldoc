@@ -9,7 +9,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIAttribute;
-import com.logicaldoc.gui.common.client.beans.GUIAttributeSet;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -50,8 +49,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 	private static final String SEARCHINHITS = "searchinhits";
 
 	private static final String BEFORE = "before";
-
-	private static final String DATE = "date";
 
 	private static final String PUBLISHEDON = "publishedon";
 
@@ -159,16 +156,15 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
 		opts.put(CREATEDON, I18N.message(CREATEDON));
 		opts.put(PUBLISHEDON, I18N.message(PUBLISHEDON));
-		opts.put(DATE, I18N.message(DATE));
 		dateSelector.setValueMap(opts);
 		dateSelector.setName("dateSelector");
-		dateSelector.setTitle(I18N.message(DATE));
+		dateSelector.setTitle(I18N.message("date"));
 		dateSelector.setValue(CREATEDON);
 		dateSelector.setWidth(80);
 
 		SelectItem dateOperator = ItemFactory.newDateOperator("dateOperator", null);
 
-		DateItem date = ItemFactory.newDateItem(DATE, null);
+		DateItem date = ItemFactory.newDateItem("date", null);
 
 		DynamicForm form2 = new DynamicForm();
 		form2.setValuesManager(vm);
@@ -215,15 +211,10 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		}
 
 		String operator = vm.getValueAsString("dateOperator");
-		Date date = (Date) vm.getValues().get(DATE);
+		Date date = (Date) vm.getValues().get("date");
 		if (date != null && !NOLIMIT.equals(operator)) {
 			String whatDate = vm.getValueAsString("dateSelector");
-			if (DATE.equals(whatDate)) {
-				if (BEFORE.equals(operator))
-					options.setSourceDateTo(date);
-				else if (!NOLIMIT.equals(operator))
-					options.setSourceDateFrom(date);
-			} else if (CREATEDON.equals(whatDate)) {
+			if (CREATEDON.equals(whatDate)) {
 				if (BEFORE.equals(operator))
 					options.setCreationTo(date);
 				else if (!NOLIMIT.equals(operator))
@@ -236,8 +227,8 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			}
 		}
 
-		if (values.containsKey("attributeSet") && !((String) values.get("attributeSet")).isEmpty())
-			options.setTemplate(new Long((String) values.get("attributeSet")));
+		if (values.containsKey("template") && !((String) values.get("template")).isEmpty())
+			options.setTemplate(new Long((String) values.get("template")));
 
 		String[] fields = searchinItem.getValues();
 		options.setFields(fields);
@@ -286,15 +277,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		fieldsMap.put("customId", I18N.message("customid"));
 		fieldsMap.put("comment", I18N.message("comment"));
 
-		GUIAttributeSet defaultAttributes = Session.get().getInfo().getDefaultAttributeSet();
-		fieldsMap.put("coverage", defaultAttributes.getAttribute("coverage").getDisplayName());
-		fieldsMap.put("source", defaultAttributes.getAttribute("source").getDisplayName());
-		fieldsMap.put("sourceAuthor", defaultAttributes.getAttribute("sourceAuthor").getDisplayName());
-		fieldsMap.put("sourceType", defaultAttributes.getAttribute("sourceType").getDisplayName());
-		fieldsMap.put("sourceId", defaultAttributes.getAttribute("sourceId").getDisplayName());
-		fieldsMap.put("recipient", defaultAttributes.getAttribute("recipient").getDisplayName());
-		fieldsMap.put("object", defaultAttributes.getAttribute("object").getDisplayName());
-
 		searchinItem.setValueMap(fieldsMap);
 		searchinItem.setValue(new String[] { "title", "content", "tags" });
 
@@ -313,7 +295,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 			public void onSuccess(GUIAttribute[] result) {
 				for (GUIAttribute att : result) {
 					if (att.getType() == GUIAttribute.TYPE_STRING || att.getType() == GUIAttribute.TYPE_USER) {
-						fieldsMap.put("ext_" + att.getName(), att.getName());
+						fieldsMap.put("ext_" + att.getName(), att.getDisplayName());
 					}
 				}
 				searchinItem.setValueMap(fieldsMap);

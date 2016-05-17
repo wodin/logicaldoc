@@ -9,8 +9,6 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
-import com.logicaldoc.gui.frontend.client.services.FormService;
-import com.logicaldoc.gui.frontend.client.services.FormServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.Overflow;
@@ -46,8 +44,6 @@ public class FormDetailsPanel extends VLayout {
 	private Layout propertiesTabPanel;
 
 	private HLayout savePanel;
-
-	private FormServiceAsync service = (FormServiceAsync) GWT.create(FormService.class);
 
 	private DocumentServiceAsync docService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -199,8 +195,8 @@ public class FormDetailsPanel extends VLayout {
 	public void onSave() {
 		if (vm.validate()) {
 			form.setTitle(vm.getValueAsString("name"));
-			if (vm.getValueAsString("attributeSet") != null)
-				form.setTemplateId(Long.parseLong(vm.getValueAsString("attributeSet")));
+			if (vm.getValueAsString("template") != null)
+				form.setTemplateId(Long.parseLong(vm.getValueAsString("template")));
 			else
 				form.setTemplateId(null);
 			form.setNature(Constants.NATURE_FORM);
