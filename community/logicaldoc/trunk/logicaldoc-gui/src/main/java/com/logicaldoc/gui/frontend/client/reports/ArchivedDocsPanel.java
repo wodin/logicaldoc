@@ -18,6 +18,7 @@ import com.logicaldoc.gui.common.client.widgets.FolderChangeListener;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.document.SendToArchiveDialog;
 import com.logicaldoc.gui.frontend.client.folder.FolderSelector;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
@@ -346,18 +347,26 @@ public class ArchivedDocsPanel extends VLayout implements FolderChangeListener {
 			}
 		});
 
-		if (!(list.getSelectedRecords() != null && list.getSelectedRecords().length == 1)) {
-			download.setEnabled(false);
-			preview.setEnabled(false);
-			openFolder.setEnabled(false);
-		}
+		MenuItem sendToExpArchive = new MenuItem();
+		sendToExpArchive.setTitle(I18N.message("sendtoexparchive"));
+		sendToExpArchive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				long[] selectionIds = new long[selection.length];
+				for (int i = 0; i < selection.length; i++)
+					selectionIds[i] = Long.parseLong(selection[i].getAttributeAsString("id"));
+				SendToArchiveDialog archiveDialog = new SendToArchiveDialog(selectionIds, true);
+				archiveDialog.show();
+			}
+		});
 
-		if (list.getSelectedRecords() == null || list.getSelectedRecords().length < 1) {
-			restore.setEnabled(false);
-			delete.setEnabled(false);
-		}
+		download.setEnabled(list.getSelectedRecords() != null && list.getSelectedRecords().length == 1);
+		preview.setEnabled(list.getSelectedRecords() != null && list.getSelectedRecords().length == 1);
+		openFolder.setEnabled(list.getSelectedRecords() != null && list.getSelectedRecords().length == 1);
+		sendToExpArchive.setEnabled(list.getSelectedRecords() != null && list.getSelectedRecords().length > 0);
+		delete.setEnabled(list.getSelectedRecords() != null && list.getSelectedRecords().length > 0);
+		restore.setEnabled(list.getSelectedRecords() != null && list.getSelectedRecords().length > 0);
 
-		contextMenu.setItems(download, preview, openFolder, restore, delete);
+		contextMenu.setItems(download, preview, openFolder, restore, sendToExpArchive, delete);
 		contextMenu.showContextMenu();
 	}
 
