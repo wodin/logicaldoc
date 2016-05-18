@@ -1,7 +1,6 @@
 package com.logicaldoc.webservice.rest.endpoint;
 
 import java.util.HashMap;
-import java.util.List;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,7 +13,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.cxf.jaxrs.ext.multipart.Attachment;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
@@ -31,26 +29,16 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	private static Logger log = LoggerFactory.getLogger(RestFolderService.class);
 
 	/*
-	 * (non-Javadoc)
+	 * The "folder" parameter comes in the POST request body (encoded as XML or JSON).
 	 * 
 	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#create(java.util
-	 * .List)
+	 * com.logicaldoc.webservice.rest.endpoint.FolderService#create(java.util.List)
 	 */
 	@POST
 	@Path("/create")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	// The "folder" parameter comes in the POST request body (encoded as XML or
-	// JSON).
-	public WSFolder create(List<Attachment> atts) throws Exception {
+	public WSFolder create(WSFolder folder) throws Exception {
+		log.debug("create()");
 		String sid = validateSession();
-		WSFolder folder = null;
-
-		for (Attachment att : atts) {
-			if ("folder".equals(att.getContentDisposition().getParameter("name"))) {
-				folder = att.getObject(WSFolder.class);
-			}
-		}
 		return super.create(sid, folder);
 	}
 
@@ -229,18 +217,9 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 
 	@POST
 	@Path("/update")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	public void update(List<Attachment> atts) throws Exception {
-		log.debug("update({})", atts);
-
+	public void update(WSFolder folder) throws Exception {
+		log.debug("update()");
 		String sid = validateSession();
-		WSFolder folder = null;
-
-		for (Attachment att : atts) {
-			if ("folder".equals(att.getContentDisposition().getParameter("name"))) {
-				folder = att.getObject(WSFolder.class);
-			}
-		}
 		super.update(sid, folder);
 	}
 

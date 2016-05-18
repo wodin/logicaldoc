@@ -1,7 +1,5 @@
 package com.logicaldoc.webservice.rest;
 
-import java.util.List;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -13,8 +11,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.cxf.jaxrs.ext.multipart.Attachment;
-
 import com.logicaldoc.webservice.model.WSFolder;
 
 @Consumes({ MediaType.APPLICATION_JSON })
@@ -23,10 +19,8 @@ public interface FolderService {
 
 	@POST
 	@Path("/create")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	// The "folder" parameter comes in the POST request body (encoded as XML or
-	// JSON).
-	WSFolder create(List<Attachment> atts) throws Exception;
+	// The "folder" parameter comes in the POST request body (encoded as XML or JSON).
+	WSFolder create(WSFolder folder) throws Exception;
 
 	@POST
 	@Path("/createSimple")
@@ -77,8 +71,7 @@ public interface FolderService {
 
 	@POST
 	@Path("/update")
-	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	void update(List<Attachment> atts) throws Exception;
+	void update(WSFolder folder) throws Exception;
 
 	@PUT
 	@Path("/rename")

@@ -2,6 +2,8 @@ package com.logicaldoc.webservice.model;
 
 import java.util.Locale;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.SearchOptions;
 import com.logicaldoc.webservice.AbstractService;
@@ -9,9 +11,10 @@ import com.logicaldoc.webservice.AbstractService;
 /**
  * Search options through Web Services.
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 6.7
  */
+@XmlRootElement(name = "searchoptions")
 public class WSSearchOptions implements Comparable<WSSearchOptions> {
 
 	protected int maxHits = 40;
