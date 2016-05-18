@@ -47,7 +47,7 @@ public class ArchiveDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("addarchive"));
-		setWidth(280);
+		setWidth(320);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -66,6 +66,7 @@ public class ArchiveDialog extends Window {
 		name.setRequired(true);
 
 		TextItem description = ItemFactory.newTextItem("description", "description", null);
+		description.setWidth(300);
 
 		StaticTextItem creator = ItemFactory.newStaticTextItem("creator", "creator", Session.get().getUser()
 				.getFullName());
