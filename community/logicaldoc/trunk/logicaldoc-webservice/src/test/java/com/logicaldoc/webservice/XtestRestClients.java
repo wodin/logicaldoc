@@ -64,6 +64,7 @@ public class XtestRestClients {
 
 		//getFolder(04L);
 
+		/*
 		WSDocument myDoc = getDocument(3407874L);
 		
 		Calendar cal = Calendar.getInstance();
@@ -73,7 +74,11 @@ public class XtestRestClients {
 		myDoc.setTitle("document test(" +sdf.format(cal.getTime()) +")");
 		
 		updateDocument(myDoc);
+		*/
 
+		//WSFolder cfld = createFolder();
+		//updateFolder(cfld, "Folder uppdated by REST ws");
+		
 		// createDocument02();
 		// createFolder(04L, "DJ KATCH");
 
@@ -111,6 +116,10 @@ public class XtestRestClients {
 		//updateDocument(164986881L);
 		
 		long start_time = System.nanoTime();
+		
+		
+		 WSSearchOptions wsso = buildSearchOptions("en", "document management system"); 
+		 find(wsso);		
 
 		/*
 		 * WSSearchOptions wsso = buildSearchOptions("en",
@@ -197,6 +206,23 @@ public class XtestRestClients {
 		// Total Exec. time (ms): 889.628808
 		// Total Exec. time (ms): 918.054599
 	}
+	
+	private static WSFolder createFolder() throws Exception {
+
+		WSFolder fld = new WSFolder();
+		fld.setParentId(04L);
+		fld.setName("REST created fld");
+		fld.setDescription("folder created by Java REST client (JSON post)");
+		WSFolder cfld = fldClient.create(fld);
+		System.out.println("Folder created with ID: " +cfld.getId());
+		return cfld;
+	}	
+
+	private static void updateFolder(WSFolder cfld, String newFolderName) throws Exception {
+		cfld.setName(newFolderName);
+		fldClient.update(cfld);
+		System.out.println("Folder updated");
+	}
 
 	private static void updateDocument(long docId) throws Exception {
 
@@ -240,7 +266,7 @@ public class XtestRestClients {
 		document.setFolderId(04L);
 		document.setFileName(xxxx.getName());
 		docClient.create(document, xxxx);
-	}
+	}	
 
 	private static void createDocument02() throws Exception {
 
@@ -318,8 +344,7 @@ public class XtestRestClients {
 
 		WSSearchResult res = searchClient.find(options);
 
-		// ObjectWriter ow = new
-		// ObjectMapper().writer().withDefaultPrettyPrinter();
+		// ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		ObjectWriter ow = new ObjectMapper().writer();
 		String jsonStr = ow.writeValueAsString(res);
 		System.out.println(jsonStr);
