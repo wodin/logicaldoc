@@ -13,7 +13,7 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
-import com.logicaldoc.webservice.model.Right;
+import com.logicaldoc.webservice.model.WSRight;
 import com.logicaldoc.webservice.model.WSFolder;
 
 /**
@@ -153,7 +153,7 @@ public class SoapFolderServiceTest extends AbstractWebServiceTestCase {
 	@Test
 	public void testGetGrantedUsers() {
 		try {
-			Right[] rights = new Right[0];
+			WSRight[] rights = new WSRight[0];
 			rights = folderServiceImpl.getGrantedUsers("", 100);
 			Assert.assertEquals(2, rights.length);
 			Assert.assertEquals(3, rights[0].getId());
@@ -163,7 +163,7 @@ public class SoapFolderServiceTest extends AbstractWebServiceTestCase {
 
 	@Test
 	public void testGetGrantedGroups() throws Exception {
-		Right[] rights = new Right[0];
+		WSRight[] rights = new WSRight[0];
 		rights = folderServiceImpl.getGrantedGroups("", 100);
 		Assert.assertEquals(2, rights.length);
 	}

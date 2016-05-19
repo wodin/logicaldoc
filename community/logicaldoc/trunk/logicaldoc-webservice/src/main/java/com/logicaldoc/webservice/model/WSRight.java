@@ -7,15 +7,15 @@ package com.logicaldoc.webservice.model;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-public class Right {
+public class WSRight {
 	private long id;
 
 	private int permissions;
 
-	public Right() {
+	public WSRight() {
 	}
 
-	public Right(long id, int permissions) {
+	public WSRight(long id, int permissions) {
 		this.id = id;
 		this.permissions = permissions;
 	}

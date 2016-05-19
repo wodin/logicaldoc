@@ -4,7 +4,7 @@ import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
-import com.logicaldoc.webservice.model.Right;
+import com.logicaldoc.webservice.model.WSRight;
 import com.logicaldoc.webservice.model.WSFolder;
 
 /**
@@ -245,7 +245,7 @@ public interface FolderService {
 	 * @return 'error' if error occurred, the right objects collection.
 	 * @throws Exception
 	 */
-	public Right[] getGrantedUsers(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
+	public WSRight[] getGrantedUsers(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 
 	/**
@@ -256,7 +256,7 @@ public interface FolderService {
 	 * @return 'error' if error occurred, the right objects collection.
 	 * @throws Exception
 	 */
-	public Right[] getGrantedGroups(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
+	public WSRight[] getGrantedGroups(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 
 	/**
