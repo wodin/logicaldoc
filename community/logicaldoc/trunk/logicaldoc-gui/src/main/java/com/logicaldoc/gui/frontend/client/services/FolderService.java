@@ -130,7 +130,7 @@ public interface FolderService extends RemoteService {
 	public void saveTemplates(GUIValue[] templates) throws ServerException;
 
 	/**
-	 * Applies a attributeSet to a folder
+	 * Applies a template to a folder
 	 */
 	public void applyTemplate(long folderId, long templateId, boolean inheritSecurity)
 			throws ServerException;

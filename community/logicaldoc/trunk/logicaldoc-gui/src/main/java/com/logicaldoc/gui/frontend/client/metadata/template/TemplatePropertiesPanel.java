@@ -35,7 +35,7 @@ import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
 
 /**
- * This panel shows all attributeSet properties.
+ * This panel shows all template properties.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.0

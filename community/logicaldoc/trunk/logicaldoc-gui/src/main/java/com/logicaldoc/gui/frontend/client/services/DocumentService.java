@@ -35,7 +35,7 @@ public interface DocumentService extends RemoteService {
 	public GUIDocument save(GUIDocument document) throws Exception;
 
 	/**
-	 * Retrieves all attributes of the specified attributeSet
+	 * Retrieves all attributes of the specified template
 	 */
 	public GUIAttribute[] getAttributes(long templateId) throws ServerException;
 
@@ -133,7 +133,7 @@ public interface DocumentService extends RemoteService {
 	 * @param importZip If .zip files have to be unpacked and the contained
 	 *        documents imported
 	 * @param immediteIndexing If the documents must be immediately indexed
-	 * @param templateId The documents attributeSet
+	 * @param templateId The documents template
 	 * 
 	 * @return The list of created documents
 	 */
