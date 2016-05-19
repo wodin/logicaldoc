@@ -3,29 +3,15 @@ package com.logicaldoc.webservice.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
-import com.logicaldoc.core.folder.Folder;
-import com.logicaldoc.core.folder.FolderDAO;
-import com.logicaldoc.core.metadata.Attribute;
-import com.logicaldoc.core.metadata.Template;
-import com.logicaldoc.core.metadata.TemplateDAO;
-import com.logicaldoc.util.Context;
-import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.webservice.AbstractService;
 
 /**
  * Web Service Document. Useful class to create repository Documents.
@@ -173,8 +159,6 @@ public class WSDocument implements Serializable {
 	private int nature = AbstractDocument.NATURE_DOC;
 
 	private Long formId = null;
-
-
 
 	public Collection<String> listAttributeNames() {
 		List<String> names = new ArrayList<String>();
