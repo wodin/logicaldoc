@@ -27,7 +27,7 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
 /**
- * This panel collects all attributeSet details
+ * This panel collects all template details
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.0

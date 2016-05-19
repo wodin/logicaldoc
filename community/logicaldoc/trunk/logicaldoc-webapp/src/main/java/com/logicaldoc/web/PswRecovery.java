@@ -116,7 +116,7 @@ public class PswRecovery extends HttpServlet {
 						email.setHtml(1);
 
 						/*
-						 * Prepare the attributeSet
+						 * Prepare the template
 						 */
 						Map<String, Object> dictionary = new HashMap<String, Object>();
 						String address = request.getScheme() + "://" + request.getServerName() + ":"

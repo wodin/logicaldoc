@@ -192,7 +192,7 @@ public class ParametricForm extends VLayout {
 	}
 
 	public void reloadCriteriaRows(GUITemplate template, boolean reload) {
-		// When the selected attributeSet change, we have to retrieve the correct
+		// When the selected template change, we have to retrieve the correct
 		// criteria row,because someone has been deleted
 		if (criteriaRows != null && reload) {
 			criteriaRows.clear();
@@ -216,7 +216,7 @@ public class ParametricForm extends VLayout {
 			criteriaRows.add(new RowCriteria(template, 0));
 		}
 
-		// When the selected attributeSet change, we must reload the criteria
+		// When the selected template change, we must reload the criteria
 		// field,so we reload all criteria rows
 		if (reload) {
 			int count = criteriaRows.size();

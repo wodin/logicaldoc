@@ -12,17 +12,17 @@ import com.logicaldoc.gui.common.client.beans.GUITemplate;
 @RemoteServiceRelativePath("template")
 public interface TemplateService extends RemoteService {
 	/**
-	 * Deletes a given attributeSet
+	 * Deletes a given template
 	 */
 	public void delete(long templateId) throws ServerException;
 
 	/**
-	 * Creates or updates a attributeSet
+	 * Creates or updates a template
 	 */
 	public GUITemplate save(GUITemplate template) throws ServerException;
 
 	/**
-	 * Loads a given attributeSet from the database
+	 * Loads a given template from the database
 	 */
 	public GUITemplate getTemplate(long templateId) throws ServerException;
 }

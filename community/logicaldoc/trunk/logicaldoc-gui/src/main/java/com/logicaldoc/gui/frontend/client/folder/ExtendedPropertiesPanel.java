@@ -41,7 +41,7 @@ import com.smartgwt.client.widgets.form.fields.events.KeyPressHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
 /**
- * Shows folder's optional attributeSet metadata
+ * Shows folder's optional template metadata
  * 
  * @author Marco Meschieri - LogicalDOC
  * @since 6.0
