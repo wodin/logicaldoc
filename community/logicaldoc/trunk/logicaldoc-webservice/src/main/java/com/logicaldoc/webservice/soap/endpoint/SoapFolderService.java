@@ -20,7 +20,7 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
-import com.logicaldoc.webservice.model.Right;
+import com.logicaldoc.webservice.model.WSRight;
 import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.soap.FolderService;
 
@@ -434,14 +434,14 @@ public class SoapFolderService extends AbstractService implements FolderService 
 	}
 
 	@Override
-	public Right[] getGrantedUsers(String sid, long folderId) throws Exception {
+	public WSRight[] getGrantedUsers(String sid, long folderId) throws Exception {
 		return getGranted(sid, folderId, true);
 	}
 
-	private Right[] getGranted(String sid, long folderId, boolean users) throws Exception {
+	private WSRight[] getGranted(String sid, long folderId, boolean users) throws Exception {
 		validateSession(sid);
 
-		List<Right> rightsList = new ArrayList<Right>();
+		List<WSRight> rightsList = new ArrayList<WSRight>();
 		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 		try {
@@ -452,21 +452,21 @@ public class SoapFolderService extends AbstractService implements FolderService 
 			for (FolderGroup mg : folder.getFolderGroups()) {
 				Group group = groupDao.findById(mg.getGroupId());
 				if (group.getName().startsWith("_user_") && users) {
-					rightsList.add(new Right(Long.parseLong(group.getName().substring(
+					rightsList.add(new WSRight(Long.parseLong(group.getName().substring(
 							group.getName().lastIndexOf('_') + 1)), mg.getPermissions()));
 				} else if (!group.getName().startsWith("_user_") && !users)
-					rightsList.add(new Right(group.getId(), mg.getPermissions()));
+					rightsList.add(new WSRight(group.getId(), mg.getPermissions()));
 			}
 		} catch (Exception e) {
 			log.error("Some errors occurred", e);
 			throw new Exception("error", e);
 		}
 
-		return (Right[]) rightsList.toArray(new Right[rightsList.size()]);
+		return (WSRight[]) rightsList.toArray(new WSRight[rightsList.size()]);
 	}
 
 	@Override
-	public Right[] getGrantedGroups(String sid, long folderId) throws Exception {
+	public WSRight[] getGrantedGroups(String sid, long folderId) throws Exception {
 		return getGranted(sid, folderId, false);
 	}
 

@@ -2,7 +2,7 @@ package com.logicaldoc.webservice.soap.client;
 
 import java.io.IOException;
 
-import com.logicaldoc.webservice.model.Right;
+import com.logicaldoc.webservice.model.WSRight;
 import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.soap.FolderService;
 
@@ -88,12 +88,12 @@ public class SoapFolderClient extends SoapClient<FolderService> implements Folde
 	}
 
 	@Override
-	public Right[] getGrantedGroups(String sid, long folderId) throws Exception {
+	public WSRight[] getGrantedGroups(String sid, long folderId) throws Exception {
 		return client.getGrantedGroups(sid, folderId);
 	}
 
 	@Override
-	public Right[] getGrantedUsers(String sid, long folderId) throws Exception {
+	public WSRight[] getGrantedUsers(String sid, long folderId) throws Exception {
 		return client.getGrantedUsers(sid, folderId);
 	}
 

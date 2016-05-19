@@ -115,9 +115,9 @@ public class SoapWorgkbench {
 			// folderClient.grantGroup(sid, 13, 3, 4091, true);
 			// folderClient.grantGroup(sid, 13, -20, 0, true);
 			// folderClient.grantUser(sid, 13, 2, 0, false);
-			// Right[] rights = folderClient.getGrantedUsers(sid, 14);
+			// WSRight[] rights = folderClient.getGrantedUsers(sid, 14);
 			// System.out.println("--- " + rights.length);
-			// for (Right right : rights) {
+			// for (WSRight right : rights) {
 			// System.out.println("+++ " + right.getId());
 			// }
 
