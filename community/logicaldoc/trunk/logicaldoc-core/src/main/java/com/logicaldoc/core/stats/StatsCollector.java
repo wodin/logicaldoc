@@ -155,7 +155,7 @@ public class StatsCollector extends Task {
 			else if ("postgresql".equals(documentDAO.getDbms()))
 				dbdir = documentDAO.queryForLong("select pg_database_size(current_database())");
 		} catch (Throwable t) {
-
+			log.warn("Unable to determine the database size - " + t.getMessage());
 		}
 
 		/*
@@ -220,17 +220,6 @@ public class StatsCollector extends Task {
 		long aliases = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_document WHERE ld_docref IS NOT NULL");
 		long tenantsCount = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_tenant");
 
-		long workflow_histories = -1;
-		try {
-			try {
-				Class.forName("com.logicaldoc.workflow.WorkflowHistory");
-				workflow_histories = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_workflowhistory");
-			} catch (ClassNotFoundException exception) {
-
-			}
-		} catch (Exception e) {
-		}
-
 		/*
 		 * Save the last update time
 		 */
@@ -282,16 +271,29 @@ public class StatsCollector extends Task {
 			postParams.add(new BasicNameValuePair("notes", Long.toString(notes)));
 			postParams.add(new BasicNameValuePair("links", Long.toString(links)));
 			postParams.add(new BasicNameValuePair("aliases", Long.toString(aliases)));
-			postParams.add(new BasicNameValuePair("workflow_histories", Long.toString(workflow_histories)));
 			postParams.add(new BasicNameValuePair("tenants", Long.toString(tenantsCount)));
 
-			long templates = documentDAO.queryForLong("select count(ld_id) from ld_template where ld_deleted=0");
+			long workflow_histories = 0;
+			try {
+				workflow_histories = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_workflowhistory");
+			} catch (Throwable t) {
+				log.warn("Unable to retrieve workflow statistics - " + t.getMessage());
+			}
+			postParams.add(new BasicNameValuePair("workflow_histories", Long.toString(workflow_histories)));
+			
+			long templates = 0;
+			try {
+				templates = documentDAO.queryForLong("select count(ld_id) from ld_template where ld_deleted=0");
+			} catch (Throwable t) {
+				log.warn("Unable to retrieve templates statistics - " + t.getMessage());
+			}
 			postParams.add(new BasicNameValuePair("templates", Long.toString(templates)));
 
 			long importFolders = 0;
 			try {
 				importFolders = documentDAO.queryForLong("select count(ld_id) from ld_importfolder where ld_deleted=0");
 			} catch (Throwable t) {
+				log.warn("Unable to retrieve import folders statistics - " + t.getMessage());
 			}
 			postParams.add(new BasicNameValuePair("importfolders", Long.toString(importFolders)));
 
@@ -299,22 +301,31 @@ public class StatsCollector extends Task {
 			try {
 				stamps = documentDAO.queryForLong("select count(ld_id) from ld_stamp where ld_deleted=0");
 			} catch (Throwable t) {
+				log.warn("Unable to retrieve stamps statistics - " + t.getMessage());
 			}
 			postParams.add(new BasicNameValuePair("stamps", Long.toString(stamps)));
 
-			long forms = documentDAO
-					.queryForLong("select count(ld_id) from ld_document where ld_deleted=0 and ld_nature="
-							+ AbstractDocument.NATURE_FORM);
+			long forms = 0;
+			try {
+				forms = documentDAO
+						.queryForLong("select count(ld_id) from ld_document where ld_deleted=0 and ld_nature="
+								+ AbstractDocument.NATURE_FORM);
+			} catch (Throwable t) {
+				log.warn("Unable to retrieve forms statistics - " + t.getMessage());
+			}
 			postParams.add(new BasicNameValuePair("forms", Long.toString(forms)));
 
 			long reports = 0;
 			try {
 				reports = documentDAO.queryForLong("select count(ld_id) from ld_report where ld_deleted=0");
-				postParams.add(new BasicNameValuePair("reports", Long.toString(reports)));
 			} catch (Throwable t) {
+				log.warn("Unable to retrieve reports statistics - " + t.getMessage());
 			}
+			postParams.add(new BasicNameValuePair("reports", Long.toString(reports)));
 
-			// General usage
+			/*
+			 * General usage
+			 */
 			SimpleDateFormat isoDf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
 
 			Date lastLogin = null;
@@ -323,7 +334,7 @@ public class StatsCollector extends Task {
 						"select max(ld_date) from ld_user_history where ld_deleted=0 and ld_event='"
 								+ UserHistory.EVENT_USER_LOGIN + "'", Date.class);
 			} catch (Throwable t) {
-				log.warn(t.getMessage());
+				log.warn("Unable to retrieve last login statistics - " + t.getMessage());
 			}
 			postParams.add(new BasicNameValuePair("last_login", lastLogin != null ? isoDf.format(lastLogin) : ""));
 
@@ -333,18 +344,22 @@ public class StatsCollector extends Task {
 						"select max(ld_date) from ld_history where ld_deleted=0 and ld_event='" + DocumentEvent.STORED
 								+ "'", Date.class);
 			} catch (Throwable t) {
-				log.warn(t.getMessage());
+				log.warn("Unable to retrieve last creation statistics - " + t.getMessage());
 			}
 			postParams.add(new BasicNameValuePair("last_creation", lastCreation != null ? isoDf.format(lastCreation)
 					: ""));
 
-			// Quotas
+			/*
+			 * Quotas
+			 */
 			postParams.add(new BasicNameValuePair("docdir", Long.toString(docdir)));
 			postParams.add(new BasicNameValuePair("indexdir", Long.toString(indexdir)));
 			postParams.add(new BasicNameValuePair("quota", Long.toString(docdir + indexdir + userdir + importdir
 					+ exportdir + plugindir + dbdir + logdir)));
 
-			// Registration
+			/*
+			 * Registration
+			 */
 			postParams.add(new BasicNameValuePair("reg_name", regName != null ? regName : ""));
 			postParams.add(new BasicNameValuePair("reg_email", regEmail != null ? regEmail : ""));
 			postParams.add(new BasicNameValuePair("reg_organization", regOrganization != null ? regOrganization : ""));
