@@ -212,15 +212,6 @@ public class StatsCollector extends Task {
 		long user_histories = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_user_history");
 
 		/*
-		 * Collect features statistics
-		 */
-		long bookmarks = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_bookmark");
-		long notes = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_note");
-		long links = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_link");
-		long aliases = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_document WHERE ld_docref IS NOT NULL");
-		long tenantsCount = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_tenant");
-
-		/*
 		 * Save the last update time
 		 */
 		saveStatistic("lastrun", new Date(), Tenant.SYSTEM_ID);
@@ -266,62 +257,7 @@ public class StatsCollector extends Task {
 			postParams.add(new BasicNameValuePair("histories", Long.toString(histories)));
 			postParams.add(new BasicNameValuePair("user_histories", Long.toString(user_histories)));
 
-			// Features usage
-			postParams.add(new BasicNameValuePair("bookmarks", Long.toString(bookmarks)));
-			postParams.add(new BasicNameValuePair("notes", Long.toString(notes)));
-			postParams.add(new BasicNameValuePair("links", Long.toString(links)));
-			postParams.add(new BasicNameValuePair("aliases", Long.toString(aliases)));
-			postParams.add(new BasicNameValuePair("tenants", Long.toString(tenantsCount)));
-
-			long workflow_histories = 0;
-			try {
-				workflow_histories = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_workflowhistory");
-			} catch (Throwable t) {
-				log.warn("Unable to retrieve workflow statistics - " + t.getMessage());
-			}
-			postParams.add(new BasicNameValuePair("workflow_histories", Long.toString(workflow_histories)));
-			
-			long templates = 0;
-			try {
-				templates = documentDAO.queryForLong("select count(ld_id) from ld_template where ld_deleted=0");
-			} catch (Throwable t) {
-				log.warn("Unable to retrieve templates statistics - " + t.getMessage());
-			}
-			postParams.add(new BasicNameValuePair("templates", Long.toString(templates)));
-
-			long importFolders = 0;
-			try {
-				importFolders = documentDAO.queryForLong("select count(ld_id) from ld_importfolder where ld_deleted=0");
-			} catch (Throwable t) {
-				log.warn("Unable to retrieve import folders statistics - " + t.getMessage());
-			}
-			postParams.add(new BasicNameValuePair("importfolders", Long.toString(importFolders)));
-
-			long stamps = 0;
-			try {
-				stamps = documentDAO.queryForLong("select count(ld_id) from ld_stamp where ld_deleted=0");
-			} catch (Throwable t) {
-				log.warn("Unable to retrieve stamps statistics - " + t.getMessage());
-			}
-			postParams.add(new BasicNameValuePair("stamps", Long.toString(stamps)));
-
-			long forms = 0;
-			try {
-				forms = documentDAO
-						.queryForLong("select count(ld_id) from ld_document where ld_deleted=0 and ld_nature="
-								+ AbstractDocument.NATURE_FORM);
-			} catch (Throwable t) {
-				log.warn("Unable to retrieve forms statistics - " + t.getMessage());
-			}
-			postParams.add(new BasicNameValuePair("forms", Long.toString(forms)));
-
-			long reports = 0;
-			try {
-				reports = documentDAO.queryForLong("select count(ld_id) from ld_report where ld_deleted=0");
-			} catch (Throwable t) {
-				log.warn("Unable to retrieve reports statistics - " + t.getMessage());
-			}
-			postParams.add(new BasicNameValuePair("reports", Long.toString(reports)));
+			collectFeatureUsageStats(postParams);
 
 			/*
 			 * General usage
@@ -394,6 +330,97 @@ public class StatsCollector extends Task {
 			log.warn("Troubles packaging the statistics");
 			log.debug("Unable to send statistics", t);
 		}
+	}
+
+	private void collectFeatureUsageStats(List<NameValuePair> postParams) {
+		long bookmarks = 0;
+		try {
+			bookmarks = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_bookmark");
+		} catch (Throwable t) {
+			log.warn("Unable to calculate bookmarks statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("bookmarks", Long.toString(bookmarks)));
+
+		long links = 0;
+		try {
+			links = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_link");
+		} catch (Throwable t) {
+			log.warn("Unable to calculate links statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("links", Long.toString(links)));
+
+		long notes = 0;
+		try {
+			notes = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_note");
+		} catch (Throwable t) {
+			log.warn("Unable to calculate notes statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("notes", Long.toString(notes)));
+
+		long aliases = 0;
+		try {
+			aliases = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_document WHERE ld_docref IS NOT NULL");
+		} catch (Throwable t) {
+			log.warn("Unable to calculate aliases statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("aliases", Long.toString(aliases)));
+
+		long tenants = 0;
+		try {
+			tenants = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_tenant");
+		} catch (Throwable t) {
+			log.warn("Unable to calculate tenants statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("tenants", Long.toString(tenants)));
+
+		long workflow_histories = 0;
+		try {
+			workflow_histories = folderDAO.queryForLong("SELECT COUNT(*) FROM ld_workflowhistory");
+		} catch (Throwable t) {
+			log.warn("Unable to calculate workflow statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("workflow_histories", Long.toString(workflow_histories)));
+
+		long templates = 0;
+		try {
+			templates = documentDAO.queryForLong("select count(ld_id) from ld_template where ld_deleted=0");
+		} catch (Throwable t) {
+			log.warn("Unable to calculate templates statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("templates", Long.toString(templates)));
+
+		long importFolders = 0;
+		try {
+			importFolders = documentDAO.queryForLong("select count(ld_id) from ld_importfolder where ld_deleted=0");
+		} catch (Throwable t) {
+			log.warn("Unable to calculate import folders statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("importfolders", Long.toString(importFolders)));
+
+		long stamps = 0;
+		try {
+			stamps = documentDAO.queryForLong("select count(ld_id) from ld_stamp where ld_deleted=0");
+		} catch (Throwable t) {
+			log.warn("Unable to calculate stamps statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("stamps", Long.toString(stamps)));
+
+		long forms = 0;
+		try {
+			forms = documentDAO.queryForLong("select count(ld_id) from ld_document where ld_deleted=0 and ld_nature="
+					+ AbstractDocument.NATURE_FORM);
+		} catch (Throwable t) {
+			log.warn("Unable to calculate forms statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("forms", Long.toString(forms)));
+
+		long reports = 0;
+		try {
+			reports = documentDAO.queryForLong("select count(ld_id) from ld_report where ld_deleted=0");
+		} catch (Throwable t) {
+			log.warn("Unable to calculate reports statistics - " + t.getMessage());
+		}
+		postParams.add(new BasicNameValuePair("reports", Long.toString(reports)));
 	}
 
 	/**
