@@ -191,7 +191,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 
 	protected void refresh(Object entity) {
 		try {
-			if (!sessionFactory.getCurrentSession().contains(entity)){
+			if (!sessionFactory.getCurrentSession().contains(entity)) {
 				sessionFactory.getCurrentSession().refresh(entity);
 			}
 		} catch (Throwable t) {
@@ -283,7 +283,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 			else
 				list = jdbcTemplate.queryForList(sql, elementType);
 		} catch (Exception e) {
-			e.printStackTrace();
+
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
@@ -303,7 +303,7 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 			else
 				rs = jdbcTemplate.queryForRowSet(sql);
 		} catch (Exception e) {
-			e.printStackTrace();
+
 			if (log.isErrorEnabled())
 				log.error(e.getMessage(), e);
 		}
@@ -330,42 +330,27 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.queryForLong(sql);
 		} catch (EmptyResultDataAccessException empty) {
-		} catch (Exception e) {
-			e.printStackTrace();
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
 		}
 		return 0;
 	}
 
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings("unchecked")
 	@Override
-	public Object queryForObject(String sql, Class type) {
+	public Object queryForObject(String sql, @SuppressWarnings("rawtypes") Class type) {
 		try {
 			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 			return jdbcTemplate.queryForObject(sql, type);
 		} catch (EmptyResultDataAccessException empty) {
-		} catch (Exception e) {
-			e.printStackTrace();
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
 		}
 		return 0;
 	}
 
 	@Override
 	public int jdbcUpdate(String statement) {
-		try {
-			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
-			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			return jdbcTemplate.update(statement);
-		} catch (Exception e) {
-			e.printStackTrace();
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-		return 0;
+		DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		return jdbcTemplate.update(statement);
 	}
 
 	@Override
@@ -398,15 +383,9 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 
 	@Override
 	public int jdbcUpdate(String statement, Object... args) {
-		try {
-			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
-			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			return jdbcTemplate.update(statement, args);
-		} catch (Exception e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-		}
-		return 0;
+		DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
+		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+		return jdbcTemplate.update(statement, args);
 	}
 
 	protected Connection getConnection() throws SQLException {
