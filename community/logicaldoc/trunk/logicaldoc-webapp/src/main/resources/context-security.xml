@@ -22,9 +22,7 @@
     <bean id="SessionManager" class="com.logicaldoc.core.security.SessionManager" destroy-method="destroy">
         <property name="authenticationChain" ref="AuthenticationChain" />
     </bean>
-    <bean id="LDAuthenticationProvider" class="com.logicaldoc.core.security.spring.LDAuthenticationProvider">
-        <property name="userDAO" ref="UserDAO" />
-    </bean>
+    <bean id="LDAuthenticationProvider" class="com.logicaldoc.core.security.spring.LDAuthenticationProvider" />
     <bean id="AdminPasswdAuthenticationProvider"
         class="com.logicaldoc.core.security.spring.AdminPasswdAuthenticationProvider" />
     <bean id="LDAccessDecisionManager" class="com.logicaldoc.core.security.spring.LDAccessDecisionManager">

@@ -30,9 +30,11 @@ public class LDAuthenticationFailureHandler implements AuthenticationFailureHand
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) throws IOException, ServletException {
-		
-		StringBuffer failureUrl = new StringBuffer(
-				request.getParameter(PARAM_FAILUREURL) != null ? request.getParameter(PARAM_FAILUREURL) : "");
+
+		StringBuffer failureUrl = new StringBuffer(request.getContextPath());
+		failureUrl.append("/");
+		if (request.getParameter(PARAM_FAILUREURL) != null)
+			failureUrl.append(request.getParameter(PARAM_FAILUREURL));
 		if (failureUrl.toString().indexOf('?') != -1)
 			failureUrl.append("&");
 		else
@@ -42,7 +44,7 @@ public class LDAuthenticationFailureHandler implements AuthenticationFailureHand
 
 		Cookie failureCookie = new Cookie(COOKIE_LDOC_FAILURE, exception.getMessage());
 		response.addCookie(failureCookie);
-
+		
 		log.info("Authentication was unsuccesful, redirecting to " + failureUrl.toString());
 		response.sendRedirect(failureUrl.toString());
 	}
