@@ -142,6 +142,10 @@
                 stage="never" keep="true" />
             <executable targetfile="$INSTALL_PATH/bin/logicaldoc.plist"
                 stage="never" keep="true" />
+            <executable targetfile="$INSTALL_PATH/bin/reset-passwd.sh"
+                stage="never" keep="true" />            
+            <executable targetfile="$INSTALL_PATH/bin/reset-passwd.bat"
+                stage="never" keep="true" />            
             <executable targetfile="$INSTALL_PATH/tomcat/bin/catalina.sh"
                 stage="never" keep="true" />
             <executable targetfile="$INSTALL_PATH/tomcat/bin/configtest.sh"
