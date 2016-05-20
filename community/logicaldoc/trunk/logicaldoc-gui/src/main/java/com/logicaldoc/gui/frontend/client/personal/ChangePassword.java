@@ -116,10 +116,12 @@ public class ChangePassword extends Window {
 										else
 											SC.warn(I18N.message("genericerror"));
 									} else {
-										// Close the popup
-										ChangePassword.this.destroy();
+
 										Log.info(I18N.message("event.user.passwordchanged"), null);
 									}
+
+									// Close the popup
+									ChangePassword.this.destroy();
 								}
 							});
 				}
