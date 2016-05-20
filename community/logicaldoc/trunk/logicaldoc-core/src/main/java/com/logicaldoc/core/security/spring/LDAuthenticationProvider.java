@@ -25,7 +25,6 @@ import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.authentication.AccountDisabledException;
 import com.logicaldoc.core.security.authentication.AccountNotFoundException;
 import com.logicaldoc.core.security.authentication.PasswordExpiredException;
-import com.logicaldoc.core.security.dao.UserDAO;
 
 /**
  * This Authentication provider users the <code>AuthenticationChain</code> to
@@ -37,8 +36,6 @@ import com.logicaldoc.core.security.dao.UserDAO;
 public class LDAuthenticationProvider implements AuthenticationProvider {
 
 	private static Logger log = LoggerFactory.getLogger(LDAuthenticationProvider.class);
-
-	private UserDAO userDAO;
 
 	public LDAuthenticationProvider() {
 	}
@@ -103,9 +100,5 @@ public class LDAuthenticationProvider implements AuthenticationProvider {
 	@Override
 	public boolean supports(Class<?> arg0) {
 		return true;
-	}
-
-	public void setUserDAO(UserDAO userDAO) {
-		this.userDAO = userDAO;
 	}
 }
