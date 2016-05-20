@@ -514,4 +514,32 @@
 		<antcall target="tomcat-start" />
 		<echo>Restore finished</echo>
 	</target>
+   
+   <target name="reset-passwd">
+       <antcall target="tomcat-stop" />
+       
+       <echo>Update configuration file</echo> 
+      <propertyfile file="${root}/conf/context.properties" comment="LogicalDOC restore password">
+          <entry key="adminpasswd" value="d033e22ae348aeb566fc214aec3585c4da997" />
+       </propertyfile>
+       <echo>configuration file updated</echo>
+       
+       <echo>Update the database ${jdbc.url}</echo>
+       <trycatch property="error" reference="exception">
+              <try>
+                <sql driver="${jdbc.driver}" url="${jdbc.url}"  
+                     userid="${jdbc.username}" password="${jdbc.password}" 
+                     print="yes" classpathref="webapp.classpath">
+                  update ld_user set ld_password='d033e22ae348aeb566fc214aec3585c4da997' where ld_username='admin';
+                </sql>
+                <echo>Database updated</echo>
+                <echo>Password of user admin is now admin</echo> 
+              </try>
+              <catch>
+                <echo>Error during database update</echo>
+              </catch>
+       </trycatch>
+       
+       <antcall target="tomcat-start" />
+   </target>   
 </project>
