@@ -1106,8 +1106,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public Folder create(Folder parent, Folder folderVO, boolean inheritSecurity, FolderHistory transaction) {
-		if (parent.getFoldRef() != null)
-			parent = findFolder(parent);
+		parent = findFolder(parent);
 
 		Folder folder = new Folder();
 		folder.setName(folderVO.getName());
@@ -1122,6 +1121,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		if (folderVO.getCreator() != null)
 			folder.setCreator(folderVO.getCreator());
 		folder.setParentId(parent.getId());
+
+		setUniqueName(folder);
 
 		folder.setTemplate(folderVO.getTemplate());
 		folder.setTemplateLocked(folderVO.getTemplateLocked());
@@ -1160,7 +1161,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			}
 		}
 
-		setUniqueName(folder);
 		if (transaction != null)
 			transaction.setEvent(FolderEvent.CREATED.toString());
 
@@ -1239,20 +1239,17 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		return folder;
 	}
 
-	@Override
-	public void setUniqueName(Folder folder) {
+	private void setUniqueName(Folder folder) {
 		int counter = 1;
 
-		folder = findFolder(folder);
 		String folderName = folder.getName();
 
 		List<String> collisions = (List<String>) queryForList(
 				"select lower(ld_name) from ld_folder where ld_deleted=0 and ld_parentid=" + folder.getParentId()
 						+ " and lower(ld_name) like'" + SqlUtil.doubleQuotes(folderName.toLowerCase()) + "%'",
 				String.class);
-		while (collisions.contains(folder.getName().toLowerCase())) {
+		while (collisions.contains(folder.getName().toLowerCase()))
 			folder.setName(folderName + "(" + (counter++) + ")");
-		}
 	}
 
 	@Override

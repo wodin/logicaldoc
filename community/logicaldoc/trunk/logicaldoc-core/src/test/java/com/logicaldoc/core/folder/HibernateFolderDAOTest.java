@@ -455,6 +455,8 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(alias);
 		Assert.assertTrue(3000L == alias.getFoldRef());
 		Assert.assertTrue(3000L == alias.getSecurityRef());
+		Folder orig = dao.findById(3000L);
+		Assert.assertEquals("Workspace X", orig.getName());
 	}
 
 	@Test

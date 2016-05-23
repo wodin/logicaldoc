@@ -62,7 +62,8 @@ public class LogDownload extends HttpServlet {
 			} else if (appender != null) {
 				response.setContentType("text/html");
 				LoggingConfigurator conf = new LoggingConfigurator();
-				file = new File(conf.getFile(appender, true));
+				if (conf.getFile(appender, true) != null)
+					file = new File(conf.getFile(appender, true));
 			}
 
 			if (file == null)
