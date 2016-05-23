@@ -396,8 +396,6 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	 */
 	public List<Folder> deleteTree(long folderId, FolderHistory transaction) throws Exception;
 
-	public void setUniqueName(Folder folder);
-
 	/**
 	 * Useful method that allows to find all folders that contains the given
 	 * name into their text.

@@ -260,7 +260,7 @@ public class DuplicatesPanel extends VLayout {
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
 				if (Session.get().getCurrentFolder().isDownload())
-					WindowUtils.openUrl(GWT.getHostPageBaseURL() + "download?docId=" + id + "&open=true");
+					WindowUtils.openUrl(Util.downloadURL(Long.parseLong(id), null, false));
 			}
 		});
 
