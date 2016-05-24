@@ -85,8 +85,8 @@ public class RestServerProxy extends AbstractServerProxy {
 	}
 
 	@Override
-	public WSFolder createPath(String sid, Long rootFolder, String currentKey) throws Exception {
-		return folderClient.createPath(rootFolder, currentKey);
+	public WSFolder createPath(String sid, Long rootFolder, String path) throws Exception {
+		return folderClient.createPath(rootFolder, path);
 	}
 
 	@Override
