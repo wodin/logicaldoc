@@ -42,4 +42,8 @@ public interface Constants {
 	public final static String OPENSSL = "openssl";
 
 	public final static String ARCHITECTURE = "architecture";
+
+	public final static String JAVAHOME = "javahome";
+
+	public final static String JREHOME = "jrehome";
 }

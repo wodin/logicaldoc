@@ -58,14 +58,15 @@ public class ApplyConfiguration {
 			String openssl = args[27].trim();
 
 			String lang = "en";
-			//if (args[29] != null && !args[28].contains("$"))
-      if (args[28] != null && !args[28].contains("$"))
+			if (args[28] != null && !args[28].contains("$"))
 				lang = args[28].trim();
 
 			String setuppassword = "admin";
-			//if (args[30] != null && !args[29].contains("$"))
-      if (args[29] != null && !args[29].contains("$"))
+			if (args[29] != null && !args[29].contains("$"))
 				setuppassword = args[29].trim();
+
+			String javahome = args[30].trim();
+			String jrehome = args[31].trim();
 
 			/*
 			 * Save the configuration in the context.properties
@@ -175,6 +176,17 @@ public class ApplyConfiguration {
 			Replace.replace(file.getAbsolutePath(), "SSERVNAME", servicename);
 			String serviceBat = readFileAsString(file);
 			serviceBat = serviceBat.replaceAll("--JvmMx 900", "--JvmMx " + memory);
+
+			serviceBat = serviceBat.replaceAll("--JvmMx 900", "--JvmMx " + memory);
+			if (!"-".equals(javahome))
+				serviceBat = serviceBat.replaceAll("setlocal",
+						"set \"JAVA_HOME=" + javahome.replaceAll("\\\\", "\\\\\\\\")
+								+ "\"\r\nset JRE_HOME=\r\nsetlocal\r\n");
+			else if (!"-".equals(jrehome))
+				serviceBat = serviceBat.replaceAll("setlocal",
+						"set \"JRE_HOME=" + jrehome.replaceAll("\\\\", "\\\\\\\\")
+								+ "\"\r\nset JAVA_HOME=\r\nsetlocal\r\n");
+
 			out = new FileWriter(file);
 			out.write(serviceBat);
 			out.close();

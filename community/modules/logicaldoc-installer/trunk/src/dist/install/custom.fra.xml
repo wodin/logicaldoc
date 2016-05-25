@@ -8,15 +8,15 @@
     <str id="installer.madewith" txt="http://www.logicaldoc.com"/>
     <str id="installer.reversetitle" txt="$APP_NAME $APP_VER"/>
     <str id="installer.title" txt="$APP_NAME $APP_VER"/>
-    <str id="installer.close" txt="Close"/>
-    <str id="data.validation.warning.title" txt="Warning"/>
+    <str id="installer.close" txt="Fermer"/>
+    <str id="data.validation.warning.title" txt="Attention"/>
     
-    <str id="embeddeddbwarn" txt="You selected to install with the Embedded db.\nYour data will not be available in the production system.\nDo you confirm?" />
+    <str id="embeddeddbwarn" txt="Vous avez choisi d'installer avec le db embedded.\nVos données ne seront pas disponibles dans le système de production.\nConfirmez-vous?" />
     
-    <str id="invalidcredentials" txt="Invalid credentials or feature not enabled in the license"/>
+    <str id="invalidcredentials" txt="Pouvoirs ou fonctionnalité non valide pas activé dans la licence"/>
     
-    <str id="invalidjava" txt="Unable to find a Java 8 or greater for the chosen architecture"/>
+    <str id="invalidjava" txt="Impossible de trouver un Java 8 ou plus pour l'architecture choisie"/>
     
     <str id="TargetPanel.existingLogicalDOC"
-         txt="Existing installation detected! Please apply the appropriate update package if you want to update your system."/>
+         txt="Installation existante détectée! S'il vous plaît appliquer le package de mise à jour appropriée si vous souhaitez mettre à jour votre système."/>
 </izpack:langpack>

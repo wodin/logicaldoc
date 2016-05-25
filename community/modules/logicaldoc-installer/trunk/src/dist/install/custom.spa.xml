@@ -4,9 +4,17 @@
                  xmlns:izpack="http://izpack.org/schema/langpack"
                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                  xsi:schemaLocation="http://izpack.org/schema/langpack http://izpack.org/schema/5.0/izpack-langpack-5.0.xsd">
-                 
+
     <str id="installer.madewith" txt="http://www.logicaldoc.com"/>
     <str id="installer.reversetitle" txt="$APP_NAME $APP_VER"/>
     <str id="installer.title" txt="$APP_NAME $APP_VER"/>
-    <str id="data.validation.warning.title" txt="Atencion"/>
+    <str id="installer.close" txt="Cerrar"/>
+    <str id="data.validation.warning.title" txt="Atención"/>
+    
+    <str id="invalidcredentials" txt="Las credenciales no son válidas o la característica no está habilitada en la licencia"/>
+    
+    <str id="invalidjava" txt="No se puede encontrar un Java 8 o mayor por la arquitectura elegida"/>
+    
+    <str id="TargetPanel.existingLogicalDOC"
+         txt="nstalación existente detectada! Por favor, aplicar el paquete de actualización si quiere actualizar el sistema."/>
 </izpack:langpack>
