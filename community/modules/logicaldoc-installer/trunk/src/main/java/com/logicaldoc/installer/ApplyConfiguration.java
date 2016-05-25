@@ -61,12 +61,8 @@ public class ApplyConfiguration {
 			if (args[28] != null && !args[28].contains("$"))
 				lang = args[28].trim();
 
-			String setuppassword = "admin";
-			if (args[29] != null && !args[29].contains("$"))
-				setuppassword = args[29].trim();
-
-			String javahome = args[30].trim();
-			String jrehome = args[31].trim();
+			String javahome = args[29].trim();
+			String jrehome = args[30].trim();
 
 			/*
 			 * Save the configuration in the context.properties
@@ -206,22 +202,14 @@ public class ApplyConfiguration {
 			Log.info("Using architecture: " + architecture, null);
 
 			/*
-			 * Save the configuration in the tomcat-users.xml
-			 */
-			file = new File(rootDir + "/tomcat/conf/tomcat-users.xml");
-			Log.info("Save configurations into " + file.getAbsolutePath(), null);
-			handler.logOutput("Save configurations into " + file.getAbsolutePath(), false);
-			Replace.replace(file.getAbsolutePath(), "adminpwd", setuppassword);
-
-			/*
 			 * Replace the right Tomcat binaries
 			 */
 			if ("32bit".equals(architecture)) {
 				File src = new File(args[0] + "/tomcat/bin/32/tcnative-1.dll");
 				File dst = new File(args[0] + "/tomcat/bin/tcnative-1.dll");
 				FileUtil.copyFile(src, dst);
-				src = new File(args[0] + "/tomcat/bin/32/tomcat7.exe");
-				dst = new File(args[0] + "/tomcat/bin/tomcat7.exe");
+				src = new File(args[0] + "/tomcat/bin/32/tomcat8.exe");
+				dst = new File(args[0] + "/tomcat/bin/tomcat8.exe");
 				FileUtil.copyFile(src, dst);
 				if (memory > 1300)
 					memory = 1300;
