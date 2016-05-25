@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="iso-8859-1" standalone="yes" ?>
+
+<izpack:langpack version="5.0"
+                 xmlns:izpack="http://izpack.org/schema/langpack"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://izpack.org/schema/langpack http://izpack.org/schema/5.0/izpack-langpack-5.0.xsd">
+                 
+    <str id="installer.madewith" txt="http://www.logicaldoc.com"/>
+    <str id="installer.reversetitle" txt="$APP_NAME $APP_VER"/>
+    <str id="installer.title" txt="$APP_NAME $APP_VER"/>
+    <str id="installer.close" txt="Schließen"/>
+    <str id="data.validation.warning.title" txt="Warnung"/>
+    
+    <str id="embeddeddbwarn" txt="Ihre Auswahl mit dem Embedded db zu installieren.\nIhre Daten werden nicht in das Produktionssystem zur Verfügung.\nSie bestätigen, dass Sie?" />
+    
+    <str id="invalidcredentials" txt="Ungültige Anmeldeinformationen oder eine Funktion nicht in der Lizenz aktiviert"/>
+    
+    <str id="invalidjava" txt="Es kann keine Java 8 oder höher für die gewählte Architektur zu finden"/>
+    
+    <str id="TargetPanel.existingLogicalDOC"
+         txt="Bestehende installation erkannt! Bitte wenden Sie das entsprechende Update-Paket, wenn Sie Ihr System aktualisieren möchten."/>
+</izpack:langpack>

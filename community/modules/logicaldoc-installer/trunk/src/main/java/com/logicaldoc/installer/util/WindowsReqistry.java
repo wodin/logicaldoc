@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
 
-
 public class WindowsReqistry {
 
 	/**
@@ -26,11 +25,12 @@ public class WindowsReqistry {
 			String output = reader.getResult();
 
 			return output.substring(output.lastIndexOf("REG_") + 8, output.length() - 1).trim();
+		} catch (IndexOutOfBoundsException ioe) {
+			//Nothing to do
 		} catch (Throwable e) {
-			Log.error(e.getMessage(), e);
-			return null;
+			Log.error("WindowsRegistry: " + e.getMessage(), e);
 		}
-
+		return null;
 	}
 
 	static class StreamReader extends Thread {

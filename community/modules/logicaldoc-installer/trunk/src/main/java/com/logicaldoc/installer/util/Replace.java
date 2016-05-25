@@ -39,7 +39,7 @@ public class Replace {
 			file.delete();
 			tmp.renameTo(file);
 		} catch (Throwable ioe) {
-			Log.error(ioe.getMessage(), ioe);
+			Log.error("Replace: " + ioe.getMessage(), ioe);
 		}
 	}
 }

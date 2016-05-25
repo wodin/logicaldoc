@@ -42,7 +42,8 @@
         
         <arg>${ISO2_LANG}</arg>
         
-        <arg>${setuppassword}</arg>
+        <arg>${javahome}</arg>
+        <arg>${jrehome}</arg>
     </executeclass>
   </job>
   <job name="Database Loader">

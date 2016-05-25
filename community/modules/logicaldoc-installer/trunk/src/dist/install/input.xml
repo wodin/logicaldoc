@@ -118,20 +118,11 @@
         <field type="title" align="left" bold="true" txt="Application Server"
             id="applicationserver">
         </field>
-
-        <field type="text" variable="setuppassword">
-            <spec txt="Setup password" id="setuppassword" size="10" set="" />
-            <validator class="com.logicaldoc.installer.PasswordWeeknessValidator" txt="Please enter a password composed by at least 6 characters" id="setuppasswordreq" />
-        </field>
         
-        <field type="space" />
         <field type="text" variable="httpport">
             <spec txt="HTTP Port" id="httpport" size="10" set="8080" />
             <validator class="com.logicaldoc.installer.PortValidator"
                 id="invalidhttpport" txt="Invalid HTTP port" >
-                <!-- 
-                <spec txt="" id="invalidhttpport" />
-                -->
             </validator>
         </field>
         
@@ -140,9 +131,6 @@
             <spec txt="HTTPS Port" id="httpsport" size="10" set="8443" />
             <validator class="com.logicaldoc.installer.PortValidator"
                 id="invalidhttpsport" txt="Invalid HTTPS port">
-                <!-- 
-                <spec txt="" id="invalidhttpsport" />
-                -->
             </validator>
         </field>
         
@@ -151,9 +139,6 @@
             <spec txt="Shutdown Port" id="shutdownport" size="10" set="9005" />
             <validator class="com.logicaldoc.installer.PortValidator"
                 id="invalidshutdownport" txt="Invalid Shutdown port">
-                <!--
-                <spec txt="" id="invalidshutdownport" />
-                -->
             </validator>
         </field>
         

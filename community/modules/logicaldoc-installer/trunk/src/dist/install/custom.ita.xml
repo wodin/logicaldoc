@@ -8,4 +8,13 @@
     <str id="installer.madewith" txt="http://www.logicaldoc.com"/>
     <str id="installer.reversetitle" txt="$APP_NAME $APP_VER"/>
     <str id="installer.title" txt="$APP_NAME $APP_VER"/>
+    <str id="installer.close" txt="Chiudi"/>
+    <str id="data.validation.warning.title" txt="Attenzione"/>
+    
+    <str id="invalidcredentials" txt="Credenziali non valide o caratteristica non abilitata in licenza"/>
+    
+    <str id="invalidjava" txt="Java 8 o superiore non rilevato per l'architettura selezionata"/>
+    
+    <str id="TargetPanel.existingLogicalDOC"
+         txt="Individuata un'installazione esistente! Scarica e installa il pacchetto di aggiornamento se vuoi aggiornare il tuo sistema."/>
 </izpack:langpack>
