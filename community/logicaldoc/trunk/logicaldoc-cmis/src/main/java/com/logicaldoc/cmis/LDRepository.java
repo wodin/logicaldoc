@@ -126,8 +126,8 @@ import com.logicaldoc.core.folder.FolderHistory;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.metadata.Attribute;
-import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.metadata.Template;
+import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
@@ -202,12 +202,12 @@ public class LDRepository {
 	/**
 	 * Constructor.
 	 * 
-	 * @param id CMIS repository id
+	 * @param sid The Session identifier
 	 * @param root root folder
 	 */
 	public LDRepository(Folder root, String sid) {
 		// check root folder
-		if ((root == null)) {
+		if (root == null) {
 			throw new IllegalArgumentException("Invalid root folder!");
 		}
 
@@ -788,9 +788,6 @@ public class LDRepository {
 		validatePermission(objectId.getValue(), context, Permission.WRITE);
 
 		try {
-			if (objectId == null)
-				throw new CmisInvalidArgumentException("Id is not valid!");
-
 			// get the document or folder
 			PersistentObject object = getObject(objectId.getValue());
 
@@ -1789,15 +1786,6 @@ public class LDRepository {
 
 				addPropertyString(result, typeId, filter, TypeManager.PROP_TITLE, doc.getTitle());
 				addPropertyString(result, typeId, filter, TypeManager.PROP_LANGUAGE, doc.getLanguage());
-				addPropertyString(result, typeId, filter, TypeManager.PROP_SOURCE, doc.getSource());
-				addPropertyString(result, typeId, filter, TypeManager.PROP_SOURCE_AUTHOR, doc.getSourceAuthor());
-				addPropertyDateTime(result, typeId, filter, TypeManager.PROP_SOURCE_DATE, doc.getSourceDate());
-				addPropertyString(result, typeId, filter, TypeManager.PROP_SOURCE_TYPE, doc.getSourceType());
-				addPropertyString(result, typeId, filter, TypeManager.PROP_SOURCE_ID, doc.getSourceId());
-				addPropertyString(result, typeId, filter, TypeManager.PROP_RECIPIENT, doc.getRecipient());
-				addPropertyString(result, typeId, filter, TypeManager.PROP_COVERAGE, doc.getCoverage());
-				addPropertyString(result, typeId, filter, TypeManager.PROP_CUSTOMID, doc.getCustomId());
-				addPropertyString(result, typeId, filter, TypeManager.PROP_OBJECT, doc.getObject());
 				addPropertyInteger(result, typeId, filter, TypeManager.PROP_RATING,
 						doc.getRating() != null ? doc.getRating() : 0);
 				addPropertyString(result, typeId, filter, TypeManager.PROP_FILEVERSION, doc.getFileVersion());
@@ -1929,8 +1917,6 @@ public class LDRepository {
 				doc.setTitle(FilenameUtils.getBaseName(doc.getFileName()));
 			} else if (p.getId().equals(TypeManager.PROP_TITLE) && StringUtils.isNotEmpty((String) p.getFirstValue()))
 				doc.setTitle((String) p.getFirstValue());
-			else if (p.getId().equals(TypeManager.PROP_COVERAGE))
-				doc.setCoverage((String) p.getFirstValue());
 			else if (p.getId().equals(TypeManager.PROP_CUSTOMID))
 				doc.setCustomId((String) p.getFirstValue());
 			else if (p.getId().equals(TypeManager.PROP_LANGUAGE)) {
@@ -1938,26 +1924,7 @@ public class LDRepository {
 				Language lang = langMan.getLanguage(LocaleUtil.toLocale((String) p.getFirstValue()));
 				if (lang != null)
 					doc.setCustomId((String) p.getFirstValue());
-			} else if (p.getId().equals(TypeManager.PROP_OBJECT))
-				doc.setObject((String) p.getFirstValue());
-			else if (p.getId().equals(TypeManager.PROP_RECIPIENT))
-				doc.setRecipient((String) p.getFirstValue());
-			else if (p.getId().equals(TypeManager.PROP_SOURCE))
-				doc.setSource((String) p.getFirstValue());
-			else if (p.getId().equals(TypeManager.PROP_SOURCE_AUTHOR))
-				doc.setSourceAuthor((String) p.getFirstValue());
-			else if (p.getId().equals(TypeManager.PROP_SOURCE_ID))
-				doc.setSourceId((String) p.getFirstValue());
-			else if (p.getId().equals(TypeManager.PROP_SOURCE_DATE)) {
-				if (p.getFirstValue() == null)
-					doc.setSourceDate(null);
-				else if (p.getFirstValue() instanceof Date)
-					doc.setSourceDate((Date) p.getFirstValue());
-				else if (p.getFirstValue() instanceof GregorianCalendar)
-					doc.setSourceDate(((GregorianCalendar) p.getFirstValue()).getTime());
-			} else if (p.getId().equals(TypeManager.PROP_SOURCE_TYPE))
-				doc.setSourceType((String) p.getFirstValue());
-			else if (p.getId().equals(TypeManager.PROP_TAGS)) {
+			} else if (p.getId().equals(TypeManager.PROP_TAGS)) {
 				doc.getTags().clear();
 				doc.setTgs((String) p.getFirstValue());
 				if (doc.getTgs() != null) {
@@ -2223,15 +2190,6 @@ public class LDRepository {
 		PropertyBooleanImpl p = new PropertyBooleanImpl(id, value);
 		p.setQueryName(id);
 		props.addProperty(p);
-	}
-
-	private void addPropertyDateTime(PropertiesImpl props, String typeId, Set<String> filter, String id, Date value) {
-		GregorianCalendar gc = null;
-		if (value != null) {
-			gc = new GregorianCalendar();
-			gc.setTime(value);
-		}
-		addPropertyDateTime(props, typeId, filter, id, gc);
 	}
 
 	private void addPropertyDateTime(PropertiesImpl props, String typeId, Set<String> filter, String id,
@@ -2657,14 +2615,11 @@ public class LDRepository {
 		if (changeLogToken == null)
 			throw new CmisInvalidArgumentException("Missing change log token holder");
 		long minDate;
-		if (changeLogToken == null) {
-			minDate = 0;
-		} else {
-			try {
-				minDate = Long.parseLong(changeLogToken.getValue());
-			} catch (NumberFormatException e) {
-				throw new CmisInvalidArgumentException("Invalid change log token");
-			}
+
+		try {
+			minDate = Long.parseLong(changeLogToken.getValue());
+		} catch (NumberFormatException e) {
+			throw new CmisInvalidArgumentException("Invalid change log token");
 		}
 
 		StringBuffer query = new StringBuffer(" _entity.tenantId=?1 and _entity.date >= ?2 ");

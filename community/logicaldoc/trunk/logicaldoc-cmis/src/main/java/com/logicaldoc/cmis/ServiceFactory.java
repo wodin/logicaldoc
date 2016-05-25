@@ -46,7 +46,8 @@ public class ServiceFactory extends AbstractServiceFactory {
 
 		CmisService wrapperService = null;
 		if (session != null) {
-			session.getDictionary().put(KEY_REPO_ID, context.getRepositoryId());
+			if (context.getRepositoryId() != null)
+				session.getDictionary().put(KEY_REPO_ID, context.getRepositoryId());
 			log.debug("Using session " + session.getId() + " for user " + session.getUsername());
 			wrapperService = new CmisServiceWrapper<LDCmisService>(new LDCmisService(context, session.getId()),
 					DEFAULT_MAX_ITEMS_TYPES, DEFAULT_DEPTH_TYPES, DEFAULT_MAX_ITEMS_OBJECTS, DEFAULT_DEPTH_OBJECTS);
