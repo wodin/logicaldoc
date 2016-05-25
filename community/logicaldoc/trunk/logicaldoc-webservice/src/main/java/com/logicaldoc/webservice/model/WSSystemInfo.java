@@ -9,7 +9,7 @@ public class WSSystemInfo {
 
 	protected String product = "LogicalDOC";
 
-	protected String release = "7.4.1";
+	protected String release = "7.5";
 
 	protected String year = "2006-2016";
 
