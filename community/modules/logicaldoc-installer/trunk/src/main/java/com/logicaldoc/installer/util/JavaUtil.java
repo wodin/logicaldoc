@@ -84,7 +84,7 @@ public class JavaUtil {
 
 			stdoutStream.close();
 
-			is64bit = outputText.contains("64-bit");
+			is64bit = outputText.toLowerCase().contains("64-bit");
 		} catch (Throwable t) {
 
 		}
