@@ -36,27 +36,35 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	private Date creation;
 
-	private Date sourceDate;
-
 	private String creator;
 
 	private String publisher;
 
+	@Deprecated
+	private Date sourceDate;
+
+	@Deprecated
 	private String source;
 
-	private String language;
-
+	@Deprecated
 	private String sourceAuthor;
 
+	@Deprecated
 	private String sourceId;
 
+	@Deprecated
 	private String sourceType;
 
+	@Deprecated
 	private String object;
 
+	@Deprecated
 	private String recipient;
 
+	@Deprecated
 	private String coverage;
+
+	private String language;
 
 	private Float fileSize;
 
@@ -69,7 +77,7 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private String icon = "generic";
 
 	private Long lockUserId;
-	
+
 	private String lockUser;
 
 	private int status = 0;
@@ -254,18 +262,22 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 		this.fileName = fileName;
 	}
 
+	@Deprecated
 	public Date getSourceDate() {
 		return sourceDate;
 	}
 
+	@Deprecated
 	public void setSourceDate(Date sourceDate) {
 		this.sourceDate = sourceDate;
 	}
 
+	@Deprecated
 	public String getSource() {
 		return source;
 	}
 
+	@Deprecated
 	public void setSource(String source) {
 		this.source = source;
 	}
@@ -278,50 +290,62 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 		this.language = language;
 	}
 
+	@Deprecated
 	public String getSourceAuthor() {
 		return sourceAuthor;
 	}
 
+	@Deprecated
 	public void setSourceAuthor(String sourceAuthor) {
 		this.sourceAuthor = sourceAuthor;
 	}
 
+	@Deprecated
 	public String getSourceId() {
 		return sourceId;
 	}
 
+	@Deprecated
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
 	}
 
+	@Deprecated
 	public String getSourceType() {
 		return sourceType;
 	}
 
+	@Deprecated
 	public void setSourceType(String sourceType) {
 		this.sourceType = sourceType;
 	}
 
+	@Deprecated
 	public String getObject() {
 		return object;
 	}
 
+	@Deprecated
 	public void setObject(String object) {
 		this.object = object;
 	}
 
+	@Deprecated
 	public String getRecipient() {
 		return recipient;
 	}
 
+	@Deprecated
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
 	}
 
+	@Deprecated
 	public String getCoverage() {
 		return coverage;
 	}
 
+	@Deprecated
 	public void setCoverage(String coverage) {
 		this.coverage = coverage;
 	}
