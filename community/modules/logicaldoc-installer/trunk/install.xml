@@ -159,7 +159,7 @@
       </native>
    </natives>
    <listeners>
-      <listener classname="RegistryInstallerListener" stage="install">
+      <listener classname="com.logicaldoc.installer.LDRegistryInstallerListener" stage="install">
          <os family="windows" />
       </listener>
       <listener classname="RegistryUninstallerListener" stage="uninstall">
