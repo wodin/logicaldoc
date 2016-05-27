@@ -374,6 +374,7 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 			} catch (Throwable t) {
 			}
 		}
+		Session.killTimeoutThreads();
 		clear();
 	}
 }

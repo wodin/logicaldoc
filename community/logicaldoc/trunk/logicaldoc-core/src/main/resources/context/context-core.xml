@@ -355,6 +355,13 @@
         <property name="config" ref="ContextProperties" />
         <property name="genericDao" ref="GenericDAO" />
     </bean>
+    
+    <bean id="AuthenticationChain"
+        class="com.logicaldoc.core.security.authentication.AuthenticationChain" />
+    <bean id="SessionManager" class="com.logicaldoc.core.security.SessionManager" destroy-method="destroy">
+        <property name="authenticationChain" ref="AuthenticationChain" />
+    </bean>
+    
     <!-- Mail sender -->
     <bean id="EMailSender" abstract="false" autowire="default"
         class="com.logicaldoc.core.communication.EMailSender" lazy-init="default">
