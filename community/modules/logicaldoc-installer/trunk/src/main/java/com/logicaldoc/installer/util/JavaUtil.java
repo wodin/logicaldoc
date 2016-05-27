@@ -81,9 +81,10 @@ public class JavaUtil {
 				buffer.append((char) c);
 			}
 			String outputText = buffer.toString().toLowerCase();
-
 			stdoutStream.close();
 
+			Log.info("Java output:\n" + outputText + "\n", null);
+			
 			is64bit = outputText.toLowerCase().contains("64-bit");
 		} catch (Throwable t) {
 
