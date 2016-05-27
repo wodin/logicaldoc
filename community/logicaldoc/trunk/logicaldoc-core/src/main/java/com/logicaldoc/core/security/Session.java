@@ -86,7 +86,7 @@ public class Session implements Comparable<Session> {
 	/**
 	 * Represents the action to be taken in the future when the timeout occurs
 	 */
-	private FutureTask timeoutTask;
+	private FutureTask<String> timeoutTask;
 
 	/**
 	 * Represents a dictionary of custom informations a client may save in the
@@ -95,6 +95,19 @@ public class Session implements Comparable<Session> {
 	private Map<String, Object> dictionary = new ConcurrentHashMap<String, Object>();
 
 	private List<Log> logs = new ArrayList<Log>();
+
+	/**
+	 * Stops all the timeout threads
+	 */
+	static void killTimeoutThreads() {
+		log.info("Killing all timeout threads");
+		executor.shutdownNow();
+		try {
+			executor.awaitTermination(3, TimeUnit.SECONDS);
+		} catch (InterruptedException e) {
+
+		}
+	}
 
 	public Map<String, Object> getDictionary() {
 		return dictionary;
@@ -201,7 +214,7 @@ public class Session implements Comparable<Session> {
 
 		log.info("Session " + getId() + " has been started");
 		logInfo("Session started");
-		
+
 		renew();
 	}
 

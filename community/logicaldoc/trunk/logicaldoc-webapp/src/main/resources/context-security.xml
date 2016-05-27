@@ -17,11 +17,6 @@
             http://www.springframework.org/schema/aop/spring-aop.xsd
             http://www.springframework.org/schema/security
             http://www.springframework.org/schema/security/spring-security.xsd">
-    <bean id="AuthenticationChain"
-        class="com.logicaldoc.core.security.authentication.AuthenticationChain" />
-    <bean id="SessionManager" class="com.logicaldoc.core.security.SessionManager" destroy-method="destroy">
-        <property name="authenticationChain" ref="AuthenticationChain" />
-    </bean>
     <bean id="LDAuthenticationProvider" class="com.logicaldoc.core.security.spring.LDAuthenticationProvider" />
     <bean id="AdminPasswdAuthenticationProvider"
         class="com.logicaldoc.core.security.spring.AdminPasswdAuthenticationProvider" />
