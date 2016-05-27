@@ -9,6 +9,7 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -80,28 +81,22 @@ public class ApplicationListener implements ServletContextListener, HttpSessionL
 			log.warn(e.getMessage(), e);
 		}
 
-		// Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-		// Thread[] threadArray = threadSet.toArray(new
-		// Thread[threadSet.size()]);
-		//
-		// for (Thread t : threadArray) {
-		// synchronized (t) {
-		// // if ((t.getName().startsWith("Abandoned connection cleanup")
-		// // || t.getName().contains("webdav")
-		// // || t.getName().startsWith("Scheduler_") ||
-		// // t.getName().startsWith("Thread-"))
-		// // && !Thread.currentThread().equals(t) && !t.isInterrupted())
-		// if ((t.getName().toLowerCase().contains("abandoned connection") ||
-		// t.getName().startsWith("Scheduler_"))
-		// && !Thread.currentThread().equals(t) && !t.isInterrupted())
-		// try {
-		// t.stop(); // don't complain, it works
-		// log.warn("Killed thread " + t.getName());
-		// } catch (Throwable e) {
-		// log.warn("Error killing " + t.getName());
-		// }
-		// }
-		// }
+//		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+//		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+//
+//		for (Thread t : threadArray) {
+//			synchronized (t) {
+//				if ((t.getName().toLowerCase().contains("abandoned connection") || t.getName().startsWith("Scheduler_")
+//						|| t.getName().startsWith("SessionTimeout") || t.getName().startsWith("QuotaUpdate"))
+//						&& !Thread.currentThread().equals(t) && !t.isInterrupted())
+//					try {
+//						t.stop(); // don't complain, it works
+//						log.warn("Killed thread " + t.getName());
+//					} catch (Throwable e) {
+//						log.warn("Error killing " + t.getName());
+//					}
+//			}
+//		}
 
 		log.warn("Application stopped");
 	}
