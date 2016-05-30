@@ -29,6 +29,7 @@ public class WSUtil {
 			wsDoc.setId(document.getId());
 			wsDoc.setCustomId(document.getCustomId());
 			wsDoc.setTitle(document.getTitle());
+			wsDoc.setLanguage(document.getLanguage());
 			wsDoc.setComment(document.getComment());
 			wsDoc.setWorkflowStatus(document.getWorkflowStatus());
 			if (document.getTemplate() != null)
