@@ -60,6 +60,8 @@
       <res id="userInputLang.xml_eng" src="install/inputlang.eng.xml" />
       <res id="userInputLang.xml_ita" src="install/inputlang.ita.xml" />
       <res id="userInputLang.xml_spa" src="install/inputlang.spa.xml" />
+      <res id="userInputLang.xml_deu" src="install/inputlang.deu.xml" />
+      <res id="userInputLang.xml_fra" src="install/inputlang.fra.xml" />
       <res id="CustomLangPack.xml_eng" src="install/custom.eng.xml" />
       <res id="CustomLangPack.xml_ita" src="install/custom.ita.xml" />
       <res id="CustomLangPack.xml_spa" src="install/custom.spa.xml" />
