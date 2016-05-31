@@ -64,7 +64,7 @@
   boolean versionChanged=cVersion!=null && !cVersion.equals(sVersion);
   
   if(versionChanged && !"releasecheck".equals(MODULE) && !"true".equals(request.getParameter("skipreleasecheck")))
-     response.sendRedirect("./releasecheck.jsp");
+     response.sendRedirect("./releasecheck.jsp?loginpage="+LOGIN_PAGE);
 %>
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
