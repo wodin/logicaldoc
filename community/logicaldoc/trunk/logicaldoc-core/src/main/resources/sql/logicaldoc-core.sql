@@ -1,3 +1,5 @@
+-- datetime -> timestamp 
+
 create table ld_bookmark (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
                           ld_deleted int not null, ld_tenantid bigint not null, ld_userid bigint not null, 
                           ld_docid bigint not null, ld_title varchar(255) not null, ld_description varchar(4000), 
