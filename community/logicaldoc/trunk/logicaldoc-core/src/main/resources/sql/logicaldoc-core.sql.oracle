@@ -439,7 +439,7 @@ $report',1,1);
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
 values(2, CURRENT_TIMESTAMP,0,'psw.rec1','en', '$product - $I18N.get(''emailnotifyaccountobject'')', 
 '$I18N.format(''emailnotifyaccount'', $user.fullName) <br/>
-$I18N.get(''username''): <b>$user.userName</b> <br/>
+$I18N.get(''username''): <b>$user.username</b> <br/>
 $I18N.get(''password''): <b>$password</b> <br/>
 $I18N.get(''clickhere''): <a href="$url">$url</a>',1,1);
 
