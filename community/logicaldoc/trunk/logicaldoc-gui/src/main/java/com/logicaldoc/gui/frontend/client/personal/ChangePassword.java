@@ -82,7 +82,7 @@ public class ChangePassword extends Window {
 		newPassAgain.setWrapTitle(false);
 		newPassAgain.setRequired(true);
 
-		ButtonItem apply = new ButtonItem();
+		final ButtonItem apply = new ButtonItem();
 		apply.setTitle(I18N.message("apply"));
 		apply.setAutoFit(true);
 		apply.addClickHandler(new ClickHandler() {
@@ -95,17 +95,21 @@ public class ChangePassword extends Window {
 						vm.setErrors(errors, true);
 						return;
 					}
-
+					
+					apply.setDisabled(true);
+					
 					securityService.changePassword(user.getId(), vm.getValueAsString(PASSWORD),
 							vm.getValueAsString(NEWPASSWORD), true, new AsyncCallback<Integer>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
+									apply.setDisabled(false);
 									SC.warn(caught.getMessage());
 								}
 
 								@Override
 								public void onSuccess(Integer ret) {
+									apply.setDisabled(false);
 									if (ret.intValue() > 0) {
 										// Alert the user and maintain the popup
 										// opened
