@@ -445,7 +445,7 @@ public class LoginPanel extends VLayout {
 				}
 			});
 		} catch (RequestException e) {
-			SC.warn(e.getMessage());
+			SC.warn("Login request error: "+e.getMessage());
 		}
 	}
 
@@ -468,7 +468,6 @@ public class LoginPanel extends VLayout {
 		try {
 			messagesWindow.destroy();
 		} catch (Throwable e) {
-			SC.warn(e.getMessage());
 		}
 
 		// If the case, save the credentials into client cookies
