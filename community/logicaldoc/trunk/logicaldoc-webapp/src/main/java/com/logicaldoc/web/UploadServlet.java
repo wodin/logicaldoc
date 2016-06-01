@@ -113,8 +113,13 @@ public class UploadServlet extends UploadAction {
 
 						receivedFiles.put(item.getFieldName(), file);
 						receivedContentTypes.put(item.getFieldName(), item.getContentType());
-						receivedFileNames.put(item.getFieldName(),
-								URLDecoder.decode(FilenameUtils.getName(item.getName()), "UTF-8"));
+						try {
+							receivedFileNames.put(item.getFieldName(),
+									URLDecoder.decode(FilenameUtils.getName(item.getName()), "UTF-8"));
+						} catch (Throwable uee) {
+							log.debug(uee.getMessage());
+							receivedFileNames.put(item.getFieldName(), FilenameUtils.getName(item.getName()));
+						}
 					} catch (Throwable e) {
 						log.warn(e.getMessage(), e);
 						throw new UploadActionException(e.getMessage());
