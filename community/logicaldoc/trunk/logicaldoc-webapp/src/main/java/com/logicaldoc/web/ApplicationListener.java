@@ -180,7 +180,7 @@ public class ApplicationListener implements ServletContextListener, HttpSessionL
 		}
 
 		if (needRestart)
-			System.out.println("The application needs to be restarted");
+			System.out.println("The application has to be restarted");
 	}
 
 	/**
