@@ -1,7 +1,7 @@
-The LogicalDOC development team is happy to announce the immediate availability of LogicalDOC CE 7.2.1
+The LogicalDOC development team is happy to announce the immediate availability of LogicalDOC CE 7.5
 
 You can get this distribution in tomcat-bundle archive from SourceForge: 
-http://sourceforge.net/projects/logicaldoc/files/distribution/LogicalDOC%20CE%206.3/logicaldoc-7.2.1-tomcat-bundle.zip/download
+http://sourceforge.net/projects/logicaldoc/files/distribution/LogicalDOC%20CE%207.5/logicaldoc-7.5-tomcat-bundle.zip/download
 
 LogicalDOC is a Web-based Document Management System (DMS) based on open 
 source technology (GWT +Spring +Hibernate). Thanks to its intuitive interface, 
@@ -10,15 +10,17 @@ storage, organization, versioning and use of all kind of files and documents
 within an user friendly interface.
 
 Changes:
-Improved support to preview documents
-Fixed support for Locales with language variants (Portuguese-brazilian)
-Completed the GUI translation in German language
-Introduced support for the Norwegian language (Big thanks to Magnus Ottosen - Datawaves.no)
-Improvements in the advanced search
-Fixed problems on web-services
-WebDAV Permission fixes on renaming, moving and deleting folder and file.
-Improved parser for PDF documents
-New Webservice method to collect the metadata of a list of documents
+Folder alias - new feature - Core
+REST implementation of web services - new feature - Web Services
+Reusable custom attribute sets - new feature - Core
+Removed support for Java7 - deprecation - Core
+Hiding Extended Properties that aren't used - improvement - User Interface
+Optimization of tags handling for huge repositories - enhancement - Core
+Preview of older document versions displays latest version only - defect - User Interface
+Removed all Java Applets - deprecation - User Interface
+SOAP webservices refactoring - improvement - Web Services
+Removed support for Internet Explorer 10 - deprecation - User Interface
+Add Documents Issue '&' and '%' symbols fail - bug - User Interface 
 
 
 You can use our dedicated Bug tracker http://bugs.logicaldoc.com to report errors or feature requests.
