@@ -5,11 +5,11 @@
     <parent>
         <groupId>com.logicaldoc</groupId>
         <artifactId>logicaldoc</artifactId>
-        <version>7.4.3</version>
+        <version>7.5.0</version>
     </parent>
     <artifactId>logicaldoc-community-installer</artifactId>
     <name>logicaldoc-community-installer</name>
-    <version>7.4.3</version>
+    <version>7.5.0</version>
     <dependencies>
         <dependency>
             <groupId>com.logicaldoc</groupId>
@@ -27,9 +27,6 @@
             <groupId>org.codehaus.izpack</groupId>
             <artifactId>izpack-maven-plugin</artifactId>
             <version>5.0.8</version>
-            <!--
-            <version>5.0.0-rc1</version>
-            -->
         </dependency>
     </dependencies>
 </project>
