@@ -209,14 +209,24 @@ public class WSFolder implements Serializable {
 		this.templateId = templateId;
 	}
 
+	@Deprecated
 	public WSAttribute[] getExtendedAttributes() {
 		return extendedAttributes;
 	}
 
+	public WSAttribute[] getAttributes() {
+		return extendedAttributes;
+	}
+	
+	@Deprecated
 	public void setExtendedAttributes(WSAttribute[] extendedAttributes) {
 		this.extendedAttributes = extendedAttributes;
 	}
 
+	public void setAttributes(WSAttribute[] extendedAttributes) {
+		this.extendedAttributes = extendedAttributes;
+	}
+	
 	public String getCreation() {
 		return creation;
 	}
