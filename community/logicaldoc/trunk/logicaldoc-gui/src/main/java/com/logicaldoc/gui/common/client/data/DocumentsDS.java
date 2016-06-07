@@ -67,10 +67,6 @@ public class DocumentsDS extends DataSource {
 		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
 		DataSourceIntegerField status = new DataSourceIntegerField("status");
 		lockUserId.setHidden(true);
-		DataSourceDateTimeField sourceDate = new DataSourceDateTimeField("sourceDate");
-		sourceDate.setHidden(true);
-		DataSourceTextField sourceAuthor = new DataSourceTextField("sourceAuthor");
-		sourceAuthor.setHidden(true);
 		DataSourceImageField rating = new DataSourceImageField("rating");
 		DataSourceTextField comment = new DataSourceTextField("comment");
 		DataSourceIntegerField wfStatus = new DataSourceIntegerField("workflowStatus");
@@ -79,11 +75,6 @@ public class DocumentsDS extends DataSource {
 		DataSourceDateTimeField startPublishing = new DataSourceDateTimeField("startPublishing");
 		DataSourceDateTimeField stopPublishing = new DataSourceDateTimeField("stopPublishing");
 		DataSourceTextField extResId = new DataSourceTextField("extResId");
-		DataSourceTextField source = new DataSourceTextField("source");
-		DataSourceTextField sourceId = new DataSourceTextField("sourceId");
-		DataSourceTextField recipient = new DataSourceTextField("recipient");
-		DataSourceTextField object = new DataSourceTextField("object");
-		DataSourceTextField coverage = new DataSourceTextField("coverage");
 
 		List<DataSourceField> fields = new ArrayList<DataSourceField>();
 		fields.add(id);
@@ -98,8 +89,6 @@ public class DocumentsDS extends DataSource {
 		fields.add(published);
 		fields.add(created);
 		fields.add(creator);
-		fields.add(sourceDate);
-		fields.add(sourceAuthor);
 		fields.add(customId);
 		fields.add(icon);
 		fields.add(immutable);
@@ -119,11 +108,6 @@ public class DocumentsDS extends DataSource {
 		fields.add(startPublishing);
 		fields.add(stopPublishing);
 		fields.add(extResId);
-		fields.add(source);
-		fields.add(sourceId);
-		fields.add(recipient);
-		fields.add(object);
-		fields.add(coverage);
 		fields.add(template);
 
 		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");

@@ -102,8 +102,9 @@ public class DocumentsDataServlet extends HttpServlet {
 					Document doc = docs.get(i);
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
-					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension(),doc.getDocRef()!=null))
-							+ "</icon>");
+					writer.print("<icon>"
+							+ FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension(),
+									doc.getDocRef() != null)) + "</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
 					writer.print("<folderId>" + doc.getFolder().getId() + "</folderId>");
@@ -120,8 +121,9 @@ public class DocumentsDataServlet extends HttpServlet {
 						continue;
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
-					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension(),doc.getDocRef()!=null))
-							+ "</icon>");
+					writer.print("<icon>"
+							+ FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getFileExtension(),
+									doc.getDocRef() != null)) + "</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
 					writer.print("<folderId>" + doc.getFolder().getId() + "</folderId>");
@@ -210,9 +212,9 @@ public class DocumentsDataServlet extends HttpServlet {
 				StringBuffer query = new StringBuffer(
 						"select A.id, A.customId, A.docRef, A.type, A.title, A.version, A.lastModified, A.date, A.publisher,"
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
-								+ " A.signed, A.type, A.sourceDate, A.sourceAuthor, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
-								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId, A.source, A.sourceId, A.recipient,"
-								+ " A.object, A.coverage, B.name, A.docRefType, A.stamped, A.lockUser"
+								+ " A.signed, A.type, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
+								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId,"
+								+ " B.name, A.docRefType, A.stamped, A.lockUser"
 								+ " from Document as A left outer join A.template as B ");
 				query.append(" where A.deleted = 0 and not A.status=" + AbstractDocument.DOC_ARCHIVED);
 				if (folderId != null)
@@ -239,7 +241,7 @@ public class DocumentsDataServlet extends HttpServlet {
 					Document doc = new Document();
 					doc.setId((Long) cols[0]);
 					doc.setDocRef((Long) cols[2]);
-					doc.setDocRefType((String) cols[35]);
+					doc.setDocRefType((String) cols[28]);
 
 					// Replace with the real document if this is an alias
 					if (doc.getDocRef() != null && doc.getDocRef().longValue() != 0L) {
@@ -254,9 +256,9 @@ public class DocumentsDataServlet extends HttpServlet {
 						} else
 							continue;
 					} else {
-						doc.setStartPublishing((Date) cols[25]);
-						doc.setStopPublishing((Date) cols[26]);
-						doc.setPublished((Integer) cols[27]);
+						doc.setStartPublishing((Date) cols[23]);
+						doc.setStopPublishing((Date) cols[24]);
+						doc.setPublished((Integer) cols[25]);
 
 						if (doc.isPublishing() || user.isInGroup("admin") || user.isInGroup("publisher")) {
 							doc.setCustomId((String) cols[1]);
@@ -275,21 +277,14 @@ public class DocumentsDataServlet extends HttpServlet {
 							doc.setStatus((Integer) cols[16]);
 							doc.setSigned((Integer) cols[17]);
 							doc.setType((String) cols[18]);
-							doc.setSourceDate((Date) cols[19]);
-							doc.setSourceAuthor((String) cols[20]);
-							doc.setRating((Integer) cols[21]);
-							doc.setFileVersion((String) cols[22]);
-							doc.setComment((String) cols[23]);
-							doc.setWorkflowStatus((String) cols[24]);
-							doc.setExtResId((String) cols[28]);
-							doc.setSource((String) cols[29]);
-							doc.setSourceId((String) cols[30]);
-							doc.setRecipient((String) cols[31]);
-							doc.setObject((String) cols[32]);
-							doc.setCoverage((String) cols[33]);
-							doc.setTemplateName((String) cols[34]);
-							doc.setStamped((Integer) cols[36]);
-							doc.setLockUser((String) cols[37]);
+							doc.setRating((Integer) cols[19]);
+							doc.setFileVersion((String) cols[20]);
+							doc.setComment((String) cols[21]);
+							doc.setWorkflowStatus((String) cols[22]);
+							doc.setExtResId((String) cols[26]);
+							doc.setTemplateName((String) cols[27]);
+							doc.setStamped((Integer) cols[29]);
+							doc.setLockUser((String) cols[30]);
 						}
 					}
 
@@ -309,10 +304,13 @@ public class DocumentsDataServlet extends HttpServlet {
 					}
 
 					if ("pdf".equals(doc.getDocRefType()))
-						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon("pdf",doc.getDocRef()!=null)) + "</icon>");
-					else
-						writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType(),doc.getDocRef()!=null))
+						writer.print("<icon>"
+								+ FilenameUtils.getBaseName(IconSelector.selectIcon("pdf", doc.getDocRef() != null))
 								+ "</icon>");
+					else
+						writer.print("<icon>"
+								+ FilenameUtils.getBaseName(IconSelector.selectIcon(doc.getType(),
+										doc.getDocRef() != null)) + "</icon>");
 					writer.print("<title><![CDATA[" + doc.getTitle() + "]]></title>");
 					writer.print("<version>" + doc.getVersion() + "</version>");
 					writer.print("<lastModified>" + df.format(doc.getLastModified()) + "</lastModified>");
@@ -353,10 +351,6 @@ public class DocumentsDataServlet extends HttpServlet {
 					else if (doc.getStamped() == 1)
 						writer.print("<stamped>stamp</stamped>");
 
-					writer.print("<sourceDate>" + (doc.getSourceDate() != null ? df.format(doc.getSourceDate()) : "")
-							+ "</sourceDate>");
-					if (doc.getSourceAuthor() != null)
-						writer.print("<sourceAuthor><![CDATA[" + doc.getSourceAuthor() + "]]></sourceAuthor>");
 					writer.print("<rating>rating" + (doc.getRating() != null ? doc.getRating() : "0") + "</rating>");
 					writer.print("<fileVersion><![CDATA[" + doc.getFileVersion() + "]]></fileVersion>");
 					writer.print("<comment><![CDATA[" + (doc.getComment() != null ? doc.getComment() : "")
@@ -372,21 +366,6 @@ public class DocumentsDataServlet extends HttpServlet {
 
 					if (doc.getExtResId() != null)
 						writer.print("<extResId><![CDATA[" + doc.getExtResId() + "]]></extResId>");
-
-					if (doc.getSource() != null)
-						writer.print("<source><![CDATA[" + doc.getSource() + "]]></source>");
-
-					if (doc.getSourceId() != null)
-						writer.print("<sourceId><![CDATA[" + doc.getSourceId() + "]]></sourceId>");
-
-					if (doc.getRecipient() != null)
-						writer.print("<recipient><![CDATA[" + doc.getRecipient() + "]]></recipient>");
-
-					if (doc.getObject() != null)
-						writer.print("<object><![CDATA[" + doc.getObject() + "]]></object>");
-
-					if (doc.getCoverage() != null)
-						writer.print("<coverage><![CDATA[" + doc.getCoverage() + "]]></coverage>");
 
 					if (doc.getTemplateName() != null)
 						writer.print("<template><![CDATA[" + doc.getTemplateName() + "]]></template>");

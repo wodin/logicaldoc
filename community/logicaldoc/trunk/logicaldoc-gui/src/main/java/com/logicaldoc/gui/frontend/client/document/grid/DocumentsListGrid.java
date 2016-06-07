@@ -128,51 +128,6 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		created.setCanFilter(false);
 		created.setHidden(true);
 
-		/*
-		 * Standard Attributes
-		 */
-		ListGridField sourceDate = new ListGridField("sourceDate", defaultAttributes.getAttribute("sourceDate")
-				.getDisplayName(), 110);
-		sourceDate.setAlign(Alignment.CENTER);
-		sourceDate.setType(ListGridFieldType.DATE);
-		sourceDate.setCellFormatter(new DateCellFormatter(true));
-		sourceDate.setCanFilter(false);
-		sourceDate.setHidden(true);
-
-		ListGridField sourceAuthor = new ListGridField("sourceAuthor", defaultAttributes.getAttribute("sourceAuthor")
-				.getDisplayName(), 90);
-		sourceAuthor.setAlign(Alignment.CENTER);
-		sourceAuthor.setCanFilter(true);
-		sourceAuthor.setHidden(true);
-
-		ListGridField source = new ListGridField("source", defaultAttributes.getAttribute("source").getDisplayName(),
-				100);
-		source.setHidden(true);
-		source.setCanFilter(true);
-
-		ListGridField sourceId = new ListGridField("sourceId", defaultAttributes.getAttribute("sourceId")
-				.getDisplayName(), 100);
-		sourceId.setHidden(true);
-		sourceId.setCanFilter(true);
-
-		ListGridField recipient = new ListGridField("recipient", defaultAttributes.getAttribute("recipient")
-				.getDisplayName(), 100);
-		recipient.setHidden(true);
-		recipient.setCanFilter(true);
-
-		ListGridField object = new ListGridField("object", defaultAttributes.getAttribute("object").getDisplayName(),
-				100);
-		object.setHidden(true);
-		object.setCanFilter(true);
-
-		ListGridField coverage = new ListGridField("coverage", defaultAttributes.getAttribute("coverage")
-				.getDisplayName(), 100);
-		coverage.setHidden(true);
-		coverage.setCanFilter(true);
-		/*
-		 * End of standard attributes
-		 */
-
 		ListGridField customId = new ListGridField("customId", I18N.message("customid"), 110);
 		customId.setType(ListGridFieldType.TEXT);
 
@@ -334,14 +289,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			fields.add(published);
 			fields.add(creator);
 			fields.add(created);
-			fields.add(source);
-			fields.add(sourceId);
-			fields.add(sourceDate);
-			fields.add(sourceAuthor);
 			fields.add(customId);
-			fields.add(recipient);
-			fields.add(object);
-			fields.add(coverage);
 			fields.add(rating);
 			fields.add(comment);
 			fields.add(wfStatus);
@@ -401,14 +349,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			fields.add(published);
 			fields.add(creator);
 			fields.add(created);
-			fields.add(source);
-			fields.add(sourceId);
-			fields.add(sourceDate);
-			fields.add(sourceAuthor);
 			fields.add(customId);
-			fields.add(recipient);
-			fields.add(object);
-			fields.add(coverage);
 			fields.add(folder);
 			fields.add(rating);
 			fields.add(comment);
