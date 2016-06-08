@@ -17,7 +17,7 @@
 	</dependencySets>
 	<fileSets>
 		<fileSet>
-			<directory>target/classes</directory>
+			<directory>src/dist/conf</directory>
 			 <includes>
                 <include>*.properties</include>
                 <include>*.xml</include>
