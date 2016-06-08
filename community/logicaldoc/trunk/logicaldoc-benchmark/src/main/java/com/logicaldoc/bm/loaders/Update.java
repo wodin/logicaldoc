@@ -171,7 +171,9 @@ public class Update extends AbstractLoader {
 				doc.addAttribute(att);
 				switch (attribute.getType()) {
 				case Attribute.TYPE_STRING:
-					att.setStringValue(chooseString());
+					String str = chooseString();
+					if (str != null)
+						att.setStringValue(chooseString());
 					break;
 				case Attribute.TYPE_INT:
 					att.setIntValue(random.nextLong());
@@ -180,7 +182,7 @@ public class Update extends AbstractLoader {
 					att.setDoubleValue(random.nextDouble());
 					break;
 				case Attribute.TYPE_DATE:
-					att.setDateValue(convertDateToString(new Date(random.nextLong())));
+					att.setDateValue(convertDateToString(new Date()));
 					break;
 				case Attribute.TYPE_BOOLEAN:
 					att.setIntValue(Math.random() < 0.5 ? 1l : 0l);
@@ -277,7 +279,6 @@ public class Update extends AbstractLoader {
 			WSFolder[] ret = serverProxy.listChildren(serverProxy.sid, parent);
 			if (ret != null) {
 				log.debug("Got {} children in parent {}", ret.length, parent);
-				System.out.println("got " + ret.length + " children");
 				for (WSFolder wsFolder : ret) {
 					folders.add(wsFolder.getId());
 					if (level < depth)
