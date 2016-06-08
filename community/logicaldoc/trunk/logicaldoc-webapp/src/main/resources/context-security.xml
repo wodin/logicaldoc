@@ -141,7 +141,7 @@
         disable-url-rewriting="true" auto-config="false"
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AuthenticationManager"
-        security-context-repository-ref="LDSecurityContextRepository">
+        security-context-repository-ref="LDSecurityContextRepository" >
         <!-- Protected areas -->
         <security:intercept-url pattern="/frontend.jsp"
             access="isAuthenticated()" />

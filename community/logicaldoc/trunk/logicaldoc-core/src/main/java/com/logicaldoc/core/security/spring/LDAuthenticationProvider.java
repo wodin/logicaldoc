@@ -1,5 +1,6 @@
 package com.logicaldoc.core.security.spring;
 
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -45,7 +46,7 @@ public class LDAuthenticationProvider implements AuthenticationProvider {
 		UsernamePasswordAuthenticationToken auth = (UsernamePasswordAuthenticationToken) authentication;
 		String username = String.valueOf(auth.getPrincipal());
 		String password = String.valueOf(auth.getCredentials());
-
+		
 		log.debug("Authenticate user " + username);
 
 		HttpServletRequest httpReq = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
