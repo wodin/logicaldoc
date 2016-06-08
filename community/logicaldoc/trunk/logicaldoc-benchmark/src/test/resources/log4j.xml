@@ -21,7 +21,7 @@
 		</layout>
 	</appender>
 
-  <category name="org.apache.cxf" additivity="false">
+    <category name="org.apache.cxf" additivity="false">
 		<priority value="fatal" />
 	</category>
 
