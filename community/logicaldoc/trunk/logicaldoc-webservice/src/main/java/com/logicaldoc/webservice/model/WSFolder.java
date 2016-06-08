@@ -13,10 +13,9 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.metadata.Attribute;
-import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.metadata.Template;
+import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.webservice.AbstractService;
 
 /**
  * Web Service Folder. Useful class to create repository Folders.
@@ -88,8 +87,8 @@ public class WSFolder implements Serializable {
 		wsFolder.setType(folder.getType());
 		wsFolder.setDescription(folder.getDescription());
 		wsFolder.setParentId(folder.getParentId());
-		wsFolder.setLastModified(AbstractService.convertDateToString(folder.getLastModified()));
-		wsFolder.setCreation(AbstractService.convertDateToString(folder.getCreation()));
+		wsFolder.setLastModified(WSUtil.convertDateToString(folder.getLastModified()));
+		wsFolder.setCreation(WSUtil.convertDateToString(folder.getCreation()));
 		wsFolder.setCreator(folder.getCreator());
 		wsFolder.setPosition(folder.getPosition());
 		wsFolder.setTemplateLocked(folder.getTemplateLocked());
@@ -129,8 +128,7 @@ public class WSFolder implements Serializable {
 		Template template = null;
 		if (templateId != null) {
 			folder.getAttributes().clear();
-			TemplateDAO templDao = (TemplateDAO) Context.get().getBean(
-					TemplateDAO.class);
+			TemplateDAO templDao = (TemplateDAO) Context.get().getBean(TemplateDAO.class);
 			template = templDao.findById(templateId);
 			if (template != null) {
 				if (extendedAttributes != null && extendedAttributes.length > 0) {
@@ -141,8 +139,7 @@ public class WSFolder implements Serializable {
 						extAttribute.setIntValue(extendedAttributes[i].getIntValue());
 						extAttribute.setStringValue(extendedAttributes[i].getStringValue());
 						extAttribute.setDoubleValue(extendedAttributes[i].getDoubleValue());
-						extAttribute.setDateValue(AbstractService.convertStringToDate(extendedAttributes[i]
-								.getDateValue()));
+						extAttribute.setDateValue(WSUtil.convertStringToDate(extendedAttributes[i].getDateValue()));
 						extAttribute.setType(extendedAttributes[i].getType());
 						folder.getAttributes().put(extendedAttributes[i].getName(), extAttribute);
 					}
@@ -217,7 +214,7 @@ public class WSFolder implements Serializable {
 	public WSAttribute[] getAttributes() {
 		return extendedAttributes;
 	}
-	
+
 	@Deprecated
 	public void setExtendedAttributes(WSAttribute[] extendedAttributes) {
 		this.extendedAttributes = extendedAttributes;
@@ -226,7 +223,7 @@ public class WSFolder implements Serializable {
 	public void setAttributes(WSAttribute[] extendedAttributes) {
 		this.extendedAttributes = extendedAttributes;
 	}
-	
+
 	public String getCreation() {
 		return creation;
 	}

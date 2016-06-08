@@ -6,7 +6,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.SearchOptions;
-import com.logicaldoc.webservice.AbstractService;
 
 /**
  * Search options through Web Services.
@@ -290,13 +289,13 @@ public class WSSearchOptions implements Comparable<WSSearchOptions> {
 
 		switch (opt.getType()) {
 		case SearchOptions.TYPE_FULLTEXT:
-			wopt.setCreationFrom(AbstractService.convertDateToString(((FulltextSearchOptions) opt).getCreationFrom()));
-			wopt.setCreationTo(AbstractService.convertDateToString(((FulltextSearchOptions) opt).getCreationTo()));
-			wopt.setDateFrom(AbstractService.convertDateToString(((FulltextSearchOptions) opt).getDateFrom()));
-			wopt.setDateTo(AbstractService.convertDateToString(((FulltextSearchOptions) opt).getDateTo()));
-			wopt.setSourceDateFrom(AbstractService.convertDateToString(((FulltextSearchOptions) opt)
+			wopt.setCreationFrom(WSUtil.convertDateToString(((FulltextSearchOptions) opt).getCreationFrom()));
+			wopt.setCreationTo(WSUtil.convertDateToString(((FulltextSearchOptions) opt).getCreationTo()));
+			wopt.setDateFrom(WSUtil.convertDateToString(((FulltextSearchOptions) opt).getDateFrom()));
+			wopt.setDateTo(WSUtil.convertDateToString(((FulltextSearchOptions) opt).getDateTo()));
+			wopt.setSourceDateFrom(WSUtil.convertDateToString(((FulltextSearchOptions) opt)
 					.getSourceDateFrom()));
-			wopt.setSourceDateTo(AbstractService.convertDateToString(((FulltextSearchOptions) opt).getSourceDateTo()));
+			wopt.setSourceDateTo(WSUtil.convertDateToString(((FulltextSearchOptions) opt).getSourceDateTo()));
 			wopt.setExpressionLanguage(((FulltextSearchOptions) opt).getExpressionLanguage());
 			wopt.setLanguage(((FulltextSearchOptions) opt).getLanguage());
 			wopt.setFields(((FulltextSearchOptions) opt).getFields());
@@ -333,18 +332,18 @@ public class WSSearchOptions implements Comparable<WSSearchOptions> {
 			so.setTopOperator(topOperator);
 			so.setTemplate(getTemplate());
 
-			((FulltextSearchOptions) so).setCreationFrom(AbstractService.convertStringToDate(creationFrom));
-			((FulltextSearchOptions) so).setCreationTo(AbstractService.convertStringToDate(creationTo));
-			((FulltextSearchOptions) so).setDateFrom(AbstractService.convertStringToDate(dateFrom));
-			((FulltextSearchOptions) so).setDateTo(AbstractService.convertStringToDate(dateTo));
+			((FulltextSearchOptions) so).setCreationFrom(WSUtil.convertStringToDate(creationFrom));
+			((FulltextSearchOptions) so).setCreationTo(WSUtil.convertStringToDate(creationTo));
+			((FulltextSearchOptions) so).setDateFrom(WSUtil.convertStringToDate(dateFrom));
+			((FulltextSearchOptions) so).setDateTo(WSUtil.convertStringToDate(dateTo));
 			((FulltextSearchOptions) so).setExpressionLanguage(expressionLanguage);
 			((FulltextSearchOptions) so).setFields(fields);
 			((FulltextSearchOptions) so).setFormat(format);
 			((FulltextSearchOptions) so).setLanguage(language);
 			((FulltextSearchOptions) so).setSizeMax(sizeMax);
 			((FulltextSearchOptions) so).setSizeMin(sizeMin);
-			((FulltextSearchOptions) so).setSourceDateFrom(AbstractService.convertStringToDate(sourceDateFrom));
-			((FulltextSearchOptions) so).setSourceDateTo(AbstractService.convertStringToDate(sourceDateTo));
+			((FulltextSearchOptions) so).setSourceDateFrom(WSUtil.convertStringToDate(sourceDateFrom));
+			((FulltextSearchOptions) so).setSourceDateTo(WSUtil.convertStringToDate(sourceDateTo));
 			break;
 		default:
 		}

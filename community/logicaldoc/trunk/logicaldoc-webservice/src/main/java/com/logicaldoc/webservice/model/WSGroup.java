@@ -7,7 +7,6 @@ import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.webservice.AbstractService;
 
 /**
  * Web Service Group. Useful class to create repository Groups.
@@ -131,7 +130,7 @@ public class WSGroup {
 			wsGroup.setName(group.getName());
 			wsGroup.setDescription(group.getDescription());
 			wsGroup.setType(group.getType());
-			wsGroup.setLastModified(AbstractService.convertDateToString(group
+			wsGroup.setLastModified(WSUtil.convertDateToString(group
 					.getLastModified()));
 
 			if (group.getUsers() != null && group.getUsers().size() > 0) {

@@ -148,7 +148,7 @@ public class WSAttribute implements Serializable {
 		case TYPE_DOUBLE:
 			return getDoubleValue();
 		case TYPE_DATE:
-			return AbstractService.convertStringToDate(getDateValue());
+			return WSUtil.convertStringToDate(getDateValue());
 		case TYPE_USER:
 			return getIntValue();
 		}
@@ -191,7 +191,7 @@ public class WSAttribute implements Serializable {
 			setDoubleValue((Double) value);
 		} else if (value instanceof Date) {
 			this.type = TYPE_DATE;
-			setDateValue(AbstractService.convertDateToString((Date) value));
+			setDateValue(WSUtil.convertDateToString((Date) value));
 		} else if (value instanceof WSUser) {
 			this.stringValue = ((WSUser) value).getFullName();
 			this.intValue = ((WSUser) value).getId();
@@ -202,7 +202,7 @@ public class WSAttribute implements Serializable {
 				XMLGregorianCalendar theXGCal = (XMLGregorianCalendar) value;
 				GregorianCalendar theGCal = theXGCal.toGregorianCalendar();
 				Date theDate = theGCal.getTime();
-				setDateValue(AbstractService.convertDateToString((Date) theDate));
+				setDateValue(WSUtil.convertDateToString((Date) theDate));
 			} else
 				setDateValue(null);
 		}

@@ -9,7 +9,6 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.crypt.CryptUtil;
-import com.logicaldoc.webservice.AbstractService;
 
 /**
  * Web Service User. Useful class to create repository Users.
@@ -376,8 +375,8 @@ public class WSUser {
 			wsUser.setSource(user.getSource());
 			wsUser.setPassword(user.getPassword());
 			wsUser.setPasswordmd4(user.getPasswordmd4());
-			wsUser.setPasswordChanged(AbstractService.convertDateToString(user.getPasswordChanged()));
-			wsUser.setLastModified(AbstractService.convertDateToString(user.getLastModified()));
+			wsUser.setPasswordChanged(WSUtil.convertDateToString(user.getPasswordChanged()));
+			wsUser.setLastModified(WSUtil.convertDateToString(user.getLastModified()));
 			wsUser.setEmailSignature(user.getEmailSignature());
 
 			if (user.getGroups() != null && user.getGroups().size() > 0) {
