@@ -119,10 +119,15 @@ public class Update extends AbstractLoader {
 				log.error("error", e);
 			}
 
-			if (docs != null) {
+			if (docs != null && docs.length > 0) {
 				for (WSDocument doc : docs) {
 					updateDocument(serverProxy, doc);
 					statCount++;
+				}
+			} else {
+				// Empty folder, we could remove it from the pool
+				synchronized (folders) {
+					folders.remove(folderId);
 				}
 			}
 		} finally {
@@ -133,16 +138,6 @@ public class Update extends AbstractLoader {
 	}
 
 	private void updateDocument(AbstractServerProxy serverProxy, WSDocument doc) throws Exception {
-		// /*
-		// * Edit the title
-		// */
-		// String prefix = doc.getTitle();
-		// if (prefix.contains("updated on")) {
-		// prefix = prefix.substring(0, prefix.indexOf("updated on"));
-		// }
-		// SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		// doc.setTitle(prefix + " updated on " + df.format(new Date()));
-
 		/*
 		 * Add the tags
 		 */
