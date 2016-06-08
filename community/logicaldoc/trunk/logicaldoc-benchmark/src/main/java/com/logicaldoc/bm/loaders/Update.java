@@ -128,6 +128,7 @@ public class Update extends AbstractLoader {
 				// Empty folder, we could remove it from the pool
 				synchronized (folders) {
 					folders.remove(folderId);
+					log.debug("Removed empty folder {}", folderId);
 				}
 			}
 		} finally {
