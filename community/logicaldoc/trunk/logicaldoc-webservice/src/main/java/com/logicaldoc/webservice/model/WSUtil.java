@@ -1,5 +1,8 @@
 package com.logicaldoc.webservice.model;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,7 +22,6 @@ import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.webservice.AbstractService;
 
 public class WSUtil {
 	public static WSDocument toWSDocument(AbstractDocument document) {
@@ -53,7 +55,7 @@ public class WSUtil {
 			wsDoc.setDigest(document.getDigest());
 			wsDoc.setDocRef(document.getDocRef());
 			wsDoc.setDocRefType(document.getDocRefType());
-			wsDoc.setLastModified(AbstractService.convertDateToString(document.getLastModified()));
+			wsDoc.setLastModified(convertDateToString(document.getLastModified()));
 			wsDoc.setRating(document.getRating());
 			wsDoc.setPages(document.getPages());
 			wsDoc.setSigned(document.getSigned());
@@ -63,19 +65,19 @@ public class WSUtil {
 
 			String date = null;
 			if (document.getDate() != null)
-				date = AbstractService.convertDateToString(document.getDate());
+				date = convertDateToString(document.getDate());
 			wsDoc.setDate(date);
 			date = null;
 			if (document.getCreation() != null)
-				date = AbstractService.convertDateToString(document.getCreation());
+				date = convertDateToString(document.getCreation());
 			wsDoc.setCreation(date);
 			date = null;
 			if (document.getStartPublishing() != null)
-				date = AbstractService.convertDateToString(document.getStartPublishing());
+				date = convertDateToString(document.getStartPublishing());
 			wsDoc.setStartPublishing(date);
 			date = null;
 			if (document.getStopPublishing() != null)
-				date = AbstractService.convertDateToString(document.getStopPublishing());
+				date = convertDateToString(document.getStopPublishing());
 			wsDoc.setStopPublishing(date);
 
 			// Populate the attributes
@@ -155,7 +157,7 @@ public class WSUtil {
 						att.setIntValue(wsDoc.getAttributes()[i].getIntValue());
 						att.setStringValue(wsDoc.getAttributes()[i].getStringValue());
 						att.setDoubleValue(wsDoc.getAttributes()[i].getDoubleValue());
-						att.setDateValue(AbstractService.convertStringToDate(wsDoc.getAttributes()[i].getDateValue()));
+						att.setDateValue(convertStringToDate(wsDoc.getAttributes()[i].getDateValue()));
 						att.setType(wsDoc.getAttributes()[i].getType());
 						att.setSetId(wsDoc.getAttributes()[i].getSetId());
 
@@ -186,7 +188,7 @@ public class WSUtil {
 		doc.setFileVersion(wsDoc.getFileVersion());
 		Date newdate = null;
 		if (StringUtils.isNotEmpty(wsDoc.getDate()))
-			newdate = AbstractService.convertStringToDate(wsDoc.getDate());
+			newdate = convertStringToDate(wsDoc.getDate());
 		doc.setDate(newdate);
 		doc.setPages(wsDoc.getPages());
 		doc.setNature(wsDoc.getNature());
@@ -194,7 +196,7 @@ public class WSUtil {
 
 		Date creationDate = null;
 		if (StringUtils.isNotEmpty(wsDoc.getCreation()))
-			creationDate = AbstractService.convertStringToDate(wsDoc.getCreation());
+			creationDate = convertStringToDate(wsDoc.getCreation());
 		doc.setCreation(creationDate);
 
 		doc.setPublisher(wsDoc.getPublisher());
@@ -212,10 +214,41 @@ public class WSUtil {
 			doc.setRating(wsDoc.getRating());
 		doc.setPublished(wsDoc.getPublished());
 		if (StringUtils.isNotEmpty(wsDoc.getStartPublishing()))
-			doc.setStartPublishing(AbstractService.convertStringToDate(wsDoc.getStartPublishing()));
+			doc.setStartPublishing(convertStringToDate(wsDoc.getStartPublishing()));
 		if (StringUtils.isNotEmpty(wsDoc.getStopPublishing()))
-			doc.setStopPublishing(AbstractService.convertStringToDate(wsDoc.getStopPublishing()));
+			doc.setStopPublishing(convertStringToDate(wsDoc.getStopPublishing()));
 
 		return doc;
+	}
+
+	public static String convertDateToString(Date date) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+		try {
+			return df.format(date);
+		} catch (Exception e) {
+			df = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				return df.format(date);
+			} catch (Exception e1) {
+			}
+		}
+		return null;
+	}
+
+	public static Date convertStringToDate(String date) {
+		if (StringUtils.isEmpty(date))
+			return null;
+
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+		try {
+			return df.parse(date);
+		} catch (ParseException e) {
+			df = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				return df.parse(date);
+			} catch (ParseException e1) {
+			}
+		}
+		return null;
 	}
 }

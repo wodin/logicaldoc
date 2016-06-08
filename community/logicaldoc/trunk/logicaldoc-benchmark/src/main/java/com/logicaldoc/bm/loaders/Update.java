@@ -1,7 +1,10 @@
 package com.logicaldoc.bm.loaders;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -177,7 +180,7 @@ public class Update extends AbstractLoader {
 					att.setDoubleValue(random.nextDouble());
 					break;
 				case Attribute.TYPE_DATE:
-					att.setDoubleValue(random.nextDouble());
+					att.setDateValue(convertDateToString(new Date(random.nextLong())));
 					break;
 				case Attribute.TYPE_BOOLEAN:
 					att.setIntValue(Math.random() < 0.5 ? 1l : 0l);
@@ -238,8 +241,6 @@ public class Update extends AbstractLoader {
 			String token = st.nextToken();
 			strings.add(token.trim());
 		}
-		
-		System.out.println(strings);
 	}
 
 	private void prepareTemplates() throws IOException {
@@ -256,7 +257,8 @@ public class Update extends AbstractLoader {
 			template.setId(Long.parseLong(token));
 			templates.add(template);
 
-			StringTokenizer st2 = new StringTokenizer(config.getProperty("Update.template." + template.getId() + ".attributes"), ",", false);
+			StringTokenizer st2 = new StringTokenizer(config.getProperty("Update.template." + template.getId()
+					+ ".attributes"), ",", false);
 			while (st2.hasMoreTokens()) {
 				String name = st2.nextToken();
 				Attribute attribute = new Attribute();
@@ -292,5 +294,19 @@ public class Update extends AbstractLoader {
 			log.error("Throwable exception: ", tw);
 			throw tw;
 		}
+	}
+
+	public static String convertDateToString(Date date) {
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
+		try {
+			return df.format(date);
+		} catch (Exception e) {
+			df = new SimpleDateFormat("yyyy-MM-dd");
+			try {
+				return df.format(date);
+			} catch (Exception e1) {
+			}
+		}
+		return null;
 	}
 }

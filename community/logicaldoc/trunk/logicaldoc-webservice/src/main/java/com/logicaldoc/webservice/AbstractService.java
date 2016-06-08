@@ -30,6 +30,7 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.MenuDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.webservice.model.WSUtil;
 
 /**
  * Basepoint for creating webservices implementations
@@ -162,36 +163,7 @@ public class AbstractService {
 			throw new FileNotFoundException("Document is archived");
 	}
 
-	public static String convertDateToString(Date date) {
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-		try {
-			return df.format(date);
-		} catch (Exception e) {
-			df = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				return df.format(date);
-			} catch (Exception e1) {
-			}
-		}
-		return null;
-	}
 
-	public static Date convertStringToDate(String date) {
-		if (StringUtils.isEmpty(date))
-			return null;
-
-		DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss Z");
-		try {
-			return df.parse(date);
-		} catch (ParseException e) {
-			df = new SimpleDateFormat("yyyy-MM-dd");
-			try {
-				return df.parse(date);
-			} catch (ParseException e1) {
-			}
-		}
-		return null;
-	}
 
 	protected boolean isWebserviceEnabled() {
 		return "true".equals(Context.get().getProperties().get("webservice.enabled"));
@@ -254,5 +226,13 @@ public class AbstractService {
 		if (sid == null)
 			throw new Exception("Invalid session");
 		return sid;
+	}
+	
+	public static String convertDateToString(Date date) {
+		return WSUtil.convertDateToString(date);
+	}
+
+	public static Date convertStringToDate(String date) {
+		return WSUtil.convertStringToDate(date);
 	}
 }
