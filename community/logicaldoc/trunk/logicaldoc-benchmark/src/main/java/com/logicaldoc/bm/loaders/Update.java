@@ -124,12 +124,13 @@ public class Update extends AbstractLoader {
 					updateDocument(serverProxy, doc);
 					statCount++;
 				}
-			} else {
-				// Empty folder, we could remove it from the pool
-				synchronized (folders) {
-					folders.remove(folderId);
-					log.debug("Removed empty folder {}", folderId);
-				}
+			}
+
+			// The documents of this folder were processed so we could remove it
+			// from the pool.
+			synchronized (folders) {
+				folders.remove(folderId);
+				log.debug("Removed empty folder {}", folderId);
 			}
 		} finally {
 			// To compensate the internal increments
