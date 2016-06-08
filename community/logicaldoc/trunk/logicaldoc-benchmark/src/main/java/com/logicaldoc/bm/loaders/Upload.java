@@ -131,7 +131,7 @@ public class Upload extends AbstractLoader {
 		return null;
 	}
 
-	private Long createDocument(String ticket, AbstractServerProxy serverProxy, long folderId, String title, SourceFile sfile) {
+	private Long createDocument(String sid, AbstractServerProxy serverProxy, long folderId, String title, SourceFile sfile) {
 
 		String fileName = sfile.getFile().getName();
 
@@ -158,10 +158,10 @@ public class Upload extends AbstractLoader {
 
 		try {
 			if (sfile.getContent() != null) {
-				doc = serverProxy.create(ticket, doc, new DataHandler(new ByteArrayDataSource(sfile
+				doc = serverProxy.create(sid, doc, new DataHandler(new ByteArrayDataSource(sfile
 						.getContent().getBytes(), "application/octet-stream")));
 			} else {
-				doc = serverProxy.create(ticket, doc, sfile.getFile());
+				doc = serverProxy.create(sid, doc, sfile.getFile());
 			}
 
 			if (doc != null) {
