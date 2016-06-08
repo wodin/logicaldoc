@@ -17,7 +17,7 @@ import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
 /**
- * This Authentication provider simply checks if the pprovided password matches
+ * This Authentication provider simply checks if the provided password matches
  * the context property 'adminpswd'
  * 
  * @author Marco Meschieri - LogicalDOC

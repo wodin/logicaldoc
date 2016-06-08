@@ -2,6 +2,8 @@ package com.logicaldoc.core;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.Set;
@@ -18,38 +20,48 @@ public class EmailDummy {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		EMailSender sender = prepareEmailSender();
-
-		EMail eml = new EMail();
-		eml.setSubject("HTML test");
-		eml.setHtml(1);
-		Set<Recipient> recipients = new HashSet<Recipient>();
-
-		eml.getImages().add("file:///C:/Users/Marco/Pictures/email_header2.jpg");
-				//"http://www.logicaldoc.com/templates/theme326/images/LogicalDOC_logo_website.gif");
-
-		// Notify the general report
-		Recipient rec = new Recipient();
-		rec.setAddress("a.gasparini@logicalobjects.com");
-		recipients.add(rec);
-		eml.setRecipients(recipients);
-		// eml.setMessageText("<span style='color:red'>Test</span> di <b>HTML</b>\ncippa"
-		// +"<br/><image src='cid:image_1' />");
-
-		String message = StringUtil.writeToString(new FileInputStream(new File("C:/tmp/ldoc_ready.html")), "UTF8");
-		message=message.replaceAll("\\{", "'{'");
-		message=message.replaceAll("}", "'}'");
-		message=message.replaceAll("\\[\\[", "{");
-		message=message.replaceAll("\\]\\]", "}");
+		String original="1234567€";
+		System.out.println("original: "+original);
 		
-	
-		MessageFormat format = new MessageFormat(message);
-		message = format.format(new Object[] { "Marco Meschieri", "qui c'è il codice di attivazione" });
-		eml.setMessageText(message);
-	
-		System.out.println(eml.getMessageText());
+		String encoded=URLEncoder.encode(original, "UTF-8");
+		System.out.println("encoded: "+encoded);
 		
-		sender.send(eml);
+		
+		String decoded=URLDecoder.decode("1234567%E2%82%AC", "UTF-8");
+		System.out.println("decoded: "+decoded);
+		
+//		EMailSender sender = prepareEmailSender();
+//
+//		EMail eml = new EMail();
+//		eml.setSubject("HTML test");
+//		eml.setHtml(1);
+//		Set<Recipient> recipients = new HashSet<Recipient>();
+//
+//		eml.getImages().add("file:///C:/Users/Marco/Pictures/email_header2.jpg");
+//				//"http://www.logicaldoc.com/templates/theme326/images/LogicalDOC_logo_website.gif");
+//
+//		// Notify the general report
+//		Recipient rec = new Recipient();
+//		rec.setAddress("a.gasparini@logicalobjects.com");
+//		recipients.add(rec);
+//		eml.setRecipients(recipients);
+//		// eml.setMessageText("<span style='color:red'>Test</span> di <b>HTML</b>\ncippa"
+//		// +"<br/><image src='cid:image_1' />");
+//
+//		String message = StringUtil.writeToString(new FileInputStream(new File("C:/tmp/ldoc_ready.html")), "UTF8");
+//		message=message.replaceAll("\\{", "'{'");
+//		message=message.replaceAll("}", "'}'");
+//		message=message.replaceAll("\\[\\[", "{");
+//		message=message.replaceAll("\\]\\]", "}");
+//		
+//	
+//		MessageFormat format = new MessageFormat(message);
+//		message = format.format(new Object[] { "Marco Meschieri", "qui c'è il codice di attivazione" });
+//		eml.setMessageText(message);
+//	
+//		System.out.println(eml.getMessageText());
+//		
+//		sender.send(eml);
 	}
 
 	protected static EMailSender prepareEmailSender() {
