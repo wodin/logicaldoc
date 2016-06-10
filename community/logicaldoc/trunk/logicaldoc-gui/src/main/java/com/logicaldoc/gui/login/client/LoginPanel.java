@@ -11,7 +11,6 @@ import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
@@ -409,7 +408,7 @@ public class LoginPanel extends VLayout {
 	}
 
 	protected void onSigninClicked() {
-		if (!form.validate()){
+		if (!form.validate()) {
 			onAuthenticationFailure();
 			return;
 		}
@@ -428,7 +427,7 @@ public class LoginPanel extends VLayout {
 			data += "&j_password=" + URL.encodeQueryString((String) password.getValue());
 			data += "&" + PARAM_SUCCESSURL + "=" + URL.encodeQueryString(Util.getJavascriptVariable(PARAM_SUCCESSURL));
 			data += "&" + PARAM_FAILUREURL + "=" + URL.encodeQueryString(Util.getJavascriptVariable(PARAM_FAILUREURL));
-			
+
 			builder.sendRequest(data, new RequestCallback() {
 				public void onError(Request request, Throwable exception) {
 					loggingIn = false;
@@ -446,7 +445,7 @@ public class LoginPanel extends VLayout {
 				}
 			});
 		} catch (RequestException e) {
-			SC.warn("Login request error: "+e.getMessage());
+			SC.warn("Login request error: " + e.getMessage());
 		}
 	}
 
