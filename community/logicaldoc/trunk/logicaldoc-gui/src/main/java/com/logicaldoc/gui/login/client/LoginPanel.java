@@ -10,6 +10,7 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.shared.UriUtils;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -423,11 +424,11 @@ public class LoginPanel extends VLayout {
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, Util.contextPath() + "j_spring_security_check");
 		builder.setHeader("Content-type", "application/x-www-form-urlencoded");
 		try {
-			String data = "j_username=" + UriUtils.encode((String) username.getValue());
-			data += "&j_password=" + UriUtils.encode((String) password.getValue());
-			data += "&" + PARAM_SUCCESSURL + "=" + UriUtils.encode(Util.getJavascriptVariable(PARAM_SUCCESSURL));
-			data += "&" + PARAM_FAILUREURL + "=" + UriUtils.encode(Util.getJavascriptVariable(PARAM_FAILUREURL));
-
+			String data = "j_username=" + URL.encodeQueryString((String) username.getValue());
+			data += "&j_password=" + URL.encodeQueryString((String) password.getValue());
+			data += "&" + PARAM_SUCCESSURL + "=" + URL.encodeQueryString(Util.getJavascriptVariable(PARAM_SUCCESSURL));
+			data += "&" + PARAM_FAILUREURL + "=" + URL.encodeQueryString(Util.getJavascriptVariable(PARAM_FAILUREURL));
+			
 			builder.sendRequest(data, new RequestCallback() {
 				public void onError(Request request, Throwable exception) {
 					loggingIn = false;
