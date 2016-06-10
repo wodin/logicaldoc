@@ -127,17 +127,17 @@ public class Session implements Comparable<Session> {
 
 	public void renew() {
 		if (status == STATUS_OPEN)
-			lastRenew = new Date();
+			if (isTimedOut()) {
+				setExpired();
+				return;
+			} else
+				lastRenew = new Date();
 		else
 			return;
 
 		stopTimeout();
 
-		int timeout = 30;
-		ContextProperties config = Context.get().getProperties();
-		if (config.getInt(getTenantName() + ".session.timeout") > 0)
-			timeout = config.getInt(getTenantName() + ".session.timeout");
-
+		int timeout = getTimeout();
 		if (timeout > 0) {
 			try {
 				timeoutTask = new FutureTask<String>(new SessionTimeout());
@@ -150,7 +150,32 @@ public class Session implements Comparable<Session> {
 		}
 	}
 
+	/**
+	 * Retrieves the timeout in minutes
+	 */
+	protected int getTimeout() {
+		int timeout = 30;
+		ContextProperties config = Context.get().getProperties();
+		if (config.getInt(getTenantName() + ".session.timeout") > 0)
+			timeout = config.getInt(getTenantName() + ".session.timeout");
+
+		return timeout;
+	}
+
+	protected boolean isTimedOut() {
+		int timeout = getTimeout();
+		if (timeout < 0)
+			return false;
+
+		Date now = new Date();
+		long diff = now.getTime() - lastRenew.getTime();
+		long diffMinutes = diff / (60 * 1000) % 60;
+		return diffMinutes >= timeout;
+	}
+
 	public int getStatus() {
+		if (status == STATUS_OPEN && isTimedOut())
+			setExpired();
 		return status;
 	}
 
@@ -377,7 +402,9 @@ public class Session implements Comparable<Session> {
 
 		@Override
 		public String call() throws Exception {
-			Session.this.setExpired();
+			// As a security check, verify if the timeout is reached
+			if (Session.this.isTimedOut())
+				Session.this.setExpired();
 			return "done";
 		}
 
