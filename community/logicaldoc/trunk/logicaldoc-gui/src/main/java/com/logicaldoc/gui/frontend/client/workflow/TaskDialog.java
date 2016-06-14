@@ -77,7 +77,7 @@ public class TaskDialog extends Window {
 		setShowModalMask(true);
 		setMargin(3);
 		setWidth(600);
-		setHeight(560);
+		setHeight(550);
 		centerInPage();
 
 		Tab propertiesTab = new Tab(I18N.message("properties"));
