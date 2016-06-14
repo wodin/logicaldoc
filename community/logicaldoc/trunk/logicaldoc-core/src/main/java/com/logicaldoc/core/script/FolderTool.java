@@ -13,7 +13,7 @@ import com.logicaldoc.util.config.ContextProperties;
  */
 public class FolderTool {
 
-	public String display(long tenatId, long folderId) {
+	public String displayUrl(long tenatId, long folderId) {
 		ContextProperties config = Context.get().getProperties();
 		String url = config.getProperty("server.url");
 		if (!url.endsWith("/"))
@@ -22,11 +22,11 @@ public class FolderTool {
 		return url;
 	}
 	
-	public String display(Folder folder) {
-		return display(folder.getTenantId(), folder.getId());
+	public String displayUrl(Folder folder) {
+		return displayUrl(folder.getTenantId(), folder.getId());
 	}
 	
-	public String display(FolderHistory history) {
-		return display(history.getTenantId(), history.getFolderId());
+	public String displayUrl(FolderHistory history) {
+		return displayUrl(history.getTenantId(), history.getFolderId());
 	}
 }

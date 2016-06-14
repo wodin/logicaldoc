@@ -79,20 +79,30 @@ public class WSDocument implements Serializable {
 
 	private Long lockUserId;
 
+	private String creation;
+	
+	@Deprecated
 	private String source;
 
+	@Deprecated
 	private String sourceAuthor;
 
+	@Deprecated
 	private String sourceDate;
-
+	
+	@Deprecated
 	private String sourceId;
-
+	
+	@Deprecated
+	private String sourceType;
+	
+	@Deprecated
 	private String object;
 
-	private String creation;
+	@Deprecated
+	private String recipient;
 
-	private String sourceType;
-
+	@Deprecated
 	private String coverage;
 
 	private String fileName;
@@ -114,8 +124,6 @@ public class WSDocument implements Serializable {
 	private int immutable = 0;
 
 	private String digest;
-
-	private String recipient;
 
 	private String exportName;
 
@@ -280,50 +288,62 @@ public class WSDocument implements Serializable {
 		this.lockUserId = lockUserId;
 	}
 
+	@Deprecated
 	public String getSource() {
 		return source;
 	}
 
+	@Deprecated
 	public void setSource(String source) {
 		this.source = source;
 	}
 
+	@Deprecated
 	public String getSourceAuthor() {
 		return sourceAuthor;
 	}
 
+	@Deprecated
 	public void setSourceAuthor(String sourceAuthor) {
 		this.sourceAuthor = sourceAuthor;
 	}
 
+	@Deprecated
 	public String getSourceId() {
 		return sourceId;
 	}
 
+	@Deprecated
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
 	}
 
+	@Deprecated
 	public String getObject() {
 		return object;
 	}
 
+	@Deprecated
 	public void setObject(String object) {
 		this.object = object;
 	}
 
+	@Deprecated
 	public String getSourceType() {
 		return sourceType;
 	}
 
+	@Deprecated
 	public void setSourceType(String sourceType) {
 		this.sourceType = sourceType;
 	}
 
+	@Deprecated
 	public String getCoverage() {
 		return coverage;
 	}
 
+	@Deprecated
 	public void setCoverage(String coverage) {
 		this.coverage = coverage;
 	}
@@ -400,10 +420,12 @@ public class WSDocument implements Serializable {
 		this.digest = digest;
 	}
 
+	@Deprecated
 	public String getRecipient() {
 		return recipient;
 	}
 
+	@Deprecated
 	public void setRecipient(String recipient) {
 		this.recipient = recipient;
 	}
@@ -456,10 +478,12 @@ public class WSDocument implements Serializable {
 		this.date = date;
 	}
 
+	@Deprecated
 	public String getSourceDate() {
 		return sourceDate;
 	}
 
+	@Deprecated
 	public void setSourceDate(String sourceDate) {
 		this.sourceDate = sourceDate;
 	}

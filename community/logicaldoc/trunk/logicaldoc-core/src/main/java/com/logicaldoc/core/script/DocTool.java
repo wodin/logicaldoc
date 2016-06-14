@@ -13,7 +13,7 @@ import com.logicaldoc.util.config.ContextProperties;
  */
 public class DocTool {
 
-	public String download(long docId) {
+	public String downloadUrl(long docId) {
 		ContextProperties config = Context.get().getProperties();
 		String url = config.getProperty("server.url");
 		if (!url.endsWith("/"))
@@ -22,28 +22,28 @@ public class DocTool {
 		return url;
 	}
 
-	public String display(long tenantId, long docId) {
+	public String displayUrl(long tenantId, long docId) {
 		ContextProperties config = Context.get().getProperties();
 		String url = config.getProperty("server.url");
 		if (!url.endsWith("/"))
 			url += "/";
-		url += "?tenantId=" + tenantId + "&docId=" + docId;
+		url += "frontend.jsp?tenantId=" + tenantId + "&docId=" + docId;
 		return url;
 	}
 
-	public String download(Document doc) {
-		return download(doc.getId());
+	public String downloadUrl(Document doc) {
+		return downloadUrl(doc.getId());
 	}
 
-	public String download(History history) {
-		return download(history.getDocId());
+	public String downloadUrl(History history) {
+		return downloadUrl(history.getDocId());
 	}
 
-	public String display(Document doc) {
-		return display(doc.getTenantId(), doc.getId());
+	public String displayUrl(Document doc) {
+		return displayUrl(doc.getTenantId(), doc.getId());
 	}
 
-	public String display(History history) {
-		return display(history.getTenantId(), history.getDocId());
+	public String displayUtl(History history) {
+		return displayUrl(history.getTenantId(), history.getDocId());
 	}
 }

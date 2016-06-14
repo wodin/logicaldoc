@@ -23,7 +23,23 @@ import com.logicaldoc.i18n.I18N;
  */
 public class ScriptingEngine {
 
-	private static final String KEY_LOCALE = "locale";
+	private static final String CLASS_TOOL = "ClassTool";
+
+	public static final String DIC_I18N = "I18N";
+
+	public static final String DOC_TOOL = "DocTool";
+
+	public static final String FOLDER_TOOL = "FolderTool";
+
+	public static final String CURRENT_DATE = "CURRENT_DATE";
+
+	public static final String PRODUCT = "product";
+
+	public static final String DATE_TOOL = "DateTool";
+
+	public static final String KEY_LOCALE = "locale";
+
+	public static final String LOG = "log";
 
 	private static Logger log = LoggerFactory.getLogger(ScriptingEngine.class);
 
@@ -33,6 +49,11 @@ public class ScriptingEngine {
 
 	public ScriptingEngine() {
 		super();
+	}
+
+	public ScriptingEngine(String logTag) {
+		super();
+		this.logTag = logTag;
 	}
 
 	public ScriptingEngine(String logTag, Locale locale) {
@@ -63,7 +84,7 @@ public class ScriptingEngine {
 		dictionary.put("nl", "\n");
 
 		// The product name
-		dictionary.put("product", SystemInfo.get().getProduct());
+		dictionary.put(PRODUCT, SystemInfo.get().getProduct());
 
 		// This is the locale
 		if (!dictionary.containsKey(KEY_LOCALE))
@@ -72,19 +93,25 @@ public class ScriptingEngine {
 		// This is needed to format dates
 		DateTool dateTool = new DateTool(I18N.getMessages((Locale) dictionary.get(KEY_LOCALE)).get("format_date"), I18N
 				.getMessages((Locale) dictionary.get(KEY_LOCALE)).get("format_dateshort"));
-		dictionary.put("DateTool", dateTool);
+		dictionary.put(DATE_TOOL, dateTool);
 
 		// Put the current date
-		dictionary.put("CURRENT_DATE", new Date());
+		dictionary.put(CURRENT_DATE, new Date());
 
 		// Localized messages map
-		dictionary.put("I18N", new I18NTool(I18N.getMessages((Locale) dictionary.get(KEY_LOCALE))));
+		dictionary.put(DIC_I18N, new I18NTool(I18N.getMessages((Locale) dictionary.get(KEY_LOCALE))));
 
 		// This is needed to print document's URL
-		dictionary.put("DocTool", new DocTool());
+		dictionary.put(DOC_TOOL, new DocTool());
 
 		// This is needed to print folder's URL
-		dictionary.put("FolderTool", new FolderTool());
+		dictionary.put(FOLDER_TOOL, new FolderTool());
+
+		// Utility functions for manipulating classes and resources
+		dictionary.put(CLASS_TOOL, new ClassTool());
+
+		// Access to the system log
+		dictionary.put(LOG, new LogTool());
 
 		StringWriter writer = new StringWriter();
 		try {
