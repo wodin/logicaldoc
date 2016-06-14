@@ -22,7 +22,6 @@ import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SpinnerItem;
@@ -31,12 +30,13 @@ import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
-import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
-import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
 import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.tab.Tab;
+import com.smartgwt.client.widgets.tab.TabSet;
 
 /**
  * This is the form used for the workflow task and end nodes settings.
@@ -62,8 +62,6 @@ public class TaskDialog extends Window {
 
 	private Button removeParticipant = null;
 
-	private DynamicForm buttonForm;
-
 	private StateWidget widget;
 
 	public TaskDialog(StateWidget widget) {
@@ -77,10 +75,77 @@ public class TaskDialog extends Window {
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
-		setAutoSize(true);
 		setMargin(3);
-		setWidth(400);
+		setWidth(600);
+		setHeight(560);
 		centerInPage();
+
+		Tab propertiesTab = new Tab(I18N.message("properties"));
+		propertiesTab.setPane(preparePropertiesPanel());
+
+		Tab automationTab = new Tab(I18N.message("automation"));
+		automationTab.setPane(prepareAutomationPanel());
+
+		TabSet tabSet = new TabSet();
+		tabSet.setWidth100();
+		tabSet.setTabs(propertiesTab, automationTab);
+		addItem(tabSet);
+
+		Button save = new Button(I18N.message("save"));
+		save.setAutoFit(true);
+		save.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				if (vm.validate()) {
+					onSave();
+					destroy();
+				}
+			}
+		});
+		save.setMargin(3);
+		addItem(save);
+	}
+
+	private VLayout prepareAutomationPanel() {
+		VLayout automationPanel = new VLayout();
+		automationPanel.setWidth100();
+		automationPanel.setHeight100();
+
+		DynamicForm automationForm = new DynamicForm();
+		automationForm.setTitleOrientation(TitleOrientation.TOP);
+		automationForm.setNumCols(1);
+		automationForm.setValuesManager(vm);
+
+		TextAreaItem onCreation = ItemFactory.newTextAreaItem("onCreation", "execcodeontaskcreation",
+				state.getOnCreation());
+		onCreation.setWidth("*");
+		onCreation.setHeight(200);
+		onCreation.setWrapTitle(false);
+
+		TextAreaItem onAssignment = ItemFactory.newTextAreaItem("onAssignment", "execcodeontaskassignment",
+				state.getOnAssignment());
+		onAssignment.setWidth(400);
+		onAssignment.setWidth("*");
+		onAssignment.setHeight(200);
+		onAssignment.setWrapTitle(false);
+
+		if (state.getType() == GUIWFState.TYPE_TASK)
+			automationForm.setItems(onCreation, onAssignment);
+		else {
+			onCreation.setHeight(400);
+			automationForm.setItems(onCreation);
+		}
+
+		automationPanel.addMember(automationForm);
+
+		return automationPanel;
+	}
+
+	private VLayout preparePropertiesPanel() {
+		VLayout propertiesPanel = new VLayout();
+		propertiesPanel.setWidth100();
+		propertiesPanel.setHeight100();
 
 		DynamicForm taskForm = new DynamicForm();
 		taskForm.setTitleOrientation(TitleOrientation.TOP);
@@ -93,7 +158,7 @@ public class TaskDialog extends Window {
 		taskDescr.setWidth(350);
 		taskDescr.setWrapTitle(false);
 		taskForm.setFields(taskName, taskDescr);
-		addItem(taskForm);
+		propertiesPanel.addMember(taskForm);
 
 		if (state.getType() == GUIWFState.TYPE_TASK) {
 			DynamicForm escalationFormItem = new DynamicForm();
@@ -105,7 +170,7 @@ public class TaskDialog extends Window {
 			escalation.setWrapTitle(false);
 			escalation.setWrap(false);
 			escalationFormItem.setItems(escalation);
-			addItem(escalationFormItem);
+			propertiesPanel.addMember(escalationFormItem);
 
 			DynamicForm escalationForm = new DynamicForm();
 			escalationForm.setTitleOrientation(TitleOrientation.LEFT);
@@ -130,14 +195,14 @@ public class TaskDialog extends Window {
 				remindTime.setDisabled(true);
 			}
 			escalationForm.setFields(duedateTimeItem, duedateTime, remindTimeItem, remindTime);
-			addItem(escalationForm);
+			propertiesPanel.addMember(escalationForm);
 		}
 
 		HTMLPane spacer = new HTMLPane();
 		spacer.setHeight(2);
 		spacer.setMargin(2);
 		spacer.setOverflow(Overflow.HIDDEN);
-		addItem(spacer);
+		propertiesPanel.addMember(spacer);
 
 		DynamicForm participantsItemForm = new DynamicForm();
 		participantsItemForm.setTitleOrientation(TitleOrientation.TOP);
@@ -149,7 +214,7 @@ public class TaskDialog extends Window {
 		participantsItem.setWrapTitle(false);
 		participantsItem.setRequired(true);
 		participantsItemForm.setItems(participantsItem);
-		addItem(participantsItemForm);
+		propertiesPanel.addMember(participantsItemForm);
 
 		HLayout usergroupSelection = new HLayout();
 		usergroupSelection.setHeight(25);
@@ -235,12 +300,12 @@ public class TaskDialog extends Window {
 
 		usergroupForm.setItems(user, group, attr);
 		usergroupSelection.addMember(usergroupForm);
-		addItem(usergroupSelection);
+		propertiesPanel.addMember(usergroupSelection);
 
 		participantsLayout = new HLayout();
-		participantsLayout.setHeight(70);
+		participantsLayout.setHeight(150);
 		participantsLayout.setMembersMargin(5);
-		addItem(participantsLayout);
+		propertiesPanel.addMember(participantsLayout);
 
 		// Initialize the participants list
 		if (this.state.getParticipants() != null)
@@ -259,6 +324,8 @@ public class TaskDialog extends Window {
 			}
 
 		addParticipant(null, null);
+
+		return propertiesPanel;
 	}
 
 	/**
@@ -270,10 +337,6 @@ public class TaskDialog extends Window {
 			participantsLayout.removeMember(participantsForm);
 		if (removeParticipant != null)
 			participantsLayout.removeMember(removeParticipant);
-		if (buttonForm != null) {
-			removeMember(buttonForm);
-			buttonForm.destroy();
-		}
 
 		participantsForm = new DynamicForm();
 		participantsForm.setTitleOrientation(TitleOrientation.TOP);
@@ -296,8 +359,8 @@ public class TaskDialog extends Window {
 		participantsList.setShowTitle(false);
 		participantsList.setMultipleAppearance(MultipleAppearance.GRID);
 		participantsList.setMultiple(true);
-		participantsList.setWidth(300);
-		participantsList.setHeight(70);
+		participantsList.setWidth(350);
+		participantsList.setHeight(130);
 		participantsList.setEndRow(true);
 		participantsList.setValueMap(participants);
 		participantsForm.setItems(participantsList);
@@ -317,49 +380,40 @@ public class TaskDialog extends Window {
 		});
 
 		participantsLayout.setMembers(participantsForm, removeParticipant);
+	}
 
-		buttonForm = new DynamicForm();
-		ButtonItem saveItem = new ButtonItem("save", I18N.message("save"));
-		saveItem.setAutoFit(true);
-		saveItem.addClickHandler(new ClickHandler() {
-			@SuppressWarnings("unchecked")
-			public void onClick(ClickEvent event) {
-				Map<String, Object> values = (Map<String, Object>) vm.getValues();
+	private void onSave() {
+		if (!vm.validate())
+			return;
 
-				if (vm.validate()) {
-					TaskDialog.this.state.setName((String) values.get("taskName"));
-					TaskDialog.this.state.setDescription((String) values.get("taskDescr"));
+		Map<String, Object> values = (Map<String, Object>) vm.getValues();
+		TaskDialog.this.state.setName((String) values.get("taskName"));
+		TaskDialog.this.state.setDescription((String) values.get("taskDescr"));
 
-					if (state.getType() == GUIWFState.TYPE_TASK) {
-						TaskDialog.this.state.setDueDateNumber((Integer) values.get("duedateNumber"));
-						TaskDialog.this.state.setDueDateUnit((String) values.get("duedateTime"));
-						TaskDialog.this.state.setReminderNumber((Integer) values.get("remindtimeNumber"));
-						TaskDialog.this.state.setReminderUnit((String) values.get("remindTime"));
-					}
+		if (state.getType() == GUIWFState.TYPE_TASK) {
+			TaskDialog.this.state.setDueDateNumber((Integer) values.get("duedateNumber"));
+			TaskDialog.this.state.setDueDateUnit((String) values.get("duedateTime"));
+			TaskDialog.this.state.setReminderNumber((Integer) values.get("remindtimeNumber"));
+			TaskDialog.this.state.setReminderUnit((String) values.get("remindTime"));
+			
+			TaskDialog.this.state.setOnAssignment((String) values.get("onAssignment"));
+		}
 
-					GUIValue[] b = new GUIValue[participants.size()];
-					int i = 0;
-					for (String key : participants.keySet())
-						b[i++] = new GUIValue(key, participants.get(key));
-					TaskDialog.this.state.setParticipants(b);
+		GUIValue[] b = new GUIValue[participants.size()];
+		int i = 0;
+		for (String key : participants.keySet())
+			b[i++] = new GUIValue(key, participants.get(key));
+		TaskDialog.this.state.setParticipants(b);
 
-					if (state.getType() == GUIWFState.TYPE_TASK
-							&& (TaskDialog.this.state.getParticipants() == null || TaskDialog.this.state
-									.getParticipants().length == 0)) {
-						SC.warn(I18N.message("workflowtaskparticipantatleast"));
-						return;
-					}
+		if (state.getType() == GUIWFState.TYPE_TASK
+				&& (TaskDialog.this.state.getParticipants() == null || TaskDialog.this.state.getParticipants().length == 0)) {
+			SC.warn(I18N.message("workflowtaskparticipantatleast"));
+			return;
+		}
 
-					widget.setContents("<b>" + state.getName() + "</b>");
-					widget.getDrawingPanel().getDiagramController().update();
+		TaskDialog.this.state.setOnCreation((String) values.get("onCreation"));
 
-					destroy();
-				}
-			}
-		});
-
-		buttonForm.setMargin(3);
-		buttonForm.setItems(saveItem);
-		addItem(buttonForm);
+		TaskDialog.this.widget.setContents("<b>" + state.getName() + "</b>");
+		TaskDialog.this.widget.getDrawingPanel().getDiagramController().update();
 	}
 }

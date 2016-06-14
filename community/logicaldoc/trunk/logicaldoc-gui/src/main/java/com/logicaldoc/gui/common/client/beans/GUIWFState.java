@@ -64,6 +64,10 @@ public class GUIWFState implements Serializable {
 
 	private boolean initial = false;
 
+	private String onCreation;
+
+	private String onAssignment;
+
 	public GUIWFState() {
 	}
 
@@ -237,5 +241,21 @@ public class GUIWFState implements Serializable {
 
 	public void setDueDate(Date dueDate) {
 		this.dueDate = dueDate;
+	}
+
+	public String getOnCreation() {
+		return onCreation;
+	}
+
+	public void setOnCreation(String onCreation) {
+		this.onCreation = onCreation;
+	}
+
+	public String getOnAssignment() {
+		return onAssignment;
+	}
+
+	public void setOnAssignment(String onAssignment) {
+		this.onAssignment = onAssignment;
 	}
 }
