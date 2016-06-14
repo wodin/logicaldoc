@@ -158,6 +158,9 @@ public class RestDocumentService extends SoapDocumentService implements Document
 
 			for (Attachment att : attachments) {
 				Map<String, String> params = att.getContentDisposition().getParameters();
+        //log.debug("keys: {}", params.keySet());
+				//log.debug("name: {}", params.get("name"));
+        
 				if ("docId".equals(params.get("name"))) {
 					docId = Long.parseLong(att.getObject(String.class));
 				} else if ("folderId".equals(params.get("name"))) {
@@ -166,9 +169,9 @@ public class RestDocumentService extends SoapDocumentService implements Document
 					release = Boolean.parseBoolean(att.getObject(String.class));
 				} else if ("filename".equals(params.get("name"))) {
 					filename = att.getObject(String.class);
-				} else if ("language".equals(params.get("language"))) {
+				} else if ("language".equals(params.get("name"))) {
 					language = att.getObject(String.class);
-				} else if ("filedata".equals(params.get("filedata"))) {
+				} else if ("filedata".equals(params.get("name"))) {
 					datah = att.getDataHandler();
 				}
 			}
