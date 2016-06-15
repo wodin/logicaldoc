@@ -101,8 +101,15 @@ public class PswRecovery extends HttpServlet {
 					email.setFolder("outbox");
 
 					// Generate a new password
-					ContextProperties pbean = Context.get().getProperties();
-					String password = new PasswordGenerator().generate(pbean.getInt("password.size"));
+					ContextProperties config = Context.get().getProperties();
+
+					int pswdSize = 8;
+					try {
+						pswdSize = config.getInt(tenant + ".password.size");
+					} catch (Throwable t) {
+					}
+
+					String password = new PasswordGenerator().generate(pswdSize);
 					user.setDecodedPassword(password);
 					user.setPasswordChanged(new Date());
 
