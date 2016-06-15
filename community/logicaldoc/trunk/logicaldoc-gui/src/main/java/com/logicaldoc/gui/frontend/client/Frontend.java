@@ -110,7 +110,7 @@ public class Frontend implements EntryPoint {
 				if (sid == null || "".equals(sid))
 					SC.warn(I18N.message("accessdenied"));
 
-				securityService.getSession(locale, new AsyncCallback<GUISession>() {
+				securityService.getSession(Util.getLocaleInRequest(), new AsyncCallback<GUISession>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
