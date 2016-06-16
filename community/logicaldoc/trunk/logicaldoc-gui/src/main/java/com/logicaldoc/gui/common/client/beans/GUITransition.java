@@ -18,9 +18,7 @@ public class GUITransition implements Serializable {
 
 	private String points;
 
-	private String effect;
-
-	private Long targetFolder;
+	private String onChosen;
 
 	public GUITransition() {
 	}
@@ -58,19 +56,11 @@ public class GUITransition implements Serializable {
 		this.points = points;
 	}
 
-	public String getEffect() {
-		return effect;
+	public String getOnChosen() {
+		return onChosen;
 	}
 
-	public void setEffect(String effect) {
-		this.effect = effect;
-	}
-
-	public Long getTargetFolder() {
-		return targetFolder;
-	}
-
-	public void setTargetFolder(Long targetFolder) {
-		this.targetFolder = targetFolder;
+	public void setOnChosen(String onChosen) {
+		this.onChosen = onChosen;
 	}
 }
