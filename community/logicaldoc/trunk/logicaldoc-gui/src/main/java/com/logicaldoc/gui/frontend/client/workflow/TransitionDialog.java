@@ -3,12 +3,8 @@ package com.logicaldoc.gui.frontend.client.workflow;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
-import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.folder.FolderSelector;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -17,7 +13,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
-import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
@@ -45,8 +41,10 @@ public class TransitionDialog extends Window {
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
-		setAutoSize(true);
 		setMargin(3);
+		setWidth(500);
+		setHeight(400);
+
 		centerInPage();
 
 		form = new DynamicForm();
@@ -57,15 +55,11 @@ public class TransitionDialog extends Window {
 		TextItem name = ItemFactory.newTextItem("name", "name", widget.getTransition().getText());
 		name.setRequired(true);
 
-		SelectItem effect = ItemFactory.newEffectSelector("effect", "effect");
-		effect.setValue(widget.getTransition().getEffect());
-
-		final FolderSelector target = new FolderSelector("target", false);
-		target.setRequired(false);
-		target.setWidth(200);
-		target.setTitle(I18N.message("target"));
-		if (widget.getTransition().getTargetFolder() != null)
-			target.setFolder(widget.getTransition().getTargetFolder(), "");
+		TextAreaItem onCreation = ItemFactory.newTextAreaItem("onCreation", "execscriptontranschosen", widget
+				.getTransition().getOnChosen());
+		onCreation.setWidth("*");
+		onCreation.setHeight(270);
+		onCreation.setWrapTitle(false);
 
 		ButtonItem save = new ButtonItem("save", I18N.message("save"));
 		save.setAutoFit(true);
@@ -76,38 +70,15 @@ public class TransitionDialog extends Window {
 
 				if (vm.validate()) {
 					TransitionDialog.this.widget.getTransition().setText((String) values.get("name"));
-					TransitionDialog.this.widget.getTransition().setEffect((String) values.get("effect"));
-					if (target.getFolder() != null)
-						TransitionDialog.this.widget.getTransition().setTargetFolder(target.getFolderId());
-					else
-						TransitionDialog.this.widget.getTransition().setTargetFolder(null);
-
 					TransitionDialog.this.widget.setContents((String) values.get("name"));
+					TransitionDialog.this.widget.getTransition().setOnChosen((String) values.get("onCreation"));
 
 					destroy();
 				}
 			}
 		});
 
-		form.setItems(name, effect, target, save);
-
-		if (widget.getTransition().getTargetFolder() != null) {
-			folderService.getFolder(widget.getTransition().getTargetFolder(), false,
-					new AsyncCallback<GUIFolder>() {
-
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-						}
-
-						@Override
-						public void onSuccess(GUIFolder folder) {
-							addItem(form);
-							target.setFolder(folder);
-						}
-					});
-
-		} else
-			addItem(form);
+		form.setItems(name, onCreation, save);
+		addItem(form);
 	}
 }

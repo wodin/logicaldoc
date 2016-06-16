@@ -23,6 +23,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
+import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
@@ -56,7 +57,7 @@ public class TaskDialog extends Window {
 
 	private LinkedHashMap<String, String> participants = new LinkedHashMap<String, String>();
 
-	private HLayout participantsLayout;
+	private HLayout participantsListLayout;
 
 	private DynamicForm participantsForm;
 
@@ -117,13 +118,14 @@ public class TaskDialog extends Window {
 		automationForm.setNumCols(1);
 		automationForm.setValuesManager(vm);
 
-		TextAreaItem onCreation = ItemFactory.newTextAreaItem("onCreation", "execcodeontaskcreation",
+		TextAreaItem onCreation = ItemFactory.newTextAreaItem("onCreation",
+				state.getType() == GUIWFState.TYPE_TASK ? "execscriptontaskreached" : "execscriptonenstatusreached",
 				state.getOnCreation());
 		onCreation.setWidth("*");
 		onCreation.setHeight(200);
 		onCreation.setWrapTitle(false);
 
-		TextAreaItem onAssignment = ItemFactory.newTextAreaItem("onAssignment", "execcodeontaskassignment",
+		TextAreaItem onAssignment = ItemFactory.newTextAreaItem("onAssignment", "execscriptontaskassignment",
 				state.getOnAssignment());
 		onAssignment.setWidth(400);
 		onAssignment.setWidth("*");
@@ -142,6 +144,12 @@ public class TaskDialog extends Window {
 		return automationPanel;
 	}
 
+	// Checks if the tast requires human interaction
+	private boolean isHumanInteraction() {
+		GUIValue[] parts = this.state.getParticipants();
+		return !(parts != null && parts.length == 1 && parts[0].getCode().equals("_workflow"));
+	}
+
 	private VLayout preparePropertiesPanel() {
 		VLayout propertiesPanel = new VLayout();
 		propertiesPanel.setWidth100();
@@ -157,20 +165,34 @@ public class TaskDialog extends Window {
 		TextAreaItem taskDescr = ItemFactory.newTextAreaItem("taskDescr", "description", this.state.getDescription());
 		taskDescr.setWidth(350);
 		taskDescr.setWrapTitle(false);
-		taskForm.setFields(taskName, taskDescr);
-		propertiesPanel.addMember(taskForm);
+
+		boolean isHumanInteraction = isHumanInteraction();
+		RadioGroupItem humanInteraction = ItemFactory.newBooleanSelector("humanInteraction", "humaninteraction");
+		humanInteraction.setValue(isHumanInteraction ? "yes" : "no");
+		humanInteraction.setDefaultValue(isHumanInteraction ? "yes" : "no");
 
 		if (state.getType() == GUIWFState.TYPE_TASK) {
-			DynamicForm escalationFormItem = new DynamicForm();
-			escalationFormItem.setTitleOrientation(TitleOrientation.TOP);
+			taskForm.setFields(taskName, humanInteraction, taskDescr);
+			taskForm.setNumCols(2);
+		} else
+			taskForm.setFields(taskName, taskDescr);
+
+		propertiesPanel.addMember(taskForm);
+
+		final VLayout participantsPanel = new VLayout();
+		propertiesPanel.addMember(participantsPanel);
+
+		if (state.getType() == GUIWFState.TYPE_TASK) {
+			DynamicForm escalationFormTitle = new DynamicForm();
+			escalationFormTitle.setTitleOrientation(TitleOrientation.TOP);
 			StaticTextItem escalation = ItemFactory.newStaticTextItem("escalationManagement", "",
 					"<b>" + I18N.message("escalationmanagement") + "</b>");
 			escalation.setShouldSaveValue(false);
 			escalation.setShowTitle(false);
 			escalation.setWrapTitle(false);
 			escalation.setWrap(false);
-			escalationFormItem.setItems(escalation);
-			propertiesPanel.addMember(escalationFormItem);
+			escalationFormTitle.setItems(escalation);
+			participantsPanel.addMember(escalationFormTitle);
 
 			DynamicForm escalationForm = new DynamicForm();
 			escalationForm.setTitleOrientation(TitleOrientation.LEFT);
@@ -195,26 +217,26 @@ public class TaskDialog extends Window {
 				remindTime.setDisabled(true);
 			}
 			escalationForm.setFields(duedateTimeItem, duedateTime, remindTimeItem, remindTime);
-			propertiesPanel.addMember(escalationForm);
+			participantsPanel.addMember(escalationForm);
 		}
 
 		HTMLPane spacer = new HTMLPane();
 		spacer.setHeight(2);
 		spacer.setMargin(2);
 		spacer.setOverflow(Overflow.HIDDEN);
-		propertiesPanel.addMember(spacer);
+		participantsPanel.addMember(spacer);
 
-		DynamicForm participantsItemForm = new DynamicForm();
-		participantsItemForm.setTitleOrientation(TitleOrientation.TOP);
-		participantsItemForm.setNumCols(1);
+		final DynamicForm participantsForm = new DynamicForm();
+		participantsForm.setTitleOrientation(TitleOrientation.TOP);
+		participantsForm.setNumCols(1);
 		StaticTextItem participantsItem = ItemFactory.newStaticTextItem("participants", "",
 				"<b>" + I18N.message("participants") + "</b>");
 		participantsItem.setShouldSaveValue(false);
 		participantsItem.setShowTitle(false);
 		participantsItem.setWrapTitle(false);
 		participantsItem.setRequired(true);
-		participantsItemForm.setItems(participantsItem);
-		propertiesPanel.addMember(participantsItemForm);
+		participantsForm.setItems(participantsItem);
+		participantsPanel.addMember(participantsForm);
 
 		HLayout usergroupSelection = new HLayout();
 		usergroupSelection.setHeight(25);
@@ -300,12 +322,12 @@ public class TaskDialog extends Window {
 
 		usergroupForm.setItems(user, group, attr);
 		usergroupSelection.addMember(usergroupForm);
-		propertiesPanel.addMember(usergroupSelection);
+		participantsPanel.addMember(usergroupSelection);
 
-		participantsLayout = new HLayout();
-		participantsLayout.setHeight(150);
-		participantsLayout.setMembersMargin(5);
-		propertiesPanel.addMember(participantsLayout);
+		participantsListLayout = new HLayout();
+		participantsListLayout.setHeight(150);
+		participantsListLayout.setMembersMargin(5);
+		participantsPanel.addMember(participantsListLayout);
 
 		// Initialize the participants list
 		if (this.state.getParticipants() != null)
@@ -325,6 +347,27 @@ public class TaskDialog extends Window {
 
 		addParticipant(null, null);
 
+		if (isHumanInteraction)
+			participantsPanel.show();
+		else
+			participantsPanel.hide();
+
+		humanInteraction.setValue(isHumanInteraction);
+		humanInteraction.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if ("yes".equals(event.getValue())) {
+					participants.clear();
+					TaskDialog.this.state.setParticipants(new GUIValue[0]);
+					participantsList.setValueMap(participants);
+					participantsPanel.show();
+				} else
+					participantsPanel.hide();
+
+			}
+		});
+
 		return propertiesPanel;
 	}
 
@@ -334,9 +377,9 @@ public class TaskDialog extends Window {
 	 */
 	private void addParticipant(String entityCode, String entityLabel) {
 		if (participantsForm != null)
-			participantsLayout.removeMember(participantsForm);
+			participantsListLayout.removeMember(participantsForm);
 		if (removeParticipant != null)
-			participantsLayout.removeMember(removeParticipant);
+			participantsListLayout.removeMember(removeParticipant);
 
 		participantsForm = new DynamicForm();
 		participantsForm.setTitleOrientation(TitleOrientation.TOP);
@@ -379,14 +422,18 @@ public class TaskDialog extends Window {
 			}
 		});
 
-		participantsLayout.setMembers(participantsForm, removeParticipant);
+		participantsListLayout.setMembers(participantsForm, removeParticipant);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void onSave() {
-		if (!vm.validate())
+		vm.validate();
+		Map<String, Object> values = (Map<String, Object>) vm.getValues();
+		boolean humanInteraction = "yes".equals(values.get("humanInteraction"));
+
+		if (!vm.validate() && humanInteraction)
 			return;
 
-		Map<String, Object> values = (Map<String, Object>) vm.getValues();
 		TaskDialog.this.state.setName((String) values.get("taskName"));
 		TaskDialog.this.state.setDescription((String) values.get("taskDescr"));
 
@@ -395,8 +442,13 @@ public class TaskDialog extends Window {
 			TaskDialog.this.state.setDueDateUnit((String) values.get("duedateTime"));
 			TaskDialog.this.state.setReminderNumber((Integer) values.get("remindtimeNumber"));
 			TaskDialog.this.state.setReminderUnit((String) values.get("remindTime"));
-			
+
 			TaskDialog.this.state.setOnAssignment((String) values.get("onAssignment"));
+
+			if (!humanInteraction) {
+				participants.clear();
+				participants.put("_workflow", "Workflow Engine");
+			}
 		}
 
 		GUIValue[] b = new GUIValue[participants.size()];
@@ -405,7 +457,8 @@ public class TaskDialog extends Window {
 			b[i++] = new GUIValue(key, participants.get(key));
 		TaskDialog.this.state.setParticipants(b);
 
-		if (state.getType() == GUIWFState.TYPE_TASK
+		if (humanInteraction
+				&& state.getType() == GUIWFState.TYPE_TASK
 				&& (TaskDialog.this.state.getParticipants() == null || TaskDialog.this.state.getParticipants().length == 0)) {
 			SC.warn(I18N.message("workflowtaskparticipantatleast"));
 			return;
