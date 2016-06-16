@@ -166,9 +166,9 @@ public class RestDocumentService extends SoapDocumentService implements Document
 					release = Boolean.parseBoolean(att.getObject(String.class));
 				} else if ("filename".equals(params.get("name"))) {
 					filename = att.getObject(String.class);
-				} else if ("language".equals(params.get("language"))) {
+				} else if ("language".equals(params.get("name"))) {
 					language = att.getObject(String.class);
-				} else if ("filedata".equals(params.get("language"))) {
+				} else if ("filedata".equals(params.get("name"))) {
 					datah = att.getDataHandler();
 				}
 			}

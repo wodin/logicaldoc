@@ -28,7 +28,7 @@ import com.smartgwt.client.util.SC;
 /**
  * The Frontend entry point
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 6.0
  */
 public class Frontend implements EntryPoint {
@@ -86,7 +86,7 @@ public class Frontend implements EntryPoint {
 		declareGetCurrentFolderId(this);
 		declareCheckPermission(this);
 
-		infoService.getInfo(Util.getLocaleInRequest(), tenant, new AsyncCallback<GUIInfo>() {
+		infoService.getInfo(locale, tenant, new AsyncCallback<GUIInfo>() {
 			@Override
 			public void onFailure(Throwable error) {
 				SC.warn(error.getMessage());
@@ -110,6 +110,7 @@ public class Frontend implements EntryPoint {
 				if (sid == null || "".equals(sid))
 					SC.warn(I18N.message("accessdenied"));
 
+				//securityService.getSession(locale, new AsyncCallback<GUISession>() {
 				securityService.getSession(Util.getLocaleInRequest(), new AsyncCallback<GUISession>() {
 
 					@Override
