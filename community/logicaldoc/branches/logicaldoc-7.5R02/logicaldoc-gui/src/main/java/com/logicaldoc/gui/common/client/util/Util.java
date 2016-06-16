@@ -698,6 +698,9 @@ public class Util {
 		if (locale == null)
 			locale = Util.getBrowserLanguage();
 
+		if (locale == null || locale.isEmpty())
+			return "en";
+
 		return locale;
 	}
 

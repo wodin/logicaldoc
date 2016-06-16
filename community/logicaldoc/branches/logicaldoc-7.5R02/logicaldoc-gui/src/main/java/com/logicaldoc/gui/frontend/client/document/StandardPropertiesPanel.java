@@ -45,7 +45,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
 /**
  * Shows document's standard properties and read-only data
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 6.0
  */
 public class StandardPropertiesPanel extends DocumentDetailTab {
@@ -163,13 +163,15 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		LinkItem folder = ItemFactory.newLinkItem("folder", Util.padLeft(document.getPathExtended(), 40));
 		folder.setTitle(I18N.message("folder"));
-		folder.setValue(Util.contextPath() + "?" + Constants.FOLDER_ID + "=" + document.getFolder().getId());
+		//folder.setValue(Util.contextPath() + "?" + Constants.FOLDER_ID + "=" + document.getFolder().getId());
+		folder.setValue(Util.contextPath() + "frontend.jsp?" + Constants.FOLDER_ID + "=" + document.getFolder().getId());
 		folder.setTooltip(document.getPathExtended());
 		folder.setWrap(false);
-		folder.setWidth(DEFAULT_ITEM_WIDTH);
-
+		folder.setWidth(DEFAULT_ITEM_WIDTH);	
+		
 		String downloadUrl = Util.downloadURL(document.getId());
-		String detailsUrl = Util.contextPath() + "?docId=" + document.getId();
+		//String detailsUrl = Util.contextPath() + "/frontend.jsp?docId=" + document.getId();
+		String detailsUrl = Util.contextPath() + "frontend.jsp?docId=" + document.getId();
 		String perma = "<a href='" + downloadUrl + "'>" + I18N.message("download") + "</a> | " + "<a href='"
 				+ detailsUrl + "'>" + I18N.message("details") + "</a>";
 

@@ -5,7 +5,6 @@ import java.util.Date;
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -93,7 +92,7 @@ public class PropertiesPanel extends FolderDetailTab {
 
 		LinkItem pathItem = ItemFactory.newLinkItem("path", folder.getPathExtended());
 		pathItem.setTitle(I18N.message("path"));
-		pathItem.setValue(Util.contextPath() + "?folderId=" + folder.getId());
+		pathItem.setValue(Util.contextPath() + "frontend.jsp?folderId=" + folder.getId());
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(400);
 

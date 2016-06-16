@@ -10,11 +10,10 @@ import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
 import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
-import com.google.gwt.safehtml.shared.UriUtils;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
-import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUIMessage;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
@@ -182,12 +181,6 @@ public class LoginPanel extends VLayout {
 			}
 		});
 
-		// If the case, initialize the credentials from client's cookies
-		if (saveLoginEnabled && rememberMe.getValueAsBoolean()) {
-			username.setValue(Offline.get(Constants.COOKIE_USER));
-			password.setValue(Offline.get(Constants.COOKIE_PASSWORD));
-		}
-
 		language = ItemFactory.newLanguageSelector("language", true, true);
 		language.setShowTitle(false);
 		language.setDefaultValue("");
@@ -322,6 +315,12 @@ public class LoginPanel extends VLayout {
 		prepareMessages();
 
 		prepareSwitchViewLink();
+		
+		// If the case, initialize the credentials from client's cookies
+		if (saveLoginEnabled && rememberMe.getValueAsBoolean()) {
+			username.setValue(Offline.get(Constants.COOKIE_USER));
+			password.setValue(Offline.get(Constants.COOKIE_PASSWORD));
+		}		
 	}
 
 	protected void initGUI() {
@@ -423,10 +422,10 @@ public class LoginPanel extends VLayout {
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, Util.contextPath() + "j_spring_security_check");
 		builder.setHeader("Content-type", "application/x-www-form-urlencoded");
 		try {
-			String data = "j_username=" + UriUtils.encode((String) username.getValue());
-			data += "&j_password=" + UriUtils.encode((String) password.getValue());
-			data += "&" + PARAM_SUCCESSURL + "=" + UriUtils.encode(Util.getJavascriptVariable(PARAM_SUCCESSURL));
-			data += "&" + PARAM_FAILUREURL + "=" + UriUtils.encode(Util.getJavascriptVariable(PARAM_FAILUREURL));
+			String data = "j_username=" + URL.encodeQueryString((String) username.getValue());
+			data += "&j_password=" + URL.encodeQueryString((String) password.getValue());
+			data += "&" + PARAM_SUCCESSURL + "=" + URL.encodeQueryString(Util.getJavascriptVariable(PARAM_SUCCESSURL));
+			data += "&" + PARAM_FAILUREURL + "=" + URL.encodeQueryString(Util.getJavascriptVariable(PARAM_FAILUREURL));
 
 			builder.sendRequest(data, new RequestCallback() {
 				public void onError(Request request, Throwable exception) {
@@ -470,8 +469,10 @@ public class LoginPanel extends VLayout {
 		} catch (Throwable e) {
 		}
 
+		boolean saveLoginEnabled = "true".equals(info.getConfig("gui.savelogin"));
+
 		// If the case, save the credentials into client cookies
-		if ("true".equals(Session.get().getConfig("gui.savelogin"))) {
+		if (saveLoginEnabled) {
 			Offline.put(Constants.COOKIE_SAVELOGIN, (String) rememberMe.getValueAsBoolean().toString());
 			Offline.put(Constants.COOKIE_USER, rememberMe.getValueAsBoolean() ? (String) username.getValue() : "");
 			Offline.put(Constants.COOKIE_PASSWORD, rememberMe.getValueAsBoolean() ? (String) password.getValue() : "");
