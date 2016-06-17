@@ -9,6 +9,12 @@ package com.logicaldoc.core.script;
 public class ClassTool {
 	public Object newInstance(String classname) throws InstantiationException, IllegalAccessException,
 			ClassNotFoundException {
-		return Class.forName(classname).newInstance();
+		try {
+			return Class.forName(classname).newInstance();
+		} catch (Throwable t) {
+			// The classname as is was not found, so try to prefix with our root
+			// package
+			return Class.forName("com.logicaldoc." + classname).newInstance();
+		}
 	}
 }

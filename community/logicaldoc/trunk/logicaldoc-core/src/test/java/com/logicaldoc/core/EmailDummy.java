@@ -1,67 +1,65 @@
 package com.logicaldoc.core;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
 
-import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailSender;
-import com.logicaldoc.core.communication.Recipient;
-import com.logicaldoc.util.StringUtil;
+import com.logicaldoc.core.script.ScriptingEngine;
 
 public class EmailDummy {
 
-	/**
-	 * @param args
-	 * @throws Exception
-	 */
 	public static void main(String[] args) throws Exception {
-		String original="1234567€";
-		System.out.println("original: "+original);
+		ScriptingEngine engine = new ScriptingEngine();
 		
-		String encoded=URLEncoder.encode(original, "UTF-8");
-		System.out.println("encoded: "+encoded);
+		engine.evaluate("$SystemTool.exec('C:\\Program Files (x86)\\PSPad editor\\pspad.exe \"D:\\tmp\\Java- DropSpot.txt\"')",
+				new HashMap<String, Object>());
+
+		System.out.println("executed");
 		
-		
-		String decoded=URLDecoder.decode("1234567%E2%82%AC", "UTF-8");
-		System.out.println("decoded: "+decoded);
-		
-//		EMailSender sender = prepareEmailSender();
-//
-//		EMail eml = new EMail();
-//		eml.setSubject("HTML test");
-//		eml.setHtml(1);
-//		Set<Recipient> recipients = new HashSet<Recipient>();
-//
-//		eml.getImages().add("file:///C:/Users/Marco/Pictures/email_header2.jpg");
-//				//"http://www.logicaldoc.com/templates/theme326/images/LogicalDOC_logo_website.gif");
-//
-//		// Notify the general report
-//		Recipient rec = new Recipient();
-//		rec.setAddress("a.gasparini@logicalobjects.com");
-//		recipients.add(rec);
-//		eml.setRecipients(recipients);
-//		// eml.setMessageText("<span style='color:red'>Test</span> di <b>HTML</b>\ncippa"
-//		// +"<br/><image src='cid:image_1' />");
-//
-//		String message = StringUtil.writeToString(new FileInputStream(new File("C:/tmp/ldoc_ready.html")), "UTF8");
-//		message=message.replaceAll("\\{", "'{'");
-//		message=message.replaceAll("}", "'}'");
-//		message=message.replaceAll("\\[\\[", "{");
-//		message=message.replaceAll("\\]\\]", "}");
-//		
-//	
-//		MessageFormat format = new MessageFormat(message);
-//		message = format.format(new Object[] { "Marco Meschieri", "qui c'è il codice di attivazione" });
-//		eml.setMessageText(message);
-//	
-//		System.out.println(eml.getMessageText());
-//		
-//		sender.send(eml);
+		// String original="1234567€";
+		// System.out.println("original: "+original);
+		//
+		// String encoded=URLEncoder.encode(original, "UTF-8");
+		// System.out.println("encoded: "+encoded);
+		//
+		//
+		// String decoded=URLDecoder.decode("1234567%E2%82%AC", "UTF-8");
+		// System.out.println("decoded: "+decoded);
+
+		// EMailSender sender = prepareEmailSender();
+		//
+		// EMail eml = new EMail();
+		// eml.setSubject("HTML test");
+		// eml.setHtml(1);
+		// Set<Recipient> recipients = new HashSet<Recipient>();
+		//
+		// eml.getImages().add("file:///C:/Users/Marco/Pictures/email_header2.jpg");
+		// //"http://www.logicaldoc.com/templates/theme326/images/LogicalDOC_logo_website.gif");
+		//
+		// // Notify the general report
+		// Recipient rec = new Recipient();
+		// rec.setAddress("a.gasparini@logicalobjects.com");
+		// recipients.add(rec);
+		// eml.setRecipients(recipients);
+		// //
+		// eml.setMessageText("<span style='color:red'>Test</span> di <b>HTML</b>\ncippa"
+		// // +"<br/><image src='cid:image_1' />");
+		//
+		// String message = StringUtil.writeToString(new FileInputStream(new
+		// File("C:/tmp/ldoc_ready.html")), "UTF8");
+		// message=message.replaceAll("\\{", "'{'");
+		// message=message.replaceAll("}", "'}'");
+		// message=message.replaceAll("\\[\\[", "{");
+		// message=message.replaceAll("\\]\\]", "}");
+		//
+		//
+		// MessageFormat format = new MessageFormat(message);
+		// message = format.format(new Object[] { "Marco Meschieri",
+		// "qui c'è il codice di attivazione" });
+		// eml.setMessageText(message);
+		//
+		// System.out.println(eml.getMessageText());
+		//
+		// sender.send(eml);
 	}
 
 	protected static EMailSender prepareEmailSender() {
