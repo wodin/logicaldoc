@@ -104,8 +104,8 @@ public class StatsPie extends HLayout {
 	}
 
 	private DynamicForm prepareLegend(GUIParameter[] parameters, int type) {
-		NumberFormat fmt = NumberFormat.getFormat("########");
-
+		NumberFormat fmt = NumberFormat.getFormat("#############");
+		
 		// Calculate the total value
 		double count = 0;
 		for (GUIParameter parameter : parameters) {
@@ -143,10 +143,10 @@ public class StatsPie extends HLayout {
 				item.setValue(Util.formatSize(fmt.parse(parameter.getValue())) + " ( "
 						+ Util.formatPercentage((fmt.parse(parameter.getValue()) * 100 / count), 2) + " )");
 			} else if (type == STATS_DOCUMENTS)
-				item.setValue(parameter.getValue() + " " + I18N.message("documents").toLowerCase() + " " + "( "
+				item.setValue(Util.formatLong((long)fmt.parse(parameter.getValue())) + " " + I18N.message("documents").toLowerCase() + " " + "( "
 						+ Util.formatPercentage((fmt.parse(parameter.getValue()) * 100 / count), 2) + " )");
 			else if (type == STATS_FOLDERS)
-				item.setValue(parameter.getValue() + " " + I18N.message("folders").toLowerCase() + " " + " ( "
+				item.setValue(Util.formatLong((long)fmt.parse(parameter.getValue())) + " " + I18N.message("folders").toLowerCase() + " " + " ( "
 						+ Util.formatPercentage((fmt.parse(parameter.getValue()) * 100 / count), 2) + " )");
 
 			item.setRequired(true);
@@ -161,9 +161,9 @@ public class StatsPie extends HLayout {
 		if (type == STATS_REPOSITORY)
 			total.setValue(Util.formatSize(count));
 		else if (type == STATS_DOCUMENTS)
-			total.setValue((int) count + " " + I18N.message("documents").toLowerCase());
+			total.setValue(Util.formatLong((long)count) + " " + I18N.message("documents").toLowerCase());
 		else if (type == STATS_FOLDERS)
-			total.setValue((int) count + " " + I18N.message("folders").toLowerCase());
+			total.setValue(Util.formatLong((long)count) + " " + I18N.message("folders").toLowerCase());
 		total.setRequired(true);
 		total.setShouldSaveValue(false);
 		items[i++] = total;
