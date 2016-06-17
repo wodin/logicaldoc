@@ -14,12 +14,10 @@ public class GUISearchEngine implements Serializable {
 
 	private String languages = "standard, en, it, de, fr, es";
 
-	private long entries;
-
 	private boolean locked;
 
 	private boolean subwords;
-	
+
 	private String includePatters;
 
 	private String excludePatters = "*.exe,*.bin,*.iso";
@@ -29,7 +27,7 @@ public class GUISearchEngine implements Serializable {
 	private Integer parsingTimeout;
 
 	private Integer maxText;
-	
+
 	private String dir;
 
 	public String getLanguages() {
@@ -38,14 +36,6 @@ public class GUISearchEngine implements Serializable {
 
 	public void setLanguages(String languages) {
 		this.languages = languages;
-	}
-
-	public long getEntries() {
-		return entries;
-	}
-
-	public void setEntries(long entries) {
-		this.entries = entries;
 	}
 
 	public boolean isLocked() {

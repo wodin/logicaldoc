@@ -25,4 +25,10 @@ public interface TemplateService extends RemoteService {
 	 * Loads a given template from the database
 	 */
 	public GUITemplate getTemplate(long templateId) throws ServerException;
+	
+
+	/**
+	 * Loads a given template from the database
+	 */
+	public long countDocuments(long templateId) throws ServerException;
 }

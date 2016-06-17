@@ -808,7 +808,7 @@ public class ItemFactory {
 		templateItem.setMultiple(false);
 		templateItem.setWrapTitle(false);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
-		templateItem.setOptionDataSource(new TemplatesDS(withEmpty, templateId, null, false));
+		templateItem.setOptionDataSource(new TemplatesDS(withEmpty, templateId, null));
 
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);

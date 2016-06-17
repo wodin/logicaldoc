@@ -18,4 +18,6 @@ public interface SearchEngineServiceAsync {
 	void check(AsyncCallback<String> callback);
 
 	void setAliases(String extension, String aliases, AsyncCallback<Void> callback);
+
+	void countEntries(AsyncCallback<Long> callback);
 }

@@ -43,7 +43,6 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 
 			SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 			searchEngine.setLocked(indexer.isLocked());
-			searchEngine.setEntries(indexer.getCount());
 
 			ContextProperties conf = Context.get().getProperties();
 			searchEngine.setExcludePatters(conf.getProperty(session.getTenantName() + ".index.excludes"));
@@ -189,6 +188,17 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			ParserFactory.setAliases(extension, buf.toArray(new String[0]));
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public long countEntries() throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+		try {
+			SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
+			return indexer.getCount();
+		} catch (Exception t) {
+			return (Long) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 }

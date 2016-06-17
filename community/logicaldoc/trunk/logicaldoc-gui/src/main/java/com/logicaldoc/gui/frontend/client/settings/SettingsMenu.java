@@ -10,7 +10,6 @@ import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineServiceAsync;
@@ -114,19 +113,15 @@ public class SettingsMenu extends VLayout {
 		searchAndIndexing.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				ContactingServer.get().show();
-
 				seService.getInfo(new AsyncCallback<GUISearchEngine>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						ContactingServer.get().hide();
 						Log.serverError(caught);
 					}
 
 					@Override
 					public void onSuccess(GUISearchEngine searchEngine) {
-						ContactingServer.get().hide();
 						AdminPanel.get().setContent(new SearchIndexingPanel(searchEngine));
 					}
 

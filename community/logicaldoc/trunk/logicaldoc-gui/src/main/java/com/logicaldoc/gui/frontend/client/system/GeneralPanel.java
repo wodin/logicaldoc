@@ -27,7 +27,7 @@ public class GeneralPanel extends HLayout {
 
 		Tab sessions = new Tab();
 		sessions.setTitle(I18N.message("sessions"));
-		sessions.setPane(new SessionsPanel(true));
+		sessions.setPane(new SessionsPanel());
 
 		Tab plugins = new Tab();
 		plugins.setTitle(I18N.message("plugins"));

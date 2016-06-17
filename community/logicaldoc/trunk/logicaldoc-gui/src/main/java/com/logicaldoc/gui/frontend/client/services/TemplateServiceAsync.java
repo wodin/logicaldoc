@@ -10,4 +10,6 @@ public interface TemplateServiceAsync {
 	void save(GUITemplate template, AsyncCallback<GUITemplate> callback);
 
 	void getTemplate(long templateId, AsyncCallback<GUITemplate> callback);
+
+	void countDocuments(long templateId, AsyncCallback<Long> callback);
 }
