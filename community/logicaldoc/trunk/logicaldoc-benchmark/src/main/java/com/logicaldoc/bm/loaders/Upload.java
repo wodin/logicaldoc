@@ -90,7 +90,7 @@ public class Upload extends AbstractLoader {
 					+ "E.g. '1, 3'");
 		}
 
-		log.error("folderProfilesStr.length(): {}", folderProfilesList.size());
+		log.info("folderProfilesStr.length(): {}", folderProfilesList.size());
 	}
 
 	@Override
