@@ -2,6 +2,7 @@ package com.logicaldoc.core.script;
 
 import java.io.StringWriter;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -36,6 +37,8 @@ public class ScriptingEngine {
 	public static final String PRODUCT = "product";
 
 	public static final String DATE_TOOL = "DateTool";
+
+	public static final String SYSTEM_TOOL = "SystemTool";
 
 	public static final String KEY_LOCALE = "locale";
 
@@ -80,11 +83,13 @@ public class ScriptingEngine {
 	 * @return The processed result
 	 */
 	public String evaluate(String expression, Map<String, Object> dictionary) {
+		Map<String, Object> extendedDictionary = new HashMap<String, Object>();
+
 		// This is needed to handle new lines
-		dictionary.put("nl", "\n");
+		extendedDictionary.put("nl", "\n");
 
 		// The product name
-		dictionary.put(PRODUCT, SystemInfo.get().getProduct());
+		extendedDictionary.put(PRODUCT, SystemInfo.get().getProduct());
 
 		// This is the locale
 		if (!dictionary.containsKey(KEY_LOCALE))
@@ -93,29 +98,35 @@ public class ScriptingEngine {
 		// This is needed to format dates
 		DateTool dateTool = new DateTool(I18N.getMessages((Locale) dictionary.get(KEY_LOCALE)).get("format_date"), I18N
 				.getMessages((Locale) dictionary.get(KEY_LOCALE)).get("format_dateshort"));
-		dictionary.put(DATE_TOOL, dateTool);
+		extendedDictionary.put(DATE_TOOL, dateTool);
 
 		// Put the current date
-		dictionary.put(CURRENT_DATE, new Date());
+		extendedDictionary.put(CURRENT_DATE, new Date());
 
 		// Localized messages map
-		dictionary.put(DIC_I18N, new I18NTool(I18N.getMessages((Locale) dictionary.get(KEY_LOCALE))));
+		extendedDictionary.put(DIC_I18N, new I18NTool(I18N.getMessages((Locale) dictionary.get(KEY_LOCALE))));
 
 		// This is needed to print document's URL
-		dictionary.put(DOC_TOOL, new DocTool());
+		extendedDictionary.put(DOC_TOOL, new DocTool());
 
 		// This is needed to print folder's URL
-		dictionary.put(FOLDER_TOOL, new FolderTool());
+		extendedDictionary.put(FOLDER_TOOL, new FolderTool());
 
 		// Utility functions for manipulating classes and resources
-		dictionary.put(CLASS_TOOL, new ClassTool());
+		extendedDictionary.put(CLASS_TOOL, new ClassTool());
+
+		// System Utility functions
+		extendedDictionary.put(SYSTEM_TOOL, new SystemTool());
 
 		// Access to the system log
-		dictionary.put(LOG, new LogTool());
+		extendedDictionary.put(LOG, new LogTool());
+
+		if (dictionary != null)
+			extendedDictionary.putAll(dictionary);
 
 		StringWriter writer = new StringWriter();
 		try {
-			VelocityContext context = new VelocityContext(dictionary);
+			VelocityContext context = new VelocityContext(extendedDictionary);
 			Velocity.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, Log4JLogChute.class.getName());
 			Velocity.setProperty("runtime.log.logsystem.log4j.logger", ScriptingEngine.class.getName());
 			Velocity.evaluate(context, writer, StringUtils.isNotEmpty(logTag) ? logTag : "ScriptEngine",
