@@ -19,6 +19,11 @@ public interface SearchEngineService extends RemoteService {
 	public GUISearchEngine getInfo() throws ServerException;
 
 	/**
+	 * Counts the total number of entries.
+	 */
+	public long countEntries() throws ServerException;
+
+	/**
 	 * Unlocks the indexer.
 	 */
 	public void unlocks() throws ServerException;

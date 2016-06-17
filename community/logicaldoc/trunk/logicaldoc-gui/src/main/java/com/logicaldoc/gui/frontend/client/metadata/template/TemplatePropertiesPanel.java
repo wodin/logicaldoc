@@ -4,11 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.frontend.client.services.TemplateService;
+import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
@@ -17,10 +23,13 @@ import com.smartgwt.client.widgets.events.DropCompleteEvent;
 import com.smartgwt.client.widgets.events.DropCompleteHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
@@ -41,6 +50,8 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
  * @since 6.0
  */
 public class TemplatePropertiesPanel extends HLayout {
+
+	private TemplateServiceAsync service = (TemplateServiceAsync) GWT.create(TemplateService.class);
 
 	protected DynamicForm templateForm = new DynamicForm();
 
@@ -310,10 +321,31 @@ public class TemplatePropertiesPanel extends HLayout {
 		description.setDisabled(template.isReadonly());
 		description.setWidth(name.getWidth());
 
+		PickerIcon computeStat = new PickerIcon(PickerIcon.REFRESH, new FormItemClickHandler() {
+			public void onFormItemClick(final FormItemIconClickEvent event) {
+				event.getItem().setValue(I18N.message("computing") + "...");
+				service.countDocuments(template.getId(), new AsyncCallback<Long>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Long count) {
+						event.getItem().setValue(Util.formatLong(count));
+					}
+				});
+			}
+		});
+		computeStat.setPrompt(I18N.message("calculatestats"));
+		StaticTextItem docs = ItemFactory.newStaticTextItem("docs", "documents", "-");
+		docs.setIcons(computeStat);
+
 		if (!template.isReadonly())
 			description.addChangedHandler(changedHandler);
 
-		templateForm.setItems(id, name, description);
+		templateForm.setItems(id, name, description, docs);
 
 		container.addMember(templateForm);
 	}

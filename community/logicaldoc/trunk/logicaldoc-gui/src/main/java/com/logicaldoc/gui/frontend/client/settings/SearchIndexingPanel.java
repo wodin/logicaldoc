@@ -35,9 +35,12 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
+import com.smartgwt.client.widgets.form.fields.events.FormItemIconClickEvent;
 import com.smartgwt.client.widgets.form.validator.LengthRangeValidator;
 import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -420,9 +423,28 @@ public class SearchIndexingPanel extends VLayout {
 		searchEngineForm.setColWidths(1, "*");
 		searchEngineForm.setValuesManager(vm);
 
+		PickerIcon computeStat = new PickerIcon(PickerIcon.REFRESH, new FormItemClickHandler() {
+			public void onFormItemClick(final FormItemIconClickEvent event) {
+				event.getItem().setValue(I18N.message("computing") + "...");
+				service.countEntries(new AsyncCallback<Long>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Long count) {
+						event.getItem().setValue(Util.formatLong(count));
+					}
+				});
+			}
+		});
+		computeStat.setPrompt(I18N.message("calculatestats"));
+		
 		// Entries count
-		StaticTextItem entries = ItemFactory.newStaticTextItem("entries", "entriescount",
-				"" + this.searchEngine.getEntries());
+		StaticTextItem entries = ItemFactory.newStaticTextItem("entries", "entriescount", "-");
+		entries.setIcons(computeStat);
 
 		// Locked
 		StaticTextItem status = ItemFactory.newStaticTextItem(

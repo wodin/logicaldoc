@@ -41,7 +41,6 @@ public class TemplatesDataServlet extends HttpServlet {
 			Session session = ServiceUtil.validateSession(request);
 
 			String folderId = request.getParameter("folderId");
-			boolean count = "true".equals(request.getParameter("count"));
 
 			Integer type = null;
 			if (request.getParameter("type") != null)
@@ -100,7 +99,6 @@ public class TemplatesDataServlet extends HttpServlet {
 				writer.print("<template>");
 				writer.print("<id>" + template.getId() + "</id>");
 				writer.print("<name><![CDATA[" + template.getName() + "]]></name>");
-				writer.print("<documents>" + (count ? dao.countDocs(template.getId()) : "") + "</documents>");
 				writer.print("<description><![CDATA[" + template.getDescription() + "]]></description>");
 				writer.print("<readonly>" + Boolean.toString(template.getReadonly() == 1) + "</readonly>");
 				writer.print("<type>" + template.getType() + "</type>");

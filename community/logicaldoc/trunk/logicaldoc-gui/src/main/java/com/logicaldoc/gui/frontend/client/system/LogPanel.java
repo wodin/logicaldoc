@@ -6,11 +6,11 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.smartgwt.client.types.ContentsType;
 import com.smartgwt.client.widgets.HTMLPane;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.layout.HStack;
 import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * Main log panel
@@ -29,35 +29,34 @@ public class LogPanel extends VLayout {
 		htmlPane.setContentsURL(GWT.getHostPageBaseURL() + "log?appender=" + appender);
 		htmlPane.setContentsType(ContentsType.PAGE);
 
-		HStack hStack = new HStack();
-		hStack.setLayoutMargin(10);
-		hStack.setMembersMargin(10);
-
-		IButton refresh = new IButton(I18N.message("refresh"));
+		ToolStrip toolStrip = new ToolStrip();
+		toolStrip.setHeight(20);
+		toolStrip.setWidth100();
+		toolStrip.addSpacer(2);
+		ToolStripButton refresh = new ToolStripButton(I18N.message("refresh"));
+		toolStrip.addButton(refresh);
 		refresh.addClickHandler(new ClickHandler() {
+			@Override
 			public void onClick(ClickEvent event) {
 				htmlPane.redraw();
 				htmlPane.setWidth100();
 				htmlPane.setHeight100();
 			}
 		});
-		hStack.addMember(refresh);
-
-		IButton download = new IButton(I18N.message("downloadlogs"));
-		download.setAutoFit(true);
+		ToolStripButton download = new ToolStripButton(I18N.message("downloadlogs"));
+		toolStrip.addButton(download);
 		download.addClickHandler(new ClickHandler() {
+			@Override
 			public void onClick(ClickEvent event) {
 				try {
 					WindowUtils.openUrl(Util.contextPath() + "log?appender=all");
 				} catch (Throwable t) {
 
 				}
-
 			}
 		});
-		hStack.addMember(download);
-
-		addMember(hStack);
+		toolStrip.addFill();
+		addMember(toolStrip);
 		addMember(htmlPane);
 		draw();
 	}

@@ -15,7 +15,6 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.util.ValueCallback;
-import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
@@ -25,11 +24,12 @@ import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
-import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
+import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * Displays a list list of user sessions, allowing the kill operation.
@@ -43,29 +43,24 @@ public class SessionsPanel extends VLayout {
 
 	private ListGrid list;
 
-	public SessionsPanel(boolean showRefresh) {
+	public SessionsPanel() {
+		ToolStrip toolStrip = new ToolStrip();
+		toolStrip.setHeight(20);
+		toolStrip.setWidth100();
+		toolStrip.addSpacer(2);
+		ToolStripButton refresh = new ToolStripButton(I18N.message("refresh"));
+		toolStrip.addButton(refresh);
+		refresh.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				removeMember(list);
+				refresh();
+			}
+		});
+		toolStrip.addFill();
+		addMember(toolStrip);
+
 		refresh();
-
-		if (showRefresh) {
-			HLayout buttons = new HLayout();
-			buttons.setMembersMargin(2);
-			Button refresh = new Button(I18N.message("refresh"));
-			refresh.setAutoFit(true);
-			buttons.addMember(refresh);
-			buttons.setMembersMargin(4);
-			buttons.setWidth100();
-			buttons.setHeight(15);
-			refresh.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					removeMember(list);
-					refresh();
-				}
-			});
-
-			setMembersMargin(5);
-			addMember(buttons);
-		}
 	}
 
 	private void refresh() {
@@ -147,7 +142,7 @@ public class SessionsPanel extends VLayout {
 			}
 		});
 
-		addMember(list, 0);
+		addMember(list);
 	}
 
 	private void showContextMenu() {

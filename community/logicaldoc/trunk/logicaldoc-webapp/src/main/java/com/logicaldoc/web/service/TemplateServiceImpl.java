@@ -47,6 +47,14 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 	}
 
 	@Override
+	public long countDocuments(long templateId) throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
+
+		TemplateDAO dao = (TemplateDAO) Context.get().getBean(TemplateDAO.class);
+		return dao.countDocs(templateId);
+	}
+
+	@Override
 	public GUITemplate save(GUITemplate template) throws ServerException {
 		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
@@ -175,7 +183,7 @@ public class TemplateServiceImpl extends RemoteServiceServlet implements Templat
 				attributes[i] = att;
 				i++;
 			}
-			if (attributes.length > 0){
+			if (attributes.length > 0) {
 				Arrays.sort(attributes);
 				templ.setAttributes(attributes);
 			}
