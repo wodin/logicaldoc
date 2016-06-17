@@ -33,8 +33,8 @@ public class MultiLoader {
 		this.rootFolder = rootFolder;
 	}
 
-	private static final String COLUMNS_SUMMARY = String.format("%15s\t%15s\t%15s\t%15s\t%15s\t%15s\t%25s", "NAME", "COUNT",
-			"TOTAL TIME", "AVERAGE TIME", "PER SECOND", "ERRORS", "DESCRIPTION");
+	private static final String COLUMNS_SUMMARY = String.format("%15s\t%15s\t%15s\t%15s\t%15s\t%15s\t%25s", "NAME",
+			"COUNT", "TOTAL TIME", "AVERAGE TIME", "PER SECOND", "ERRORS", "DESCRIPTION");
 
 	protected long startTime;
 
@@ -51,9 +51,14 @@ public class MultiLoader {
 	public static void main(String[] args) {
 		try {
 			ApplicationContext context = new ClassPathXmlApplicationContext(new String[] { "/context.xml" });
+			ContextProperties config = (ContextProperties) context.getBean("ContextProperties");
 
 			MultiLoader app = (MultiLoader) context.getBean("MultiLoader");
 
+			SocketListener listener = new SocketListener(app, config.getInt("socket.port"));
+
+			listener.start();
+			
 			// Run
 			app.start();
 
@@ -96,9 +101,9 @@ public class MultiLoader {
 	public synchronized void start() {
 
 		log.debug("start()");
-		
+
 		log.debug("session: {}", session);
-		log.debug("loaders: {}", (Object[])loaders);
+		log.debug("loaders: {}", (Object[]) loaders);
 		if (session == null || loaders == null) {
 			log.warn("session IS NULL and loaders IS NULL");
 			throw new RuntimeException("Application not initialized");
@@ -113,10 +118,22 @@ public class MultiLoader {
 		log.debug("start() completed");
 	}
 
+	public String processCommand(String command) throws InterruptedException {
+		if (command.equals("Q") || command.equals("q")) {
+			log.info("Requested stop");
+			stopThreads();
+			finished = true;
+			throw new InterruptedException();
+		} else if (command.equals("S") || command.equals("s")) {
+			return dumpThreadSummaries();
+		}
+		return "";
+	}
+
 	private void initConsole() {
 
 		log.debug("initConsole()");
-		
+
 		consoleThread = new Thread() {
 
 			@Override
@@ -135,13 +152,10 @@ public class MultiLoader {
 						break;
 					}
 
-					if (keyPress == 'Q' || keyPress == 'q') {
-						log.info("Requested stop");
-						stopThreads();
-						finished = true;
+					try {
+						processCommand(new String(new char[] { (char) keyPress }));
+					} catch (InterruptedException e) {
 						break;
-					} else if (keyPress == 'S' || keyPress == 's') {
-						dumpThreadSummaries();
 					}
 				}
 			}
@@ -151,7 +165,7 @@ public class MultiLoader {
 		log.debug("initConsole() completed");
 	}
 
-	protected synchronized void stopThreads() {
+	public synchronized void stopThreads() {
 		// Stop the threads
 		for (AbstractLoader thread : loaders) {
 			thread.setStop();
@@ -170,20 +184,26 @@ public class MultiLoader {
 		}
 	}
 
-	public void dumpThreadSummaries() {
-		System.out.println("");
-		System.out.println(COLUMNS_SUMMARY);
+	public String dumpThreadSummaries() {
+		StringBuffer sb = new StringBuffer();
+
+		sb.append("\n");
+		sb.append(COLUMNS_SUMMARY);
 		// Dump each thread's summary
 		for (AbstractLoader thread : loaders) {
 			String summary = thread.getSummary();
-			System.out.println(summary);
+			sb.append("\n");
+			sb.append(summary);
 		}
+
+		System.out.println(sb.toString());
+		return sb.toString();
 	}
 
 	public synchronized void stopAll() {
 
 		log.debug("stopAll()");
-		
+
 		consoleThread.interrupt();
 
 		// Print and Log each thread's summary
