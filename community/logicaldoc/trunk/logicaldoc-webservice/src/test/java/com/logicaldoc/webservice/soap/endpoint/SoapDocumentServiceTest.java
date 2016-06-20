@@ -64,17 +64,11 @@ public class SoapDocumentServiceTest extends AbstractWebServiceTestCase {
 		wsDoc.setCustomId("xxxxxxxx");
 		Assert.assertEquals(1, wsDoc.getId());
 		Assert.assertEquals("testDocname2", wsDoc.getTitle());
-		Assert.assertNull("sourceauthor2", wsDoc.getSourceAuthor());
-		Assert.assertNull("sourcetype2", wsDoc.getSourceType());
-		Assert.assertNull("coverage2", wsDoc.getCoverage());
 
 		docServiceImpl.update("", wsDoc);
 
 		docDao.initialize(doc);
 		Assert.assertEquals("testDocname2(1)", doc.getTitle());
-		Assert.assertNull("sourceauthor2", doc.getSourceAuthor());
-		Assert.assertNull("sourcetype2", doc.getSourceType());
-		Assert.assertNull("coverage2", doc.getCoverage());
 	}
 
 	@Test
@@ -116,7 +110,6 @@ public class SoapDocumentServiceTest extends AbstractWebServiceTestCase {
 		wsDoc.setTemplateId(-1L);
 		wsDoc.setTitle("document test");
 		wsDoc.setFileName("document test.txt");
-		wsDoc.setCoverage("coverage");
 		wsDoc.setCustomId("yyyyyyyy");
 		File file = new File("pom.xml");
 		wsDoc.setComment("comment");
@@ -136,7 +129,6 @@ public class SoapDocumentServiceTest extends AbstractWebServiceTestCase {
 
 		wsDoc = docServiceImpl.getDocument("xxxx", doc.getId());
 		Assert.assertEquals("document test", wsDoc.getTitle());
-		Assert.assertNull(wsDoc.getCoverage());
 		Assert.assertEquals("coverage-val", wsDoc.getAttribute("coverage").getStringValue());
 	}
 

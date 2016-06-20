@@ -140,7 +140,7 @@ public class SoapWorgkbench {
 		att[0].setName("from");
 		att[0].setType(Attribute.TYPE_STRING);
 		att[0].setStringValue("pippo");
-		newFolder.setExtendedAttributes(att);
+		newFolder.setAttributes(att);
 
 		// newFolder = folderClient.create(sid, newFolder);
 

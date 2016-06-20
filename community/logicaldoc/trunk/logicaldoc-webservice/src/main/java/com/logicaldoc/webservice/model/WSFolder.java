@@ -56,24 +56,24 @@ public class WSFolder implements Serializable {
 
 	private Long foldRef = null;
 
-	private WSAttribute[] extendedAttributes = new WSAttribute[0];
+	private WSAttribute[] attributes = new WSAttribute[0];
 
-	public void addExtendedAttribute(WSAttribute att) {
-		List<WSAttribute> buf = (List<WSAttribute>) Arrays.asList(getExtendedAttributes());
+	public void addAttribute(WSAttribute att) {
+		List<WSAttribute> buf = (List<WSAttribute>) Arrays.asList(getAttributes());
 		buf.add(att);
-		setExtendedAttributes(buf.toArray(new WSAttribute[0]));
+		setAttributes(buf.toArray(new WSAttribute[0]));
 	}
 
 	public Collection<String> listAttributeNames() {
 		List<String> names = new ArrayList<String>();
-		for (WSAttribute att : getExtendedAttributes()) {
+		for (WSAttribute att : getAttributes()) {
 			names.add(att.getName());
 		}
 		return names;
 	}
 
 	public WSAttribute attribute(String name) {
-		for (WSAttribute att : getExtendedAttributes()) {
+		for (WSAttribute att : getAttributes()) {
 			if (att.getName().equals(name))
 				return att;
 		}
@@ -97,7 +97,7 @@ public class WSFolder implements Serializable {
 		if (folder.getTemplate() != null)
 			wsFolder.setTemplateId(folder.getTemplate().getId());
 
-		// Populate extended attributes
+		// Populate the attributes
 		WSAttribute[] attributes = new WSAttribute[0];
 		if (folder.getTemplate() != null && folder.getAttributes() != null && folder.getAttributes().size() > 0) {
 			attributes = new WSAttribute[folder.getAttributeNames().size()];
@@ -119,29 +119,29 @@ public class WSFolder implements Serializable {
 				attributes[i++] = attribute;
 			}
 		}
-		wsFolder.setExtendedAttributes(attributes);
+		wsFolder.setAttributes(attributes);
 
 		return wsFolder;
 	}
 
-	public void updateExtendedAttributes(Folder folder) {
+	public void updateAttributes(Folder folder) {
 		Template template = null;
 		if (templateId != null) {
 			folder.getAttributes().clear();
 			TemplateDAO templDao = (TemplateDAO) Context.get().getBean(TemplateDAO.class);
 			template = templDao.findById(templateId);
 			if (template != null) {
-				if (extendedAttributes != null && extendedAttributes.length > 0) {
-					for (int i = 0; i < extendedAttributes.length; i++) {
+				if (attributes != null && attributes.length > 0) {
+					for (int i = 0; i < attributes.length; i++) {
 						Attribute extAttribute = new Attribute();
-						extAttribute.setMandatory(extendedAttributes[i].getMandatory());
-						extAttribute.setPosition(extendedAttributes[i].getPosition());
-						extAttribute.setIntValue(extendedAttributes[i].getIntValue());
-						extAttribute.setStringValue(extendedAttributes[i].getStringValue());
-						extAttribute.setDoubleValue(extendedAttributes[i].getDoubleValue());
-						extAttribute.setDateValue(WSUtil.convertStringToDate(extendedAttributes[i].getDateValue()));
-						extAttribute.setType(extendedAttributes[i].getType());
-						folder.getAttributes().put(extendedAttributes[i].getName(), extAttribute);
+						extAttribute.setMandatory(attributes[i].getMandatory());
+						extAttribute.setPosition(attributes[i].getPosition());
+						extAttribute.setIntValue(attributes[i].getIntValue());
+						extAttribute.setStringValue(attributes[i].getStringValue());
+						extAttribute.setDoubleValue(attributes[i].getDoubleValue());
+						extAttribute.setDateValue(WSUtil.convertStringToDate(attributes[i].getDateValue()));
+						extAttribute.setType(attributes[i].getType());
+						folder.getAttributes().put(attributes[i].getName(), extAttribute);
 					}
 				}
 			}
@@ -206,22 +206,12 @@ public class WSFolder implements Serializable {
 		this.templateId = templateId;
 	}
 
-	@Deprecated
-	public WSAttribute[] getExtendedAttributes() {
-		return extendedAttributes;
-	}
-
 	public WSAttribute[] getAttributes() {
-		return extendedAttributes;
+		return attributes;
 	}
 
-	@Deprecated
-	public void setExtendedAttributes(WSAttribute[] extendedAttributes) {
-		this.extendedAttributes = extendedAttributes;
-	}
-
-	public void setAttributes(WSAttribute[] extendedAttributes) {
-		this.extendedAttributes = extendedAttributes;
+	public void setAttributes(WSAttribute[] attributes) {
+		this.attributes = attributes;
 	}
 
 	public String getCreation() {
