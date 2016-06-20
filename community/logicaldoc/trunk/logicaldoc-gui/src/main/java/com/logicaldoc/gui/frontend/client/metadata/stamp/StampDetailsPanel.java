@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.widgets.DragPanSampleImg;
 import com.logicaldoc.gui.frontend.client.services.StampService;
 import com.logicaldoc.gui.frontend.client.services.StampServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -19,7 +20,6 @@ import com.smartgwt.client.types.Side;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.widgets.Button;
-import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Img;
@@ -340,9 +340,9 @@ public class StampDetailsPanel extends VLayout {
 		image.setAlign(VerticalAlignment.TOP);
 		image.setMargin(1);
 		image.setMembersMargin(1);
-		String html = "<img border='0' alt='' height='100%' title='' src='" + stampImageUrl(stamp.getId()) + "' />";
-		HTMLFlow img = new HTMLFlow(html);
-		img.setHeight100();
+
+		DragPanSampleImg img = new DragPanSampleImg(stampImageUrl(stamp.getId()));
+		img.setHeight(getHeight() - 60);
 		img.setWidth100();
 
 		IButton uploadStamp = new IButton(I18N.message("uploadstamp"));

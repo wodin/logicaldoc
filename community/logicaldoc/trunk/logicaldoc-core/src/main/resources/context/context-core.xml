@@ -417,6 +417,7 @@
         <property name="indexer" ref="SearchEngine" />
         <property name="documentDao" ref="DocumentDAO" />
         <property name="documentManager" ref="DocumentManager" />
+        <property name="tenantDao" ref="TenantDAO" />
         <property name="config" ref="ContextProperties" />
         <property name="sender" ref="EMailSender" />
         <property name="userDao" ref="UserDAO" />
