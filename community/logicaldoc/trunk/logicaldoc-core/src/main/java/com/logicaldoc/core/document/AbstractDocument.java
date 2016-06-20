@@ -115,9 +115,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private String sourceType;
 
 	@Deprecated
-	private Date sourceDate;
-
-	@Deprecated
 	private String sourceId;
 
 	@Deprecated
@@ -340,19 +337,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	@Deprecated
 	public void setSourceAuthor(String sourceAuthor) {
 		this.sourceAuthor = sourceAuthor;
-	}
-
-	/**
-	 * The date of the document (form document's metadata)
-	 */
-	@Deprecated
-	public Date getSourceDate() {
-		return sourceDate;
-	}
-
-	@Deprecated
-	public void setSourceDate(Date sourceDate) {
-		this.sourceDate = sourceDate;
 	}
 
 	/**

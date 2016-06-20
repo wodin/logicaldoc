@@ -58,7 +58,7 @@ public class FulltextSearch extends Search {
 					hit.setContent(master.getContent());
 					hit.setSummary(master.getSummary());
 				}
-				hit.setDocRefType(rs.getString(40));
+				hit.setDocRefType(rs.getString(33));
 			}
 			hit.setType(rs.getString(4));
 			hit.setTitle(rs.getString(5));
@@ -76,36 +76,29 @@ public class FulltextSearch extends Search {
 			hit.setStatus(rs.getInt(17));
 			hit.setSigned(rs.getInt(18));
 			hit.setType(rs.getString(19));
-			hit.setSourceDate(rs.getTimestamp(20));
-			hit.setSourceAuthor(rs.getString(21));
-			hit.setRating(rs.getInt(22));
-			hit.setFileVersion(rs.getString(23));
-			hit.setComment(rs.getString(24));
-			hit.setWorkflowStatus(rs.getString(25));
-			hit.setStartPublishing(rs.getTimestamp(26));
-			hit.setStopPublishing(rs.getTimestamp(27));
-			hit.setPublished(rs.getInt(28));
-			hit.setSource(rs.getString(29));
-			hit.setSourceId(rs.getString(30));
-			hit.setRecipient(rs.getString(31));
-			hit.setObject(rs.getString(32));
-			hit.setCoverage(rs.getString(33));
+			hit.setRating(rs.getInt(20));
+			hit.setFileVersion(rs.getString(21));
+			hit.setComment(rs.getString(22));
+			hit.setWorkflowStatus(rs.getString(23));
+			hit.setStartPublishing(rs.getTimestamp(24));
+			hit.setStopPublishing(rs.getTimestamp(25));
+			hit.setPublished(rs.getInt(26));
 
 			Folder folder = new Folder();
-			folder.setId(rs.getLong(35));
-			folder.setName(rs.getString(34));
+			folder.setId(rs.getLong(28));
+			folder.setName(rs.getString(27));
 			hit.setFolder(folder);
 
-			if (rs.getLong(37) != 0L) {
+			if (rs.getLong(30) != 0L) {
 				Template t = new Template();
-				t.setId(rs.getLong(37));
-				t.setName(rs.getString(38));
+				t.setId(rs.getLong(30));
+				t.setName(rs.getString(31));
 				hit.setTemplate(t);
 				hit.setTemplateId(t.getId());
 			}
 
-			hit.setTenantId(rs.getLong(39));
-			hit.setStamped(rs.getInt(41));
+			hit.setTenantId(rs.getLong(32));
+			hit.setStamped(rs.getInt(34));
 
 			return hit;
 		}
@@ -239,12 +232,9 @@ public class FulltextSearch extends Search {
 		richQuery = new StringBuffer(
 				"select A.ld_id, A.ld_customid, A.ld_docref, A.ld_type, A.ld_title, A.ld_version, A.ld_lastmodified, ");
 		richQuery.append(" A.ld_date, A.ld_publisher, A.ld_creation, A.ld_creator, A.ld_filesize, A.ld_immutable, ");
-		richQuery
-				.append(" A.ld_indexed, A.ld_lockuserid, A.ld_filename, A.ld_status, A.ld_signed, A.ld_type, A.ld_sourcedate, ");
-		richQuery
-				.append(" A.ld_sourceauthor, A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
-		richQuery
-				.append(" A.ld_stoppublishing, A.ld_published, A.ld_source, A.ld_sourceid, A.ld_recipient, A.ld_object, A.ld_coverage, ");
+		richQuery.append(" A.ld_indexed, A.ld_lockuserid, A.ld_filename, A.ld_status, A.ld_signed, A.ld_type, ");
+		richQuery.append(" A.ld_rating, A.ld_fileversion, A.ld_comment, A.ld_workflowstatus, A.ld_startpublishing, ");
+		richQuery.append(" A.ld_stoppublishing, A.ld_published, ");
 		richQuery
 				.append(" FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, A.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype, ");
 		richQuery.append(" A.ld_stamped ");
@@ -270,11 +260,10 @@ public class FulltextSearch extends Search {
 		richQuery
 				.append(" REF.ld_date, REF.ld_publisher, REF.ld_creation, REF.ld_creator, REF.ld_filesize, REF.ld_immutable, ");
 		richQuery
-				.append(" REF.ld_indexed, REF.ld_lockuserid, REF.ld_filename, REF.ld_status, REF.ld_signed, REF.ld_type, REF.ld_sourcedate, ");
+				.append(" REF.ld_indexed, REF.ld_lockuserid, REF.ld_filename, REF.ld_status, REF.ld_signed, REF.ld_type, ");
 		richQuery
-				.append(" REF.ld_sourceauthor, REF.ld_rating, REF.ld_fileversion, A.ld_comment, REF.ld_workflowstatus, REF.ld_startpublishing, ");
-		richQuery
-				.append(" A.ld_stoppublishing, A.ld_published, REF.ld_source, REF.ld_sourceid, REF.ld_recipient, REF.ld_object, REF.ld_coverage, ");
+				.append(" REF.ld_rating, REF.ld_fileversion, A.ld_comment, REF.ld_workflowstatus, REF.ld_startpublishing, ");
+		richQuery.append(" A.ld_stoppublishing, A.ld_published, ");
 		richQuery
 				.append(" FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, REF.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype, ");
 		richQuery.append(" REF.ld_stamped ");

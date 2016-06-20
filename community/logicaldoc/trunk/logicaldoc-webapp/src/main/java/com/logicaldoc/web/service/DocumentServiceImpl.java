@@ -106,14 +106,11 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 
-		int added = 0;
-		int alreadyAdded = 0;
 		for (long id : ids) {
 			try {
 				Bookmark bookmark = null;
 				if (bookmarkDao.findByUserIdAndDocId(session.getUserId(), id).size() > 0) {
 					// The bookmark already exists
-					alreadyAdded++;
 				} else {
 					bookmark = new Bookmark();
 					bookmark.setTenantId(session.getTenantId());
@@ -131,8 +128,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					}
 
 					bookmarkDao.store(bookmark);
-
-					added++;
 				}
 			} catch (AccessControlException e) {
 				ServiceUtil.throwServerException(session, log, e);
@@ -461,52 +456,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				}
 			}
 
-			/*
-			 * Append the legacy attributes
-			 */
-			if (doc != null) {
-				GUIAttribute att = new GUIAttribute();
-				att.setName("source");
-				att.setStringValue(doc.getSource());
-				attributes.add(att);
-
-				att = new GUIAttribute();
-				att.setName("sourceAuthor");
-				att.setStringValue(doc.getSourceAuthor());
-				attributes.add(att);
-
-				att = new GUIAttribute();
-				att.setName("sourceId");
-				att.setStringValue(doc.getSourceId());
-				attributes.add(att);
-
-				att = new GUIAttribute();
-				att.setName("sourceType");
-				att.setStringValue(doc.getSourceType());
-				attributes.add(att);
-
-				att = new GUIAttribute();
-				att.setName("sourceDate");
-				att.setDateValue(doc.getSourceDate());
-				att.setType(Attribute.TYPE_DATE);
-				attributes.add(att);
-
-				att = new GUIAttribute();
-				att.setName("coverage");
-				att.setStringValue(doc.getCoverage());
-				attributes.add(att);
-
-				att = new GUIAttribute();
-				att.setName("recipient");
-				att.setStringValue(doc.getRecipient());
-				attributes.add(att);
-
-				att = new GUIAttribute();
-				att.setName("object");
-				att.setStringValue(doc.getObject());
-				attributes.add(att);
-			}
-
 			return attributes.toArray(new GUIAttribute[0]);
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
@@ -602,18 +551,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setIcon(FilenameUtils.getBaseName(IconSelector.selectIcon(
 				FilenameUtils.getExtension(document.getFileName()), document.getDocRef() != null)));
 
-		// Legacy attributes
-		{
-			document.setSource(doc.getSource());
-			document.setSourceType(doc.getSourceType());
-			document.setSourceAuthor(doc.getSourceAuthor());
-			document.setSourceDate(doc.getSourceDate());
-			document.setSourceId(doc.getSourceId());
-			document.setRecipient(doc.getRecipient());
-			document.setObject(doc.getObject());
-			document.setCoverage(doc.getCoverage());
-		}
-
 		if (doc.getRating() != null)
 			document.setRating(doc.getRating());
 
@@ -671,17 +608,9 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version1.setLanguage(docVersion.getLanguage());
 				version1.setTemplateId(docVersion.getTemplateId());
 				version1.setFileSize(new Float(docVersion.getFileSize()));
-				version1.setSource(docVersion.getSource());
-				version1.setCoverage(docVersion.getCoverage());
-				version1.setRecipient(docVersion.getRecipient());
-				version1.setObject(docVersion.getObject());
 				version1.setWorkflowStatus(docVersion.getWorkflowStatus());
 				if (docVersion.getRating() != null)
 					version1.setRating(docVersion.getRating());
-				version1.setSourceType(docVersion.getSourceType());
-				version1.setSourceAuthor(docVersion.getSourceAuthor());
-				version1.setSourceId(docVersion.getSourceId());
-				version1.setSourceDate(docVersion.getSourceDate());
 				version1.setStartPublishing(docVersion.getStartPublishing());
 				version1.setStopPublishing(docVersion.getStopPublishing());
 				version1.setPublished(docVersion.getPublished());
@@ -722,16 +651,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				version2.setFileVersion(docVersion.getFileVersion());
 				version2.setLanguage(docVersion.getLanguage());
 				version2.setFileSize(new Float(docVersion.getFileSize()));
-				version2.setSource(docVersion.getSource());
-				version2.setCoverage(docVersion.getCoverage());
-				version2.setRecipient(docVersion.getRecipient());
-				version2.setObject(docVersion.getObject());
 				if (docVersion.getRating() != null)
 					version2.setRating(docVersion.getRating());
-				version2.setSourceType(docVersion.getSourceType());
-				version2.setSourceAuthor(docVersion.getSourceAuthor());
-				version2.setSourceId(docVersion.getSourceId());
-				version2.setSourceDate(docVersion.getSourceDate());
 				version2.setWorkflowStatus(docVersion.getWorkflowStatus());
 				version2.setStartPublishing(docVersion.getStartPublishing());
 				version2.setStopPublishing(docVersion.getStopPublishing());
@@ -1069,18 +990,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					docVO.getAttributes().put(attr.getName(), extAttr);
 				}
 			}
-		}
-
-		// The legacy attributes
-		{
-			docVO.setSource(document.getSource());
-			docVO.setSourceAuthor(document.getSourceAuthor());
-			docVO.setSourceDate(document.getSourceDate());
-			docVO.setSourceId(document.getSourceId());
-			docVO.setSourceType(document.getSourceType());
-			docVO.setRecipient(document.getRecipient());
-			docVO.setObject(document.getObject());
-			docVO.setCoverage(document.getCoverage());
 		}
 
 		docVO.setStatus(document.getStatus());
@@ -1519,28 +1428,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					buf.setLanguage(vo.getLanguage());
 				if (vo.getTags() != null && vo.getTags().length > 0)
 					buf.setTags(vo.getTags());
-				if (StringUtils.isNotEmpty(vo.getCoverage()))
-					buf.setCoverage(vo.getCoverage());
-				if (StringUtils.isNotEmpty(vo.getObject()))
-					buf.setObject(vo.getObject());
-				if (StringUtils.isNotEmpty(vo.getRecipient()))
-					buf.setRecipient(vo.getRecipient());
-				if (StringUtils.isNotEmpty(vo.getSource()))
-					buf.setSource(vo.getSource());
-				if (StringUtils.isNotEmpty(vo.getSourceAuthor()))
-					buf.setSourceAuthor(vo.getSourceAuthor());
-				if (StringUtils.isNotEmpty(vo.getSourceId()))
-					buf.setSourceId(vo.getSourceId());
-				if (StringUtils.isNotEmpty(vo.getSourceType()))
-					buf.setSourceType(vo.getSourceType());
 				if (vo.getTemplateId() != null)
 					buf.setTemplateId(vo.getTemplateId());
 				if (vo.getAttributes() != null && vo.getAttributes().length > 0)
 					buf.setAttributes(vo.getAttributes());
-				if (vo.getSourceDate() != null)
-					buf.setSourceDate(vo.getSourceDate());
-				if (StringUtils.isNotEmpty(vo.getWorkflowStatus()))
-					buf.setSource(vo.getWorkflowStatus());
 				if (vo.getPublished() > -1)
 					buf.setPublished(vo.getPublished());
 				if (vo.getStartPublishing() != null)

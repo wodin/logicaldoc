@@ -48,7 +48,6 @@ public class MetadataDiff extends Window {
 		records.add(new DiffRecord(I18N.message("username"), version1.getUsername(), version2.getUsername()));
 		records.add(new DiffRecord(I18N.message("comment"), version1.getComment(), version2.getComment()));
 		records.add(new DiffRecord(I18N.message("customid"), version1.getCustomId(), version2.getCustomId()));
-		records.add(new DiffRecord(I18N.message("sourceid"), version1.getSourceId(), version2.getSourceId()));
 		records.add(new DiffRecord(I18N.message("title"), version1.getTitle(), version2.getTitle()));
 		records.add(new DiffRecord(I18N.message("language"), version1.getLanguage(), version2.getLanguage()));
 		records.add(new DiffRecord(I18N.message("createdon"), I18N.formatDate(version1.getCreation()), I18N
@@ -57,15 +56,9 @@ public class MetadataDiff extends Window {
 		records.add(new DiffRecord(I18N.message("publishedon"), I18N.formatDate(version1.getDate()), I18N
 				.formatDate(version2.getDate())));
 		records.add(new DiffRecord(I18N.message("publisher"), version1.getPublisher(), version2.getPublisher()));
-		records.add(new DiffRecord(I18N.message("source"), version1.getSource(), version2.getSource()));
-		records.add(new DiffRecord(I18N.message("type"), version1.getSourceType(), version2.getSourceType()));
-		records.add(new DiffRecord(I18N.message("author"), version1.getSourceAuthor(), version2.getSourceAuthor()));
-		records.add(new DiffRecord(I18N.message("object"), version1.getObject(), version2.getObject()));
-		records.add(new DiffRecord(I18N.message("coverage"), version1.getCoverage(), version2.getCoverage()));
 		records.add(new DiffRecord(I18N.message("filename"), version1.getFileName(), version2.getFileName()));
 		records.add(new DiffRecord(I18N.message("size"), Util.formatSizeKB(version1.getFileSize()), Util
 				.formatSizeKB(version2.getFileSize())));
-		records.add(new DiffRecord(I18N.message("recipient"), version1.getRecipient(), version2.getRecipient()));
 		records.add(new DiffRecord(I18N.message("folder"),
 				version1.getFolder().getId() == Constants.DOCUMENTS_FOLDERID ? "/" : version1.getFolder().getName(),
 				version2.getFolder().getId() == Constants.DOCUMENTS_FOLDERID ? "/" : version2.getFolder().getName()));
