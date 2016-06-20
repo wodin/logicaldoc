@@ -59,7 +59,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 			folderVO.setTemplateLocked(folder.getTemplateLocked());
 			folderVO.setHidden(folder.getHidden());
 			folderVO.setFoldRef(folder.getFoldRef());
-			folder.updateExtendedAttributes(folderVO);
+			folder.updateAttributes(folderVO);
 
 			Folder f = folderDao.create(parentFolder, folderVO, true, transaction);
 
@@ -500,7 +500,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 			fld.setTemplateLocked(folder.getTemplateLocked());
 			fld.setPosition(folder.getPosition());
 
-			folder.updateExtendedAttributes(fld);
+			folder.updateAttributes(fld);
 
 			// Add a folder history entry
 			FolderHistory transaction = new FolderHistory();
