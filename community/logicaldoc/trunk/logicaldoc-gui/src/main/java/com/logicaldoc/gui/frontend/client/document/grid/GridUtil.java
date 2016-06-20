@@ -51,10 +51,10 @@ public class GridUtil {
 			document.setFileVersion(record.getAttribute("fileVersion"));
 			document.setImmutable("blank".equals(record.getAttributeAsString("immutable")) ? 0 : 1);
 			document.setPublisher(record.getAttributeAsString("publisher"));
-			
+
 			if (record.getAttributeAsFloat("size") != null)
 				document.setFileSize(record.getAttributeAsFloat("size"));
-			
+
 			if ("indexed".equals(record.getAttributeAsString("indexed")))
 				document.setIndexed(Constants.INDEX_INDEXED);
 			else if ("blank".equals(record.getAttributeAsString("indexed")))
@@ -81,7 +81,6 @@ public class GridUtil {
 				document.setDate(record.getAttributeAsDate("published"));
 			if (record.getAttributeAsDate("created") != null)
 				document.setCreation(record.getAttributeAsDate("created"));
-
 
 			GUIFolder folder = new GUIFolder();
 			if ("folder".equals(document.getType())) {
@@ -112,8 +111,6 @@ public class GridUtil {
 		record.setAttribute("publisher", doc.getPublisher());
 		record.setAttribute("creator", doc.getCreator());
 		record.setAttribute("created", doc.getCreation());
-		record.setAttribute("sourceDate", doc.getSourceDate());
-		record.setAttribute("sourceAuthor", doc.getSourceAuthor());
 		record.setAttribute("customId", doc.getCustomId());
 		record.setAttribute("type", doc.getType());
 		record.setAttribute("immutable", doc.getImmutable() == 1 ? "stop" : "blank");
@@ -132,11 +129,6 @@ public class GridUtil {
 		record.setAttribute("lockUserId", doc.getLockUserId());
 		record.setAttribute("folderId", doc.getFolder().getId());
 		record.setAttribute("folder", doc.getFolder().getName());
-		record.setAttribute("source", doc.getSource());
-		record.setAttribute("sourceId", doc.getSourceId());
-		record.setAttribute("recipient", doc.getRecipient());
-		record.setAttribute("object", doc.getObject());
-		record.setAttribute("coverage", doc.getCoverage());
 		record.setAttribute("rating", "rating" + doc.getRating());
 		record.setAttribute("template", doc.getTemplate());
 		record.setAttribute("lockUserId", doc.getLockUserId());

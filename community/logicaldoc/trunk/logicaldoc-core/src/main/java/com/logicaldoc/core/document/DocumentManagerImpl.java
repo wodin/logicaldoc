@@ -384,7 +384,6 @@ public class DocumentManagerImpl implements DocumentManager {
 				doc.setSourceId(docVO.getSourceId());
 				doc.setObject(docVO.getObject());
 				doc.setSourceAuthor(docVO.getSourceAuthor());
-				doc.setSourceDate(docVO.getSourceDate());
 				doc.setSourceType(docVO.getSourceType());
 				doc.setCoverage(docVO.getCoverage());
 				doc.setRecipient(docVO.getRecipient());
@@ -533,9 +532,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			if (docVO.getDate() == null)
 				docVO.setDate(new Date());
-
-			if (docVO.getSourceDate() == null)
-				docVO.setSourceDate(docVO.getDate());
 
 			if (docVO.getCreation() == null)
 				docVO.setCreation(docVO.getDate());
@@ -841,10 +837,6 @@ public class DocumentManagerImpl implements DocumentManager {
 
 			setUniqueTitleAndFilename(alias);
 
-			if (doc.getSourceDate() != null)
-				alias.setSourceDate(doc.getSourceDate());
-			else
-				alias.setSourceDate(alias.getDate());
 			alias.setPublisher(transaction.getUsername());
 			alias.setPublisherId(transaction.getUserId());
 			alias.setCreator(transaction.getUsername());

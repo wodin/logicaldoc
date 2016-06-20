@@ -308,7 +308,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public void addUserToGroup(long groupId, long userId) throws ServerException {
-		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+		ServiceUtil.validateSession(getThreadLocalRequest());
 
 		SecurityManager manager = (SecurityManager) Context.get().getBean(SecurityManager.class);
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
@@ -347,7 +347,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public GUIGroup getGroup(long groupId) throws ServerException {
-		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+		ServiceUtil.validateSession(getThreadLocalRequest());
 		GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 		Group group = groupDao.findById(groupId);
 
@@ -364,7 +364,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 	@Override
 	public GUIUser getUser(long userId) throws ServerException {
-		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+		ServiceUtil.validateSession(getThreadLocalRequest());
 		try {
 			UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 			TenantDAO tenantDao = (TenantDAO) Context.get().getBean(TenantDAO.class);
