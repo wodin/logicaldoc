@@ -6,12 +6,16 @@ import java.util.Locale;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.AbstractDocument;
+import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.task.Task;
 import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.io.FileUtil;
 
 /**
  * This task enlists all non-indexed documents and performs the indexing
@@ -25,6 +29,8 @@ public class IndexerTask extends Task {
 	private DocumentManager documentManager;
 
 	private DocumentDAO documentDao;
+
+	private TenantDAO tenantDao;
 
 	private SearchEngine indexer;
 
@@ -71,7 +77,7 @@ public class IndexerTask extends Task {
 
 		errors = 0;
 		indexed = 0;
-		try {	
+		try {
 			/*
 			 * Cleanup all references to expired transactions
 			 */
@@ -116,8 +122,25 @@ public class IndexerTask extends Task {
 			for (Long id : ids) {
 				try {
 					log.debug("Indexing document " + id);
-					documentManager.reindex(id, null);
-					log.debug("Indexed document " + id);
+
+					Document doc = documentDao.findById(id);
+					Tenant tenant = tenantDao.findById(doc.getTenantId());
+
+					// Check if this document must be marked for skipping
+					if (!FileUtil.matches(
+							doc.getFileName(),
+							config.getProperty(tenant.getName() + ".index.includes") == null ? "" : config
+									.getProperty(tenant.getName() + ".index.includes"),
+							config.getProperty(tenant.getName() + ".index.excludes") == null ? "" : config
+									.getProperty(tenant.getName() + ".index.excludes"))) {
+						documentDao.initialize(doc);
+						doc.setIndexed(Document.INDEX_SKIP);
+						documentDao.store(doc);
+						log.warn("Document {} with filename '{}' maked as unindexable ", id, doc.getFileName());
+					} else {
+						documentManager.reindex(id, null);
+						log.debug("Indexed document " + id);
+					}
 					indexed++;
 				} catch (Throwable e) {
 					log.error(e.getMessage(), e);
@@ -161,5 +184,9 @@ public class IndexerTask extends Task {
 		sb.append(I18N.message("errors", locale) + ": ");
 		sb.append(errors);
 		return sb.toString();
+	}
+
+	public void setTenantDao(TenantDAO tenantDao) {
+		this.tenantDao = tenantDao;
 	}
 }
