@@ -29,8 +29,8 @@ import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.metadata.Attribute;
-import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.metadata.Template;
+import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
@@ -380,13 +380,6 @@ public class DocumentManagerImpl implements DocumentManager {
 				if (StringUtils.isNotEmpty(docVO.getFileName()))
 					doc.setFileName(docVO.getFileName());
 				doc.setTitle(docVO.getTitle());
-				doc.setSource(docVO.getSource());
-				doc.setSourceId(docVO.getSourceId());
-				doc.setObject(docVO.getObject());
-				doc.setSourceAuthor(docVO.getSourceAuthor());
-				doc.setSourceType(docVO.getSourceType());
-				doc.setCoverage(docVO.getCoverage());
-				doc.setRecipient(docVO.getRecipient());
 
 				// The document must be re-indexed
 				doc.setIndexed(AbstractDocument.INDEX_TO_INDEX);
@@ -843,14 +836,6 @@ public class DocumentManagerImpl implements DocumentManager {
 			alias.setCreatorId(transaction.getUserId());
 			alias.setStatus(Document.DOC_UNLOCKED);
 			alias.setType(type);
-			alias.setSource(doc.getSource());
-			alias.setSourceAuthor(doc.getSourceAuthor());
-			alias.setSourceType(doc.getSourceType());
-			alias.setCoverage(doc.getCoverage());
-			alias.setLocale(doc.getLocale());
-			alias.setObject(doc.getObject());
-			alias.setSourceId(doc.getSourceId());
-			alias.setRecipient(doc.getRecipient());
 
 			// Set the Doc Reference
 			if (doc.getDocRef() == null) {
