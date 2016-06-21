@@ -177,7 +177,7 @@ public class StampDetailsPanel extends VLayout {
 
 		addMember(tabSet);
 
-		ChangedHandler changedHandler = new ChangedHandler() {
+		final ChangedHandler changedHandler = new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
 				onModified();
@@ -201,19 +201,19 @@ public class StampDetailsPanel extends VLayout {
 
 		TextItem exprx = ItemFactory.newTextItem("exprx", "exprx", stamp.getExprX());
 		exprx.addChangedHandler(changedHandler);
-		exprx.setWidth(250);
+		exprx.setWidth(300);
 
 		TextItem expry = ItemFactory.newTextItem("expry", "expry", stamp.getExprY());
 		expry.addChangedHandler(changedHandler);
-		expry.setWidth(250);
+		expry.setWidth(300);
 
 		TextAreaItem description = ItemFactory.newTextAreaItem("description", "description", stamp.getDescription());
 		description.addChangedHandler(changedHandler);
-		description.setWidth("250");
+		description.setWidth("300");
 
 		final TextAreaItem text = ItemFactory.newTextAreaItem("text", "text", stamp.getText());
 		text.addChangedHandler(changedHandler);
-		text.setWidth("250");
+		text.setWidth("300");
 
 		final ColorItem color = ItemFactory.newColorItem("color", "color", stamp.getColor());
 		color.addChangedHandler(changedHandler);
@@ -228,16 +228,39 @@ public class StampDetailsPanel extends VLayout {
 		SpinnerItem rotation = ItemFactory.newSpinnerItem("rotation", "rotation", stamp.getRotation(), 0, 360);
 		rotation.addChangedHandler(changedHandler);
 
+		final TextItem pageSelection = ItemFactory.newTextItem("pageSelection", I18N.message("selection"),
+				stamp.getPageSelection());
+		pageSelection.setVisible(stamp.getPageOption() == GUIStamp.PAGE_OPT_SEL);
+		pageSelection.addChangedHandler(changedHandler);
+		
+		final RadioGroupItem pageOption = ItemFactory.newRadioGroup("pageOption", "stampin");
+		LinkedHashMap<String, String> pageOptions = new LinkedHashMap<String, String>();
+		pageOptions.put("" + GUIStamp.PAGE_OPT_ALL, I18N.message("allpages"));
+		pageOptions.put("" + GUIStamp.PAGE_OPT_LAST, I18N.message("lastpage"));
+		pageOptions.put("" + GUIStamp.PAGE_OPT_SEL, I18N.message("selection"));
+		pageOption.setValueMap(pageOptions);
+		pageOption.setValue("" + stamp.getPageOption());
+		pageOption.setWrap(false);
+		pageOption.setEndRow(true);
+		pageOption.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (event.getValue().equals("" + GUIStamp.PAGE_OPT_SEL))
+					pageSelection.show();
+				else
+					pageSelection.hide();
+				onModified();
+			}
+		});
+
 		SpinnerItem opacity = ItemFactory.newSpinnerItem("opacity", "opacity", stamp.getOpacity(), 1, 100);
 		opacity.addChangedHandler(changedHandler);
-
-		SpinnerItem page = ItemFactory.newSpinnerItem("page", "page", stamp.getPage(), 1, 9999);
-		page.addChangedHandler(changedHandler);
 
 		final SpinnerItem size = ItemFactory.newSpinnerItem("size", "size", stamp.getSize(), 1, 9999);
 		size.addChangedHandler(changedHandler);
 
-		form1.setItems(name, type, page, exprx, rotation, expry, opacity, description);
+		form1.setItems(name, type, pageOption, pageSelection, exprx, rotation, expry, opacity, description);
 
 		form2.setItems(text, color, size);
 
@@ -245,7 +268,6 @@ public class StampDetailsPanel extends VLayout {
 		// not be refreshed
 		vm.setValue("rotation", stamp.getRotation());
 		vm.setValue("opacity", stamp.getOpacity());
-		vm.setValue("page", stamp.getPage());
 
 		propertiesTabPanel.setMembers(form1, form2, image);
 
@@ -300,7 +322,8 @@ public class StampDetailsPanel extends VLayout {
 			stamp.setRotation(Integer.parseInt(vm.getValueAsString("rotation")));
 			stamp.setOpacity(Integer.parseInt(vm.getValueAsString("opacity")));
 			stamp.setSize(Integer.parseInt(vm.getValueAsString("size")));
-			stamp.setPage(Integer.parseInt(vm.getValueAsString("page")));
+			stamp.setPageOption(Integer.parseInt(vm.getValueAsString("pageOption")));
+			stamp.setPageSelection(vm.getValueAsString("pageSelection"));
 
 			stamp.setDescription(vm.getValueAsString("description"));
 			stamp.setColor(vm.getValueAsString("color"));

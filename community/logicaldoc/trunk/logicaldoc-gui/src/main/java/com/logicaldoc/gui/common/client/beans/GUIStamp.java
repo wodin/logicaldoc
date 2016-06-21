@@ -17,7 +17,17 @@ public class GUIStamp implements Serializable {
 
 	public static int TYPE_IMAGE = 1;
 
+	public static int PAGE_OPT_ALL = 0;
+
+	public static int PAGE_OPT_LAST = 1;
+
+	public static int PAGE_OPT_SEL = 2;
+
 	private int type = TYPE_TEXT;
+
+	private int pageOption = PAGE_OPT_ALL;
+
+	private String pageSelection = "1";
 
 	private int enabled = 1;
 
@@ -31,8 +41,6 @@ public class GUIStamp implements Serializable {
 
 	private int rotation = 0;
 
-	private int page = 1;
-	
 	private int size = 24;
 
 	private String exprX;
@@ -139,19 +147,27 @@ public class GUIStamp implements Serializable {
 		this.users = users;
 	}
 
-	public int getPage() {
-		return page;
-	}
-
-	public void setPage(int page) {
-		this.page = page;
-	}
-
 	public int getSize() {
 		return size;
 	}
 
 	public void setSize(int size) {
 		this.size = size;
+	}
+
+	public int getPageOption() {
+		return pageOption;
+	}
+
+	public void setPageOption(int pageOption) {
+		this.pageOption = pageOption;
+	}
+
+	public String getPageSelection() {
+		return pageSelection;
+	}
+
+	public void setPageSelection(String pageSelection) {
+		this.pageSelection = pageSelection;
 	}
 }

@@ -143,6 +143,7 @@ public class IndexerTask extends Task {
 					}
 					indexed++;
 				} catch (Throwable e) {
+					log.error("There was a problem indexing document {}", id);
 					log.error(e.getMessage(), e);
 					errors++;
 				} finally {
