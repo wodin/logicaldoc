@@ -225,7 +225,7 @@ public class StatsCollector extends Task {
 			List<NameValuePair> postParams = new ArrayList<NameValuePair>();
 
 			// Add all statistics as parameters
-			postParams.add(new BasicNameValuePair("sid", id != null ? id : ""));
+			postParams.add(new BasicNameValuePair("id", id != null ? id : ""));
 			postParams.add(new BasicNameValuePair("userno", userno != null ? userno : ""));
 			postParams.add(new BasicNameValuePair("product_release", release != null ? release : ""));
 			postParams.add(new BasicNameValuePair("email", email != null ? email : ""));
