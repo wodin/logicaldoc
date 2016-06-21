@@ -31,7 +31,7 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 	private UserDAO userDao;
 
 	private FolderDAO folderDao;
-	
+
 	private DocumentNoteDAO documentNoteDao;
 
 	// Instance under test
@@ -73,9 +73,6 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		documentManager.update(doc, newDoc, transaction);
 
 		Assert.assertEquals("testDocname2(1)", doc.getTitle());
-		Assert.assertEquals("sourceauthor2", doc.getSourceAuthor());
-		Assert.assertEquals("sourcetype2", doc.getSourceType());
-		Assert.assertEquals("coverage2", doc.getCoverage());
 	}
 
 	@Test
@@ -185,9 +182,6 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 		newDoc = docDao.findById(newDoc.getId());
 		Assert.assertEquals(newDoc.getTitle(), doc.getTitle());
-		Assert.assertEquals(newDoc.getSourceAuthor(), doc.getSourceAuthor());
-		Assert.assertEquals(newDoc.getSourceType(), doc.getSourceType());
-		Assert.assertEquals(newDoc.getCoverage(), doc.getCoverage());
 	}
 
 	@Test
@@ -210,9 +204,6 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		Assert.assertNotSame(doc.getId(), newDoc.getId());
 		Assert.assertEquals(newFolder, newDoc.getFolder());
 		Assert.assertEquals(newDoc.getTitle(), "testDocname(1)");
-		Assert.assertEquals(newDoc.getSourceAuthor(), doc.getSourceAuthor());
-		Assert.assertEquals(newDoc.getSourceType(), doc.getSourceType());
-		Assert.assertEquals(newDoc.getCoverage(), doc.getCoverage());
 	}
 
 	@Test
@@ -238,15 +229,15 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
 
 		Assert.assertNotNull(documentNoteDao.findById(2L));
-		
+
 		documentManager.checkin(1L, file, "pippo", true, null, transaction);
 
 		doc = docDao.findById(1);
 		Assert.assertNotNull(doc);
 		docDao.initialize(doc);
 
-		Assert.assertNull(documentNoteDao.findById(2L));		
-		
+		Assert.assertNull(documentNoteDao.findById(2L));
+
 		Assert.assertEquals(AbstractDocument.INDEX_TO_INDEX, doc.getIndexed());
 		Assert.assertEquals(0, doc.getSigned());
 		Assert.assertEquals(Document.DOC_UNLOCKED, doc.getStatus());
@@ -256,10 +247,10 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		docDao.initialize(doc);
 		Assert.assertEquals(Document.DOC_CHECKED_OUT, doc.getStatus());
 
-		doc.setCoverage("xyz");
-		documentManager.checkin(1L, file, "pippa", true, doc, transaction);
+		transaction.setComment("reason2");
+		documentManager.checkin(1L, file, "pippo", true, doc, transaction);
 		doc = docDao.findById(1);
-		Assert.assertEquals("xyz", doc.getCoverage());
+		Assert.assertEquals("reason2", doc.getComment());
 	}
 
 	@Test
@@ -287,17 +278,17 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		documentManager.deleteVersion(13L, null);
 		Assert.assertNull(verDao.findById(13L));
 	}
-	
+
 	@Test
 	public void testArchiveDocuments() throws Exception {
 		User user = userDao.findByUsername("admin");
-		History transaction=new History();
+		History transaction = new History();
 		transaction.setSessionId("1234");
 		transaction.setUser(user);
-		
-		documentManager.archiveDocuments(new long[]{1L}, transaction);
-		
-		Document doc=docDao.findById(1L);
+
+		documentManager.archiveDocuments(new long[] { 1L }, transaction);
+
+		Document doc = docDao.findById(1L);
 		Assert.assertEquals(AbstractDocument.DOC_ARCHIVED, doc.getStatus());
 	}
 }
