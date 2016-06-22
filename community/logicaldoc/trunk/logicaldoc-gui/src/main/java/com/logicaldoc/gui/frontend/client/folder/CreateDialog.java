@@ -98,8 +98,7 @@ public class CreateDialog extends Dialog {
 	private void onCreate(final GUIFolder folder, boolean inheritOptionEnabled) {
 		if (form.validate()) {
 			folder.setName(form.getValueAsString("name").trim());
-			service.create(folder,
-					!inheritOptionEnabled || "true".equals(form.getValueAsString("inheritSecurity")),
+			service.create(folder, !inheritOptionEnabled || "true".equals(form.getValueAsString("inheritSecurity")),
 					new AsyncCallback<GUIFolder>() {
 
 						@Override
@@ -115,9 +114,19 @@ public class CreateDialog extends Dialog {
 							newNode.setAttribute("type", Long.toString(newFolder.getType()));
 
 							if (newFolder.getType() == 1) {
+								newNode.setAttribute(
+										"id",
+										FolderNavigator.get().getRootNode().getAttributeAsString("id") + "-"
+												+ Long.toString(newFolder.getId()));
 								FolderNavigator.get().getTree().add(newNode, FolderNavigator.get().getTree().getRoot());
 							} else {
 								TreeNode selectedNode = (TreeNode) FolderNavigator.get().getSelectedRecord();
+
+								newNode.setAttribute(
+										"id",
+										selectedNode.getAttributeAsString("id") + "-"
+												+ Long.toString(newFolder.getId()));
+
 								if (!FolderNavigator.get().getTree().isOpen(selectedNode))
 									FolderNavigator.get().getTree().openFolder(selectedNode);
 								FolderNavigator.get().getTree().add(newNode, selectedNode);
