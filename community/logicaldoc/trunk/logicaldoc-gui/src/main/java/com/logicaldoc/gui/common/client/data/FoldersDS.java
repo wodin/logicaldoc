@@ -31,9 +31,12 @@ public class FoldersDS extends DataSource {
 		setRecordXPath("/list/folder");
 		DataSourceTextField name = new DataSourceTextField("name", I18N.message("name"), 255);
 
+		DataSourceTextField recordId = new DataSourceTextField("id", I18N.message("id"));
+		recordId.setPrimaryKey(true);
+		recordId.setRequired(true);
+
 		DataSourceTextField folderId = new DataSourceTextField("folderId", I18N.message("id"));
-		folderId.setPrimaryKey(true);
-		folderId.setRequired(true);
+		folderId.setHidden(true);
 
 		DataSourceTextField foldRef = new DataSourceTextField("foldRef");
 		foldRef.setHidden(true);
@@ -45,10 +48,10 @@ public class FoldersDS extends DataSource {
 
 		DataSourceTextField parent = new DataSourceTextField("parent", "Parent ID");
 		parent.setRequired(true);
-		parent.setForeignKey(dsId + ".folderId");
+		parent.setForeignKey(dsId + ".id");
 		parent.setRootValue("/");
 
-		setFields(name, folderId, foldRef, parent, type, size);
+		setFields(recordId, name, folderId, foldRef, parent, type, size);
 
 		setDataURL("data/folders.xml?");
 		setClientOnly(false);

@@ -17,8 +17,8 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.Context;
@@ -59,17 +59,23 @@ public class FoldersDataServlet extends HttpServlet {
 			long tenantId = session.getTenantId();
 
 			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
-			long parent = Folder.ROOTID;
+			String parent = "" + Folder.ROOTID;
 
 			if ("/".equals(request.getParameter("parent"))) {
 				Folder root = folderDao.findRoot(tenantId);
 				if (root == null)
 					throw new Exception("Unable to locate the root folder for tenant " + tenantId);
-				parent = root.getId();
+				parent = "" + root.getId();
 			} else if (request.getParameter("parent") != null)
-				parent = Long.parseLong(request.getParameter("parent"));
+				parent = request.getParameter("parent");
 
-			Folder parentFolder = folderDao.findFolder(parent);
+			long parentFolderId = 0;
+			if (parent.contains("-")) {
+				parentFolderId = Long.parseLong(parent.substring(parent.lastIndexOf('-')+1));
+			} else
+				parentFolderId = Long.parseLong(parent);
+
+			Folder parentFolder = folderDao.findFolder(parentFolderId);
 
 			Context context = Context.get();
 			UserDAO udao = (UserDAO) context.getBean(UserDAO.class);
@@ -94,6 +100,7 @@ public class FoldersDataServlet extends HttpServlet {
 			if (rs != null)
 				while (rs.next()) {
 					writer.print("<folder>");
+					writer.print("<id>" + parent + "-" + rs.getLong(1) + "</id>");
 					writer.print("<folderId>" + rs.getLong(1) + "</folderId>");
 					writer.print("<parent>" + parent + "</parent>");
 					writer.print("<name><![CDATA[" + rs.getString(3) + "]]></name>");
@@ -122,8 +129,8 @@ public class FoldersDataServlet extends HttpServlet {
 						Date now = new Date();
 						boolean published = (rs.getInt(5) == 1) && (rs.getDate(6) == null || now.after(rs.getDate(6)))
 								&& (rs.getDate(7) == null || now.before(rs.getDate(7)));
-
 						writer.print("<folder>");
+						writer.print("<id>d-" + rs.getLong(1) + "</id>");
 						writer.print("<folderId>d-" + rs.getLong(1) + "</folderId>");
 						writer.print("<parent>" + parent + "</parent>");
 						writer.print("<name><![CDATA[" + rs.getString(2) + "]]></name>");

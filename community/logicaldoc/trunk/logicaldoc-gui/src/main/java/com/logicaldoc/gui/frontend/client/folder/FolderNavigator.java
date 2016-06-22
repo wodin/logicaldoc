@@ -492,8 +492,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		exportZip.setTitle(I18N.message("exportzip"));
 		exportZip.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				Window.open(Util.contextPath() + "zip-export?folderId=" + id,
-						"_blank", "");
+				Window.open(Util.contextPath() + "zip-export?folderId=" + id, "_blank", "");
 			}
 		});
 
@@ -650,12 +649,14 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 
 										@Override
 										public void onSuccess(Void result) {
-											reloadParentsOfSelection();
-
 											TreeNode node = getTree().find("folderId",
 													(Object) getSelectedRecord().getAttributeAsString("folderId"));
 											TreeNode parent = getTree().getParent(node);
-											selectFolder(Long.parseLong(parent.getAttributeAsString("parent")));
+											
+											if(parent.getAttributeAsString("folderId")!=null)
+												selectFolder(Long.parseLong(parent.getAttributeAsString("folderId")));
+																						
+											reloadParentsOfSelection();
 										}
 									});
 								}
@@ -1057,18 +1058,29 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		});
 	}
 
+	public TreeNode getNode(long folderId) {
+		TreeNode node = getTree().find("folderId", Long.toString(folderId));
+		return node;
+	}
+
+	public TreeNode getRootNode() {
+		TreeNode node = getTree().getRoot();
+		return node;
+	}
+
 	private void reloadParentsOfSelection() {
-		try {
-			ListGridRecord[] selection = getSelectedRecords();
-			for (ListGridRecord record : selection) {
-				TreeNode node = getTree().find("folderId", (Object) record.getAttributeAsLong("folderId"));
+		ListGridRecord[] selection = getSelectedRecords();
+		for (ListGridRecord record : selection) {
+			try {
+				TreeNode node = getTree().find("id", record.getAttributeAsString("id"));
 				TreeNode parentNode = getTree().getParent(node);
 				if (parentNode != null) {
 					getTree().reloadChildren(parentNode);
-				} else
-					getTree().reloadChildren(getTree().getRoot());
+				} else {
+					getTree().reloadChildren(getRootNode());
+				}
+			} catch (Throwable t) {
 			}
-		} catch (Throwable t) {
 		}
 	}
 }
