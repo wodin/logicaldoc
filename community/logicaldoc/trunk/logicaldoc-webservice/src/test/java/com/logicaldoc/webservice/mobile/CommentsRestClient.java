@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 //import org.apache.commons.httpclient.methods.GetMethod;
 //import org.apache.commons.httpclient.methods.PostMethod;
 //import org.apache.commons.httpclient.methods.StringRequestEntity;
-import org.codehaus.jackson.map.ObjectMapper;
+//import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jettison.json.JSONObject;
 
 /**
