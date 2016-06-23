@@ -126,14 +126,16 @@ public class ScriptingEngine {
 
 		StringWriter writer = new StringWriter();
 		try {
-			VelocityContext context = new VelocityContext(extendedDictionary);
-			Velocity.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, Log4JLogChute.class.getName());
-			Velocity.setProperty("runtime.log.logsystem.log4j.logger", ScriptingEngine.class.getName());
-			Velocity.evaluate(context, writer, StringUtils.isNotEmpty(logTag) ? logTag : "ScriptEngine",
-					expression.replace("\n", "${nl}"));
+			if (StringUtils.isNotEmpty(expression)) {
+				VelocityContext context = new VelocityContext(extendedDictionary);
+				Velocity.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, Log4JLogChute.class.getName());
+				Velocity.setProperty("runtime.log.logsystem.log4j.logger", ScriptingEngine.class.getName());
+				Velocity.evaluate(context, writer, StringUtils.isNotEmpty(logTag) ? logTag : "ScriptEngine",
+						expression.replace("\n", "${nl}"));
+			}
 			return writer.toString();
 		} catch (Throwable e) {
-			log.error(e.getMessage());
+		    log.error("Error in this script: "+expression, e);
 			return expression;
 		}
 	}
