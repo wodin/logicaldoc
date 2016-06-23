@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.smartgwt.client.types.TitleOrientation;
@@ -216,8 +217,8 @@ public class SecuritySettingsPanel extends VLayout {
 			@Override
 			public void onChanged(ChangedEvent event) {
 				if (event.getValue() != null)
-					url.setValue(GWT.getHostPageBaseURL() + "?anonymous=login&tenant=" + Session.get().getTenantName()
-							+ "&key=" + event.getValue().toString());
+					url.setValue(Util.contextPath() + "frontend.jsp?anonymous=login&tenant="
+							+ Session.get().getTenantName() + "&key=" + event.getValue().toString());
 			}
 		});
 
