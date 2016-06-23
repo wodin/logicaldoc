@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.config.WebConfigurator;
 import com.logicaldoc.util.plugin.LogicalDOCPlugin;
+//import com.logicaldoc.webservice.WebserviceServlet;
 
 /**
  * This class provides initializations needed by this plug-in
@@ -28,8 +29,7 @@ public class WebserviceDocPlugin extends LogicalDOCPlugin {
 //		config.writeXMLDoc();
 		config.addServletMapping("CXFServlet", "/app/*");
 		config.writeXMLDoc();
-		
-		//jackson-core-2.3.0-rc1.jar
+	
 		setRestartRequired();
 	}
 }
