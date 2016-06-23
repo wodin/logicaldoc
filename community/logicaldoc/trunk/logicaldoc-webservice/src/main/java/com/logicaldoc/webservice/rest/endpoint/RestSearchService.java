@@ -16,7 +16,7 @@ import com.logicaldoc.webservice.soap.endpoint.SoapSearchService;
 
 import io.swagger.annotations.Api;
 
-@Path("/rest/search") 
+@Path("/") 
 @Api(value = "search")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })

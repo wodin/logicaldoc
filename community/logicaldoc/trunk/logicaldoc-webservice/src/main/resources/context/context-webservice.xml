@@ -117,7 +117,7 @@
             </bean>
         </jaxrs:serviceBeans>
     </jaxrs:server>
-    <jaxrs:server id="restDocument">
+    <jaxrs:server id="restDocument" address="/rest/document">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestDocumentService">
                 <aop:scoped-proxy />
@@ -127,7 +127,8 @@
             <ref bean="jsonProvider" />
         </jaxrs:providers>
     </jaxrs:server>
-    <jaxrs:server id="restFolder">
+    
+    <jaxrs:server id="restFolder" address="/rest/folder">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestFolderService" />
         </jaxrs:serviceBeans>
@@ -135,12 +136,14 @@
             <ref bean="jsonProvider" />
         </jaxrs:providers>
     </jaxrs:server>
-    <jaxrs:server id="restSearch">
+    
+    <jaxrs:server id="restSearch" address="/rest/search">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestSearchService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
        		<ref bean="jsonProvider"/>
     	</jaxrs:providers>
-    </jaxrs:server>    
+    </jaxrs:server>  
+
 </beans>

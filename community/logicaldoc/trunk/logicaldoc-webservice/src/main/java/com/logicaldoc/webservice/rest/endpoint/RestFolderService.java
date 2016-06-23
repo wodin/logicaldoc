@@ -24,7 +24,7 @@ import com.logicaldoc.webservice.soap.endpoint.SoapFolderService;
 
 import io.swagger.annotations.Api;
 
-@Path("/rest/folder") 
+@Path("/") 
 @Api(value = "folder")
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })

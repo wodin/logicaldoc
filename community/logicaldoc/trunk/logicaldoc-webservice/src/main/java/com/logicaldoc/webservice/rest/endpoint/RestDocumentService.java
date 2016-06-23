@@ -26,7 +26,7 @@ import com.logicaldoc.webservice.soap.endpoint.SoapDocumentService;
 
 import io.swagger.annotations.Api;
 
-@Path("/rest/document") 
+@Path("/") 
 @Api(value = "document")
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })

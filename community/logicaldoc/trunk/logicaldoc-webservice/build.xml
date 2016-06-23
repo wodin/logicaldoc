@@ -8,9 +8,11 @@
 
 		<echo message="Deploying ${pom.artifactId}" />
 
+		<!--
 		<exec executable="mvn.bat" resolveexecutable="true" searchpath="true">
 		  <arg line="-o -Dmaven.test.skip=true install"/>
 		</exec>
+		-->
 		
 		<unzip src="target/${pom.artifactId}-${pom.version}-plugin.zip" dest="${logicaldoc.webroot}" />
 
@@ -18,7 +20,7 @@
 	</target>
 	
   <target name="mydep" description="Updates a deployed wwww">
-		<copy todir="C:/JavaSuite/apache-tomcat-7.0.59/webapps/logicaldoc/WEB-INF/classes" verbose="true">
+		<copy todir="${logicaldoc.webroot}/WEB-INF/classes" verbose="true">
       <!--
 			<fileset dir="target/classes">
 				<exclude name="**/*.xml" />
@@ -42,9 +44,9 @@
   
   
     <target name="mydep2" description="Updates a deployed wwww">
-		<copy todir="C:/JavaSuite/apache-tomcat-7.0.59/webapps/logicaldoc/WEB-INF/classes" verbose="true">
+		<copy todir="${logicaldoc.webroot}/WEB-INF/classes" verbose="true">
 			<fileset dir="target/classes">
-				<exclude name="**/*.xml" />
+				<!-- <exclude name="**/*.xml" /> -->
 				<exclude name="**/*.properties" />
 				<exclude name="**/*.dtd" />
 			</fileset>
