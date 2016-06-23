@@ -17,10 +17,6 @@
 				<include>io.swagger:*</include>
 				<include>org.apache.commons:commons-lang3:*</include>
 				<include>org.reflections:*</include>
-				<!-- 
-				<include>org.apache.cxf:cxf-rt-rs-service-description:*</include>
-				-->
-							
 				<include>com.fasterxml.jackson.dataformat:*</include>
 				<include>javax.validation:*</include>				
 			</includes>
