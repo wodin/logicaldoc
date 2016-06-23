@@ -111,16 +111,31 @@
             <artifactId>servlet-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- 
         <dependency>
             <groupId>com.dropbox.core</groupId>
             <artifactId>dropbox-core-sdk</artifactId>
             <version>1.7.6</version>
         </dependency>
+        -->
+<!-- https://mvnrepository.com/artifact/com.dropbox.core/dropbox-core-sdk -->
+<dependency>
+    <groupId>com.dropbox.core</groupId>
+    <artifactId>dropbox-core-sdk</artifactId>
+    <version>1.8.2</version>
+            <exclusions>
+                <exclusion>
+		            <groupId>com.fasterxml.jackson.core</groupId>
+		            <artifactId>jackson-core</artifactId>                    
+                </exclusion>
+            </exclusions>    
+</dependency>
         <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-            <scope>test</scope>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.6.5</version>
         </dependency>
+        
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>sqltool</artifactId>

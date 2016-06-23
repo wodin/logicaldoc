@@ -96,7 +96,10 @@
     <!-- ###### JAX-RS (RESTful) ###### -->
     <!-- ############################## -->
     <!-- to support Java-to-JSON and vice-versa conversion -->
-    <bean id="jsonProvider" class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
+    
+    <!-- JAXRS providers -->
+    <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />    
+    
     <jaxrs:server id="commentservice" address="/mobile/comments">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.mobile.CommentService" />
@@ -105,6 +108,7 @@
             <ref bean="jsonProvider" />
         </jaxrs:providers>
     </jaxrs:server>
+    
     <!-- New REST Web-services (beta) -->
     <jaxrs:server id="restAuth" address="/rest/auth">
         <jaxrs:serviceBeans>
@@ -113,7 +117,8 @@
             </bean>
         </jaxrs:serviceBeans>
     </jaxrs:server>
-    <jaxrs:server id="restDocument" address="/rest/document">
+    
+    <jaxrs:server id="restDocument">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestDocumentService">
                 <aop:scoped-proxy />
@@ -123,15 +128,19 @@
             <ref bean="jsonProvider" />
         </jaxrs:providers>
     </jaxrs:server>
-    <jaxrs:server id="restFolder" address="/rest/folder">
+    
+    
+    <jaxrs:server id="restFolder">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestFolderService" />
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider" />
-        </jaxrs:providers>
+        </jaxrs:providers>              
     </jaxrs:server>
-    <jaxrs:server id="restSearch" address="/rest/search">
+        
+        
+    <jaxrs:server id="restSearch">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestSearchService"/>
         </jaxrs:serviceBeans>

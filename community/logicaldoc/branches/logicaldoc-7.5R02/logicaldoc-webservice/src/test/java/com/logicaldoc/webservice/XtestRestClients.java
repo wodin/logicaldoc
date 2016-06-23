@@ -13,8 +13,8 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import com.logicaldoc.util.io.IOUtil;
 import com.logicaldoc.webservice.model.WSDocument;
@@ -36,9 +36,11 @@ public class XtestRestClients {
 
 	private static RestSearchClient searchClient = null;
 
-	private static String BASE_PATH = "http://localhost:8080/logicaldoc";
+	//private static String BASE_PATH = "http://localhost:8080/logicaldoc";
 
 	// private static String BASE_PATH = "http://192.168.2.11:8080/logicaldoc";
+	
+	private static String BASE_PATH = "http://localhost:8080";
 
 	public static void main(String[] args) throws Exception {
 
@@ -80,7 +82,7 @@ public class XtestRestClients {
 		//updateFolder(cfld, "Folder uppdated by REST ws");
 		
 		// createDocument02();
-		// createFolder(04L, "DJ KATCH");
+		createFolder(04L, "DJ KATCH");
 
 		// deleteDocument(3375105L);
 		// deleteFolder(4128768L);
@@ -118,8 +120,8 @@ public class XtestRestClients {
 		long start_time = System.nanoTime();
 		
 		
-		 WSSearchOptions wsso = buildSearchOptions("en", "document management system"); 
-		 find(wsso);		
+//		 WSSearchOptions wsso = buildSearchOptions("en", "document management system"); 
+//		 find(wsso);		
 
 		/*
 		 * WSSearchOptions wsso = buildSearchOptions("en",

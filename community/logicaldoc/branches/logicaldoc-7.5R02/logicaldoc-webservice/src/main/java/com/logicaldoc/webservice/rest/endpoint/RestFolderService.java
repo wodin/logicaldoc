@@ -13,8 +13,8 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,8 +22,12 @@ import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.rest.FolderService;
 import com.logicaldoc.webservice.soap.endpoint.SoapFolderService;
 
+import io.swagger.annotations.Api;
+
 @Consumes({ MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
+@Path("/rest/folder") 
+@Api(value = "folder")
 public class RestFolderService extends SoapFolderService implements FolderService {
 
 	private static Logger log = LoggerFactory.getLogger(RestFolderService.class);
