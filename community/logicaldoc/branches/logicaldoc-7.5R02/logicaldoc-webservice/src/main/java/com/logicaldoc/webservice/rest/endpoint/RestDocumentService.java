@@ -24,8 +24,12 @@ import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.rest.DocumentService;
 import com.logicaldoc.webservice.soap.endpoint.SoapDocumentService;
 
+import io.swagger.annotations.Api;
+
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
+@Path("/rest/document") 
+@Api(value = "document")
 public class RestDocumentService extends SoapDocumentService implements DocumentService {
 
 	private static Logger log = LoggerFactory.getLogger(RestDocumentService.class);

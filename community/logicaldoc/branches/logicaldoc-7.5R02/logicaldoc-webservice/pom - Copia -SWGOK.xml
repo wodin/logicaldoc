@@ -177,7 +177,6 @@
     
     
         <!-- Swagger dependencies -->
-        <!-- 
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-jaxrs</artifactId>
@@ -188,21 +187,13 @@
                     <artifactId>jsr311-api</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>org.webjars</groupId>
             <artifactId>swagger-ui</artifactId>
             <version>2.1.0</version>
             <scope>provided</scope>
         </dependency>
-        -->
-        
-		<dependency>
-		    <groupId>io.swagger</groupId>
-		    <artifactId>swagger-annotations</artifactId>
-		    <version>1.5.8</version>
-		</dependency>        
-        
         <dependency>
             <groupId>com.fasterxml.jackson.jaxrs</groupId>
             <artifactId>jackson-jaxrs-json-provider</artifactId>
@@ -320,65 +311,9 @@
                     </execution>
                 </executions>
             </plugin>
-
-<!--           
-<plugin>
-    <groupId>com.sebastian-daschner</groupId>
-    <artifactId>jaxrs-analyzer-maven-plugin</artifactId>
-    <version>0.9</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>analyze-jaxrs</goal>
-            </goals>
-            <configuration>
-                <!- Available backends are plaintext (default), swagger and asciidoc ->
-                <backend>swagger</backend>
-                <!- Domain of the deployed project, defaults to example.com ->
-                <deployedDomain>example.com</deployedDomain>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
--->
-
-<plugin>
-                <groupId>com.qmino</groupId>
-                <artifactId>miredot-plugin</artifactId>
-                <version>2.0-RC3</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>restdoc</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <organizationId>718ef168-ca5b-4742-a319-6ceb3dc61cb2</organizationId>
-                    <restModel>
-                        <restFramework>
-                            <name>jax-rs</name>
-                        </restFramework>
-                    </restModel>
-                    <output>
-                        <title>LogicalDOC REST API ${project.version}</title>
-                        <html>
-                            <baseUrl>http://localhost:8080/services</baseUrl>
-                        </html>
-                    </output>
-                    <!-- insert other configuration here (optional) -->
-                </configuration>
-            </plugin>            
+           
           
         </plugins>
     </build>
-    
-    <pluginRepositories>
-        <pluginRepository>
-            <id>miredot</id>
-            <name>Miredot Releases</name>
-            <url>http://nexus.qmino.com/content/repositories/miredot</url>
-        </pluginRepository>
-    </pluginRepositories>    
         
 </project>
