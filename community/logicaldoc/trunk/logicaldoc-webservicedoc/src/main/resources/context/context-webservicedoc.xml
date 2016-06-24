@@ -40,30 +40,34 @@
     <!-- to support Java-to-JSON and vice-versa conversion -->
     
     <!-- JAXRS providers -->
-    <bean id="originFilter" class="demo.jaxrs.swagger.server.ApiOriginFilter" />
-    <!--
     <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
     <bean id="multipartProvider" class="org.apache.cxf.jaxrs.provider.MultipartProvider" />
-    -->
+    <bean id="originFilter" class="demo.jaxrs.swagger.server.ApiOriginFilter" />
 
     <!-- CXF Swagger2Feature -->  
     <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.Swagger2Feature">
             <property name="basePath" value="/services/rest"/>
+            <property name="title" value="LogicalDOC REST API"/>
+            <property name="version" value="7.5.1"/>
+            <property name="contact" value="devel@logicaldoc.com"/>
+            <property name="description" value="wrwrwrwrwrwr"/>                        
     </bean>
 
     <jaxrs:server id="restDocumentSWG" address="/rest/documentSWG">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestDocumentService" />
         </jaxrs:serviceBeans>
-        <jaxrs:providers>
+       <jaxrs:providers>
             <ref bean="jsonProvider" />
-            <ref bean="originFilter" />            
+            <ref bean="multipartProvider" />
+            <ref bean="originFilter" />
         </jaxrs:providers>
         <jaxrs:features>
             <ref bean="swagger2Feature" />
         </jaxrs:features>        
-    </jaxrs:server>    
-    
+    </jaxrs:server>
+        
+    <!-- 
     <jaxrs:server id="restFolderSWG" address="/rest/folderSWG">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestFolderService" />
@@ -76,6 +80,6 @@
             <ref bean="swagger2Feature" />
         </jaxrs:features>                
     </jaxrs:server>
-    
+    -->
    
 </beans>
