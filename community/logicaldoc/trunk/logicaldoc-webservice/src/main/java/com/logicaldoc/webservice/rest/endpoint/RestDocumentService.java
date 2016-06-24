@@ -29,8 +29,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Authorization;
 
-@Path("/") 
+ 
+@Path("/")
+//@Api(value = "document", authorizations = {@Authorization(value = "basic")} )
 @Api(value = "document")
 @Consumes({ MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON })
 @Produces({ MediaType.APPLICATION_JSON })
@@ -42,7 +45,12 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@POST
 	@Path("/create")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
-	// The "document" comes in the POST request body (encoded as JSON).
+	@ApiOperation(value = "Creates a new document", 
+	notes = "Creates a new document using the metadata 'document' provided as JSON/XML")
+	@ApiImplicitParams({
+	    @ApiImplicitParam(name = "document", value = "The document metadata provided as WSDocument object encoded in JSON/XML format", required = true, dataType = "com.logicaldoc.webservice.model.WSDocument", paramType = "body"),
+	    @ApiImplicitParam(name = "content", value = "File data", required = true, dataType = "file", paramType = "form")
+	  })		
 	public WSDocument create(List<Attachment> atts) throws Exception {
 		log.debug("create()");
 
@@ -69,7 +77,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.logicaldoc.webservice.rest.RestDocument#getDocument(java.lang.String,
+	 * com.logicaldoc.webservice.rest.DocumentService#getDocument(java.lang.String,
 	 * long)
 	 */
 	@Override
@@ -85,7 +93,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.logicaldoc.webservice.rest.RestDocument#checkout(java.lang.String,
+	 * com.logicaldoc.webservice.rest.DocumentService#checkout(java.lang.String,
 	 * long)
 	 */
 	@Override
@@ -100,13 +108,22 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.logicaldoc.webservice.rest.RestDocument#checkin(java.util.List)
+	 * @see com.logicaldoc.webservice.rest.DocumentService#checkin(java.util.List)
 	 */
 	@Override
 	@POST
 	@Path("/checkin")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@ApiOperation(value = "Check-in an existing document", 
+	notes = "Performs a check-in (commit) operation of new content over an existing document. The document must be in checked-out status")
+	@ApiImplicitParams({
+	    @ApiImplicitParam(name = "docId", value = "The id of an existing document to update", required = true, dataType = "integer", paramType = "form"),
+	    @ApiImplicitParam(name = "comment", value = "An optional comment", required = false, dataType = "string", paramType = "form"),
+	    @ApiImplicitParam(name = "release", value = "Indicates whether to create or not a new major release of the updated document", required = false, dataType = "string", paramType = "form", allowableValues = "true, false"),
+	    @ApiImplicitParam(name = "filename", value = "File name", required = true, dataType = "string", paramType = "form"),
+	    @ApiImplicitParam(name = "filedata", value = "File data", required = true, dataType = "file", paramType = "form")
+	  })		
 	public Response checkin(List<Attachment> attachments) throws Exception {
 		String sid = validateSession();
 		try {
@@ -145,14 +162,15 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@ApiOperation(value = "Uploads a document")
+	@ApiOperation(value = "Uploads a document", 
+	notes = "Creates or updates an existing document, if used in update mode docId must be provided, when used in create mode folderId is required")
 	@ApiImplicitParams({
-	    @ApiImplicitParam(name = "docId", value = "The id of an existing document to update", required = false, dataType = "long", paramType = "form"),
+	    @ApiImplicitParam(name = "docId", value = "The id of an existing document to update", required = false, dataType = "integer", paramType = "form"),
 	    @ApiImplicitParam(name = "folderId", value = "Folder id where to place the document", required = false, dataType = "string", paramType = "form"),
 	    @ApiImplicitParam(name = "release", value = "Indicates whether to create or not a new major release of an updated document", required = false, dataType = "string", paramType = "form", allowableValues = "true, false"),
 	    @ApiImplicitParam(name = "filename", value = "File name", required = true, dataType = "string", paramType = "form"),
 	    @ApiImplicitParam(name = "language", value = "Language of the document (ISO 639-2)", required = false, dataType = "string", paramType = "form", defaultValue = "en"),
-	    @ApiImplicitParam(name = "filedata", value = "File data", required = true, dataType = "file", paramType = "body")
+	    @ApiImplicitParam(name = "filedata", value = "File data", required = true, dataType = "file", paramType = "form")
 	  })	
 	public Response upload(List<Attachment> attachments) throws Exception {
 		String sid = validateSession();
@@ -196,7 +214,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.logicaldoc.webservice.rest.RestDocument#delete(java.lang.String,
+	 * @see com.logicaldoc.webservice.rest.DocumentService#delete(java.lang.String,
 	 * long)
 	 */
 	@Override
@@ -211,7 +229,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.logicaldoc.webservice.rest.RestDocument#list(java.lang.String,
+	 * @see com.logicaldoc.webservice.rest.DocumentService#list(java.lang.String,
 	 * long)
 	 */
 	@Override
@@ -227,7 +245,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.logicaldoc.webservice.rest.RestDocument#listDocuments(java.lang.String
+	 * com.logicaldoc.webservice.rest.DocumentService#listDocuments(java.lang.String
 	 * , long, java.lang.String)
 	 */
 	@Override
@@ -250,9 +268,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Override
 	@PUT
 	@Path("/update")
-    @ApiOperation(
-            value = "Update an existing document"
-        )	
+    @ApiOperation(value = "Update an existing document")	
 	public void update(@ApiParam(value = "Document object that needs to be updated", required = true) WSDocument document) throws Exception {
 		String sid = validateSession();
 		super.update(sid, document);
