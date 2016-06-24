@@ -48,7 +48,7 @@
 
     <!-- CXF Swagger2Feature -->  
     <bean id="swagger2Feature" class="org.apache.cxf.jaxrs.swagger.Swagger2Feature">
-            <property name="basePath" value="/services"/>
+            <property name="basePath" value="/services/rest"/>
     </bean>
 
     <jaxrs:server id="restDocumentSWG" address="/rest/documentSWG">
