@@ -25,6 +25,8 @@ import com.logicaldoc.webservice.rest.DocumentService;
 import com.logicaldoc.webservice.soap.endpoint.SoapDocumentService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Path("/") 
 @Api(value = "document")
@@ -34,11 +36,6 @@ public class RestDocumentService extends SoapDocumentService implements Document
 
 	private static Logger log = LoggerFactory.getLogger(RestDocumentService.class);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.logicaldoc.webservice.rest.RestDocument#create(java.util.List)
-	 */
 	@Override
 	@POST
 	@Path("/create")
@@ -196,8 +193,11 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	 */
 	@Override
 	@DELETE
-	@Path("/delete")
-	public void delete(@QueryParam("docId") long docId) throws Exception {
+	@Path("/delete")	
+    @ApiOperation(
+            value = "Deletes a document"
+        )	
+	public void delete(@ApiParam(value = "Document id to delete", required = true) @QueryParam("docId") long docId) throws Exception {
 		String sid = validateSession();
 		super.delete(sid, docId);
 	}
@@ -244,7 +244,10 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Override
 	@PUT
 	@Path("/update")
-	public void update(WSDocument document) throws Exception {
+    @ApiOperation(
+            value = "Update an existing document"
+        )	
+	public void update(@ApiParam(value = "Document object that needs to be updated", required = true) WSDocument document) throws Exception {
 		String sid = validateSession();
 		super.update(sid, document);
 	}
