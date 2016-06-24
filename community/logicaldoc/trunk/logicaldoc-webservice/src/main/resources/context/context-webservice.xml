@@ -99,6 +99,7 @@
     <!-- to support Java-to-JSON and vice-versa conversion -->    
     <!-- JAXRS providers -->
     <bean id="jsonProvider" class="com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider" />
+        <bean id="multipartProvider" class="org.apache.cxf.jaxrs.provider.MultipartProvider" />
     
     <jaxrs:server id="commentservice" address="/mobile/comments">
         <jaxrs:serviceBeans>
@@ -125,9 +126,11 @@
         </jaxrs:serviceBeans>
         <jaxrs:providers>
             <ref bean="jsonProvider" />
+            <ref bean="multipartProvider" />
         </jaxrs:providers>
     </jaxrs:server>
     
+    <!-- 
     <jaxrs:server id="restFolder" address="/rest/folder">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestFolderService" />
@@ -145,5 +148,6 @@
        		<ref bean="jsonProvider"/>
     	</jaxrs:providers>
     </jaxrs:server>  
+    -->
 
 </beans>
