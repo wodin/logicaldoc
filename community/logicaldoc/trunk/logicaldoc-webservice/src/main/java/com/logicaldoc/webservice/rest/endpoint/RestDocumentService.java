@@ -25,6 +25,8 @@ import com.logicaldoc.webservice.rest.DocumentService;
 import com.logicaldoc.webservice.soap.endpoint.SoapDocumentService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
@@ -137,16 +139,21 @@ public class RestDocumentService extends SoapDocumentService implements Document
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.logicaldoc.webservice.rest.RestDocument#upload(java.util.List)
-	 */
+
 	@Override
 	@POST
 	@Path("/upload")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@ApiOperation(value = "Uploads a document")
+	@ApiImplicitParams({
+	    @ApiImplicitParam(name = "docId", value = "The id of an existing document to update", required = false, dataType = "long", paramType = "form"),
+	    @ApiImplicitParam(name = "folderId", value = "Folder id where to place the document", required = false, dataType = "string", paramType = "form"),
+	    @ApiImplicitParam(name = "release", value = "Indicates whether to create or not a new major release of an updated document", required = false, dataType = "string", paramType = "form", allowableValues = "true, false"),
+	    @ApiImplicitParam(name = "filename", value = "File name", required = true, dataType = "string", paramType = "form"),
+	    @ApiImplicitParam(name = "language", value = "Language of the document (ISO 639-2)", required = false, dataType = "string", paramType = "form", defaultValue = "en"),
+	    @ApiImplicitParam(name = "filedata", value = "File data", required = true, dataType = "file", paramType = "body")
+	  })	
 	public Response upload(List<Attachment> attachments) throws Exception {
 		String sid = validateSession();
 		try {
@@ -159,7 +166,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 
 			for (Attachment att : attachments) {
 				Map<String, String> params = att.getContentDisposition().getParameters();
-        //log.debug("keys: {}", params.keySet());
+                //log.debug("keys: {}", params.keySet());
 				//log.debug("name: {}", params.get("name"));
         
 				if ("docId".equals(params.get("name"))) {
@@ -184,6 +191,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 			return Response.serverError().build();
 		}
 	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -194,9 +202,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Override
 	@DELETE
 	@Path("/delete")	
-    @ApiOperation(
-            value = "Deletes a document"
-        )	
+    @ApiOperation(value = "Deletes a document")	
 	public void delete(@ApiParam(value = "Document id to delete", required = true) @QueryParam("docId") long docId) throws Exception {
 		String sid = validateSession();
 		super.delete(sid, docId);
