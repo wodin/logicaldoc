@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import com.logicaldoc.webservice.AbstractService;
+import com.logicaldoc.webservice.doc.WSDoc;
 
 /**
  * Extended attribute of a document
@@ -14,42 +15,61 @@ import com.logicaldoc.webservice.AbstractService;
  * @author Matteo Caruso - Logical Objects
  * @since 4.0
  */
+@XmlType(name = "WSAttribute")
 public class WSAttribute implements Serializable {
 
+	@WSDoc(documented = true)
 	private static final long serialVersionUID = 1L;
 
+	@WSDoc(documented = true)
 	public static final int TYPE_STRING = 0;
 
+	@WSDoc(documented = true)
 	public static final int TYPE_INT = 1;
 
+	@WSDoc(documented = true)
 	public static final int TYPE_DOUBLE = 2;
 
+	@WSDoc(documented = true)
 	public static final int TYPE_DATE = 3;
 
+	@WSDoc(documented = true)
 	public static final int TYPE_USER = 4;
 
+	@WSDoc(documented = true)
 	public static final int TYPE_BOOLEAN = 5;
 
+	@WSDoc(required = true, description="name of the attribute")
 	private String name;
 
+	@WSDoc(required = false)
 	private String stringValue;
 
+	@WSDoc(required = false)
 	private Long intValue;
 
+	@WSDoc(required = false)
 	private Double doubleValue;
 
+	@WSDoc(required = false)
 	private String dateValue;
 
+	@WSDoc(required = true, description = "0 = String, 1 = int, 2 = double, 3 = date, 4 = user (intValue represents the user's id), 5 = boolean (intValue must be 0 or 1)")
 	private int type = TYPE_STRING;
 
+	@WSDoc(required = true)
 	private int mandatory = 0;
 
+	@WSDoc(required = false)
 	private int position = 0;
 
+	@WSDoc(required = false)
 	private String label;
 
+	@WSDoc(required = true, description="0 = free, 1 = preset")
 	private int editor = 0;
-	
+
+	@WSDoc(required = false, description="Id of the attribute set")
 	private Long setId;
 
 	public WSAttribute() {

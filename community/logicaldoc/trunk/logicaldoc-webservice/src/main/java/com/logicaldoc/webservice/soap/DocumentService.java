@@ -1,10 +1,12 @@
 package com.logicaldoc.webservice.soap;
 
 import javax.activation.DataHandler;
+import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
+import com.logicaldoc.webservice.doc.WSDoc;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSLink;
 
@@ -14,7 +16,8 @@ import com.logicaldoc.webservice.model.WSLink;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
-@WebService(name="Document", serviceName="Document", targetNamespace = "http://ws.logicaldoc.com")
+@WSDoc(description = "documents handling and CRUD operations")
+@WebService(name = "Document", serviceName = "Document", targetNamespace = "http://ws.logicaldoc.com")
 public interface DocumentService {
 
 	/**
@@ -28,9 +31,12 @@ public interface DocumentService {
 	 * @return The value object containing the document's metadata.
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "document")
+	@WSDoc(description = "creates a new document; the user can completely customize the document through a value object containing the document's metadata; returns the newly created document.")
 	public WSDocument create(@WebParam(name = "sid") String sid, @WebParam(name = "document") WSDocument document,
-			@WebParam(name = "content") DataHandler content) throws Exception;
+			@WSDoc(description = "the raw content of the file") @WebParam(name = "content") DataHandler content)
+			throws Exception;
 
 	/**
 	 * Deletes an existing document with the given identifier.
@@ -39,6 +45,8 @@ public interface DocumentService {
 	 * @param docId The document id
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "deletes an existing document with the given identifier")
 	public void delete(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
 
 	/**
@@ -48,6 +56,8 @@ public interface DocumentService {
 	 * @param docId The document id
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "locks an existing document with the given identifier")
 	public void lock(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
 
 	/**
@@ -57,6 +67,8 @@ public interface DocumentService {
 	 * @param docId The document id
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "unlocks an existing document with the given identifier")
 	public void unlock(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
 
 	/**
@@ -67,6 +79,8 @@ public interface DocumentService {
 	 * @param name The new document title
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "renames the title of an existing document with the given identifier")
 	public void rename(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "name") String name) throws Exception;
 
@@ -78,6 +92,8 @@ public interface DocumentService {
 	 * @param name The new document file name
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "renames the filename of an existing document with the given identifier")
 	public void renameFile(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "name") String name) throws Exception;
 
@@ -86,21 +102,26 @@ public interface DocumentService {
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
-	 * @param folderId The folder id of the new document folder
+	 * @param folderId Identifier of the new document's folder
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "moves an existing document with the given identifier")
 	public void move(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WebParam(name = "folderId") long folderId) throws Exception;
+			@WSDoc(description = "identifier of the new document's folder") @WebParam(name = "folderId") long folderId)
+			throws Exception;
 
 	/**
-	 * Gets document metadata of an existing document with the given identifier.
+	 * Gets the metadata of an existing document with the given identifier.
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
 	 * @return A value object containing the document's metadata.
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "document")
+	@WSDoc(description = "gets the metadata of an existing document with the given identifier; returns the document's representation")
 	public WSDocument getDocument(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
 
@@ -113,7 +134,9 @@ public interface DocumentService {
 	 * @return A value object containing the document's metadata.
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "document")
+	@WSDoc(description = "gets document metadata of an existing document with the given custom identifier")
 	public WSDocument getDocumentByCustomId(@WebParam(name = "sid") String sid,
 			@WebParam(name = "customId") String customId) throws Exception;
 
@@ -123,10 +146,12 @@ public interface DocumentService {
 	 * 
 	 * @param sid Session identifier
 	 * @param docIds The documents ids
-	 * @return  the list of documents
+	 * @return the list of documents
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "documents")
+	@WSDoc(description = "gets document metadata of a collection of existing documents with the given identifiers; returns an array of WSDocument")
 	public WSDocument[] getDocuments(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") Long[] docIds)
 			throws Exception;
 
@@ -138,7 +163,9 @@ public interface DocumentService {
 	 * @return Arrays of aliases
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "aliases")
+	@WSDoc(description = "gets the aliases of the given document; returns an array of WSDocument that are aliases")
 	public WSDocument[] getAliases(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
 
@@ -150,18 +177,21 @@ public interface DocumentService {
 	 * @param doc The value object containing the document's metadata.
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "updates an existing document with the value object containing the document's metadata")
 	public void update(@WebParam(name = "sid") String sid, @WebParam(name = "document") WSDocument document)
 			throws Exception;
 
 	/**
-	 * Gets the document content of an existing document with the given
-	 * identifier.
+	 * Gets the content of an existing document with the given identifier
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
 	 * @return The requested document's binary
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "gets the content of an existing document with the given identifier; returns the raw content of the file")
 	public DataHandler getContent(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
 
@@ -173,13 +203,14 @@ public interface DocumentService {
 	 * @return The requested document's text
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "text")
+	@WSDoc(description = "gets the document's text stored in the full-text index")
 	public String getExtractedText(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
 
 	/**
-	 * Gets the version content of an existing document with the given
-	 * identifier.
+	 * Gets the content of a specific version of a document
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
@@ -187,8 +218,11 @@ public interface DocumentService {
 	 * @return The requested version's binary
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "gets the content of a specific version of a document; returns the raw content of the file")
 	public DataHandler getVersionContent(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WebParam(name = "version") String version) throws Exception;
+			@WSDoc(description = "the version to retrieve, eg: '1.0', '2.3'") @WebParam(name = "version") String version)
+			throws Exception;
 
 	/**
 	 * Gets the content of a resource associated to the given document.
@@ -201,17 +235,24 @@ public interface DocumentService {
 	 * @return The requested resource's binary
 	 * @throws Exception
 	 */
-	public DataHandler getResource(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WebParam(name = "fileVersion") String fileVersion, @WebParam(name = "suffix") String suffix)
+	@WebMethod
+	@WSDoc(description = "gets the content of a resource associated to the given document; returns the raw content of the file")
+	public DataHandler getResource(
+			@WebParam(name = "sid") String sid,
+			@WebParam(name = "docId") long docId,
+			@WSDoc(description = "the file version to retrieve, eg: '1.0', '2.3'") @WebParam(name = "fileVersion") String fileVersion,
+			@WSDoc(description = "suffix specification(it cannot be empty, use 'conversion.pdf' to get the PDF conversion)") @WebParam(name = "suffix") String suffix)
 			throws Exception;
 
 	/**
-	 * Checkouts an existing document with the given identifier.
+	 * Checks out an existing document with the given identifier.
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "checks out an existing document with the given identifier")
 	public void checkout(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
 
 	/**
@@ -227,31 +268,42 @@ public interface DocumentService {
 	 * @param content The document's binary content
 	 * @throws Exception
 	 */
-	public void checkin(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WebParam(name = "comment") String comment, @WebParam(name = "filename") String filename,
-			@WebParam(name = "release") boolean release, @WebParam(name = "content") DataHandler content)
-			throws Exception;
+	@WebMethod
+	@WSDoc(description = "checks in an existing document to create a new version")
+	public void checkin(
+			@WebParam(name = "sid") String sid,
+			@WebParam(name = "docId") long docId,
+			@WebParam(name = "comment") String comment,
+			@WebParam(name = "filename") String filename,
+			@WSDoc(description = "true if this is a new release(eg: 2.0) rather than a subversion(eg: 1.1)") @WebParam(name = "release") boolean release,
+			@WebParam(name = "content") DataHandler content) throws Exception;
 
 	/**
-	 * Checks in an existing document with the given identifier to create a new
-	 * version.
+	 * Creates a new document or updates an existing one.
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id (optional)
 	 * @param folderId The folder id (optional)
-	 * @param release True if this is a new release(eg: 2.0) rather than a
-	 *        subversion(eg: 1.1)
+	 * @param release True if this is a major release(eg: 2.0) rather than a
+	 *        minor release(eg: 1.12)
 	 * @param filename The document file name
 	 * @param language The language for the document
 	 * @param content The document's binary content
 	 * @return The created/updated document's ID
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "docId")
-	public long upload(@WebParam(name = "sid") String sid, @WebParam(name = "docId") Long docId,
-			@WebParam(name = "folderId") Long folderId, @WebParam(name = "release") boolean release,
-			@WebParam(name = "filename") String filename, @WebParam(name = "language") String language,
-			@WebParam(name = "content") DataHandler content) throws Exception;
+	@WSDoc(description = "creates a new document or updates an existing one; returns the newly created document's ID")
+	public long upload(
+			@WebParam(name = "sid") String sid,
+			@WSDoc(description = "id of the document to update", required = false) @WebParam(name = "docId") Long docId,
+			@WSDoc(description = "the folder's id, used in case of creation", required = false) @WebParam(name = "folderId") Long folderId,
+			@WSDoc(description = "true if this is a major release(eg: 2.0) rather than a minor release(eg: 1.12)") @WebParam(name = "release") boolean release,
+			@WSDoc(description = "used in case of creation", required = false) @WebParam(name = "filename") String filename,
+			@WebParam(name = "language") String language,
+			@WSDoc(description = "raw content of the file") @WebParam(name = "content") DataHandler content)
+			throws Exception;
 
 	/**
 	 * Uploads a new resource attached to the given document. If the resource
@@ -265,31 +317,41 @@ public interface DocumentService {
 	 * @param content The resource's binary content
 	 * @throws Exception
 	 */
-	public void uploadResource(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WebParam(name = "fileVersion") String fileVersion, @WebParam(name = "suffix") String suffix,
-			@WebParam(name = "content") DataHandler content) throws Exception;
+	@WebMethod
+    @WSDoc(description = "uploads a new resource attached to the given document. If the resource already exists it is overwritten")
+	public void uploadResource(
+			@WebParam(name = "sid") String sid,
+			@WebParam(name = "docId") long docId,
+			@WSDoc(description = "the specific file version", required = false) @WebParam(name = "fileVersion") String fileVersion,
+			@WSDoc(description = "suffix specification(it cannot be empty, use 'conversion.pdf' to put the PDF conversion)") @WebParam(name = "suffix") String suffix,
+			@WSDoc(description = "taw content of the file") @WebParam(name = "content") DataHandler content)
+			throws Exception;
 
 	/**
-	 * Test if a document identifier is valid.
+	 * Tests if a document is readable.
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
 	 * @return True if the identifier denotes a document, otherwise false.
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "tests if a document is readable")
 	public boolean isReadable(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
 
 	/**
-	 * Restores an existing document with the given identifier.
+	 * Restores a deleted document.
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
-	 * @param folderId The target folder id
+	 * @param folderId Id of the folder in which the document must be restored
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "restores a deleted document")
 	public void restore(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WebParam(name = "folderId") long folderId) throws Exception;
+			@WSDoc(description = "id of the folder in which the document must be restored") @WebParam(name = "folderId") long folderId) throws Exception;
 
 	/**
 	 * Gets the version history of an existing document with the given
@@ -300,6 +362,7 @@ public interface DocumentService {
 	 * @return Array of versions
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "document")
 	public WSDocument[] getVersions(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
 			throws Exception;
@@ -340,6 +403,7 @@ public interface DocumentService {
 	 * 
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "document")
 	public WSDocument[] getRecentDocuments(@WebParam(name = "sid") String sid,
 			@WebParam(name = "maxHits") Integer maxHits) throws Exception;
@@ -353,6 +417,7 @@ public interface DocumentService {
 	 * @param subject The email subject
 	 * @param message The email message body
 	 */
+	@WebMethod
 	public void sendEmail(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") Long[] docIds,
 			@WebParam(name = "recipients") String recipients, String subject, String message) throws Exception;
 
@@ -368,6 +433,7 @@ public interface DocumentService {
 	 * @return The value object containing the document's metadata.
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "document")
 	public WSDocument createAlias(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "folderId") long folderId, @WebParam(name = "type") String type) throws Exception;
@@ -383,6 +449,7 @@ public interface DocumentService {
 	 * @return the new link
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "link")
 	public WSLink link(@WebParam(name = "sid") String sid, @WebParam(name = "doc1") long doc1,
 			@WebParam(name = "doc2") long doc2, @WebParam(name = "type") String type) throws Exception;
@@ -396,6 +463,7 @@ public interface DocumentService {
 	 * @return The new links of the document
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "link")
 	public WSLink[] getLinks(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
 
@@ -407,6 +475,7 @@ public interface DocumentService {
 	 * 
 	 * @throws Exception
 	 */
+	@WebMethod
 	public void deleteLink(@WebParam(name = "sid") String sid, @WebParam(name = "id") long id) throws Exception;
 
 	/**
@@ -418,6 +487,7 @@ public interface DocumentService {
 	 * 
 	 * @throws Exception
 	 */
+	@WebMethod
 	public void reindex(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "content") String content) throws Exception;
 
@@ -430,6 +500,7 @@ public interface DocumentService {
 	 * @param fileVersion The specific file version(it can be empty)
 	 * @throws Exception
 	 */
+	@WebMethod
 	public void createPdf(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
 			@WebParam(name = "fileVersion") String fileVersion) throws Exception;
 }

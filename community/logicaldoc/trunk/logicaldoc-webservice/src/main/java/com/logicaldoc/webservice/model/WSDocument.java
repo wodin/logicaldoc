@@ -6,12 +6,14 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.webservice.doc.WSDoc;
 
 /**
  * Web Service Document. Useful class to create repository Documents.
@@ -20,28 +22,40 @@ import com.logicaldoc.core.document.Document;
  * @since 5.2
  */
 @XmlRootElement(name = "document")
+@XmlType(name = "WSDocument")
 public class WSDocument implements Serializable {
 
+	@WSDoc(documented = true)
 	private static final long serialVersionUID = 1L;
 
+	@WSDoc(documented = true)
 	protected static Logger log = LoggerFactory.getLogger(WSDocument.class);
 
+	@WSDoc(documented = true)
 	public static final int DOC_UNLOCKED = 0;
 
+	@WSDoc(documented = true)
 	public static final int DOC_CHECKED_OUT = 1;
 
+	@WSDoc(documented = true)
 	public static final int DOC_LOCKED = 2;
 
+	@WSDoc(documented = true)
 	public static final int EXPORT_UNLOCKED = 0;
 
+	@WSDoc(documented = true)
 	public static final int EXPORT_LOCKED = 1;
 
+	@WSDoc(documented = true)
 	public static final int INDEX_TO_INDEX = 0;
 
+	@WSDoc(documented = true)
 	public static final int INDEX_INDEXED = 1;
 
+	@WSDoc(documented = true)
 	public static final int INDEX_SKIP = 2;
 
+	@WSDoc(description = "unique identifier ")
 	private long id;
 
 	private long fileSize = 0;
@@ -53,95 +67,136 @@ public class WSDocument implements Serializable {
 	 * @see Document#DOC_CHECKED_OUT
 	 * @see Document#DOC_LOCKED
 	 */
+	@WSDoc(required = false, description = "0 = unlocked, 1 = checked out, 2 = locked")
 	private int status = DOC_UNLOCKED;
 
+	@WSDoc(required = false)
 	private int exportStatus = EXPORT_UNLOCKED;
 
 	private String title;
 
+	@WSDoc(required = false)
 	private String version;
 
+	@Deprecated
 	private String exportVersion;
 
+	@WSDoc(required = false)
 	private String fileVersion;
 
+	@WSDoc(description = "last publication date; format must be 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd'")
 	private String date;
 
+	@WSDoc(required = false)
 	private String publisher;
 
+	@WSDoc(required = false)
 	private long publisherId;
 
+	@WSDoc(required = false)
 	private String creator;
 
+	@WSDoc(required = false)
 	private long creatorId;
 
 	private String type;
 
+	@WSDoc(required = false)
 	private Long lockUserId;
 
+	@WSDoc(required = false, description = "the date when the document was created; format must be 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd'")
 	private String creation;
 
 	private String fileName;
 
+	@WSDoc(required = false, description = "0 = to index, 1 = indexed, 2 = skip indexing")
 	private int indexed = INDEX_TO_INDEX;
 
+	@WSDoc(required = false)
 	private int signed = 0;
 
+	@WSDoc(required = false, description = "1 if the document contains at least one stamp")
 	private int stamped = 0;
 
+	@WSDoc(required = false, description = "tags to be applied to document")
 	private String[] tags = new String[0];
 
+	@WSDoc(description = "parent folder")
 	private Long folderId;
 
+	@WSDoc(required = false, description = "id of the template assigned to the document")
 	private Long templateId;
 
+	@WSDoc(required = false, description = "unique custom identifier")
 	private String customId;
 
+	@WSDoc(required = false, description = "0 = not immutable, 1 = immutable")
 	private int immutable = 0;
 
+	@WSDoc(required = false)
 	private String digest;
 
+	@WSDoc(required = false)
 	private String exportName;
 
+	@WSDoc(required = false)
 	private Long exportId = null;
 
+	@WSDoc(required = false, description = "used for aliases, refers to another document")
 	private Long docRef;
 
+	@WSDoc(required = false, description = "if used, defines the reference type (use pdf for the PDF Conversion)")
 	private String docRefType;
 
+	@WSDoc(required = false, description = "user that has deleted the document")
 	private Long deleteUserId;
 
+	@WSDoc(required = false, description = "array of attributes")
 	private WSAttribute[] attributes = new WSAttribute[0];
 
+	@WSDoc(required = false, description = "language of the document. See specification at http://wiki.logicaldoc.com/wiki/LanguageSpecification")
 	private String language;
 
-	// Contains the snippet search text
+	@WSDoc(required = false, description = "contains the snippet search text")
 	private String summary;
 
+	@WSDoc(required = false, description = "full text search score")
 	private Integer score;
 
+	@WSDoc(required = false)
 	private String icon;
 
+	@WSDoc(required = false)
 	private String path;
 
+	@WSDoc(required = false)
 	private String comment;
 
+	@WSDoc(required = false)
 	private String lastModified;
 
+	@WSDoc(required = false)
 	private Integer rating;
 
+	@WSDoc(required = false, description = "Current workflow's status where the document is in")
 	private String workflowStatus;
 
+	@WSDoc(required = false, description = "If it is not set to 1, the document is marked as not published")
 	private int published = 1;
 
+	@WSDoc(required = false)
 	private String startPublishing;
 
+	@WSDoc(required = false)
 	private String stopPublishing;
 
+	@WSDoc(required = false, description = "number of pages (default -1)")
 	private int pages = -1;
 
+	@WSDoc(required = false, description = "0 = document, 1 = form")
 	private int nature = AbstractDocument.NATURE_DOC;
 
+	@WSDoc(required = false, description = "the last modified date; format must be 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd'")
 	private Long formId = null;
 
 	public Collection<String> listAttributeNames() {
