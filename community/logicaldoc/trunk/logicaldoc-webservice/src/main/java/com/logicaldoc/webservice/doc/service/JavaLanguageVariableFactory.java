@@ -51,12 +51,7 @@ public class JavaLanguageVariableFactory {
 	}
 
 	private static String getVariableName(Field field, WSDoc annotation) {
-		// String variableName = annotation.name();
-		// if ("##default".equals(variableName)) {
-		// variableName = getElementName(field);
-		// }
-		// return variableName;
-		if (annotation.documented())
+		if (!annotation.documented())
 			return "sskip";
 		else
 			return getElementName(field);

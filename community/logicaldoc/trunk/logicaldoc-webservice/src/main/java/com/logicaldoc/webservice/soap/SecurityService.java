@@ -1,9 +1,11 @@
 package com.logicaldoc.webservice.soap;
 
+import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
+import com.logicaldoc.webservice.doc.WSDoc;
 import com.logicaldoc.webservice.model.WSGroup;
 import com.logicaldoc.webservice.model.WSUser;
 
@@ -13,8 +15,10 @@ import com.logicaldoc.webservice.model.WSUser;
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
+@WSDoc(description = "users and groups handling")
 @WebService(name = "Security", serviceName = "Security", targetNamespace = "http://ws.logicaldoc.com")
 public interface SecurityService {
+
 	/**
 	 * Gets metadata of all existing users.
 	 * 
@@ -22,7 +26,9 @@ public interface SecurityService {
 	 * @return A value object containing the users metadata.
 	 * @throws Exception
 	 */
-	@WebResult(name = "users")
+	@WebMethod
+	@WebResult(name = "user")
+	@WSDoc(description = "gets all existing users")
 	public WSUser[] listUsers(@WebParam(name = "sid") String sid) throws Exception;
 
 	/**
@@ -32,11 +38,13 @@ public interface SecurityService {
 	 * @return A value object containing the groups metadata.
 	 * @throws Exception
 	 */
-	@WebResult(name = "groups")
+	@WebMethod
+	@WebResult(name = "group")
+	@WSDoc(description = "gets all existing groups")
 	public WSGroup[] listGroups(@WebParam(name = "sid") String sid) throws Exception;
 
 	/**
-	 * Create/Update a user. You can completely customize the user through a
+	 * Creates/Updates a user. You can completely customize the user through a
 	 * value object containing the user's metadata. The current user must be an
 	 * administrator.
 	 * 
@@ -46,10 +54,14 @@ public interface SecurityService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "userId")
+	@WebMethod
+	@WSDoc(description = "creates/updates a user; you can completely customize the user through a value object containing the user's metadata;"
+			+ "<br/>the current user must be an administrator;"
+			+ "<br/>returns the identifier of the created/updated user")
 	public long storeUser(@WebParam(name = "sid") String sid, @WebParam(name = "user") WSUser user) throws Exception;
 
 	/**
-	 * Create/Update a group. You can completely customize the group through a
+	 * Creates/Updates a group. You can completely customize the group through a
 	 * value object containing the group's metadata.
 	 * 
 	 * @param sid Session identifier. Must be an administrator.
@@ -58,6 +70,10 @@ public interface SecurityService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "groupId")
+	@WebMethod
+	@WSDoc(description = "creates/updates a group; you can completely customize the group through a value object containing the group's metadata;"
+			+ "<br/>the current user must be an administrator;"
+			+ "<br/>returns the identifier of the created/updated user")
 	public long storeGroup(@WebParam(name = "sid") String sid, @WebParam(name = "group") WSGroup group)
 			throws Exception;
 
@@ -68,6 +84,8 @@ public interface SecurityService {
 	 * @param userId The user id
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "deletes an existing user")
 	public void deleteUser(@WebParam(name = "sid") String sid, @WebParam(name = "userId") long userId) throws Exception;
 
 	/**
@@ -77,6 +95,8 @@ public interface SecurityService {
 	 * @param groupId The group id
 	 * @throws Exception
 	 */
+	@WebMethod
+	@WSDoc(description = "deletes an existing group")
 	public void deleteGroup(@WebParam(name = "sid") String sid, @WebParam(name = "groupId") long groupId)
 			throws Exception;
 
@@ -91,6 +111,10 @@ public interface SecurityService {
 	 *         than 2
 	 */
 	@WebResult(name = "changeResult")
+	@WebMethod
+	@WSDoc(description = "changes the password of a user.<br/>"
+			+ "<b>0</b> if all is ok, <b>1</b> if the password is incorrect, <b>2</b> if the new "
+			+ "password cannot be notified, otherwise a positive number grater than <b>2</b>")
 	public int changePassword(@WebParam(name = "sid") String sid, @WebParam(name = "userId") long userId,
 			@WebParam(name = "oldPassword") String oldPassword, @WebParam(name = "newPassword") String newPassword)
 			throws Exception;
@@ -104,6 +128,8 @@ public interface SecurityService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "user")
+	@WebMethod
+	@WSDoc(description = "gets an existing user")
 	public WSUser getUser(@WebParam(name = "sid") String sid, @WebParam(name = "userId") long userId) throws Exception;
 
 	/**
@@ -115,8 +141,11 @@ public interface SecurityService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "user")
-	public WSUser getUserByUsername(@WebParam(name = "sid") String sid, @WebParam(name = "username") String username) throws Exception;
-	
+	@WebMethod
+	@WSDoc(description = "finds a user by his username")
+	public WSUser getUserByUsername(@WebParam(name = "sid") String sid, @WebParam(name = "username") String username)
+			throws Exception;
+
 	/**
 	 * Gets group metadata of an existing group with the given identifier.
 	 * 
@@ -126,6 +155,8 @@ public interface SecurityService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "group")
+	@WebMethod
+	@WSDoc(description = "gets an existing group")
 	public WSGroup getGroup(@WebParam(name = "sid") String sid, @WebParam(name = "groupId") long groupId)
 			throws Exception;
 }

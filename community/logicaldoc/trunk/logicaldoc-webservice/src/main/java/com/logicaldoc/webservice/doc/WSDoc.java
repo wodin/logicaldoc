@@ -15,7 +15,7 @@ public @interface WSDoc {
 
 	boolean required() default true;
 
-	boolean documented() default false;
+	boolean documented() default true;
 
 	String description() default "";
 }

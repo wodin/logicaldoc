@@ -4,11 +4,14 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.bind.annotation.XmlType;
+
 import com.logicaldoc.core.security.Group;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.crypt.CryptUtil;
+import com.logicaldoc.webservice.doc.WSDoc;
 
 /**
  * Web Service User. Useful class to create repository Users.
@@ -16,19 +19,27 @@ import com.logicaldoc.util.crypt.CryptUtil;
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
+@XmlType(name = "WSUser")
 public class WSUser {
+	@WSDoc(documented = false)
 	public static int TYPE_DEFAULT = 0;
 
+	@WSDoc(documented = false)
 	public static int TYPE_SYSTEM = 1;
 
+	@WSDoc(documented = false)
 	public static int SOURCE_DEFAULT = 0;
 
+	@WSDoc(documented = false)
 	public static int SOURCE_LDAP = 1;
 
+	@WSDoc(documented = false)
 	public static int SOURCE_ACTIVE_DIRECTORY = 2;
 
+	@WSDoc(documented = false)
 	public static final long USERID_ADMIN = 1;
 
+	@WSDoc(description = "unique identifier")
 	private long id;
 
 	private String username = "";
@@ -37,48 +48,67 @@ public class WSUser {
 
 	private String passwordmd4 = "";
 
+	@WSDoc(required = false)
 	private String name = "";
 
+	@WSDoc(required = false)
 	private String firstName = "";
 
+	@WSDoc(required = false)
 	private String street = "";
 
+	@WSDoc(required = false)
 	private String postalcode = "";
 
+	@WSDoc(required = false)
 	private String city = "";
 
+	@WSDoc(required = false)
 	private String country = "";
 
+	@WSDoc(required = false)
 	private String state = "";
 
+	@WSDoc(description="default language; <a href='/wiki/LanguageSpecification'>See specification</a>")
 	private String language = "";
 
+	@WSDoc(description="address used for notifications, must be a valid e-mail")
 	private String email = "";
 
+	@WSDoc(description="a simple text to be used as a signature in the footer of the outgoing emails",required = false)
 	private String emailSignature;
 
+	@WSDoc(required = false)
 	private String telephone = "";
 
+	@WSDoc(required = false)
 	private String telephone2 = "";
 
+	@WSDoc(description="must be <b>0</b>")
 	private int type = TYPE_DEFAULT;
 
+	@WSDoc(description="ids of the groups this user belongs to")
 	private long[] groupIds = new long[0];
 
+	@WSDoc(description="if <b>1</b> the user is enabled, if <b>0</b> the user is disabled")
 	private int enabled = 1;
 
-	// The last time the password was changed
+	@WSDoc(description="last time the password was changed (format must be 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd')", required=false)
 	private String passwordChanged = "";
 
-	// If the password expires or not
+	@WSDoc(description="if <b>1</b> the password is eligible for expiration, if <b>0</b> the password never expires")
 	private int passwordExpires = 0;
 
+	@WSDoc(description="must be <b>0</b>")
 	private int source = 0;
 
+	@WSDoc(description="maximum allowed user's quota expressed in bytes, <b>-1</b> for no limits")
 	private long quota = -1;
 
+	@WSDoc(description=" actual quota used by the user ")
 	private long quotaCount = 0;
 
+	@WSDoc(required = false)
 	private String lastModified;
 
 	public long getId() {

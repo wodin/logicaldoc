@@ -150,6 +150,7 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	@WebMethod
+	//@TODO correct this to "document"
 	@WebResult(name = "documents")
 	@WSDoc(description = "gets document metadata of a collection of existing documents with the given identifiers; returns an array of WSDocument")
 	public WSDocument[] getDocuments(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") Long[] docIds)
@@ -318,7 +319,7 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	@WebMethod
-    @WSDoc(description = "uploads a new resource attached to the given document. If the resource already exists it is overwritten")
+	@WSDoc(description = "uploads a new resource attached to the given document. If the resource already exists it is overwritten")
 	public void uploadResource(
 			@WebParam(name = "sid") String sid,
 			@WebParam(name = "docId") long docId,
@@ -350,8 +351,11 @@ public interface DocumentService {
 	 */
 	@WebMethod
 	@WSDoc(description = "restores a deleted document")
-	public void restore(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WSDoc(description = "id of the folder in which the document must be restored") @WebParam(name = "folderId") long folderId) throws Exception;
+	public void restore(
+			@WebParam(name = "sid") String sid,
+			@WebParam(name = "docId") long docId,
+			@WSDoc(description = "id of the folder in which the document must be restored") @WebParam(name = "folderId") long folderId)
+			throws Exception;
 
 	/**
 	 * Gets the version history of an existing document with the given
@@ -364,21 +368,8 @@ public interface DocumentService {
 	 */
 	@WebMethod
 	@WebResult(name = "document")
+	@WSDoc(description = "gets the versions' history of a document; returns an array of versions")
 	public WSDocument[] getVersions(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId)
-			throws Exception;
-
-	/**
-	 * Lists the documents inside a folder
-	 * 
-	 * @param sid Session identifier
-	 * @param folderId The document id
-	 * @return Array of documents contained in the folder
-	 * 
-	 * @throws Exception
-	 */
-	@WebResult(name = "document")
-	@Deprecated
-	public WSDocument[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
 			throws Exception;
 
 	/**
@@ -391,11 +382,13 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "document")
+	@WSDoc(description = "gets the documents in a specific folder")
 	public WSDocument[] listDocuments(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId,
-			@WebParam(name = "fileName") String fileName) throws Exception;
+			@WSDoc(description = "file name filter", required = false) @WebParam(name = "fileName") String fileName)
+			throws Exception;
 
 	/**
-	 * Lists of last modified documents of the current session's user.
+	 * Lists of last modified documents of the current session.
 	 * 
 	 * @param sid Session identifier
 	 * @param maxHits Maximum number of returned records
@@ -405,8 +398,11 @@ public interface DocumentService {
 	 */
 	@WebMethod
 	@WebResult(name = "document")
-	public WSDocument[] getRecentDocuments(@WebParam(name = "sid") String sid,
-			@WebParam(name = "maxHits") Integer maxHits) throws Exception;
+	@WSDoc(description = "lists of last modified documents in the current session")
+	public WSDocument[] getRecentDocuments(
+			@WebParam(name = "sid") String sid,
+			@WSDoc(description = "max number of returned records", required = false) @WebParam(name = "maxHits") Integer maxHits)
+			throws Exception;
 
 	/**
 	 * Sends a set of documents as mail attachments
@@ -418,12 +414,16 @@ public interface DocumentService {
 	 * @param message The email message body
 	 */
 	@WebMethod
-	public void sendEmail(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") Long[] docIds,
-			@WebParam(name = "recipients") String recipients, String subject, String message) throws Exception;
+	@WSDoc(description = "sends a set of documents as mail attachments")
+	public void sendEmail(
+			@WebParam(name = "sid") String sid,
+			@WebParam(name = "docIds") Long[] docIds,
+			@WSDoc(description = "comma separated list of email addresses") @WebParam(name = "recipients") String recipients,
+			@WebParam(name = "subject") String subject, @WebParam(name = "message") String message) throws Exception;
 
 	/**
-	 * Create a new document alias for the given document id and inside the
-	 * given folder id.
+	 * Creates a new document alias for the given document inside a specified
+	 * folder.
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The original document id
@@ -435,8 +435,13 @@ public interface DocumentService {
 	 */
 	@WebMethod
 	@WebResult(name = "document")
-	public WSDocument createAlias(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WebParam(name = "folderId") long folderId, @WebParam(name = "type") String type) throws Exception;
+	@WSDoc(description = "creates a new document alias for the given document inside a specified folder")
+	public WSDocument createAlias(
+			@WebParam(name = "sid") String sid,
+			@WSDoc(description = "the original document's id") @WebParam(name = "docId") long docId,
+			@WebParam(name = "folderId") long folderId,
+			@WSDoc(description = "type of the alias (use 'pdf' to create an alias to the PDF conversion)", required = false) @WebParam(name = "type") String type)
+			throws Exception;
 
 	/**
 	 * Creates a new link between two documents.
@@ -451,8 +456,13 @@ public interface DocumentService {
 	 */
 	@WebMethod
 	@WebResult(name = "link")
-	public WSLink link(@WebParam(name = "sid") String sid, @WebParam(name = "doc1") long doc1,
-			@WebParam(name = "doc2") long doc2, @WebParam(name = "type") String type) throws Exception;
+	@WSDoc(description = "creates a new link between two documents")
+	public WSLink link(
+			@WebParam(name = "sid") String sid,
+			@WSDoc(description = "ID of document 1") @WebParam(name = "doc1") long doc1,
+			@WSDoc(description = "ID of document 2") @WebParam(name = "doc2") long doc2,
+			@WSDoc(description = "type of the link (use 'pdf' to point to the pdf conversion)", required = false) @WebParam(name = "type") String type)
+			throws Exception;
 
 	/**
 	 * Gets all the links of a specific document
@@ -465,10 +475,11 @@ public interface DocumentService {
 	 */
 	@WebMethod
 	@WebResult(name = "link")
+	@WSDoc(description = "gets all the links of a specific document; returns an array of links")
 	public WSLink[] getLinks(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId) throws Exception;
 
 	/**
-	 * Remove an existing link
+	 * Removes an existing link
 	 * 
 	 * @param sid Session identifier
 	 * @param id ID of the link
@@ -476,10 +487,12 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	@WebMethod
-	public void deleteLink(@WebParam(name = "sid") String sid, @WebParam(name = "id") long id) throws Exception;
+	@WSDoc(description = "removes an existing link")
+	public void deleteLink(@WebParam(name = "sid") String sid,
+			@WSDoc(description = "identifier of the link") @WebParam(name = "id") long id) throws Exception;
 
 	/**
-	 * Reindexes(or indexes) a document
+	 * Re-indexes(or indexes from scratch) a document
 	 * 
 	 * @param sid Session identifier
 	 * @param docId The document id
@@ -488,8 +501,12 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	@WebMethod
-	public void reindex(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WebParam(name = "content") String content) throws Exception;
+	@WSDoc(description = "re-indexes(or indexes from scratch) a document")
+	public void reindex(
+			@WebParam(name = "sid") String sid,
+			@WebParam(name = "docId") long docId,
+			@WSDoc(description = "the content to be used (if null the file is parsed)", required = false) @WebParam(name = "content") String content)
+			throws Exception;
 
 	/**
 	 * Creates the PDF conversion of the given document. If the conversion was
@@ -501,6 +518,10 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	@WebMethod
-	public void createPdf(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
-			@WebParam(name = "fileVersion") String fileVersion) throws Exception;
+	@WSDoc(description = "creates the PDF conversion of the given document; if the conversion was already created, nothing will happen")
+	public void createPdf(
+			@WebParam(name = "sid") String sid,
+			@WebParam(name = "docId") long docId,
+			@WSDoc(description = "the specific file version", required = false) @WebParam(name = "fileVersion") String fileVersion)
+			throws Exception;
 }

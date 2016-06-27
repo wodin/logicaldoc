@@ -18,25 +18,25 @@ import com.logicaldoc.webservice.doc.WSDoc;
 @XmlType(name = "WSAttribute")
 public class WSAttribute implements Serializable {
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	private static final long serialVersionUID = 1L;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int TYPE_STRING = 0;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int TYPE_INT = 1;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int TYPE_DOUBLE = 2;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int TYPE_DATE = 3;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int TYPE_USER = 4;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int TYPE_BOOLEAN = 5;
 
 	@WSDoc(required = true, description="name of the attribute")
@@ -54,7 +54,7 @@ public class WSAttribute implements Serializable {
 	@WSDoc(required = false)
 	private String dateValue;
 
-	@WSDoc(required = true, description = "0 = String, 1 = int, 2 = double, 3 = date, 4 = user (intValue represents the user's id), 5 = boolean (intValue must be 0 or 1)")
+	@WSDoc(required = true, description = "<b>0</b> = String, <b>1</b> = int, <b>2</b> = double, <b>3</b> = date, <b>4</b> = user (intValue represents the user's id), <b>5</b> = boolean (intValue must be <b>0</b> or <b>1</b>)")
 	private int type = TYPE_STRING;
 
 	@WSDoc(required = true)
@@ -66,7 +66,7 @@ public class WSAttribute implements Serializable {
 	@WSDoc(required = false)
 	private String label;
 
-	@WSDoc(required = true, description="0 = free, 1 = preset")
+	@WSDoc(required = true, description="<b>0</b> = free, <b>1</b> = preset")
 	private int editor = 0;
 
 	@WSDoc(required = false, description="Id of the attribute set")

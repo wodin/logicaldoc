@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.webservice.doc.WSDoc;
 
 /**
  * Web Service Folder. Useful class to create repository Folders.
@@ -24,38 +26,52 @@ import com.logicaldoc.util.Context;
  * @since 5.2
  */
 @XmlRootElement(name = "folder")
+@XmlType(name = "WSAttribute")
 public class WSFolder implements Serializable {
 
+	@WSDoc(documented = false)
 	private static final long serialVersionUID = 1L;
 
+	@WSDoc(documented = false)
 	protected static Logger log = LoggerFactory.getLogger(WSFolder.class);
 
+	@WSDoc(description = "unique identifier of the folder")
 	private long id = 0;
 
 	private String name = "";
 
+	@WSDoc(description = "identifier of the parent folder")
 	private long parentId = 0;
 
 	private String description = "";
 
+	@WSDoc(description = "the last modified date (format must be 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd')", required = false)
 	private String lastModified;
 
+	@WSDoc(description = "<b>0</b> = Folder, <b>1</b> = Workspace")
 	private int type = Folder.TYPE_DEFAULT;
 
+	@WSDoc(description = "template assigned to folder", required = false)
 	private Long templateId;
 
+	@WSDoc(description = "<b>0</b> = the template is unlocked, <b>1</b> = the template is locked ")
 	private int templateLocked = 0;
 
+	@WSDoc(description = "the creation date (format must be 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd')", required = false)
 	private String creation;
 
+	@WSDoc(description = "who created the folder", required = false)
 	private String creator;
 
 	private int position = 1;
 
+	@WSDoc(description = "<b>0</b> = visible, <b>1</b> = hidden")
 	private int hidden = 0;
 
+	@WSDoc(description = "the referenced folder, used in case of folder alias")
 	private Long foldRef = null;
 
+	@WSDoc(description = "array of attributes", required = false)
 	private WSAttribute[] attributes = new WSAttribute[0];
 
 	public void addAttribute(WSAttribute att) {
