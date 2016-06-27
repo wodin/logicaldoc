@@ -29,7 +29,8 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.Authorization;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
  
 @Path("/")
@@ -46,12 +47,17 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Path("/create")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@ApiOperation(value = "Creates a new document", 
-	notes = "Creates a new document using the metadata 'document' provided as JSON/XML")
+	notes = "Creates a new document using the metadata 'document' provided as JSON/XML",
+	response = WSDocument.class)
 	@ApiImplicitParams({
-	    @ApiImplicitParam(name = "document", value = "The document metadata provided as WSDocument object encoded in JSON/XML format", required = true, dataType = "com.logicaldoc.webservice.model.WSDocument", paramType = "body"),
+	    @ApiImplicitParam(name = "document", value = "The document metadata provided as WSDocument object encoded in JSON/XML format", required = true, dataType = "com.logicaldoc.webservice.model.WSDocument", paramType = "form"),
 	    @ApiImplicitParam(name = "content", value = "File data", required = true, dataType = "file", paramType = "form")
 	  })		
-	public WSDocument create(List<Attachment> atts) throws Exception {
+	@ApiResponses(value = { 
+			@ApiResponse(code = 401, message = "Authentication failed"),
+			@ApiResponse(code = 500, message = "Generic error, see the response message")
+			})		
+	public Response create(List<Attachment> atts) throws Exception {
 		log.debug("create()");
 
 		String sid = validateSession();
@@ -70,16 +76,16 @@ public class RestDocumentService extends SoapDocumentService implements Document
 		log.debug("document: {}", document);
 		log.debug("content: {}", content);
 
-		return super.create(sid, document, content);
+		try {
+			//return super.create(sid, document, content);
+			 WSDocument cdoc = super.create(sid, document, content);
+			 return Response.ok().entity(cdoc).build();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+			return Response.status(500).entity(e.getMessage()).build();
+		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.DocumentService#getDocument(java.lang.String,
-	 * long)
-	 */
 	@Override
 	@GET
 	@Path("/getDocument")
@@ -89,13 +95,6 @@ public class RestDocumentService extends SoapDocumentService implements Document
 		return super.getDocument(sid, docId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.DocumentService#checkout(java.lang.String,
-	 * long)
-	 */
 	@Override
 	@POST
 	@Path("/checkout")
@@ -105,11 +104,6 @@ public class RestDocumentService extends SoapDocumentService implements Document
 		super.checkout(sid, docId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.logicaldoc.webservice.rest.DocumentService#checkin(java.util.List)
-	 */
 	@Override
 	@POST
 	@Path("/checkin")
@@ -118,12 +112,16 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@ApiOperation(value = "Check-in an existing document", 
 	notes = "Performs a check-in (commit) operation of new content over an existing document. The document must be in checked-out status")
 	@ApiImplicitParams({
-	    @ApiImplicitParam(name = "docId", value = "The id of an existing document to update", required = true, dataType = "integer", paramType = "form"),
+	    @ApiImplicitParam(name = "docId", value = "The ID of an existing document to update", required = true, dataType = "integer", paramType = "form"),
 	    @ApiImplicitParam(name = "comment", value = "An optional comment", required = false, dataType = "string", paramType = "form"),
 	    @ApiImplicitParam(name = "release", value = "Indicates whether to create or not a new major release of the updated document", required = false, dataType = "string", paramType = "form", allowableValues = "true, false"),
 	    @ApiImplicitParam(name = "filename", value = "File name", required = true, dataType = "string", paramType = "form"),
 	    @ApiImplicitParam(name = "filedata", value = "File data", required = true, dataType = "file", paramType = "form")
-	  })		
+	  })
+	@ApiResponses(value = { 
+			@ApiResponse(code = 401, message = "Authentication failed"),
+			@ApiResponse(code = 500, message = "Generic error, see the response message")
+			})	
 	public Response checkin(List<Attachment> attachments) throws Exception {
 		String sid = validateSession();
 		try {
@@ -152,7 +150,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 			return Response.ok("file checked-in").build();
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
-			return Response.serverError().build();
+			return Response.status(500).entity(t.getMessage()).build();			
 		}
 	}
 
@@ -163,15 +161,19 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@ApiOperation(value = "Uploads a document", 
-	notes = "Creates or updates an existing document, if used in update mode docId must be provided, when used in create mode folderId is required")
+	notes = "Creates or updates an existing document, if used in update mode docId must be provided, when used in create mode folderId is required. Returns the ID of the created/updated document")
 	@ApiImplicitParams({
-	    @ApiImplicitParam(name = "docId", value = "The id of an existing document to update", required = false, dataType = "integer", paramType = "form"),
-	    @ApiImplicitParam(name = "folderId", value = "Folder id where to place the document", required = false, dataType = "string", paramType = "form"),
+	    @ApiImplicitParam(name = "docId", value = "The ID of an existing document to update", required = false, dataType = "integer", paramType = "form"),
+	    @ApiImplicitParam(name = "folderId", value = "Folder ID where to place the document", required = false, dataType = "string", paramType = "form"),
 	    @ApiImplicitParam(name = "release", value = "Indicates whether to create or not a new major release of an updated document", required = false, dataType = "string", paramType = "form", allowableValues = "true, false"),
 	    @ApiImplicitParam(name = "filename", value = "File name", required = true, dataType = "string", paramType = "form"),
 	    @ApiImplicitParam(name = "language", value = "Language of the document (ISO 639-2)", required = false, dataType = "string", paramType = "form", defaultValue = "en"),
 	    @ApiImplicitParam(name = "filedata", value = "File data", required = true, dataType = "file", paramType = "form")
-	  })	
+	  })
+	@ApiResponses(value = { 
+			@ApiResponse(code = 401, message = "Authentication failed"),
+			@ApiResponse(code = 500, message = "Generic error, see the response message")
+			})			
 	public Response upload(List<Attachment> attachments) throws Exception {
 		String sid = validateSession();
 		try {
@@ -206,51 +208,39 @@ public class RestDocumentService extends SoapDocumentService implements Document
 			return Response.ok("" + documentId).build();
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
-			return Response.serverError().build();
+			return Response.status(500).entity(t.getMessage()).build();			
 		}
 	}
 	
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.logicaldoc.webservice.rest.DocumentService#delete(java.lang.String,
-	 * long)
-	 */
 	@Override
 	@DELETE
 	@Path("/delete")	
     @ApiOperation(value = "Deletes a document")	
-	public void delete(@ApiParam(value = "Document id to delete", required = true) @QueryParam("docId") long docId) throws Exception {
+	public void delete(@ApiParam(value = "Document ID to delete", required = true) @QueryParam("docId") long docId) throws Exception {
 		String sid = validateSession();
 		super.delete(sid, docId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.logicaldoc.webservice.rest.DocumentService#list(java.lang.String,
-	 * long)
-	 */
 	@Override
 	@GET
 	@Path("/list")
 	@Produces({ MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "Lists Documents by folder ID", 
+	    notes = "Lists Documents by folder ID",
+	    response = WSDocument.class, 
+	    responseContainer = "List")	
 	public WSDocument[] list(@QueryParam("folderId") long folderId) throws Exception {
 		String sid = validateSession();
 		return super.listDocuments(sid, folderId, null);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.DocumentService#listDocuments(java.lang.String
-	 * , long, java.lang.String)
-	 */
 	@Override
 	@GET
 	@Path("/listDocuments")
+	@ApiOperation(value = "Lists Documents by folder ID and fileName", 
+    notes = "Lists Documents by folder ID filtering the results by filename",
+    response = WSDocument.class, 
+    responseContainer = "List")		
 	public WSDocument[] listDocuments(@QueryParam("folderId") long folderId, @QueryParam("fileName") String fileName)
 			throws Exception {
 		String sid = validateSession();
@@ -260,6 +250,8 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@GET
 	@Path("/getContent")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@ApiOperation(value = "Gets the document content", 
+    notes = "Returns the content of a document using the document ID in input")	
 	public DataHandler getContent(@QueryParam("docId") long docId) throws Exception {
 		String sid = validateSession();
 		return super.getContent(sid, docId);
@@ -268,7 +260,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Override
 	@PUT
 	@Path("/update")
-    @ApiOperation(value = "Update an existing document")	
+    @ApiOperation(value = "Updates an existing document")	
 	public void update(@ApiParam(value = "Document object that needs to be updated", required = true) WSDocument document) throws Exception {
 		String sid = validateSession();
 		super.update(sid, document);

@@ -27,7 +27,7 @@ public interface DocumentService {
 	@Path("/create")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	// The "document" comes in the POST request body (encoded as JSON).
-	WSDocument create(List<Attachment> atts) throws Exception;
+	Response create(List<Attachment> atts) throws Exception;
 
 	@GET
 	@Path("/getDocument")

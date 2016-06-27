@@ -130,7 +130,6 @@
         </jaxrs:providers>
     </jaxrs:server>
     
-    <!-- 
     <jaxrs:server id="restFolder" address="/rest/folder">
         <jaxrs:serviceBeans>
             <bean class="com.logicaldoc.webservice.rest.endpoint.RestFolderService" />
@@ -148,6 +147,6 @@
        		<ref bean="jsonProvider"/>
     	</jaxrs:providers>
     </jaxrs:server>  
-    -->
+
 
 </beans>
