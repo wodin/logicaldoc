@@ -37,8 +37,8 @@ public class Stub {
 	 */
 	private Class<?> subTypeOfParentStub;
 
-	private String description;
-	
+	private String description = "";
+
 	public String getStubName() {
 		return stubName;
 	}
@@ -90,7 +90,8 @@ public class Stub {
 
 	@Override
 	public String toString() {
-		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(stubName).append(type).append(required).append(childStubs).toString();
+		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE).append(stubName).append(type).append(required)
+				.append(childStubs).toString();
 	}
 
 	public String getDescription() {

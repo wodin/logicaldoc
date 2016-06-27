@@ -1,8 +1,13 @@
 package com.logicaldoc.webservice.model;
 
+import javax.xml.bind.annotation.XmlType;
 
+import com.logicaldoc.webservice.doc.WSDoc;
+
+@XmlType(name = "WSSystemInfo")
 public class WSSystemInfo {
 
+	@WSDoc(documented=false)
 	protected static final long serialVersionUID = 1L;
 
 	protected String productName = "LogicalDOC Community";
@@ -59,7 +64,7 @@ public class WSSystemInfo {
 
 	public void setProduct(String product) {
 		this.product = product;
-	}
+	} 
 
 	public String getRelease() {
 		return release;

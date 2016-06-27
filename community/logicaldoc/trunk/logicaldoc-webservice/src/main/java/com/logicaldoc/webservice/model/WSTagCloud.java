@@ -1,5 +1,7 @@
 package com.logicaldoc.webservice.model;
 
+import javax.xml.bind.annotation.XmlType;
+
 import com.logicaldoc.core.document.TagCloud;
 
 /**
@@ -8,6 +10,7 @@ import com.logicaldoc.core.document.TagCloud;
  * @author Marco Meschieri - Logical Objects
  * @since 6.7
  */
+@XmlType(name = "WSTagCloud")
 public class WSTagCloud {
 
 	private String tag;

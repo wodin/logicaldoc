@@ -2,22 +2,32 @@ package com.logicaldoc.webservice.model;
 
 import java.io.Serializable;
 
+import javax.xml.bind.annotation.XmlType;
+
+import com.logicaldoc.webservice.doc.WSDoc;
+
 /**
  * Web Service Document Link.
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 7.1.1
  */
+@XmlType(name = "WSLink")
 public class WSLink implements Serializable {
 
+	@WSDoc(documented = false)
 	private static final long serialVersionUID = 1L;
 
+	@WSDoc(description = "unique identifier")
 	private long id;
 
+	@WSDoc(description = "just a string indicating the meaning of the link", required = false)
 	private String type;
 
+	@WSDoc(description = "itentifier of document 1")
 	private long doc1;
 
+	@WSDoc(description = "itentifier of document 2")
 	private long doc2;
 
 	public WSLink() {

@@ -3,6 +3,7 @@ package com.logicaldoc.webservice.model;
 import java.util.Locale;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.SearchOptions;
@@ -14,6 +15,7 @@ import com.logicaldoc.core.searchengine.SearchOptions;
  * @since 6.7
  */
 @XmlRootElement(name = "searchoptions")
+@XmlType(name = "WSSearchOptions")
 public class WSSearchOptions implements Comparable<WSSearchOptions> {
 
 	protected int maxHits = 40;

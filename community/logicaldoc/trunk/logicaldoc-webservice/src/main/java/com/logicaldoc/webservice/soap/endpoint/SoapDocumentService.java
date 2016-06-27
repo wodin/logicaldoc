@@ -539,11 +539,6 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 	}
 
 	@Override
-	public WSDocument[] list(String sid, long folderId) throws Exception {
-		return listDocuments(sid, folderId, null);
-	}
-
-	@Override
 	public WSDocument[] getDocuments(String sid, Long[] docIds) throws Exception {
 		User user = validateSession(sid);
 		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);

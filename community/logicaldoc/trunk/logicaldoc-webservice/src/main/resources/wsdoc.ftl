@@ -26,7 +26,11 @@
 		</head>	
 		<body>
 			<h1>Webservice: ${className(service.webServiceClass.name)}</h1>
-			<h2>${classDescription(service.webServiceClass.name)}</h2>
+			<h2>
+				<#noescape>
+					${classDescription(service.webServiceClass.name)}
+				</#noescape>
+			</h2>
 			
 			<table cellspacing="1" cellpadding="1" border="0">
 				<tbody>
@@ -62,7 +66,11 @@
 								</#if>
 							</td>
 							<td class="no_color"/>
-							<td align="left" class="color">${method.description}</td>								
+							<td align="left" class="color">
+								<#noescape>
+									${method.description}
+								</#noescape>
+							</td>								
 						</tr>
 					</#list>
 				</tbody>
@@ -126,7 +134,11 @@
 												<td class="no_color"/>		
 												<td align="left" class="color">${stub.multiOccurs?string("Y","")}</td>
 												<td class="no_color"/>		
-												<td align="left" class="color">${stub.description}</td>																									
+												<td align="left" class="color">
+													<#noescape>
+													    ${stub.description}
+													</#noescape>
+												</td>																									
 											</tr>								 
 											<#list stub.childStubs as childStub>									
 												<@stubRow stub=childStub indence=indence+1 inheritanceInvolved=inheritanceInvolved/>

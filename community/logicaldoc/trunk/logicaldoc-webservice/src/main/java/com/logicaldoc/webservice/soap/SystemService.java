@@ -1,9 +1,11 @@
 package com.logicaldoc.webservice.soap;
 
+import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebResult;
 import javax.jws.WebService;
 
+import com.logicaldoc.webservice.doc.WSDoc;
 import com.logicaldoc.webservice.model.WSParameter;
 import com.logicaldoc.webservice.model.WSSystemInfo;
 
@@ -13,6 +15,7 @@ import com.logicaldoc.webservice.model.WSSystemInfo;
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
+@WSDoc(description = "informations about the system")
 @WebService(name = "System", serviceName = "System", targetNamespace = "http://ws.logicaldoc.com")
 public interface SystemService {
 
@@ -23,6 +26,8 @@ public interface SystemService {
 	 * @throws Exception
 	 */
 	@WebResult(name = "info")
+	@WebMethod
+	@WSDoc(description = "retrieves the Installation informations")
 	public WSSystemInfo getInfo() throws Exception;
 
 	/**
@@ -32,7 +37,9 @@ public interface SystemService {
 	 * @return The value object containing the statistics values.
 	 * @throws Exception
 	 */
-	@WebResult(name = "parameters")
+	@WebResult(name = "parameter")
+	@WebMethod
+	@WSDoc(description = "gets a set of statisticts of the system")
 	public WSParameter[] getStatistics(@WebParam(name = "sid") String sid) throws Exception;
 
 	/**
@@ -43,6 +50,9 @@ public interface SystemService {
 	 * 
 	 * @throws Exception
 	 */
-	@WebResult(name = "languages")
-	public String[] getLanguages(@WebParam(name = "tenantOrSid") String tenantOrSid) throws Exception;
+	@WebResult(name = "language")
+	@WSDoc(description = "retrieves the languages enabled in the server")
+	public String[] getLanguages(
+			@WSDoc(description = "a session's identifier or a tenant's name") @WebParam(name = "tenantOrSid") String tenantOrSid)
+			throws Exception;
 }

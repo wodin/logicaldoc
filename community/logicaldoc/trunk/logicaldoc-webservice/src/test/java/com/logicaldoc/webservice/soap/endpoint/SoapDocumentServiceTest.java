@@ -278,10 +278,6 @@ public class SoapDocumentServiceTest extends AbstractWebServiceTestCase {
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(1, docs.length);
 		Assert.assertEquals("pippo", docs[0].getFileName());
-
-		docs = docServiceImpl.list("", 99);
-		Assert.assertNotNull(docs);
-		Assert.assertEquals(0, docs.length);
 	}
 
 	@Test

@@ -20,7 +20,7 @@ import com.logicaldoc.webservice.soap.DocumentService;
  * @author Marco Meschieri - LogicalDOC
  * @since 7.5
  */
-@WebService(name="Document", serviceName="Document")
+@WebService(name = "Document", serviceName = "Document")
 public class SoapDocumentClient extends SoapClient<DocumentService> implements DocumentService {
 
 	public SoapDocumentClient(String endpoint, int gzipThreshold, boolean log, int timeout) throws IOException {
@@ -96,12 +96,6 @@ public class SoapDocumentClient extends SoapClient<DocumentService> implements D
 	public void checkin(String sid, long docId, String comment, String filename, boolean release, File content)
 			throws Exception {
 		this.checkin(sid, docId, comment, filename, release, new DataHandler(new FileDataSource(content)));
-	}
-
-	@Override
-	@Deprecated
-	public WSDocument[] list(String sid, long folderId) throws Exception {
-		return client.listDocuments(sid, folderId, null);
 	}
 
 	@Override

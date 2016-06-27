@@ -25,34 +25,34 @@ import com.logicaldoc.webservice.doc.WSDoc;
 @XmlType(name = "WSDocument")
 public class WSDocument implements Serializable {
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	private static final long serialVersionUID = 1L;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	protected static Logger log = LoggerFactory.getLogger(WSDocument.class);
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int DOC_UNLOCKED = 0;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int DOC_CHECKED_OUT = 1;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int DOC_LOCKED = 2;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int EXPORT_UNLOCKED = 0;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int EXPORT_LOCKED = 1;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int INDEX_TO_INDEX = 0;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int INDEX_INDEXED = 1;
 
-	@WSDoc(documented = true)
+	@WSDoc(documented = false)
 	public static final int INDEX_SKIP = 2;
 
 	@WSDoc(description = "unique identifier ")
@@ -67,7 +67,7 @@ public class WSDocument implements Serializable {
 	 * @see Document#DOC_CHECKED_OUT
 	 * @see Document#DOC_LOCKED
 	 */
-	@WSDoc(required = false, description = "0 = unlocked, 1 = checked out, 2 = locked")
+	@WSDoc(required = false, description = "<b>0</b> = unlocked, <b>1</b> = checked out, <b>2</b> = locked")
 	private int status = DOC_UNLOCKED;
 
 	@WSDoc(required = false)
@@ -109,13 +109,13 @@ public class WSDocument implements Serializable {
 
 	private String fileName;
 
-	@WSDoc(required = false, description = "0 = to index, 1 = indexed, 2 = skip indexing")
+	@WSDoc(required = false, description = "<b>0</b> = to index, <b>1</b> = indexed, <b>2</b> = skip indexing")
 	private int indexed = INDEX_TO_INDEX;
 
 	@WSDoc(required = false)
 	private int signed = 0;
 
-	@WSDoc(required = false, description = "1 if the document contains at least one stamp")
+	@WSDoc(required = false, description = "<b>1</b> if the document contains at least one stamp")
 	private int stamped = 0;
 
 	@WSDoc(required = false, description = "tags to be applied to document")
@@ -130,7 +130,7 @@ public class WSDocument implements Serializable {
 	@WSDoc(required = false, description = "unique custom identifier")
 	private String customId;
 
-	@WSDoc(required = false, description = "0 = not immutable, 1 = immutable")
+	@WSDoc(required = false, description = "<b>0</b> = not immutable, <b>1</b> = immutable")
 	private int immutable = 0;
 
 	@WSDoc(required = false)
@@ -154,7 +154,7 @@ public class WSDocument implements Serializable {
 	@WSDoc(required = false, description = "array of attributes")
 	private WSAttribute[] attributes = new WSAttribute[0];
 
-	@WSDoc(required = false, description = "language of the document. See specification at http://wiki.logicaldoc.com/wiki/LanguageSpecification")
+	@WSDoc(required = false, description = "language of the document; <a href='/wiki/LanguageSpecification'>See specification</a>")
 	private String language;
 
 	@WSDoc(required = false, description = "contains the snippet search text")
@@ -181,7 +181,7 @@ public class WSDocument implements Serializable {
 	@WSDoc(required = false, description = "Current workflow's status where the document is in")
 	private String workflowStatus;
 
-	@WSDoc(required = false, description = "If it is not set to 1, the document is marked as not published")
+	@WSDoc(required = false, description = "If it is not set to <b>1</b>, the document is marked as not published")
 	private int published = 1;
 
 	@WSDoc(required = false)
@@ -190,10 +190,10 @@ public class WSDocument implements Serializable {
 	@WSDoc(required = false)
 	private String stopPublishing;
 
-	@WSDoc(required = false, description = "number of pages (default -1)")
+	@WSDoc(required = false, description = "number of pages (default <b>-1</b>)")
 	private int pages = -1;
 
-	@WSDoc(required = false, description = "0 = document, 1 = form")
+	@WSDoc(required = false, description = "<b>0</b> = document, <b>1</b> = form")
 	private int nature = AbstractDocument.NATURE_DOC;
 
 	@WSDoc(required = false, description = "the last modified date; format must be 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd'")

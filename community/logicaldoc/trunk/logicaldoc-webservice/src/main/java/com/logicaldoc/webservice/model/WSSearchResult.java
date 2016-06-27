@@ -1,5 +1,7 @@
 package com.logicaldoc.webservice.model;
 
+import javax.xml.bind.annotation.XmlType;
+
 import com.logicaldoc.util.SnippetStripper;
 
 /**
@@ -8,6 +10,7 @@ import com.logicaldoc.util.SnippetStripper;
  * @author Matteo Caruso - Logical Objects
  * @since 5.2
  */
+@XmlType(name = "WSSearchResult")
 public class WSSearchResult {
 	private long time = 0;
 

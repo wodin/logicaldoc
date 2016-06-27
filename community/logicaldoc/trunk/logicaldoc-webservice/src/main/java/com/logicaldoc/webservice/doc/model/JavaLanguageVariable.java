@@ -27,7 +27,7 @@ public class JavaLanguageVariable {
 
 	private boolean multiOccurs;
 
-	private String description;
+	private String description = "";
 
 	public Class<?> getType() {
 		return type;
@@ -55,7 +55,6 @@ public class JavaLanguageVariable {
 
 	@Override
 	public String toString() {
-
 		return new ToStringBuilder(this, SHORT_PREFIX_STYLE).append(type).append(variableName).toString();
 	}
 
