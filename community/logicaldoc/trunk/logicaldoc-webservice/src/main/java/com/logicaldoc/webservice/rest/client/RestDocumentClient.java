@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.activation.DataHandler;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -22,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.logicaldoc.core.security.Client;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.rest.DocumentService;
 
@@ -69,8 +71,11 @@ public class RestDocumentClient extends AbstractRestClient {
 		List<Attachment> atts = new LinkedList<Attachment>();
 		atts.add(docAttachment);
 		atts.add(fileAttachment);
+		
+		Response res = proxy.create(atts);
+		WSDocument cdoc = res.readEntity(WSDocument.class);
 
-		return proxy.create(atts);
+		return cdoc;
 	}
 
 	public WSDocument create(WSDocument document, DataHandler dataHandler) throws Exception {
@@ -91,7 +96,10 @@ public class RestDocumentClient extends AbstractRestClient {
 		atts.add(docAttachment);
 		atts.add(fileAttachment);
 
-		return proxy.create(atts);
+		Response res = proxy.create(atts);
+		WSDocument cdoc = res.readEntity(WSDocument.class);
+
+		return cdoc;
 	}
 
 	public WSDocument[] list(long folderId) throws Exception {

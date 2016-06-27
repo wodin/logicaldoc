@@ -23,6 +23,8 @@ import com.logicaldoc.webservice.rest.FolderService;
 import com.logicaldoc.webservice.soap.endpoint.SoapFolderService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 @Path("/") 
 @Api(value = "folder")
@@ -142,17 +144,18 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 		return super.createFolder(sid, parentId, name);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#getFolder(java.
-	 * lang.String, long)
-	 */
+    /**
+     * Get the folder with the specified folder id.
+     *
+     * @param folderId The folder id
+     * @return The folder with the specified id
+     * @summary Get the folder with the specified id
+     */
 	@GET
 	@Path("/getFolder")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public WSFolder getFolder(@QueryParam("folderId") long folderId) throws Exception {
+	@ApiOperation(value = "Gets a folder", notes = "Gets the folder with the specified id")
+	public WSFolder getFolder(@ApiParam(value = "The folder id", required = true) @QueryParam("folderId") long folderId) throws Exception {
 		String sid = validateSession();
 		return super.getFolder(sid, folderId);
 	}
@@ -166,7 +169,8 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	 */
 	@DELETE
 	@Path("/delete")
-	public void delete(@QueryParam("folderId") long folderId) throws Exception {
+	@ApiOperation(value = "Deletes a folder")
+	public void delete(@ApiParam(value = "The id of the folder to be deleted", required = true) @QueryParam("folderId") long folderId) throws Exception {
 		String sid = validateSession();
 		super.delete(sid, folderId);
 	}

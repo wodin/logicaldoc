@@ -28,13 +28,11 @@ public class RestSearchService extends SoapSearchService implements SearchServic
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.SearchService#find(java.util.
-	 * List)
+	 * com.logicaldoc.webservice.rest.endpoint.SearchService#find(WSSearchOptions opt)
 	 */
 	@POST
 	@Path("/find")
 	public WSSearchResult find(WSSearchOptions opt) throws Exception {
-		log.debug("find()");
 		String sid = validateSession();
 		return super.find(sid, opt);
 	}
