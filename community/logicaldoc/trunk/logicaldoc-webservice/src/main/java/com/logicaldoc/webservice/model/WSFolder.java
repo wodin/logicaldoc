@@ -26,7 +26,7 @@ import com.logicaldoc.webservice.doc.WSDoc;
  * @since 5.2
  */
 @XmlRootElement(name = "folder")
-@XmlType(name = "WSAttribute")
+@XmlType(name = "WSFolder")
 public class WSFolder implements Serializable {
 
 	@WSDoc(documented = false)

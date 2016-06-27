@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
@@ -15,6 +16,7 @@ import com.logicaldoc.webservice.doc.WSDoc;
  * @author Matteo Caruso - Logical Objects
  * @since 4.0
  */
+@XmlRootElement(name = "attribute")
 @XmlType(name = "WSAttribute")
 public class WSAttribute implements Serializable {
 
