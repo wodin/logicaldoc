@@ -9,12 +9,12 @@
    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/jtds-1.2.5.jar" />
    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/hsqldb-2.2.8.jar" />
    <jar src="tomcat/webapps/ROOT/WEB-INF/lib/postgresql-9.4-1201-jdbc41.jar" />
-   <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-i18n-7.5.0.jar" />
-   <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-util-7.5.0.jar" />
+   <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-i18n-7.5.1.jar" />
+   <jar src="tomcat/webapps/ROOT/WEB-INF/lib/logicaldoc-util-7.5.1.jar" />
    <jar src="lib/logicaldoc-community-installer.jar" stage="both" />
    <info>
       <appname>LogicalDOC Community</appname>
-      <appversion>7.5</appversion>
+      <appversion>7.5.1</appversion>
       <authors>
          <author name="LogicalDOC" email="support@logicaldoc.com" />
       </authors>

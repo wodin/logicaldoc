@@ -48,7 +48,9 @@ public class FoldersDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "no-store");
 			response.setDateHeader("Expires", 0);
 
-			if (request.getParameter("parent") != null && request.getParameter("parent").startsWith("d-")) {
+			if (request.getParameter("parent") != null
+					&& (request.getParameter("parent").startsWith("d-") || request.getParameter("parent")
+							.equals("null"))) {
 				// The user clicked on a file
 				PrintWriter writer = response.getWriter();
 				writer.write("<list></list>");
@@ -71,7 +73,7 @@ public class FoldersDataServlet extends HttpServlet {
 
 			long parentFolderId = 0;
 			if (parent.contains("-")) {
-				parentFolderId = Long.parseLong(parent.substring(parent.lastIndexOf('-')+1));
+				parentFolderId = Long.parseLong(parent.substring(parent.lastIndexOf('-') + 1));
 			} else
 				parentFolderId = Long.parseLong(parent);
 
