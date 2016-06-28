@@ -2,6 +2,8 @@ package com.logicaldoc.core.script;
 
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderHistory;
+import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
 
@@ -13,12 +15,17 @@ import com.logicaldoc.util.config.ContextProperties;
  */
 public class FolderTool {
 
-	public String displayUrl(long tenatId, long folderId) {
+	public String displayUrl(long tenantId, long folderId) {
 		ContextProperties config = Context.get().getProperties();
 		String url = config.getProperty("server.url");
 		if (!url.endsWith("/"))
 			url += "/";
-		url += "?tenantId="+tenatId+"&folderId=" + folderId;
+		
+
+		TenantDAO tenantDao = (TenantDAO) Context.get().getBean(TenantDAO.class);
+		Tenant tenant = tenantDao.findById(tenantId);
+		
+		url += "display?tenant="+tenant.getName()+"&folderId=" + folderId;
 		return url;
 	}
 	
