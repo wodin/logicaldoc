@@ -34,32 +34,24 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 
 	private static Logger log = LoggerFactory.getLogger(RestFolderService.class);
 
-	/*
-	 * The "folder" parameter comes in the POST request body (encoded as XML or JSON).
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#create(java.util.List)
-	 */
+
 	@POST
 	@Path("/create")
-	public WSFolder create(WSFolder folder) throws Exception {
+	@ApiOperation(value = "Creates a new folder", 
+	notes = "The 'folder' metadata comes in the POST request body (encoded as JSON). Note: folder object must specify at least fields name and parentId")	
+	public WSFolder create(@ApiParam(value = "The folder metadata", required = true) WSFolder folder) throws Exception {
 		log.debug("create()");
 		String sid = validateSession();
 		return super.create(sid, folder);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#createSimpleForm
-	 * (java.lang.String, java.lang.String)
-	 */
+
 	@POST
-	@Path("/createSimple")
+	@Path("/createSimpleForm")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-	// The "folderPath" parameter comes in the POST request body.
-	public WSFolder createSimpleForm(@FormParam("folderPath") String folderPath) throws Exception {
+	@ApiOperation(value = "Creates folders from path", 
+	notes = "Creates folders using an input path. All the folders in the path will be created. It returns the metadata object representing the latest created folder in the path")
+	public WSFolder createSimpleForm(@ApiParam(value = "The string representing the path to be created", example = "/Default/newfolder") @FormParam("folderPath") String folderPath) throws Exception {
 		log.debug("createSimpleForm()");
 		String sid = validateSession();
 		log.debug("sid: " +sid);
@@ -83,25 +75,19 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#createSimpleJSON
-	 * (java.lang.String)
-	 */
+
 	@POST
-	@Path("/createSimple")
+	@Path("/createSimpleJSON")
 	@Consumes({ MediaType.APPLICATION_JSON })
-	// The "folderPath" parameter comes in the POST request body.
-	public WSFolder createSimpleJSON(String jsonstr) throws Exception {
+	@ApiOperation(value = "Creates folders from path", 
+	notes = "Creates folders using an input path. All the folders in the path will be created. It returns the metadata object representing the latest created folder in the path")
+	public WSFolder createSimpleJSON(@ApiParam(name = "folderPath", value = "The string representing the path to be created", example = "{\"folderPath\":\"/Default/central/repo\"}") String jsonstr) throws Exception {
 		log.debug("createSimpleJSON()");
 
 		String sid = validateSession();
 
 		ObjectMapper mapper = new ObjectMapper();
-		TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {
-		};
+		TypeReference<HashMap<String, String>> typeRef = new TypeReference<HashMap<String, String>>() {};
 		HashMap<String, String> hm = mapper.readValue(jsonstr, typeRef);
 
 		String folderPath = hm.get("folderPath");
@@ -109,111 +95,85 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 		WSFolder root = super.getRootFolder(sid);
 		return super.createPath(sid, root.getId(), folderPath);
 	}
+	
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#createPath(java
-	 * .lang.String, long, java.lang.String) The parameters come in the POST
-	 * request body.
-	 */
+	@POST
+	@Path("/createSimple")
+	@Consumes({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })
+	@ApiOperation(value = "Creates folders from path", 
+	notes = "Creates folders using an input path. All the folders in the path will be created. It returns the metadata object representing the latest created folder in the path. "
+			+ "Example: curl -u admin:admin -X POST -H ''Content-Type: text/plain'' -H ''Accept: application/json'' -d ''/Default/Curl/newfolder'' http://localhost:8080/services/rest/folder/createSimple")	
+	public WSFolder createSimple(@ApiParam(value = "The string representing the path to be created", example = "/Default/newfolder") String folderPath) throws Exception {
+		log.debug("createSimple()");
+
+		String sid = validateSession();
+
+		WSFolder root = super.getRootFolder(sid);
+		return super.createPath(sid, root.getId(), folderPath);
+	}	
+
 	@POST
 	@Path("/createPath")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
-	public WSFolder createPath(@FormParam("parentId") long parentId, @FormParam("path") String path) throws Exception {
+	@ApiOperation(value = "Creates a path", 
+	notes = "Creates a path of folders starting from a parent folder. It returns the metadata object representing the latest created folder in the path")	
+	public WSFolder createPath(@ApiParam(value = "The parent folder ID from which the new path will start") @FormParam("parentId") long parentId, 
+			@ApiParam(value = "The path to create", example = "How/to/POST/JSON/data/with/Curl") @FormParam("path") String path) throws Exception {
 		String sid = validateSession();
 		return super.createPath(sid, parentId, path);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#createFolder(java
-	 * .lang.String, long, java.lang.String)
-	 */
 	@POST
 	@Path("/createFolder")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@Override
-	// The parameters come in the POST request body.
-	public long createFolder(@FormParam("parentId") long parentId, @FormParam("name") String name) throws Exception {
+	@ApiOperation(value = "Creates a subfolder")	
+	public long createFolder(@ApiParam(value = "The ID of the parent folder") @FormParam("parentId") long parentId, @ApiParam(value = "Name of the new folder") @FormParam("name") String name) throws Exception {
 		String sid = validateSession();
 		return super.createFolder(sid, parentId, name);
 	}
 
-    /**
-     * Get the folder with the specified folder id.
-     *
-     * @param folderId The folder id
-     * @return The folder with the specified id
-     * @summary Get the folder with the specified id
-     */
 	@GET
 	@Path("/getFolder")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	@ApiOperation(value = "Gets a folder", notes = "Gets the folder with the specified id")
-	public WSFolder getFolder(@ApiParam(value = "The folder id", required = true) @QueryParam("folderId") long folderId) throws Exception {
+	@ApiOperation(value = "Gets a folder", notes = "Gets the folder with the specified ID")
+	public WSFolder getFolder(@ApiParam(value = "The folder ID", required = true) @QueryParam("folderId") long folderId) throws Exception {
 		String sid = validateSession();
 		return super.getFolder(sid, folderId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#delete(java.lang
-	 * .String, long)
-	 */
 	@DELETE
 	@Path("/delete")
 	@ApiOperation(value = "Deletes a folder")
-	public void delete(@ApiParam(value = "The id of the folder to be deleted", required = true) @QueryParam("folderId") long folderId) throws Exception {
+	public void delete(@ApiParam(value = "The ID of the folder to be deleted", required = true) @QueryParam("folderId") long folderId) throws Exception {
 		String sid = validateSession();
 		super.delete(sid, folderId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#listChildren(java
-	 * .lang.String, long)
-	 */
 	@GET
 	@Path("/listChildren")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
-	public WSFolder[] listChildren(@QueryParam("folderId") long folderId) throws Exception {
+	@ApiOperation(value = "Lists the child folders",
+	notes = "Returns the list of child folders. Example: curl -u admin:admin -H ''Accept: application/json'' http://localhost:8080/services/rest/folder/listChildren?folderId=4")
+	public WSFolder[] listChildren(@ApiParam(value = "The ID of the parent folder", required = true) @QueryParam("folderId") long folderId) throws Exception {
 		String sid = validateSession();
 		return super.listChildren(sid, folderId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#getPath(java.lang
-	 * .String, long)
-	 */
 	@GET
 	@Path("/getPath")
-	public WSFolder[] getPath(@QueryParam("folderId") long folderId) throws Exception {
+	@ApiOperation(value = "Gets a path of folders", 
+	notes = "Returns the folders that make up the path to the folder in input.")
+	public WSFolder[] getPath(@ApiParam(value = "Folder identifier (ID)", required = true) @QueryParam("folderId") long folderId) throws Exception {
 		String sid = validateSession();
 		return super.getPath(sid, folderId);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.logicaldoc.webservice.rest.endpoint.FolderService#getPathString(java
-	 * .lang.String, long)
-	 */
 	@GET
 	@Path("/getPathString")
-	public String getPathString(@QueryParam("folderId") long folderId) throws Exception {
+	@ApiOperation(value = "Gets a path", 
+	notes = "Returns the path to the folder in input.")	
+	public String getPathString(@ApiParam(value = "Folder identifier (ID)", required = true) @QueryParam("folderId") long folderId) throws Exception {
 		String sid = validateSession();
 		WSFolder[] sss = this.getPath(sid, folderId);
 		String pathString = "";
@@ -225,6 +185,8 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 
 	@POST
 	@Path("/update")
+	@ApiOperation(value = "Updates a folder", 
+	notes = "Updates a folder changing its metadata. The folder object in input must specify the field id")		
 	public void update(WSFolder folder) throws Exception {
 		log.debug("update()");
 		String sid = validateSession();
@@ -233,6 +195,8 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 
 	@PUT
 	@Path("/rename")
+	@ApiOperation(value = "Renames a folder", 
+	notes = "Changes the name of a given folder")		
 	public void rename(@QueryParam("folderId") long folderId, @QueryParam("name") String name) throws Exception {
 		String sid = validateSession();
 		super.rename(sid, folderId, name);
@@ -240,6 +204,8 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 
 	@PUT
 	@Path("/move")
+	@ApiOperation(value = "Moves a folder", 
+	notes = "Updates a folder by changing its parent. The folder is moved to the new parent folder.")	
 	public void move(@QueryParam("folderId") long folderId, @QueryParam("parentId") long parentId) throws Exception {
 		String sid = validateSession();
 		super.move(sid, folderId, parentId);

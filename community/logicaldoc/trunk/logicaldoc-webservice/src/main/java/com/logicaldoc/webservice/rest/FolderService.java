@@ -24,15 +24,21 @@ public interface FolderService {
 
 	@POST
 	@Path("/createSimple")
+	@Consumes({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON })
+	// The "folderPath" string comes in the POST request body.
+	WSFolder createSimple(String folderPath) throws Exception;
+	
+	@POST
+	@Path("/createSimpleForm")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
 	// The "folderPath" parameter comes in the POST request body.
 	WSFolder createSimpleForm(@FormParam("folderPath") String folderPath) throws Exception;
 
 	@POST
-	@Path("/createSimple")
+	@Path("/createSimpleJSON")
 	@Consumes({ MediaType.APPLICATION_JSON })
 	// The "folderPath" parameter comes in the POST request body.
-	WSFolder createSimpleJSON(String jsonstr) throws Exception;
+	WSFolder createSimpleJSON(String jsonstr) throws Exception;	
 
 	// The parameters come in the POST request body.
 	@POST
