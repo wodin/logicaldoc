@@ -85,6 +85,15 @@ public class Util {
 		return downloadURL(docId, null, false);
 	}
 
+	public static String displaydURL(Long docId, Long folderId) {
+		String url = contextPath() + "display?";
+		if (docId != null)
+			url += Constants.DOC_ID + "=" + docId;
+		else
+			url += Constants.FOLDER_ID + "=" + folderId;
+		return url;
+	}
+
 	public static String webEditorUrl(long docId, String fileName, int height) {
 		String url = contextPath() + "ckeditor/index.jsp?docId=" + docId + "&lang=" + I18N.getLocale() + "&fileName="
 				+ fileName + "&height=" + height;

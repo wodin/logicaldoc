@@ -107,10 +107,7 @@ public class Frontend implements EntryPoint {
 
 				WindowUtils.setFavicon(info);
 
-				if (sid == null || "".equals(sid))
-					SC.warn(I18N.message("accessdenied"));
-
-				securityService.getSession(Util.getLocaleInRequest(), new AsyncCallback<GUISession>() {
+				securityService.getSession(locale, new AsyncCallback<GUISession>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -129,7 +126,6 @@ public class Frontend implements EntryPoint {
 						}
 					}
 				});
-
 			}
 		});
 	}

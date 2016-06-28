@@ -139,14 +139,16 @@ public final class Constants {
 	public static final String COOKIE_VERSION = "ldoc-version";
 
 	public static final String COOKIE_SID = "ldoc-sid";
-	
+
 	public static final String COOKIE_FAILURE = "ldoc-failure";
 
 	public static final String SID = "sid";
-	
+
 	public static final String KEY = "key";
 
 	public static final String FOLDER_ID = "folderId";
+
+	public static final String DOC_ID = "docId";
 
 	public final static int DASHLET_CHECKOUT = 1;
 
