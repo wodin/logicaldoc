@@ -47,7 +47,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Path("/create")
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@ApiOperation(value = "Creates a new document", 
-	notes = "Creates a new document using the metadata 'document' provided as JSON/XML",
+	notes = "Creates a new document using the metadata 'document' object provided as JSON/XML",
 	response = WSDocument.class)
 	@ApiImplicitParams({
 	    @ApiImplicitParam(name = "document", value = "The document metadata provided as WSDocument object encoded in JSON/XML format", required = true, dataType = "com.logicaldoc.webservice.model.WSDocument", paramType = "form"),
@@ -90,6 +90,8 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@GET
 	@Path("/getDocument")
 	@Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
+	@ApiOperation(value = "Gets document metadata", 
+	notes = "Gets the document metadata")	
 	public WSDocument getDocument(@QueryParam("docId") long docId) throws Exception {
 		String sid = validateSession();
 		return super.getDocument(sid, docId);
@@ -99,6 +101,8 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@POST
 	@Path("/checkout")
 	@Consumes({ MediaType.APPLICATION_FORM_URLENCODED })
+	@ApiOperation(value = "Checkout a document", 
+	notes = "Performs the checkout operation on a document. The document status will be changed to checked-out")	
 	public void checkout(@FormParam("docId") long docId) throws Exception {
 		String sid = validateSession();
 		super.checkout(sid, docId);
@@ -161,7 +165,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Consumes(MediaType.MULTIPART_FORM_DATA)
 	@Produces({ MediaType.TEXT_PLAIN, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML })
 	@ApiOperation(value = "Uploads a document", 
-	notes = "Creates or updates an existing document, if used in update mode docId must be provided, when used in create mode folderId is required. Returns the ID of the created/updated document")
+	notes = "Creates or updates an existing document, if used in update mode docId must be provided, when used in create mode folderId is required. Returns the ID of the created/updated document. &lt;br/&gt;Example: curl -u admin:admin -H ''Accept: application/json'' -X POST -F folderId=4 -F filename=newDoc.txt -F filedata=@newDoc.txt http://localhost:8080/services/rest/document/upload")
 	@ApiImplicitParams({
 	    @ApiImplicitParam(name = "docId", value = "The ID of an existing document to update", required = false, dataType = "integer", paramType = "form"),
 	    @ApiImplicitParam(name = "folderId", value = "Folder ID where to place the document", required = false, dataType = "string", paramType = "form"),
@@ -225,8 +229,8 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@GET
 	@Path("/list")
 	@Produces({ MediaType.APPLICATION_JSON })
-	@ApiOperation(value = "Lists Documents by folder ID", 
-	    notes = "Lists Documents by folder ID",
+	@ApiOperation(value = "Lists documents by folder", 
+	    notes = "Lists Documents by folder identifier",
 	    response = WSDocument.class, 
 	    responseContainer = "List")	
 	public WSDocument[] list(@QueryParam("folderId") long folderId) throws Exception {
@@ -237,7 +241,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Override
 	@GET
 	@Path("/listDocuments")
-	@ApiOperation(value = "Lists Documents by folder ID and fileName", 
+	@ApiOperation(value = "Lists documents by folder and filename", 
     notes = "Lists Documents by folder ID filtering the results by filename",
     response = WSDocument.class, 
     responseContainer = "List")		
@@ -260,7 +264,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Override
 	@PUT
 	@Path("/update")
-    @ApiOperation(value = "Updates an existing document")	
+    @ApiOperation(value = "Updates an existing document", notes = "Updates the metadata of an existing document. The ID of the document must be specified in the WSDocument value object")	
 	public void update(@ApiParam(value = "Document object that needs to be updated", required = true) WSDocument document) throws Exception {
 		String sid = validateSession();
 		super.update(sid, document);
