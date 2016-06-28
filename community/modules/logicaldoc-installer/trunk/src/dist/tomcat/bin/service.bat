@@ -143,7 +143,7 @@ set "CLASSPATH=%CATALINA_HOME%\bin\bootstrap.jar;%CATALINA_BASE%\bin\tomcat-juli
 if not "%CATALINA_HOME%" == "%CATALINA_BASE%" set "CLASSPATH=%CLASSPATH%;%CATALINA_HOME%\bin\tomcat-juli.jar"
 
 "%EXECUTABLE%" //IS//%SERVICE_NAME% ^
-    --Starup auto ^
+    --Startup auto ^
     --Description "%DISPLAYNAME% - http://www.logicaldoc.com" ^
     --DisplayName "%DISPLAYNAME%" ^
     --Install "%EXECUTABLE%" ^

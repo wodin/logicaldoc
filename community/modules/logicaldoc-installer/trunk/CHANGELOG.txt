@@ -9,6 +9,11 @@
 
                     LogicalDOC Community Edition
 
+LogicalDOC 7.5.1 (2016-07-05; logicaldoc-7.5.1)
+==============================================================
+695 - Direct link to the document does not work anymore - bug - User Interface
+697 - Upgrade document preview technology - task - User Interface
+
 
 LogicalDOC 7.4.3 (2016-05-10; logicaldoc-7.4.3)
 ==============================================================
