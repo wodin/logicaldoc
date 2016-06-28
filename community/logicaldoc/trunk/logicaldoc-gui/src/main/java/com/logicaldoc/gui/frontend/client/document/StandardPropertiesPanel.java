@@ -7,7 +7,6 @@ import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
@@ -163,15 +162,15 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		LinkItem folder = ItemFactory.newLinkItem("folder", Util.padLeft(document.getPathExtended(), 40));
 		folder.setTitle(I18N.message("folder"));
-		folder.setValue(Util.contextPath() + "frontend.jsp?" + Constants.FOLDER_ID + "=" + document.getFolder().getId());
+		folder.setValue(Util.displaydURL(null, document.getFolder().getId()));
 		folder.setTooltip(document.getPathExtended());
 		folder.setWrap(false);
 		folder.setWidth(DEFAULT_ITEM_WIDTH);
 
 		String downloadUrl = Util.downloadURL(document.getId());
-		String detailsUrl = Util.contextPath() + "frontend.jsp?docId=" + document.getId();
+		String displayUrl = Util.displaydURL(document.getId(), null);
 		String perma = "<a href='" + downloadUrl + "'>" + I18N.message("download") + "</a> | " + "<a href='"
-				+ detailsUrl + "'>" + I18N.message("details") + "</a>";
+				+ displayUrl + "'>" + I18N.message("details") + "</a>";
 
 		StaticTextItem permaLink = ItemFactory.newStaticTextItem("permalink", "permalink", perma);
 

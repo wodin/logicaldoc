@@ -92,15 +92,14 @@ public class PropertiesPanel extends FolderDetailTab {
 
 		LinkItem pathItem = ItemFactory.newLinkItem("path", folder.getPathExtended());
 		pathItem.setTitle(I18N.message("path"));
-		pathItem.setValue(Util.contextPath() + "frontend.jsp?folderId=" + folder.getId());
+		pathItem.setValue(Util.displaydURL(null, folder.getId()));
 		pathItem.addChangedHandler(changedHandler);
 		pathItem.setWidth(400);
 
 		LinkItem barcode = ItemFactory.newLinkItem("barcode", I18N.message("generatebarcode"));
 		barcode.setTarget("_blank");
 		barcode.setTitle(I18N.message("barcode"));
-		barcode.setValue(GWT.getHostPageBaseURL() + "barcode?code=" + folder.getId()
-				+ "&width=400&height=150");
+		barcode.setValue(GWT.getHostPageBaseURL() + "barcode?code=" + folder.getId() + "&width=400&height=150");
 
 		StaticTextItem documents = ItemFactory.newStaticTextItem("documents", "documents",
 				"" + folder.getDocumentCount());
