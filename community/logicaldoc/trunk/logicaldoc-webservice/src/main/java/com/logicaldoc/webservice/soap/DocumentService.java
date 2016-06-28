@@ -381,12 +381,28 @@ public interface DocumentService {
 	 * @return A value object containing the document's metadata.
 	 * @throws Exception
 	 */
+	@WebMethod
 	@WebResult(name = "document")
 	@WSDoc(description = "gets the documents in a specific folder")
 	public WSDocument[] listDocuments(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId,
 			@WSDoc(description = "file name filter", required = false) @WebParam(name = "fileName") String fileName)
 			throws Exception;
 
+	
+	/**
+	 * Lists the documents inside a folder
+	 * 
+	 * @param sid Session identifier
+	 * @param folderId The document id
+	 * @return Array of documents contained in the folder
+	 * 
+	 * @throws Exception
+	 */
+	@WebResult(name = "document")
+	@Deprecated
+	public WSDocument[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
+			throws Exception;
+	
 	/**
 	 * Lists of last modified documents of the current session.
 	 * 
