@@ -9,6 +9,8 @@ import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.concurrency.NamedThreadFactory;
@@ -42,7 +44,11 @@ public class DocTool {
 		String url = config.getProperty("server.url");
 		if (!url.endsWith("/"))
 			url += "/";
-		url += "frontend.jsp?tenantId=" + tenantId + "&docId=" + docId;
+
+		TenantDAO tenantDao = (TenantDAO) Context.get().getBean(TenantDAO.class);
+		Tenant tenant = tenantDao.findById(tenantId);
+
+		url += "display?tenant=" + tenant.getName() + "&docId=" + docId;
 		return url;
 	}
 
