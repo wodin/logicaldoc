@@ -216,4 +216,9 @@ public class SoapDocumentClient extends SoapClient<DocumentService> implements D
 	public String getExtractedText(String sid, long docId) throws Exception {
 		return client.getExtractedText(sid, docId);
 	}
+
+	@Override
+	public WSDocument[] list(String sid, long folderId) throws Exception {
+		return client.list(sid, folderId);
+	}
 }

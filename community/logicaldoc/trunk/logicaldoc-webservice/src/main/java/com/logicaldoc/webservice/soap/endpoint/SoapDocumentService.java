@@ -505,6 +505,11 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 	}
 
 	@Override
+	public WSDocument[] list(String sid, long folderId) throws Exception {
+		return listDocuments(sid, folderId, null);
+	}
+	
+	@Override
 	public WSDocument[] listDocuments(String sid, long folderId, String fileName) throws Exception {
 		User user = validateSession(sid);
 		checkReadEnable(user, folderId);
