@@ -54,7 +54,7 @@ public class HttpRestWb {
                 .setDefaultCredentialsProvider(credsProvider)
                 .build();
         
-		createFolderSimple(httpclient);
+		createFolderSimpleForm(httpclient);
 		createFolderSimpleJSON(httpclient);
 
 		createDocument( httpclient);
@@ -182,8 +182,9 @@ public class HttpRestWb {
 		return options;
 	}
 	
-	private static void find(CloseableHttpClient httpclient, WSSearchOptions wsso) throws IOException {
+	private static void find(CloseableHttpClient httpclient, WSSearchOptions wsso) throws Exception {
 
+		System.out.println("find");
 		//CloseableHttpClient httpclient = HttpClients.createDefault();
 		
         HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/search/find");
@@ -192,29 +193,33 @@ public class HttpRestWb {
 		//ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
         ObjectMapper mapper = new ObjectMapper();
         ObjectWriter ow = mapper.writer();
-		String jsonStr = ow.writeValueAsString(wsso);		
-        
-		StringBody jsonPart = new StringBody(jsonStr, ContentType.APPLICATION_JSON);       
-
-        HttpEntity reqEntity = MultipartEntityBuilder.create()
-                .addPart("opt", jsonPart)
-                .build();
+		String jsonStr = ow.writeValueAsString(wsso);
+		System.out.println(jsonStr);
 		
-		httppost.setEntity(reqEntity);
+		StringEntity entity = new StringEntity(jsonStr, ContentType.create("application/json", Consts.UTF_8));
+		httppost.setEntity(entity);		
 
 		CloseableHttpResponse response = httpclient.execute(httppost);
+		
+		int code = response.getStatusLine().getStatusCode();
+		System.out.println("HTTPstatus code: "+ code);
+		
+		if (code == HttpStatus.SC_OK) {
+		} else {
+			//log.warn("status code is invalid: {}", code);
+			System.err.println("status code is invalid: "+ code);
+			throw new Exception(response.getStatusLine().getReasonPhrase());
+		}			
+		
 		try {
 			HttpEntity rent = response.getEntity();
 			if (rent != null) {
 				String respoBody = EntityUtils.toString(rent, "UTF-8");
-				//System.out.println(respoBody);
+				System.out.println(respoBody);
 				
-				//ObjectMapper mapper = new ObjectMapper();
 				//JSON from String to Object
-				WSSearchResult obj = mapper.readValue(respoBody, WSSearchResult.class);
-				
-				//ObjectWriter ow2 = new ObjectMapper().writer();
-				System.out.println(ow.writeValueAsString(obj) );				
+				//WSSearchResult obj = mapper.readValue(respoBody, WSSearchResult.class);
+				//System.out.println(ow.writeValueAsString(obj) );				
 			}
 		} finally {
 			response.close();
@@ -223,13 +228,14 @@ public class HttpRestWb {
 	
 	private static void listDocuments(CloseableHttpClient httpclient, long parentId) throws ClientProtocolException, IOException {
 
-		//System.out.println("sid: " + httpclient);
+		System.out.println("listDocuments");
 
 		List<NameValuePair> params = new LinkedList<NameValuePair>();
 		params.add(new BasicNameValuePair("folderId", String.valueOf(parentId)));
 		//params.add(new BasicNameValuePair("fileName", "gjhghjgj")); // this should result nothing
 		//params.add(new BasicNameValuePair("fileName", "InvoiceProcessing01-workflow.png"));
-		params.add(new BasicNameValuePair("fileName", "*.png"));
+		//params.add(new BasicNameValuePair("fileName", "*.png"));
+		params.add(new BasicNameValuePair("fileName", "*"));
 
 		StringBuilder requestUrl = new StringBuilder(BASE_PATH + "/services/rest/document/listDocuments");
 		String querystring = URLEncodedUtils.format(params, "utf-8");
@@ -296,6 +302,7 @@ public class HttpRestWb {
 
 	private static void createDocument(CloseableHttpClient httpclient) throws IOException {
 
+		System.out.println("createDocument(CloseableHttpClient)");
 		//CloseableHttpClient httpclient = HttpClients.createDefault();
 		
         HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/document/create");
@@ -306,7 +313,7 @@ public class HttpRestWb {
 		WSDocument wsDoc = new WSDocument();
 		wsDoc.setId(0);
 		wsDoc.setTitle("document test");
-		wsDoc.setCustomId("CustomId-xxxxx4444");
+		wsDoc.setCustomId("CustomId-xxxxx4444"); // warning this might produce sql errors: integrity constraint violation: unique constraint or index violation: AK_DOCUMENT; SQL [n/a]; constraint [null];
 		wsDoc.setTags(new String[] { "Invoice", "Processing", "workflow" });
 		wsDoc.setFolderId(4L);
 		wsDoc.setFileName(f.getName());
@@ -337,7 +344,7 @@ public class HttpRestWb {
 		}
 	}
 
-	private static void createFolderSimple(CloseableHttpClient httpclient) throws Exception { 
+	private static void createFolderSimpleForm(CloseableHttpClient httpclient) throws Exception { 
 		
 		// This will create a tree starting from the Root folder (not in the Default workspace)
 		List<NameValuePair> formparams = new ArrayList<NameValuePair>();
@@ -345,7 +352,7 @@ public class HttpRestWb {
 		
 		UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
 		
-		HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/folder/createSimple");
+		HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/folder/createSimpleForm");
 		httppost.setEntity(entity);		
 
 		CloseableHttpResponse response = httpclient.execute(httppost);
@@ -376,10 +383,10 @@ public class HttpRestWb {
 
 		// This will create a tree starting from the Default workspace
 		String folderPath = "/Default/USA/NJ/Fair Lawn/createSimple/JSON";
-		String input = "{ \"sid\" : \"" + httpclient + "\", \"folderPath\" : \"" + folderPath + "\" }";
+		String input = "{ \"folderPath\" : \"" + folderPath + "\" }";
 		System.out.println(input);
 
-		HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/folder/createSimple");
+		HttpPost httppost = new HttpPost(BASE_PATH + "/services/rest/folder/createSimpleJSON");
 		StringEntity entity = new StringEntity(input, ContentType.create("application/json", Consts.UTF_8));
 		httppost.setEntity(entity);
 

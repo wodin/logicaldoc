@@ -17,6 +17,8 @@ import com.logicaldoc.webservice.soap.endpoint.SoapSearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Example;
+import io.swagger.annotations.ExampleProperty;
 
 @Path("/") 
 @Api(value = "search")
@@ -30,7 +32,7 @@ public class RestSearchService extends SoapSearchService implements SearchServic
 	@Path("/find")
 	@ApiOperation(value = "Search documents", 
 	notes = "Runs a search on the server")		
-	public WSSearchResult find(@ApiParam(value = "Search options", required = true) WSSearchOptions opt) throws Exception {
+	public WSSearchResult find(@ApiParam(value = "Search options", required = true, examples=@Example(value = { @ExampleProperty(value="{\"maxHits\":50,\"expression\":\"document management system\",\"expressionLanguage\":\"en\",\"language\":\"en\"}") })) WSSearchOptions opt) throws Exception {
 		String sid = validateSession();
 		return super.find(sid, opt);
 	}
