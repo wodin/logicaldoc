@@ -72,8 +72,6 @@ public class Frontend implements EntryPoint {
 		// Tries to capture tenant parameter
 		final String tenant = Util.detectTenant();
 
-		final String sid = Util.detectSid();
-
 		// Get grid of scrollbars, and clear out the window's built-in margin,
 		// because we want to take advantage of the entire client area.
 		Window.enableScrolling(false);
@@ -107,7 +105,7 @@ public class Frontend implements EntryPoint {
 
 				WindowUtils.setFavicon(info);
 
-				securityService.getSession(locale, new AsyncCallback<GUISession>() {
+				securityService.getSession(Util.getLocaleInRequest(), new AsyncCallback<GUISession>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

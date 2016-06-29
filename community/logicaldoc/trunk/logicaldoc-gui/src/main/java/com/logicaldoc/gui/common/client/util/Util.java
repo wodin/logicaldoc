@@ -480,7 +480,7 @@ public class Util {
 		var lang = window.navigator.language ? window.navigator.language
 				: window.navigator.userLanguage;
 		if (lang != null && lang != "") {
-			return lang;
+			return lang.replace('-', '_');
 		} else {
 			return "en";
 		}
@@ -706,7 +706,7 @@ public class Util {
 		// Tries to capture locale parameter
 		if (locale == null)
 			locale = Util.getBrowserLanguage();
-
+		
 		if (locale == null || locale.isEmpty())
 			return "en";
 

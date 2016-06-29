@@ -11,6 +11,7 @@ import com.logicaldoc.gui.frontend.client.services.AttributeSetService;
 import com.logicaldoc.gui.frontend.client.services.AttributeSetServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -136,7 +137,10 @@ public class AddTemplateAttributeDialog extends Window {
 		add.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				propertiesPanel.addAttributes(setAttributesList.getSelectedRecords());
+				if (setAttributesList.getSelectedRecords() == null || setAttributesList.getSelectedRecords().length < 1)
+					SC.warn(I18N.message("pleaseselectanattribute"));
+				else
+					propertiesPanel.addAttributes(setAttributesList.getSelectedRecords());
 			}
 		});
 
