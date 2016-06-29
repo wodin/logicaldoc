@@ -25,6 +25,8 @@ import com.logicaldoc.webservice.soap.endpoint.SoapFolderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.Example;
+import io.swagger.annotations.ExampleProperty;
 
 @Path("/") 
 @Api(value = "folder")
@@ -39,7 +41,7 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	@Path("/create")
 	@ApiOperation(value = "Creates a new folder", 
 	notes = "The 'folder' metadata comes in the POST request body (encoded as JSON). Note: folder object must specify at least fields name and parentId")	
-	public WSFolder create(@ApiParam(value = "The folder metadata", required = true) WSFolder folder) throws Exception {
+	public WSFolder create(@ApiParam(value = "The folder metadata", required = true, examples=@Example(value = { @ExampleProperty(value = "{ \"parentId\": 4, \"name\": \"Folder created by REST ws\"}") })) WSFolder folder) throws Exception {
 		log.debug("create()");
 		String sid = validateSession();
 		return super.create(sid, folder);
@@ -81,7 +83,7 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	@Consumes({ MediaType.APPLICATION_JSON })
 	@ApiOperation(value = "Creates folders from path", 
 	notes = "Creates folders using an input path. All the folders in the path will be created. It returns the metadata object representing the latest created folder in the path")
-	public WSFolder createSimpleJSON(@ApiParam(name = "folderPath", value = "The string representing the path to be created", example = "{\"folderPath\":\"/Default/central/repo\"}") String jsonstr) throws Exception {
+	public WSFolder createSimpleJSON(@ApiParam(name = "folderPath", value = "The string representing the path to be created", examples=@Example(value = { @ExampleProperty(value = "{\"folderPath\":\"/Default/central/repo\"}") })) String jsonstr) throws Exception {	
 		log.debug("createSimpleJSON()");
 
 		String sid = validateSession();
@@ -103,7 +105,7 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	@ApiOperation(value = "Creates folders from path", 
 	notes = "Creates folders using an input path. All the folders in the path will be created. It returns the metadata object representing the latest created folder in the path. "
 			+ "Example: curl -u admin:admin -X POST -H ''Content-Type: text/plain'' -H ''Accept: application/json'' -d ''/Default/Curl/newfolder'' http://localhost:8080/services/rest/folder/createSimple")	
-	public WSFolder createSimple(@ApiParam(value = "The string representing the path to be created", example = "/Default/newfolder") String folderPath) throws Exception {
+	public WSFolder createSimple(@ApiParam(value = "The string representing the path to be created", examples=@Example(value = { @ExampleProperty(value = "/Default/newfolder") })) String folderPath) throws Exception {
 		log.debug("createSimple()");
 
 		String sid = validateSession();
@@ -186,8 +188,8 @@ public class RestFolderService extends SoapFolderService implements FolderServic
 	@POST
 	@Path("/update")
 	@ApiOperation(value = "Updates a folder", 
-	notes = "Updates a folder changing its metadata. The folder object in input must specify the field id")		
-	public void update(WSFolder folder) throws Exception {
+	notes = "Updates a folder changing its metadata. The folder object in input must specify the property id")		
+	public void update(@ApiParam(value = "A value object with the metadata of the folder to update", examples=@Example(value = { @ExampleProperty(value = "{ \"id\": 2335253, \"name\": \"Folder updated by REST ws\"}") }))WSFolder folder) throws Exception {
 		log.debug("update()");
 		String sid = validateSession();
 		super.update(sid, folder);

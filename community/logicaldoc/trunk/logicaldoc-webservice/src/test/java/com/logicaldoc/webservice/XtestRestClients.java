@@ -77,7 +77,7 @@ public class XtestRestClients {
 		*/
 
 		//WSFolder cfld = createFolder();
-		//updateFolder(cfld, "Folder uppdated by REST ws");
+		//updateFolder(cfld, "Folder updated by REST ws");
 		
 		// createDocument02();
 		// createFolder(04L, "DJ KATCH");

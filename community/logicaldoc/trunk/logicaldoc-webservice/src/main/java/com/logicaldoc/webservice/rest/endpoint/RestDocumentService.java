@@ -31,6 +31,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Example;
+import io.swagger.annotations.ExampleProperty;
 
  
 @Path("/")
@@ -50,7 +52,13 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	notes = "Creates a new document using the metadata 'document' object provided as JSON/XML",
 	response = WSDocument.class)
 	@ApiImplicitParams({
-	    @ApiImplicitParam(name = "document", value = "The document metadata provided as WSDocument object encoded in JSON/XML format", required = true, dataType = "com.logicaldoc.webservice.model.WSDocument", paramType = "form"),
+	    @ApiImplicitParam(
+	    		name = "document", 
+	    		value = "The document metadata provided as WSDocument object encoded in JSON/XML format", 
+	    		required = true, 
+	    		dataType = "WSDocument", 
+	    		paramType = "form", 
+	    		examples=@Example(value = { @ExampleProperty(value = "{ \"fileName\":\"Help.pdf\",\"folderId\": 4, \"language\":\"en\" }") })),
 	    @ApiImplicitParam(name = "content", value = "File data", required = true, dataType = "file", paramType = "form")
 	  })		
 	@ApiResponses(value = { 
@@ -264,8 +272,14 @@ public class RestDocumentService extends SoapDocumentService implements Document
 	@Override
 	@PUT
 	@Path("/update")
-    @ApiOperation(value = "Updates an existing document", notes = "Updates the metadata of an existing document. The ID of the document must be specified in the WSDocument value object")	
-	public void update(@ApiParam(value = "Document object that needs to be updated", required = true) WSDocument document) throws Exception {
+    @ApiOperation(value = "Updates an existing document", 
+    notes = "Updates the metadata of an existing document. The ID of the document must be specified in the WSDocument value object. The provided example moves document with ID 1111111 to folder 3435433")	
+	public void update(
+			@ApiParam(
+					value = "Document object that needs to be updated",					
+					required = true,
+					examples=@Example(value = { @ExampleProperty(value = "{ \"id\": 1111111, \"folderId\": 3435433 }") })
+					) WSDocument document) throws Exception {
 		String sid = validateSession();
 		super.update(sid, document);
 	}
