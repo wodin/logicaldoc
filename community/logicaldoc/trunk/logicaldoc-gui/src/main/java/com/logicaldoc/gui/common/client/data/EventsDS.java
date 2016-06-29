@@ -1,5 +1,6 @@
 package com.logicaldoc.gui.common.client.data;
 
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
@@ -10,7 +11,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 6.0
  */
 public class EventsDS extends DataSource {
-	public EventsDS(String locale, boolean folder, boolean workflow, boolean user) {
+	public EventsDS(boolean folder, boolean workflow, boolean user) {
 		setRecordXPath("/list/event");
 		DataSourceTextField code = new DataSourceTextField("code");
 		code.setPrimaryKey(true);
@@ -22,6 +23,6 @@ public class EventsDS extends DataSource {
 		setFields(code, type, label);
 		setClientOnly(true);
 
-		setDataURL("data/events.xml?locale=" + locale + "&folder=" + folder + "&workflow=" + "&user=" + user);
+		setDataURL("data/events.xml?locale=" + I18N.getLocale() + "&folder=" + folder + "&workflow=" + "&user=" + user);
 	}
 }

@@ -414,7 +414,7 @@ public class ItemFactory {
 		select.setHeight(200);
 		select.setMultipleAppearance(MultipleAppearance.GRID);
 		select.setMultiple(true);
-		select.setOptionDataSource(new EventsDS(Session.get().getUser().getLanguage(), folder, workflow, user));
+		select.setOptionDataSource(new EventsDS(folder, workflow, user));
 		select.setValueField("code");
 		select.setDisplayField("label");
 		select.setHintStyle("hint");
