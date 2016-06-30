@@ -549,7 +549,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 
 			if (workspace == null) {
 				log.debug("Path " + path + " will be created in the Default workspace");
-				parent = folderDao.findById(rootId);
+				parent = folderDao.findDefaultWorkspace(user.getTenantId());
 			}
 		}
 

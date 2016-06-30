@@ -734,7 +734,10 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 					}
 
 					TreeNode node = new TreeNode(fld.getName());
-					node.setAttribute("id", parent.getAttributeAsString("id") + "-" + Long.toString(fldId));
+					String parentId = parent.getAttributeAsString("id");
+					if ("/".equals(parentId))
+						parentId = "" + Constants.DOCUMENTS_FOLDERID;
+					node.setAttribute("id", parentId + "-" + Long.toString(fldId));
 					node.setAttribute("folderId", Long.toString(fldId));
 					node.setAttribute("type", Integer.toString(fld.getType()));
 					node.setAttribute("foldRef", fldRef != null ? Long.toString(fldRef) : null);

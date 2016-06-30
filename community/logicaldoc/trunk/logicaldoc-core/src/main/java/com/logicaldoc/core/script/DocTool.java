@@ -11,6 +11,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
@@ -86,35 +87,28 @@ public class DocTool {
 		docDao.store(doc, transaction);
 	}
 
-	public void move(final Document doc, final String targetPath, final String username) throws Exception {
-		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+	public void move(Document doc, String targetPath, String username) throws Exception {
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		DocumentManager manager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 
-		Folder parent = doc.getFolder();
-		if (targetPath.startsWith("/"))
-			parent = fdao.findRoot(doc.getTenantId());
+		User user = userDao.findByUsername(username);
 
-		Folder folder = fdao.createPath(parent, targetPath, true, null);
+		Folder folder = createPath(doc, targetPath);
 
 		History transaction = new History();
 		transaction.setDocId(doc.getId());
+		transaction.setTenantId(doc.getTenantId());
 		transaction.setDate(new Date());
-		transaction.setUser(userDao.findByUsername(username));
+		transaction.setUser(user);
 
 		manager.moveToFolder(doc, folder, transaction);
 	}
 
-	public void copy(final Document doc, final String targetPath, final String username) throws Exception {
-		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+	public void copy(Document doc, String targetPath, String username) throws Exception {
 		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
 		DocumentManager manager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 
-		Folder parent = doc.getFolder();
-		if (targetPath.startsWith("/"))
-			parent = fdao.findRoot(doc.getTenantId());
-
-		Folder folder = fdao.createPath(parent, targetPath, true, null);
+		Folder folder = createPath(doc, targetPath);
 
 		History transaction = new History();
 		transaction.setDocId(doc.getId());
@@ -122,5 +116,37 @@ public class DocTool {
 		transaction.setUser(userDao.findByUsername(username));
 
 		manager.copyToFolder(doc, folder, transaction);
+	}
+
+	private Folder createPath(Document doc, String targetPath) {
+		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+		Folder parent = doc.getFolder();
+		if (targetPath.startsWith("/")) {
+			targetPath = targetPath.substring(1);
+			/*
+			 * Cannot write in the root so if the parent is the root, we have to
+			 * guarantee that the first element in the path is a workspace. If
+			 * not the Default one will be used.
+			 */
+			parent = fdao.findRoot(doc.getTenantId());
+			Folder workspace = null;
+
+			/*
+			 * Check if the path contains the workspace specification
+			 */
+			for (Folder w : fdao.findWorkspaces(doc.getTenantId())) {
+				if (targetPath.startsWith(w.getName())) {
+					workspace = fdao.findById(w.getId());
+					break;
+				}
+			}
+
+			if (workspace == null) {
+				parent = fdao.findDefaultWorkspace(doc.getTenantId());
+			}
+		}
+
+		Folder folder = fdao.createPath(parent, targetPath, true, null);
+		return folder;
 	}
 }
