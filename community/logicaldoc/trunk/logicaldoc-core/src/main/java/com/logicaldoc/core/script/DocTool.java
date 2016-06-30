@@ -7,6 +7,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.Tenant;
@@ -66,6 +67,23 @@ public class DocTool {
 
 	public String displayUtl(History history) {
 		return displayUrl(history.getTenantId(), history.getDocId());
+	}
+
+	public void store(Document doc) {
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		docDao.store(doc);
+	}
+
+	public void store(Document doc, String username) {
+		UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
+		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+
+		History transaction = new History();
+		transaction.setDocId(doc.getId());
+		transaction.setDate(new Date());
+		transaction.setUser(userDao.findByUsername(username));
+
+		docDao.store(doc, transaction);
 	}
 
 	public void move(final Document doc, final String targetPath, final String username) throws Exception {
