@@ -13,15 +13,17 @@ public class GUIStamp implements Serializable {
 
 	private long id = 0L;
 
-	public static int TYPE_TEXT = 0;
+	public static final int TYPE_TEXT = 0;
 
-	public static int TYPE_IMAGE = 1;
+	public static final int TYPE_IMAGE = 1;
 
-	public static int PAGE_OPT_ALL = 0;
+	public static final int PAGE_OPT_ALL = 0;
 
-	public static int PAGE_OPT_LAST = 1;
+	public static final int PAGE_OPT_FIRST = 1;
 
-	public static int PAGE_OPT_SEL = 2;
+	public static final int PAGE_OPT_LAST = 2;
+
+	public static final int PAGE_OPT_SEL = 3;
 
 	private int type = TYPE_TEXT;
 
