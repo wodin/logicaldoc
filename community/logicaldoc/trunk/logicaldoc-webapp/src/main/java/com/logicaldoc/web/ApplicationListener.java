@@ -81,22 +81,21 @@ public class ApplicationListener implements ServletContextListener, HttpSessionL
 			log.warn(e.getMessage(), e);
 		}
 
-//		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-//		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
-//
-//		for (Thread t : threadArray) {
-//			synchronized (t) {
-//				if ((t.getName().toLowerCase().contains("abandoned connection") || t.getName().startsWith("Scheduler_")
-//						|| t.getName().startsWith("SessionTimeout") || t.getName().startsWith("QuotaUpdate"))
-//						&& !Thread.currentThread().equals(t) && !t.isInterrupted())
-//					try {
-//						t.stop(); // don't complain, it works
-//						log.warn("Killed thread " + t.getName());
-//					} catch (Throwable e) {
-//						log.warn("Error killing " + t.getName());
-//					}
-//			}
-//		}
+		Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+		Thread[] threadArray = threadSet.toArray(new Thread[threadSet.size()]);
+
+		for (Thread t : threadArray) {
+			synchronized (t) {
+				if ((t.getName().toLowerCase().contains("abandoned connection") || t.getName().startsWith("Scheduler_"))
+						&& !Thread.currentThread().equals(t) && !t.isInterrupted())
+					try {
+						t.stop(); // don't complain, it works
+						log.warn("Killed thread " + t.getName());
+					} catch (Throwable e) {
+						log.warn("Error killing " + t.getName());
+					}
+			}
+		}
 
 		log.warn("Application stopped");
 	}
