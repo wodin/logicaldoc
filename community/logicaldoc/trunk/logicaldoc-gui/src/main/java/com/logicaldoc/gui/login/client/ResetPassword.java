@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.login.client.services.LoginService;
 import com.logicaldoc.gui.login.client.services.LoginServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -85,6 +86,7 @@ public class ResetPassword extends Window {
 						@Override
 						public void onSuccess(Void result) {
 							buttonForm.setDisabled(false);
+							SC.say(I18N.message("amessagewassentto", emailAddress));
 							destroy();
 						}
 					});
