@@ -29,6 +29,7 @@ import com.ibm.icu.util.StringTokenizer;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.User;
@@ -75,6 +76,7 @@ public class DocumentsDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "no-store");
 			response.setDateHeader("Expires", 0);
 
+			FolderDAO fDao = (FolderDAO) context.getBean(FolderDAO.class);
 			DocumentDAO dao = (DocumentDAO) context.getBean(DocumentDAO.class);
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 			df.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -100,6 +102,10 @@ public class DocumentsDataServlet extends HttpServlet {
 				int end = Math.min(begin + max - 1, docs.size() - 1);
 				for (int i = begin; i <= end; i++) {
 					Document doc = docs.get(i);
+
+					if (!fDao.isReadEnabled(doc.getFolder().getId(), session.getUserId()))
+						continue;
+
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
 					writer.print("<icon>"
@@ -119,6 +125,10 @@ public class DocumentsDataServlet extends HttpServlet {
 					Document doc = dao.findById(Long.parseLong(id));
 					if (doc == null || doc.getDeleted() == 1)
 						continue;
+
+					if (!fDao.isReadEnabled(doc.getFolder().getId(), session.getUserId()))
+						continue;
+
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
 					writer.print("<icon>"
@@ -139,6 +149,8 @@ public class DocumentsDataServlet extends HttpServlet {
 				Long folderId = null;
 				if (StringUtils.isNotEmpty(request.getParameter("folderId")))
 					folderId = new Long(request.getParameter("folderId"));
+				if (!fDao.isReadEnabled(folderId, session.getUserId()))
+					throw new Exception("Folder " + folderId + " is not accessible by user " + session.getUsername());
 
 				String filename = null;
 				if (StringUtils.isNotEmpty(request.getParameter("filename")))
