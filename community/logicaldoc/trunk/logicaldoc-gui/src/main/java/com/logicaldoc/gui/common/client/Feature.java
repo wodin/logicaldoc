@@ -172,6 +172,8 @@ public class Feature {
 	public static final int AUTO_FOLDING = 89;
 
 	public static final int HOT_FOLDER = 91;
+	
+	public static final int ZOHO = 92;
 
 	private static Set<String> features = new HashSet<String>();
 
