@@ -122,114 +122,119 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 	 * given authenticated user.
 	 */
 	public GUISession loadSession(Session sess, String locale) {
-		GUIUser guiUser = new GUIUser();
-		GUISession session = new GUISession();
-		session.setSid(sess.getId());
+		try {
+			GUIUser guiUser = new GUIUser();
+			GUISession session = new GUISession();
+			session.setSid(sess.getId());
 
-		DocumentDAO documentDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
-		SystemMessageDAO messageDao = (SystemMessageDAO) Context.get().getBean(SystemMessageDAO.class);
-		SequenceDAO seqDao = (SequenceDAO) Context.get().getBean(SequenceDAO.class);
+			DocumentDAO documentDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+			SystemMessageDAO messageDao = (SystemMessageDAO) Context.get().getBean(SystemMessageDAO.class);
+			SequenceDAO seqDao = (SequenceDAO) Context.get().getBean(SequenceDAO.class);
 
-		User user = sess.getUser();
+			User user = sess.getUser();
 
-		guiUser.setFirstName(user.getFirstName());
-		guiUser.setName(user.getName());
-		guiUser.setId(user.getId());
-		guiUser.setTenantId(user.getTenantId());
-		if (StringUtils.isEmpty(locale)) {
-			guiUser.setLanguage(user.getLanguage());
-		} else {
-			guiUser.setLanguage(locale);
+			guiUser.setFirstName(user.getFirstName());
+			guiUser.setName(user.getName());
+			guiUser.setId(user.getId());
+			guiUser.setTenantId(user.getTenantId());
+			if (StringUtils.isEmpty(locale) || "null".equals(locale)) {
+				guiUser.setLanguage(user.getLanguage());
+			} else {
+				guiUser.setLanguage(locale);
+			}
+
+			GUIInfo info = new InfoServiceImpl().getInfo(guiUser.getLanguage(), sess.getTenantName());
+			session.setInfo(info);
+
+			guiUser.setName(user.getName());
+			guiUser.setEmail(user.getEmail());
+			guiUser.setEmailSignature(user.getEmailSignature());
+
+			GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
+			int i = 0;
+			for (Group g : user.getGroups()) {
+				groups[i] = new GUIGroup();
+				groups[i].setId(g.getId());
+				groups[i].setName(g.getName());
+				groups[i].setDescription(g.getDescription());
+				i++;
+			}
+			guiUser.setGroups(groups);
+
+			guiUser.setUserName(user.getUsername());
+			guiUser.setPasswordExpired(false);
+
+			guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED).size());
+			guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(),
+					AbstractDocument.DOC_CHECKED_OUT).size());
+			guiUser.setUnreadMessages(messageDao.getCount(user.getUsername(), SystemMessage.TYPE_SYSTEM, 0));
+
+			guiUser.setQuota(user.getQuota());
+			guiUser.setQuotaCount(seqDao.getCurrentValue("userquota", user.getId(), user.getTenantId()));
+			guiUser.setWelcomeScreen(user.getWelcomeScreen());
+
+			if (StringUtils.isNotEmpty(user.getCertSubject()))
+				guiUser.setCertSubject(user.getCertSubject());
+			if (StringUtils.isNotEmpty(user.getKeyDigest()))
+				guiUser.setKeyDigest(user.getKeyDigest());
+
+			session.setSid(sess.getId());
+			session.setUser(guiUser);
+			session.setLoggedIn(true);
+
+			MenuDAO mdao = (MenuDAO) Context.get().getBean(MenuDAO.class);
+			List<Long> menues = mdao.findMenuIdByUserId(sess.getUserId());
+			guiUser.setMenues((Long[]) menues.toArray(new Long[0]));
+
+			loadDashlets(guiUser);
+
+			/*
+			 * Prepare an incoming message, if any
+			 */
+			ContextProperties config = Context.get().getProperties();
+			String incomingMessage = config.getProperty(sess.getTenantName() + ".gui.welcome");
+			if (StringUtils.isNotEmpty(incomingMessage)) {
+				Map<String, String> map = new HashMap<String, String>();
+				map.put("user", user.getFullName());
+				incomingMessage = StrSubstitutor.replace(incomingMessage, map);
+			}
+
+			// In case of news overwrite the incoming message
+			if (guiUser.isMemberOf(Constants.GROUP_ADMIN) && info.isEnabled("Feature_27")) {
+				// Check if there are incoming messages not already read
+				FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context.get().getBean(FeedMessageDAO.class);
+				if (feedMessageDao.checkNotRead())
+					incomingMessage = I18N.message("productnewsmessage", user.getLocale());
+			}
+
+			if (StringUtils.isNotEmpty(incomingMessage))
+				session.setIncomingMessage(incomingMessage);
+
+			// Define the current locale
+			sess.getDictionary().put(ServiceUtil.LOCALE, user.getLocale());
+			sess.getDictionary().put(ServiceUtil.USER, user);
+
+			guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty(sess.getTenantName() + ".password.size")));
+
+			/*
+			 * Prepare the external command
+			 */
+			String tenant = sess.getTenantName();
+			if (info.isEnabled("Feature_31") && "true".equals(config.getProperty(tenant + ".extcall.enabled"))) {
+				GUIExternalCall externalCall = new GUIExternalCall();
+				externalCall.setName(config.getProperty(tenant + ".extcall.name"));
+				externalCall.setBaseUrl(config.getProperty(tenant + ".extcall.baseurl"));
+				externalCall.setSuffix(config.getProperty(tenant + ".extcall.suffix"));
+				externalCall.setTargetWindow(config.getProperty(tenant + ".extcall.window"));
+				externalCall.setParametersStr(config.getProperty(tenant + ".extcall.params"));
+				session.setExternalCall(externalCall);
+			}
+
+			return session;
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+			throw new RuntimeException(t.getMessage(), t);
 		}
-
-		GUIInfo info = new InfoServiceImpl().getInfo(guiUser.getLanguage(), sess.getTenantName());
-		session.setInfo(info);
-
-		guiUser.setName(user.getName());
-		guiUser.setEmail(user.getEmail());
-		guiUser.setEmailSignature(user.getEmailSignature());
-
-		GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
-		int i = 0;
-		for (Group g : user.getGroups()) {
-			groups[i] = new GUIGroup();
-			groups[i].setId(g.getId());
-			groups[i].setName(g.getName());
-			groups[i].setDescription(g.getDescription());
-			i++;
-		}
-		guiUser.setGroups(groups);
-
-		guiUser.setUserName(user.getUsername());
-		guiUser.setPasswordExpired(false);
-
-		guiUser.setLockedDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_LOCKED).size());
-		guiUser.setCheckedOutDocs(documentDao.findByLockUserAndStatus(user.getId(), AbstractDocument.DOC_CHECKED_OUT)
-				.size());
-		guiUser.setUnreadMessages(messageDao.getCount(user.getUsername(), SystemMessage.TYPE_SYSTEM, 0));
-
-		guiUser.setQuota(user.getQuota());
-		guiUser.setQuotaCount(seqDao.getCurrentValue("userquota", user.getId(), user.getTenantId()));
-		guiUser.setWelcomeScreen(user.getWelcomeScreen());
-
-		if (StringUtils.isNotEmpty(user.getCertSubject()))
-			guiUser.setCertSubject(user.getCertSubject());
-		if (StringUtils.isNotEmpty(user.getKeyDigest()))
-			guiUser.setKeyDigest(user.getKeyDigest());
-
-		session.setSid(sess.getId());
-		session.setUser(guiUser);
-		session.setLoggedIn(true);
-
-		MenuDAO mdao = (MenuDAO) Context.get().getBean(MenuDAO.class);
-		List<Long> menues = mdao.findMenuIdByUserId(sess.getUserId());
-		guiUser.setMenues((Long[]) menues.toArray(new Long[0]));
-
-		loadDashlets(guiUser);
-
-		/*
-		 * Prepare an incoming message, if any
-		 */
-		ContextProperties config = Context.get().getProperties();
-		String incomingMessage = config.getProperty(sess.getTenantName() + ".gui.welcome");
-		if (StringUtils.isNotEmpty(incomingMessage)) {
-			Map<String, String> map = new HashMap<String, String>();
-			map.put("user", user.getFullName());
-			incomingMessage = StrSubstitutor.replace(incomingMessage, map);
-		}
-
-		// In case of news overwrite the incoming message
-		if (guiUser.isMemberOf(Constants.GROUP_ADMIN) && info.isEnabled("Feature_27")) {
-			// Check if there are incoming messages not already read
-			FeedMessageDAO feedMessageDao = (FeedMessageDAO) Context.get().getBean(FeedMessageDAO.class);
-			if (feedMessageDao.checkNotRead())
-				incomingMessage = I18N.message("productnewsmessage", locale);
-		}
-
-		if (StringUtils.isNotEmpty(incomingMessage))
-			session.setIncomingMessage(incomingMessage);
-
-		// Define the current locale
-		sess.getDictionary().put(ServiceUtil.LOCALE, user.getLocale());
-		sess.getDictionary().put(ServiceUtil.USER, user);
-
-		guiUser.setPasswordMinLenght(Integer.parseInt(config.getProperty(sess.getTenantName() + ".password.size")));
-
-		/*
-		 * Prepare the external command
-		 */
-		String tenant = sess.getTenantName();
-		if (info.isEnabled("Feature_31") && "true".equals(config.getProperty(tenant + ".extcall.enabled"))) {
-			GUIExternalCall externalCall = new GUIExternalCall();
-			externalCall.setName(config.getProperty(tenant + ".extcall.name"));
-			externalCall.setBaseUrl(config.getProperty(tenant + ".extcall.baseurl"));
-			externalCall.setSuffix(config.getProperty(tenant + ".extcall.suffix"));
-			externalCall.setTargetWindow(config.getProperty(tenant + ".extcall.window"));
-			externalCall.setParametersStr(config.getProperty(tenant + ".extcall.params"));
-			session.setExternalCall(externalCall);
-		}
-
-		return session;
 	}
 
 	@Override
