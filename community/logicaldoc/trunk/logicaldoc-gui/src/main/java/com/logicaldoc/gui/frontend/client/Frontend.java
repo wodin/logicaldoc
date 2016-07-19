@@ -105,7 +105,7 @@ public class Frontend implements EntryPoint {
 
 				WindowUtils.setFavicon(info);
 
-				securityService.getSession(Util.getLocaleInRequest(), new AsyncCallback<GUISession>() {
+				securityService.getSession(locale, new AsyncCallback<GUISession>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
