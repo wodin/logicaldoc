@@ -41,7 +41,7 @@ public class IconSelector {
 				|| ext.equals("pot") || ext.equals("sxi") || ext.equals("kpr"))
 			icon = "powerpoint.png";
 		else if (ext.equals("jpg") || ext.equals("jpeg") || ext.equals("gif") || ext.equals("png") || ext.equals("bmp")
-				|| ext.equals("tif") || ext.equals("tiff") || ext.equals("psd"))
+				|| ext.equals("tif") || ext.equals("tiff") || ext.equals("psd") || ext.equals("ai"))
 			icon = "picture.png";
 		else if (ext.equals("htm") || ext.equals("html") || ext.equals("xml") || ext.equals("xhtml"))
 			icon = "html.png";
