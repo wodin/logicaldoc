@@ -9,7 +9,7 @@
   </parent>
 	<groupId>com.logicaldoc</groupId>
 	<artifactId>logicaldoc</artifactId>
-	<version>7.5.1</version>
+	<version>7.5.2</version>
 	<packaging>pom</packaging>
 	<name>logicaldoc</name>
 	<description>
@@ -98,6 +98,13 @@
     <url>http://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/logicaldoc/trunk</url>
   </scm>
 	
+  <!--repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+  </repositories -->
+          
 	<modules>
 		<module>logicaldoc-util</module>
 		<module>logicaldoc-core</module>
