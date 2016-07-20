@@ -363,13 +363,10 @@ public class LoginPanel extends VLayout {
 	 * Prepares the panel to show messages
 	 */
 	protected void prepareMessages() {
-		if (info.getMessages() == null || info.getMessages().length == 0)
-			return;
-
 		int height = 0;
 
 		List<MessageLabel> messages = new ArrayList<MessageLabel>();
-		if (info.getMessages().length > 0) {
+		if (info.getMessages()!=null && info.getMessages().length > 0) {
 			for (GUIMessage message : info.getMessages()) {
 				MessageLabel label = new MessageLabel(message, info.getTenant().getId() == 1L);
 				label.setStyleName("loginMemesage");
