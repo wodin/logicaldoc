@@ -54,7 +54,6 @@
 
     <script src="debugger.js"></script>
     <script src="viewer.js"></script>
-
   </head>
 
   <body tabindex="1" class="loadingInProgress">
@@ -111,7 +110,6 @@
               <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
             </button>
 
-        <% if(download) { %>
             <button id="secondaryOpenFile" class="secondaryToolbarButton openFile visibleLargeView" title="Open File" tabindex="52" data-l10n-id="open_file">
               <span data-l10n-id="open_file_label">Open</span>
             </button>
@@ -123,7 +121,6 @@
             <button id="secondaryDownload" class="secondaryToolbarButton download visibleMediumView" title="Download" tabindex="54" data-l10n-id="download">
               <span data-l10n-id="download_label">Download</span>
             </button>
-        <% } %>
         
             <a href="#" id="secondaryViewBookmark" class="secondaryToolbarButton bookmark visibleSmallView" title="Current view (copy or open in new window)" tabindex="55" data-l10n-id="bookmark">
               <span data-l10n-id="bookmark_label">Current View</span>
@@ -190,7 +187,6 @@
                   <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
                 </button>
 
-                <% if(download) { %>
                   <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
                     <span data-l10n-id="open_file_label">Open</span>
                   </button>
@@ -202,7 +198,6 @@
                   <button id="download" class="toolbarButton download hiddenMediumView" title="Download" tabindex="34" data-l10n-id="download">
                     <span data-l10n-id="download_label">Download</span>
                   </button>
-                <% } %>
                 
                 <a href="#" id="viewBookmark" class="toolbarButton bookmark hiddenSmallView" title="Current view (copy or open in new window)" tabindex="35" data-l10n-id="bookmark">
                   <span data-l10n-id="bookmark_label">Current View</span>
@@ -436,3 +431,17 @@
 
   </body>
 </html>
+
+
+<script>
+	document.getElementById("openFile").style.display = 'none';
+	document.getElementById("secondaryOpenFile").style.display = 'none';
+</script>
+<% if(!download) { %>
+<script>
+	document.getElementById("download").style.display = 'none';
+	document.getElementById("secondaryDownload").style.display = 'none';
+	document.getElementById("print").style.display = 'none';
+	document.getElementById("secondaryPrint").style.display = 'none';
+</script>
+<% } %>
