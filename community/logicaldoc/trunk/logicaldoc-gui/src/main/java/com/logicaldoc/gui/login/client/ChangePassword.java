@@ -8,8 +8,8 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.services.SecurityService;
-import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
+import com.logicaldoc.gui.login.client.services.LoginService;
+import com.logicaldoc.gui.login.client.services.LoginServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.VerticalAlignment;
@@ -39,7 +39,7 @@ public class ChangePassword extends Window {
 
 	private static final String NEWPASSWORD = "newpassword";
 
-	private SecurityServiceAsync securityService = (SecurityServiceAsync) GWT.create(SecurityService.class);
+	private LoginServiceAsync loginService = (LoginServiceAsync) GWT.create(LoginService.class);
 
 	public ChangePassword(final GUIUser user) {
 		super();
@@ -99,7 +99,7 @@ public class ChangePassword extends Window {
 						return;
 					}
 
-					securityService.changePassword(user.getId(), vm.getValueAsString(PASSWORD),
+					loginService.changePassword(user.getId(), vm.getValueAsString(PASSWORD),
 							vm.getValueAsString(NEWPASSWORD), true, new AsyncCallback<Integer>() {
 
 								@Override
