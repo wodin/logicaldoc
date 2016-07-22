@@ -10,6 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLDecoder;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -96,8 +97,14 @@ public class UploadServlet extends UploadAction {
 
 			String tenant = Tenant.DEFAULT_NAME;
 
-			Session sess = ServiceUtil.validateSession(request);
-			tenant = sess.getTenantName();
+			try {
+				Session sess = ServiceUtil.validateSession(request);
+				tenant = sess.getTenantName();
+			} catch (Throwable t) {
+				// ok no session, but was the security checks passed?
+				if (request.getAttribute("__spring_security_session_mgmt_filter_applied")==null || !"true".equals(request.getAttribute("__spring_security_session_mgmt_filter_applied").toString()))
+					throw t;
+			}
 
 			for (FileItem item : sessionFiles) {
 				if (false == item.isFormField()) {
@@ -141,7 +148,7 @@ public class UploadServlet extends UploadAction {
 			removeSessionFileItems(request);
 			throw e;
 		} catch (Throwable t) {
-			log.error(t.getMessage());
+			log.error(t.getMessage(), t);
 		}
 		return null;
 	}
