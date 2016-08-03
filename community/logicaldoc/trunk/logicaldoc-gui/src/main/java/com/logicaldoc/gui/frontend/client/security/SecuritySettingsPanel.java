@@ -207,7 +207,7 @@ public class SecuritySettingsPanel extends VLayout {
 		enableAnonymous.setRequired(true);
 
 		final StaticTextItem url = ItemFactory.newStaticTextItem("anonUrl", I18N.message("url"),
-				GWT.getHostPageBaseURL() + "?anonymous=login&tenant=" + Session.get().getTenantName() + "&key="
+				GWT.getHostPageBaseURL() + "frontend.jsp?anonymous=login&tenant=" + Session.get().getTenantName() + "&key="
 						+ settings.getAnonymousKey());
 
 		TextItem anonymousKey = ItemFactory.newSimpleTextItem("anonymousKey", "key", settings.getAnonymousKey());

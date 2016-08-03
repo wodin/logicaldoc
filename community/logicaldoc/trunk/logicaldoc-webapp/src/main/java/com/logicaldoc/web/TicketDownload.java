@@ -34,9 +34,7 @@ import com.logicaldoc.util.MimeType;
 import com.logicaldoc.web.util.ServletUtil;
 
 public class TicketDownload extends HttpServlet {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 9088160958327454062L;
 
 	protected static Logger logger = LoggerFactory.getLogger(TicketDownload.class);
@@ -75,8 +73,7 @@ public class TicketDownload extends HttpServlet {
 		try {
 			DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 			TicketDAO ticketDao = (TicketDAO) Context.get().getBean(TicketDAO.class);
-			PdfConverterManager converter = (PdfConverterManager) Context.get().getBean(
-					PdfConverterManager.class);
+			PdfConverterManager converter = (PdfConverterManager) Context.get().getBean(PdfConverterManager.class);
 			Ticket ticket = ticketDao.findByTicketId(ticketId);
 			if (ticket == null || ticket.getDocId() == 0)
 				throw new IOException("Unexisting ticket " + ticketId);
@@ -92,6 +89,8 @@ public class TicketDownload extends HttpServlet {
 				throw new IOException("Document not published");
 
 			String suffix = ticket.getSuffix();
+			if ("pdf".equals(suffix))
+				suffix = "conversion.pdf";
 			if ("conversion.pdf".equals(suffix)) {
 				converter.createPdf(doc, null, null);
 				if ("pdf".equals(FilenameUtils.getExtension(doc.getFileName()).toLowerCase()))

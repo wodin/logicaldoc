@@ -78,10 +78,12 @@ public class Menu {
 	public static final long SHAREFILE = -2075;
 
 	public static final long GDOCS = -2080;
-
+	
 	public static final long WEBCONTENT = -2100;
 
 	public static final long RETENTION_POLICIES = -2110;
+	
+	public static final long ZOHO = -2120;
 	
 	private static Set<Long> menues = new HashSet<Long>();
 

@@ -656,15 +656,16 @@ public class DocumentManagerImpl implements DocumentManager {
 
 		// Execute the query to populate the sets
 		SqlRowSet rs = documentDAO.queryForRowSet(query.toString(), null, null);
-		while (rs.next()) {
-			String title = rs.getString(1);
-			String file = rs.getString(2);
+		if (rs != null)
+			while (rs.next()) {
+				String title = rs.getString(1);
+				String file = rs.getString(2);
 
-			if (!titles.contains(title))
-				titles.add(title);
-			if (!files.contains(file))
-				files.add(file);
-		}
+				if (!titles.contains(title))
+					titles.add(title);
+				if (!files.contains(file))
+					files.add(file);
+			}
 
 		int counter = 1;
 		while (titles.contains(doc.getTitle().toLowerCase())) {
