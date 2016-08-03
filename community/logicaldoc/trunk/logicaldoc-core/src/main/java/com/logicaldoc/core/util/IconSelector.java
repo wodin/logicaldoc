@@ -28,7 +28,7 @@ public class IconSelector {
 			icon = "generic.png";
 		else if (ext.equals("pdf"))
 			icon = "pdf.png";
-		else if (ext.equals("txt") || ext.equals("properties"))
+		else if (ext.equals("txt") || ext.equals("properties") || ext.equals("log") || ext.equals("csv"))
 			icon = "text.png";
 		else if (ext.equals("doc") || ext.equals("docx") || ext.equals("odt") || ext.equals("rtf") || ext.equals("ott")
 				|| ext.equals("sxw") || ext.equals("wpd") || ext.equals("kwd") || ext.equals("dot"))

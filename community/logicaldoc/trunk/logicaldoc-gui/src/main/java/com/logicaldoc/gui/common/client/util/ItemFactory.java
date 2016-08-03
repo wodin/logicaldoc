@@ -915,7 +915,7 @@ public class ItemFactory {
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("", I18N.message("document"));
-		map.put("pdf", I18N.message("pdfconversion"));
+		map.put("conversion.pdf", I18N.message("pdfconversion"));
 
 		item.setValueMap(map);
 
