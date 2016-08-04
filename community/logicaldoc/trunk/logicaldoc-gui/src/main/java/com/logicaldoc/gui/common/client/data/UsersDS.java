@@ -27,8 +27,9 @@ public class UsersDS extends DataSource {
 		DataSourceTextField phone = new DataSourceTextField("phone");
 		DataSourceTextField cell = new DataSourceTextField("cell");
 		DataSourceTextField usergroup = new DataSourceTextField("usergroup");
+		DataSourceTextField groups = new DataSourceTextField("groups");
 
-		setFields(id, username, label, enabled, name, firstName, email, phone, cell, usergroup);
+		setFields(id, username, label, enabled, name, firstName, email, phone, cell,groups, usergroup);
 		setDataURL("data/users.xml?1=1" + (groupIdOrName != null ? "&groupId=" + groupIdOrName : "") + "&required="
 				+ required);
 		setClientOnly(true);

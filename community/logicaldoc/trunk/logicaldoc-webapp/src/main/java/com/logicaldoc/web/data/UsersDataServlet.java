@@ -2,8 +2,8 @@ package com.logicaldoc.web.data;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -13,14 +13,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.RowMapper;
 
 import com.logicaldoc.core.security.Group;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
+import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.web.util.ServiceUtil;
 
 /**
@@ -42,9 +42,8 @@ public class UsersDataServlet extends HttpServlet {
 			Session session = ServiceUtil.validateSession(request);
 
 			String groupIdOrName = request.getParameter("groupId");
-			boolean required= "true".equals(request.getParameter("required"));
-			
-			
+			boolean required = "true".equals(request.getParameter("required"));
+
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
 
@@ -55,12 +54,16 @@ public class UsersDataServlet extends HttpServlet {
 
 			PrintWriter writer = response.getWriter();
 			writer.print("<list>");
-			
-			if(!required)
+
+			if (!required)
 				writer.print("<user><id></id><username></username><name></name></user>");
 
+			List<User> users = new ArrayList<User>();
+
+			UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
+			GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
+
 			if (groupIdOrName != null && !groupIdOrName.trim().isEmpty()) {
-				GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
 				Group group = null;
 				try {
 					group = groupDao.findById(Long.parseLong(groupIdOrName));
@@ -69,99 +72,55 @@ public class UsersDataServlet extends HttpServlet {
 				if (group == null)
 					group = groupDao.findByName(groupIdOrName, session.getTenantId());
 				groupDao.initialize(group);
-				
-				/*
-				 * Iterate over records composing the response XML document
-				 */
-				for (User user : group.getUsers()) {
-					if (user.getType() != User.TYPE_DEFAULT)
-						continue;
 
-					writer.print("<user>");
-					writer.print("<id>" + user.getId() + "</id>");
-					writer.print("<username><![CDATA[" + user.getUsername() + "]]></username>");
-					if (user.getEnabled() == 1)
-						writer.print("<eenabled>0</eenabled>");
-					else if (user.getEnabled() == 0)
-						writer.print("<eenabled>2</eenabled>");
-					writer.print("<name><![CDATA[" + (user.getName() == null ? "" : user.getName()) + "]]></name>");
-					writer.print("<firstName><![CDATA[" + (user.getFirstName() == null ? "" : user.getFirstName())
-							+ "]]></firstName>");
-					writer.print("<label><![CDATA[" + (user.getFullName() == null ? "" : user.getFullName())
-							+ "]]></label>");
-					writer.print("<email><![CDATA[" + (user.getEmail() == null ? "" : user.getEmail()) + "]]></email>");
-					writer.print("<phone><![CDATA[" + (user.getTelephone() == null ? "" : user.getTelephone())
-							+ "]]></phone>");
-					writer.print("<cell><![CDATA[" + (user.getTelephone2() == null ? "" : user.getTelephone2())
-							+ "]]></cell>");
-					writer.print("<certSubject><![CDATA["
-							+ (user.getCertSubject() == null ? "" : user.getCertSubject()) + "]]></certSubject>");
-					writer.print("<keyDigest><![CDATA[" + (user.getKeyDigest() == null ? "" : user.getKeyDigest())
-							+ "]]></keyDigest>");
-					writer.print("<usergroup><![CDATA[" + user.getUserGroup().getId() + "]]></usergroup>");
-					writer.print("</user>");
-				}
+				users.addAll(group.getUsers());
 			} else {
-				UserDAO userDao = (UserDAO) Context.get().getBean(UserDAO.class);
-				String query = "select A.ld_id, A.ld_username, A.ld_enabled, A.ld_name, A.ld_firstname, A.ld_email, A.ld_telephone, "
-						+ "A.ld_telephone2, A.ld_certsubject, A.ld_keydigest, B.ld_id "
-						+ "from ld_user A, ld_group B where A.ld_deleted = 0 and A.ld_type = 0 and B.ld_type=1 and A.ld_tenantid="
-						+ session.getTenantId()
-						+ " and B.ld_id in(select ld_groupid from ld_usergroup where ld_userid=A.ld_id)";
-
-				@SuppressWarnings("unchecked")
-				List<User> records = (List<User>) userDao.query(query, null, new RowMapper<User>() {
-					public User mapRow(ResultSet rs, int rowNum) throws SQLException {
-						User user = new User();
-						user.setId(rs.getLong(1));
-						user.setUsername(rs.getString(2));
-						user.setEnabled(rs.getInt(3));
-						user.setName(rs.getString(4));
-						user.setFirstName(rs.getString(5));
-						user.setEmail(rs.getString(6));
-						user.setTelephone(rs.getString(7));
-						user.setTelephone2(rs.getString(8));
-						user.setCertSubject(rs.getString(9));
-						user.setKeyDigest(rs.getString(10));
-						Group group = new Group();
-						group.setId(rs.getLong(11));
-						group.setName("_user_" + user.getId());
-						user.getGroups().add(group);
-
-						return user;
-					}
-				}, null);
-
-				/*
-				 * Iterate over records composing the response XML document
-				 */
-				for (User user : records) {
-					writer.print("<user>");
-					writer.print("<id>" + user.getId() + "</id>");
-					writer.print("<username><![CDATA[" + user.getUsername() + "]]></username>");
-					if (user.getEnabled() == 1)
-						writer.print("<eenabled>0</eenabled>");
-					else if (user.getEnabled() == 0)
-						writer.print("<eenabled>2</eenabled>");
-					writer.print("<name><![CDATA[" + (user.getName() == null ? "" : user.getName()) + "]]></name>");
-					writer.print("<firstName><![CDATA[" + (user.getFirstName() == null ? "" : user.getFirstName())
-							+ "]]></firstName>");
-					writer.print("<label><![CDATA[" + (user.getFullName() == null ? "" : user.getFullName())
-							+ "]]></label>");
-					writer.print("<email><![CDATA[" + (user.getEmail() == null ? "" : user.getEmail()) + "]]></email>");
-					writer.print("<phone><![CDATA[" + (user.getTelephone() == null ? "" : user.getTelephone())
-							+ "]]></phone>");
-					writer.print("<cell><![CDATA[" + (user.getTelephone2() == null ? "" : user.getTelephone2())
-							+ "]]></cell>");
-					writer.print("<certSubject><![CDATA["
-							+ (user.getCertSubject() == null ? "" : user.getCertSubject()) + "]]></certSubject>");
-					writer.print("<keyDigest><![CDATA[" + (user.getKeyDigest() == null ? "" : user.getKeyDigest())
-							+ "]]></keyDigest>");
-					writer.print("<usergroup><![CDATA[" + user.getGroups().iterator().next().getId() + "]]></usergroup>");
-					writer.print("</user>");
-				}
+				users = userDao.findByWhere("_entity.tenantId=?1", new Long[] { session.getTenantId() }, null, null);
 			}
+
+			/*
+			 * Iterate over records composing the response XML document
+			 */
+			for (User user : users) {
+				if (user.getType() != User.TYPE_DEFAULT)
+					continue;
+
+				userDao.initialize(user);
+
+				writer.print("<user>");
+				writer.print("<id>" + user.getId() + "</id>");
+				writer.print("<username><![CDATA[" + user.getUsername() + "]]></username>");
+				if (user.getEnabled() == 1)
+					writer.print("<eenabled>0</eenabled>");
+				else if (user.getEnabled() == 0)
+					writer.print("<eenabled>2</eenabled>");
+				writer.print("<name><![CDATA[" + (user.getName() == null ? "" : user.getName()) + "]]></name>");
+				writer.print("<firstName><![CDATA[" + (user.getFirstName() == null ? "" : user.getFirstName())
+						+ "]]></firstName>");
+				writer.print("<label><![CDATA[" + (user.getFullName() == null ? "" : user.getFullName())
+						+ "]]></label>");
+				writer.print("<email><![CDATA[" + (user.getEmail() == null ? "" : user.getEmail()) + "]]></email>");
+				writer.print("<phone><![CDATA[" + (user.getTelephone() == null ? "" : user.getTelephone())
+						+ "]]></phone>");
+				writer.print("<cell><![CDATA[" + (user.getTelephone2() == null ? "" : user.getTelephone2())
+						+ "]]></cell>");
+				writer.print("<certSubject><![CDATA[" + (user.getCertSubject() == null ? "" : user.getCertSubject())
+						+ "]]></certSubject>");
+				writer.print("<keyDigest><![CDATA[" + (user.getKeyDigest() == null ? "" : user.getKeyDigest())
+						+ "]]></keyDigest>");
+				writer.print("<usergroup><![CDATA[" + user.getUserGroup().getId() + "]]></usergroup>");
+
+				String[] groups = user.getGroupNames();
+
+				groups = Arrays.stream(user.getGroupNames()).filter(g -> !g.startsWith("_user_"))
+						.toArray(String[]::new);
+
+				writer.print("<groups><![CDATA[" + StringUtil.arrayToString(groups, ", ") + "]]></groups>");
+				writer.print("</user>");
+			}
+
 			writer.print("</list>");
+
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 			if (e instanceof ServletException)

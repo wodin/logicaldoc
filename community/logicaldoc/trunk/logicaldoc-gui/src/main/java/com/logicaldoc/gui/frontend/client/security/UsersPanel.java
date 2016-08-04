@@ -102,6 +102,9 @@ public class UsersPanel extends VLayout {
 		enabled.setImageURLSuffix(".gif");
 		enabled.setCanFilter(false);
 
+		ListGridField groups = new ListGridField("groups", I18N.message("groups"), 200);
+		groups.setCanFilter(true);
+		
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
@@ -110,8 +113,9 @@ public class UsersPanel extends VLayout {
 		list.setFilterOnKeypress(true);
 		list.setShowFilterEditor(true);
 		list.setDataSource(new UsersDS(null, true));
-		list.setFields(id, enabled, username, firstName, name, email, phone, cell);
-
+		list.setFields(id, enabled, username, firstName, name, email, phone, cell, groups);
+		
+		
 		listing.addMember(infoPanel);
 		listing.addMember(list);
 

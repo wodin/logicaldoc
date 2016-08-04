@@ -3,11 +3,8 @@ package com.logicaldoc.web;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
