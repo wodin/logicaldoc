@@ -19,12 +19,11 @@ import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.Permission;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServletUtil;
-import com.logicaldoc.web.util.ServiceUtil;
 
 /**
  * This servlet is responsible for document resource upload. It receives the

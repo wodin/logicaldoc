@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.folder.FolderDAO;
-import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.web.util.ServiceUtil;
 
