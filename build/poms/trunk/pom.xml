@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>78</version>
+  <version>79</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -24,8 +24,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>1.8</source>
+          <target>1.8</target>
           <encoding>iso-8859-1</encoding>
         </configuration>
       </plugin>
