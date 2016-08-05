@@ -597,7 +597,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 					log.warn(e.getMessage(), e);
 				}
 
-			return user;
+			return getUser(user.getId());
 		} catch (Throwable t) {
 			return (GUIUser) ServiceUtil.throwServerException(session, log, t);
 		}
