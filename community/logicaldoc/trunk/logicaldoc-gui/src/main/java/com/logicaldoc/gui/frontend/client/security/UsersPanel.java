@@ -1,10 +1,13 @@
 package com.logicaldoc.gui.frontend.client.security;
 
+import java.util.ArrayList;
+
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.data.UsersDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -54,9 +57,9 @@ public class UsersPanel extends VLayout {
 
 	private InfoPanel infoPanel;
 
-	private Layout listing = new VLayout();
+	private Layout listing;
 
-	private Layout detailsContainer = new VLayout();
+	private Layout detailsContainer = null;
 
 	final static Canvas SELECT_USER = new HTMLPanel("&nbsp;" + I18N.message("selectuser"));
 
@@ -64,6 +67,80 @@ public class UsersPanel extends VLayout {
 
 	public UsersPanel() {
 		setWidth100();
+
+		ToolStrip toolStrip = new ToolStrip();
+		toolStrip.setHeight(20);
+		toolStrip.setWidth100();
+		toolStrip.addSpacer(2);
+
+		ToolStripButton refresh = new ToolStripButton();
+		refresh.setTitle(I18N.message("refresh"));
+		toolStrip.addButton(refresh);
+		refresh.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				refresh();
+			}
+		});
+
+		toolStrip.addSeparator();
+
+		ToolStripButton add = new ToolStripButton();
+		add.setTitle(I18N.message("adduser"));
+		toolStrip.addButton(add);
+		add.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				list.deselectAllRecords();
+				showUserDetails(new GUIUser());
+			}
+		});
+
+		toolStrip.addSeparator();
+
+		ToolStripButton export = new ToolStripButton();
+		export.setTitle(I18N.message("export"));
+		toolStrip.addButton(export);
+		export.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				list.deselectAllRecords();
+				Util.exportCSV(list, true);
+			}
+		});
+		if (!Feature.enabled(Feature.EXPORT_CSV)) {
+			export.setDisabled(true);
+			export.setTooltip(I18N.message("featuredisabled"));
+		}
+
+		toolStrip.addSeparator();
+
+		ToolStripButton print = new ToolStripButton();
+		print.setTitle(I18N.message("print"));
+		toolStrip.addButton(print);
+		print.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Canvas.printComponents(new Object[] { list });
+			}
+		});
+
+		toolStrip.addFill();
+
+		addMember(toolStrip);
+
+		refresh();
+	}
+
+	private void refresh() {
+		if (listing != null)
+			removeMember(listing);
+		if (detailsContainer != null)
+			removeMember(detailsContainer);
+
+		listing = new VLayout();
+
+		detailsContainer = new VLayout();
 
 		infoPanel = new InfoPanel("");
 
@@ -104,7 +181,7 @@ public class UsersPanel extends VLayout {
 
 		ListGridField groups = new ListGridField("groups", I18N.message("groups"), 200);
 		groups.setCanFilter(true);
-		
+
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
@@ -114,31 +191,13 @@ public class UsersPanel extends VLayout {
 		list.setShowFilterEditor(true);
 		list.setDataSource(new UsersDS(null, true));
 		list.setFields(id, enabled, username, firstName, name, email, phone, cell, groups);
-		
-		
+
 		listing.addMember(infoPanel);
 		listing.addMember(list);
 
 		detailsContainer.setAlign(Alignment.CENTER);
+		details = SELECT_USER;
 		detailsContainer.addMember(details);
-
-		ToolStrip toolStrip = new ToolStrip();
-		toolStrip.setHeight(20);
-		toolStrip.setWidth100();
-		toolStrip.addSpacer(2);
-		ToolStripButton add = new ToolStripButton();
-		add.setTitle(I18N.message("adduser"));
-		toolStrip.addButton(add);
-		add.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				list.deselectAllRecords();
-				showUserDetails(new GUIUser());
-			}
-		});
-		toolStrip.addFill();
-
-		setMembers(toolStrip, listing, detailsContainer);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
@@ -174,6 +233,9 @@ public class UsersPanel extends VLayout {
 				infoPanel.setMessage(I18N.message("showusers", Integer.toString(list.getTotalRows())));
 			}
 		});
+
+		addMembers(listing);
+		addMembers(detailsContainer);
 	}
 
 	/**
@@ -194,6 +256,18 @@ public class UsersPanel extends VLayout {
 			record.setAttribute("eenabled", "0");
 		else
 			record.setAttribute("eenabled", "2");
+
+		GUIGroup[] groups = user.getGroups();
+		ArrayList<String> gnames = new ArrayList<String>();
+		for (GUIGroup group : groups) {
+			if (!group.getName().startsWith("_user_")) {
+				if (!gnames.isEmpty())
+					gnames.add(", " + group.getName());
+				else
+					gnames.add(group.getName());
+			}
+		}
+		record.setAttribute("groups", gnames);
 
 		if (record.getAttributeAsString("id") != null
 				&& (user.getId() == Long.parseLong(record.getAttributeAsString("id")))) {
