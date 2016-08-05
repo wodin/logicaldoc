@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.security;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
+import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.beans.GUIGroup;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -10,6 +11,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.HTMLPanel;
 import com.logicaldoc.gui.common.client.widgets.InfoPanel;
 import com.smartgwt.client.data.Record;
@@ -49,20 +51,89 @@ public class GroupsPanel extends VLayout {
 
 	private InfoPanel infoPanel;
 
-	private Layout listing = new VLayout();
+	private Layout listing;
 
 	final static Canvas SELECT_GROUP = new HTMLPanel("&nbsp;" + I18N.message("selectgroup"));
 
 	private Canvas details = SELECT_GROUP;
 
-	private Layout detailsContainer = new VLayout();
+	private Layout detailsContainer = null;
 
 	public GroupsPanel() {
 		setWidth100();
 
-		detailsContainer.setMembers(details);
+		ToolStrip toolStrip = new ToolStrip();
+		toolStrip.setHeight(20);
+		toolStrip.setWidth100();
+		toolStrip.addSpacer(2);
+		
+		ToolStripButton refresh = new ToolStripButton();
+		refresh.setTitle(I18N.message("refresh"));
+		toolStrip.addButton(refresh);
+		refresh.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				refresh();
+			}
+		});
+		toolStrip.addSeparator();
+		
+		ToolStripButton add = new ToolStripButton();
+		add.setTitle(I18N.message("addgroup"));
+		toolStrip.addButton(add);
+		add.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				list.deselectAllRecords();
+				showGroupDetails(new GUIGroup());
+			}
+		});
+		toolStrip.addSeparator();
+		
+		
+		ToolStripButton export = new ToolStripButton();
+		export.setTitle(I18N.message("export"));
+		toolStrip.addButton(export);
+		export.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Util.exportCSV(list, true);
+			}
+		});
+		if (!Feature.enabled(Feature.EXPORT_CSV)) {
+			export.setDisabled(true);
+			export.setTooltip(I18N.message("featuredisabled"));
+		}
+		toolStrip.addSeparator();
+
+		ToolStripButton print = new ToolStripButton();
+		print.setTitle(I18N.message("print"));
+		toolStrip.addButton(print);
+		print.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Canvas.printComponents(new Object[] { list });
+			}
+		});
+		toolStrip.addFill();
+		
+		addMember(toolStrip);
+		
+		refresh();
+	}
+
+	private void refresh(){
+		if (listing != null)
+			removeMember(listing);
+		if (detailsContainer != null)
+			removeMember(detailsContainer);
+
+		listing = new VLayout();
+
+		detailsContainer = new VLayout();
 
 		infoPanel = new InfoPanel("");
+	
 
 		// Initialize the listing panel as placeholder
 		listing.setAlign(Alignment.CENTER);
@@ -90,24 +161,6 @@ public class GroupsPanel extends VLayout {
 
 		listing.addMember(infoPanel);
 		listing.addMember(list);
-
-		ToolStrip toolStrip = new ToolStrip();
-		toolStrip.setHeight(20);
-		toolStrip.setWidth100();
-		toolStrip.addSpacer(2);
-		ToolStripButton add = new ToolStripButton();
-		add.setTitle(I18N.message("addgroup"));
-		toolStrip.addButton(add);
-		add.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				list.deselectAllRecords();
-				showGroupDetails(new GUIGroup());
-			}
-		});
-		toolStrip.addFill();
-
-		setMembers(toolStrip, listing, detailsContainer);
 
 		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
@@ -144,8 +197,14 @@ public class GroupsPanel extends VLayout {
 				infoPanel.setMessage(I18N.message("showgroups", Integer.toString(list.getTotalRows())));
 			}
 		});
+		
+		details = SELECT_GROUP;
+		detailsContainer.setMembers(details);
+		
+		addMembers(listing);
+		addMembers(detailsContainer);
 	}
-
+	
 	/**
 	 * Updates the selected record with new data
 	 */
