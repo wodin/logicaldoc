@@ -82,7 +82,6 @@ public class UsersPanel extends VLayout {
 				refresh();
 			}
 		});
-
 		toolStrip.addSeparator();
 
 		ToolStripButton add = new ToolStripButton();
@@ -95,7 +94,6 @@ public class UsersPanel extends VLayout {
 				showUserDetails(new GUIUser());
 			}
 		});
-
 		toolStrip.addSeparator();
 
 		ToolStripButton export = new ToolStripButton();
@@ -104,7 +102,6 @@ public class UsersPanel extends VLayout {
 		export.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				list.deselectAllRecords();
 				Util.exportCSV(list, true);
 			}
 		});
@@ -112,7 +109,6 @@ public class UsersPanel extends VLayout {
 			export.setDisabled(true);
 			export.setTooltip(I18N.message("featuredisabled"));
 		}
-
 		toolStrip.addSeparator();
 
 		ToolStripButton print = new ToolStripButton();
@@ -124,7 +120,6 @@ public class UsersPanel extends VLayout {
 				Canvas.printComponents(new Object[] { list });
 			}
 		});
-
 		toolStrip.addFill();
 
 		addMember(toolStrip);

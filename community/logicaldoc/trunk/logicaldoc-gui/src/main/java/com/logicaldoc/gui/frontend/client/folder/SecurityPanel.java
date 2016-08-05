@@ -14,6 +14,7 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -25,6 +26,7 @@ import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.VerticalAlignment;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Img;
 import com.smartgwt.client.widgets.Label;
@@ -273,7 +275,7 @@ public class SecurityPanel extends FolderDetailTab {
 				dialog.show();
 			}
 		});
-
+		
 		// Prepare the combo and button for adding a new Group
 		final DynamicForm groupForm = new DynamicForm();
 		final SelectItem group = ItemFactory.newGroupSelector("group", "addgroup");
@@ -338,8 +340,28 @@ public class SecurityPanel extends FolderDetailTab {
 				user.clearValue();
 			}
 		});
-
 		buttons.addMember(userForm);
+		
+		
+		Button exportButton = new Button(I18N.message("export"));
+		exportButton.setAutoFit(true);
+		buttons.addMember(exportButton);
+		exportButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Util.exportCSV(list, true);
+			}
+		});
+		
+		Button print = new Button(I18N.message("print"));
+		print.setAutoFit(true);
+		buttons.addMember(print);
+		print.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Canvas.printComponents(new Object[] { list });
+			}
+		});
 	}
 
 	/**

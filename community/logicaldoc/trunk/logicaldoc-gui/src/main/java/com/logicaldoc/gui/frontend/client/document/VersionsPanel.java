@@ -20,6 +20,10 @@ import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.widgets.Button;
+import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -27,6 +31,8 @@ import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
+import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
@@ -41,9 +47,7 @@ public class VersionsPanel extends DocumentDetailTab {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private VersionsDS dataSource;
-
-	private ListGrid listGrid;
+	private ListGrid list = null;
 
 	public VersionsPanel(final GUIDocument document, DocumentObserver observer) {
 		super(document, null, observer);
@@ -65,16 +69,13 @@ public class VersionsPanel extends DocumentDetailTab {
 		type.setType(ListGridFieldType.TEXT);
 		type.setAlign(Alignment.CENTER);
 
-		listGrid = new ListGrid();
-		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
-		listGrid.setCanFreezeFields(true);
-		listGrid.setAutoFetchData(true);
-		dataSource = new VersionsDS(document.getId(), null, 100);
-		listGrid.setDataSource(dataSource);
-		listGrid.setFields(user, event, type, fileVersion, version, date, comment);
-		addMember(listGrid);
-
-		listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
+		list = new ListGrid();
+		list.setEmptyMessage(I18N.message("notitemstoshow"));
+		list.setCanFreezeFields(true);
+		list.setAutoFetchData(true);
+		list.setDataSource(new VersionsDS(document.getId(), null, 100));
+		list.setFields(user, event, type, fileVersion, version, date, comment);
+		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
@@ -86,13 +87,45 @@ public class VersionsPanel extends DocumentDetailTab {
 			}
 		});
 
-		listGrid.addCellContextClickHandler(new CellContextClickHandler() {
+		list.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
 				prepareContextMenu().showContextMenu();
 				event.cancel();
 			}
 		});
+
+		VLayout container = new VLayout();
+		container.setMembersMargin(3);
+		container.addMember(list);
+
+		HLayout buttons = new HLayout();
+		buttons.setMembersMargin(4);
+		buttons.setWidth100();
+		buttons.setHeight(20);
+
+		Button exportButton = new Button(I18N.message("export"));
+		exportButton.setAutoFit(true);
+		buttons.addMember(exportButton);
+		exportButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Util.exportCSV(list, true);
+			}
+		});
+
+		Button print = new Button(I18N.message("print"));
+		print.setAutoFit(true);
+		buttons.addMember(print);
+		print.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				Canvas.printComponents(new Object[] { list });
+			}
+		});
+
+		container.addMember(buttons);
+		addMember(container);
 	}
 
 	protected void onDownload(final GUIDocument document, ListGridRecord record) {
@@ -119,7 +152,7 @@ public class VersionsPanel extends DocumentDetailTab {
 	 * Prepares the context menu.
 	 */
 	private Menu prepareContextMenu() {
-		final ListGridRecord[] selection = listGrid.getSelectedRecords();
+		final ListGridRecord[] selection = list.getSelectedRecords();
 
 		Menu contextMenu = new Menu();
 		MenuItem compareMetadata = new MenuItem();
@@ -206,7 +239,7 @@ public class VersionsPanel extends DocumentDetailTab {
 										document.setFileVersion(result.getFileVersion());
 										observer.onDocumentSaved(result);
 										observer.onDocumentSelected(result);
-										listGrid.removeSelectedData();
+										list.removeSelectedData();
 									}
 								}
 							});
@@ -235,12 +268,5 @@ public class VersionsPanel extends DocumentDetailTab {
 			contextMenu.setItems(preview, download, compareMetadata, delete);
 
 		return contextMenu;
-	}
-
-	@Override
-	public void destroy() {
-		super.destroy();
-		if (dataSource != null)
-			dataSource.destroy();
 	}
 }
