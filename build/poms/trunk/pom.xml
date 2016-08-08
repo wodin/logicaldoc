@@ -80,7 +80,7 @@
     <cxf.version>3.1.6</cxf.version>
     <slf4j.version>1.7.7</slf4j.version>
     <ant.version>1.8.2</ant.version>
-    <httpclient.version>4.5.2</httpclient.version>    
+    <httpclient.version>2.6.5</httpclient.version>  
   </properties>
   <dependencyManagement>
     <dependencies>
@@ -678,6 +678,31 @@
          <artifactId>httpcore</artifactId>
          <version>4.4.4</version>
       </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.jaxrs</groupId>
+         <artifactId>jackson-jaxrs-json-provider</artifactId>
+         <version>${jackson.version}</version>
+      </dependency>           
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-core</artifactId>
+         <version>${jackson.version}</version>
+      </dependency>
+      <dependency>
+         <groupId>com.fasterxml.jackson.core</groupId>
+         <artifactId>jackson-databind</artifactId>
+         <version>${jackson.version}</version>
+      </dependency>
+		  <dependency>
+		     <groupId>com.fasterxml.jackson.core</groupId>
+		     <artifactId>jackson-annotations</artifactId>
+		     <version>${jackson.version}</version>
+		  </dependency>  
+      <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.3.1</version>
+       </dependency>                
     </dependencies>
   </dependencyManagement>
   <repositories>
