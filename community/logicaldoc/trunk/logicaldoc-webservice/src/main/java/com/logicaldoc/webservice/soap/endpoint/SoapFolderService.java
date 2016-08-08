@@ -518,6 +518,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 
 		FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		Folder parent = folderDao.findById(parentId);
+		folderDao.initialize(parent);
 
 		FolderHistory transaction = new FolderHistory();
 		transaction.setUser(user);
@@ -543,6 +544,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 			for (WSFolder w : listWorkspaces(sid)) {
 				if (path.startsWith(w.getName())) {
 					workspace = folderDao.findById(w.getId());
+					folderDao.initialize(workspace);
 					break;
 				}
 			}
@@ -550,11 +552,13 @@ public class SoapFolderService extends AbstractService implements FolderService 
 			if (workspace == null) {
 				log.debug("Path " + path + " will be created in the Default workspace");
 				parent = folderDao.findDefaultWorkspace(user.getTenantId());
+				folderDao.initialize(parent);
 			}
 		}
 
 		Folder folder = folderDao.createPath(parent, path, true, transaction);
-
+		folderDao.initialize(folder);
+		
 		return WSFolder.fromFolder(folder);
 	}
 
