@@ -1,6 +1,7 @@
 package com.logicaldoc.core.security;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -141,7 +142,7 @@ public class Session implements Comparable<Session> {
 		if (timeout > 0) {
 			try {
 				timeoutTask = new FutureTask<String>(new SessionTimeout());
-				executor.schedule(timeoutTask, timeout, TimeUnit.MINUTES);
+				executor.schedule(timeoutTask, timeout + 1, TimeUnit.MINUTES);
 				if (log.isDebugEnabled())
 					log.debug("Renewing session " + getId());
 			} catch (Exception e) {
@@ -164,12 +165,26 @@ public class Session implements Comparable<Session> {
 
 	protected boolean isTimedOut() {
 		int timeout = getTimeout();
-		if (timeout < 0)
+		if (timeout <= 0)
 			return false;
 
-		Date now = new Date();
-		long diff = now.getTime() - lastRenew.getTime();
-		long diffMinutes = diff / (60 * 1000) % 60;
+		/**
+		 * In order to compare the actual date and the last renewal date, we
+		 * prefer to drop milliseconds and seconds.
+		 */
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(new Date());
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		Date now = calendar.getTime();
+
+		calendar.setTime(lastRenew);
+		calendar.set(Calendar.MILLISECOND, 0);
+		calendar.set(Calendar.SECOND, 0);
+		Date lastRen = calendar.getTime();
+
+		long diff = now.getTime() - lastRen.getTime();
+		long diffMinutes = Math.abs(diff / 1000 / 60);
 		return diffMinutes >= timeout;
 	}
 
