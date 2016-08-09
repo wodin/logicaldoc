@@ -163,9 +163,8 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	 */
 	private void prepareExtendedAttributes(final Long templateId) {
 		if (form2 != null)
-			form2.destroy();
-		if (contains(form2))
-			removeChild(form2);
+			removeMember(form2);
+
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
 		form2.setTitleOrientation(TitleOrientation.TOP);
@@ -173,9 +172,13 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form2.clear();
 		addMember(form2);
 
+		Log.info("**1 "+templateId, null);
+		
 		if (templateId == null)
 			return;
 
+		Log.info("**2 ", null);
+		
 		documentService.getAttributes(templateId, new AsyncCallback<GUIAttribute[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -186,6 +189,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			public void onSuccess(GUIAttribute[] result) {
 				currentExtAttributes = result;
 				extendedItems.clear();
+				
 				for (GUIAttribute att : result) {
 					if (att.getType() == GUIAttribute.TYPE_STRING) {
 						FormItem item = ItemFactory.newStringItemForAttribute(att);
