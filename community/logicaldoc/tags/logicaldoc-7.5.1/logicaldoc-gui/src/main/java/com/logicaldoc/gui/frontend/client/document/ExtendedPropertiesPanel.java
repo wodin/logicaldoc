@@ -163,9 +163,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	 */
 	private void prepareExtendedAttributes(final Long templateId) {
 		if (form2 != null)
-			form2.destroy();
-		if (contains(form2))
-			removeChild(form2);
+			removeMember(form2);
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
 		form2.setTitleOrientation(TitleOrientation.TOP);
