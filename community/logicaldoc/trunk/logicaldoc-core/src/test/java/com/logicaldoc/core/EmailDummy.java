@@ -1,7 +1,5 @@
 package com.logicaldoc.core;
 
-import java.util.HashMap;
-
 import com.logicaldoc.core.communication.EMailSender;
 import com.logicaldoc.core.script.ScriptingEngine;
 
@@ -9,12 +7,7 @@ public class EmailDummy {
 
 	public static void main(String[] args) throws Exception {
 		ScriptingEngine engine = new ScriptingEngine();
-		
-		engine.evaluate("$SystemTool.exec('C:\\Program Files (x86)\\PSPad editor\\pspad.exe \"D:\\tmp\\Java- DropSpot.txt\"')",
-				new HashMap<String, Object>());
 
-		System.out.println("executed");
-		
 		// String original="1234567€";
 		// System.out.println("original: "+original);
 		//
