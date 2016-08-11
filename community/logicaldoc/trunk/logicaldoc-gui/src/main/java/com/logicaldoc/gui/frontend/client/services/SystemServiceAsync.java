@@ -38,4 +38,6 @@ public interface SystemServiceAsync {
 	void markFeedMsgAsRead(long[] ids, AsyncCallback<Void> callback);
 
 	void getPlugins(AsyncCallback<GUIValue[]> callback);
+
+	void confirmUpdate(AsyncCallback<Void> callback);
 }

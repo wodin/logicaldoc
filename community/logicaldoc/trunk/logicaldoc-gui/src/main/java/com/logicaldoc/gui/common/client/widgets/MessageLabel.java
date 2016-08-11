@@ -20,22 +20,25 @@ public class MessageLabel extends Label {
 	}
 
 	public MessageLabel(final GUIMessage message, boolean showLinks) {
-		super("<span style='text-decoration: underline'>" + message.getMessage() + "</span>");
+		if (message.getUrl() == null || message.getUrl().isEmpty() || !showLinks)
+			setContents("<span>" + message.getMessage() + "</span>");
+		else
+			setContents("<span style='text-decoration: underline'>" + message.getMessage() + "</span>");
+
 		setHeight(25);
 		setWrap(false);
 		if (message.getPriority() == GUIMessage.PRIO_INFO)
 			setIcon("[SKIN]/Dialog/notify.png");
 		else if (message.getPriority() == GUIMessage.PRIO_WARN)
 			setIcon("[SKIN]/Dialog/warn.png");
-		if (showLinks)
-			if (message.getUrl() != null) {
-				setCursor(Cursor.HAND);
-				addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						Window.open(message.getUrl(), "_self", "");
-					}
-				});
-			}
+		if (showLinks && message.getUrl() != null && !message.getUrl().isEmpty()) {
+			setCursor(Cursor.HAND);
+			addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					Window.open(message.getUrl(), "_self", "");
+				}
+			});
+		}
 	}
 }

@@ -12,9 +12,12 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.administration.AdminPanel;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.SystemService;
+import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
 import com.logicaldoc.gui.frontend.client.tenant.TenantsPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
+import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -31,6 +34,8 @@ import com.smartgwt.client.widgets.layout.VLayout;
  */
 public class SystemMenu extends VLayout {
 	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
+
+	private SystemServiceAsync systemService = (SystemServiceAsync) GWT.create(SystemService.class);
 
 	public SystemMenu() {
 		setMargin(10);
@@ -70,15 +75,33 @@ public class SystemMenu extends VLayout {
 			}
 		}
 
-		Button updates = new Button(I18N.message("updates"));
+		final Button updates = new Button(I18N.message("updates"));
 		updates.setWidth100();
 		updates.setHeight(25);
+		updates.setVisible(false);
+		addMember(updates);
+
+		final Button confirmUpdate = new Button("<span style='color:red;'><b>" + I18N.message("confirmupdate")
+				+ "</b></span>");
+		confirmUpdate.setWidth100();
+		confirmUpdate.setHeight(25);
+		confirmUpdate.setVisible(false);
+		addMember(confirmUpdate);
 
 		if (Feature.visible(Feature.UPDATES) && Menu.enabled(Menu.UPDATES) && Session.get().isDefaultTenant()) {
-			addMember(updates);
-			if (!Feature.enabled(Feature.UPDATES)) {
-				updates.setDisabled(true);
-				updates.setTooltip(I18N.message("featuredisabled"));
+			String runlevel = Session.get().getConfig("runlevel");
+			if ("updated".equals(runlevel)) {
+				confirmUpdate.setVisible(true);
+				if (!Feature.enabled(Feature.UPDATES)) {
+					confirmUpdate.setDisabled(true);
+					confirmUpdate.setTooltip(I18N.message("featuredisabled"));
+				}
+			} else {
+				updates.setVisible(true);
+				if (!Feature.enabled(Feature.UPDATES)) {
+					updates.setDisabled(true);
+					updates.setTooltip(I18N.message("featuredisabled"));
+				}
 			}
 		}
 
@@ -104,6 +127,7 @@ public class SystemMenu extends VLayout {
 			clustering.setVisible(false);
 			tenants.setVisible(false);
 			updates.setVisible(false);
+			confirmUpdate.setVisible(false);
 		}
 
 		addInformations();
@@ -133,6 +157,28 @@ public class SystemMenu extends VLayout {
 			@Override
 			public void onClick(ClickEvent event) {
 				AdminPanel.get().setContent(new UpdatePanel());
+			}
+		});
+
+		confirmUpdate.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				systemService.confirmUpdate(new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void arg) {
+						Session.get().getInfo().setConfig("runlevel", "default");
+						confirmUpdate.setVisible(false);
+						updates.setVisible(true);
+
+						SC.say(I18N.message("confirmupdateresp"));
+					}
+				});
 			}
 		});
 

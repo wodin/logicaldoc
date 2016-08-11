@@ -47,8 +47,8 @@ public interface SystemService extends RemoteService {
 	 * @param event The history events
 	 * @return Result hits and statistics
 	 */
-	public GUIHistory[] search(String userName, Date from, Date till, int maxResult, String historySid,
-			String[] event) throws ServerException;
+	public GUIHistory[] search(String userName, Date from, Date till, int maxResult, String historySid, String[] event)
+			throws ServerException;
 
 	/**
 	 * Retrieves all tasks.
@@ -133,8 +133,11 @@ public interface SystemService extends RemoteService {
 
 	/**
 	 * Retrieves all plugins.
-	 * 
-	 * @param sid The current user session
 	 */
 	public GUIValue[] getPlugins() throws ServerException;
+
+	/**
+	 * Confirms the last update
+	 */
+	public void confirmUpdate() throws ServerException;
 }

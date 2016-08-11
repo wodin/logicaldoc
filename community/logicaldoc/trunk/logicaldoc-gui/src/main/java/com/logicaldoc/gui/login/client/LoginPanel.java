@@ -378,10 +378,17 @@ public class LoginPanel extends VLayout {
 		if (info.getRunLevel().equals("demo")) {
 			GUIMessage demoRunLevelMessage = new GUIMessage();
 			demoRunLevelMessage.setMessage(I18N.message("demomode"));
-			demoRunLevelMessage.setPriority(GUIMessage.PRIO_WARN);
+			demoRunLevelMessage.setPriority(GUIMessage.PRIO_INFO);
 			MessageLabel demoRunLevel = new MessageLabel(demoRunLevelMessage, info.getTenant().getId() == 1L);
 			messages.add(demoRunLevel);
 			height += demoRunLevel.getHeight();
+		}else if (info.getRunLevel().equals("updated")) {
+			GUIMessage confirmUpdateMessage = new GUIMessage();
+			confirmUpdateMessage.setMessage(I18N.message("systemupdatedwarning",info.getRelease()));
+			confirmUpdateMessage.setPriority(GUIMessage.PRIO_WARN);
+			MessageLabel updatedRunLevel = new MessageLabel(confirmUpdateMessage, info.getTenant().getId() == 1L);
+			messages.add(updatedRunLevel);
+			height += updatedRunLevel.getHeight();
 		}
 
 		HLayout spacer15 = new HLayout();

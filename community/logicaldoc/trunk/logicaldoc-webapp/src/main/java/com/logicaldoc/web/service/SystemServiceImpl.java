@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.RunLevel;
 import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.core.document.dao.HistoryDAO;
 import com.logicaldoc.core.generic.Generic;
@@ -770,5 +771,19 @@ public class SystemServiceImpl extends RemoteServiceServlet implements SystemSer
 		}
 
 		return plugins.toArray(new GUIValue[0]);
+	}
+
+	@Override
+	public void confirmUpdate() throws ServerException {
+		ServiceUtil.validateSession(getThreadLocalRequest());
+
+		try {
+			ContextProperties conf = Context.get().getProperties();
+			conf.setProperty("runlevel", RunLevel.DEFAULT.toString());
+			conf.write();
+			log.info("Update confirmed");
+		} catch (Throwable t) {
+			log.error(t.getMessage(), t);
+		}
 	}
 }
