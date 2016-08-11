@@ -129,6 +129,20 @@ public class ApplyConfiguration {
 			}
 
 			/*
+			 * Update the build.properties used by external procedures
+			 */
+			file = new File(rootDir + "/conf/build.properties");
+			Log.info("Save configurations into " + file.getAbsolutePath(), null);
+			handler.logOutput("Save configurations into " + file.getAbsolutePath(), false);
+			
+			try {
+				Replace.replace(file.getAbsolutePath(), "LDOCHOME", rootDir.replaceAll("\\\\", "/"));
+				Replace.replace(file.getAbsolutePath(), "SSERVICE", servicename);
+			} catch (Throwable e) {
+				Log.error("Exception while editing build properties", e);
+			}
+			
+			/*
 			 * Save the configuration in the server.xml
 			 */
 			file = new File(rootDir + "/tomcat/conf/server.xml");
