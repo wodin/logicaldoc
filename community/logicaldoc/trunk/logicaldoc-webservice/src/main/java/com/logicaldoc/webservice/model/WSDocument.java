@@ -78,9 +78,6 @@ public class WSDocument implements Serializable {
 	@WSDoc(required = false)
 	private String version;
 
-	@Deprecated
-	private String exportVersion;
-
 	@WSDoc(required = false)
 	private String fileVersion;
 
@@ -253,14 +250,6 @@ public class WSDocument implements Serializable {
 
 	public void setVersion(String version) {
 		this.version = version;
-	}
-
-	public String getExportVersion() {
-		return exportVersion;
-	}
-
-	public void setExportVersion(String exportVersion) {
-		this.exportVersion = exportVersion;
 	}
 
 	public String getFileVersion() {

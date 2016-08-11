@@ -21,6 +21,7 @@ import java.util.Set;
  * <li>WORKFLOW: ability to handle workflow</li>
  * <li>CALENDAR: ability to handle calendar events</li>
  * <li>SUBSCRIPTION: ability to handle events subscription</li>
+ * <li>PRINT: ability to print</li>
  * </ul>
  * 
  * @author Marco Meschieri - Logical Objects
@@ -29,7 +30,7 @@ import java.util.Set;
 public enum Permission {
 	READ("read"), DOWNLOAD("download"), WRITE("write"), ADD("add"), SECURITY("security"), IMMUTABLE("immutable"), DELETE(
 			"delete"), RENAME("rename"), IMPORT("import"), EXPORT("export"), SIGN("sign"), ARCHIVE("archive"), WORKFLOW(
-			"workflow"), CALENDAR("calendar"), SUBSCRIPTION("subscription");
+			"workflow"), CALENDAR("calendar"), SUBSCRIPTION("subscription"), PRINT("print");
 
 	private final String name;
 
@@ -38,35 +39,37 @@ public enum Permission {
 	private Permission(String name) {
 		this.name = name;
 		if ("read".equals(name))
-			mask = Integer.parseInt("000000000000001", 2);
+			mask = Integer.parseInt("0000000000000001", 2);
 		if ("write".equals(name))
-			mask = Integer.parseInt("000000000000010", 2);
+			mask = Integer.parseInt("0000000000000010", 2);
 		if ("add".equals(name))
-			mask = Integer.parseInt("000000000000100", 2);
+			mask = Integer.parseInt("0000000000000100", 2);
 		if ("security".equals(name))
-			mask = Integer.parseInt("000000000001000", 2);
+			mask = Integer.parseInt("0000000000001000", 2);
 		if ("immutable".equals(name))
-			mask = Integer.parseInt("000000000010000", 2);
+			mask = Integer.parseInt("0000000000010000", 2);
 		if ("delete".equals(name))
-			mask = Integer.parseInt("000000000100000", 2);
+			mask = Integer.parseInt("0000000000100000", 2);
 		if ("rename".equals(name))
-			mask = Integer.parseInt("000000001000000", 2);
+			mask = Integer.parseInt("0000000001000000", 2);
 		if ("import".equals(name))
-			mask = Integer.parseInt("000000010000000", 2);
+			mask = Integer.parseInt("0000000010000000", 2);
 		if ("export".equals(name))
-			mask = Integer.parseInt("000000100000000", 2);
+			mask = Integer.parseInt("0000000100000000", 2);
 		if ("sign".equals(name))
-			mask = Integer.parseInt("000001000000000", 2);
+			mask = Integer.parseInt("0000001000000000", 2);
 		if ("archive".equals(name))
-			mask = Integer.parseInt("000010000000000", 2);
+			mask = Integer.parseInt("0000010000000000", 2);
 		if ("workflow".equals(name))
-			mask = Integer.parseInt("000100000000000", 2);
+			mask = Integer.parseInt("0000100000000000", 2);
 		if ("download".equals(name))
-			mask = Integer.parseInt("001000000000000", 2);
+			mask = Integer.parseInt("0001000000000000", 2);
 		if ("calendar".equals(name))
-			mask = Integer.parseInt("010000000000000", 2);
+			mask = Integer.parseInt("0010000000000000", 2);
 		if ("subscription".equals(name))
-			mask = Integer.parseInt("100000000000000", 2);
+			mask = Integer.parseInt("0100000000000000", 2);
+		if ("print".equals(name))
+			mask = Integer.parseInt("1000000000000000", 2);
 	}
 
 	public String getName() {
@@ -106,6 +109,7 @@ public enum Permission {
 		permissions.add(DOWNLOAD);
 		permissions.add(CALENDAR);
 		permissions.add(SUBSCRIPTION);
+		permissions.add(PRINT);
 		return permissions;
 	}
 

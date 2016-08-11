@@ -570,6 +570,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				}
 				grps.add(fg);
 
+				if (isAdmin || right.isPrint())
+					fg.setPrint(1);
+				else
+					fg.setPrint(0);
+				
 				if (isAdmin || right.isWrite())
 					fg.setWrite(1);
 				else

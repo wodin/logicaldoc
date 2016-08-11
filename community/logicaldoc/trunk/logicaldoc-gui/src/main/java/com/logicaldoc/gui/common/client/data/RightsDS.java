@@ -19,6 +19,7 @@ public class RightsDS extends DataSource {
 		DataSourceTextField entityId = new DataSourceTextField("entityId");
 		entityId.setPrimaryKey(true);
 		DataSourceBooleanField read = new DataSourceBooleanField("read");
+		DataSourceBooleanField print = new DataSourceBooleanField("print");
 		DataSourceBooleanField write = new DataSourceBooleanField("write");
 		DataSourceBooleanField delete = new DataSourceBooleanField("delete");
 		DataSourceBooleanField add = new DataSourceBooleanField("add");
@@ -35,7 +36,7 @@ public class RightsDS extends DataSource {
 		DataSourceBooleanField subscription = new DataSourceBooleanField("subscription");
 		DataSourceTextField type = new DataSourceTextField("type");
 
-		setFields(entityId, entity, read, write, delete, add, workflow, sign, _import, export, immutable, rename,
+		setFields(entityId, entity, read, print, write, delete, add, workflow, sign, _import, export, immutable, rename,
 				security, archive, type, download, calendar, subscription);
 		setClientOnly(true);
 		setDataURL("data/rights.xml?" + (folder ? "folderId" : "menuId") + "=" + id

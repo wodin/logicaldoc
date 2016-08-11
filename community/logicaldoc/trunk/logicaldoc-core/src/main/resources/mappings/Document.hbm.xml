@@ -28,7 +28,6 @@
 		<property name="lockUserId" type="long" column="ld_lockuserid" />
         <property name="lockUser" type="string" column="ld_lockuser" length="255" />
 		<property name="source" type="string" column="ld_source" length="4000" />
-		<property name="sourceAuthor" type="string" column="ld_sourceauthor" length="255" />
 		<property name="sourceId" type="string" column="ld_sourceid" length="1000"/>
 		<property name="sourceType" type="string" column="ld_sourcetype" length="255" />
 		<property name="object" type="string" column="ld_object" length="1000"/>

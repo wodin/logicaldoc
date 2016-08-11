@@ -19,7 +19,7 @@ public class WSRight {
 	@WSDoc(description = "permissions mask. "
 			+ "<br/> this is an integer representation of a list of 13 bits. Each bit refers to a permission: <b>0</b> to deny, <b>1</b> to grant the permission."
 			+ "<br/> This list represent the bit array starting from left to right:"
-			+ "<ol><li>Download </li><li>Workflow</li><li>Archive</li><li>Sign</li><li>Export</li><li>Import</li>"
+			+ "<ol><li>Print</li><li>Subscription</li><li>Calendar</li><li>Download </li><li>Workflow</li><li>Archive</li><li>Sign</li><li>Export</li><li>Import</li>"
 			+ "<li>Delete</li><li>Immutable</li><li>Security</li><li>Add</li><li>Write</li><li>Read</li></ol>"
 			+ "In particular, 'Read' is represented by the last right bit while 'Download' is represented by the first left bit.<br/>"
 			+ "Here are two examples:"
