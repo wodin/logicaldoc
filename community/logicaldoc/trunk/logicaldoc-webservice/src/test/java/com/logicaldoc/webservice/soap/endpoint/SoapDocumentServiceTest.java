@@ -187,9 +187,6 @@ public class SoapDocumentServiceTest extends AbstractWebServiceTestCase {
 		docServiceImpl.rename("", 1, "pippo");
 		docDao.initialize(doc);
 		Assert.assertEquals("pippo", doc.getTitle());
-		Assert.assertEquals("sourceauthor1", doc.getSourceAuthor());
-		Assert.assertEquals("sourcetype1", doc.getSourceType());
-		Assert.assertEquals("coverage1", doc.getCoverage());
 	}
 
 	@Test
@@ -202,9 +199,6 @@ public class SoapDocumentServiceTest extends AbstractWebServiceTestCase {
 		docDao.initialize(doc);
 		Assert.assertEquals("pippo.doc", doc.getFileName());
 		Assert.assertEquals("doc", doc.getType());
-		Assert.assertEquals("sourceauthor1", doc.getSourceAuthor());
-		Assert.assertEquals("sourcetype1", doc.getSourceType());
-		Assert.assertEquals("coverage1", doc.getCoverage());
 	}
 
 	@Test

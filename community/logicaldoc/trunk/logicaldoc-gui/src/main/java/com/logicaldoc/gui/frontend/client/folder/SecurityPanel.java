@@ -132,6 +132,10 @@ public class SecurityPanel extends FolderDetailTab {
 		read.setType(ListGridFieldType.BOOLEAN);
 		read.setCanEdit(true);
 
+		ListGridField print = new ListGridField("print", I18N.message("print"), 60);
+		print.setType(ListGridFieldType.BOOLEAN);
+		print.setCanEdit(true);
+
 		ListGridField download = new ListGridField("download", I18N.message("download"), 60);
 		download.setType(ListGridFieldType.BOOLEAN);
 		download.setCanEdit(true);
@@ -200,6 +204,7 @@ public class SecurityPanel extends FolderDetailTab {
 		fields.add(entityId);
 		fields.add(entity);
 		fields.add(read);
+		fields.add(print);
 		fields.add(download);
 		fields.add(write);
 		fields.add(add);
@@ -275,7 +280,7 @@ public class SecurityPanel extends FolderDetailTab {
 				dialog.show();
 			}
 		});
-		
+
 		// Prepare the combo and button for adding a new Group
 		final DynamicForm groupForm = new DynamicForm();
 		final SelectItem group = ItemFactory.newGroupSelector("group", "addgroup");
@@ -341,8 +346,7 @@ public class SecurityPanel extends FolderDetailTab {
 			}
 		});
 		buttons.addMember(userForm);
-		
-		
+
 		Button exportButton = new Button(I18N.message("export"));
 		exportButton.setAutoFit(true);
 		buttons.addMember(exportButton);
@@ -352,11 +356,11 @@ public class SecurityPanel extends FolderDetailTab {
 				Util.exportCSV(list, true);
 			}
 		});
-		
-		Button print = new Button(I18N.message("print"));
-		print.setAutoFit(true);
-		buttons.addMember(print);
-		print.addClickHandler(new ClickHandler() {
+
+		Button printButton = new Button(I18N.message("print"));
+		printButton.setAutoFit(true);
+		buttons.addMember(printButton);
+		printButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				Canvas.printComponents(new Object[] { list });
@@ -383,6 +387,7 @@ public class SecurityPanel extends FolderDetailTab {
 
 			right.setName(record.getAttributeAsString("entity"));
 			right.setEntityId(Long.parseLong(record.getAttribute("entityId")));
+			right.setPrint("true".equals(record.getAttributeAsString("print")));
 			right.setWrite("true".equals(record.getAttributeAsString("write")));
 			right.setDelete("true".equals(record.getAttributeAsString("delete")));
 			right.setAdd("true".equals(record.getAttributeAsString("add")));

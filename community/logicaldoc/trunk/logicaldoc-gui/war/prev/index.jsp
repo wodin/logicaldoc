@@ -15,6 +15,7 @@
   if(!security.isReadEnabled(docId, userId))
       throw new Exception("Permission Denied");
   
+  boolean print = security.isPrintEnabled(docId, userId);
   boolean download = security.isDownloadEnabled(docId, userId);
 %>
 <html dir="ltr" mozdisallowselectionprint moznomarginboxes>
@@ -441,6 +442,10 @@
 <script>
 	document.getElementById("download").style.display = 'none';
 	document.getElementById("secondaryDownload").style.display = 'none';
+</script>
+<% } %>
+<% if(!print) { %>
+<script>
 	document.getElementById("print").style.display = 'none';
 	document.getElementById("secondaryPrint").style.display = 'none';
 </script>

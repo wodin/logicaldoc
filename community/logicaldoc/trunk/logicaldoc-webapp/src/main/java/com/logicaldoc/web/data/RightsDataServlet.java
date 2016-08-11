@@ -113,6 +113,7 @@ public class RightsDataServlet extends HttpServlet {
 								+ " (" + user.getUsername() + ")]]></entity>");
 					}
 					writer.print("<read>" + true + "</read>");
+					writer.print("<print>" + (folderGroup.getPrint() == 1 ? true : false) + "</print>");
 					writer.print("<write>" + (folderGroup.getWrite() == 1 ? true : false) + "</write>");
 					writer.print("<add>" + (folderGroup.getAdd() == 1 ? true : false) + "</add>");
 					writer.print("<security>" + (folderGroup.getSecurity() == 1 ? true : false) + "</security>");

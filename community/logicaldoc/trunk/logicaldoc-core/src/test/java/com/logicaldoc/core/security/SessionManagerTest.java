@@ -48,7 +48,8 @@ public class SessionManagerTest extends AbstractCoreTCase {
 	@Test
 	public void testTimeout() {
 		ContextProperties conf = Context.get().getProperties();
-		conf.setProperty("default.session.timeout", "60");
+		int timeout=1;
+		conf.setProperty("default.session.timeout", ""+timeout);
 
 		SessionManager sm = SessionManager.get();
 		sm.clear();
@@ -56,7 +57,7 @@ public class SessionManagerTest extends AbstractCoreTCase {
 		Assert.assertNotNull(session1);
 
 		try {
-			Thread.sleep(1000*60*61);
+			Thread.sleep(1000*60*timeout);
 		} catch (InterruptedException e) {
 		}
 

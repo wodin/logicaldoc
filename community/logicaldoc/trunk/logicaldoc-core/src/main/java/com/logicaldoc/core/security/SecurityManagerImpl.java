@@ -231,6 +231,15 @@ public class SecurityManagerImpl implements SecurityManager {
 	}
 
 	@Override
+	public boolean isPrintEnabled(long docId, long userId) {
+		Document doc = documentDAO.findById(docId);
+		if (doc == null)
+			return false;
+		else
+			return folderDAO.isPrintEnabled(doc.getFolder().getId(), userId);
+	}
+	
+	@Override
 	public boolean isDownloadEnabled(long docId, long userId) {
 		Document doc = documentDAO.findById(docId);
 		if (doc == null)

@@ -151,6 +151,8 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public boolean isWriteEnabled(long folderId, long userId);
 
 	public boolean isReadEnabled(long folderId, long userId);
+	
+	public boolean isPrintEnabled(long folderId, long userId);
 
 	public boolean isDownloadEnabled(long folderId, long userId);
 

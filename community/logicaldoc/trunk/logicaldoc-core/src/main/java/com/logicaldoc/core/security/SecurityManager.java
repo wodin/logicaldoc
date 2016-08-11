@@ -110,6 +110,8 @@ public interface SecurityManager {
 	public boolean isWriteEnabled(long docId, long userId);
 
 	public boolean isReadEnabled(long docId, long userId);
+	
+	public boolean isPrintEnabled(long docId, long userId);
 
 	public boolean isDownloadEnabled(long docId, long userId);
 

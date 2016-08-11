@@ -17,13 +17,8 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.dao.DocumentDAO;
-import com.logicaldoc.core.folder.Folder;
-import com.logicaldoc.core.folder.FolderDAO;
-import com.logicaldoc.core.folder.FolderEvent;
-import com.logicaldoc.core.folder.FolderHistory;
-import com.logicaldoc.core.folder.FolderHistoryDAO;
-import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.metadata.Template;
+import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
@@ -215,10 +210,6 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		List<Folder> folderList = dao.findChildren(folderA.getId(), null);
 		Assert.assertTrue(folderList.size() == 1);
-
-		for (Folder folder : folderList) {
-			System.out.println(folder.getId());
-		}
 
 		Assert.assertTrue(folderList.contains(folderC));
 	}
@@ -566,7 +557,6 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(0, folders.size());
 
 		folders = dao.findByUserId(4, Folder.ROOTID);
-		System.out.println(folders);
 
 		Assert.assertNotNull(folders);
 		Assert.assertEquals(1, folders.size());
@@ -609,6 +599,15 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testIsPrintEnable() {
+		Assert.assertTrue(dao.isPrintEnabled(Folder.ROOTID, 1L));
+		Assert.assertTrue(dao.isPrintEnabled(5, 1));
+		Assert.assertFalse(dao.isPrintEnabled(Folder.ROOTID, 22L));
+		Assert.assertFalse(dao.isPrintEnabled(Folder.ROOTID, 999L));
+		Assert.assertTrue(dao.isPrintEnabled(1200, 3));
+	}
+	
+	@Test
 	public void testIsPermissionEnabled() {
 		Assert.assertTrue(dao.isPermissionEnabled(Permission.WRITE, Folder.ROOTID, 1));
 		Assert.assertTrue(dao.isPermissionEnabled(Permission.WRITE, 6, 1));
@@ -620,7 +619,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testGetEnabledPermissions() {
 		Set<Permission> permissions = dao.getEnabledPermissions(Folder.ROOTID, 1);
-		Assert.assertEquals(15, permissions.size());
+		Assert.assertEquals(16, permissions.size());
 		Assert.assertTrue(permissions.contains(Permission.READ));
 		Assert.assertTrue(permissions.contains(Permission.SECURITY));
 		Assert.assertTrue(permissions.contains(Permission.SIGN));
@@ -629,7 +628,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(permissions.contains(Permission.READ));
 		Assert.assertTrue(permissions.contains(Permission.WRITE));
 		permissions = dao.getEnabledPermissions(999, 1);
-		Assert.assertEquals(15, permissions.size());
+		Assert.assertEquals(16, permissions.size());
 	}
 
 	@Test
@@ -879,7 +878,6 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	@Test
 	public void testFindFolderIdInTree() {
 		Collection<Long> ids = dao.findFolderIdInTree(1200L, false);
-		System.out.println("ids=" + ids);
 		Assert.assertEquals(3, ids.size());
 		Assert.assertTrue(ids.contains(1202L));
 		Assert.assertTrue(ids.contains(1201L));
