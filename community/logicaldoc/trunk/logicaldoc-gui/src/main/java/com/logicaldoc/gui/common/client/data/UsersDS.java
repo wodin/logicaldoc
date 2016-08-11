@@ -36,6 +36,6 @@ public class UsersDS extends DataSource {
 	}
 
 	public static UsersDS get(long groupId) {
-		return new UsersDS(Long.toString(groupId), false);
+		return new UsersDS(Long.toString(groupId), true);
 	}
 }
