@@ -139,9 +139,7 @@ create table ld_foldergroup (ld_folderid bigint not null, ld_groupid bigint not 
                              ld_rename int not null, ld_import int not null, ld_export int not null, ld_sign int not null, 
                              ld_archive int not null, ld_workflow int not null, ld_download int not null, ld_calendar int not null,
                              ld_subscription int not null, ld_print int not null,  
-                             constraint PK_LD_FOLDERGROUP primary key (ld_folderid, ld_groupid, ld_write, ld_add, ld_security, ld_immutable, ld_delete, 
-                             ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, 
-                             ld_calendar, ld_subscription, ld_print));
+                             constraint PK_LD_FOLDERGROUP primary key (ld_folderid, ld_groupid));
 create table ld_feedmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
                              ld_deleted int not null, ld_tenantid bigint not null, ld_guid varchar(512) null, ld_title varchar(512) null, ld_description  varchar(4000) null, ld_link varchar(512) null, ld_pubdate timestamp, ld_read int not null, primary key (ld_id));
 create table ld_rating (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
