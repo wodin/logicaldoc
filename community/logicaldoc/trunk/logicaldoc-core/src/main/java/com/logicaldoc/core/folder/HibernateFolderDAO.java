@@ -757,8 +757,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				log.debug("Use the security reference " + id);
 			}
 
-			System.out.println("id: " + id);
-
 			StringBuffer query = new StringBuffer(
 					"select A.ld_write as LDWRITE, A.ld_add as LDADD, A.ld_security as LDSECURITY, A.ld_immutable as LDIMMUTABLE, A.ld_delete as LDDELETE, A.ld_rename as LDRENAME, A.ld_import as LDIMPORT, A.ld_export as LDEXPORT, A.ld_sign as LDSIGN, A.ld_archive as LDARCHIVE, A.ld_workflow as LDWORKFLOW, A.ld_download as LDDOWNLOAD, A.ld_calendar as LDCALENDAR, A.ld_subscription as LDSUBSCRIPTION, A.ld_print as LDPRINT");
 			query.append(" from ld_foldergroup A");
