@@ -172,12 +172,8 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 		form2.clear();
 		addMember(form2);
 
-		Log.info("**1 "+templateId, null);
-		
 		if (templateId == null)
 			return;
-
-		Log.info("**2 ", null);
 		
 		documentService.getAttributes(templateId, new AsyncCallback<GUIAttribute[]>() {
 			@Override
