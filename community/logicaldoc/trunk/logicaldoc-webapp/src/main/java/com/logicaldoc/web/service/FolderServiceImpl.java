@@ -465,6 +465,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				// The user is editing a real folder
 				f.setDescription(folder.getDescription());
 				f.setPosition(folder.getPosition());
+				f.setType(folder.getType());
 
 				if (f.getName().trim().equals(folderName)) {
 					f.setName(folderName.trim());
@@ -475,7 +476,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				}
 			}
 
-			f.setType(folder.getType());
 			f.setTemplateLocked(folder.getTemplateLocked());
 			f.setQuotaDocs(folder.getQuotaDocs());
 			f.setQuotaSize(folder.getQuotaSize());
