@@ -444,10 +444,12 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 	public void testCreateAlias() {
 		Folder alias = dao.createAlias(4L, 3000L, null);
 		Assert.assertNotNull(alias);
-		Assert.assertTrue(3000L == alias.getFoldRef());
-		Assert.assertTrue(3000L == alias.getSecurityRef());
+		Assert.assertEquals(new Long(3000L), alias.getFoldRef());
+		Assert.assertEquals(new Long(3000L), alias.getSecurityRef());
+		Assert.assertEquals(new Integer(Folder.TYPE_ALIAS), new Integer(alias.getType()));
 		Folder orig = dao.findById(3000L);
 		Assert.assertEquals("Workspace X", orig.getName());
+		Assert.assertEquals(Folder.TYPE_WORKSPACE, orig.getType());
 	}
 
 	@Test
