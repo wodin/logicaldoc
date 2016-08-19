@@ -92,14 +92,14 @@ public class EmailDialog extends Window {
 		form.setID("emailform");
 		form.setValuesManager(vm);
 		form.setWidth100();
-		form.setHeight100();
+		form.setHeight("*");
 		form.setMargin(5);
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(1);
 
 		final TextItem subject = ItemFactory.newTextItem("subject", "subject", docTitle);
 		subject.setRequired(true);
-		subject.setWidth(250);
+		subject.setWidth("*");
 
 		final RichTextItem message = new RichTextItem();
 		message.setName("message");
@@ -214,6 +214,7 @@ public class EmailDialog extends Window {
 
 		HLayout buttons = new HLayout();
 		buttons.setMembers(send);
+		buttons.setHeight(30);
 
 		addItem(recipientsStack);
 		addItem(form);
@@ -223,7 +224,7 @@ public class EmailDialog extends Window {
 	private SectionStack prepareRecipientsGrid() {
 		SectionStack sectionStack = new SectionStack();
 		sectionStack.setWidth100();
-		sectionStack.setHeight(200);
+		sectionStack.setHeight(150);
 		sectionStack.setMargin(6);
 		SectionStackSection section = new SectionStackSection("<b>" + I18N.message("recipients") + "</b>");
 		section.setCanCollapse(false);
@@ -234,7 +235,7 @@ public class EmailDialog extends Window {
 		email.setCanFilter(true);
 		FormItem emailItem = ItemFactory.newEmailComboSelector("email", "email");
 		emailItem.setRequired(true);
-		emailItem.setWidth("100%");
+		emailItem.setWidth("*");
 		emailItem.addKeyPressHandler(new KeyPressHandler() {
 
 			@Override
