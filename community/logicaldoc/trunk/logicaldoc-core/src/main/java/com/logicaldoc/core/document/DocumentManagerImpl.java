@@ -304,7 +304,9 @@ public class DocumentManagerImpl implements DocumentManager {
 		String resource = storer.getResourceName(doc, fileVersion, null);
 		Parser parser = ParserFactory.getParser(storer.getStream(doc.getId(), resource), doc.getFileName(), locale,
 				null, doc.getTenantId());
-
+		
+		log.debug("Using parser "+parser.getClass().getName()+ " to parse document "+doc.getId());
+		
 		// and gets some fields
 		if (parser != null) {
 			content = parser.getContent();
