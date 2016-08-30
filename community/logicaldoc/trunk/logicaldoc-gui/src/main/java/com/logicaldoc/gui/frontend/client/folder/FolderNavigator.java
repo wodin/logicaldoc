@@ -156,10 +156,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 							return;
 						final long[] ids = new long[selection.length];
 						for (int i = 0; i < selection.length; i++)
-							if (selection[i].getDocRef() != null)
-								ids[i] = selection[i].getDocRef();
-							else
-								ids[i] = selection[i].getId();
+							ids[i] = selection[i].getId();
 
 						final TreeNode selectedNode = getDropFolder();
 						final long folderId = Long.parseLong(selectedNode.getAttribute("folderId"));

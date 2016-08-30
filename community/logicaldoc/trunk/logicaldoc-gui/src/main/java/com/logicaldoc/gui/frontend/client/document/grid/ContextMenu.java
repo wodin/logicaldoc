@@ -91,8 +91,6 @@ public class ContextMenu extends Menu {
 				Clipboard.getInstance().clear();
 				for (int i = 0; i < selection.length; i++) {
 					long id = selection[i].getId();
-					if (selection[i].getDocRef() != null)
-						id = selection[i].getDocRef();
 
 					GUIDocument document = new GUIDocument();
 					document.setId(id);
@@ -119,8 +117,6 @@ public class ContextMenu extends Menu {
 				Clipboard.getInstance().clear();
 				for (int i = 0; i < selection.length; i++) {
 					long id = selection[i].getId();
-					if (selection[i].getDocRef() != null)
-						id = selection[i].getDocRef();
 
 					GUIDocument document = new GUIDocument();
 					document.setId(id);
