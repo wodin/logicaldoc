@@ -109,9 +109,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private String source;
 
 	@Deprecated
-	private String sourceType;
-
-	@Deprecated
 	private String sourceId;
 
 	@Deprecated
@@ -321,19 +318,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	@Deprecated
 	public void setSource(String source) {
 		this.source = source;
-	}
-
-	/**
-	 * The type of the document (form document's metadata)
-	 */
-	@Deprecated
-	public String getSourceType() {
-		return sourceType;
-	}
-
-	@Deprecated
-	public void setSourceType(String sourceType) {
-		this.sourceType = sourceType;
 	}
 
 	/**
