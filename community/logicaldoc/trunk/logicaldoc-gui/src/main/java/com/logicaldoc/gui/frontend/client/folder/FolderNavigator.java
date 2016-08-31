@@ -565,6 +565,10 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 			paste.setEnabled(false);
 			pasteAsAlias.setEnabled(false);
 		}
+		
+		if(!folder.hasPermission(Constants.PERMISSION_ADD)){
+			createAlias.setEnabled(false);
+		}
 
 		if (Clipboard.getInstance().getLastAction().equals(Clipboard.CUT))
 			pasteAsAlias.setEnabled(false);
