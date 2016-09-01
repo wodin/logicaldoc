@@ -41,7 +41,7 @@ public class IconSelector {
 				|| ext.equals("pot") || ext.equals("sxi") || ext.equals("kpr"))
 			icon = "powerpoint.png";
 		else if (ext.equals("jpg") || ext.equals("jpeg") || ext.equals("gif") || ext.equals("png") || ext.equals("bmp")
-				|| ext.equals("tif") || ext.equals("tiff") || ext.equals("psd") || ext.equals("ai"))
+				|| ext.equals("tif") || ext.equals("tiff") || ext.equals("psd"))
 			icon = "picture.png";
 		else if (ext.equals("htm") || ext.equals("html") || ext.equals("xml") || ext.equals("xhtml"))
 			icon = "html.png";
@@ -60,6 +60,8 @@ public class IconSelector {
 		else if (ext.equals("mp3") || ext.equals("m4p") || ext.equals("m4a") || ext.equals("wav") || ext.equals("wma")
 				|| ext.equals("cda") || ext.equals("wave"))
 			icon = "music.png";
+		else if (ext.equals("vsd") || ext.equals("vsdx") || ext.equals("pub") || ext.equals("pubx") || ext.equals("ai"))
+			icon = "vector.png";
 		else
 			icon = "generic.png";
 
