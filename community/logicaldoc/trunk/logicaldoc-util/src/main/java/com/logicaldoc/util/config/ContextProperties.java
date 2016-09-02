@@ -148,6 +148,7 @@ public class ContextProperties extends OrderedProperties {
 	 * makes a backup of the actual file. Up to <code>maxBackups</code> are
 	 * maintained
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	protected void backup() throws IOException {
 		// Backup the file first
 		final File src = new File(docPath);
