@@ -1,6 +1,8 @@
 package com.logicaldoc.util.security;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
@@ -11,9 +13,6 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.DESedeKeySpec;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 /**
  * Utility class to encrypt/decrypt strings
@@ -35,6 +34,10 @@ public class StringEncrypter {
 	private Cipher cipher;
 
 	private static final String UNICODE_FORMAT = "UTF8";
+
+	public static void main(String[] args) throws IOException {
+
+	}
 
 	public StringEncrypter(String encryptionScheme) throws EncryptionException {
 		this(encryptionScheme, DEFAULT_ENCRYPTION_KEY);
@@ -75,8 +78,7 @@ public class StringEncrypter {
 			cipher.init(Cipher.ENCRYPT_MODE, key);
 			byte[] cleartext = unencryptedString.getBytes(UNICODE_FORMAT);
 			byte[] ciphertext = cipher.doFinal(cleartext);
-			BASE64Encoder base64encoder = new BASE64Encoder();
-			return base64encoder.encode(ciphertext);
+			return new String(java.util.Base64.getMimeEncoder().encode(ciphertext), StandardCharsets.UTF_8);
 		} catch (Exception e) {
 			throw new EncryptionException(e);
 		}
@@ -88,8 +90,7 @@ public class StringEncrypter {
 		try {
 			SecretKey key = keyFactory.generateSecret(keySpec);
 			cipher.init(Cipher.DECRYPT_MODE, key);
-			BASE64Decoder base64decoder = new BASE64Decoder();
-			byte[] cleartext = base64decoder.decodeBuffer(encryptedString);
+			byte[] cleartext = java.util.Base64.getMimeDecoder().decode(encryptedString);
 			byte[] ciphertext = cipher.doFinal(cleartext);
 			return bytes2String(ciphertext);
 		} catch (Exception e) {

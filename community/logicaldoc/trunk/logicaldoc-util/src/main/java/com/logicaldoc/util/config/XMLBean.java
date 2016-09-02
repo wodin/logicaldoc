@@ -135,6 +135,7 @@ public class XMLBean {
 	}
 
 	private List<Element> getChildren(Element elem, String name) {
+		@SuppressWarnings("unchecked")
 		List<Element> list = (List<Element>) elem.getChildren(name, elem.getNamespace());
 		if (list == null || list.isEmpty())
 			list = elem.getChildren(name);
@@ -221,6 +222,7 @@ public class XMLBean {
 	 * @param attribute Name of the attribute which must root element have.
 	 * @param value Value of the attribute.
 	 */
+	@SuppressWarnings("rawtypes")
 	public String getAllChildText(String elemname, String attribute, String value, String separator1, String separator2) {
 		String result = "";
 
@@ -335,6 +337,7 @@ public class XMLBean {
 	 * 
 	 * @return Childrenlist
 	 */
+	@SuppressWarnings("rawtypes")
 	public List getRootChild() {
 
 		if (doc == null) {
@@ -350,6 +353,7 @@ public class XMLBean {
 	 * @param elem Name of the element.
 	 * @return Attributelist
 	 */
+	@SuppressWarnings("rawtypes")
 	public List getAllAttribute(Element elem) {
 
 		if (doc == null) {
@@ -362,6 +366,7 @@ public class XMLBean {
 	/**
 	 * Returns a list of all elements with the given elementname.
 	 */
+	@SuppressWarnings("rawtypes")
 	public List getAllChild(String elemname) {
 
 		if (doc == null) {
@@ -375,6 +380,7 @@ public class XMLBean {
 	 * Returns a list of all children with the specific name and the specific
 	 * attribute value;
 	 */
+	@SuppressWarnings("rawtypes")
 	public List getAllChild(String elemname, String attribute, String value) {
 		List<Element> list = new LinkedList<Element>();
 		List elems = root.getChildren(elemname);

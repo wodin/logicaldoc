@@ -1,6 +1,7 @@
 package com.logicaldoc.util.crypt;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.KeySpec;
@@ -16,9 +17,6 @@ import org.apache.commons.lang.StringUtils;
 import org.bouncycastle.crypto.digests.MD4Digest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import com.logicaldoc.util.io.FileUtil;
 
@@ -110,8 +108,7 @@ public class CryptUtil {
 			cipher.init(Cipher.ENCRYPT_MODE, key);
 			byte[] cleartext = unencryptedString.getBytes(UNICODE_FORMAT);
 			byte[] ciphertext = cipher.doFinal(cleartext);
-			BASE64Encoder base64encoder = new BASE64Encoder();
-			return base64encoder.encode(ciphertext);
+			return new String(java.util.Base64.getMimeEncoder().encode(ciphertext), StandardCharsets.UTF_8);
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new EncryptionException(e);
@@ -124,8 +121,7 @@ public class CryptUtil {
 		try {
 			SecretKey key = keyFactory.generateSecret(keySpec);
 			cipher.init(Cipher.DECRYPT_MODE, key);
-			BASE64Decoder base64decoder = new BASE64Decoder();
-			byte[] cleartext = base64decoder.decodeBuffer(encryptedString);
+			byte[] cleartext = java.util.Base64.getMimeDecoder().decode(encryptedString);
 			byte[] ciphertext = cipher.doFinal(cleartext);
 			return bytes2String(ciphertext);
 		} catch (Exception e) {
