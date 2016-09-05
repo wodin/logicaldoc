@@ -224,6 +224,10 @@
     <servlet-class>com.logicaldoc.web.data.AttributeSetsDataServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>CharsetsData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.CharsetsDataServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>Thumbnail</servlet-name>
     <servlet-class>com.logicaldoc.web.ThumbnailServlet</servlet-class>
   </servlet>
@@ -535,6 +539,10 @@
     <servlet-name>AttributeOptionsData</servlet-name>
     <url-pattern>/data/attributeoptions.xml</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>CharsetsData</servlet-name>
+    <url-pattern>/data/charsets.xml</url-pattern>
+  </servlet-mapping>  
   <servlet-mapping>
     <servlet-name>Thumbnail</servlet-name>
     <url-pattern>/thumbnail</url-pattern>

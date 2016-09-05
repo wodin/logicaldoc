@@ -5,10 +5,10 @@ import java.util.Date;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.ServerException;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
-import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
@@ -132,15 +132,16 @@ public interface DocumentService extends RemoteService {
 	 * @param folderId The destination folder identifier
 	 * @param importZip If .zip files have to be unpacked and the contained
 	 *        documents imported
+	 * @param charset Charset to use to process the .zip files
 	 * @param immediteIndexing If the documents must be immediately indexed
 	 * @param templateId The documents template
 	 * 
 	 * @return The list of created documents
 	 */
-	public GUIDocument[] addDocuments(String language, long folderId, boolean importZip,
+	public GUIDocument[] addDocuments(String language, long folderId, boolean importZip, String charset,
 			boolean immediateIndexing, Long templateId) throws ServerException;
 
-	public GUIDocument[] addDocuments(boolean importZip, boolean immediateIndexing, GUIDocument metadata)
+	public GUIDocument[] addDocuments(boolean importZip, String charset, boolean immediateIndexing, GUIDocument metadata)
 			throws ServerException;
 
 	/**

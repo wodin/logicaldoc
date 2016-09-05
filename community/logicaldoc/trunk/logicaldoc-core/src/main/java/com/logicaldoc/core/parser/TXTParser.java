@@ -46,7 +46,7 @@ public class TXTParser extends AbstractParser {
 							setEncoding(cm.getName());
 					}
 				} catch (Throwable th) {
-					log.warn("Error during TXT charset detection", th);
+					log.warn("Error during TXT fileNameCharset detection", th);
 				}
 			}
 			parse(bis);

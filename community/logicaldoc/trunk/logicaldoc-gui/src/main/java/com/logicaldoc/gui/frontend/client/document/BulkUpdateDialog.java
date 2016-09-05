@@ -44,6 +44,8 @@ public class BulkUpdateDialog extends Window {
 
 	private boolean immediteIndexing = false;
 
+	private String charset = "UTF-8";
+
 	public BulkUpdateDialog(final long[] ids, final GUIDocument metadata, final boolean checkin,
 			final boolean majorVersion) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
@@ -151,7 +153,7 @@ public class BulkUpdateDialog extends Window {
 				else {
 					bulkPanel.getDocument().setComment(saveForm.getValueAsString("versionComment"));
 					ContactingServer.get().show();
-					documentService.addDocuments(zip, immediteIndexing, bulkPanel.getDocument(),
+					documentService.addDocuments(zip, charset, immediteIndexing, bulkPanel.getDocument(),
 							new AsyncCallback<GUIDocument[]>() {
 
 								@Override
@@ -233,5 +235,9 @@ public class BulkUpdateDialog extends Window {
 
 	public void setImmediateIndexing(boolean immediteIndexing) {
 		this.immediteIndexing = immediteIndexing;
+	}
+
+	public void setCharset(String charset) {
+		this.charset = charset;
 	}
 }

@@ -108,7 +108,7 @@ public class SampleClient {
 
 		// default values if the document has no content
 		String filename = "business plan 2014.docx";
-		String mimetype = "text/plain; charset=UTF-8";
+		String mimetype = "text/plain; fileNameCharset=UTF-8";
 		String content = "";
 
 		// get the orginal content
@@ -231,7 +231,7 @@ public class SampleClient {
 		}
 		ByteArrayInputStream input = new ByteArrayInputStream(buf);
 		ContentStream contentStream = session.getObjectFactory().createContentStream(newDocName, buf.length,
-				"text/plain; charset=UTF-8", input);
+				"text/plain; fileNameCharset=UTF-8", input);
 		target.createDocument(props, contentStream, VersioningState.NONE);
 	}
 

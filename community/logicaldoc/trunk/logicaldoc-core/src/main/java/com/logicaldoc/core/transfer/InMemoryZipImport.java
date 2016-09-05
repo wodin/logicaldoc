@@ -33,8 +33,9 @@ public class InMemoryZipImport extends ZipImport {
 
 	protected static Logger logger = LoggerFactory.getLogger(InMemoryZipImport.class);
 
-	public InMemoryZipImport(Document docVo) {
-		super(docVo);
+	
+	public InMemoryZipImport(Document docVo, String charset) {
+		super(docVo, charset);
 	}
 
 	public void process(File zipsource, Folder parent, long userId, String sessionId) {
@@ -49,7 +50,9 @@ public class InMemoryZipImport extends ZipImport {
 
 		try {
 			// Open the Zip and list all the contents
-			List<String> entries = ZipUtil.listEntries(zipsource);
+			ZipUtil zipUtil = new ZipUtil();
+			zipUtil.setFileNameCharset(fileNameCharset);
+			List<String> entries = zipUtil.listEntries(zipsource);
 			for (String entry : entries) {
 				String relativePath = FilenameUtils.getPath(entry);
 				if (relativePath.startsWith("/"))
@@ -82,7 +85,7 @@ public class InMemoryZipImport extends ZipImport {
 					history.setUser(user);
 					history.setSessionId(sessionId);
 
-					docManager.create(ZipUtil.getEntryStream(zipsource, entry), doc, history);
+					docManager.create(zipUtil.getEntryStream(zipsource, entry), doc, history);
 				} catch (Exception e) {
 					logger.warn("InMemoryZipImport unable to import ZIP entry " + entry, e);
 				}

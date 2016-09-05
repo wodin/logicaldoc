@@ -27,10 +27,21 @@ import org.slf4j.LoggerFactory;
  */
 public class ZipUtil {
 
-	public static List<String> listEntries(File zipsource) {
+	private String fileNameCharset = "UTF-8";
+
+	public ZipUtil() {
+	}
+
+	public ZipUtil(String charset) {
+		this.fileNameCharset = charset;
+	}
+
+	public List<String> listEntries(File zipsource) {
 		List<String> files = new ArrayList<String>();
 		try {
 			ZipFile zipFile = new ZipFile(zipsource);
+			if (fileNameCharset != null)
+				zipFile.setFileNameCharset(fileNameCharset);
 			@SuppressWarnings("unchecked")
 			List<FileHeader> fileHeaders = zipFile.getFileHeaders();
 			for (FileHeader fileHeader : fileHeaders)
@@ -48,10 +59,11 @@ public class ZipUtil {
 	 * @param target Path of the extracted files.
 	 * @return True if successfully extracted.
 	 */
-	public static boolean unzip(String zipsource, String target) {
+	public boolean unzip(String zipsource, String target) {
 		boolean result = true;
 		try {
 			ZipFile zipFile = new ZipFile(zipsource);
+			zipFile.setFileNameCharset(fileNameCharset);
 			zipFile.extractAll(target);
 		} catch (Throwable e) {
 			result = false;
@@ -67,7 +79,7 @@ public class ZipUtil {
 	 * @param entry The entry to be read
 	 * @return The bytes of the entry
 	 */
-	public static byte[] getEntryBytes(File zipsource, String entry) {
+	public byte[] getEntryBytes(File zipsource, String entry) {
 		if (entry.startsWith("/"))
 			entry = entry.substring(1);
 
@@ -75,6 +87,7 @@ public class ZipUtil {
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		try {
 			ZipFile zipFile = new ZipFile(zipsource);
+			zipFile.setFileNameCharset(fileNameCharset);
 			FileHeader header = zipFile.getFileHeader(entry);
 
 			entryStream = zipFile.getInputStream(header);
@@ -99,12 +112,13 @@ public class ZipUtil {
 	 * @param entry The entry to be read
 	 * @return The stream of the entry
 	 */
-	public static InputStream getEntryStream(File zip, String entry) {
+	public InputStream getEntryStream(File zip, String entry) {
 		if (entry.startsWith("/"))
 			entry = entry.substring(1);
 
 		try {
 			ZipFile zipFile = new ZipFile(zip);
+			zipFile.setFileNameCharset(fileNameCharset);
 			FileHeader header = zipFile.getFileHeader(entry);
 			return zipFile.getInputStream(header);
 		} catch (Throwable e) {
@@ -113,7 +127,7 @@ public class ZipUtil {
 		}
 	}
 
-	public static String getEntryContent(File zip, String entry) throws FileNotFoundException, IOException {
+	public String getEntryContent(File zip, String entry) throws FileNotFoundException, IOException {
 		return IOUtil.getStringFromInputStream(getEntryStream(zip, entry));
 	}
 
@@ -122,7 +136,7 @@ public class ZipUtil {
 		logger.error(message);
 	}
 
-	private static void zipDir(File zipDir, ZipOutputStream zos, File startZipDir) {
+	private void zipDir(File zipDir, ZipOutputStream zos, File startZipDir) {
 		try {
 			// get a listing of the directory content
 			File[] dirList = zipDir.listFiles();
@@ -169,7 +183,7 @@ public class ZipUtil {
 	 * @param src The source file
 	 * @param dest The destination archive file
 	 */
-	public static void zipFile(File src, File dest) {
+	public void zipFile(File src, File dest) {
 		try {
 			// create a ZipOutputStream to zip the data to
 			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(dest));
@@ -201,7 +215,7 @@ public class ZipUtil {
 	/**
 	 * Zips a folder into a .zip archive
 	 */
-	public static void zipFolder(File inFolder, File outFile) {
+	public void zipFolder(File inFolder, File outFile) {
 		try {
 			// create a ZipOutputStream to zip the data to
 			ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(outFile));
@@ -217,5 +231,13 @@ public class ZipUtil {
 			e.printStackTrace();
 			logError(e.getMessage());
 		}
+	}
+
+	public String getFileNameCharset() {
+		return fileNameCharset;
+	}
+
+	public void setFileNameCharset(String fileNameCharset) {
+		this.fileNameCharset = fileNameCharset;
 	}
 }
