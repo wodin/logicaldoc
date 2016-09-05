@@ -89,7 +89,7 @@ public class ApplicationListener implements ServletContextListener, HttpSessionL
 				if ((t.getName().toLowerCase().contains("abandoned connection") || t.getName().startsWith("Scheduler_"))
 						&& !Thread.currentThread().equals(t) && !t.isInterrupted())
 					try {
-						t.stop(); // don't complain, it works
+						t.interrupt();
 						log.warn("Killed thread " + t.getName());
 					} catch (Throwable e) {
 						log.warn("Error killing " + t.getName());

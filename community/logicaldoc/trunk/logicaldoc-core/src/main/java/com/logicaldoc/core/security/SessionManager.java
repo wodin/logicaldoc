@@ -45,7 +45,11 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 
 	private AuthenticationChain authenticationChain;
 
+	private SessionTimeoutWatchDog timeoutWatchDog = new SessionTimeoutWatchDog();
+
 	private SessionManager() {
+		timeoutWatchDog.start();
+		log.info("Starting the session timeout watchdog");
 	}
 
 	public final static SessionManager get() {
@@ -368,13 +372,62 @@ public class SessionManager extends ConcurrentHashMap<String, Session> {
 	}
 
 	public void destroy() {
+		log.info("Stopping the session timeout watchdog");
+		timeoutWatchDog.finish();
+
 		for (Session session : getSessions()) {
 			try {
 				SessionManager.get().kill(session.getId());
 			} catch (Throwable t) {
 			}
 		}
-		Session.killTimeoutThreads();
 		clear();
+
+		if (timeoutWatchDog.isAlive()) {
+			try {
+				timeoutWatchDog.interrupt();
+			} catch (Throwable t) {
+
+			}
+			log.info("Session timeout watch dog killed");
+		}
+	}
+
+	/**
+	 * Each minute iterates over the sessions killing the expired ones
+	 * 
+	 * @author Marco Meschieri - LogicalDOC
+	 * @since 7.5.3
+	 */
+	class SessionTimeoutWatchDog extends Thread {
+		boolean active = true;
+
+		private SessionTimeoutWatchDog() {
+			setDaemon(true);
+			setName("SessionTimeoutWatchDog");
+		}
+
+		@Override
+		public void run() {
+			while (active) {
+				try {
+					Thread.sleep(1000 * 60L);
+				} catch (InterruptedException e) {
+
+				}
+				for (Session session : SessionManager.this.getSessions()) {
+					if (session.isOpen() && session.isTimedOut())
+						session.setExpired();
+				}
+			}
+		}
+
+		public void finish() {
+			this.active = false;
+		}
+
+		public boolean isActive() {
+			return active;
+		}
 	}
 }

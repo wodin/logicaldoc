@@ -6,12 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -20,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserHistoryDAO;
 import com.logicaldoc.util.Context;
-import com.logicaldoc.util.concurrency.NamedThreadFactory;
 import com.logicaldoc.util.config.ContextProperties;
 
 /**
@@ -79,36 +73,12 @@ public class Session implements Comparable<Session> {
 	private User user = null;
 
 	/**
-	 * This executor will be used to execute timeout checks in the future
-	 */
-	private static ScheduledExecutorService executor = Executors.newScheduledThreadPool(5, new NamedThreadFactory(
-			"SessionTimeout"));
-
-	/**
-	 * Represents the action to be taken in the future when the timeout occurs
-	 */
-	private FutureTask<String> timeoutTask;
-
-	/**
 	 * Represents a dictionary of custom informations a client may save in the
 	 * session
 	 */
 	private Map<String, Object> dictionary = new ConcurrentHashMap<String, Object>();
 
 	private List<Log> logs = new ArrayList<Log>();
-
-	/**
-	 * Stops all the timeout threads
-	 */
-	static void killTimeoutThreads() {
-		log.info("Killing all timeout threads");
-		executor.shutdownNow();
-		try {
-			executor.awaitTermination(3, TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-
-		}
-	}
 
 	public Map<String, Object> getDictionary() {
 		return dictionary;
@@ -135,20 +105,6 @@ public class Session implements Comparable<Session> {
 				lastRenew = new Date();
 		else
 			return;
-
-		stopTimeout();
-
-		int timeout = getTimeout();
-		if (timeout > 0) {
-			try {
-				timeoutTask = new FutureTask<String>(new SessionTimeout());
-				executor.schedule(timeoutTask, timeout + 1, TimeUnit.MINUTES);
-				if (log.isDebugEnabled())
-					log.debug("Renewing session " + getId());
-			} catch (Exception e) {
-				log.warn(e.getMessage());
-			}
-		}
 	}
 
 	/**
@@ -163,7 +119,14 @@ public class Session implements Comparable<Session> {
 		return timeout;
 	}
 
+	public boolean isOpen() {
+		return status == STATUS_OPEN;
+	}
+
 	protected boolean isTimedOut() {
+		if (status != STATUS_OPEN)
+			return true;
+
 		int timeout = getTimeout();
 		if (timeout <= 0)
 			return false;
@@ -202,8 +165,6 @@ public class Session implements Comparable<Session> {
 		// Add a user history entry
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
 		userHistoryDAO.createUserHistory(user, UserHistory.EVENT_USER_TIMEOUT, "", id);
-
-		stopTimeout();
 	}
 
 	public void setClosed() {
@@ -214,8 +175,6 @@ public class Session implements Comparable<Session> {
 		// Add a user history entry
 		UserHistoryDAO userHistoryDAO = (UserHistoryDAO) Context.get().getBean(UserHistoryDAO.class);
 		userHistoryDAO.createUserHistory(user, UserHistory.EVENT_USER_LOGOUT, "", id);
-
-		stopTimeout();
 	}
 
 	Session(User user, String password, String key, Client client) {
@@ -400,28 +359,5 @@ public class Session implements Comparable<Session> {
 
 	public void setTenantName(String tenantName) {
 		this.tenantName = tenantName;
-	}
-
-	private void stopTimeout() {
-		if (timeoutTask != null)
-			timeoutTask.cancel(true);
-	}
-
-	/**
-	 * This is invoked at the session timeout
-	 * 
-	 * @author Marco Meschieri - LogicalDOC
-	 * @since 7.5
-	 */
-	class SessionTimeout implements Callable<String> {
-
-		@Override
-		public String call() throws Exception {
-			// As a security check, verify if the timeout is reached
-			if (Session.this.isTimedOut())
-				Session.this.setExpired();
-			return "done";
-		}
-
 	}
 }
