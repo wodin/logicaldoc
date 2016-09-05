@@ -34,7 +34,9 @@ public class ZipUtilTest {
 	public void testListEntries() throws IOException {
 		File file = new File("target/test.zip");
 		FileUtil.copyResource("/test.zip", file);
-		List<String> entries = ZipUtil.listEntries(file);
+
+		ZipUtil zipUtil = new ZipUtil();
+		List<String> entries = zipUtil.listEntries(file);
 
 		Assert.assertEquals(3, entries.size());
 		Assert.assertTrue(entries.contains("impex.xsd"));
@@ -44,7 +46,8 @@ public class ZipUtilTest {
 	public void testGetEntryBytes() throws IOException {
 		File file = new File("target/test.zip");
 		FileUtil.copyResource("/test.zip", file);
-		byte[] in = ZipUtil.getEntryBytes(file, "index.xml");
+		ZipUtil zipUtil = new ZipUtil();
+		byte[] in = zipUtil.getEntryBytes(file, "index.xml");
 		Assert.assertEquals(132997526, in.length);
 	}
 

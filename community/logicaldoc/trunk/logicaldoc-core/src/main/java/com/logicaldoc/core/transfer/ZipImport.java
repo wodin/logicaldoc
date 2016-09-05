@@ -52,13 +52,18 @@ public class ZipImport {
 
 	protected Document docVo = null;
 
+	protected String fileNameCharset = "UTF-8";
+
 	/**
 	 * Constructor.
 	 * 
-	 * @param docVo Value object for the common documents metadata.
+	 * @param docVo Value object for the common documents
+	 * @param fileNameCharset the charset to use to process the zip
 	 */
-	public ZipImport(Document docVo) {
+	public ZipImport(Document docVo, String fileNameCharset) {
 		this.docVo = docVo;
+		if (fileNameCharset != null)
+			this.fileNameCharset = fileNameCharset;
 	}
 
 	public void process(File zipsource, Folder parent, long userId, String sessionId) {
@@ -80,7 +85,9 @@ public class ZipImport {
 			FileUtils.forceMkdir(dir);
 		} catch (IOException e) {
 		}
-		ZipUtil.unzip(zipFile.getPath(), dir.getPath());
+
+		ZipUtil zipUtil = new ZipUtil();
+		zipUtil.unzip(zipFile.getPath(), dir.getPath());
 		File[] files = dir.listFiles();
 
 		for (int i = 0; i < files.length; i++) {

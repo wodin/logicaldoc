@@ -59,15 +59,15 @@ public class HTMLParser extends AbstractParser {
 		String inputLine;
 		while ((inputLine = br.readLine()) != null) {
 			// System.out.println(inputLine);
-			if (inputLine.indexOf("charset") != -1) {
+			if (inputLine.indexOf("fileNameCharset") != -1) {
 				// System.out.println("inputLine: " + inputLine);
-				String chs = inputLine.substring(inputLine.indexOf("charset") + "charset=".length());
+				String chs = inputLine.substring(inputLine.indexOf("fileNameCharset") + "fileNameCharset=".length());
 				if (chs.indexOf("\"") != -1)
 					chs = chs.substring(0, chs.indexOf("\""));
 				if (chs.indexOf(">") != -1)
 					chs = chs.substring(0, chs.indexOf(">"));
-				// System.out.println("charset: " + chs);
-				// verify if is a valid charset
+				// System.out.println("fileNameCharset: " + chs);
+				// verify if is a valid fileNameCharset
 				boolean supportedCharset = Charset.isSupported(chs);
 				if (supportedCharset == true)
 					return chs;

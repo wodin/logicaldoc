@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.beans.GUIRetentionPolicy;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.AttributeOptionsDS;
 import com.logicaldoc.gui.common.client.data.AttributeSetsDS;
+import com.logicaldoc.gui.common.client.data.CharsetsDS;
 import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
@@ -186,6 +187,31 @@ public class ItemFactory {
 		item.setTitle(I18N.message("language"));
 		item.setWrapTitle(false);
 		item.setHintStyle("hint");
+		return item;
+	}
+
+	public static SelectItem newCharsetSelector(String name) {
+		SelectItem item = new SelectItem();
+		item.setName(filterItemName(name));
+		item.setTitle(I18N.message("charset"));
+		item.setWrapTitle(false);
+		item.setHintStyle("hint");
+		item.setDefaultValue("UTF-8");
+		item.setDisplayField("name");
+		item.setValueField("code");
+
+		ListGridField code = new ListGridField("code", I18N.message("code"));
+		code.setWidth(90);
+		code.setHidden(true);
+		code.setShowTitle(false);
+
+		ListGridField nameField = new ListGridField("name", I18N.message("name"));
+		nameField.setWidth("*");
+		nameField.setShowTitle(false);
+
+		item.setPickListFields(code, nameField);
+		item.setOptionDataSource(new CharsetsDS());
+
 		return item;
 	}
 
@@ -536,7 +562,7 @@ public class ItemFactory {
 		String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		FormItem item = new TextItem();
 
-		if (att.getEditor() == GUIAttribute.EDITOR_LISTBOX && att.getSetId()!= null) {
+		if (att.getEditor() == GUIAttribute.EDITOR_LISTBOX && att.getSetId() != null) {
 			item = new SelectItem();
 			item.setOptionDataSource(new AttributeOptionsDS(att.getSetId(), att.getName(), !att.isMandatory()));
 

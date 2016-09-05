@@ -241,7 +241,7 @@ public class EMailSender {
 
 		MimeBodyPart body = new MimeBodyPart();
 		if (email.isHtml()) {
-			body.setContent(email.getMessageText(), "text/html; charset=utf-8");
+			body.setContent(email.getMessageText(), "text/html; fileNameCharset=utf-8");
 		} else {
 			body.setText(email.getMessageText(), "UTF-8");
 		}

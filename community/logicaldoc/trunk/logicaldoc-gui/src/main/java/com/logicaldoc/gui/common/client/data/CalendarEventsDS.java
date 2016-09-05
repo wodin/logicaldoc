@@ -17,14 +17,14 @@ public class CalendarEventsDS extends DataSource {
 		DataSourceSequenceField id = new DataSourceSequenceField("eventId");
 		id.setPrimaryKey(true);
 
-		DataSourceTextField title = new DataSourceTextField("name");
+		DataSourceTextField name = new DataSourceTextField("name");
 		DataSourceTextField description = new DataSourceTextField("description");
 		DataSourceDateTimeField start = new DataSourceDateTimeField("startDate");
 		DataSourceDateTimeField end = new DataSourceDateTimeField("endDate");
 		DataSourceDateTimeField eventWindowStyle = new DataSourceDateTimeField("eventWindowStyle");
 		DataSourceTextField parentId = new DataSourceTextField("parentId");
 
-		setFields(id, title, description, start, end, eventWindowStyle, parentId);
+		setFields(id, name, description, start, end, eventWindowStyle, parentId);
 		setClientOnly(true);
 		setDataURL("data/calendarevents.xml" + (docId != null ? "?docId=" + docId : ""));
 	}

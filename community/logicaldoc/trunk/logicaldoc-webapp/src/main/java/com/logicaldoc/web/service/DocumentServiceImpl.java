@@ -153,8 +153,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public GUIDocument[] addDocuments(boolean importZip, boolean immediateIndexing, final GUIDocument metadata)
-			throws ServerException {
+	public GUIDocument[] addDocuments(boolean importZip, String charset, boolean immediateIndexing,
+			final GUIDocument metadata) throws ServerException {
 		final Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		List<GUIDocument> createdDocs = new ArrayList<GUIDocument>();
@@ -204,7 +204,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 							doc.setTenantId(session.getTenantId());
 							doc.setCreation(new Date());
 
-							InMemoryZipImport importer = new InMemoryZipImport(doc);
+							InMemoryZipImport importer = new InMemoryZipImport(doc, charset);
 							importer.process(destFile, parent, userId, sessionId);
 							try {
 								FileUtils.forceDelete(destFile);
@@ -253,8 +253,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	}
 
 	@Override
-	public GUIDocument[] addDocuments(String language, long folderId, boolean importZip, boolean immediateIndexing,
-			final Long templateId) throws ServerException {
+	public GUIDocument[] addDocuments(String language, long folderId, boolean importZip, String charset,
+			boolean immediateIndexing, final Long templateId) throws ServerException {
 		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 		if (folderId == fdao.findRoot(session.getTenantId()).getId())
@@ -264,7 +264,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		metadata.setLanguage(language);
 		metadata.setFolder(new GUIFolder(folderId));
 		metadata.setTemplateId(templateId);
-		return addDocuments(importZip, immediateIndexing, metadata);
+		return addDocuments(importZip, charset, immediateIndexing, metadata);
 	}
 
 	@Override
@@ -1093,7 +1093,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			try {
 				message = "<html><body>" + message + "</body></html>";
 				// message =
-				// "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\"></head><body>"
+				// "<html><head><meta http-equiv=\"content-type\" content=\"text/html; fileNameCharset=utf-8\"></head><body>"
 				// + message + "</body></html>";
 				mail.setMessageText(message);
 

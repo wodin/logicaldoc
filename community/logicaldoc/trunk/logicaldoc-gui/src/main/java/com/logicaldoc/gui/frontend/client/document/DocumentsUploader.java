@@ -34,6 +34,8 @@ import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangeEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangeHandler;
+import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
+import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
@@ -133,11 +135,24 @@ public class DocumentsUploader extends Window {
 		vm = new ValuesManager();
 		form.setValuesManager(vm);
 
+		final SelectItem charset = ItemFactory.newCharsetSelector("charset");
+		charset.setHidden(true);
+
 		final CheckboxItem zipItem = new CheckboxItem();
 		zipItem.setName("zip");
 		zipItem.setTitle(I18N.message("importfromzip"));
 		zipItem.setValue(!zipImport);
 		zipItem.setTitleAlign(Alignment.LEFT);
+		zipItem.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if ((Boolean) event.getValue())
+					charset.show();
+				else
+					charset.hide();
+			}
+		});
 
 		final CheckboxItem immediateIndexing = new CheckboxItem();
 		immediateIndexing.setName("immediateIndexing");
@@ -159,7 +174,7 @@ public class DocumentsUploader extends Window {
 			}
 		});
 
-		form.setItems(zipItem, immediateIndexing);
+		form.setItems(zipItem, charset, immediateIndexing);
 	}
 
 	private IUploader.OnFinishUploaderHandler onFinishUploaderHandler = new IUploader.OnFinishUploaderHandler() {
@@ -194,14 +209,15 @@ public class DocumentsUploader extends Window {
 
 		BulkUpdateDialog bulk = new BulkUpdateDialog(null, metadata, false, false);
 		bulk.setZip(getImportZip());
+		bulk.setCharset(getCharset());
 		bulk.setImmediateIndexing(getImmediateIndexing());
 
 		bulk.show();
 		destroy();
 	}
 
-	public String getEncoding() {
-		return vm.getValueAsString("encoding");
+	public String getCharset() {
+		return vm.getValueAsString("charset");
 	}
 
 	public boolean getImportZip() {
