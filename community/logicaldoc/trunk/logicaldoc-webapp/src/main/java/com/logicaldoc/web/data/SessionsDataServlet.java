@@ -75,7 +75,7 @@ public class SessionsDataServlet extends HttpServlet {
 				writer.print("<sid><![CDATA[" + session.getId() + "]]></sid>");
 				writer.print("<status>" + session.getStatus() + "</status>");
 				if (session.getStatus() == Session.STATUS_OPEN)
-					writer.print("<statusLabel>" + I18N.message("open", locale) + "</statusLabel>");
+					writer.print("<statusLabel>" + I18N.message("opened", locale) + "</statusLabel>");
 				else if (session.getStatus() == Session.STATUS_CLOSED)
 					writer.print("<statusLabel>" + I18N.message("closed", locale) + "</statusLabel>");
 				else if (session.getStatus() == Session.STATUS_EXPIRED)
