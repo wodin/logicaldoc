@@ -220,7 +220,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				Map<String, String> params = new HashMap<String, String>();
 				params.put("targetFolderId", "" + Session.get().getCurrentFolder().getId());
 
-				WindowUtils.openUrl(Util.webstartURL("scan", params), "_blank");
+				WindowUtils.openUrl(Util.webstartURL("scan", params), "_self");
 			}
 		});
 
