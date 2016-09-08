@@ -535,7 +535,7 @@ public class Util {
 		params.put("folderId", "" + Session.get().getCurrentFolder().getId());
 		params.put("disallow", Session.get().getInfo().getConfig("upload.disallow"));
 		params.put("sizeMax", "" + (Long.parseLong(Session.get().getInfo().getConfig("upload.maxsize")) * 1024 * 1024));
-		WindowUtils.openUrl(Util.webstartURL("dropspot", params), "_blank");
+		WindowUtils.openUrl(Util.webstartURL("dropspot", params), "_self");
 	}
 
 	/**
