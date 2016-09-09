@@ -48,6 +48,7 @@ public class SignatureViewer extends Window {
 		downloadUrl.setTitleOrientation(TitleOrientation.LEFT);
 		downloadUrl.setWrapTitle(false);
 		downloadUrl.setValue(GWT.getHostPageBaseURL() + "download?docId=" + docId + "&suffix=sign.p7m");
+		downloadUrl.setTarget("_self");
 		downloadUrl.setLinkTitle(fileName);
 
 		urlForm.setItems(downloadUrl);
