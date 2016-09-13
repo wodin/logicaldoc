@@ -304,9 +304,9 @@ public class DocumentManagerImpl implements DocumentManager {
 		String resource = storer.getResourceName(doc, fileVersion, null);
 		Parser parser = ParserFactory.getParser(storer.getStream(doc.getId(), resource), doc.getFileName(), locale,
 				null, doc.getTenantId());
-		
-		log.debug("Using parser "+parser.getClass().getName()+ " to parse document "+doc.getId());
-		
+
+		log.debug("Using parser " + parser.getClass().getName() + " to parse document " + doc.getId());
+
 		// and gets some fields
 		if (parser != null) {
 			content = parser.getContent();
@@ -698,6 +698,8 @@ public class DocumentManagerImpl implements DocumentManager {
 			cloned.setId(0);
 			cloned.setFolder(folder);
 			cloned.setLastModified(null);
+			if (cloned.getBarcoded() == Document.BARCODE_PROCESSED)
+				cloned.setBarcoded(Document.BARCODE_TO_PROCESS);
 			if (cloned.getIndexed() == Document.INDEX_INDEXED)
 				cloned.setIndexed(Document.INDEX_TO_INDEX);
 			return create(is, cloned, transaction);
