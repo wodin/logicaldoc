@@ -327,6 +327,8 @@ public class AttributeSetPropertiesPanel extends HLayout {
 		addUpdate.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+				if(!form2.validate())
+					return;
 				if (attributeName.getValue() != null && !((String) attributeName.getValue()).trim().isEmpty()) {
 					if (updatingAttributeName.trim().isEmpty()) {
 						GUIAttribute att = new GUIAttribute();
