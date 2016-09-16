@@ -160,7 +160,7 @@ public class ResourceServiceImpl implements ResourceService {
 	}
 
 	public Resource getResource(String requestPath, DavSession session) throws DavException {
-		log.debug("Find DAV resource: " + requestPath);
+		log.trace("Find DAV resource: " + requestPath);
 
 		long userId = 0;
 		String currentStablePath = "";
@@ -393,7 +393,6 @@ public class ResourceServiceImpl implements ResourceService {
 
 	public Resource move(Resource source, Resource destination, DavSession session) throws DavException {
 		String sid = (String) session.getObject("sid");
-
 		if (source.isWorkspace()) {
 			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot move a workspace");
 		} else if (source.isFolder()) {
@@ -474,13 +473,14 @@ public class ResourceServiceImpl implements ResourceService {
 	private Resource folderRenameOrMove(Resource source, Resource destination, DavSession session, String sid)
 			throws DavException {
 
+		log.info("Rename or Move folder " + source.getPath() + " to " + destination.getPath());
+
 		Folder currentFolder = folderDAO.findById(Long.parseLong(source.getID()));
+		if (currentFolder.getType() == Folder.TYPE_WORKSPACE)
+			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot move nor rename a workspace");
 
 		long currentParentFolder = currentFolder.getParentId();
 		long destinationParentFolder = Long.parseLong(destination.getID());
-
-		if (currentFolder.getType() == Folder.TYPE_WORKSPACE)
-			throw new DavException(DavServletResponse.SC_FORBIDDEN, "Cannot more nor rename a workspace");
 
 		// distinction between folder move and folder rename
 		if (currentParentFolder != destinationParentFolder) {
@@ -491,9 +491,8 @@ public class ResourceServiceImpl implements ResourceService {
 			if (!addchildEnabled)
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "AddChild Rights not granted to this user");
 
-			// check the delete on the parent of the source to move
-			Resource sourceParent = getParentResource(source);
-			if (!sourceParent.isDeleteEnabled())
+			// check the delete permission on the parent of the source to move
+			if (!source.isDeleteEnabled())
 				throw new DavException(DavServletResponse.SC_FORBIDDEN, "No rights to delete resource.");
 
 			User user = (User) session.getObject("user");
@@ -504,9 +503,10 @@ public class ResourceServiceImpl implements ResourceService {
 
 			// we are doing a folder move
 			try {
-				Folder destParentFolder = folderDAO.findById(Long.parseLong(destination.getID()));
+				Folder destParentFolder = folderDAO.findById(destinationParentFolder);
 				folderDAO.move(currentFolder, destParentFolder, transaction);
-			} catch (Exception e) {
+			} catch (Throwable e) {
+				e.printStackTrace();
 				log.warn(e.getMessage(), e);
 				throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, "Error during Folder Move");
 			}
