@@ -258,6 +258,10 @@ public class VersionControlledResourceImpl extends DeltaVResourceImpl implements
 			// DAV:auto-version property: there is no auto version, explicit
 			// EVENT_CHECKEDOUT is required.
 			properties.add(new DefaultDavProperty(AUTO_VERSION, null, false));
+		  
+			if(resource==null)
+				return;
+			
 			properties.add(new DefaultDavProperty(DavPropertyName.DISPLAYNAME, resource.getName(), false));
 
 			if (resource.isFolder())
