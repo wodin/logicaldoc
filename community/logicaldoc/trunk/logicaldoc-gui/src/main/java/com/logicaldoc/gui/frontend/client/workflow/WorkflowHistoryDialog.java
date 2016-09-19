@@ -163,6 +163,8 @@ public class WorkflowHistoryDialog extends Window {
 		endDate.setCellFormatter(new DateCellFormatter(false));
 		endDate.setCanFilter(false);
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 250);
+		ListGridField documentIds = new ListGridField("documentIds", I18N.message("documentIds"), 300);
+		documentIds.setHidden(true);
 
 		instancesList = new ListGrid();
 		instancesList.setCanFreezeFields(true);
@@ -186,7 +188,7 @@ public class WorkflowHistoryDialog extends Window {
 				reload();
 			}
 		});
-		instancesList.setFields(id, startDate, endDate, documents);
+		instancesList.setFields(id, startDate, endDate, documents, documentIds);
 		instancesList.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
