@@ -5,6 +5,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowTasksDS;
+import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -12,8 +13,10 @@ import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.data.Record;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.DragAppearance;
 import com.smartgwt.client.types.HeaderControls;
+import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.HeaderControl;
@@ -75,10 +78,21 @@ public class WorkflowPortlet extends Portlet {
 
 		ListGridField workflow = new ListGridField("workflow", I18N.message("workflow"), 100);
 		ListGridField id = new ListGridField("id", I18N.message("id"), 70);
+		id.setHidden(true);
 		ListGridField processId = new ListGridField("processId", I18N.message("processid"), 70);
-		ListGridField name = new ListGridField("name", I18N.message("name"), 100);
+		processId.setHidden(true);
+		ListGridField name = new ListGridField("name", I18N.message("task"), 100);
 		ListGridField pooledAssignees = new ListGridField("pooledassignees", I18N.message("pooledassignees"), 150);
-
+		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 300);
+		ListGridField documentIds = new ListGridField("documentIds", I18N.message("documentids"), 200);
+		documentIds.setHidden(true);
+		
+		ListGridField startdate = new ListGridField("startdate", I18N.message("date"), 100);
+		startdate.setAlign(Alignment.CENTER);
+		startdate.setType(ListGridFieldType.DATE);
+		startdate.setCellFormatter(new DateCellFormatter(false));
+		startdate.setCanFilter(false);
+		
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
@@ -92,9 +106,9 @@ public class WorkflowPortlet extends Portlet {
 		list.setDataSource(dataSource);
 		if (type == WorkflowDashboard.TASKS_I_CAN_OWN || type == WorkflowDashboard.TASKS_ADMIN
 				|| type == WorkflowDashboard.TASKS_SUPERVISOR)
-			list.setFields(workflow, name, id, processId, pooledAssignees);
+			list.setFields(workflow, startdate, name, id, processId, documents, documentIds, pooledAssignees);
 		else
-			list.setFields(workflow, id, processId, name);
+			list.setFields(workflow, startdate, id, processId, name, documents, documentIds);
 
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
