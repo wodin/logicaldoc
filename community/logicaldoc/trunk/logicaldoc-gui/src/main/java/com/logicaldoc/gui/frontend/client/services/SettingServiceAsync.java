@@ -15,13 +15,7 @@ public interface SettingServiceAsync {
 
 	void saveEmailSettings(GUIEmailSettings settings, AsyncCallback<Void> callback);
 
-	void loadRepositories(AsyncCallback<GUIParameter[][]> callback);
-
-	void saveRepositories(GUIParameter[][] repos, AsyncCallback<Void> callback);
-
 	void loadOcrSettings(AsyncCallback<GUIParameter[]> callback);
-
-	void computeStoragesSize(AsyncCallback<GUIParameter[]> callback);
 
 	void loadGUISettings(AsyncCallback<GUIParameter[]> callback);
 

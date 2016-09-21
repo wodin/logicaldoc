@@ -155,8 +155,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 				long[] selection = grid.getSelectedIds();
 				if (selection.length == 1) {
-					WindowUtils.openUrl(Util.contextPath() + "convertpdf?docId=" + document.getId() + "&version=" + document.getVersion() + "&open=true",
-							"_blank");
+					WindowUtils.openUrl(Util.contextPath() + "convertpdf?docId=" + document.getId() + "&version="
+							+ document.getVersion() + "&open=true", "_blank");
 				} else {
 					String url = Util.contextPath() + "convertpdf?open=true&docId=";
 					for (long id : selection)
@@ -430,7 +430,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				params.put("folderId", "" + Session.get().getCurrentFolder().getId());
 				params.put("docIds", unlockedIds.toString().replace('[', ' ').replace(']', ' ').trim());
 
-				WindowUtils.openUrl(Util.webstartURL("bulk-checkout", params), "_blank");
+				WindowUtils.openUrl(Util.webstartURL("bulk-checkout", params), "_self");
 			}
 		});
 

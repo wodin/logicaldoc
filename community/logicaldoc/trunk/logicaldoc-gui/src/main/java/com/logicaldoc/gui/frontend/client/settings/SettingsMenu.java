@@ -205,18 +205,7 @@ public class SettingsMenu extends VLayout {
 		folders.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				settingService.loadRepositories(new AsyncCallback<GUIParameter[][]>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
-
-					@Override
-					public void onSuccess(GUIParameter[][] repos) {
-						AdminPanel.get().setContent(new RepositoriesPanel(repos));
-					}
-				});
+				AdminPanel.get().setContent(new RepositoriesPanel());
 			}
 		});
 	}

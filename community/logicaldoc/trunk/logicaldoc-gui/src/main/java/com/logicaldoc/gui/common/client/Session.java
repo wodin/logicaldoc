@@ -242,6 +242,10 @@ public class Session {
 		return info.getConfig(name);
 	}
 
+	public void setConfig(String name, String value) {
+		info.setConfig(name, value);
+	}
+
 	public boolean isShowThumbnail() {
 		return showThumbnail;
 	}
