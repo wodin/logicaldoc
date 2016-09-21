@@ -14,11 +14,8 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -35,22 +32,15 @@ public class RepositoriesPanel extends VLayout {
 
 	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
 
-	private ValuesManager vm = new ValuesManager();
+	private DynamicForm foldersForm = new DynamicForm();
 
 	private Tab tab1 = null;
 
 	private Tab tab2 = null;
 
-	private GUIParameter[] foldersParameter = null;
-
-	private GUIParameter[] storagesParameter = null;
-
 	private TabSet tabs = new TabSet();
 
-	public RepositoriesPanel(GUIParameter[][] repos) {
-		this.foldersParameter = repos[0];
-		this.storagesParameter = repos[1];
-
+	public RepositoriesPanel() {
 		setWidth100();
 		setHeight100();
 		setMembersMargin(5);
@@ -61,84 +51,86 @@ public class RepositoriesPanel extends VLayout {
 		tabs.setHeight100();
 
 		// The Folders Tab
-		tab1 = new Tab();
-		tab1.setTitle(I18N.message("folders"));
-		DynamicForm foldersForm = new DynamicForm();
-		foldersForm.setWidth(300);
+		tab2 = new Tab();
+		tab2.setTitle(I18N.message("folders"));
+		foldersForm.setWidth(400);
 		foldersForm.setColWidths(1, "*");
-		foldersForm.setValuesManager(vm);
 		foldersForm.setTitleOrientation(TitleOrientation.LEFT);
-		List<FormItem> items = new ArrayList<FormItem>();
-
-		for (GUIParameter f : this.foldersParameter) {
-			TextItem item = ItemFactory.newTextItem(f.getName(), f.getName(), f.getValue());
-			item.setRequired(true);
-			item.setWidth(250);
-			items.add(item);
-		}
-		foldersForm.setItems(items.toArray(new FormItem[0]));
-		tab1.setPane(foldersForm);
+		tab2.setPane(foldersForm);
 
 		// The Storages Tab
-		tab2 = new Tab();
-		tab2.setTitle(I18N.message("storages"));
-		tab2.setID("repos");
-		tab2.setPane(new StoragesPanel(storagesParameter, vm));
+		tab1 = new Tab();
+		tab1.setTitle(I18N.message("stores"));
+		tab1.setID("repos");
+		tab1.setPane(new StoresPanel());
 
 		tabs.setTabs(tab1, tab2);
 
-		IButton save = new IButton();
-		save.setTitle(I18N.message("save"));
-		save.addClickHandler(new ClickHandler() {
-			@SuppressWarnings("unchecked")
-			public void onClick(ClickEvent event) {
-				final Map<String, Object> values = vm.getValues();
+		setMembers(tabs);
 
-				if (vm.validate()) {
-					final GUIParameter[][] repos = new GUIParameter[2][7];
-					List<GUIParameter> folders = new ArrayList<GUIParameter>();
-					List<GUIParameter> storages = new ArrayList<GUIParameter>();
-					GUIParameter repo = null;
-					for (String name : values.keySet()) {
-						if (name.startsWith("isc"))
-							continue;
-						repo = new GUIParameter(name, (String) values.get(name));
-						if (name.equals("compression")) {
-							repo = new GUIParameter("store.compress", (String) values.get(name));
-							storages.add(repo);
-						} else if (name.startsWith("store")) {
-							storages.add(repo);
-						} else if (name.equals("writeto")) {
-							String storeSelected = (String) values.get(name);
-							storeSelected = storeSelected.replaceAll(".dir", "");
-							repo = new GUIParameter("store.write", storeSelected.substring(storeSelected
-									.lastIndexOf(".") + 1));
-							storages.add(repo);
-						} else {
-							folders.add(repo);
-						}
+		service.loadSettingsByNames(new String[] { "conf.dbdir", "conf.exportdir", "conf.importdir", "conf.logdir",
+				"conf.plugindir", "conf.userdir" }, new AsyncCallback<GUIParameter[]>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUIParameter[] folderParameters) {
+				List<FormItem> items = new ArrayList<FormItem>();
+
+				for (GUIParameter f : folderParameters) {
+					TextItem item = ItemFactory.newTextItem(f.getName(),
+							f.getName().substring(f.getName().indexOf('.') + 1), f.getValue());
+					item.setValue(f.getValue());
+					item.setRequired(true);
+					item.setWidth(400);
+					items.add(item);
+				}
+
+				ButtonItem save = new ButtonItem("save", I18N.message("save"));
+				save.addClickHandler(new com.smartgwt.client.widgets.form.fields.events.ClickHandler() {
+
+					@Override
+					public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
+						onSaveFolders();
 					}
+				});
+				items.add(save);
 
-					repos[0] = folders.toArray(new GUIParameter[0]);
-					repos[1] = storages.toArray(new GUIParameter[0]);
+				save.setDisabled(Session.get().isDemo() && Session.get().getUser().getId() == 1);
 
-					service.saveRepositories(repos, new AsyncCallback<Void>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							Log.serverError(caught);
-						}
+				foldersForm.setItems(items.toArray(new FormItem[0]));
+			}
+		});
+	}
 
-						@Override
-						public void onSuccess(Void result) {
-							tabs.setTabPane("repos", new StoragesPanel(repos[1], vm));
-							Log.info(I18N.message("settingssaved"), null);
-						}
-					});
+	private void onSaveFolders() {
+		final List<GUIParameter> settings = new ArrayList<GUIParameter>();
+		@SuppressWarnings("unchecked")
+		Map<String, Object> values = foldersForm.getValues();
+		for (String name : values.keySet()) {
+			if (!"save".equals(name))
+				settings.add(new GUIParameter(ItemFactory.originalItemName(name), values.get(name).toString().trim()));
+		}
+
+		service.saveSettings(settings.toArray(new GUIParameter[0]), new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(Void arg) {
+				Log.info(I18N.message("settingssaved"), null);
+
+				// Replicate the settings in the current session
+				for (GUIParameter setting : settings) {
+					Session.get().setConfig(setting.getName(), setting.getValue());
 				}
 			}
 		});
-		save.setDisabled(Session.get().isDemo() && Session.get().getUser().getId() == 1);
-
-		setMembers(tabs, save);
 	}
 }

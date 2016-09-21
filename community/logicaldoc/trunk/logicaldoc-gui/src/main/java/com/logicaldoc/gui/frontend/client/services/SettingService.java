@@ -25,7 +25,7 @@ public interface SettingService extends RemoteService {
 	/**
 	 * Loads the complete settings set
 	 */
-	public GUIParameter[] loadSettings()throws ServerException;
+	public GUIParameter[] loadSettings() throws ServerException;
 
 	/**
 	 * Loads a set of settings values
@@ -45,7 +45,7 @@ public interface SettingService extends RemoteService {
 	/**
 	 * Loads email settings (SMTP connection)
 	 */
-	public GUIEmailSettings loadEmailSettings()throws ServerException;
+	public GUIEmailSettings loadEmailSettings() throws ServerException;
 
 	/**
 	 * Tests the SMTP connection
@@ -57,22 +57,6 @@ public interface SettingService extends RemoteService {
 	public boolean testEmail(String email) throws ServerException;
 
 	/**
-	 * Load the repositories paths.
-	 * 
-	 * <ol>
-	 * <li>The first array contains the folders paths.</li>
-	 * <li>The second array contains the available repositories paths.</li>
-	 * </ol>
-	 * 
-	 */
-	public GUIParameter[][] loadRepositories()throws ServerException;
-
-	/**
-	 * Saves folders path
-	 */
-	public void saveRepositories(GUIParameter[][] repos) throws ServerException;
-
-	/**
 	 * Saves email settings (SMTP connection)
 	 */
 	public void saveEmailSettings(GUIEmailSettings settings) throws ServerException;
@@ -80,19 +64,12 @@ public interface SettingService extends RemoteService {
 	/**
 	 * Loads the OCR settings
 	 */
-	public GUIParameter[] loadOcrSettings()throws ServerException;
+	public GUIParameter[] loadOcrSettings() throws ServerException;
 
 	/**
 	 * Load the GUI settings
 	 */
-	public GUIParameter[] loadGUISettings()throws ServerException;
-
-	/**
-	 * Retrieves the size of all saved storages.
-	 * 
-	 * @param sid The current user session
-	 */
-	public GUIParameter[] computeStoragesSize()throws ServerException;
+	public GUIParameter[] loadGUISettings() throws ServerException;
 
 	/**
 	 * Saves the dashlets configuration for the current user

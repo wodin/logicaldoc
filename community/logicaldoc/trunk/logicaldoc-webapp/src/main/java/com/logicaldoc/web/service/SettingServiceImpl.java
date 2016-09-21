@@ -1,14 +1,11 @@
 package com.logicaldoc.web.service;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,27 +172,30 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 
 	@Override
 	public void saveSettings(GUIParameter[] settings) throws ServerException {
-		ServiceUtil.validateSession(getThreadLocalRequest());
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
+			int counter = 0;
+
 			ContextProperties conf = Context.get().getProperties();
 			for (int i = 0; i < settings.length; i++) {
 				if (settings[i] == null || StringUtils.isEmpty(settings[i].getName()))
 					continue;
 				conf.setProperty(settings[i].getName(), settings[i].getValue() != null ? settings[i].getValue() : "");
+				counter++;
 			}
 
 			conf.write();
 
-			log.info("Parameters settings data written successfully.");
-		} catch (Exception e) {
-			log.error("Exception writing Parameters settings data: " + e.getMessage(), e);
+			log.info("Successfully saved " + counter + " parameters");
+		} catch (Throwable e) {
+			ServiceUtil.throwServerException(session, log, e);
 		}
 	}
 
 	@Override
 	public GUIParameter[] loadSettingsByNames(String[] names) throws ServerException {
-		ServiceUtil.validateSession(getThreadLocalRequest());
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		GUIParameter[] values = new GUIParameter[names.length];
 		try {
@@ -204,64 +204,10 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 			for (int i = 0; i < names.length; i++) {
 				values[i] = new GUIParameter(names[i], conf.getProperty(names[i]));
 			}
-		} catch (Exception e) {
-			log.error("Exception reading settings: " + e.getMessage(), e);
+		} catch (Throwable e) {
+			ServiceUtil.throwServerException(session, log, e);
 		}
 		return values;
-	}
-
-	@Override
-	public GUIParameter[][] loadRepositories() throws ServerException {
-		ServiceUtil.validateSession(getThreadLocalRequest());
-
-		ContextProperties conf = Context.get().getProperties();
-
-		// Collect the directories
-		GUIParameter[] dirs = new GUIParameter[6];
-		dirs[0] = new GUIParameter("dbdir", conf.getProperty("conf.dbdir"));
-		dirs[1] = new GUIParameter("exportdir", conf.getProperty("conf.exportdir"));
-		dirs[2] = new GUIParameter("importdir", conf.getProperty("conf.importdir"));
-		dirs[3] = new GUIParameter("logdir", conf.getProperty("conf.logdir"));
-		dirs[4] = new GUIParameter("plugindir", conf.getProperty("conf.plugindir"));
-		dirs[5] = new GUIParameter("userdir", conf.getProperty("conf.userdir"));
-
-		// Prepare the stores
-		List<GUIParameter> tmp = new ArrayList<GUIParameter>();
-		for (Object key : conf.keySet()) {
-			String name = key.toString();
-			if (name.startsWith("store."))
-				tmp.add(new GUIParameter(name, conf.getProperty(name)));
-		}
-
-		GUIParameter[][] repos = new GUIParameter[2][Math.max(dirs.length, tmp.size())];
-		// In the first array insert the folders
-		repos[0] = dirs;
-		// In the second array insert the stores configuration
-		repos[1] = tmp.toArray(new GUIParameter[0]);
-
-		return repos;
-	}
-
-	@Override
-	public void saveRepositories(GUIParameter[][] repos) throws ServerException {
-		ServiceUtil.validateSession(getThreadLocalRequest());
-
-		ContextProperties conf = Context.get().getProperties();
-		try {
-			// First of all the folders
-			for (GUIParameter f : repos[0]) {
-				conf.setProperty("conf." + f.getName(), f.getValue());
-			}
-			// Now the storages
-			for (GUIParameter f : repos[1]) {
-				if (f == null || f.getValue().trim().isEmpty())
-					continue;
-				conf.setProperty(f.getName().replaceAll("_", "."), f.getValue());
-			}
-			conf.write();
-		} catch (IOException e) {
-			log.error(e.getMessage(), e);
-		}
 	}
 
 	@Override
@@ -290,27 +236,6 @@ public class SettingServiceImpl extends RemoteServiceServlet implements SettingS
 		params[12] = new GUIParameter("ocr.batch", conf.getProperty("ocr.batch"));
 
 		return params;
-	}
-
-	@Override
-	public GUIParameter[] computeStoragesSize() throws ServerException {
-		ServiceUtil.validateSession(getThreadLocalRequest());
-
-		ContextProperties conf = Context.get().getProperties();
-		List<GUIParameter> storagesList = new ArrayList<GUIParameter>();
-		GUIParameter param = null;
-		for (Object key : conf.keySet()) {
-			String name = key.toString();
-			if (name.startsWith("store.") && name.endsWith(".dir")) {
-				File docDir = new File(conf.getProperty(name));
-				if (docDir.exists()) {
-					param = new GUIParameter(name, "" + FileUtils.sizeOfDirectory(docDir));
-					storagesList.add(param);
-				}
-			}
-		}
-
-		return storagesList.toArray(new GUIParameter[0]);
 	}
 
 	@Override
