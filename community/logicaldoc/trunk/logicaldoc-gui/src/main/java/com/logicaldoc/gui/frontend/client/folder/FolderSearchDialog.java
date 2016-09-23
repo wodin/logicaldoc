@@ -42,13 +42,12 @@ public class FolderSearchDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("folder"));
 		setWidth(500);
-		setHeight(400);
+		setHeight(450);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
 		setPadding(5);
-		setAutoSize(true);
 		setMembersMargin(3);
 
 		form = new FolderSearchForm() {
@@ -58,11 +57,11 @@ public class FolderSearchDialog extends Window {
 			}
 		};
 		form.setWidth100();
-		form.setHeight(150);
+		form.setHeight(180);
 
 		grid.setWidth100();
 		grid.setHeight100();
-		grid.setMinHeight(250);
+		grid.setMinHeight(220);
 		ListGridField name = new ListGridField("name", I18N.message("name"));
 		ListGridField description = new ListGridField("description", I18N.message("description"));
 		grid.setFields(name, description);

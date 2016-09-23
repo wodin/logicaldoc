@@ -227,11 +227,18 @@ public class ContextProperties extends OrderedProperties {
 	}
 
 	public Map<String, String> getTenantProperties(String tenant) {
+		return getProperties(tenant + ".");
+	}
+
+	/**
+	 * Gets all the properties whose name starts with the given prefix.
+	 */
+	public Map<String, String> getProperties(String prefix) {
 		Map<String, String> props = new HashMap<String, String>();
 		for (Object key : keySet()) {
 			String prop = key.toString();
-			if (prop.startsWith(tenant + "."))
-				props.put(prop.substring(tenant.length() + 1), getProperty(prop));
+			if (prop.startsWith(prefix))
+				props.put(prop.substring(prefix.length()), getProperty(prop));
 		}
 		return props;
 	}

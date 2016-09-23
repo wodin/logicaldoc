@@ -16,6 +16,7 @@ import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.gui.common.client.ServerException;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.frontend.client.services.SearchEngineService;
 import com.logicaldoc.util.Context;
@@ -48,7 +49,6 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 			searchEngine.setExcludePatters(conf.getProperty(session.getTenantName() + ".index.excludes"));
 			searchEngine.setIncludePatters(conf.getProperty(session.getTenantName() + ".index.includes"));
 			searchEngine.setDir(conf.getProperty("index.dir"));
-			searchEngine.setSubwords("true".equals(conf.getProperty("index.subwords")));
 
 			if (StringUtils.isNotEmpty(conf.getProperty("index.batch")))
 				searchEngine.setBatch(new Integer(conf.getProperty("index.batch")));
@@ -153,7 +153,6 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 				conf.setProperty("index.maxtext", Integer.toString(searchEngine.getMaxText()));
 				conf.setProperty("parser.timeout", Integer.toString(searchEngine.getParsingTimeout()));
 				conf.setProperty("index.dir", searchEngine.getDir());
-				conf.setProperty("index.subwords", searchEngine.isSubwords() ? "true" : "false");
 			}
 
 			conf.write();
@@ -197,8 +196,48 @@ public class SearchEngineServiceImpl extends RemoteServiceServlet implements Sea
 		try {
 			SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 			return indexer.getCount();
-		} catch (Exception t) {
+		} catch (Throwable t) {
 			return (Long) ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void reorderTokenFilters(String[] filters) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+		try {
+			ContextProperties conf = Context.get().getProperties();
+			int i = 1;
+			for (String filter : filters)
+				conf.setProperty("index.tokenfilter." + filter + ".position", Integer.toString(i++));
+			conf.write();
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void saveTokenFilterSettings(String filter, GUIParameter[] settings) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+		try {
+			String prefix = "index.tokenfilter." + filter + ".";
+			ContextProperties conf = Context.get().getProperties();
+			for (GUIParameter setting : settings)
+				conf.setProperty(prefix + setting.getName(), setting.getValue().trim());
+			conf.write();
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void setTokenFilterStatus(String filter, boolean active) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+		try {
+			ContextProperties conf = Context.get().getProperties();
+			conf.setProperty("index.tokenfilter." + filter, active ? "enabled" : "disabled");
+			conf.write();
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 }

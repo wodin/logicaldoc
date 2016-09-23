@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -71,7 +72,7 @@ public class StoresPanel extends VLayout {
 		add.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				// onAddingTemplate();
+				onAddStore();
 			}
 		});
 
@@ -208,5 +209,21 @@ public class StoresPanel extends VLayout {
 				}
 			}
 		});
+	}
+
+	private void onAddStore() {
+		for (int i = 1; i < 99; i++) {
+			Record record = stores.getRecordList().find("id", Integer.toString(i));
+			if (record == null) {
+				ListGridRecord newStore = new ListGridRecord();
+				newStore.setAttribute("id", Integer.toString(i));
+				newStore.setAttribute("name", "Store " + i);
+				newStore.setAttribute("write", "blank");
+				
+				stores.getDataSource().addData(newStore);
+				stores.redraw();
+				break;
+			}
+		}
 	}
 }
