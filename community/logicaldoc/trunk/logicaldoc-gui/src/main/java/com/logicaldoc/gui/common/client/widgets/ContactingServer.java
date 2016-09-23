@@ -32,13 +32,14 @@ public class ContactingServer extends Dialog {
 		setIsModal(true);
 		setVertical(true);
 		setAlign(Alignment.CENTER);
-		setMargin(2);
+		setMargin(0);
 		setMembersMargin(0);
+		setPadding(0);
 		setBodyColor("white");
 		setBackgroundColor("white");
 		setBorder("1px solid DarkBlue");
 		setOverflow(Overflow.HIDDEN);
-		setHeight(55);
+		setAutoSize(true);
 		
 		Label message = new Label(I18N.message("contactingserver") + "...");
 		message.setWrap(false);
@@ -48,9 +49,11 @@ public class ContactingServer extends Dialog {
 		message.setStyleName("contactingserver");
 		message.setLayoutAlign(Alignment.CENTER);
 		message.setLayoutAlign(VerticalAlignment.TOP);
-		message.setHeight(50);
 		message.setBackgroundColor("white");
+		message.setAutoFit(true);
+		message.setHeight(50);
+		message.setMargin(0);
 		
-		addMember(message);
+		addItem(message);
 	}
 }

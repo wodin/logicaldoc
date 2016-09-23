@@ -16,8 +16,6 @@ public class GUISearchEngine implements Serializable {
 
 	private boolean locked;
 
-	private boolean subwords;
-
 	private String includePatters;
 
 	private String excludePatters = "*.exe,*.bin,*.iso";
@@ -92,13 +90,5 @@ public class GUISearchEngine implements Serializable {
 
 	public void setDir(String dir) {
 		this.dir = dir;
-	}
-
-	public boolean isSubwords() {
-		return subwords;
-	}
-
-	public void setSubwords(boolean subwords) {
-		this.subwords = subwords;
 	}
 }

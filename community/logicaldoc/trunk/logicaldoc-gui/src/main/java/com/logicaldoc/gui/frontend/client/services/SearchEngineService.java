@@ -3,6 +3,7 @@ package com.logicaldoc.gui.frontend.client.services;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.logicaldoc.gui.common.client.ServerException;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 
 /**
@@ -53,4 +54,23 @@ public interface SearchEngineService extends RemoteService {
 	 * comma-separated values.
 	 */
 	public void setAliases(String extension, String aliases) throws ServerException;
+
+	/**
+	 * Reorders the token filters.
+	 * 
+	 * @param filters the ordered list of the filters
+	 * 
+	 * @throws ServerException
+	 */
+	public void reorderTokenFilters(String[] filters) throws ServerException;
+
+	/**
+	 * Saves the settings of the specified token filter
+	 */
+	public void saveTokenFilterSettings(String filter, GUIParameter[] settings) throws ServerException;
+
+	/**
+	 * Changes the activation status of a token filter
+	 */
+	public void setTokenFilterStatus(String language, boolean active) throws ServerException;
 }

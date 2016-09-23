@@ -124,74 +124,92 @@ public class SecurityPanel extends FolderDetailTab {
 		ListGridField entityId = new ListGridField("entityId", "entityId", 50);
 		entityId.setCanEdit(false);
 		entityId.setHidden(true);
+		entityId.setAutoFitWidth(true);
 
 		ListGridField entity = new ListGridField("entity", I18N.message("entity"), 180);
 		entity.setCanEdit(false);
+		entity.setAutoFitWidth(true);
 
 		ListGridField read = new ListGridField("read", I18N.message("read"), 60);
 		read.setType(ListGridFieldType.BOOLEAN);
 		read.setCanEdit(true);
-
+		read.setAutoFitWidth(true);
+		
 		ListGridField print = new ListGridField("print", I18N.message("print"), 60);
 		print.setType(ListGridFieldType.BOOLEAN);
 		print.setCanEdit(true);
+		print.setAutoFitWidth(true);
 
 		ListGridField download = new ListGridField("download", I18N.message("download"), 60);
 		download.setType(ListGridFieldType.BOOLEAN);
 		download.setCanEdit(true);
+		download.setAutoFitWidth(true);
 
 		ListGridField write = new ListGridField("write", I18N.message("write"), 60);
 		write.setType(ListGridFieldType.BOOLEAN);
 		write.setCanEdit(true);
-
+		write.setAutoFitWidth(true);
+		
 		ListGridField add = new ListGridField("add", I18N.message("addfolder"), 60);
 		add.setType(ListGridFieldType.BOOLEAN);
 		add.setCanEdit(true);
-
+		add.setAutoFitWidth(true);
+		
 		ListGridField security = new ListGridField("security", I18N.message("security"), 60);
 		security.setType(ListGridFieldType.BOOLEAN);
 		security.setCanEdit(true);
-
+		security.setAutoFitWidth(true);
+		
 		ListGridField immutable = new ListGridField("immutable", I18N.message("immutable"), 60);
 		immutable.setType(ListGridFieldType.BOOLEAN);
 		immutable.setCanEdit(true);
-
+		immutable.setAutoFitWidth(true);
+		
 		ListGridField delete = new ListGridField("delete", I18N.message("ddelete"), 60);
 		delete.setType(ListGridFieldType.BOOLEAN);
 		delete.setCanEdit(true);
-
+		delete.setAutoFitWidth(true);
+		
 		ListGridField rename = new ListGridField("rename", I18N.message("rename"), 60);
 		rename.setType(ListGridFieldType.BOOLEAN);
 		rename.setCanEdit(true);
-
+		rename.setAutoFitWidth(true);
+		
 		ListGridField _import = new ListGridField("import", I18N.message("iimport"), 60);
 		_import.setType(ListGridFieldType.BOOLEAN);
 		_import.setCanEdit(true);
-
+		_import.setAutoFitWidth(true);
+		
 		ListGridField export = new ListGridField("export", I18N.message("eexport"), 60);
 		export.setType(ListGridFieldType.BOOLEAN);
 		export.setCanEdit(true);
-
+		export.setAutoFitWidth(true);
+		
 		ListGridField sign = new ListGridField("sign", I18N.message("sign"), 60);
 		sign.setType(ListGridFieldType.BOOLEAN);
 		sign.setCanEdit(true);
-
+		sign.setAutoFitWidth(true);
+		
 		ListGridField archive = new ListGridField("archive", I18N.message("archive"), 60);
 		archive.setType(ListGridFieldType.BOOLEAN);
 		archive.setCanEdit(true);
-
+		archive.setAutoFitWidth(true);
+		
 		ListGridField workflow = new ListGridField("workflow", I18N.message("workflow"), 60);
 		workflow.setType(ListGridFieldType.BOOLEAN);
 		workflow.setCanEdit(true);
-
+		workflow.setAutoFitWidth(true);
+		
 		ListGridField calendar = new ListGridField("calendar", I18N.message("calendar"), 60);
 		calendar.setType(ListGridFieldType.BOOLEAN);
 		calendar.setCanEdit(true);
-
+		calendar.setAutoFitWidth(true);
+		
 		ListGridField subscription = new ListGridField("subscription", I18N.message("subscription"), 60);
 		subscription.setType(ListGridFieldType.BOOLEAN);
 		subscription.setCanEdit(true);
-
+		subscription.setAutoFitWidth(true);
+		
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
@@ -372,9 +390,6 @@ public class SecurityPanel extends FolderDetailTab {
 	 * Create an array of all right defined
 	 */
 	public GUIRight[] getRights() {
-		// This returns 0 records if the grid is composed by 80 rows!!
-		// ListGridRecord[] records = list.getRecords();
-
 		int totalRecords = list.getRecordList().getLength();
 		List<GUIRight> tmp = new ArrayList<GUIRight>();
 

@@ -335,6 +335,11 @@
     <servlet-name>StatChart</servlet-name>
     <servlet-class>com.logicaldoc.web.stat.StatChartServlet</servlet-class>
   </servlet>
+  <servlet>
+    <servlet-name>TokenFiltersData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.TokenFiltersDataServlet</servlet-class>
+  </servlet>
+  
   <servlet-mapping>
     <servlet-name>UploadServlet</servlet-name>
     <url-pattern>*.gupld</url-pattern>
@@ -539,6 +544,10 @@
     <servlet-name>AttributeOptionsData</servlet-name>
     <url-pattern>/data/attributeoptions.xml</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>TokenFiltersData</servlet-name>
+    <url-pattern>/data/tokenfilters.xml</url-pattern>
+  </servlet-mapping>  
   <servlet-mapping>
     <servlet-name>CharsetsData</servlet-name>
     <url-pattern>/data/charsets.xml</url-pattern>

@@ -42,6 +42,7 @@
         precisionStep="0" omitNorms="true" positionIncrementGap="0" />
     <fieldType name="date" class="solr.TrieDateField" omitNorms="true"
         precisionStep="0" positionIncrementGap="0" />
+        
     <!-- A text field that only splits on whitespace for exact matching of words -->
     <fieldType name="text_ws" class="solr.TextField"
         positionIncrementGap="100">
@@ -49,6 +50,7 @@
             <tokenizer class="solr.WhitespaceTokenizerFactory" />
         </analyzer>
     </fieldType>
+    
     <!-- A general text field that has reasonable, generic cross-language defaults: 
         it tokenizes with StandardTokenize -->
     <fieldType name="text_general" class="solr.TextField"
@@ -71,12 +73,24 @@
         </analyzer>
     </fieldType>
     
-    <!-- Multi-language text field -->
+    <!-- N-Gram Tokenizer -->
+    <fieldType name="text_ngrm" class="solr.TextField">
+        <analyzer type="index">
+            <tokenizer class="solr.NGramTokenizerFactory"/>
+            <filter class="solr.LowerCaseFilterFactory" />
+        </analyzer>
+        <analyzer type="query">
+            <tokenizer class="solr.NGramTokenizerFactory"/>
+            <filter class="solr.LowerCaseFilterFactory" />
+        </analyzer>
+    </fieldType>
+    
+    <!-- LogicalDOC text field -->
     <fieldType name="text_std" class="solr.TextField">
         <analyzer type="index"
-            class="com.logicaldoc.core.searchengine.MultilanguageAnalyzer" />
+            class="com.logicaldoc.core.searchengine.analyzer.FilteredAnalyzer" />
         <analyzer type="query"
-            class="com.logicaldoc.core.searchengine.MultilanguageAnalyzer" />
+            class="com.logicaldoc.core.searchengine.analyzer.FilteredAnalyzer" />
     </fieldType>
     
     <fieldType class="solr.TextField" name="spell">

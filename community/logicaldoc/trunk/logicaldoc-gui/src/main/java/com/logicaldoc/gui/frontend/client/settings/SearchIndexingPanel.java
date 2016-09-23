@@ -1,15 +1,19 @@
 package com.logicaldoc.gui.frontend.client.settings;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIParameter;
 import com.logicaldoc.gui.common.client.beans.GUISearchEngine;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
 import com.logicaldoc.gui.common.client.data.LanguagesDS;
 import com.logicaldoc.gui.common.client.data.ParsersDS;
+import com.logicaldoc.gui.common.client.data.TokenFiltersDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -29,14 +33,16 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.BooleanCallback;
+import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
+import com.smartgwt.client.widgets.events.DropCompleteEvent;
+import com.smartgwt.client.widgets.events.DropCompleteHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
-import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.FormItemClickHandler;
@@ -114,7 +120,7 @@ public class SearchIndexingPanel extends VLayout {
 
 		indexingQueueTab = fillIndexingQueueTab(100);
 
-		tabs.setTabs(searchEngineTab, fillLanguagesTab(), parsersInfoTab, indexingQueueTab);
+		tabs.setTabs(searchEngineTab, fillFiltersTab(), fillLanguagesTab(), parsersInfoTab, indexingQueueTab);
 
 		setMembers(tabs);
 	}
@@ -280,7 +286,7 @@ public class SearchIndexingPanel extends VLayout {
 	}
 
 	private Tab fillParsersTab() {
-		Tab parsersInfoTab = new Tab(I18N.message("parsersinfo"));
+		Tab parsersInfoTab = new Tab(I18N.message("parsers"));
 		parsersInfoTabPanel = new HLayout();
 		parsersInfoTabPanel.setWidth100();
 		parsersInfoTabPanel.setHeight100();
@@ -339,20 +345,20 @@ public class SearchIndexingPanel extends VLayout {
 			public void onEditComplete(EditCompleteEvent event) {
 				ListGridRecord record = parsersList.getRecord(event.getRowNum());
 
-				service.setAliases(record.getAttributeAsString("extension"), (String) event
-						.getNewValues().get("aliases"), new AsyncCallback<Void>() {
-					@Override
-					public void onFailure(Throwable caught) {
-						Log.serverError(caught);
-					}
+				service.setAliases(record.getAttributeAsString("extension"),
+						(String) event.getNewValues().get("aliases"), new AsyncCallback<Void>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-					@Override
-					public void onSuccess(Void ret) {
-						parsersList.invalidateCache();
-						parsersList.getDataSource().invalidateCache();
-						parsersList.redraw();
-					}
-				});
+							@Override
+							public void onSuccess(Void ret) {
+								parsersList.invalidateCache();
+								parsersList.getDataSource().invalidateCache();
+								parsersList.redraw();
+							}
+						});
 			}
 		});
 
@@ -362,12 +368,10 @@ public class SearchIndexingPanel extends VLayout {
 	}
 
 	private Tab fillLanguagesTab() {
-		Tab languagesTab = new Tab(I18N.message("installedlanguages"));
+		Tab languagesTab = new Tab(I18N.message("languages"));
 		Layout languagesTabPanel = new HLayout();
 		languagesTabPanel.setWidth100();
 		languagesTabPanel.setHeight100();
-
-		setMembersMargin(3);
 
 		ListGridField enabled = new ListGridField("eenabled", " ", 24);
 		enabled.setType(ListGridFieldType.IMAGE);
@@ -410,6 +414,144 @@ public class SearchIndexingPanel extends VLayout {
 		return languagesTab;
 	}
 
+	private Tab fillFiltersTab() {
+		ListGridField enabled = new ListGridField("eenabled", " ", 24);
+		enabled.setType(ListGridFieldType.IMAGE);
+		enabled.setCanSort(false);
+		enabled.setAlign(Alignment.CENTER);
+		enabled.setShowDefaultContextMenu(false);
+		enabled.setImageURLPrefix(Util.imagePrefix());
+		enabled.setImageURLSuffix(".gif");
+		enabled.setCanFilter(false);
+
+		ListGridField name = new ListGridField("name", I18N.message("filter"));
+		name.setWidth("*");
+		name.setCanEdit(false);
+
+		final ListGrid filtersGrid = new ListGrid() {
+			@Override
+			protected Canvas getExpansionComponent(final ListGridRecord record) {
+				final String filter = record.getAttributeAsString("name");
+				final ListGrid grid = this;
+
+				VLayout layout = new VLayout(5);
+				layout.setPadding(5);
+
+				final ListGrid configsGrid = new ListGrid();
+				configsGrid.setHeight(150);
+				configsGrid.setDataSource(new TokenFiltersDS(filter));
+				configsGrid.setCanEdit(true);
+				configsGrid.setModalEditing(true);
+				configsGrid.setAutoSaveEdits(true);
+				configsGrid.setAutoFetchData(true);
+
+				ListGridField name = new ListGridField("name", I18N.message("parameter"), 150);
+				name.setCanEdit(false);
+				ListGridField value = new ListGridField("value", I18N.message("value"));
+				value.setWidth("*");
+				value.setCanEdit(true);
+				configsGrid.setFields(name, value);
+
+				layout.addMember(configsGrid);
+
+				HLayout hLayout = new HLayout(10);
+				hLayout.setAlign(Alignment.CENTER);
+
+				IButton saveButton = new IButton(I18N.message("save"));
+				saveButton.setTop(250);
+				saveButton.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						final List<GUIParameter> params = new ArrayList<GUIParameter>();
+						ListGridRecord[] records = configsGrid.getRecords();
+						for (ListGridRecord rec : records) {
+							params.add(new GUIParameter(rec.getAttributeAsString("name"), rec
+									.getAttributeAsString("value")));
+						}
+
+						service.saveTokenFilterSettings(filter, params.toArray(new GUIParameter[0]),
+								new AsyncCallback<Void>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(Void arg) {
+
+									}
+								});
+					}
+				});
+				hLayout.addMember(saveButton);
+
+				IButton closeButton = new IButton(I18N.message("close"));
+				closeButton.addClickHandler(new ClickHandler() {
+					public void onClick(ClickEvent event) {
+						grid.collapseRecord(record);
+					}
+				});
+				hLayout.addMember(closeButton);
+
+				layout.addMember(hLayout);
+
+				return layout;
+			}
+		};
+
+		filtersGrid.setShowRowNumbers(true);
+		filtersGrid.setCanExpandRecords(true);
+		filtersGrid.setCanEdit(false);
+		filtersGrid.setWidth100();
+		filtersGrid.setHeight100();
+		filtersGrid.setAutoFetchData(true);
+		filtersGrid.setSelectionType(SelectionStyle.SINGLE);
+		filtersGrid.setCanReorderRecords(true);
+		filtersGrid.setDataSource(new TokenFiltersDS(null));
+		filtersGrid.setFields(enabled, name);
+
+		Layout filtersTabPanel = new HLayout();
+		filtersTabPanel.setWidth100();
+		filtersTabPanel.setHeight100();
+		filtersTabPanel.addMember(filtersGrid);
+
+		Tab filtersTab = new Tab(I18N.message("filters"));
+		filtersTab.setPane(filtersTabPanel);
+
+		filtersGrid.addDropCompleteHandler(new DropCompleteHandler() {
+
+			@Override
+			public void onDropComplete(DropCompleteEvent event) {
+				List<String> filters = new ArrayList<String>();
+				ListGridRecord[] records = filtersGrid.getRecords();
+				for (ListGridRecord record : records) {
+					filters.add(record.getAttributeAsString("name"));
+				}
+				service.reorderTokenFilters(filters.toArray(new String[0]), new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void arg) {
+
+					}
+				});
+			}
+		});
+
+		filtersGrid.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				showFilterMenu(filtersGrid);
+				event.cancel();
+			}
+		});
+		return filtersTab;
+	}
+
 	private Tab fillSearchEngineTab(GUISearchEngine searchEngine) {
 		Tab searchEngineTab = new Tab(I18N.message("searchengine"));
 		searchEngineTabPanel = new VLayout();
@@ -441,7 +583,7 @@ public class SearchIndexingPanel extends VLayout {
 			}
 		});
 		computeStat.setPrompt(I18N.message("calculatestats"));
-		
+
 		// Entries count
 		StaticTextItem entries = ItemFactory.newStaticTextItem("entries", "entriescount", "-");
 		entries.setIcons(computeStat);
@@ -484,10 +626,7 @@ public class SearchIndexingPanel extends VLayout {
 		// Repository
 		TextItem repository = ItemFactory.newTextItem("repository", "repository", null);
 		repository.setValue(this.searchEngine.getDir());
-		repository.setWidth(250);
-
-		RadioGroupItem subwords = ItemFactory.newBooleanSelector("subwords", "analizesubwords");
-		subwords.setValue(this.searchEngine.isSubwords() ? "yes" : "no");
+		repository.setWidth(300);
 
 		HLayout buttons = new HLayout();
 
@@ -502,8 +641,6 @@ public class SearchIndexingPanel extends VLayout {
 					SearchIndexingPanel.this.searchEngine.setIncludePatters((String) values.get("includePatters"));
 					SearchIndexingPanel.this.searchEngine.setExcludePatters((String) values.get("excludePatters"));
 					SearchIndexingPanel.this.searchEngine.setDir((String) values.get("repository"));
-
-					SearchIndexingPanel.this.searchEngine.setSubwords("yes".equals(values.get("subwords")));
 
 					String btch = vm.getValueAsString("batch");
 					if (btch == null || "".equals(btch.trim()))
@@ -523,8 +660,17 @@ public class SearchIndexingPanel extends VLayout {
 					else
 						SearchIndexingPanel.this.searchEngine.setMaxText(new Integer(maxtext));
 
-					service.save(SearchIndexingPanel.this.searchEngine,
-							new AsyncCallback<Void>() {
+					service.save(SearchIndexingPanel.this.searchEngine, new AsyncCallback<Void>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Log.serverError(caught);
+						}
+
+						@Override
+						public void onSuccess(Void ret) {
+							Log.info(I18N.message("settingssaved"), null);
+							service.getInfo(new AsyncCallback<GUISearchEngine>() {
 
 								@Override
 								public void onFailure(Throwable caught) {
@@ -532,23 +678,13 @@ public class SearchIndexingPanel extends VLayout {
 								}
 
 								@Override
-								public void onSuccess(Void ret) {
-									Log.info(I18N.message("settingssaved"), null);
-									service.getInfo(new AsyncCallback<GUISearchEngine>() {
-
-										@Override
-										public void onFailure(Throwable caught) {
-											Log.serverError(caught);
-										}
-
-										@Override
-										public void onSuccess(GUISearchEngine searchEngine) {
-											AdminPanel.get().setContent(new SearchIndexingPanel(searchEngine));
-										}
-
-									});
+								public void onSuccess(GUISearchEngine searchEngine) {
+									AdminPanel.get().setContent(new SearchIndexingPanel(searchEngine));
 								}
+
 							});
+						}
+					});
 				}
 			}
 		});
@@ -706,12 +842,10 @@ public class SearchIndexingPanel extends VLayout {
 			batch.setVisible(false);
 			timeout.setVisible(false);
 			maxText.setVisible(false);
-			subwords.setVisible(false);
 			buttons.setMembers(save, rescheduleAll);
 		}
 
-		searchEngineForm.setItems(entries, status, repository, includePatters, excludePatters, batch, timeout, maxText,
-				subwords);
+		searchEngineForm.setItems(entries, status, repository, includePatters, excludePatters, batch, timeout, maxText);
 
 		buttons.setMembersMargin(5);
 		searchEngineTabPanel.setMembers(searchEngineForm, buttons);
@@ -769,21 +903,20 @@ public class SearchIndexingPanel extends VLayout {
 		enable.setTitle(I18N.message("enable"));
 		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.setLanguageStatus(record.getAttributeAsString("code"), true,
-						new AsyncCallback<Void>() {
+				service.setLanguageStatus(record.getAttributeAsString("code"), true, new AsyncCallback<Void>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(Void result) {
-								record.setAttribute("eenabled", "0");
-								langsList.refreshRow(langsList.getRecordIndex(record));
-								Log.info(I18N.message("settingsaffectnewsessions"), null);
-							}
-						});
+					@Override
+					public void onSuccess(Void result) {
+						record.setAttribute("eenabled", "0");
+						langsList.refreshRow(langsList.getRecordIndex(record));
+						Log.info(I18N.message("settingsaffectnewsessions"), null);
+					}
+				});
 			}
 		});
 
@@ -791,21 +924,71 @@ public class SearchIndexingPanel extends VLayout {
 		disable.setTitle(I18N.message("disable"));
 		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				service.setLanguageStatus(record.getAttributeAsString("code"), false,
-						new AsyncCallback<Void>() {
+				service.setLanguageStatus(record.getAttributeAsString("code"), false, new AsyncCallback<Void>() {
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Log.serverError(caught);
-							}
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
 
-							@Override
-							public void onSuccess(Void result) {
-								record.setAttribute("eenabled", "2");
-								langsList.refreshRow(langsList.getRecordIndex(record));
-								Log.info(I18N.message("settingsaffectnewsessions"), null);
-							}
-						});
+					@Override
+					public void onSuccess(Void result) {
+						record.setAttribute("eenabled", "2");
+						langsList.refreshRow(langsList.getRecordIndex(record));
+						Log.info(I18N.message("settingsaffectnewsessions"), null);
+					}
+				});
+			}
+		});
+
+		if ("0".equals(record.getAttributeAsString("eenabled")))
+			contextMenu.setItems(disable);
+		else
+			contextMenu.setItems(enable);
+		contextMenu.showContextMenu();
+	}
+
+	private void showFilterMenu(final ListGrid grid) {
+		final ListGridRecord record = grid.getSelectedRecord();
+
+		Menu contextMenu = new Menu();
+		MenuItem enable = new MenuItem();
+		enable.setTitle(I18N.message("enable"));
+		enable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.setTokenFilterStatus(record.getAttributeAsString("name"), true, new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						record.setAttribute("eenabled", "0");
+						grid.refreshRow(grid.getRecordIndex(record));
+					}
+				});
+			}
+		});
+
+		MenuItem disable = new MenuItem();
+		disable.setTitle(I18N.message("disable"));
+		disable.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.setTokenFilterStatus(record.getAttributeAsString("name"), false, new AsyncCallback<Void>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(Void result) {
+						record.setAttribute("eenabled", "2");
+						grid.refreshRow(grid.getRecordIndex(record));
+					}
+				});
 			}
 		});
 

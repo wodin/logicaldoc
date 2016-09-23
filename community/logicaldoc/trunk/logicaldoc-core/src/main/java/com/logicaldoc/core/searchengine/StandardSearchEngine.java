@@ -33,6 +33,7 @@ import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
+import com.logicaldoc.core.searchengine.analyzer.FilteredAnalyzer;
 import com.logicaldoc.util.StringUtil;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.FileUtil;
@@ -140,11 +141,11 @@ public class StandardSearchEngine implements SearchEngine {
 		}
 
 		try {
-			MultilanguageAnalyzer.lang.set(doc.getLanguage());
+			FilteredAnalyzer.lang.set(doc.getLanguage());
 			server.add(hit);
 			server.commit();
 		} finally {
-			MultilanguageAnalyzer.lang.remove();
+			FilteredAnalyzer.lang.remove();
 		}
 	}
 
@@ -331,7 +332,7 @@ public class StandardSearchEngine implements SearchEngine {
 			// This configures the analyzer to use to to parse the expression of
 			// the
 			// content field
-			MultilanguageAnalyzer.lang.set(expressionLanguage);
+			FilteredAnalyzer.lang.set(expressionLanguage);
 			Hits hits = null;
 			SolrQuery query = prepareSearchQuery(expression, filters, expressionLanguage, rows);
 
@@ -344,7 +345,7 @@ public class StandardSearchEngine implements SearchEngine {
 			}
 			return hits;
 		} finally {
-			MultilanguageAnalyzer.lang.remove();
+			FilteredAnalyzer.lang.remove();
 		}
 	}
 

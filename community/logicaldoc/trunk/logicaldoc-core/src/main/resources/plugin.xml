@@ -52,7 +52,10 @@
   <extension-point id="SystemInfo">
     <parameter-def id="class" />
   </extension-point>
-  
+  <extension-point id="TokenFilter">
+  	<parameter-def id="name" />
+    <parameter-def id="factory" />
+  </extension-point>  
 
   <extension plugin-id="logicaldoc-core" point-id="Authentication" id="DefaultAuthentication">
     <parameter id="providerId" value="DefaultAuthentication" />
@@ -256,5 +259,18 @@
   </extension>
   <extension plugin-id="logicaldoc-core" point-id="Task" id="taskProductNews">
 	<parameter id="name" value="ProductNews" />
+  </extension>
+  
+  <extension plugin-id="logicaldoc-core" point-id="TokenFilter" id="tfStemmer">
+	<parameter id="name" value="stemmer" />
+	<parameter id="factory" value="com.logicaldoc.core.searchengine.analyzer.SnowballFilterFactory" />
+  </extension>
+  <extension plugin-id="logicaldoc-core" point-id="TokenFilter" id="tfWordDelim">
+	<parameter id="name" value="worddelimiter" />
+	<parameter id="factory" value="org.apache.lucene.analysis.miscellaneous.WordDelimiterFilterFactory.WordDelimiterFilterFactory" />
+  </extension>
+  <extension plugin-id="logicaldoc-core" point-id="TokenFilter" id="tfNGram">
+	<parameter id="name" value="ngram" />
+	<parameter id="factory" value="org.apache.lucene.analysis.miscellaneous.WordDelimiterFilterFactory.WordDelimiterFilterFactory" />
   </extension>
 </plugin>
