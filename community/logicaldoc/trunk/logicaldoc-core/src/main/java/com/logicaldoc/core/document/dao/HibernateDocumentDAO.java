@@ -1008,9 +1008,18 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public void updateCountUniqueTags() {
-		StringBuffer updateStatement = new StringBuffer(
-				"update ld_uniquetag A set A.ld_count = (select count(B.ld_tag) from ld_tag B where B.ld_tag=A.ld_tag and A.ld_tenantid=B.ld_tenantid) ");
-		jdbcUpdate(updateStatement.toString());
+		List<Long> tenantIds = tenantDAO.findAllIds();
+		for (Long tenantId : tenantIds) {
+			// Get the actual unique tags for the given tenant
+			List<String> uniqueTags = queryForList("select ld_tag from ld_uniquetag", String.class);
+
+			// Update the count for each tag
+			for (String tag : uniqueTags) {
+				jdbcUpdate("update ld_uniquetag set ld_count = (select count(ld_tag) from ld_tag where ld_tag='"
+						+ SqlUtil.doubleQuotes(tag) + "' and ld_tenantid=" + tenantId + ") where ld_tag='"
+						+ SqlUtil.doubleQuotes(tag) + "' and ld_tenantid=" + tenantId);
+			}
+		}
 	}
 
 	@Override
