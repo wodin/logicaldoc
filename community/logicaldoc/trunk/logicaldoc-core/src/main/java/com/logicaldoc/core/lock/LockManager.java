@@ -3,6 +3,7 @@ package com.logicaldoc.core.lock;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,15 @@ public class LockManager {
 	private GenericDAO genericDao;
 
 	private ContextProperties config;
+
+	/**
+	 * Gets all the transaction ids associated to the locks
+	 */
+	@SuppressWarnings("unchecked")
+	public List<String> getAllTransactions() {
+		return genericDao.queryForList(
+				"select ld_string1 from ld_generic where ld_type='lock' and ld_string1 is not null", String.class);
+	}
 
 	/**
 	 * Acquire a lock of a given name and for a given transaction.
@@ -54,6 +64,10 @@ public class LockManager {
 		return false;
 	}
 
+	private String getSubType(String lockName) {
+		return lockName + "-" + config.getProperty("id");
+	}
+
 	/**
 	 * Releases a previously acquired lock.
 	 * 
@@ -64,7 +78,7 @@ public class LockManager {
 		if (lockName == null || transactionId == null)
 			return;
 
-		Generic lock = genericDao.findByAlternateKey(LOCK, lockName, null, Tenant.DEFAULT_ID);
+		Generic lock = genericDao.findByAlternateKey(LOCK, getSubType(lockName), null, Tenant.DEFAULT_ID);
 		if (lock != null && transactionId.equals(lock.getString1())) {
 			lock.setDate1(null);
 			lock.setString1(null);
@@ -74,11 +88,11 @@ public class LockManager {
 
 	protected boolean getInternal(String lockName, String transactionId) {
 		Date today = new Date();
-		Generic lock = genericDao.findByAlternateKey(LOCK, lockName, null, Tenant.DEFAULT_ID);
+		Generic lock = genericDao.findByAlternateKey(LOCK, getSubType(lockName), null, Tenant.DEFAULT_ID);
 		try {
 			if (lock == null) {
 				log.debug("Lock " + lockName + " not found");
-				lock = new Generic(LOCK, lockName);
+				lock = new Generic(LOCK, getSubType(lockName));
 				lock.setString1(transactionId);
 				lock.setDate1(today);
 			}

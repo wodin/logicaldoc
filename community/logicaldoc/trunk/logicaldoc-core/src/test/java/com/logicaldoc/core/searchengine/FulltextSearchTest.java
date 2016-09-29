@@ -16,10 +16,6 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.AbstractCoreTCase;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.folder.Folder;
-import com.logicaldoc.core.i18n.Language;
-import com.logicaldoc.core.i18n.LanguageManager;
-import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.plugin.PluginRegistry;
 
 public class FulltextSearchTest extends AbstractCoreTCase {
 
@@ -112,7 +108,7 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 	@Test
 	public void testSearch() throws Exception {
 		Assert.assertEquals(4, engine.getCount());
-		
+
 		FulltextSearchOptions opt = new FulltextSearchOptions();
 		opt.setLanguage("en");
 		opt.setExpression("document");
@@ -125,7 +121,7 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 		search.setOptions(opt);
 
 		List<Hit> hits = null;
-		hits=search.search();
+		hits = search.search();
 		Assert.assertEquals(2, hits.size());
 
 		opt.setMaxHits(1);

@@ -61,7 +61,7 @@ public class StandardSearchEngineTest extends AbstractCoreTCase {
 		document.setFolder(fold);
 		engine.addHit(
 				document,
-				"This is another test documents just for test insertion.Solr is an enterprise-ready, Lucene-based search server that supports faceted ... This is useful for retrieving and highlighting the documents contents for display but is not .... hl, When hl=true , highlight snippets in the query response.");
+				"This is another test documents just for test insertion.Solr is an enterprise-ready, Lucene-based search server that supports faceted ... This is useful for retrieving and highlighting the documents contents for display but is not .... hl, When hl=true , highlight snippets in the query response. document.");
 
 		hit = engine.getHit(1L);
 		Assert.assertEquals(1L, hit.getId());

@@ -78,11 +78,6 @@ public class IndexerTask extends Task {
 		errors = 0;
 		indexed = 0;
 		try {
-			/*
-			 * Cleanup all references to expired transactions
-			 */
-			documentDao.cleanExpiredTransactions();
-
 			ContextProperties config = Context.get().getProperties();
 			Integer max = config.getProperty("index.batch") != null ? new Integer(config.getProperty("index.batch"))
 					: null;
@@ -93,11 +88,16 @@ public class IndexerTask extends Task {
 			if (max != null && max.intValue() < 1)
 				max = null;
 
+			// Retrieve the actual transactions
+			List<String> transactionIds = lockManager.getAllTransactions();
+			String transactionIdsStr = transactionIds.toString().replace("[", "('").replace("]", "')")
+					.replace(", ", "','");
+
 			// First of all find documents to be indexed and not already
 			// involved into a transaction
 			List<Long> ids = documentDao.findIdsByWhere("_entity.indexed = " + AbstractDocument.INDEX_TO_INDEX
-					+ " and _entity.transactionId is null and not _entity.status=" + AbstractDocument.DOC_ARCHIVED,
-					"order by _entity.date asc", max);
+					+ " and (_entity.transactionId is null or _entity.transactionId not in " + transactionIdsStr
+					+ ") and not _entity.status=" + AbstractDocument.DOC_ARCHIVED, null, max);
 			size = ids.size();
 			log.info("Found a total of " + size + " documents to be processed");
 
