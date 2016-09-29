@@ -977,9 +977,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public void cleanExpiredTransactions() {
-		jdbcUpdate(
-				"update ld_document set ld_transactionid=null where not (ld_transactionid is null) and not exists(select B.ld_id from ld_generic B where B.ld_type='lock' and B.ld_string1=ld_transactionid)",
-				new Object[0]);
+		// Retrieve the actual registered locks on transactions
+		List<String> transactionIds = queryForList("select ld_string1 from ld_generic where ld_type='lock' and ld_string1 is not null",
+				String.class);
+		String transactionIdsStr = transactionIds.toString().replace("[", "('").replace("]", "')").replace(", ", "','");
+
+		bulkUpdate("set transactionId=null where transactionId is not null and transactionId not in "+transactionIdsStr, null);
 	}
 
 	public void setTenantDAO(TenantDAO tenantDAO) {

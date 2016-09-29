@@ -212,7 +212,7 @@ create unique index AK_GROUP on ld_group (ld_name, ld_tenantid);
 create unique index AK_TICKET on ld_ticket (ld_ticketid);
 create unique index AK_LINK on ld_link (ld_docid1, ld_docid2, ld_type);
 create unique index AK_TEMPLATE on ld_template (ld_name, ld_tenantid);
-create unique index AK_GENERIC on ld_generic (ld_type, ld_subtype, ld_qualifier,ld_tenantid);
+create unique index AK_GENERIC on ld_generic (ld_type, ld_subtype, ld_qualifier, ld_tenantid);
 create unique index AK_VERSION on ld_version (ld_documentid, ld_version);
 create unique index AK_RATING on ld_rating (ld_docid, ld_userid);
 create unique index AK_MSGTEMPL on ld_messagetemplate (ld_name, ld_language, ld_tenantid);
