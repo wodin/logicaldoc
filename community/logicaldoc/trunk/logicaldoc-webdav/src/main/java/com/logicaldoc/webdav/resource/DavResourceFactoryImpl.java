@@ -101,7 +101,8 @@ public class DavResourceFactoryImpl implements DavResourceFactory {
 
 			putInCache(session, resource);
 			return resource;
-		} catch (Exception e) {
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 			throw new DavException(DavServletResponse.SC_INTERNAL_SERVER_ERROR, e);
 		}
 	}
