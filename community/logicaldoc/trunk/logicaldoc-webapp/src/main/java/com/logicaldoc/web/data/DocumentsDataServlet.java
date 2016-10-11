@@ -149,7 +149,7 @@ public class DocumentsDataServlet extends HttpServlet {
 				Long folderId = null;
 				if (StringUtils.isNotEmpty(request.getParameter("folderId")))
 					folderId = new Long(request.getParameter("folderId"));
-				if (!fDao.isReadEnabled(folderId, session.getUserId()))
+				if (folderId!=null && session!=null && !fDao.isReadEnabled(folderId, session.getUserId()))
 					throw new Exception("Folder " + folderId + " is not accessible by user " + session.getUsername());
 
 				String filename = null;
