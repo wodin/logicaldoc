@@ -85,14 +85,15 @@ public class TaskSchedulingPanel extends VLayout {
 		opts.put("false", I18N.message("advanced"));
 		simple.setValueMap(opts);
 		simple.setName("simple");
+		simple.setValue(simplePolicy ? "true" : "false");
 		simple.setTitle(I18N.message("policy"));
 		simple.setDefaultValue(Boolean.toString(task.getScheduling().isSimple()));
 		simple.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
-				simplePolicy = !simplePolicy;
-				reloadForm();
+				simplePolicy = "true".equals(simple.getValueAsString());
 				changedHandler.onChanged(event);
+				reloadForm();
 			}
 		});
 
@@ -189,7 +190,7 @@ public class TaskSchedulingPanel extends VLayout {
 		restoreDefaults.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				if (vm.validate()) {
-					TaskSchedulingPanel.this.maxDuration.setValue("-1");
+					TaskSchedulingPanel.this.maxDuration.setValue("30");
 					TaskSchedulingPanel.this.initialDelay.setValue(1800);
 					TaskSchedulingPanel.this.repeatInterval.setValue(1800);
 					TaskSchedulingPanel.this.seconds.setValue("0");
