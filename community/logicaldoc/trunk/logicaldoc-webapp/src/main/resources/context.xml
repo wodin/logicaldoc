@@ -47,7 +47,15 @@
         <property name="password">
             <value>${jdbc.password}</value>
         </property>
-        <property name="initialSize" value="3" />
+        <property name="initialSize">
+            <value>${jdbc.cp.initialSize}</value>
+        </property>
+        <property name="maxActive">
+            <value>${jdbc.cp.maxActive}</value>
+        </property>
+        <property name="maxIdle">
+            <value>${jdbc.cp.maxIdle}</value>
+        </property>                        
         <property name="validationQuery">
             <value>${jdbc.validationQuery}</value>
         </property>
