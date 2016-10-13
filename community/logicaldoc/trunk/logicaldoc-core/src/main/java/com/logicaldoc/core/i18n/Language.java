@@ -122,27 +122,14 @@ public class Language implements Comparable<Language> {
 				log.error(analyzerClass + " not found");
 			}
 
-			// Try to use constructor (Version matchVersion, Set<?> stopwords)
+			// Try to use constructor (Set<?> stopwords)
 			if (stopWords != null && (!stopWords.isEmpty())) {
 				try {
-					Constructor constructor = aClass.getConstructor(new Class[] { org.apache.lucene.util.Version.class,
-							java.util.Set.class });
+					Constructor constructor = aClass.getConstructor(new Class[] { java.util.Set.class });
 					if (constructor != null)
-						analyzer = (Analyzer) constructor.newInstance(StandardSearchEngine.VERSION, stopWords);
+						analyzer = (Analyzer) constructor.newInstance(stopWords);
 				} catch (Throwable e) {
 					log.debug("constructor (Version matchVersion, Set<?> stopwords)  not found");
-				}
-			}
-
-			// Try to use constructor (Version matchVersion)
-			if (analyzer == null) {
-				try {
-					Constructor constructor = aClass
-							.getConstructor(new Class[] { org.apache.lucene.util.Version.class });
-					if (constructor != null)
-						analyzer = (Analyzer) constructor.newInstance(StandardSearchEngine.VERSION);
-				} catch (Throwable t) {
-					log.debug("constructor (Version matchVersion) not found");
 				}
 			}
 
@@ -157,9 +144,11 @@ public class Language implements Comparable<Language> {
 		}
 
 		if (analyzer == null) {
-			analyzer = new SimpleAnalyzer(StandardSearchEngine.VERSION);
+			analyzer = new SimpleAnalyzer();
 			log.debug("Using default simple analyzer");
 		}
+
+		analyzer.setVersion(StandardSearchEngine.VERSION);
 
 		return analyzer;
 	}
@@ -191,7 +180,7 @@ public class Language implements Comparable<Language> {
 	public SnowballProgram getStemmer() {
 		if (stemmer == null) {
 			String stemmerClass = "org.tartarus.snowball.ext." + getLocale().getDisplayName(Locale.ENGLISH) + "Stemmer";
-			
+
 			try {
 				Class clazz = Class.forName(stemmerClass);
 				if (clazz != null) {
@@ -200,7 +189,7 @@ public class Language implements Comparable<Language> {
 						stemmer = (SnowballProgram) constructor.newInstance();
 				}
 			} catch (Throwable t) {
-				
+
 			}
 		}
 		return stemmer;

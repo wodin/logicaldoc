@@ -117,9 +117,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	@Deprecated
 	private String coverage;
 
-	@Deprecated
-	private String recipient;
-
 	private Date creation = new Date();
 
 	private String language;
@@ -548,19 +545,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public void setDigest(String digest) {
 		this.digest = digest;
-	}
-
-	/**
-	 * The document's recipient
-	 */
-	@Deprecated
-	public String getRecipient() {
-		return recipient;
-	}
-
-	@Deprecated
-	public void setRecipient(String recipient) {
-		this.recipient = recipient;
 	}
 
 	/**

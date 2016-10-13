@@ -12,19 +12,19 @@ import java.util.Locale;
 import org.apache.commons.lang.StringUtils;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
+import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.NIOFSDirectory;
 import org.apache.lucene.util.Version;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.SortClause;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrInputDocument;
 import org.apache.solr.core.CoreContainer;
-import org.apache.solr.update.SolrIndexWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ import com.logicaldoc.util.io.FileUtil;
  */
 public class StandardSearchEngine implements SearchEngine {
 
-	public static Version VERSION = Version.LUCENE_4_9;
+	public static Version VERSION = Version.LUCENE_5_5_3;
 
 	protected static Logger log = LoggerFactory.getLogger(StandardSearchEngine.class);
 
@@ -340,7 +340,7 @@ public class StandardSearchEngine implements SearchEngine {
 				log.info("Execute search: " + expression);
 				QueryResponse rsp = server.query(query);
 				hits = new Hits(rsp);
-			} catch (SolrServerException e) {
+			} catch (Throwable e) {
 				log.error(e.getMessage(), e);
 			}
 			return hits;
@@ -377,7 +377,7 @@ public class StandardSearchEngine implements SearchEngine {
 			server.commit();
 			unlock();
 			server.getCoreContainer().shutdown();
-			server.shutdown();
+			server.close();
 		} catch (Throwable e) {
 			log.warn(e.getMessage(), e);
 		}
@@ -392,14 +392,8 @@ public class StandardSearchEngine implements SearchEngine {
 	public synchronized void unlock() {
 		try {
 			Directory directory = getIndexDataDirectory();
-			if (SolrIndexWriter.isLocked(directory))
-				SolrIndexWriter.unlock(directory);
-
-			try {
-				directory.deleteFile("write.lock");
-			} catch (Throwable t) {
-				log.warn("Unable to delete the index lock, this may be normal");
-			}
+			if (isLocked())
+				directory.obtainLock(IndexWriter.WRITE_LOCK_NAME).close();
 		} catch (Throwable e) {
 			log.warn("unlock " + e.getMessage());
 		}
@@ -416,11 +410,16 @@ public class StandardSearchEngine implements SearchEngine {
 
 		try {
 			Directory directory = getIndexDataDirectory();
-			if (SolrIndexWriter.isLocked(directory))
+			try {
+				directory.obtainLock(IndexWriter.WRITE_LOCK_NAME).close();
+				result = false;
+			} catch (LockObtainFailedException failed) {
 				result = true;
-		} catch (Exception e) {
+			}
+		} catch (Throwable e) {
 			log.warn("isLocked " + e.getMessage(), e);
 		}
+
 		return result;
 	}
 
@@ -435,7 +434,7 @@ public class StandardSearchEngine implements SearchEngine {
 			QueryResponse rsp = server.query(query);
 			SolrDocumentList docs = rsp.getResults();
 			return docs.getNumFound();
-		} catch (SolrServerException e) {
+		} catch (Throwable e) {
 			log.error(e.getMessage(), e);
 		}
 		return 0;
@@ -455,7 +454,7 @@ public class StandardSearchEngine implements SearchEngine {
 	}
 
 	static Directory getIndexDataDirectory() throws IOException {
-		return new NIOFSDirectory(getIndexDataFolder());
+		return new NIOFSDirectory(getIndexDataFolder().toPath());
 	}
 
 	static File getIndexDataFolder() throws IOException {
