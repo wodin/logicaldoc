@@ -24,7 +24,6 @@ public class StandardSearchEngineTest extends AbstractCoreTCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		engine = (SearchEngine) context.getBean("SearchEngine");
-		engine.init();
 	}
 
 	@After
@@ -46,6 +45,7 @@ public class StandardSearchEngineTest extends AbstractCoreTCase {
 		fold.setName("test");
 		document.setFolder(fold);
 
+		engine.unlock();
 		engine.addHit(document, "Questo è un documento di prova. Per fortuna che esistono i test. document");
 		
 		Hit hit = engine.getHit(1L);

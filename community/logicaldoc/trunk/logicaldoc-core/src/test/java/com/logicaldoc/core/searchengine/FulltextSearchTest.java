@@ -27,7 +27,6 @@ public class FulltextSearchTest extends AbstractCoreTCase {
 	public void setUp() throws Exception {
 		super.setUp();
 		engine = (SearchEngine) context.getBean("SearchEngine");
-		engine.init();
 		addHits();
 	}
 
