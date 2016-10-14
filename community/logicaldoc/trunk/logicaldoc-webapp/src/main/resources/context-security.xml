@@ -160,7 +160,7 @@
         <security:intercept-url pattern="/mobile.jsp"
             access="isAuthenticated()" />
         <security:intercept-url pattern="/mobile/**"
-            access="isAuthenticated()" />
+            access="isAuthenticated()" />      
         <!-- Login page -->
         <security:form-login login-page="/login.jsp"
             username-parameter="j_username" password-parameter="j_password"
