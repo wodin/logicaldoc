@@ -378,6 +378,7 @@ public class StandardSearchEngine implements SearchEngine {
 			unlock();
 			server.getCoreContainer().shutdown();
 			server.close();
+			FileUtil.strongDelete(new File(getIndexDataFolder(), IndexWriter.WRITE_LOCK_NAME));
 		} catch (Throwable e) {
 			log.warn(e.getMessage(), e);
 		}
@@ -513,6 +514,10 @@ public class StandardSearchEngine implements SearchEngine {
 				FileUtil.copyResource("/index/logicaldoc/conf/protwords.txt", protwords_txt);
 			}
 
+			//Delete the lock file if it exists
+			FileUtil.strongDelete(new File(indexHome,"logicaldoc/data/index/"+IndexWriter.WRITE_LOCK_NAME));
+			
+			
 			CoreContainer container = new CoreContainer(indexHome.getPath());
 			server = new EmbeddedSolrServer(container, "logicaldoc");
 			container.load();
