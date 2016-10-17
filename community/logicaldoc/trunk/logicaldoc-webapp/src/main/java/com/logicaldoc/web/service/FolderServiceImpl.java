@@ -558,7 +558,6 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			log.info("Applying " + (rights != null ? rights.length : 0) + " rights to folder " + folder.getId());
 
 			folder.setSecurityRef(null);
-			folder.getFolderGroups().clear();
 			sqlerrors = false;
 			Set<FolderGroup> grps = new HashSet<FolderGroup>();
 			for (GUIRight right : rights) {
@@ -646,7 +645,8 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					fg.setSubscription(0);
 			}
 
-			folder.setFolderGroups(grps);
+			folder.getFolderGroups().clear();
+			folder.getFolderGroups().addAll(grps);
 
 			// Add a folder history entry
 			FolderHistory history = new FolderHistory();
