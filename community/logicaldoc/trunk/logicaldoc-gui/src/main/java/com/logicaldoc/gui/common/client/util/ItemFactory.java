@@ -89,10 +89,7 @@ public class ItemFactory {
 		date.setHintStyle("hint");
 		date.setWidth(110);
 
-		if (I18N.message("format_dateshort").startsWith("MM/dd"))
-			date.setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
-		else
-			date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		date.setDateFormatter(getDateDisplayFormat());
 
 		return date;
 	}
@@ -114,12 +111,18 @@ public class ItemFactory {
 		date.setName(itemName);
 		date.setHintStyle("hint");
 
-		if (I18N.message("format_dateshort").startsWith("MM/dd"))
-			date.setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
-		else
-			date.setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		date.setDateFormatter(getDateDisplayFormat());
 
 		return date;
+	}
+
+	private static DateDisplayFormat getDateDisplayFormat() {
+		if ("yyyy/MM/dd".equals(I18N.message("format_dateshort")))
+			return DateDisplayFormat.TOJAPANSHORTDATE;
+		else if (I18N.message("format_dateshort").contains("MM/dd"))
+			return DateDisplayFormat.TOUSSHORTDATE;
+		else
+			return DateDisplayFormat.TOEUROPEANSHORTDATE;
 	}
 
 	public static SelectItem newUserSelectorForAttribute(String name, String title, String groupIdOrName) {
