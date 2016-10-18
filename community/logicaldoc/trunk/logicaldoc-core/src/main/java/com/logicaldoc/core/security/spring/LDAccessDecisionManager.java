@@ -27,7 +27,7 @@ import com.logicaldoc.util.config.ContextProperties;
  */
 public class LDAccessDecisionManager extends UnanimousBased {
 
-	public LDAccessDecisionManager(List<AccessDecisionVoter> decisionVoters) {
+	public LDAccessDecisionManager(List<AccessDecisionVoter<? extends Object>> decisionVoters) {
 		super(decisionVoters);
 	}
 
