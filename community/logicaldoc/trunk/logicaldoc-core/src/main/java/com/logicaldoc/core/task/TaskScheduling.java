@@ -6,8 +6,9 @@ import java.util.Date;
 import java.util.StringTokenizer;
 
 import org.quartz.Scheduler;
-import org.quartz.SchedulerException;
-import org.quartz.Trigger;
+import org.quartz.TriggerKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
@@ -19,6 +20,9 @@ import com.logicaldoc.util.config.ContextProperties;
  * @since 3.5.0
  */
 public class TaskScheduling {
+
+	protected static Logger log = LoggerFactory.getLogger(TaskScheduling.class);
+
 	private String taskName;
 
 	private String seconds = "0";
@@ -122,15 +126,14 @@ public class TaskScheduling {
 	}
 
 	public Date getNextFireTime() {
-		Trigger trigger = (Trigger) Context.get().getBean(taskName + "Trigger");
+		Object trigger = (Object) Context.get().getBean(taskName + "Trigger");
 		if (!(trigger instanceof TaskTrigger))
 			return null;
 
 		// The following loop 'while' is needed to update the next execution
 		// time of the task into the Task list page
 		if (TaskTrigger.MODE_CRON.equals(getMode())) {
-			((TaskTrigger) trigger).setNextFireTime(trigger.getFireTimeAfter(previousFireTime));
-			return trigger.getFireTimeAfter(previousFireTime);
+			return ((TaskTrigger) trigger).getObject().getFireTimeAfter(previousFireTime);
 		} else {
 			if (previousFireTime != null) {
 				long next = previousFireTime.getTime() + this.getInterval();
@@ -185,7 +188,8 @@ public class TaskScheduling {
 	 */
 	public void save() throws IOException, ParseException {
 		Scheduler scheduler = (Scheduler) Context.get().getBean("Scheduler");
-		TaskTrigger trigger = (TaskTrigger) Context.get().getBean(taskName + "Trigger");
+		// Use the & prefix to get the factory and not the bean it produces
+		TaskTrigger trigger = (TaskTrigger) Context.get().getBean("&" + taskName + "Trigger");
 		String expression = getCronExpression();
 
 		ContextProperties config = Context.get().getProperties();
@@ -199,20 +203,18 @@ public class TaskScheduling {
 
 		trigger.reload();
 
-		if ("simple".equals(getMode()))
-			trigger.setStartTime(new Date(new Date().getTime() + trigger.getRepeatInterval()));
-
+		// Reschedule the job
 		try {
-			// Reschedule the job
-			scheduler.deleteJob(taskName + "Job", "DEFAULT");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 
-		try {
-			scheduler.scheduleJob(trigger.getJobDetail(), trigger);
-		} catch (SchedulerException e) {
-			throw new IOException(e.getMessage(), e);
+			TriggerKey key = new TriggerKey(taskName, TriggerKey.DEFAULT_GROUP);
+			Date date = scheduler.rescheduleJob(key, trigger.getObject());
+
+			if (date != null)
+				log.info("Rescheduled the task " + taskName + "; next estimated fire time is " + date);
+			else
+				log.warn("Unable to reschedule the task " + taskName);
+		} catch (Throwable e) {
+			log.error(e.getMessage(), e);
 		}
 
 		load();

@@ -52,6 +52,10 @@
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AdminPasswdAuthenticationManager"
         security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/**"
             access="isAuthenticated()" />
@@ -62,6 +66,10 @@
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AdminPasswdAuthenticationManager"
         security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/**"
             access="isAuthenticated()" />
@@ -72,6 +80,10 @@
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AdminPasswdAuthenticationManager"
         security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/**"
             access="isAuthenticated()" />
@@ -82,6 +94,10 @@
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AuthenticationManager"
         security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/**"
             access="isAuthenticated()" />
@@ -92,6 +108,10 @@
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AuthenticationManager"
         security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/**"
             access="isAuthenticated()" />
@@ -102,6 +122,10 @@
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AuthenticationManager"
         security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/**"
             access="isAuthenticated()" />
@@ -112,6 +136,10 @@
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AuthenticationManager"
         security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/**"
             access="isAuthenticated()" />
@@ -122,6 +150,10 @@
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AuthenticationManager"
         security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/**"
             access="isAuthenticated()" />
@@ -132,6 +164,10 @@
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AuthenticationManager"
         security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/**"
             access="isAuthenticated()" />
@@ -142,16 +178,25 @@
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AuthenticationManager"
         security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/**"
             access="isAuthenticated()" />
         <security:http-basic entry-point-ref="LDBasicAuthenticationEntryPoint" />
-    </security:http>
+    </security:http>   
+    
     <security:http use-expressions="true" create-session="never"
         disable-url-rewriting="true" auto-config="false"
         access-decision-manager-ref="LDAccessDecisionManager"
         authentication-manager-ref="AuthenticationManager"
-        security-context-repository-ref="LDSecurityContextRepository" >
+        security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
         <!-- Protected areas -->
         <security:intercept-url pattern="/frontend.jsp"
             access="isAuthenticated()" />
@@ -160,9 +205,11 @@
         <security:intercept-url pattern="/mobile.jsp"
             access="isAuthenticated()" />
         <security:intercept-url pattern="/mobile/**"
-            access="isAuthenticated()" />      
+            access="isAuthenticated()" />
+        
         <!-- Login page -->
         <security:form-login login-page="/login.jsp"
+            login-processing-url="/j_spring_security_check"
             username-parameter="j_username" password-parameter="j_password"
             authentication-success-handler-ref="LDAuthenticationSuccessHandler"
             authentication-failure-handler-ref="LDAuthenticationFailureHandler" />

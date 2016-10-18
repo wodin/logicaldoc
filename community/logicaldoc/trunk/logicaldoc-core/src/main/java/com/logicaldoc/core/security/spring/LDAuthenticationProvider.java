@@ -1,6 +1,5 @@
 package com.logicaldoc.core.security.spring;
 
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 

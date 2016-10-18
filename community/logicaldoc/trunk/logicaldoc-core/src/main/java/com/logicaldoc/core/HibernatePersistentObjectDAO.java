@@ -322,14 +322,13 @@ public abstract class HibernatePersistentObjectDAO<T extends PersistentObject> i
 		return new Long(mytmplong).intValue();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public long queryForLong(String sql) {
 		try {
 			DataSource dataSource = (DataSource) Context.get().getBean("DataSource");
 			JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-			return jdbcTemplate.queryForLong(sql);
-		} catch (EmptyResultDataAccessException empty) {
+			return jdbcTemplate.queryForObject(sql, Long.class);
+		} catch (Throwable empty) {
 		}
 		return 0;
 	}
