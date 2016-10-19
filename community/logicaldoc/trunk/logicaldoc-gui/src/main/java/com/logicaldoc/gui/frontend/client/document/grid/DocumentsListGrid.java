@@ -8,7 +8,6 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
-import com.logicaldoc.gui.common.client.beans.GUIAttributeSet;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
@@ -70,8 +69,6 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		setCanFreezeFields(true);
 		setAutoFetchData(true);
 		setFilterOnKeypress(true);
-
-		GUIAttributeSet defaultAttributes = Session.get().getInfo().getDefaultAttributeSet();
 
 		ListGridField id = new ListGridField("id", I18N.message("id"), 50);
 		id.setHidden(true);
