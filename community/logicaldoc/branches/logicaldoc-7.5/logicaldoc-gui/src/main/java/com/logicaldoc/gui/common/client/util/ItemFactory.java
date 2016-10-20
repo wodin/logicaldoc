@@ -105,7 +105,7 @@ public class ItemFactory {
 		final DateItem date = new DateItem(itemName);
 		date.setTitle(label);
 		date.setUseTextField(true);
-		date.setUseMask(false);
+		date.setUseMask(true);
 		date.setShowPickerIcon(true);
 		date.setWidth(110);
 		date.setName(itemName);
