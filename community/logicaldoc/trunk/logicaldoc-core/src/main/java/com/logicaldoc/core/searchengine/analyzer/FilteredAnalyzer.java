@@ -27,11 +27,9 @@ import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.plugin.PluginRegistry;
 
 /**
- * This analyzer is a wrapper to be used to handle language specific analyzer
- * and to allow searches in subwords tokens, by using the
- * <code>WordDelimiterFilter</code>.
+ * This analyzer is a wrapper to be used to handle an ordered list of filters.
  * 
- * @author Marco Meschieri - Logical Objects
+ * @author Marco Meschieri - LogicalDOC
  * @since 7.1
  */
 public class FilteredAnalyzer extends AnalyzerWrapper {
@@ -72,6 +70,10 @@ public class FilteredAnalyzer extends AnalyzerWrapper {
 
 		ContextProperties config = Context.get().getProperties();
 
+		/*
+		 * Iterate over the configured filters and progressively create a new
+		 * TokenStream over ts
+		 */
 		for (String filter : order) {
 
 			// Prepare the configuration of the filter
