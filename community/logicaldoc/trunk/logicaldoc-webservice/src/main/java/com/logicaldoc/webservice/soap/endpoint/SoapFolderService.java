@@ -59,6 +59,7 @@ public class SoapFolderService extends AbstractService implements FolderService 
 			folderVO.setTemplateLocked(folder.getTemplateLocked());
 			folderVO.setHidden(folder.getHidden());
 			folderVO.setFoldRef(folder.getFoldRef());
+			folderVO.setStorage(folder.getStorage());
 			folder.updateAttributes(folderVO);
 
 			Folder f = folderDao.create(parentFolder, folderVO, true, transaction);

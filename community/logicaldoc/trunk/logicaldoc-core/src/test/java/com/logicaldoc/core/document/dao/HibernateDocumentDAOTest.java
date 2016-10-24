@@ -548,7 +548,13 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}
-
+	
+	@Test
+	public void testGetWorkspace() {
+		Assert.assertNull(dao.getWorkspace(9999));
+		Assert.assertEquals(3000L, dao.getWorkspace(3).getId());
+	}
+	
 	@Test
 	public void testFindDeleted() {
 		List<Document> deletedDocs = dao.findDeleted(1, 5);

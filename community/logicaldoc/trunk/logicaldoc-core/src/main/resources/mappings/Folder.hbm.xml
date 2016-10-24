@@ -26,6 +26,7 @@
     <property name="hidden" type="int" column="ld_hidden" not-null="true" />
     <property name="quotaDocs" type="long" column="ld_quotadocs" />
     <property name="quotaSize" type="long" column="ld_quotasize" />
+    <property name="storage" type="int" column="ld_storage" />
 		
     <set name="folderGroups" table="ld_foldergroup" cascade="all">
       <key column="ld_folderid" />

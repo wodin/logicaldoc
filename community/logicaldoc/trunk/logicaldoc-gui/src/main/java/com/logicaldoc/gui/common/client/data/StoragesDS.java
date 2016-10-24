@@ -12,7 +12,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class StoragesDS extends DataSource {
 
-	public StoragesDS() {
+	public StoragesDS(boolean withEmpty) {
 		setTitleField("name");
 		setRecordXPath("/list/storage");
 		DataSourceTextField id = new DataSourceTextField("id");
@@ -21,7 +21,7 @@ public class StoragesDS extends DataSource {
 		DataSourceTextField path = new DataSourceTextField("path");
 		DataSourceImageField write = new DataSourceImageField("write");
 		setFields(write, id, name, path);
-		setDataURL("data/storages.xml");
+		setDataURL("data/storages.xml?empty="+withEmpty);
 		setClientOnly(true);
 	}
 }

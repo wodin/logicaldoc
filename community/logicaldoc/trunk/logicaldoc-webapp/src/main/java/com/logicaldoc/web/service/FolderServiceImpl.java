@@ -181,6 +181,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setQuotaDocs(folder.getQuotaDocs());
 			f.setQuotaSize(folder.getQuotaSize());
 			f.setFoldRef(folder.getFoldRef());
+			f.setStorage(folder.getStorage());
 
 			if (f.isWorkspace()) {
 				SequenceDAO seqDao = (SequenceDAO) Context.get().getBean(SequenceDAO.class);
@@ -467,6 +468,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				f.setPosition(folder.getPosition());
 				f.setType(folder.getType());
 
+				if(f.isWorkspace())
+					f.setStorage(folder.getStorage());
+				
 				if (f.getName().trim().equals(folderName)) {
 					f.setName(folderName.trim());
 					transaction.setEvent(FolderEvent.CHANGED.toString());

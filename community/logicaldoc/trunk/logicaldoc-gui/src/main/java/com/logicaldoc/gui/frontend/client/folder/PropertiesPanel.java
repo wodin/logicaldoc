@@ -14,6 +14,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -75,6 +76,13 @@ public class PropertiesPanel extends FolderDetailTab {
 			position.addChangedHandler(changedHandler);
 		position.setRequired(true);
 
+		SelectItem storage = ItemFactory.newStorageSelector("storage", folder.getStorage());
+		storage.setDisabled(!folder.isWrite());
+		boolean storageVisible = folder.isWorkspace() && folder.getFoldRef() == null;
+		storage.setVisible(storageVisible);
+		if (folder.isWrite() && storageVisible)
+			storage.addChangedHandler(changedHandler);
+
 		TextItem description = ItemFactory.newTextItem("description", "description", folder.getDescription());
 		description.setWidth(250);
 		if (folder.hasPermission(Constants.PERMISSION_RENAME))
@@ -112,13 +120,14 @@ public class PropertiesPanel extends FolderDetailTab {
 
 		if (folder.isDefaultWorkspace()) {
 			if (Feature.enabled(Feature.BARCODES))
-				form.setItems(idItem, pathItem, position, creation, documents, subfolders, barcode);
+				form.setItems(idItem, pathItem, position, storage, creation, documents, subfolders, barcode);
 			else
-				form.setItems(idItem, pathItem, position, creation, documents, subfolders);
+				form.setItems(idItem, pathItem, position, storage, creation, documents, subfolders);
 		} else if (Feature.enabled(Feature.BARCODES))
-			form.setItems(idItem, pathItem, name, position, description, creation, documents, subfolders, barcode);
+			form.setItems(idItem, pathItem, name, position, storage, description, creation, documents, subfolders,
+					barcode);
 		else
-			form.setItems(idItem, pathItem, name, position, description, creation, documents, subfolders);
+			form.setItems(idItem, pathItem, name, position, storage, description, creation, documents, subfolders);
 
 		addMember(form);
 
@@ -131,6 +140,14 @@ public class PropertiesPanel extends FolderDetailTab {
 		if (!folder.isDefaultWorkspace()) {
 			folder.setName(vm.getValueAsString("name").replaceAll("/", ""));
 			folder.setDescription(vm.getValueAsString("description"));
+		}
+
+		if (folder.isWorkspace()) {
+			try {
+				folder.setStorage(Integer.parseInt(vm.getValueAsString("storage")));
+			} catch (Throwable t) {
+				folder.setStorage(null);
+			}
 		}
 		return !vm.hasErrors();
 	}

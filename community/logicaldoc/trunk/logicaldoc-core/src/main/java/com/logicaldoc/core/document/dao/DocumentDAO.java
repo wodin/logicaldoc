@@ -8,6 +8,7 @@ import com.logicaldoc.core.PersistentObjectDAO;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.History;
 import com.logicaldoc.core.document.TagCloud;
+import com.logicaldoc.core.folder.Folder;
 
 /**
  * This class is a DAO-service for documents.
@@ -389,4 +390,9 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * Gets the tag cloud for the given tenant
 	 */
 	public List<TagCloud> getTagCloud(String sid);
+	
+	/**
+	 * Retrieves, the workspace where the document(or alias) is stored
+	 */
+	public Folder getWorkspace(long docId);
 }
