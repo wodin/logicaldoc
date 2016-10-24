@@ -101,8 +101,6 @@ public class FoldersDataServlet extends HttpServlet {
 				query.append(" ld_name asc ");
 			else
 				query.append(" ld_creation desc ");
-
-			System.out.println(query.toString());
 			
 			SqlRowSet rs = folderDao.queryForRowSet(query.toString(), new Long[] { parentFolder.getId(), tenantId },
 					null);
