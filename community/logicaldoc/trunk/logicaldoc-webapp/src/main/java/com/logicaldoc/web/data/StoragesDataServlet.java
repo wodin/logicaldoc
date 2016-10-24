@@ -45,6 +45,15 @@ public class StoragesDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
+			if ("true".equals(request.getParameter("empty"))) {
+				writer.print("<storage>");
+				writer.print("<id />");
+				writer.print("<name />");
+				writer.print("<path />");
+				writer.print("<write>blank</write>");
+				writer.print("</storage>");
+			}
+
 			ContextProperties conf = Context.get().getProperties();
 
 			// Prepare the stores
@@ -53,10 +62,9 @@ public class StoragesDataServlet extends HttpServlet {
 				if (StringUtils.isNotEmpty(path)) {
 					writer.print("<storage>");
 					writer.print("<id>" + i + "</id>");
-					writer.print("<name><![CDATA[Store " + i + "]]></name>");
+					writer.print("<name><![CDATA[Storage " + i + "]]></name>");
 					writer.print("<path><![CDATA[" + path + "]]></path>");
-					writer.print("<write>" + (conf.getInt("store.write") == i ? "database_edit" : "blank")
-							+ "</write>");
+					writer.print("<write>" + (conf.getInt("store.write") == i ? "database_edit" : "blank") + "</write>");
 					writer.print("</storage>");
 				}
 			}

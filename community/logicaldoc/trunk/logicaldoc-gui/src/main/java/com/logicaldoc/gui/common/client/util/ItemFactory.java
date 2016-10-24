@@ -20,6 +20,7 @@ import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
 import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.StampsDS;
+import com.logicaldoc.gui.common.client.data.StoragesDS;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.TenantsDS;
@@ -214,6 +215,28 @@ public class ItemFactory {
 
 		item.setPickListFields(code, nameField);
 		item.setOptionDataSource(new CharsetsDS());
+
+		return item;
+	}
+
+	public static SelectItem newStorageSelector(String name, Integer value) {
+		SelectItem item = new SelectItem();
+		item.setName(filterItemName(name));
+		item.setTitle(I18N.message("storage"));
+		item.setWrapTitle(false);
+		item.setHintStyle("hint");
+		item.setDisplayField("name");
+		item.setValueField("id");
+
+		ListGridField nameField = new ListGridField("name", I18N.message("name"));
+		nameField.setWidth("*");
+		nameField.setShowTitle(false);
+
+		item.setPickListFields(nameField);
+		item.setOptionDataSource(new StoragesDS(true));
+
+		if (value != null)
+			item.setValue(value.toString());
 
 		return item;
 	}

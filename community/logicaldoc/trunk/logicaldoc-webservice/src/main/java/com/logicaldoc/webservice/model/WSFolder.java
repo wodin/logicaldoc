@@ -68,12 +68,15 @@ public class WSFolder implements Serializable {
 	@WSDoc(description = "<b>0</b> = visible, <b>1</b> = hidden")
 	private int hidden = 0;
 
-	@WSDoc(description = "the referenced folder, used in case of folder alias")
+	@WSDoc(description = "the referenced folder, used in case of folder alias", required = false)
 	private Long foldRef = null;
 
 	@WSDoc(description = "array of attributes", required = false)
 	private WSAttribute[] attributes = new WSAttribute[0];
 
+	@WSDoc(description = "the storage to use for new files. Valid only in case of workspace.", required = false)
+	private Integer storage = null;
+	
 	public void addAttribute(WSAttribute att) {
 		List<WSAttribute> buf = (List<WSAttribute>) Arrays.asList(getAttributes());
 		buf.add(att);
@@ -109,6 +112,7 @@ public class WSFolder implements Serializable {
 		wsFolder.setPosition(folder.getPosition());
 		wsFolder.setTemplateLocked(folder.getTemplateLocked());
 		wsFolder.setHidden(folder.getHidden());
+		wsFolder.setStorage(folder.getStorage());
 
 		if (folder.getTemplate() != null)
 			wsFolder.setTemplateId(folder.getTemplate().getId());
@@ -276,5 +280,13 @@ public class WSFolder implements Serializable {
 
 	public void setFoldRef(Long foldRef) {
 		this.foldRef = foldRef;
+	}
+
+	public Integer getStorage() {
+		return storage;
+	}
+
+	public void setStorage(Integer storage) {
+		this.storage = storage;
 	}
 }

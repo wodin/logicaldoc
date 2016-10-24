@@ -978,11 +978,12 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 	@Override
 	public void cleanExpiredTransactions() {
 		// Retrieve the actual registered locks on transactions
-		List<String> transactionIds = queryForList("select ld_string1 from ld_generic where ld_type='lock' and ld_string1 is not null",
-				String.class);
+		List<String> transactionIds = queryForList(
+				"select ld_string1 from ld_generic where ld_type='lock' and ld_string1 is not null", String.class);
 		String transactionIdsStr = transactionIds.toString().replace("[", "('").replace("]", "')").replace(", ", "','");
 
-		bulkUpdate("set transactionId=null where transactionId is not null and transactionId not in "+transactionIdsStr, null);
+		bulkUpdate("set transactionId=null where transactionId is not null and transactionId not in "
+				+ transactionIdsStr, null);
 	}
 
 	public void setTenantDAO(TenantDAO tenantDAO) {
@@ -1078,5 +1079,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		if (doc != null && doc.getDocRef() != null)
 			doc = findById(doc.getDocRef());
 		return doc;
+	}
+
+	@Override
+	public Folder getWorkspace(long docId) {
+		Document doc = findById(docId);
+		if (doc == null)
+			return null;
+
+		return folderDAO.findWorkspace(doc.getFolder().getId());
 	}
 }

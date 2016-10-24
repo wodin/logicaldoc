@@ -61,6 +61,8 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	private Long foldRef = null;
 	
+	private Integer storage = null;
+	
 	public GUIFolder() {
 
 	}
@@ -290,5 +292,13 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	public void setFoldRef(Long foldRef) {
 		this.foldRef = foldRef;
+	}
+
+	public Integer getStorage() {
+		return storage;
+	}
+
+	public void setStorage(Integer storage) {
+		this.storage = storage;
 	}
 }

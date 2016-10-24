@@ -62,7 +62,7 @@ public class RepositoriesPanel extends VLayout {
 		tab1 = new Tab();
 		tab1.setTitle(I18N.message("stores"));
 		tab1.setID("repos");
-		tab1.setPane(new StoresPanel());
+		tab1.setPane(new StoragesPanel());
 
 		tabs.setTabs(tab1, tab2);
 

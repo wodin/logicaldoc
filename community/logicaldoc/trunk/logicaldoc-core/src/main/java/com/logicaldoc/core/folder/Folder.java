@@ -30,7 +30,7 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	public static final int TYPE_DEFAULT = 0;
 
 	public static final int TYPE_WORKSPACE = 1;
-	
+
 	public static final int TYPE_ALIAS = 2;
 
 	private long id = 0;
@@ -74,6 +74,8 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	private Long quotaSize = null;
 
 	private Long foldRef;
+
+	private Integer storage;
 
 	public Folder(String name) {
 		this.name = name;
@@ -287,5 +289,13 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	public void setFoldRef(Long foldRef) {
 		this.foldRef = foldRef;
+	}
+
+	public Integer getStorage() {
+		return storage;
+	}
+
+	public void setStorage(Integer storage) {
+		this.storage = storage;
 	}
 }

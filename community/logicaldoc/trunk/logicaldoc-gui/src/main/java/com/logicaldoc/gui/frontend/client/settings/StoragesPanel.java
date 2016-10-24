@@ -35,12 +35,12 @@ import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
- * This class shows the stores list and informations.
+ * This class shows the storages list and informations.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
-public class StoresPanel extends VLayout {
+public class StoragesPanel extends VLayout {
 
 	public static final int OPERATION_NONE = 0;
 
@@ -50,13 +50,13 @@ public class StoresPanel extends VLayout {
 
 	private SettingServiceAsync service = (SettingServiceAsync) GWT.create(SettingService.class);
 
-	private ListGrid stores;
+	private ListGrid storages;
 
 	private ToolStrip toolStrip;
 
 	private FormItem compression;
 
-	public StoresPanel() {
+	public StoragesPanel() {
 		setWidth100();
 		setHeight100();
 		setMembersMargin(5);
@@ -120,15 +120,15 @@ public class StoresPanel extends VLayout {
 	}
 
 	private void refresh() {
-		if (stores != null)
-			removeMember(stores);
+		if (storages != null)
+			removeMember(storages);
 
 		compression.setValue("true".equals(Session.get().getConfig("store.compress")) ? "yes" : "no");
 
-		stores = new ListGrid();
-		stores.setEmptyMessage(I18N.message("notitemstoshow"));
-		stores.setEmptyMessage(I18N.message("norecords"));
-		stores.setSelectionType(SelectionStyle.SINGLE);
+		storages = new ListGrid();
+		storages.setEmptyMessage(I18N.message("notitemstoshow"));
+		storages.setEmptyMessage(I18N.message("norecords"));
+		storages.setSelectionType(SelectionStyle.SINGLE);
 		ListGridField id = new ListGridField("id", " ", 20);
 		ListGridField name = new ListGridField("name", I18N.message("name"), 100);
 		ListGridField path = new ListGridField("path", I18N.message("path"));
@@ -143,10 +143,10 @@ public class StoresPanel extends VLayout {
 		write.setImageURLPrefix(Util.imagePrefix());
 		write.setImageURLSuffix(".png");
 		write.setCanFilter(false);
-		stores.setFields(id, write, name, path);
-		stores.setDataSource(new StoragesDS());
-		stores.setAutoFetchData(true);
-		stores.addCellContextClickHandler(new CellContextClickHandler() {
+		storages.setFields(id, write, name, path);
+		storages.setDataSource(new StoragesDS(false));
+		storages.setAutoFetchData(true);
+		storages.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
 				showContextMenu();
@@ -154,7 +154,7 @@ public class StoresPanel extends VLayout {
 			}
 		});
 
-		addMember(stores);
+		addMember(storages);
 	}
 
 	/**
@@ -165,13 +165,13 @@ public class StoresPanel extends VLayout {
 		makeWrite.setTitle(I18N.message("makedefwritestore"));
 		makeWrite.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				ListGridRecord[] recs = stores.getRecords();
+				ListGridRecord[] recs = storages.getRecords();
 				for (ListGridRecord rec : recs) {
 					rec.setAttribute("write", "blank");
-					stores.refreshRow(stores.getRowNum(rec));
+					storages.refreshRow(storages.getRowNum(rec));
 				}
-				stores.getSelectedRecord().setAttribute("write", "database_edit");
-				stores.refreshRow(stores.getRowNum(stores.getSelectedRecord()));
+				storages.getSelectedRecord().setAttribute("write", "database_edit");
+				storages.refreshRow(storages.getRowNum(storages.getSelectedRecord()));
 			}
 		});
 
@@ -183,7 +183,7 @@ public class StoresPanel extends VLayout {
 	private void onSave() {
 		final List<GUIParameter> settings = new ArrayList<GUIParameter>();
 		settings.add(new GUIParameter("store.compress", "yes".equals(compression.getValue()) ? "true" : "false"));
-		ListGridRecord[] records = stores.getRecords();
+		ListGridRecord[] records = storages.getRecords();
 		for (ListGridRecord rec : records) {
 			String id = rec.getAttributeAsString("id").trim();
 			settings.add(new GUIParameter("store." + id + ".dir", rec.getAttributeAsString("path").trim()));
@@ -213,15 +213,15 @@ public class StoresPanel extends VLayout {
 
 	private void onAddStore() {
 		for (int i = 1; i < 99; i++) {
-			Record record = stores.getRecordList().find("id", Integer.toString(i));
+			Record record = storages.getRecordList().find("id", Integer.toString(i));
 			if (record == null) {
 				ListGridRecord newStore = new ListGridRecord();
 				newStore.setAttribute("id", Integer.toString(i));
 				newStore.setAttribute("name", "Store " + i);
 				newStore.setAttribute("write", "blank");
-				
-				stores.getDataSource().addData(newStore);
-				stores.redraw();
+
+				storages.getDataSource().addData(newStore);
+				storages.redraw();
 				break;
 			}
 		}
