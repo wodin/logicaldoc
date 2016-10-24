@@ -59,6 +59,7 @@ public class FoldersDataServlet extends HttpServlet {
 
 			Session session = ServiceUtil.validateSession(request);
 			long tenantId = session.getTenantId();
+			String tenantName = session.getTenantName();
 
 			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			String parent = "" + Folder.ROOTID;
@@ -95,8 +96,14 @@ public class FoldersDataServlet extends HttpServlet {
 				String idsStr = accessibleIds.toString().replace('[', '(').replace(']', ')');
 				query.append(" and ld_id in " + idsStr);
 			}
-			query.append(" order by ld_position asc, ld_name asc");
+			query.append(" order by ld_position asc, ");
+			if ("name".equals(context.getProperties().getProperty(tenantName + ".gui.folder.order")))
+				query.append(" ld_name asc ");
+			else
+				query.append(" ld_creation desc ");
 
+			System.out.println(query.toString());
+			
 			SqlRowSet rs = folderDao.queryForRowSet(query.toString(), new Long[] { parentFolder.getId(), tenantId },
 					null);
 			if (rs != null)
