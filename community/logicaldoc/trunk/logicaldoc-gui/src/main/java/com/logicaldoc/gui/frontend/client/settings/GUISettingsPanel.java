@@ -130,6 +130,9 @@ public class GUISettingsPanel extends VLayout {
 		RadioGroupItem doctab = ItemFactory.newBooleanSelector("doctab", "doctab");
 		doctab.setValueMap("properties", "preview");
 
+		RadioGroupItem foldOrdering = ItemFactory.newBooleanSelector("foldordering", "foldordeding");
+		foldOrdering.setValueMap("name", "date");
+
 		TextItem extattr = ItemFactory.newTextItem("extattr", I18N.message("extendedattrs"), null);
 		extattr.setHint(I18N.message("separatedcomma"));
 		extattr.setWidth(400);
@@ -151,8 +154,8 @@ public class GUISettingsPanel extends VLayout {
 		sessionheartbeat.setWrapTitle(false);
 
 		parametersForm.setItems(welcome, previewSize, previewTimeout, thumbSize, thumbQuality, tileSize, tileQuality,
-				uploadmax, disallow, ondoubleclick, doctab, searchhits, extattr, webcontentfolders, savelogin,
-				sessiontimeout, sessionheartbeat);
+				uploadmax, disallow, ondoubleclick, doctab, foldOrdering, searchhits, extattr, webcontentfolders,
+				savelogin, sessiontimeout, sessionheartbeat);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().endsWith("gui.welcome"))
@@ -175,6 +178,8 @@ public class GUISettingsPanel extends VLayout {
 				ondoubleclick.setValue(p.getValue());
 			if (p.getName().endsWith("gui.document.tab"))
 				doctab.setValue(p.getValue());
+			if (p.getName().endsWith("folder.order"))
+				foldOrdering.setValue(p.getValue());			
 			if (p.getName().endsWith("upload.maxsize"))
 				uploadmax.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("upload.disallow") && p.getValue() != null)
@@ -220,6 +225,8 @@ public class GUISettingsPanel extends VLayout {
 							"ondoubleclick").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.document.tab", values.get(
 							"doctab").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.folder.order", values.get(
+							"foldordering").toString()));
 					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".upload.disallow", values.get(
 							"disallow").toString()));
