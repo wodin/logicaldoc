@@ -1,6 +1,7 @@
 package com.logicaldoc.core.metadata;
 
 import java.util.Collection;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -81,5 +82,12 @@ public class HibernateAttributeSetDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals("test3", set.getName());
 		Assert.assertTrue(set.getAttributes().containsKey("a1"));
 		Assert.assertTrue(set.getAttributes().containsKey("a2"));
+	}
+
+	@Test
+	public void testFindAttributes() {
+		Map<String, Attribute> attributes = dao.findAttributes(1L, null);
+		Assert.assertEquals(8, attributes.size());
+		Assert.assertTrue(attributes.containsKey("sourceAuthor"));
 	}
 }

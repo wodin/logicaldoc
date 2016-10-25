@@ -46,8 +46,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 
 	private LockManager lockManager;
 
-	private TemplateDAO templateDao;
-
 	@Before
 	public void setUp() throws Exception {
 		super.setUp();
@@ -56,7 +54,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		// it is an HibernateDocumentDAO
 		dao = (DocumentDAO) context.getBean("DocumentDAO");
 		folderDao = (FolderDAO) context.getBean("FolderDAO");
-		templateDao = (TemplateDAO) context.getBean("TemplateDAO");
 		lockManager = (LockManager) context.getBean("LockManager");
 	}
 

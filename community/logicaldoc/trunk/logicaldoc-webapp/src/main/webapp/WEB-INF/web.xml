@@ -276,6 +276,10 @@
     <servlet-class>com.logicaldoc.web.data.ContactsDataServlet</servlet-class>
   </servlet>
   <servlet>
+    <servlet-name>AttributesData</servlet-name>
+    <servlet-class>com.logicaldoc.web.data.AttributesDataServlet</servlet-class>
+  </servlet>
+  <servlet>
     <servlet-name>ContactService</servlet-name>
     <servlet-class>com.logicaldoc.web.service.ContactServiceImpl</servlet-class>
   </servlet>
@@ -528,6 +532,10 @@
     <servlet-name>ContactsData</servlet-name>
     <url-pattern>/data/contacts.xml</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>AttributesData</servlet-name>
+    <url-pattern>/data/attributes.xml</url-pattern>
+  </servlet-mapping>  
   <servlet-mapping>
     <servlet-name>DropboxData</servlet-name>
     <url-pattern>/data/dropbox.xml</url-pattern>

@@ -96,7 +96,7 @@ public class ItemFactory {
 	}
 
 	/**
-	 * Creates a new DateItem for the Extended Attributes.
+	 * Creates a new DateItem for the Extended AttributesDS.
 	 * 
 	 * @param name The item name (mandatory)
 	 */
@@ -387,10 +387,10 @@ public class ItemFactory {
 			item.setOptionDataSource(options);
 		item.setAutoFetchData(true);
 
-		IButton tagButton = new IButton();
-		tagButton.setIcon("[SKIN]/headerIcons/close.gif");
-		tagButton.setIconOrientation("right");
-		item.setButtonProperties(tagButton);
+		IButton closeButton = new IButton();
+		closeButton.setIcon("[SKIN]/headerIcons/close.gif");
+		closeButton.setIconOrientation("right");
+		item.setButtonProperties(closeButton);
 
 		if (values != null)
 			item.setValue(values);
@@ -581,7 +581,7 @@ public class ItemFactory {
 	}
 
 	/**
-	 * Creates a new TextItem for the Extended Attributes.
+	 * Creates a new TextItem for the Extended AttributesDS.
 	 */
 	public static FormItem newStringItemForAttribute(GUIAttribute att) {
 		// We cannot use spaces in items name
@@ -714,7 +714,7 @@ public class ItemFactory {
 	}
 
 	/**
-	 * Creates a new IntegerItem for the Extended Attributes.
+	 * Creates a new IntegerItem for the Extended AttributesDS.
 	 * 
 	 * @param name The item name (mandatory)
 	 * @param value The item value (optional)
@@ -1085,7 +1085,7 @@ public class ItemFactory {
 	}
 
 	/**
-	 * Creates a new FloatItem for the Extended Attributes.
+	 * Creates a new FloatItem for the Extended AttributesDS.
 	 * 
 	 * @param name The item name (mandatory)
 	 * @param value The item value (optional)
