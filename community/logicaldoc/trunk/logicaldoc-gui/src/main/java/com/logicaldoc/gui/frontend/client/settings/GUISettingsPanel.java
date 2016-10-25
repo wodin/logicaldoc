@@ -9,6 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIParameter;
+import com.logicaldoc.gui.common.client.data.AttributesDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
@@ -23,6 +24,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -133,9 +135,11 @@ public class GUISettingsPanel extends VLayout {
 		RadioGroupItem foldOrdering = ItemFactory.newBooleanSelector("foldordering", "foldordeding");
 		foldOrdering.setValueMap("name", "date");
 
-		TextItem extattr = ItemFactory.newTextItem("extattr", I18N.message("extendedattrs"), null);
-		extattr.setHint(I18N.message("separatedcomma"));
+		final MultiComboBoxItem extattr = ItemFactory.newMultiComboBoxItem("extattr", "extendedattrs", new AttributesDS(),
+				null);
 		extattr.setWidth(400);
+		extattr.setDisplayField("name");
+		extattr.setValueField("name");
 
 		TextItem webcontentfolders = ItemFactory.newTextItem("webcontentfolders", I18N.message("webcontentfolders"),
 				null);
@@ -179,15 +183,20 @@ public class GUISettingsPanel extends VLayout {
 			if (p.getName().endsWith("gui.document.tab"))
 				doctab.setValue(p.getValue());
 			if (p.getName().endsWith("folder.order"))
-				foldOrdering.setValue(p.getValue());			
+				foldOrdering.setValue(p.getValue());
 			if (p.getName().endsWith("upload.maxsize"))
 				uploadmax.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("upload.disallow") && p.getValue() != null)
 				disallow.setValue(p.getValue().trim());
 			if (p.getName().endsWith("search.hits"))
 				searchhits.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().endsWith("search.extattr"))
-				extattr.setValue(p.getValue());
+			if (p.getName().endsWith("search.extattr")) {
+				String[] attributes = p.getValue().split("\\,");
+				for (int i = 0; i < attributes.length; i++) {
+					attributes[i] = attributes[i].trim();
+				}
+				extattr.setValue((Object[]) attributes);
+			}
 			if (p.getName().endsWith("gui.webcontent.folders"))
 				webcontentfolders.setValue(p.getValue());
 			if (p.getName().endsWith("session.timeout"))
@@ -232,14 +241,25 @@ public class GUISettingsPanel extends VLayout {
 							"disallow").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".search.hits", values
 							.get("searchhits").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName() + ".search.extattr", values
-							.get("extattr").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.webcontent.folders", values.get(
 							"webcontentfolders").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".session.timeout", values.get(
 							"sessiontimeout").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".session.heartbeat", values.get(
 							"sessionheartbeat").toString()));
+
+					if (values.get("extattr") == null || "".equals(values.get("extattr"))) {
+						params.add(new GUIParameter(Session.get().getTenantName() + ".search.extattr", null));
+					} else {
+						StringBuffer value = new StringBuffer();
+						String[] attrs = extattr.getValues();
+						for (String att : attrs) {
+							if (value.length() > 0)
+								value.append(",");
+							value.append(att.trim());
+						}
+						params.add(new GUIParameter(Session.get().getTenantName() + ".search.extattr", value.toString()));
+					}
 
 					// Update the current session parameters.
 					for (GUIParameter p : params)
