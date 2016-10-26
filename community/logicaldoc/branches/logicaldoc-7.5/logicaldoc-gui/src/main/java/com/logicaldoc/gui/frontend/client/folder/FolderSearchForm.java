@@ -51,10 +51,10 @@ public abstract class FolderSearchForm extends VLayout {
 		form.setValuesManager(vm);
 		form.setTitleOrientation(TitleOrientation.LEFT);
 		form.setNumCols(4);
-		form.setWidth(300);
+		form.setMaxWidth(250);
 
 		TextItem name = ItemFactory.newTextItem("name", "name", null);
-		name.setColSpan(2);
+		name.setColSpan(4);
 		name.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -66,7 +66,7 @@ public abstract class FolderSearchForm extends VLayout {
 		});
 
 		TextItem description = ItemFactory.newTextItem("description", "description", null);
-		description.setColSpan(2);
+		description.setColSpan(4);
 		description.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -77,16 +77,16 @@ public abstract class FolderSearchForm extends VLayout {
 			}
 		});
 
-		SelectItem dateOperator = ItemFactory.newDateOperator("dateOperator", "createdon");
+		SelectItem dateOperator = ItemFactory.newDateOperator("dateOperator", "created");
 		DateItem creation = ItemFactory.newDateItem("creation", null);
 		creation.setEndRow(true);
 
 		folder = new FolderSelector(null, true);
-		folder.setColSpan(3);
+		folder.setColSpan(4);
 		folder.setWidth(200);
 
 		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders"));
-		subfolders.setEndRow(true);
+		subfolders.setColSpan(4);
 
 		IButton search = new IButton(I18N.message("search"));
 		search.setAutoFit(true);
