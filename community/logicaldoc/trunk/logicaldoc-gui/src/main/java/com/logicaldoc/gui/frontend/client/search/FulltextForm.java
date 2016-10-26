@@ -23,8 +23,8 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
-import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.MiniDateRangeItem;
 import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.PickerIcon;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -48,15 +48,11 @@ import com.smartgwt.client.widgets.layout.VLayout;
 public class FulltextForm extends VLayout implements SearchObserver {
 	private static final String SEARCHINHITS = "searchinhits";
 
-	private static final String BEFORE = "before";
+	private static final String CREATION_DATE_RANGE = "creationDateRange";
 
-	private static final String PUBLISHEDON = "publishedon";
-
-	private static final String CREATEDON = "createdon";
+	private static final String PUBLICATION_DATE_RANGE = "publicationDateRange";
 
 	private static final String LESSTHAN = "lessthan";
-
-	private static final String NOLIMIT = "nolimit";
 
 	private static final String NO_LANGUAGE = "";
 
@@ -72,7 +68,6 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 	public FulltextForm() {
 		setHeight100();
-		setWidth100();
 		setOverflow(Overflow.AUTO);
 
 		setMembersMargin(3);
@@ -81,8 +76,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		DynamicForm form1 = new DynamicForm();
 		form1.setValuesManager(vm);
 		form1.setTitleOrientation(TitleOrientation.LEFT);
-		form1.setNumCols(4);
-		form1.setWidth(300);
+		form1.setNumCols(3);
 
 		PickerIcon searchPicker = new PickerIcon(PickerIcon.SEARCH, new FormItemClickHandler() {
 			public void onFormItemClick(FormItemIconClickEvent event) {
@@ -92,10 +86,9 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		TextItem expression = ItemFactory.newTextItem("expression", "expression", I18N.message("search") + "...");
 		expression.setWidth(180);
-		expression.setColSpan(2);
+		expression.setColSpan(3);
 		expression.setRequired(true);
 		expression.setIcons(searchPicker);
-		expression.setEndRow(true);
 		expression.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -119,11 +112,11 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 		SelectItem language = ItemFactory.newLanguageSelector("language", true, false);
 		language.setDefaultValue(NO_LANGUAGE);
-		language.setColSpan(4);
-		language.setEndRow(true);
+		language.setColSpan(3);
 
 		SelectItem template = ItemFactory.newTemplateSelector(true, null);
 		template.setMultiple(false);
+		template.setColSpan(3);
 		template.addChangedHandler(new ChangedHandler() {
 			@Override
 			public void onChanged(ChangedEvent event) {
@@ -141,49 +134,39 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		folder.setColSpan(3);
 		folder.setWidth(200);
 
-		form1.setItems(expression, language, searchinhits, folder, subfolders, template);
-		addMember(form1);
-
 		SelectItem sizeOperator = ItemFactory.newSizeOperator("sizeOperator", "size");
-
 		IntegerItem size = ItemFactory.newIntegerItem("size", " ", null);
-		size.setWidth(60);
+		folder.setWidth(60);
 		size.setShowTitle(false);
-		size.setHint("(KB)");
+		size.setHint("KB");
 		size.setEndRow(true);
 
-		SelectItem dateSelector = new SelectItem();
-		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put(CREATEDON, I18N.message(CREATEDON));
-		opts.put(PUBLISHEDON, I18N.message(PUBLISHEDON));
-		dateSelector.setValueMap(opts);
-		dateSelector.setName("dateSelector");
-		dateSelector.setTitle(I18N.message("date"));
-		dateSelector.setValue(CREATEDON);
-		dateSelector.setWidth(80);
+		MiniDateRangeItem creationDateRange = ItemFactory.newMiniDateRangeItem(CREATION_DATE_RANGE,
+				I18N.message("created"));
+		creationDateRange.setEndRow(true);
+		creationDateRange.setColSpan(3);
 
-		SelectItem dateOperator = ItemFactory.newDateOperator("dateOperator", null);
+		MiniDateRangeItem publicationDateRange = ItemFactory.newMiniDateRangeItem(PUBLICATION_DATE_RANGE,
+				I18N.message("published"));
+		publicationDateRange.setEndRow(true);
+		publicationDateRange.setColSpan(3);
 
-		DateItem date = ItemFactory.newDateItem("date", null);
+		form1.setItems(expression, language, searchinhits, folder, sizeOperator, size, creationDateRange,
+				publicationDateRange, template);
 
-		DynamicForm form2 = new DynamicForm();
-		form2.setValuesManager(vm);
-		form2.setTitleOrientation(TitleOrientation.LEFT);
-		form2.setNumCols(4);
-		form2.setWidth(300);
-		form2.setItems(sizeOperator, size, dateSelector, dateOperator, date);
-		addMember(form2);
+		addMember(form1);
 
 		prepareFields(null);
 
 		Search.get().addObserver(this);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("rawtypes")
 	private void search() {
 		if (!vm.validate())
 			return;
 
+		@SuppressWarnings("unchecked")
 		Map<String, Object> values = vm.getValues();
 
 		GUISearchOptions options = new GUISearchOptions();
@@ -203,28 +186,39 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		}
 
 		Long size = vm.getValueAsString("size") != null ? new Long(vm.getValueAsString("size")) : null;
-		if (size != null && !NOLIMIT.equals(vm.getValueAsString("sizeOperator"))) {
+		if (size != null) {
 			if (LESSTHAN.equals(vm.getValueAsString("sizeOperator")))
 				options.setSizeMax(size * 1024);
-			else if (!NOLIMIT.equals(vm.getValueAsString("sizeOperator")))
+			else
 				options.setSizeMin(size * 1024);
 		}
 
-		String operator = vm.getValueAsString("dateOperator");
-		Date date = (Date) vm.getValues().get("date");
-		if (date != null && !NOLIMIT.equals(operator)) {
-			String whatDate = vm.getValueAsString("dateSelector");
-			if (CREATEDON.equals(whatDate)) {
-				if (BEFORE.equals(operator))
-					options.setCreationTo(date);
-				else if (!NOLIMIT.equals(operator))
-					options.setCreationFrom(date);
-			} else {
-				if (BEFORE.equals(operator))
-					options.setDateTo(date);
-				else if (!NOLIMIT.equals(operator))
-					options.setDateFrom(date);
-			}
+		/*
+		 * Check the creation date
+		 */
+		Map range = (Map) values.get(CREATION_DATE_RANGE);
+		if (range != null) {
+			Date start = (Date) range.get("start");
+			if (start != null)
+				options.setCreationFrom(start);
+
+			Date end = (Date) range.get("end");
+			if (end != null)
+				options.setCreationTo(end);
+		}
+
+		/*
+		 * Check the publication date
+		 */
+		range = (Map) values.get(PUBLICATION_DATE_RANGE);
+		if (range != null) {
+			Date start = (Date) range.get("start");
+			if (start != null)
+				options.setDateFrom(start);
+
+			Date end = (Date) range.get("end");
+			if (end != null)
+				options.setDateTo(end);
 		}
 
 		if (values.containsKey("template") && !((String) values.get("template")).isEmpty())

@@ -245,8 +245,6 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		if (searchOptions.getType() == SearchOptions.TYPE_FULLTEXT) {
 			op.setDateFrom(((FulltextSearchOptions) searchOptions).getDateFrom());
 			op.setDateTo(((FulltextSearchOptions) searchOptions).getDateTo());
-			op.setSourceDateFrom(((FulltextSearchOptions) searchOptions).getSourceDateFrom());
-			op.setSourceDateTo(((FulltextSearchOptions) searchOptions).getSourceDateTo());
 			op.setCreationFrom(((FulltextSearchOptions) searchOptions).getCreationFrom());
 			op.setCreationTo(((FulltextSearchOptions) searchOptions).getCreationTo());
 			op.setExpressionLanguage(((FulltextSearchOptions) searchOptions).getExpressionLanguage());
@@ -300,8 +298,6 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 		if (options.getType() == SearchOptions.TYPE_FULLTEXT) {
 			((FulltextSearchOptions) searchOptions).setDateFrom(options.getDateFrom());
 			((FulltextSearchOptions) searchOptions).setDateTo(options.getDateTo());
-			((FulltextSearchOptions) searchOptions).setSourceDateFrom(options.getSourceDateFrom());
-			((FulltextSearchOptions) searchOptions).setSourceDateTo(options.getSourceDateTo());
 			((FulltextSearchOptions) searchOptions).setCreationFrom(options.getCreationFrom());
 			((FulltextSearchOptions) searchOptions).setCreationTo(options.getCreationTo());
 			((FulltextSearchOptions) searchOptions).setExpressionLanguage(options.getExpressionLanguage());

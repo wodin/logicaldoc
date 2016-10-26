@@ -49,6 +49,7 @@ import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
+import com.smartgwt.client.widgets.form.fields.MiniDateRangeItem;
 import com.smartgwt.client.widgets.form.fields.MultiComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
@@ -89,9 +90,7 @@ public class ItemFactory {
 		date.setShowPickerIcon(true);
 		date.setHintStyle("hint");
 		date.setWidth(110);
-
 		date.setDateFormatter(getDateDisplayFormat());
-
 		return date;
 	}
 
@@ -100,20 +99,33 @@ public class ItemFactory {
 	 * 
 	 * @param name The item name (mandatory)
 	 */
-	public static DateItem newDateItemForAttribute(String name, String label) {
+	public static DateItem newDateItemForAttribute(String name, String title) {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		final DateItem date = new DateItem(itemName);
-		date.setTitle(label);
+		date.setTitle(title);
 		date.setUseTextField(true);
 		date.setUseMask(true);
 		date.setShowPickerIcon(true);
 		date.setWidth(110);
 		date.setName(itemName);
 		date.setHintStyle("hint");
-
 		date.setDateFormatter(getDateDisplayFormat());
+		return date;
+	}
 
+	public static MiniDateRangeItem newMiniDateRangeItem(String name, String title) {
+		MiniDateRangeItem date = new MiniDateRangeItem(filterItemName(name));
+		if (title != null)
+			date.setTitle(I18N.message(title));
+		else
+			date.setShowTitle(false);
+		date.setShowPickerIcon(true);
+		date.setAllowRelativeDates(false);
+		date.setHintStyle("hint");
+		date.setWidth(180);
+		date.setDateFormatter(getDateDisplayFormat());
+		date.setDateDisplayFormat(getDateDisplayFormat());
 		return date;
 	}
 
@@ -148,7 +160,6 @@ public class ItemFactory {
 	public static SelectItem newDateOperator(String name, String title) {
 		SelectItem dateOperator = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("nolimits", I18N.message("nolimits"));
 		opts.put("before", I18N.message("before"));
 		opts.put("after", I18N.message("after"));
 		dateOperator.setValueMap(opts);
@@ -157,8 +168,7 @@ public class ItemFactory {
 			dateOperator.setTitle(I18N.message(title));
 		else
 			dateOperator.setShowTitle(false);
-		dateOperator.setDefaultValue("nolimits");
-		dateOperator.setWidth(80);
+		dateOperator.setWidth(100);
 		dateOperator.setHintStyle("hint");
 		return dateOperator;
 	}
@@ -166,7 +176,6 @@ public class ItemFactory {
 	public static SelectItem newSizeOperator(String name, String title) {
 		SelectItem sizeOperator = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("nolimits", I18N.message("nolimits"));
 		opts.put("lessthan", I18N.message("lessthan"));
 		opts.put("greaterthan", I18N.message("greaterthan"));
 		sizeOperator.setValueMap(opts);
@@ -175,8 +184,7 @@ public class ItemFactory {
 			sizeOperator.setTitle(I18N.message(title));
 		else
 			sizeOperator.setShowTitle(false);
-		sizeOperator.setDefaultValue("nolimits");
-		sizeOperator.setWidth(85);
+		sizeOperator.setWidth(100);
 		sizeOperator.setHintStyle("hint");
 		return sizeOperator;
 	}

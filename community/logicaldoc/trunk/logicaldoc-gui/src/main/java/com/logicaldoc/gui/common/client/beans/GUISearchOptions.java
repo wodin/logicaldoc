@@ -52,10 +52,6 @@ public class GUISearchOptions implements Serializable {
 
 	private Date dateTo = null;
 
-	private Date sourceDateFrom = null;
-
-	private Date sourceDateTo = null;
-
 	private Date creationFrom = null;
 
 	private Date creationTo = null;
@@ -156,22 +152,6 @@ public class GUISearchOptions implements Serializable {
 
 	public void setSizeMax(Long sizeMax) {
 		this.sizeMax = sizeMax;
-	}
-
-	public Date getSourceDateFrom() {
-		return sourceDateFrom;
-	}
-
-	public void setSourceDateFrom(Date sourceDateFrom) {
-		this.sourceDateFrom = sourceDateFrom;
-	}
-
-	public Date getSourceDateTo() {
-		return sourceDateTo;
-	}
-
-	public void setSourceDateTo(Date sourceDateTo) {
-		this.sourceDateTo = sourceDateTo;
 	}
 
 	public boolean isSearchInSubPath() {

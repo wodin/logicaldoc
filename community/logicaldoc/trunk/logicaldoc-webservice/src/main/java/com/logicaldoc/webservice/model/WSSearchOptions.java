@@ -62,10 +62,6 @@ public class WSSearchOptions implements Comparable<WSSearchOptions> {
 
 	private String dateTo = null;
 
-	private String sourceDateFrom = null;
-
-	private String sourceDateTo = null;
-
 	private String creationFrom = null;
 
 	private String creationTo = null;
@@ -241,22 +237,6 @@ public class WSSearchOptions implements Comparable<WSSearchOptions> {
 		this.dateTo = dateTo;
 	}
 
-	public String getSourceDateFrom() {
-		return sourceDateFrom;
-	}
-
-	public void setSourceDateFrom(String sourceDateFrom) {
-		this.sourceDateFrom = sourceDateFrom;
-	}
-
-	public String getSourceDateTo() {
-		return sourceDateTo;
-	}
-
-	public void setSourceDateTo(String sourceDateTo) {
-		this.sourceDateTo = sourceDateTo;
-	}
-
 	public String getCreationFrom() {
 		return creationFrom;
 	}
@@ -272,7 +252,7 @@ public class WSSearchOptions implements Comparable<WSSearchOptions> {
 	public void setCreationTo(String creationTo) {
 		this.creationTo = creationTo;
 	}
-	
+
 	public static WSSearchOptions fromSearchOptions(SearchOptions opt) {
 		WSSearchOptions wopt = new WSSearchOptions();
 
@@ -295,9 +275,6 @@ public class WSSearchOptions implements Comparable<WSSearchOptions> {
 			wopt.setCreationTo(WSUtil.convertDateToString(((FulltextSearchOptions) opt).getCreationTo()));
 			wopt.setDateFrom(WSUtil.convertDateToString(((FulltextSearchOptions) opt).getDateFrom()));
 			wopt.setDateTo(WSUtil.convertDateToString(((FulltextSearchOptions) opt).getDateTo()));
-			wopt.setSourceDateFrom(WSUtil.convertDateToString(((FulltextSearchOptions) opt)
-					.getSourceDateFrom()));
-			wopt.setSourceDateTo(WSUtil.convertDateToString(((FulltextSearchOptions) opt).getSourceDateTo()));
 			wopt.setExpressionLanguage(((FulltextSearchOptions) opt).getExpressionLanguage());
 			wopt.setLanguage(((FulltextSearchOptions) opt).getLanguage());
 			wopt.setFields(((FulltextSearchOptions) opt).getFields());
@@ -344,8 +321,6 @@ public class WSSearchOptions implements Comparable<WSSearchOptions> {
 			((FulltextSearchOptions) so).setLanguage(language);
 			((FulltextSearchOptions) so).setSizeMax(sizeMax);
 			((FulltextSearchOptions) so).setSizeMin(sizeMin);
-			((FulltextSearchOptions) so).setSourceDateFrom(WSUtil.convertStringToDate(sourceDateFrom));
-			((FulltextSearchOptions) so).setSourceDateTo(WSUtil.convertStringToDate(sourceDateTo));
 			break;
 		default:
 		}
