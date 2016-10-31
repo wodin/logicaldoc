@@ -6,7 +6,6 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.PortalLayout;
-import com.smartgwt.client.widgets.layout.Portlet;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.toolbar.ToolStrip;
 import com.smartgwt.client.widgets.toolbar.ToolStripButton;
@@ -31,13 +30,13 @@ public class WorkflowDashboard extends VLayout {
 
 	private static WorkflowDashboard instance;
 
-	private Portlet assignedTasks = null;
+	private WorkflowPortlet assignedTasks = null;
 
-	private Portlet canOwnTasks = null;
+	private WorkflowPortlet canOwnTasks = null;
 
-	private Portlet adminTasks = null;
+	private WorkflowPortlet adminTasks = null;
 
-	private Portlet supervisorTasks = null;
+	private WorkflowPortlet supervisorTasks = null;
 
 	private PortalLayout portalLayout = null;
 
@@ -71,10 +70,6 @@ public class WorkflowDashboard extends VLayout {
 
 		addMember(toolStrip, 0);
 
-		refresh();
-	}
-
-	public void refresh() {
 		if (portalLayout != null)
 			removeMember(portalLayout);
 
@@ -98,8 +93,18 @@ public class WorkflowDashboard extends VLayout {
 			supervisorTasks = new WorkflowPortlet(this, TASKS_SUPERVISOR);
 			portalLayout.addPortlet(supervisorTasks, 1, 1);
 		}
-
 		addMember(portalLayout, 1);
+	}
+
+	public void refresh() {
+		if (assignedTasks != null)
+			assignedTasks.refresh();
+		if (canOwnTasks != null)
+			canOwnTasks.refresh();
+		if (adminTasks != null)
+			adminTasks.refresh();
+		if (supervisorTasks != null)
+			supervisorTasks.refresh();
 	}
 
 	public static WorkflowDashboard get() {
