@@ -71,7 +71,7 @@ public class ContextMenu extends Menu {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection.length == 1) {
 					long id = selection[0].getId();
-					WindowUtils.openUrl(Util.downloadURL(id,null,false));
+					WindowUtils.openUrl(Util.downloadURL(id, null, false));
 				} else {
 					String url = GWT.getHostPageBaseURL() + "zip-export?folderId=" + folder.getId();
 					for (GUIDocument record : selection) {
@@ -554,6 +554,20 @@ public class ContextMenu extends Menu {
 			}
 		});
 
+		MenuItem office = new MenuItem(I18N.message("editwithoffice"));
+		office.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			@Override
+			public void onClick(MenuItemClickEvent event) {
+				GUIDocument selection = grid.getSelectedDocument();
+				if (selection == null)
+					return;
+				long docId = selection.getId();
+
+				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldedit?action=edit&sid="
+						+ Session.get().getSid() + "&docId=" + selection.getId());
+			}
+		});
+
 		MenuItem sendToExpArchive = new MenuItem(I18N.message("sendtoexparchive"));
 		sendToExpArchive.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			@Override
@@ -653,9 +667,8 @@ public class ContextMenu extends Menu {
 			}
 		}
 
-		if (Clipboard.getInstance().isEmpty()) {
+		if (Clipboard.getInstance().isEmpty())
 			links.setEnabled(false);
-		}
 
 		if (!folder.hasPermission(Constants.PERMISSION_DELETE)) {
 			enableDelete = false;
@@ -738,7 +751,19 @@ public class ContextMenu extends Menu {
 			});
 		}
 
-		setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, checkout, checkin, lock, unlockItem);
+		setItems(download, preview, cut, copy, delete, bookmark, sendMail, links, office, checkout, checkin, lock,
+				unlockItem);
+
+		if (Feature.visible(Feature.OFFICE)) {
+			if (Feature.enabled(Feature.OFFICE) && folder.hasPermission(Constants.PERMISSION_WRITE)
+					&& folder.hasPermission(Constants.PERMISSION_DOWNLOAD)
+					&& Util.isOfficeFile(grid.getSelectedDocument().getFileName()))
+				office.setEnabled(true);
+			else
+				office.setEnabled(false);
+			removeItem(office);
+		} else
+			removeItem(office);
 
 		if (Feature.visible(Feature.ARCHIVING)) {
 			addItem(archive);
