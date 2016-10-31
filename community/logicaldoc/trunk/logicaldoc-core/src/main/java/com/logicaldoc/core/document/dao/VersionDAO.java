@@ -13,8 +13,8 @@ import com.logicaldoc.core.document.Version;
  */
 public interface VersionDAO extends PersistentObjectDAO<Version> {
 	/**
-	 * This method finds a version by the document's ID an the version code.
-	 * <
+	 * This method finds a version by the document's ID an the version code. <
+	 * 
 	 * @param docId ID of the document
 	 * @param version the version code
 	 * @return the found version
@@ -32,7 +32,8 @@ public interface VersionDAO extends PersistentObjectDAO<Version> {
 	/**
 	 * This method persists the given version. Checks if is necessary to delete
 	 * some document versions reading the context property
-	 * 'document.maxversions'
+	 * 'document.maxversions' and the maxVersions property of the owning
+	 * workspace.
 	 * 
 	 * @param version version to be stored.
 	 * @return True if successfully stored in a database.

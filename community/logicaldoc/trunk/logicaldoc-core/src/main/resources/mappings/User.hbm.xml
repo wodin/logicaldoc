@@ -39,6 +39,7 @@
 		<property name="key" type="string" column="ld_key" length="4000" />
         <property name="keyDigest" type="string" column="ld_keydigest" length="255" />
 		<property name="welcomeScreen" type="int" column="ld_welcomescreen" not-null="false" />
+        <property name="defaultWorkspace" type="long" column="ld_defworkspace" />
 		<property name="ipWhiteList" type="string" column="ld_ipwhitelist" length="1000" not-null="false" />
 		<property name="ipBlackList" type="string" column="ld_ipblacklist" length="1000" not-null="false" />
 		<set name="groups" table="ld_usergroup" lazy="false" inverse="true">
