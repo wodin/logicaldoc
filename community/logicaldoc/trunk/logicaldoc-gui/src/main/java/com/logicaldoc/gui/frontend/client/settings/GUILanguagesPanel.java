@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.system;
+package com.logicaldoc.gui.frontend.client.settings;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;

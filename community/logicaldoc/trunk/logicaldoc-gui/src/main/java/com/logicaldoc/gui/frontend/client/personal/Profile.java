@@ -5,14 +5,13 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.services.SecurityService;
 import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.util.SC;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
@@ -22,9 +21,10 @@ import com.smartgwt.client.widgets.form.fields.RichTextItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
-import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
+import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * This is the form used to change file data of the current user.
@@ -44,7 +44,7 @@ public class Profile extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("profile"));
 		setWidth(550);
-		setHeight(300);
+		setHeight(350);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
@@ -74,6 +74,7 @@ public class Profile extends Window {
 		TextItem phone = ItemFactory.newTextItem("phone", "phone", user.getPhone());
 		TextItem cell = ItemFactory.newTextItem("cell", "cell", user.getCell());
 		SelectItem welcomeScreen = ItemFactory.newWelcomeScreenSelector("welcomescreen", user.getWelcomeScreen());
+		SelectItem defaultWorkspace = ItemFactory.newWorkspaceSelector(user.getDefaultWorkspace());
 
 		StaticTextItem quota = ItemFactory.newStaticTextItem("quota", "maxquota", Util.formatSizeW7(user.getQuota()));
 		quota.setWrap(false);
@@ -83,7 +84,7 @@ public class Profile extends Window {
 		quotaCount.setWrap(false);
 
 		detailsForm.setFields(firstName, lastName, language, address, postalCode, city, country, state, phone, cell,
-				welcomeScreen, quotaCount, quota);
+				welcomeScreen, defaultWorkspace, quotaCount, quota);
 
 		final DynamicForm emailForm = new DynamicForm();
 		emailForm.setHeight100();
@@ -115,73 +116,82 @@ public class Profile extends Window {
 		emailTab.setPane(emailForm);
 		tabs.setTabs(detailsTab, emailTab);
 
-		IButton apply = new IButton();
-		apply.setTitle(I18N.message("apply"));
-		apply.setAutoFit(true);
-		apply.setMargin(3);
-		apply.setHeight(30);
-		apply.addClickHandler(new ClickHandler() {
+		ToolStripButton save = new ToolStripButton(I18N.message("save"));
+		save.addClickHandler(new ClickHandler() {
+
+			@Override
 			public void onClick(ClickEvent event) {
-				vm.validate();
-
-				if (!detailsForm.validate())
-					tabs.selectTab(0);
-				else
-					tabs.selectTab(1);
-
-				if (!vm.hasErrors()) {
-					GUIUser u = new GUIUser();
-					u.setId(user.getId());
-					u.setFirstName(vm.getValueAsString("firstname"));
-					u.setName(vm.getValueAsString("lastname"));
-					u.setEmail(vm.getValueAsString("email"));
-					u.setLanguage(vm.getValueAsString("language"));
-					u.setAddress(vm.getValueAsString("address"));
-					u.setPostalCode(vm.getValueAsString("postalcode"));
-					u.setCity(vm.getValueAsString("city"));
-					u.setCountry(vm.getValueAsString("country"));
-					u.setState(vm.getValueAsString("state"));
-					u.setPhone(vm.getValueAsString("phone"));
-					u.setCell(vm.getValueAsString("cell"));
-					u.setWelcomeScreen(new Integer(vm.getValueAsString("welcomescreen")));
-					u.setEmailSignature(vm.getValueAsString("signature"));
-
-					securityService.saveProfile(u, new AsyncCallback<GUIUser>() {
-						@Override
-						public void onFailure(Throwable caught) {
-							SC.warn(caught.getMessage());
-						}
-
-						@Override
-						public void onSuccess(GUIUser ret) {
-							// Update the currently logged user bean
-							user.setFirstName(ret.getFirstName());
-							user.setName(ret.getName());
-							user.setEmail(ret.getEmail());
-							user.setEmailSignature(ret.getEmailSignature());
-							user.setLanguage(ret.getLanguage());
-							user.setAddress(ret.getAddress());
-							user.setPostalCode(ret.getPostalCode());
-							user.setCity(ret.getCity());
-							user.setCountry(ret.getCountry());
-							user.setState(ret.getState());
-							user.setPhone(ret.getPhone());
-							user.setCell(ret.getCell());
-							user.setWelcomeScreen(ret.getWelcomeScreen());
-
-							Session.get().setUser(user);
-							
-							Profile.this.destroy();
-						}
-					});
-				}
+				onSave(user, detailsForm, emailForm, tabs);
 			}
 		});
+		ToolStrip toolbar = new ToolStrip();
+		toolbar.setWidth100();
+		toolbar.setMembers(save);
 
-		HLayout buttons = new HLayout();
-		buttons.setMembers(apply);
-
+		addItem(toolbar);
 		addItem(tabs);
-		addItem(buttons);
+	}
+
+	private void onSave(final GUIUser user, final DynamicForm detailsForm, final DynamicForm emailForm,
+			final TabSet tabs) {
+		vm.validate();
+
+		if (!detailsForm.validate())
+			tabs.selectTab(0);
+		else if (!emailForm.validate())
+			tabs.selectTab(1);
+
+		if (!vm.hasErrors()) {
+			GUIUser u = new GUIUser();
+			u.setId(user.getId());
+			u.setFirstName(vm.getValueAsString("firstname"));
+			u.setName(vm.getValueAsString("lastname"));
+			u.setEmail(vm.getValueAsString("email"));
+			u.setLanguage(vm.getValueAsString("language"));
+			u.setAddress(vm.getValueAsString("address"));
+			u.setPostalCode(vm.getValueAsString("postalcode"));
+			u.setCity(vm.getValueAsString("city"));
+			u.setCountry(vm.getValueAsString("country"));
+			u.setState(vm.getValueAsString("state"));
+			u.setPhone(vm.getValueAsString("phone"));
+			u.setCell(vm.getValueAsString("cell"));
+			u.setWelcomeScreen(new Integer(vm.getValueAsString("welcomescreen")));
+			String str = vm.getValueAsString("workspace");
+			if (str != null && !str.isEmpty())
+				u.setDefaultWorkspace(Long.parseLong(str));
+			u.setEmailSignature(vm.getValueAsString("signature"));
+
+			securityService.saveProfile(u, new AsyncCallback<GUIUser>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					Log.serverError(caught);
+				}
+
+				@Override
+				public void onSuccess(GUIUser ret) {
+					// Update the currently logged user bean
+					user.setFirstName(ret.getFirstName());
+					user.setName(ret.getName());
+					user.setEmail(ret.getEmail());
+					user.setEmailSignature(ret.getEmailSignature());
+					user.setLanguage(ret.getLanguage());
+					user.setAddress(ret.getAddress());
+					user.setPostalCode(ret.getPostalCode());
+					user.setCity(ret.getCity());
+					user.setCountry(ret.getCountry());
+					user.setState(ret.getState());
+					user.setPhone(ret.getPhone());
+					user.setCell(ret.getCell());
+					user.setWelcomeScreen(ret.getWelcomeScreen());
+					user.setDefaultWorkspace(ret.getDefaultWorkspace());
+
+					Session.get().setUser(user);
+
+					Profile.this.destroy();
+
+					Log.info(I18N.message("settingssaved"), null);
+				}
+			});
+		}
 	}
 }

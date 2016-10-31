@@ -107,6 +107,8 @@ public class GUIUser implements Serializable {
 
 	private GUIDashlet[] dashlets = new GUIDashlet[0];
 
+	private Long defaultWorkspace;
+	
 	public void setUserName(String userName) {
 		this.username = userName;
 		notifyObservers("username");
@@ -506,5 +508,13 @@ public class GUIUser implements Serializable {
 
 	public void setEmailSignature(String emailSignature) {
 		this.emailSignature = emailSignature;
+	}
+
+	public Long getDefaultWorkspace() {
+		return defaultWorkspace;
+	}
+
+	public void setDefaultWorkspace(Long defaultWorkspace) {
+		this.defaultWorkspace = defaultWorkspace;
 	}
 }

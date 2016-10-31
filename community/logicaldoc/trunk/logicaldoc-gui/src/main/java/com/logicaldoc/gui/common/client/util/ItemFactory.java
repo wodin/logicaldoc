@@ -13,10 +13,12 @@ import com.logicaldoc.gui.common.client.beans.GUIRetentionPolicy;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.AttributeOptionsDS;
 import com.logicaldoc.gui.common.client.data.AttributeSetsDS;
+import com.logicaldoc.gui.common.client.data.AttributesDS;
 import com.logicaldoc.gui.common.client.data.CharsetsDS;
 import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
+import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.StampsDS;
@@ -892,6 +894,19 @@ public class ItemFactory {
 		return selectItem;
 	}
 
+	public static SelectItem newAttributesSelector() {
+		final SelectItem selectItem = new SelectItem("attributes", I18N.message("attributes"));
+		selectItem.setMultiple(true);
+		selectItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
+		selectItem.setDisplayField("label");
+		selectItem.setValueField("name");
+		selectItem.setPickListWidth(150);
+		selectItem.setOptionDataSource(new AttributesDS());
+		selectItem.setHintStyle("hint");
+		selectItem.setWrapTitle(false);
+		return selectItem;
+	}
+
 	public static SelectItem newFrequencySelector(String name, String title) {
 		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
 
@@ -1153,6 +1168,20 @@ public class ItemFactory {
 		if (!Feature.enabled(Feature.FOLDER_TEMPLATE))
 			item.setDisabled(true);
 		item.setHintStyle("hint");
+		return item;
+	}
+
+	public static SelectItem newWorkspaceSelector(Long value) {
+		SelectItem item = new SelectItem("workspace");
+		item.setTitle(I18N.message("workspace"));
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setValueField("folderId");
+		item.setDisplayField("name");
+		item.setWrapTitle(false);
+		item.setOptionDataSource(new FoldersDS("profile-workspace"));
+		item.setHintStyle("hint");
+		item.setValue(value);
+		item.setVisible(Feature.enabled(Feature.MULTI_WORKSPACE));
 		return item;
 	}
 

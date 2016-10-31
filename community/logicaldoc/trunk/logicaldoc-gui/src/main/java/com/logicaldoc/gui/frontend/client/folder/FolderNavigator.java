@@ -259,14 +259,39 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 					} else if (loc.getParameter("docId") != null) {
 						DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("docId")));
 					} else {
-						TreeNode rootNode = getTree().getRoot();
-						TreeNode[] children = getTree().getChildren(rootNode);
-						if (children != null && children.length > 0) {
-							getTree().openFolder(children[0]);
-						}
+						if ("true".equals(Session.get().getConfig("gui.folder.opentree"))) {
+							long folderId = 0;
 
-						service.getFolder(Long.parseLong(children[0].getAttribute("folderId")), true,
-								new AsyncCallback<GUIFolder>() {
+							TreeNode rootNode = getTree().getRoot();
+							TreeNode[] children = getTree().getChildren(rootNode);
+							TreeNode nodeToOpen = null;
+
+							if (children != null && children.length > 0) {
+								/*
+								 * Get the first workspace and use it as the node to
+								 * open
+								 */
+								folderId = Long.parseLong(children[0].getAttributeAsString("folderId"));
+								nodeToOpen = children[0];
+								
+								/*
+								 * Check if the user has specified a different
+								 * default workspace
+								 */
+								if (Session.get().getUser().getDefaultWorkspace() != null) {
+									for (TreeNode child : children) {
+										long val = Long.parseLong(child.getAttributeAsString("folderId"));
+										if (Session.get().getUser().getDefaultWorkspace() == val) {
+											folderId = Long.parseLong(children[0].getAttribute("folderId"));
+											nodeToOpen = child;
+											break;
+										}
+									}
+								}
+
+								getTree().openFolder(nodeToOpen);
+
+								service.getFolder(folderId, true, new AsyncCallback<GUIFolder>() {
 
 									@Override
 									public void onFailure(Throwable caught) {
@@ -278,6 +303,8 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 										Session.get().setCurrentFolder(folder);
 									}
 								});
+							}
+						}
 					}
 
 					FolderNavigator.this.firstTime = false;
@@ -565,8 +592,8 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 			paste.setEnabled(false);
 			pasteAsAlias.setEnabled(false);
 		}
-		
-		if(!folder.hasPermission(Constants.PERMISSION_ADD)){
+
+		if (!folder.hasPermission(Constants.PERMISSION_ADD)) {
 			createAlias.setEnabled(false);
 		}
 
