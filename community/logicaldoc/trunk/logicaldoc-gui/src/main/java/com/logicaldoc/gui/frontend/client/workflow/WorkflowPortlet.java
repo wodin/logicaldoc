@@ -21,6 +21,8 @@ import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.HeaderControl;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
+import com.smartgwt.client.widgets.events.DrawEvent;
+import com.smartgwt.client.widgets.events.DrawHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -30,6 +32,8 @@ import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
+import com.smartgwt.client.widgets.grid.events.ViewStateChangedEvent;
+import com.smartgwt.client.widgets.grid.events.ViewStateChangedHandler;
 import com.smartgwt.client.widgets.layout.Portlet;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
@@ -49,10 +53,16 @@ public class WorkflowPortlet extends Portlet {
 
 	private ListGrid list;
 
+	private int type = WorkflowDashboard.TASKS_ASSIGNED;
+
 	private WorkflowDashboard workflowDashboard;
+
+	// We save the state of the grid to correctly handle the refreshes
+	private String gridState = null;
 
 	public WorkflowPortlet(WorkflowDashboard dashboard, int type) {
 		this.workflowDashboard = dashboard;
+		this.type = type;
 
 		setCanDrag(false);
 		setCanDrop(false);
@@ -76,6 +86,10 @@ public class WorkflowPortlet extends Portlet {
 		hcicon.setSize(16);
 		setHeaderControls(hcicon, HeaderControls.HEADER_LABEL);
 
+		refresh();
+	}
+
+	public void refresh() {
 		ListGridField workflow = new ListGridField("workflow", I18N.message("workflow"), 100);
 		ListGridField id = new ListGridField("id", I18N.message("id"), 70);
 		id.setHidden(true);
@@ -86,13 +100,16 @@ public class WorkflowPortlet extends Portlet {
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 300);
 		ListGridField documentIds = new ListGridField("documentIds", I18N.message("documentids"), 200);
 		documentIds.setHidden(true);
-		
+
 		ListGridField startdate = new ListGridField("startdate", I18N.message("date"), 100);
 		startdate.setAlign(Alignment.CENTER);
 		startdate.setType(ListGridFieldType.DATE);
 		startdate.setCellFormatter(new DateCellFormatter(false));
 		startdate.setCanFilter(false);
-		
+
+		if (list != null)
+			removeItem(list);
+
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
@@ -150,6 +167,27 @@ public class WorkflowPortlet extends Portlet {
 					Session.get().getUser().setActiveTasks(total);
 				}
 			});
+
+		/*
+		 * Save the layout of the grid at every change
+		 */
+		list.addViewStateChangedHandler(new ViewStateChangedHandler() {
+			@Override
+			public void onViewStateChanged(ViewStateChangedEvent event) {
+				gridState = list.getViewState();
+			}
+		});
+
+		/*
+		 * Restore any previously saved view state for this grid
+		 */
+		list.addDrawHandler(new DrawHandler() {
+			@Override
+			public void onDraw(DrawEvent event) {
+				if (gridState != null)
+					list.setViewState(gridState);
+			}
+		});
 
 		addItem(list);
 	}
