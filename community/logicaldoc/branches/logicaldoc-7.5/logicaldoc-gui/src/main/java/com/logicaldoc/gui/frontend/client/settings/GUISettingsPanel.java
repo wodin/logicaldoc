@@ -15,16 +15,15 @@ import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.widgets.FeatureDisabled;
 import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
-import com.logicaldoc.gui.frontend.client.system.GUILanguagesPanel;
 import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.events.ClickEvent;
-import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
+import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
+import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
@@ -65,16 +64,20 @@ public class GUISettingsPanel extends VLayout {
 		parameters.setPane(parametersForm);
 
 		Tab languages = new Tab();
-		languages.setTitle(I18N.message("guilanguages"));
+		languages.setTitle(I18N.message("languages"));
 		languages.setPane(new GUILanguagesPanel());
 
+		Tab grids = new Tab();
+		grids.setTitle(I18N.message("grids"));
+		grids.setPane(new GUIGridsPanel());
+
 		if (Feature.visible(Feature.GUI_LANGUAGES)) {
-			tabs.setTabs(parameters, languages);
+			tabs.setTabs(parameters, grids, languages);
 			if (!Feature.enabled(Feature.GUI_LANGUAGES)) {
 				languages.setPane(new FeatureDisabled());
 			}
 		} else
-			tabs.setTabs(parameters);
+			tabs.setTabs(parameters, grids);
 
 		TextItem welcome = ItemFactory.newTextItem("welcome", I18N.message("welcomemessage"), null);
 		welcome.setWidth(400);
@@ -130,12 +133,11 @@ public class GUISettingsPanel extends VLayout {
 		RadioGroupItem doctab = ItemFactory.newBooleanSelector("doctab", "doctab");
 		doctab.setValueMap("properties", "preview");
 
-		RadioGroupItem foldOrdering = ItemFactory.newBooleanSelector("foldordering", "foldordeding");
-		foldOrdering.setValueMap("name", "date");
+		RadioGroupItem foldSorting = ItemFactory.newBooleanSelector("foldsorting", "foldsorting");
+		foldSorting.setValueMap("name", "date");
 
-		TextItem extattr = ItemFactory.newTextItem("extattr", I18N.message("extendedattrs"), null);
-		extattr.setHint(I18N.message("separatedcomma"));
-		extattr.setWidth(400);
+		RadioGroupItem foldOpentree = ItemFactory.newBooleanSelector("foldopentree", I18N.message("openfolderstree"));
+		foldOpentree.setWrapTitle(false);
 
 		TextItem webcontentfolders = ItemFactory.newTextItem("webcontentfolders", I18N.message("webcontentfolders"),
 				null);
@@ -152,10 +154,6 @@ public class GUISettingsPanel extends VLayout {
 		sessionheartbeat.setHint(I18N.message("seconds"));
 		sessionheartbeat.setRequired(true);
 		sessionheartbeat.setWrapTitle(false);
-
-		parametersForm.setItems(welcome, previewSize, previewTimeout, thumbSize, thumbQuality, tileSize, tileQuality,
-				uploadmax, disallow, ondoubleclick, doctab, foldOrdering, searchhits, extattr, webcontentfolders,
-				savelogin, sessiontimeout, sessionheartbeat);
 
 		for (GUIParameter p : settings) {
 			if (p.getName().endsWith("gui.welcome"))
@@ -178,16 +176,16 @@ public class GUISettingsPanel extends VLayout {
 				ondoubleclick.setValue(p.getValue());
 			if (p.getName().endsWith("gui.document.tab"))
 				doctab.setValue(p.getValue());
-			if (p.getName().endsWith("folder.order"))
-				foldOrdering.setValue(p.getValue());			
+			if (p.getName().endsWith("gui.folder.sorting"))
+				foldSorting.setValue(p.getValue());
+			if (p.getName().endsWith("gui.folder.opentree"))
+				foldOpentree.setValue(p.getValue().equals("true") ? "yes" : "no");
 			if (p.getName().endsWith("upload.maxsize"))
 				uploadmax.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("upload.disallow") && p.getValue() != null)
 				disallow.setValue(p.getValue().trim());
 			if (p.getName().endsWith("search.hits"))
 				searchhits.setValue(Integer.parseInt(p.getValue().trim()));
-			if (p.getName().endsWith("search.extattr"))
-				extattr.setValue(p.getValue());
 			if (p.getName().endsWith("gui.webcontent.folders"))
 				webcontentfolders.setValue(p.getValue());
 			if (p.getName().endsWith("session.timeout"))
@@ -196,7 +194,7 @@ public class GUISettingsPanel extends VLayout {
 				sessionheartbeat.setValue(p.getValue());
 		}
 
-		IButton save = new IButton();
+		ButtonItem save = new ButtonItem();
 		save.setTitle(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 			@SuppressWarnings("unchecked")
@@ -225,15 +223,15 @@ public class GUISettingsPanel extends VLayout {
 							"ondoubleclick").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.document.tab", values.get(
 							"doctab").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.folder.order", values.get(
-							"foldordering").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.folder.sorting", values.get(
+							"foldsorting").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.folder.opentree", "yes"
+							.equals(values.get("foldopentree")) ? "true" : "false"));
 					params.add(new GUIParameter("upload.maxsize", values.get("uploadmax").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".upload.disallow", values.get(
 							"disallow").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".search.hits", values
 							.get("searchhits").toString()));
-					params.add(new GUIParameter(Session.get().getTenantName() + ".search.extattr", values
-							.get("extattr").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.webcontent.folders", values.get(
 							"webcontentfolders").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".session.timeout", values.get(
@@ -261,7 +259,10 @@ public class GUISettingsPanel extends VLayout {
 			}
 		});
 
+		parametersForm.setItems(welcome, previewSize, previewTimeout, thumbSize, thumbQuality, tileSize, tileQuality,
+				uploadmax, disallow, ondoubleclick, doctab, foldSorting, foldOpentree, searchhits, webcontentfolders, savelogin,
+				sessiontimeout, sessionheartbeat, save);
+
 		addMember(tabs);
-		addMember(save);
 	}
 }

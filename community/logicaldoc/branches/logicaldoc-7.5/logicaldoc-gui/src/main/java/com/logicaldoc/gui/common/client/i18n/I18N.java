@@ -34,7 +34,7 @@ public class I18N {
 		else
 			return def;
 	}
-	
+
 	public static String message(String key) {
 		if (bundle.containsKey(key))
 			return bundle.get(key);
@@ -149,7 +149,7 @@ public class I18N {
 		setLanguages(info.getSupportedLanguages());
 		setGuiLanguages(info.getSupportedGUILanguages());
 		initBundle(info.getBundle());
-		
+
 		/*
 		 * Prepare the date formatters
 		 */
@@ -188,5 +188,18 @@ public class I18N {
 
 	public static DateTimeFormat getDateFormat() {
 		return dateFormat;
+	}
+
+	public static String getAttributeLabel(String name) {
+		if (name == null)
+			return null;
+		String label = name.trim();
+		if (label.startsWith("ext_"))
+			label = label.substring(4);
+		else if ("published".equals(name) || "created".equals(name))
+			label = message(name + "on");
+		else
+			label = message(label.toLowerCase());
+		return label;
 	}
 }
