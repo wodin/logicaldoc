@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
 import com.logicaldoc.core.document.Version;
+import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.util.config.ContextProperties;
 import com.logicaldoc.util.io.FileUtil;
@@ -26,6 +28,8 @@ import com.logicaldoc.util.io.FileUtil;
 public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> implements VersionDAO {
 
 	private Storer storer;
+
+	private FolderDAO folderDAO;
 
 	private HibernateVersionDAO() {
 		super(Version.class);
@@ -64,6 +68,10 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 			// Checks the context property 'document.maxversions'
 			ContextProperties bean = new ContextProperties();
 			int maxVersions = bean.getInt("document.maxversions");
+			Folder workspace = folderDAO.findWorkspace(version.getFolderId());
+			if (workspace != null && workspace.getMaxVersions() != null && workspace.getMaxVersions() > 0)
+				maxVersions = workspace.getMaxVersions();
+
 			if (maxVersions > 0) {
 				List<Version> versions = findByDocId(version.getDocId());
 				// Inverse order the document versions
@@ -97,15 +105,15 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 					// Clean the files no more needed
 					List<String> resources = storer.listResources(version.getDocId(), null);
 					for (String resource : resources) {
-						boolean toDelete=true;
+						boolean toDelete = true;
 						for (String fileVersionToRetain : filesToBeRetained) {
 							if (resource.trim().equals(fileVersionToRetain.trim())
 									|| resource.trim().startsWith(fileVersionToRetain.trim() + "-")) {
-								toDelete=false;
+								toDelete = false;
 								break;
 							}
 						}
-						if(toDelete){
+						if (toDelete) {
 							storer.delete(version.getDocId(), resource);
 						}
 					}
@@ -161,5 +169,9 @@ public class HibernateVersionDAO extends HibernatePersistentObjectDAO<Version> i
 			result = false;
 		}
 		return result;
+	}
+
+	public void setFolderDAO(FolderDAO folderDAO) {
+		this.folderDAO = folderDAO;
 	}
 }

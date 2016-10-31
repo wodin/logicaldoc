@@ -1,6 +1,9 @@
 package com.logicaldoc.gui.frontend.client.folder;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Constants;
@@ -12,9 +15,10 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.IntegerItem;
+import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
@@ -71,7 +75,7 @@ public class PropertiesPanel extends FolderDetailTab {
 			name.addChangedHandler(changedHandler);
 		name.setRequired(true);
 
-		IntegerItem position = ItemFactory.newIntegerItem("position", "position", folder.getPosition());
+		SpinnerItem position = ItemFactory.newSpinnerItem("position", "position", folder.getPosition());
 		if (folder.hasPermission(Constants.PERMISSION_RENAME))
 			position.addChangedHandler(changedHandler);
 		position.setRequired(true);
@@ -82,6 +86,14 @@ public class PropertiesPanel extends FolderDetailTab {
 		storage.setVisible(storageVisible);
 		if (folder.isWrite() && storageVisible)
 			storage.addChangedHandler(changedHandler);
+
+		SpinnerItem maxVersions = ItemFactory.newSpinnerItem("maxVersions", I18N.message("maxversions"),
+				folder.getMaxVersions());
+		maxVersions.setDisabled(!folder.isWrite());
+		boolean maxVersionsVisible = folder.isWorkspace() && folder.getFoldRef() == null;
+		maxVersions.setVisible(storageVisible);
+		if (folder.isWrite() && maxVersionsVisible)
+			maxVersions.addChangedHandler(changedHandler);
 
 		TextItem description = ItemFactory.newTextItem("description", "description", folder.getDescription());
 		description.setWidth(250);
@@ -118,19 +130,18 @@ public class PropertiesPanel extends FolderDetailTab {
 		description.setDisabled(!update);
 		position.setDisabled(!update);
 
-		if (folder.isDefaultWorkspace()) {
-			if (Feature.enabled(Feature.BARCODES))
-				form.setItems(idItem, pathItem, position, storage, creation, documents, subfolders, barcode);
-			else
-				form.setItems(idItem, pathItem, position, storage, creation, documents, subfolders);
-		} else if (Feature.enabled(Feature.BARCODES))
-			form.setItems(idItem, pathItem, name, position, storage, description, creation, documents, subfolders,
-					barcode);
-		else
-			form.setItems(idItem, pathItem, name, position, storage, description, creation, documents, subfolders);
+		List<FormItem> items = new ArrayList<FormItem>();
+		items.addAll(Arrays.asList(new FormItem[] { idItem, pathItem, name, description, position, storage,
+				maxVersions, creation, documents, subfolders, barcode }));
+		if (!Feature.enabled(Feature.BARCODES))
+			items.remove(barcode);
+		if (!Feature.enabled(Feature.MULTI_STORAGE))
+			items.remove(storage);
+		if (folder.isDefaultWorkspace())
+			items.remove(name);
 
+		form.setItems(items.toArray(new FormItem[0]));
 		addMember(form);
-
 	}
 
 	boolean validate() {
@@ -147,6 +158,13 @@ public class PropertiesPanel extends FolderDetailTab {
 				folder.setStorage(Integer.parseInt(vm.getValueAsString("storage")));
 			} catch (Throwable t) {
 				folder.setStorage(null);
+			}
+			try {
+				folder.setMaxVersions(Integer.parseInt(vm.getValueAsString("maxVersions")));
+				if (folder.getMaxVersions() != null && folder.getMaxVersions() < 1)
+					folder.setMaxVersions(null);
+			} catch (Throwable t) {
+				folder.setMaxVersions(null);
 			}
 		}
 		return !vm.hasErrors();

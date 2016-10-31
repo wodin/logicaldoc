@@ -114,6 +114,8 @@ public class User extends PersistentObject implements Serializable {
 
 	private String keyDigest;
 
+	private Long defaultWorkspace;
+
 	public User() {
 	}
 
@@ -507,5 +509,13 @@ public class User extends PersistentObject implements Serializable {
 	public void clearPassword() {
 		this.password = null;
 		this.passwordmd4 = null;
+	}
+
+	public Long getDefaultWorkspace() {
+		return defaultWorkspace;
+	}
+
+	public void setDefaultWorkspace(Long defaultWorkspace) {
+		this.defaultWorkspace = defaultWorkspace;
 	}
 }
