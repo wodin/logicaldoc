@@ -182,6 +182,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setQuotaSize(folder.getQuotaSize());
 			f.setFoldRef(folder.getFoldRef());
 			f.setStorage(folder.getStorage());
+			f.setMaxVersions(folder.getMaxVersions());
 
 			if (f.isWorkspace()) {
 				SequenceDAO seqDao = (SequenceDAO) Context.get().getBean(SequenceDAO.class);
@@ -468,9 +469,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				f.setPosition(folder.getPosition());
 				f.setType(folder.getType());
 
-				if(f.isWorkspace())
+				if (f.isWorkspace()) {
 					f.setStorage(folder.getStorage());
-				
+					f.setMaxVersions(folder.getMaxVersions());
+				}
+
 				if (f.getName().trim().equals(folderName)) {
 					f.setName(folderName.trim());
 					transaction.setEvent(FolderEvent.CHANGED.toString());
@@ -577,7 +580,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					fg.setPrint(1);
 				else
 					fg.setPrint(0);
-				
+
 				if (isAdmin || right.isWrite())
 					fg.setWrite(1);
 				else
@@ -834,8 +837,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 						// attributes keys that remains on the form
 						// value manager
 						if (attr.getValue().toString().trim().isEmpty() && templateType != 0) {
-							if (templateType == Attribute.TYPE_INT
-									|| templateType == Attribute.TYPE_BOOLEAN) {
+							if (templateType == Attribute.TYPE_INT || templateType == Attribute.TYPE_BOOLEAN) {
 								extAttr.setIntValue(null);
 							} else if (templateType == Attribute.TYPE_DOUBLE) {
 								extAttr.setDoubleValue(null);
