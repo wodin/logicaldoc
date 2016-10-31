@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.beans.GUIRetentionPolicy;
 import com.logicaldoc.gui.common.client.data.ArchivesDS;
 import com.logicaldoc.gui.common.client.data.AttributeOptionsDS;
 import com.logicaldoc.gui.common.client.data.AttributeSetsDS;
+import com.logicaldoc.gui.common.client.data.AttributesDS;
 import com.logicaldoc.gui.common.client.data.CharsetsDS;
 import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
@@ -20,7 +21,6 @@ import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
 import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.StampsDS;
-import com.logicaldoc.gui.common.client.data.StoragesDS;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.TenantsDS;
@@ -867,6 +867,19 @@ public class ItemFactory {
 		selectItem.setHintStyle("hint");
 		selectItem.setWrapTitle(false);
 
+		return selectItem;
+	}
+
+	public static SelectItem newAttributesSelector() {
+		final SelectItem selectItem = new SelectItem("attributes", I18N.message("attributes"));
+		selectItem.setMultiple(true);
+		selectItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
+		selectItem.setDisplayField("label");
+		selectItem.setValueField("name");
+		selectItem.setPickListWidth(150);
+		selectItem.setOptionDataSource(new AttributesDS());
+		selectItem.setHintStyle("hint");
+		selectItem.setWrapTitle(false);
 		return selectItem;
 	}
 

@@ -35,11 +35,14 @@ public class DocumentsDS extends DataSource {
 	public DocumentsDS(Long folderId, String fileFilter, Integer max, int page, Integer indexed, Integer barcoded) {
 		setTitleField("title");
 		setRecordXPath("/list/document");
-		DataSourceTextField title = new DataSourceTextField("title");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		id.setHidden(true);
 		id.setRequired(true);
+		
+		DataSourceTextField title = new DataSourceTextField("title");
+		DataSourceTextField filename = new DataSourceTextField("filename");
+		
 		DataSourceImageField icon = new DataSourceImageField("icon");
 		DataSourceTextField customId = new DataSourceTextField("customId");
 		DataSourceTextField type = new DataSourceTextField("type");
@@ -61,7 +64,6 @@ public class DocumentsDS extends DataSource {
 		DataSourceImageField locked = new DataSourceImageField("locked");
 		DataSourceTextField lockUserId = new DataSourceTextField("lockUserId");
 		DataSourceTextField lockUser = new DataSourceTextField("lockUser");
-		DataSourceTextField filename = new DataSourceTextField("filename");
 		DataSourceTextField template = new DataSourceTextField("template");
 		template.setHidden(true);
 		DataSourceTextField fileVersion = new DataSourceTextField("fileVersion");
@@ -69,7 +71,7 @@ public class DocumentsDS extends DataSource {
 		lockUserId.setHidden(true);
 		DataSourceImageField rating = new DataSourceImageField("rating");
 		DataSourceTextField comment = new DataSourceTextField("comment");
-		DataSourceIntegerField wfStatus = new DataSourceIntegerField("workflowStatus");
+		DataSourceTextField wfStatus = new DataSourceTextField("workflowStatus");
 		DataSourceTextField publishedStatus = new DataSourceTextField("publishedStatus");
 		publishedStatus.setHidden(true);
 		DataSourceDateTimeField startPublishing = new DataSourceDateTimeField("startPublishing");
