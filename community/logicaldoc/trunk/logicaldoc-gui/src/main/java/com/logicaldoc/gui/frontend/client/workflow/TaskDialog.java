@@ -40,7 +40,7 @@ import com.smartgwt.client.widgets.tab.Tab;
 import com.smartgwt.client.widgets.tab.TabSet;
 
 /**
- * This is the form used for the workflow task and end nodes settings.
+ * This is the form used for the workflow task settings.
  * 
  * @author Matteo Caruso - Logical Objects
  * @since 6.0

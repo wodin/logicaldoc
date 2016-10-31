@@ -97,7 +97,7 @@ public class FoldersDataServlet extends HttpServlet {
 				query.append(" and ld_id in " + idsStr);
 			}
 			query.append(" order by ld_position asc, ");
-			if ("name".equals(context.getProperties().getProperty(tenantName + ".gui.folder.order")))
+			if ("name".equals(context.getProperties().getProperty(tenantName + ".gui.folder.sorting")))
 				query.append(" ld_name asc ");
 			else
 				query.append(" ld_creation desc ");

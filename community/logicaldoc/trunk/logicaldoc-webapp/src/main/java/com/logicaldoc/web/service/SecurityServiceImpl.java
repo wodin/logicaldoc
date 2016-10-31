@@ -172,6 +172,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			guiUser.setQuota(user.getQuota());
 			guiUser.setQuotaCount(seqDao.getCurrentValue("userquota", user.getId(), user.getTenantId()));
 			guiUser.setWelcomeScreen(user.getWelcomeScreen());
+			guiUser.setDefaultWorkspace(user.getDefaultWorkspace());
 
 			if (StringUtils.isNotEmpty(user.getCertSubject()))
 				guiUser.setCertSubject(user.getCertSubject());
@@ -400,6 +401,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				usr.setCertSubject(user.getCertSubject());
 				usr.setKeyDigest(user.getKeyDigest());
 				usr.setWelcomeScreen(user.getWelcomeScreen());
+				usr.setDefaultWorkspace(user.getDefaultWorkspace());
 				usr.setIpWhitelist(user.getIpWhiteList());
 				usr.setIpBlacklist(user.getIpBlackList());
 				usr.setEmailSignature(user.getEmailSignature());
@@ -534,6 +536,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setIpWhiteList(user.getIpWhitelist());
 			usr.setIpBlackList(user.getIpBlacklist());
 			usr.setEmailSignature(user.getEmailSignature());
+			usr.setDefaultWorkspace(user.getDefaultWorkspace());
 
 			usr.setQuota(user.getQuota());
 
@@ -661,6 +664,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setTelephone(user.getPhone());
 			usr.setTelephone2(user.getCell());
 			usr.setWelcomeScreen(user.getWelcomeScreen());
+			usr.setDefaultWorkspace(user.getDefaultWorkspace());
 			usr.setEmailSignature(user.getEmailSignature());
 
 			userDao.store(usr);

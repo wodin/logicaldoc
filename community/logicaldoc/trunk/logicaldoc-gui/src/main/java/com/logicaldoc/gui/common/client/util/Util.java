@@ -96,7 +96,7 @@ public class Util {
 
 	public static String webEditorUrl(long docId, String fileName, int height) {
 		String url = contextPath() + "ckeditor/index.jsp?docId=" + docId + "&lang=" + I18N.getLocale() + "&fileName="
-				+ fileName + "&height=" + height+"&sid="+Session.get().getSid();
+				+ fileName + "&height=" + height + "&sid=" + Session.get().getSid();
 		return url;
 	}
 
@@ -706,7 +706,7 @@ public class Util {
 		// Tries to capture locale parameter
 		if (locale == null)
 			locale = Util.getBrowserLanguage();
-		
+
 		if (locale == null || locale.isEmpty())
 			return "en";
 
