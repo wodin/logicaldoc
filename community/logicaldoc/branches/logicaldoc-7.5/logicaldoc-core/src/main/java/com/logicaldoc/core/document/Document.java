@@ -43,7 +43,6 @@ public class Document extends AbstractDocument {
 		setIndexed(docVO.getIndexed());
 		setBarcoded(docVO.getBarcoded());
 		setDigest(docVO.getDigest());
-		setRecipient(docVO.getRecipient());
 		setDocRef(docVO.getDocRef());
 		setFolder(docVO.getFolder());
 		setTemplate(docVO.getTemplate());
