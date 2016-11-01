@@ -215,6 +215,7 @@ public class ItemFactory {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		final DateItem date = new DateItem(itemName);
+		date.setTitle(title);
 		return date;
 	}
 
