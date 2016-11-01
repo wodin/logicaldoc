@@ -18,9 +18,11 @@ import com.logicaldoc.gui.common.client.data.CharsetsDS;
 import com.logicaldoc.gui.common.client.data.ContactsDS;
 import com.logicaldoc.gui.common.client.data.EventsDS;
 import com.logicaldoc.gui.common.client.data.FolderTemplatesDS;
+import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.StampsDS;
+import com.logicaldoc.gui.common.client.data.StoragesDS;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.TenantsDS;
@@ -36,6 +38,7 @@ import com.smartgwt.client.types.Cursor;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
 import com.smartgwt.client.types.MultipleAppearance;
+import com.smartgwt.client.widgets.DateRangeDialog;
 import com.smartgwt.client.widgets.HeaderControl.HeaderIcon;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Img;
@@ -44,6 +47,7 @@ import com.smartgwt.client.widgets.form.fields.CheckboxItem;
 import com.smartgwt.client.widgets.form.fields.ColorPickerItem;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
+import com.smartgwt.client.widgets.form.fields.DateRangeItem;
 import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.FormItemIcon;
@@ -73,6 +77,120 @@ import com.smartgwt.client.widgets.grid.ListGridField;
  */
 public class ItemFactory {
 
+	static {
+		DateRangeDialog dialog = new DateRangeDialog();
+		dialog.setCancelButtonTitle(I18N.message("cancel"));
+		dialog.setClearButtonTitle(I18N.message("clear"));
+		dialog.setOkButtonTitle(I18N.message("ok"));
+		dialog.setHeaderTitle(I18N.message("selectdaterange"));
+		DateRangeDialog.setDefaultProperties(dialog);
+
+		DateRangeItem dateRangeItem = new DateRangeItem();
+		dateRangeItem.setFromTitle(I18N.message("from"));
+		dateRangeItem.setToTitle(I18N.message("to"));
+		dateRangeItem.setDateFormatter(getDateDisplayFormat());
+		dateRangeItem.setPickerIconPrompt(I18N.message("showdatechooser"));
+		dateRangeItem.setHintStyle("hint");
+		dateRangeItem.setRequiredMessage(I18N.message("fieldrequired"));
+		DateRangeItem.setDefaultProperties(dateRangeItem);
+		
+		MiniDateRangeItem miniDateRangeItem=new MiniDateRangeItem();
+		miniDateRangeItem.setShowPickerIcon(true);
+		miniDateRangeItem.setAllowRelativeDates(false);
+		miniDateRangeItem.setHintStyle("hint");
+		miniDateRangeItem.setWidth(180);
+		miniDateRangeItem.setDateFormatter(getDateDisplayFormat());
+		miniDateRangeItem.setDateDisplayFormat(getDateDisplayFormat());
+		miniDateRangeItem.setToDateOnlyPrefix(I18N.message("bbefore"));
+		miniDateRangeItem.setFromDateOnlyPrefix(I18N.message("ssince"));
+		miniDateRangeItem.setPickerIconPrompt(I18N.message("showdatechooser"));
+		miniDateRangeItem.setRequiredMessage(I18N.message("fieldrequired"));
+		MiniDateRangeItem.setDefaultProperties(miniDateRangeItem);
+		
+		
+		DateItem dateItem = new DateItem();
+		dateItem.setUseTextField(true);
+		dateItem.setUseMask(true);
+		dateItem.setShowPickerIcon(true);
+		dateItem.setHintStyle("hint");
+		dateItem.setWidth(110);
+		dateItem.setDateFormatter(getDateDisplayFormat());
+		dateItem.setPickerIconPrompt(I18N.message("showdatechooser"));
+		dateItem.setRequiredMessage(I18N.message("fieldrequired"));
+		DateItem.setDefaultProperties(dateItem);
+		
+		SelectItem selectItem = new SelectItem();
+		selectItem.setHintStyle("hint");
+		selectItem.setRequiredMessage(I18N.message("fieldrequired"));
+		SelectItem.setDefaultProperties(selectItem);
+		
+		TextItem textItem = new TextItem();
+		textItem.setHintStyle("hint");
+		textItem.setRequiredMessage(I18N.message("fieldrequired"));
+		TextItem.setDefaultProperties(textItem);
+		
+		RadioGroupItem radioGroupItem =new RadioGroupItem();
+		radioGroupItem.setHintStyle("hint");
+		radioGroupItem.setRequiredMessage(I18N.message("fieldrequired"));
+		RadioGroupItem.setDefaultProperties(radioGroupItem);
+		
+		CheckboxItem checkboxItem = new CheckboxItem();
+		checkboxItem.setHintStyle("hint");
+		checkboxItem.setRequiredMessage(I18N.message("fieldrequired"));
+		CheckboxItem.setDefaultProperties(checkboxItem);
+		
+		MultiComboBoxItem multiComboBoxItem = new MultiComboBoxItem();
+		multiComboBoxItem.setHintStyle("hint");
+		multiComboBoxItem.setRequiredMessage(I18N.message("fieldrequired"));
+		MultiComboBoxItem.setDefaultProperties(multiComboBoxItem);
+		
+		SpinnerItem spinnerItem = new SpinnerItem();
+		spinnerItem.setHintStyle("hint");
+		spinnerItem.setRequiredMessage(I18N.message("fieldrequired"));
+		SpinnerItem.setDefaultProperties(spinnerItem);
+		
+		PasswordItem passwordItem = new PasswordItem();
+		passwordItem.setHintStyle("hint");
+		passwordItem.setRequiredMessage(I18N.message("fieldrequired"));
+		SpinnerItem.setDefaultProperties(passwordItem);
+		
+		StaticTextItem staticTextItem = new StaticTextItem();
+		staticTextItem.setHintStyle("hint");
+		staticTextItem.setRequiredMessage(I18N.message("fieldrequired"));
+		StaticTextItem.setDefaultProperties(staticTextItem);
+		
+		IntegerItem integerItem = new IntegerItem();
+		integerItem.setRequiredMessage(I18N.message("fieldrequired"));
+		integerItem.setHintStyle("hint");
+		IntegerItem.setDefaultProperties(integerItem);
+		
+		ColorPickerItem colorPickerItem = new ColorPickerItem();
+		colorPickerItem.setWidth(150);
+		colorPickerItem.setRequiredMessage(I18N.message("fieldrequired"));
+		colorPickerItem.setHintStyle("hint");
+		ColorPickerItem.setDefaultProperties(colorPickerItem);
+		
+		LinkItem linkItem = new LinkItem();
+		linkItem.setRequiredMessage(I18N.message("fieldrequired"));
+		linkItem.setHintStyle("hint");
+		LinkItem.setDefaultProperties(linkItem);
+		
+		TextAreaItem textAreaItem = new TextAreaItem();
+		textAreaItem.setRequiredMessage(I18N.message("fieldrequired"));
+		textAreaItem.setHintStyle("hint");
+		TextAreaItem.setDefaultProperties(textAreaItem);
+		
+		TimeItem timeItem = new TimeItem();
+		timeItem.setHintStyle("hint");
+		timeItem.setWidth(50);
+		TimeItem.setDefaultProperties(timeItem);
+		
+		FloatItem floatItem = new FloatItem();
+		floatItem.setHintStyle("hint");
+		floatItem.setWidth(50);
+		FloatItem.setDefaultProperties(floatItem);
+	}
+
 	/**
 	 * Creates a new DateItem.
 	 * 
@@ -85,12 +203,6 @@ public class ItemFactory {
 			date.setTitle(I18N.message(title));
 		else
 			date.setShowTitle(false);
-		date.setUseTextField(true);
-		date.setUseMask(true);
-		date.setShowPickerIcon(true);
-		date.setHintStyle("hint");
-		date.setWidth(110);
-		date.setDateFormatter(getDateDisplayFormat());
 		return date;
 	}
 
@@ -103,29 +215,15 @@ public class ItemFactory {
 		// We cannot use spaces in items name
 		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		final DateItem date = new DateItem(itemName);
-		date.setTitle(title);
-		date.setUseTextField(true);
-		date.setUseMask(true);
-		date.setShowPickerIcon(true);
-		date.setWidth(110);
-		date.setName(itemName);
-		date.setHintStyle("hint");
-		date.setDateFormatter(getDateDisplayFormat());
 		return date;
 	}
 
 	public static MiniDateRangeItem newMiniDateRangeItem(String name, String title) {
-		MiniDateRangeItem date = new MiniDateRangeItem(filterItemName(name));
+		final MiniDateRangeItem date = new MiniDateRangeItem(filterItemName(name));
 		if (title != null)
 			date.setTitle(I18N.message(title));
 		else
 			date.setShowTitle(false);
-		date.setShowPickerIcon(true);
-		date.setAllowRelativeDates(false);
-		date.setHintStyle("hint");
-		date.setWidth(180);
-		date.setDateFormatter(getDateDisplayFormat());
-		date.setDateDisplayFormat(getDateDisplayFormat());
 		return date;
 	}
 
@@ -169,7 +267,6 @@ public class ItemFactory {
 		else
 			dateOperator.setShowTitle(false);
 		dateOperator.setWidth(100);
-		dateOperator.setHintStyle("hint");
 		return dateOperator;
 	}
 
@@ -185,7 +282,6 @@ public class ItemFactory {
 		else
 			sizeOperator.setShowTitle(false);
 		sizeOperator.setWidth(100);
-		sizeOperator.setHintStyle("hint");
 		return sizeOperator;
 	}
 
@@ -198,7 +294,6 @@ public class ItemFactory {
 		item.setName(filterItemName(name));
 		item.setTitle(I18N.message("language"));
 		item.setWrapTitle(false);
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -207,7 +302,6 @@ public class ItemFactory {
 		item.setName(filterItemName(name));
 		item.setTitle(I18N.message("charset"));
 		item.setWrapTitle(false);
-		item.setHintStyle("hint");
 		item.setDefaultValue("UTF-8");
 		item.setDisplayField("name");
 		item.setValueField("code");
@@ -227,6 +321,27 @@ public class ItemFactory {
 		return item;
 	}
 
+	public static SelectItem newStorageSelector(String name, Integer value) {
+		SelectItem item = new SelectItem();
+		item.setName(filterItemName(name));
+		item.setTitle(I18N.message("storage"));
+		item.setWrapTitle(false);
+		item.setDisplayField("name");
+		item.setValueField("id");
+
+		ListGridField nameField = new ListGridField("name", I18N.message("name"));
+		nameField.setWidth("*");
+		nameField.setShowTitle(false);
+
+		item.setPickListFields(nameField);
+		item.setOptionDataSource(new StoragesDS(true));
+
+		if (value != null)
+			item.setValue(value.toString());
+
+		return item;
+	}
+
 	public static TextItem newEmailItem(String name, String title, boolean multiple) {
 		TextItem item = new TextItem();
 		item.setName(filterItemName(name));
@@ -239,7 +354,6 @@ public class ItemFactory {
 		else
 			item.setValidators(new EmailValidator());
 		item.setWrapTitle(false);
-		item.setHintStyle("hint");
 		item.setWidth(180);
 
 		return item;
@@ -262,7 +376,6 @@ public class ItemFactory {
 		lastName.setWidth(90);
 		selector.setPickListFields(email, firstName, lastName);
 		selector.setOptionDataSource(new ContactsDS());
-		selector.setHintStyle("hint");
 		return selector;
 	}
 
@@ -283,7 +396,6 @@ public class ItemFactory {
 		lastName.setWidth(90);
 		selector.setPickListFields(email, firstName, lastName);
 		selector.setOptionDataSource(new ContactsDS());
-		selector.setHintStyle("hint");
 		return selector;
 	}
 
@@ -298,7 +410,6 @@ public class ItemFactory {
 		ListGridField description = new ListGridField("description", I18N.message("description"));
 		group.setPickListFields(n, description);
 		group.setOptionDataSource(new GroupsDS());
-		group.setHintStyle("hint");
 		return group;
 	}
 
@@ -315,7 +426,6 @@ public class ItemFactory {
 		user.setPickListWidth(300);
 		user.setPickListFields(id, username, label);
 		user.setOptionDataSource(new UsersDS(groupIdOrName, required));
-		user.setHintStyle("hint");
 		return user;
 	}
 
@@ -331,7 +441,6 @@ public class ItemFactory {
 		tenant.setDisplayField("displayName");
 		tenant.setPickListWidth(300);
 		tenant.setPickListFields(id, _name, displayName);
-		tenant.setHintStyle("hint");
 		tenant.setOptionDataSource(new TenantsDS());
 		return tenant;
 	}
@@ -342,7 +451,6 @@ public class ItemFactory {
 		radioGroupItem.setVertical(false);
 		radioGroupItem.setTitle(I18N.message(title));
 		radioGroupItem.setWidth(80);
-		radioGroupItem.setHintStyle("hint");
 		return radioGroupItem;
 	}
 
@@ -359,7 +467,6 @@ public class ItemFactory {
 		CheckboxItem item = new CheckboxItem();
 		item.setName(filterItemName(name));
 		item.setTitle(I18N.message(title));
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -367,7 +474,6 @@ public class ItemFactory {
 		MultiComboBoxItem item = new MultiComboBoxItem(name, I18N.message(title));
 		item.setLayoutStyle(MultiComboBoxLayoutStyle.FLOW);
 		item.setWidth(200);
-		item.setHintStyle("hint");
 		item.setMultiple(true);
 		if (options != null)
 			item.setOptionDataSource(options);
@@ -398,7 +504,6 @@ public class ItemFactory {
 		selectItemMultipleGrid.setTitle(I18N.message(title));
 		selectItemMultipleGrid.setMultiple(true);
 		selectItemMultipleGrid.setValueMap("");
-		selectItemMultipleGrid.setHintStyle("hint");
 		return selectItemMultipleGrid;
 	}
 
@@ -410,7 +515,6 @@ public class ItemFactory {
 		map.put("2", I18N.message("high"));
 		select.setValueMap(map);
 		select.setValue("0");
-		select.setHintStyle("hint");
 		return select;
 	}
 
@@ -455,7 +559,6 @@ public class ItemFactory {
 		select.setOptionDataSource(new EventsDS(folder, workflow, user));
 		select.setValueField("code");
 		select.setDisplayField("label");
-		select.setHintStyle("hint");
 		return select;
 	}
 
@@ -464,7 +567,6 @@ public class ItemFactory {
 				title != null ? I18N.message(title) : I18N.message(name));
 		select.setMultiple(false);
 		select.setWrapTitle(false);
-		select.setHintStyle("hint");
 		return select;
 	}
 
@@ -485,7 +587,6 @@ public class ItemFactory {
 		spinner.setMin(0);
 		spinner.setStep(1);
 		spinner.setWidth(50);
-		spinner.setHintStyle("hint");
 		if (value != null)
 			spinner.setValue(value.intValue());
 		else
@@ -555,7 +656,6 @@ public class ItemFactory {
 			item.setValue("");
 		item.setWrapTitle(false);
 		item.setRequiredMessage(I18N.message("fieldrequired"));
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -591,8 +691,6 @@ public class ItemFactory {
 		else
 			item.setTitle(att.getName());
 		item.setWrapTitle(false);
-		item.setRequiredMessage(I18N.message("fieldrequired"));
-		item.setHintStyle("hint");
 		item.setRequired(att.isMandatory());
 
 		return item;
@@ -604,7 +702,6 @@ public class ItemFactory {
 		password.setName(filterItemName(name));
 		if (value != null)
 			password.setValue(value);
-		password.setHintStyle("hint");
 		return password;
 	}
 
@@ -618,7 +715,6 @@ public class ItemFactory {
 	public static TextItem newSimpleTextItem(String name, String title, String value) {
 		TextItem item = newTextItem(filterItemName(name), I18N.message(title), value);
 		item.setValidators(new SimpleTextValidator());
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -640,7 +736,6 @@ public class ItemFactory {
 		else
 			item.setValue("");
 		item.setWrapTitle(false);
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -657,8 +752,6 @@ public class ItemFactory {
 		item.setTitle(I18N.message(title));
 		if (value != null)
 			item.setValue(value);
-		item.setRequiredMessage(I18N.message("fieldrequired"));
-		item.setHintStyle("hint");
 		IsIntegerValidator iv = new IsIntegerValidator();
 		iv.setErrorMessage(I18N.message("wholenumber"));
 		item.setValidators(iv);
@@ -678,8 +771,6 @@ public class ItemFactory {
 		item.setTitle(I18N.message(title));
 		if (value != null)
 			item.setValue(value);
-		item.setRequiredMessage(I18N.message("fieldrequired"));
-		item.setHintStyle("hint");
 		IsIntegerValidator iv = new IsIntegerValidator();
 		iv.setErrorMessage(I18N.message("wholenumber"));
 		item.setValidators(iv);
@@ -693,9 +784,6 @@ public class ItemFactory {
 		item.setTitle(I18N.message(title));
 		if (value != null)
 			item.setValue(value);
-		item.setRequiredMessage(I18N.message("fieldrequired"));
-		item.setHintStyle("hint");
-		item.setWidth(150);
 		return item;
 	}
 
@@ -728,7 +816,6 @@ public class ItemFactory {
 		select.setValueMap(map);
 		select.setTitle(I18N.message(title));
 		select.setWidth(80);
-		select.setHintStyle("hint");
 		select.setValue("");
 
 		return select;
@@ -759,8 +846,6 @@ public class ItemFactory {
 			item.setValidators(iv);
 		else
 			item.setValidators(iv, rv);
-
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -779,7 +864,6 @@ public class ItemFactory {
 			spinner.setMax(max);
 		spinner.setStep(1);
 		spinner.setWidth(55);
-		spinner.setHintStyle("hint");
 		spinner.setWriteStackedIcons(true);
 		return spinner;
 	}
@@ -791,7 +875,6 @@ public class ItemFactory {
 			linkItem.setLinkTitle(I18N.message(title));
 		}
 		linkItem.setWrapTitle(false);
-		linkItem.setHintStyle("hint");
 		return linkItem;
 	}
 
@@ -812,7 +895,6 @@ public class ItemFactory {
 			item.setValue(value);
 		else
 			item.setValue("");
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -827,14 +909,11 @@ public class ItemFactory {
 		map.put("day", I18N.message("ddays"));
 		select.setValueMap(map);
 		select.setValue("minute");
-		select.setHintStyle("hint");
 		return select;
 	}
 
 	public static TimeItem newTimeItem(String name, String title) {
 		TimeItem item = new TimeItem(name, I18N.message(title));
-		item.setHintStyle("hint");
-		item.setWidth(50);
 		return item;
 	}
 
@@ -850,7 +929,6 @@ public class ItemFactory {
 
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
-		templateItem.setHintStyle("hint");
 		if (templateId != null)
 			templateItem.setValue(templateId.toString());
 		return templateItem;
@@ -864,7 +942,6 @@ public class ItemFactory {
 		selectItem.setValueField("id");
 		selectItem.setPickListWidth(250);
 		selectItem.setOptionDataSource(new AttributeSetsDS(false, GUIAttributeSet.TYPE_DEFAULT));
-		selectItem.setHintStyle("hint");
 		selectItem.setWrapTitle(false);
 
 		return selectItem;
@@ -878,7 +955,6 @@ public class ItemFactory {
 		selectItem.setValueField("name");
 		selectItem.setPickListWidth(150);
 		selectItem.setOptionDataSource(new AttributesDS());
-		selectItem.setHintStyle("hint");
 		selectItem.setWrapTitle(false);
 		return selectItem;
 	}
@@ -896,7 +972,6 @@ public class ItemFactory {
 		map.put("365", I18N.message("yearly"));
 
 		select.setValueMap(map);
-		select.setHintStyle("hint");
 		select.setWidth(100);
 		return select;
 	}
@@ -911,7 +986,6 @@ public class ItemFactory {
 		map.put("3", I18N.message("canceled"));
 
 		select.setValueMap(map);
-		select.setHintStyle("hint");
 		select.setWidth(90);
 		return select;
 	}
@@ -954,7 +1028,6 @@ public class ItemFactory {
 		map.put("1", I18N.message("sender"));
 		map.put("2", I18N.message("content"));
 		select.setValueMap(map);
-		select.setHintStyle("hint");
 		return select;
 	}
 
@@ -969,8 +1042,6 @@ public class ItemFactory {
 		map.put("conversion.pdf", I18N.message("pdfconversion"));
 
 		item.setValueMap(map);
-
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -987,7 +1058,6 @@ public class ItemFactory {
 		item.setOptionDataSource(new ArchivesDS(mode, null, status, null));
 		if (!Feature.enabled(Feature.IMPEX))
 			item.setDisabled(true);
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -1000,7 +1070,6 @@ public class ItemFactory {
 		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_SUBVERSION), I18N.message("importasnewsubversion"));
 		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_DOCUMENT), I18N.message("importasnewdoc"));
 		item.setValueMap(map);
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -1017,8 +1086,7 @@ public class ItemFactory {
 		item.setWrapTitle(false);
 		item.setOptionDataSource(new WorkflowsDS(false, false, true));
 		if (!Feature.enabled(Feature.WORKFLOW))
-			item.setDisabled(true);
-		item.setHintStyle("hint");
+			item.setDisabled(true);;
 		return item;
 	}
 
@@ -1033,7 +1101,6 @@ public class ItemFactory {
 		item.setOptionDataSource(new FormsDS());
 		if (!Feature.enabled(Feature.FORM))
 			item.setDisabled(true);
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -1050,7 +1117,6 @@ public class ItemFactory {
 		item.setOptionDataSource(new StampsDS(Session.get().getUser().getId(), true));
 		if (!Feature.enabled(Feature.STAMP))
 			item.setDisabled(true);
-		item.setHintStyle("hint");
 		return item;
 	}
 
@@ -1075,8 +1141,6 @@ public class ItemFactory {
 		item.setTitle(I18N.message(title));
 		if (value != null)
 			item.setValue(value);
-		item.setRequiredMessage(I18N.message("fieldrequired"));
-		item.setHintStyle("hint");
 		IsFloatValidator iv = new IsFloatValidator();
 		iv.setErrorMessage(I18N.message("wholenumber"));
 		item.setValidators(iv);
@@ -1129,7 +1193,6 @@ public class ItemFactory {
 		mode.setWrapTitle(false);
 		mode.setDefaultValue("free");
 		mode.setWidth(150);
-		mode.setHintStyle("hint");
 		return mode;
 	}
 
@@ -1143,7 +1206,19 @@ public class ItemFactory {
 		item.setOptionDataSource(new FolderTemplatesDS());
 		if (!Feature.enabled(Feature.FOLDER_TEMPLATE))
 			item.setDisabled(true);
-		item.setHintStyle("hint");
+		return item;
+	}
+
+	public static SelectItem newWorkspaceSelector(Long value) {
+		SelectItem item = new SelectItem("workspace");
+		item.setTitle(I18N.message("workspace"));
+		item.setRequiredMessage(I18N.message("fieldrequired"));
+		item.setValueField("folderId");
+		item.setDisplayField("name");
+		item.setWrapTitle(false);
+		item.setOptionDataSource(new FoldersDS("profile-workspace"));
+		item.setValue(value);
+		item.setVisible(Feature.enabled(Feature.MULTI_WORKSPACE));
 		return item;
 	}
 
@@ -1158,7 +1233,6 @@ public class ItemFactory {
 
 		selector.setWrapTitle(false);
 		selector.setWidth(150);
-		selector.setHintStyle("hint");
 
 		selector.setValue("" + value);
 		selector.setDefaultValue("" + value);
@@ -1176,7 +1250,6 @@ public class ItemFactory {
 
 		selector.setWrapTitle(false);
 		selector.setWidth(150);
-		selector.setHintStyle("hint");
 
 		selector.setValue("" + value);
 		selector.setDefaultValue("" + value);
