@@ -22,7 +22,6 @@ import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.StampsDS;
-import com.logicaldoc.gui.common.client.data.StoragesDS;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.TenantsDS;
@@ -93,8 +92,8 @@ public class ItemFactory {
 		dateRangeItem.setHintStyle("hint");
 		dateRangeItem.setRequiredMessage(I18N.message("fieldrequired"));
 		DateRangeItem.setDefaultProperties(dateRangeItem);
-		
-		MiniDateRangeItem miniDateRangeItem=new MiniDateRangeItem();
+
+		MiniDateRangeItem miniDateRangeItem = new MiniDateRangeItem();
 		miniDateRangeItem.setShowPickerIcon(true);
 		miniDateRangeItem.setAllowRelativeDates(false);
 		miniDateRangeItem.setHintStyle("hint");
@@ -106,8 +105,7 @@ public class ItemFactory {
 		miniDateRangeItem.setPickerIconPrompt(I18N.message("showdatechooser"));
 		miniDateRangeItem.setRequiredMessage(I18N.message("fieldrequired"));
 		MiniDateRangeItem.setDefaultProperties(miniDateRangeItem);
-		
-		
+
 		DateItem dateItem = new DateItem();
 		dateItem.setUseTextField(true);
 		dateItem.setUseMask(true);
@@ -118,73 +116,73 @@ public class ItemFactory {
 		dateItem.setPickerIconPrompt(I18N.message("showdatechooser"));
 		dateItem.setRequiredMessage(I18N.message("fieldrequired"));
 		DateItem.setDefaultProperties(dateItem);
-		
+
 		SelectItem selectItem = new SelectItem();
 		selectItem.setHintStyle("hint");
 		selectItem.setRequiredMessage(I18N.message("fieldrequired"));
 		SelectItem.setDefaultProperties(selectItem);
-		
+
 		TextItem textItem = new TextItem();
 		textItem.setHintStyle("hint");
 		textItem.setRequiredMessage(I18N.message("fieldrequired"));
 		TextItem.setDefaultProperties(textItem);
-		
-		RadioGroupItem radioGroupItem =new RadioGroupItem();
+
+		RadioGroupItem radioGroupItem = new RadioGroupItem();
 		radioGroupItem.setHintStyle("hint");
 		radioGroupItem.setRequiredMessage(I18N.message("fieldrequired"));
 		RadioGroupItem.setDefaultProperties(radioGroupItem);
-		
+
 		CheckboxItem checkboxItem = new CheckboxItem();
 		checkboxItem.setHintStyle("hint");
 		checkboxItem.setRequiredMessage(I18N.message("fieldrequired"));
 		CheckboxItem.setDefaultProperties(checkboxItem);
-		
+
 		MultiComboBoxItem multiComboBoxItem = new MultiComboBoxItem();
 		multiComboBoxItem.setHintStyle("hint");
 		multiComboBoxItem.setRequiredMessage(I18N.message("fieldrequired"));
 		MultiComboBoxItem.setDefaultProperties(multiComboBoxItem);
-		
+
 		SpinnerItem spinnerItem = new SpinnerItem();
 		spinnerItem.setHintStyle("hint");
 		spinnerItem.setRequiredMessage(I18N.message("fieldrequired"));
 		SpinnerItem.setDefaultProperties(spinnerItem);
-		
+
 		PasswordItem passwordItem = new PasswordItem();
 		passwordItem.setHintStyle("hint");
 		passwordItem.setRequiredMessage(I18N.message("fieldrequired"));
 		SpinnerItem.setDefaultProperties(passwordItem);
-		
+
 		StaticTextItem staticTextItem = new StaticTextItem();
 		staticTextItem.setHintStyle("hint");
 		staticTextItem.setRequiredMessage(I18N.message("fieldrequired"));
 		StaticTextItem.setDefaultProperties(staticTextItem);
-		
+
 		IntegerItem integerItem = new IntegerItem();
 		integerItem.setRequiredMessage(I18N.message("fieldrequired"));
 		integerItem.setHintStyle("hint");
 		IntegerItem.setDefaultProperties(integerItem);
-		
+
 		ColorPickerItem colorPickerItem = new ColorPickerItem();
 		colorPickerItem.setWidth(150);
 		colorPickerItem.setRequiredMessage(I18N.message("fieldrequired"));
 		colorPickerItem.setHintStyle("hint");
 		ColorPickerItem.setDefaultProperties(colorPickerItem);
-		
+
 		LinkItem linkItem = new LinkItem();
 		linkItem.setRequiredMessage(I18N.message("fieldrequired"));
 		linkItem.setHintStyle("hint");
 		LinkItem.setDefaultProperties(linkItem);
-		
+
 		TextAreaItem textAreaItem = new TextAreaItem();
 		textAreaItem.setRequiredMessage(I18N.message("fieldrequired"));
 		textAreaItem.setHintStyle("hint");
 		TextAreaItem.setDefaultProperties(textAreaItem);
-		
+
 		TimeItem timeItem = new TimeItem();
 		timeItem.setHintStyle("hint");
 		timeItem.setWidth(50);
 		TimeItem.setDefaultProperties(timeItem);
-		
+
 		FloatItem floatItem = new FloatItem();
 		floatItem.setHintStyle("hint");
 		floatItem.setWidth(50);
@@ -194,8 +192,10 @@ public class ItemFactory {
 	/**
 	 * Creates a new DateItem.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param title The item title (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param title
+	 *            The item title (optional)
 	 */
 	public static DateItem newDateItem(String name, String title) {
 		DateItem date = new DateItem(filterItemName(name));
@@ -209,17 +209,22 @@ public class ItemFactory {
 	/**
 	 * Creates a new DateItem for the Extended AttributesDS.
 	 * 
-	 * @param name The item name (mandatory)
+	 * @param name
+	 *            The item name (mandatory)
 	 */
 	public static DateItem newDateItemForAttribute(String name, String title) {
 		// We cannot use spaces in items name
-		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		String itemName = "_"
+				+ name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		final DateItem date = new DateItem(itemName);
+		date.setTitle(title);
 		return date;
 	}
 
-	public static MiniDateRangeItem newMiniDateRangeItem(String name, String title) {
-		final MiniDateRangeItem date = new MiniDateRangeItem(filterItemName(name));
+	public static MiniDateRangeItem newMiniDateRangeItem(String name,
+			String title) {
+		final MiniDateRangeItem date = new MiniDateRangeItem(
+				filterItemName(name));
 		if (title != null)
 			date.setTitle(I18N.message(title));
 		else
@@ -236,8 +241,10 @@ public class ItemFactory {
 			return DateDisplayFormat.TOEUROPEANSHORTDATE;
 	}
 
-	public static SelectItem newUserSelectorForAttribute(String name, String title, String groupIdOrName) {
-		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title,
+	public static SelectItem newUserSelectorForAttribute(String name,
+			String title, String groupIdOrName) {
+		final SelectItem item = new UserSelector("_"
+				+ name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title,
 				groupIdOrName, false);
 		return item;
 	}
@@ -285,7 +292,8 @@ public class ItemFactory {
 		return sizeOperator;
 	}
 
-	public static SelectItem newLanguageSelector(String name, boolean withEmpty, boolean gui) {
+	public static SelectItem newLanguageSelector(String name,
+			boolean withEmpty, boolean gui) {
 		SelectItem item = new SelectItem();
 		if (gui)
 			item.setValueMap(I18N.getSupportedGuiLanguages(withEmpty));
@@ -311,7 +319,8 @@ public class ItemFactory {
 		code.setHidden(true);
 		code.setShowTitle(false);
 
-		ListGridField nameField = new ListGridField("name", I18N.message("name"));
+		ListGridField nameField = new ListGridField("name",
+				I18N.message("name"));
 		nameField.setWidth("*");
 		nameField.setShowTitle(false);
 
@@ -321,28 +330,8 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static SelectItem newStorageSelector(String name, Integer value) {
-		SelectItem item = new SelectItem();
-		item.setName(filterItemName(name));
-		item.setTitle(I18N.message("storage"));
-		item.setWrapTitle(false);
-		item.setDisplayField("name");
-		item.setValueField("id");
-
-		ListGridField nameField = new ListGridField("name", I18N.message("name"));
-		nameField.setWidth("*");
-		nameField.setShowTitle(false);
-
-		item.setPickListFields(nameField);
-		item.setOptionDataSource(new StoragesDS(true));
-
-		if (value != null)
-			item.setValue(value.toString());
-
-		return item;
-	}
-
-	public static TextItem newEmailItem(String name, String title, boolean multiple) {
+	public static TextItem newEmailItem(String name, String title,
+			boolean multiple) {
 		TextItem item = new TextItem();
 		item.setName(filterItemName(name));
 		if (title != null)
@@ -370,9 +359,11 @@ public class ItemFactory {
 		selector.setHideEmptyPickList(true);
 		ListGridField email = new ListGridField("email", I18N.message("email"));
 		email.setWidth("*");
-		ListGridField firstName = new ListGridField("firstName", I18N.message("firstname"));
+		ListGridField firstName = new ListGridField("firstName",
+				I18N.message("firstname"));
 		firstName.setWidth(90);
-		ListGridField lastName = new ListGridField("lastName", I18N.message("lastname"));
+		ListGridField lastName = new ListGridField("lastName",
+				I18N.message("lastname"));
 		lastName.setWidth(90);
 		selector.setPickListFields(email, firstName, lastName);
 		selector.setOptionDataSource(new ContactsDS());
@@ -390,9 +381,11 @@ public class ItemFactory {
 		selector.setHideEmptyPickList(true);
 		ListGridField email = new ListGridField("email", I18N.message("email"));
 		email.setWidth("*");
-		ListGridField firstName = new ListGridField("firstName", I18N.message("firstname"));
+		ListGridField firstName = new ListGridField("firstName",
+				I18N.message("firstname"));
 		firstName.setWidth(90);
-		ListGridField lastName = new ListGridField("lastName", I18N.message("lastname"));
+		ListGridField lastName = new ListGridField("lastName",
+				I18N.message("lastname"));
 		lastName.setWidth(90);
 		selector.setPickListFields(email, firstName, lastName);
 		selector.setOptionDataSource(new ContactsDS());
@@ -407,19 +400,22 @@ public class ItemFactory {
 		group.setDisplayField("name");
 		group.setPickListWidth(300);
 		ListGridField n = new ListGridField("name", I18N.message("name"));
-		ListGridField description = new ListGridField("description", I18N.message("description"));
+		ListGridField description = new ListGridField("description",
+				I18N.message("description"));
 		group.setPickListFields(n, description);
 		group.setOptionDataSource(new GroupsDS());
 		return group;
 	}
 
-	public static SelectItem newUserSelector(String name, String title, String groupIdOrName, boolean required) {
+	public static SelectItem newUserSelector(String name, String title,
+			String groupIdOrName, boolean required) {
 		SelectItem user = new SelectItem(filterItemName(name));
 		user.setTitle(I18N.message(title));
 		user.setWrapTitle(false);
 		ListGridField id = new ListGridField("id", I18N.message("id"));
 		id.setHidden(true);
-		ListGridField username = new ListGridField("username", I18N.message("username"));
+		ListGridField username = new ListGridField("username",
+				I18N.message("username"));
 		ListGridField label = new ListGridField("label", I18N.message("name"));
 		user.setValueField("id");
 		user.setDisplayField("username");
@@ -436,7 +432,8 @@ public class ItemFactory {
 		ListGridField id = new ListGridField("id", I18N.message("id"));
 		id.setHidden(true);
 		ListGridField _name = new ListGridField("name", I18N.message("name"));
-		ListGridField displayName = new ListGridField("displayName", I18N.message("displayname"));
+		ListGridField displayName = new ListGridField("displayName",
+				I18N.message("displayname"));
 		tenant.setValueField("id");
 		tenant.setDisplayField("displayName");
 		tenant.setPickListWidth(300);
@@ -470,8 +467,10 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static MultiComboBoxItem newMultiComboBoxItem(String name, String title, DataSource options, Object[] values) {
-		MultiComboBoxItem item = new MultiComboBoxItem(name, I18N.message(title));
+	public static MultiComboBoxItem newMultiComboBoxItem(String name,
+			String title, DataSource options, Object[] values) {
+		MultiComboBoxItem item = new MultiComboBoxItem(name,
+				I18N.message(title));
 		item.setLayoutStyle(MultiComboBoxLayoutStyle.FLOW);
 		item.setWidth(200);
 		item.setMultiple(true);
@@ -490,8 +489,10 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static MultiComboBoxItem newTagsComboBoxItem(String name, String title, TagsDS options, Object[] tags) {
-		MultiComboBoxItem item = newMultiComboBoxItem(name, title, options, tags);
+	public static MultiComboBoxItem newTagsComboBoxItem(String name,
+			String title, TagsDS options, Object[] tags) {
+		MultiComboBoxItem item = newMultiComboBoxItem(name, title, options,
+				tags);
 		item.setPrompt(I18N.message("typeatag"));
 		item.setValueField("word");
 		item.setDisplayField("word");
@@ -519,7 +520,8 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newWelcomeScreenSelector(String name, Integer value) {
-		SelectItem select = new SelectItem(filterItemName(name), I18N.message("welcomescreen"));
+		SelectItem select = new SelectItem(filterItemName(name),
+				I18N.message("welcomescreen"));
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("1500", I18N.message("documents"));
 		map.put("1510", I18N.message("search"));
@@ -537,11 +539,16 @@ public class ItemFactory {
 		select.setAllowEmptyValue(false);
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put("" + Constants.DASHLET_CHECKOUT, I18N.message(Constants.EVENT_CHECKEDOUT + "docs"));
-		map.put("" + Constants.DASHLET_CHECKIN, I18N.message(Constants.EVENT_CHECKEDIN + "docs"));
-		map.put("" + Constants.DASHLET_LOCKED, I18N.message(Constants.EVENT_LOCKED + "docs"));
-		map.put("" + Constants.DASHLET_CHANGED, I18N.message(Constants.EVENT_CHANGED + "docs"));
-		map.put("" + Constants.DASHLET_DOWNLOADED, I18N.message(Constants.EVENT_DOWNLOADED + "docs"));
+		map.put("" + Constants.DASHLET_CHECKOUT,
+				I18N.message(Constants.EVENT_CHECKEDOUT + "docs"));
+		map.put("" + Constants.DASHLET_CHECKIN,
+				I18N.message(Constants.EVENT_CHECKEDIN + "docs"));
+		map.put("" + Constants.DASHLET_LOCKED,
+				I18N.message(Constants.EVENT_LOCKED + "docs"));
+		map.put("" + Constants.DASHLET_CHANGED,
+				I18N.message(Constants.EVENT_CHANGED + "docs"));
+		map.put("" + Constants.DASHLET_DOWNLOADED,
+				I18N.message(Constants.EVENT_DOWNLOADED + "docs"));
 		map.put("" + Constants.DASHLET_LAST_NOTES, I18N.message("lastnotes"));
 		map.put("" + Constants.DASHLET_TAGCLOUD, I18N.message("tagcloud"));
 
@@ -550,7 +557,8 @@ public class ItemFactory {
 		return select;
 	}
 
-	public static SelectItem newEventsSelector(String name, String title, boolean folder, boolean workflow, boolean user) {
+	public static SelectItem newEventsSelector(String name, String title,
+			boolean folder, boolean workflow, boolean user) {
 		SelectItem select = newMultipleSelector(filterItemName(name), title);
 		select.setWidth(330);
 		select.setHeight(200);
@@ -581,7 +589,8 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static SpinnerItem newSpinnerItem(String name, String title, Long value) {
+	public static SpinnerItem newSpinnerItem(String name, String title,
+			Long value) {
 		SpinnerItem spinner = new SpinnerItem(name);
 		spinner.setTitle(I18N.message(title));
 		spinner.setMin(0);
@@ -594,7 +603,8 @@ public class ItemFactory {
 		return spinner;
 	}
 
-	public static SpinnerItem newSpinnerItem(String name, String title, Integer value) {
+	public static SpinnerItem newSpinnerItem(String name, String title,
+			Integer value) {
 		if (value != null)
 			return newSpinnerItem(name, title, new Long(value));
 		else
@@ -642,9 +652,12 @@ public class ItemFactory {
 	/**
 	 * Creates a new TextItem.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param title The item title (mandatory)
-	 * @param value The item value (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param title
+	 *            The item title (mandatory)
+	 * @param value
+	 *            The item value (optional)
 	 */
 	public static TextItem newTextItem(String name, String title, String value) {
 		TextItem item = new TextItem();
@@ -671,14 +684,18 @@ public class ItemFactory {
 	 */
 	public static FormItem newStringItemForAttribute(GUIAttribute att) {
 		// We cannot use spaces in items name
-		String itemName = "_" + att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		String itemName = "_"
+				+ att.getName().replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		FormItem item = new TextItem();
 
-		if (att.getEditor() == GUIAttribute.EDITOR_LISTBOX && att.getSetId() != null) {
+		if (att.getEditor() == GUIAttribute.EDITOR_LISTBOX
+				&& att.getSetId() != null) {
 			item = new SelectItem();
-			item.setOptionDataSource(new AttributeOptionsDS(att.getSetId(), att.getName(), !att.isMandatory()));
+			item.setOptionDataSource(new AttributeOptionsDS(att.getSetId(), att
+					.getName(), !att.isMandatory()));
 
-			ListGridField value = new ListGridField("value", I18N.message("value"));
+			ListGridField value = new ListGridField("value",
+					I18N.message("value"));
 			((SelectItem) item).setPickListWidth(200);
 			((SelectItem) item).setPickListFields(value);
 			((SelectItem) item).setValueField("value");
@@ -696,7 +713,8 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static PasswordItem newPasswordItem(String name, String title, String value) {
+	public static PasswordItem newPasswordItem(String name, String title,
+			String value) {
 		PasswordItem password = new PasswordItem();
 		password.setTitle(I18N.message(title));
 		password.setName(filterItemName(name));
@@ -708,12 +726,17 @@ public class ItemFactory {
 	/**
 	 * Creates a new TextItem that validates a simple text.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param title The item title (mandatory)
-	 * @param value The item value (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param title
+	 *            The item title (mandatory)
+	 * @param value
+	 *            The item value (optional)
 	 */
-	public static TextItem newSimpleTextItem(String name, String title, String value) {
-		TextItem item = newTextItem(filterItemName(name), I18N.message(title), value);
+	public static TextItem newSimpleTextItem(String name, String title,
+			String value) {
+		TextItem item = newTextItem(filterItemName(name), I18N.message(title),
+				value);
 		item.setValidators(new SimpleTextValidator());
 		return item;
 	}
@@ -721,11 +744,15 @@ public class ItemFactory {
 	/**
 	 * Creates a new StaticTextItem.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param title The item title (mandatory)
-	 * @param value The item value (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param title
+	 *            The item title (mandatory)
+	 * @param value
+	 *            The item value (optional)
 	 */
-	public static StaticTextItem newStaticTextItem(String name, String title, String value) {
+	public static StaticTextItem newStaticTextItem(String name, String title,
+			String value) {
 		StaticTextItem item = new StaticTextItem();
 		if (name.trim().isEmpty())
 			item.setShouldSaveValue(false);
@@ -742,9 +769,12 @@ public class ItemFactory {
 	/**
 	 * Creates a new IntegerItem.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param title The item title (mandatory)
-	 * @param value The item value (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param title
+	 *            The item title (mandatory)
+	 * @param value
+	 *            The item value (optional)
 	 */
 	public static IntegerItem newLongItem(String name, String title, Long value) {
 		IntegerItem item = new IntegerItem();
@@ -761,11 +791,15 @@ public class ItemFactory {
 	/**
 	 * Creates a new IntegerItem.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param title The item title (mandatory)
-	 * @param value The item value (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param title
+	 *            The item title (mandatory)
+	 * @param value
+	 *            The item value (optional)
 	 */
-	public static IntegerItem newIntegerItem(String name, String title, Integer value) {
+	public static IntegerItem newIntegerItem(String name, String title,
+			Integer value) {
 		IntegerItem item = new IntegerItem();
 		item.setName(filterItemName(name));
 		item.setTitle(I18N.message(title));
@@ -778,7 +812,8 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static ColorPickerItem newColorItem(String name, String title, String value) {
+	public static ColorPickerItem newColorItem(String name, String title,
+			String value) {
 		ColorPickerItem item = new ColorPickerItem();
 		item.setName(filterItemName(name));
 		item.setTitle(I18N.message(title));
@@ -790,12 +825,16 @@ public class ItemFactory {
 	/**
 	 * Creates a new IntegerItem for the Extended AttributesDS.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param value The item value (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param value
+	 *            The item value (optional)
 	 */
-	public static IntegerItem newIntegerItemForAttribute(String name, String label, Integer value) {
+	public static IntegerItem newIntegerItemForAttribute(String name,
+			String label, Integer value) {
 		// We cannot use spaces in items name
-		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		String itemName = "_"
+				+ name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		IntegerItem item = newIntegerItem(itemName, label, value);
 		return item;
 	}
@@ -803,8 +842,10 @@ public class ItemFactory {
 	/**
 	 * Simple boolean selector for Extended Attribute
 	 */
-	public static SelectItem newBooleanSelectorForAttribute(String name, String title, boolean allowEmpty) {
-		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+	public static SelectItem newBooleanSelectorForAttribute(String name,
+			String title, boolean allowEmpty) {
+		String itemName = "_"
+				+ name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		SelectItem select = new SelectItem();
 		select.setName(itemName);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
@@ -824,14 +865,21 @@ public class ItemFactory {
 	/**
 	 * Creates a new IntegerItem with a range validator.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param title The item title (mandatory)
-	 * @param value The item value (optional)
-	 * @param min The item minimum value (optional)
-	 * @param min The item maximum value (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param title
+	 *            The item title (mandatory)
+	 * @param value
+	 *            The item value (optional)
+	 * @param min
+	 *            The item minimum value (optional)
+	 * @param min
+	 *            The item maximum value (optional)
 	 */
-	public static IntegerItem newValidateIntegerItem(String name, String title, Integer value, Integer min, Integer max) {
-		IntegerItem item = newIntegerItem(filterItemName(name), I18N.message(title), value);
+	public static IntegerItem newValidateIntegerItem(String name, String title,
+			Integer value, Integer min, Integer max) {
+		IntegerItem item = newIntegerItem(filterItemName(name),
+				I18N.message(title), value);
 		IntegerRangeValidator rv = null;
 		if (min != null || max != null) {
 			rv = new IntegerRangeValidator();
@@ -853,7 +901,8 @@ public class ItemFactory {
 	 * Creates a new SpinnerItem( with a range validator.
 	 * 
 	 */
-	public static SpinnerItem newSpinnerItem(String name, String title, Integer value, Integer min, Integer max) {
+	public static SpinnerItem newSpinnerItem(String name, String title,
+			Integer value, Integer min, Integer max) {
 		SpinnerItem spinner = new SpinnerItem(name);
 		spinner.setTitle(I18N.message(title));
 		spinner.setWrapTitle(false);
@@ -881,11 +930,15 @@ public class ItemFactory {
 	/**
 	 * Creates a new TextAreaItem.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param title The item title (mandatory)
-	 * @param value The item value (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param title
+	 *            The item title (mandatory)
+	 * @param value
+	 *            The item value (optional)
 	 */
-	public static TextAreaItem newTextAreaItem(String name, String title, String value) {
+	public static TextAreaItem newTextAreaItem(String name, String title,
+			String value) {
 		TextAreaItem item = new TextAreaItem();
 		item.setName(filterItemName(name));
 		item.setTitle(I18N.message(title));
@@ -899,7 +952,8 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newDueTimeSelector(String name, String title) {
-		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
+		SelectItem select = new SelectItem(filterItemName(name),
+				I18N.message(title));
 		select.setWidth(90);
 		select.setShowTitle(false);
 
@@ -917,15 +971,18 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static SelectItem newTemplateSelector(boolean withEmpty, Long templateId) {
-		SelectItem templateItem = new SelectItem("template", I18N.message("template"));
+	public static SelectItem newTemplateSelector(boolean withEmpty,
+			Long templateId) {
+		SelectItem templateItem = new SelectItem("template",
+				I18N.message("template"));
 		templateItem.setDisplayField("name");
 		templateItem.setValueField("id");
 		templateItem.setPickListWidth(250);
 		templateItem.setMultiple(false);
 		templateItem.setWrapTitle(false);
 		templateItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
-		templateItem.setOptionDataSource(new TemplatesDS(withEmpty, templateId, null));
+		templateItem.setOptionDataSource(new TemplatesDS(withEmpty, templateId,
+				null));
 
 		if (!Feature.enabled(Feature.TEMPLATE))
 			templateItem.setDisabled(true);
@@ -935,20 +992,23 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newAttributeSetSelector() {
-		final SelectItem selectItem = new SelectItem("attributeset", I18N.message("attributeset"));
+		final SelectItem selectItem = new SelectItem("attributeset",
+				I18N.message("attributeset"));
 		selectItem.setMultiple(false);
 		selectItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
 		selectItem.setDisplayField("name");
 		selectItem.setValueField("id");
 		selectItem.setPickListWidth(250);
-		selectItem.setOptionDataSource(new AttributeSetsDS(false, GUIAttributeSet.TYPE_DEFAULT));
+		selectItem.setOptionDataSource(new AttributeSetsDS(false,
+				GUIAttributeSet.TYPE_DEFAULT));
 		selectItem.setWrapTitle(false);
 
 		return selectItem;
 	}
 
 	public static SelectItem newAttributesSelector() {
-		final SelectItem selectItem = new SelectItem("attributes", I18N.message("attributes"));
+		final SelectItem selectItem = new SelectItem("attributes",
+				I18N.message("attributes"));
 		selectItem.setMultiple(true);
 		selectItem.setMultipleAppearance(MultipleAppearance.PICKLIST);
 		selectItem.setDisplayField("label");
@@ -960,7 +1020,8 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newFrequencySelector(String name, String title) {
-		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
+		SelectItem select = new SelectItem(filterItemName(name),
+				I18N.message(title));
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("0", "");
@@ -977,7 +1038,8 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newEventStatusSelector(String name, String title) {
-		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
+		SelectItem select = new SelectItem(filterItemName(name),
+				I18N.message(title));
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("0", "");
@@ -991,14 +1053,16 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newEmailProtocolSelector(String name, String title) {
-		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
+		SelectItem select = new SelectItem(filterItemName(name),
+				I18N.message(title));
 		select.setWidth(110);
 		select.setValueMap("pop3", "imap");
 		return select;
 	}
 
 	public static SelectItem newEmailFolderingSelector(String name, String title) {
-		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
+		SelectItem select = new SelectItem(filterItemName(name),
+				I18N.message(title));
 		select.setWidth(110);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("0", I18N.message("none"));
@@ -1010,7 +1074,8 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newEffectSelector(String name, String title) {
-		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
+		SelectItem select = new SelectItem(filterItemName(name),
+				I18N.message(title));
 		select.setWidth(110);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("", "");
@@ -1021,7 +1086,8 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newEmailFields(String name, String title) {
-		SelectItem select = new SelectItem(filterItemName(name), I18N.message(title));
+		SelectItem select = new SelectItem(filterItemName(name),
+				I18N.message(title));
 		select.setWidth(110);
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("0", I18N.message("subject"));
@@ -1050,7 +1116,8 @@ public class ItemFactory {
 		item.setTitle("");
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		ListGridField name = new ListGridField("name", I18N.message("name"));
-		ListGridField description = new ListGridField("description", I18N.message("description"));
+		ListGridField description = new ListGridField("description",
+				I18N.message("description"));
 		item.setValueField("id");
 		item.setDisplayField("name");
 		item.setPickListWidth(300);
@@ -1065,10 +1132,14 @@ public class ItemFactory {
 		SelectItem item = newSelectItem("importcids", null);
 
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
-		map.put(Integer.toString(GUIArchive.CUSTOMID_NOT_IMPORT), I18N.message("ignore"));
-		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_RELEASE), I18N.message("importasnewversion"));
-		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_SUBVERSION), I18N.message("importasnewsubversion"));
-		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_DOCUMENT), I18N.message("importasnewdoc"));
+		map.put(Integer.toString(GUIArchive.CUSTOMID_NOT_IMPORT),
+				I18N.message("ignore"));
+		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_RELEASE),
+				I18N.message("importasnewversion"));
+		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_SUBVERSION),
+				I18N.message("importasnewsubversion"));
+		map.put(Integer.toString(GUIArchive.CUSTOMID_IMPORT_AND_NEW_DOCUMENT),
+				I18N.message("importasnewdoc"));
 		item.setValueMap(map);
 		return item;
 	}
@@ -1077,7 +1148,8 @@ public class ItemFactory {
 		SelectItem item = new SelectItem("workflow", I18N.message("workflow"));
 		item.setRequiredMessage(I18N.message("fieldrequired"));
 		ListGridField name = new ListGridField("name", I18N.message("name"));
-		ListGridField description = new ListGridField("description", I18N.message("description"));
+		ListGridField description = new ListGridField("description",
+				I18N.message("description"));
 		item.setWidth(250);
 		item.setPickListWidth(300);
 		item.setPickListFields(name, description);
@@ -1086,7 +1158,8 @@ public class ItemFactory {
 		item.setWrapTitle(false);
 		item.setOptionDataSource(new WorkflowsDS(false, false, true));
 		if (!Feature.enabled(Feature.WORKFLOW))
-			item.setDisabled(true);;
+			item.setDisabled(true);
+		;
 		return item;
 	}
 
@@ -1114,7 +1187,8 @@ public class ItemFactory {
 		item.setDisplayField("name");
 		item.setValueField("id");
 		item.setWrapTitle(false);
-		item.setOptionDataSource(new StampsDS(Session.get().getUser().getId(), true));
+		item.setOptionDataSource(new StampsDS(Session.get().getUser().getId(),
+				true));
 		if (!Feature.enabled(Feature.STAMP))
 			item.setDisabled(true);
 		return item;
@@ -1131,9 +1205,12 @@ public class ItemFactory {
 	/**
 	 * Creates a new FloatItem.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param title The item title (mandatory)
-	 * @param value The item value (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param title
+	 *            The item title (mandatory)
+	 * @param value
+	 *            The item value (optional)
 	 */
 	public static FloatItem newFloatItem(String name, String title, Float value) {
 		FloatItem item = new FloatItem();
@@ -1150,12 +1227,16 @@ public class ItemFactory {
 	/**
 	 * Creates a new FloatItem for the Extended AttributesDS.
 	 * 
-	 * @param name The item name (mandatory)
-	 * @param value The item value (optional)
+	 * @param name
+	 *            The item name (mandatory)
+	 * @param value
+	 *            The item value (optional)
 	 */
-	public static FloatItem newFloatItemForAttribute(String name, String label, Float value) {
+	public static FloatItem newFloatItemForAttribute(String name, String label,
+			Float value) {
 		// We cannot use spaces in items name
-		String itemName = "_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
+		String itemName = "_"
+				+ name.replaceAll(" ", Constants.BLANK_PLACEHOLDER);
 		FloatItem item = newFloatItem(itemName, label, value);
 		return item;
 	}
@@ -1164,7 +1245,8 @@ public class ItemFactory {
 	 * Simple yes/no radio button. yes=true, no=false
 	 */
 	public static RadioGroupItem newYesNoRadioItem(String name, String label) {
-		RadioGroupItem item = new RadioGroupItem(filterItemName(name), I18N.message(label));
+		RadioGroupItem item = new RadioGroupItem(filterItemName(name),
+				I18N.message(label));
 		item.setVertical(false);
 		item.setShowTitle(true);
 		item.setWrap(false);
@@ -1223,12 +1305,17 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newRetentionDateOption(int value) {
-		SelectItem selector = new SelectItem("dateoption", I18N.message("dateoption"));
+		SelectItem selector = new SelectItem("dateoption",
+				I18N.message("dateoption"));
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("" + GUIRetentionPolicy.DATE_OPT_CREATION, I18N.message("created"));
-		opts.put("" + GUIRetentionPolicy.DATE_OPT_PUBLISHED, I18N.message("published"));
-		opts.put("" + GUIRetentionPolicy.DATE_OPT_STOPPUBLISHING, I18N.message("stoppublishing"));
-		opts.put("" + GUIRetentionPolicy.DATE_OPT_ARCHIVED, I18N.message("archiveds"));
+		opts.put("" + GUIRetentionPolicy.DATE_OPT_CREATION,
+				I18N.message("created"));
+		opts.put("" + GUIRetentionPolicy.DATE_OPT_PUBLISHED,
+				I18N.message("published"));
+		opts.put("" + GUIRetentionPolicy.DATE_OPT_STOPPUBLISHING,
+				I18N.message("stoppublishing"));
+		opts.put("" + GUIRetentionPolicy.DATE_OPT_ARCHIVED,
+				I18N.message("archiveds"));
 		selector.setValueMap(opts);
 
 		selector.setWrapTitle(false);
@@ -1243,8 +1330,10 @@ public class ItemFactory {
 	public static SelectItem newRetentionAction(int value) {
 		SelectItem selector = new SelectItem("action", I18N.message("action"));
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
-		opts.put("" + GUIRetentionPolicy.ACTION_ARCHIVE, I18N.message("archive"));
-		opts.put("" + GUIRetentionPolicy.ACTION_UNPUBLISH, I18N.message("unpublish"));
+		opts.put("" + GUIRetentionPolicy.ACTION_ARCHIVE,
+				I18N.message("archive"));
+		opts.put("" + GUIRetentionPolicy.ACTION_UNPUBLISH,
+				I18N.message("unpublish"));
 		opts.put("" + GUIRetentionPolicy.ACTION_DELETE, I18N.message("ddelete"));
 		selector.setValueMap(opts);
 
