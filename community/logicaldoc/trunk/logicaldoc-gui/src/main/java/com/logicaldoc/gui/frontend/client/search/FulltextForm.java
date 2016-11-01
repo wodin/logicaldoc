@@ -163,8 +163,9 @@ public class FulltextForm extends VLayout implements SearchObserver {
 
 	@SuppressWarnings("rawtypes")
 	private void search() {
-		if (!vm.validate())
+		if (!vm.validate()) {
 			return;
+		}
 
 		@SuppressWarnings("unchecked")
 		Map<String, Object> values = vm.getValues();
@@ -221,8 +222,12 @@ public class FulltextForm extends VLayout implements SearchObserver {
 				options.setDateTo(end);
 		}
 
-		if (values.containsKey("template") && !((String) values.get("template")).isEmpty())
-			options.setTemplate(new Long((String) values.get("template")));
+		try {
+			if (values.containsKey("template") && values.get("template") != null
+					&& !((String) values.get("template")).isEmpty())
+				options.setTemplate(Long.parseLong((String) values.get("template")));
+		} catch (Throwable t) {
+		}
 
 		String[] fields = searchinItem.getValues();
 		options.setFields(fields);
