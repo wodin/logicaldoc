@@ -83,6 +83,7 @@ public class ItemFactory {
 		dialog.setClearButtonTitle(I18N.message("clear"));
 		dialog.setOkButtonTitle(I18N.message("ok"));
 		dialog.setHeaderTitle(I18N.message("selectdaterange"));
+		dialog.setTitle(I18N.message("selectdaterange"));
 		DateRangeDialog.setDefaultProperties(dialog);
 
 		DateRangeItem dateRangeItem = new DateRangeItem();
