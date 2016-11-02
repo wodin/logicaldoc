@@ -124,7 +124,6 @@ public class SoapDocumentServiceTest extends AbstractWebServiceTestCase {
 		docDao.initialize(doc);
 
 		Assert.assertEquals("document test", doc.getTitle());
-		Assert.assertNull(doc.getCoverage());
 		Assert.assertEquals("coverage-val", doc.getValue("coverage"));
 
 		wsDoc = docServiceImpl.getDocument("xxxx", doc.getId());

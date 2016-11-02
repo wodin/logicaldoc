@@ -114,9 +114,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	@Deprecated
 	private String object;
 
-	@Deprecated
-	private String coverage;
-
 	private Date creation = new Date();
 
 	private String language;
@@ -315,19 +312,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	@Deprecated
 	public void setSource(String source) {
 		this.source = source;
-	}
-
-	/**
-	 * The coverage of the document (form document's metadata)
-	 */
-	@Deprecated
-	public String getCoverage() {
-		return coverage;
-	}
-
-	@Deprecated
-	public void setCoverage(String coverage) {
-		this.coverage = coverage;
 	}
 
 	/**

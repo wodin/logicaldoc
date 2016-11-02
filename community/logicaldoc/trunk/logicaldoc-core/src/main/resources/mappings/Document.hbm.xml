@@ -30,7 +30,6 @@
 		<property name="source" type="string" column="ld_source" length="4000" />
 		<property name="sourceId" type="string" column="ld_sourceid" length="1000"/>
 		<property name="object" type="string" column="ld_object" length="1000"/>
-		<property name="coverage" type="string" column="ld_coverage" length="255" />
 		<property name="language" type="string" column="ld_language" length="10" />
 		<property name="fileName" type="string" column="ld_filename" length="255" />
 		<property name="fileSize" type="long" column="ld_filesize" />        
