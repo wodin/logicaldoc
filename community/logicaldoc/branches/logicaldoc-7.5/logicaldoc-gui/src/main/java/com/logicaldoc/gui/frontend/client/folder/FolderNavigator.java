@@ -259,25 +259,27 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 					} else if (loc.getParameter("docId") != null) {
 						DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("docId")));
 					} else {
-						TreeNode rootNode = getTree().getRoot();
-						TreeNode[] children = getTree().getChildren(rootNode);
-						if (children != null && children.length > 0) {
-							getTree().openFolder(children[0]);
+						if ("true".equals(Session.get().getConfig("gui.folder.opentree"))) {
+							TreeNode rootNode = getTree().getRoot();
+							TreeNode[] children = getTree().getChildren(rootNode);
+							if (children != null && children.length > 0) {
+								getTree().openFolder(children[0]);
+							}
+
+							service.getFolder(Long.parseLong(children[0].getAttribute("folderId")), true,
+									new AsyncCallback<GUIFolder>() {
+
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
+
+										@Override
+										public void onSuccess(GUIFolder folder) {
+											Session.get().setCurrentFolder(folder);
+										}
+									});
 						}
-
-						service.getFolder(Long.parseLong(children[0].getAttribute("folderId")), true,
-								new AsyncCallback<GUIFolder>() {
-
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
-
-									@Override
-									public void onSuccess(GUIFolder folder) {
-										Session.get().setCurrentFolder(folder);
-									}
-								});
 					}
 
 					FolderNavigator.this.firstTime = false;
@@ -565,8 +567,8 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 			paste.setEnabled(false);
 			pasteAsAlias.setEnabled(false);
 		}
-		
-		if(!folder.hasPermission(Constants.PERMISSION_ADD)){
+
+		if (!folder.hasPermission(Constants.PERMISSION_ADD)) {
 			createAlias.setEnabled(false);
 		}
 
