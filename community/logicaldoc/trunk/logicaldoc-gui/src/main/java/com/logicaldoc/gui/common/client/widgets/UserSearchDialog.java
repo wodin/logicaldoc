@@ -10,19 +10,18 @@ import com.logicaldoc.gui.common.client.services.SecurityServiceAsync;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.SelectionStyle;
-import com.smartgwt.client.types.TitleOrientation;
-import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
-import com.smartgwt.client.widgets.form.DynamicForm;
-import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
-import com.smartgwt.client.widgets.layout.VLayout;
+import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * This is a form used for quick user selection
@@ -31,8 +30,6 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @since 6.6
  */
 public class UserSearchDialog extends Window {
-	private ValuesManager vm = new ValuesManager();
-
 	private SecurityServiceAsync service = (SecurityServiceAsync) GWT.create(SecurityService.class);
 
 	private ListGrid grid = new ListGrid();
@@ -46,53 +43,48 @@ public class UserSearchDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("users"));
-		setAutoSize(true);
-		setCanDragResize(true);
+		setWidth(500);
+		setHeight(400);
 		setIsModal(true);
 		setShowModalMask(true);
+		setCanDragResize(true);
 		centerInPage();
-		setPadding(5);
+		setMembersMargin(5);
 		setAutoSize(true);
-		setMembersMargin(3);
 
-		VLayout formPanel = new VLayout();
+		final TextItem username = ItemFactory.newTextItem("username", "username", null);
+		final SelectItem group = ItemFactory.newGroupSelector("group", "group");
 
-		final DynamicForm form = new DynamicForm();
-		form.setValuesManager(vm);
-		form.setTitleOrientation(TitleOrientation.LEFT);
-		form.setNumCols(4);
-		form.setWidth100();
-
-		TextItem username = ItemFactory.newTextItem("username", "username", null);
-		SelectItem group = ItemFactory.newGroupSelector("group", "group");
-
-		form.setItems(username, group);
-
-		IButton search = new IButton(I18N.message("search"));
+		ToolStripButton search = new ToolStripButton(I18N.message("search"));
 		search.setAutoFit(true);
 		search.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				search(vm.getValueAsString("username"), vm.getValueAsString("group"));
+				search(username.getValueAsString(), group.getValueAsString());
 			}
 		});
 
-		formPanel.setMembers(form, search);
+		final ToolStrip toolStrip = new ToolStrip();
+		toolStrip.setHeight(20);
+		toolStrip.setWidth100();
+		toolStrip.addSpacer(2);
+		toolStrip.addFormItem(username);
+		toolStrip.addFormItem(group);
+		toolStrip.addButton(search);
 
-		grid.setWidth100();
-		grid.setHeight100();
-		grid.setMinHeight(250);
 		ListGridField usernameField = new ListGridField("username", I18N.message("username"));
 		ListGridField nameField = new ListGridField("firstname", I18N.message("firstname"));
 		ListGridField lastnameField = new ListGridField("lastname", I18N.message("lastname"));
+
 		grid.setFields(usernameField, nameField, lastnameField);
+		grid.setWidth100();
+		grid.setHeight(getHeight());
 		grid.setSelectionType(SelectionStyle.SINGLE);
 		grid.setEmptyMessage(I18N.message("notitemstoshow"));
-		grid.setShowRecordComponents(true);
-		grid.setShowRecordComponentsByCell(true);
+		grid.setCanFreezeFields(true);
 		grid.setAutoFetchData(true);
-		grid.setWrapCells(false);
+		grid.setAutoDraw(true);
 		grid.setData(lastResult);
 
 		grid.addDoubleClickHandler(new DoubleClickHandler() {
@@ -103,7 +95,15 @@ public class UserSearchDialog extends Window {
 			}
 		});
 
-		addItem(formPanel);
+		addResizedHandler(new ResizedHandler() {
+
+			@Override
+			public void onResized(ResizedEvent event) {
+				grid.setHeight(getHeight() - 68);
+			}
+		});
+
+		addItem(toolStrip);
 		addItem(grid);
 	}
 
