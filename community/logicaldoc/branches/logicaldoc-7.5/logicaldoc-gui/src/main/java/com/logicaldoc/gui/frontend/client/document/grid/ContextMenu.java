@@ -759,7 +759,6 @@ public class ContextMenu extends Menu {
 				office.setEnabled(true);
 			else
 				office.setEnabled(false);
-			removeItem(office);
 		} else
 			removeItem(office);
 
