@@ -1091,6 +1091,16 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		Folder parentFolder = findFolder(parentId);
 		assert (parentFolder != null);
 
+		/*
+		 * Detect possible cycle
+		 */
+		List<Folder> parents = findParents(parentId);
+		parents.add(parentFolder);
+		for (Folder p : parents) {
+			if (p.getId() == foldRef)
+				throw new RuntimeException("Cycle detected. The alias cannot reference a parent folder");
+		}
+
 		// Prepare the transaction
 		if (transaction != null) {
 			transaction.setTenantId(targetFolder.getTenantId());
