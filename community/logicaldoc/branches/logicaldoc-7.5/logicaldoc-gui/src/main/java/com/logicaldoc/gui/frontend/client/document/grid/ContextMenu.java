@@ -561,8 +561,6 @@ public class ContextMenu extends Menu {
 				GUIDocument selection = grid.getSelectedDocument();
 				if (selection == null)
 					return;
-				long docId = selection.getId();
-
 				WindowUtils.openUrl("ldedit:" + GWT.getHostPageBaseURL() + "ldedit?action=edit&sid="
 						+ Session.get().getSid() + "&docId=" + selection.getId());
 			}
