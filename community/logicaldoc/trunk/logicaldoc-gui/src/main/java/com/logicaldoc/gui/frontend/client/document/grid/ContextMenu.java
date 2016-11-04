@@ -601,8 +601,13 @@ public class ContextMenu extends Menu {
 		preview.setTitle(I18N.message("preview"));
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				GUIDocument selection = grid.getSelectedDocument();
-				PreviewPopup iv = new PreviewPopup(selection);
+				GUIDocument[] docs=grid.getSelectedDocuments();
+				int index=0;
+				if(docs.length<=1){
+					docs=grid.getDocuments();
+					index=grid.getSelectedIndex();
+				}
+				PreviewPopup iv = new PreviewPopup(docs, index);
 				iv.show();
 			}
 		});

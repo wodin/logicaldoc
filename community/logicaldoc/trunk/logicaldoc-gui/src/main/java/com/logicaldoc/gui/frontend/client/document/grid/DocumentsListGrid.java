@@ -699,8 +699,18 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	}
 
 	@Override
+	public int getSelectedIndex() {
+		return super.getRecordIndex(getSelectedRecord());
+	}
+	
+	@Override
 	public GUIDocument[] getSelectedDocuments() {
 		return GridUtil.toDocuments(getSelectedRecords());
+	}
+	
+	@Override
+	public GUIDocument[] getDocuments() {
+		return GridUtil.toDocuments(getRecords());
 	}
 
 	@Override

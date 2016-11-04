@@ -185,6 +185,16 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 	}
 
 	@Override
+	public GUIDocument[] getDocuments() {
+		return GridUtil.toDocuments(getRecordList().toArray());
+	}
+
+	@Override
+	public int getSelectedIndex() {
+		return super.getRecordIndex(getSelectedRecord());
+	}
+
+	@Override
 	public long[] getSelectedIds() {
 		return GridUtil.getIds(getSelection());
 	}

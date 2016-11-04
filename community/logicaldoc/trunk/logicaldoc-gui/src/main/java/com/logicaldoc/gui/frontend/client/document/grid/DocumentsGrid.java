@@ -18,7 +18,7 @@ public interface DocumentsGrid {
 	public final static int MODE_LIST = 0;
 
 	public final static int MODE_GALLERY = 1;
-	
+
 	/**
 	 * Updates the visualization of the proper document element
 	 */
@@ -28,6 +28,11 @@ public interface DocumentsGrid {
 	 * Forces the records in the grid
 	 */
 	public void setDocuments(GUIDocument[] documents);
+
+	/**
+	 * Retrieves all the documents
+	 */
+	public GUIDocument[] getDocuments();
 
 	/**
 	 * Renders the selected row as checked-out
@@ -44,6 +49,11 @@ public interface DocumentsGrid {
 	 * properties are populated).
 	 */
 	public GUIDocument getSelectedDocument();
+
+	/**
+	 * Retrieves the index of the currently selected record
+	 */
+	public int getSelectedIndex();
 
 	/**
 	 * Gets a bean representation of the currently selected items (not all
@@ -110,7 +120,7 @@ public interface DocumentsGrid {
 	 * Expands all visible rows
 	 */
 	public void expandVisibleRows();
-	
+
 	/**
 	 * Tells if the grid must support the drag
 	 */
@@ -120,7 +130,7 @@ public interface DocumentsGrid {
 	 * Defines the cursor widget this grid will have to interact to
 	 */
 	public void setCursor(Cursor cursor);
-	
+
 	public void registerDoubleClickHandler(DoubleClickHandler handler);
 
 	public void registerSelectionChangedHandler(SelectionChangedHandler handler);
