@@ -611,7 +611,7 @@ public class ContextMenu extends Menu {
 				iv.show();
 			}
 		});
-		preview.setEnabled(selection.length == 1);
+		preview.setEnabled(selection.length >= 1);
 
 		MenuItem downloadTicket = new MenuItem(I18N.message("downloadticket"));
 		downloadTicket.addClickHandler(new ClickHandler() {
