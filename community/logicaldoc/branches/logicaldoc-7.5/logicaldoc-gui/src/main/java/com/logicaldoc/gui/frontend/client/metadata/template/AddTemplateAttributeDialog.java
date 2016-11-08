@@ -188,6 +188,7 @@ public class AddTemplateAttributeDialog extends Window {
 					record.setAttribute("set", att.getSet());
 					record.setAttribute("setId", att.getSetId());
 					record.setAttribute("type", att.getType());
+					record.setAttribute("editor", att.getEditor());
 					setAttributesList.getRecordList().add(record);
 				}
 			}
