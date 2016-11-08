@@ -97,6 +97,7 @@ public class TemplatePropertiesPanel extends HLayout {
 			att.setType(Integer.parseInt(rec.getAttributeAsString("type")));
 			att.setSet(rec.getAttributeAsString("set"));
 			att.setSetId(Long.parseLong(rec.getAttributeAsString("setId")));
+			att.setEditor(Integer.parseInt(rec.getAttributeAsString("editor")));
 
 			template.appendAttribute(att);
 
@@ -278,6 +279,7 @@ public class TemplatePropertiesPanel extends HLayout {
 			record.setAttribute("set", att.getSet());
 			record.setAttribute("setId", att.getSet());
 			record.setAttribute("type", att.getType());
+			record.setAttribute("editor", att.getEditor());
 			attributesList.getRecordList().add(record);
 		}
 	}
