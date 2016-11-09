@@ -53,6 +53,8 @@ public class RightsDataServlet extends HttpServlet {
 				menuId = new Long(request.getParameter("menuId"));
 
 			String locale = request.getParameter("locale");
+			if (StringUtils.isEmpty(locale))
+				locale = "en";
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -92,6 +94,8 @@ public class RightsDataServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 
+		System.out.println("folderRights");
+		
 		/*
 		 * Iterate over records composing the response XML document
 		 */
@@ -112,7 +116,7 @@ public class RightsDataServlet extends HttpServlet {
 						writer.print("<entity><![CDATA[" + I18N.message("user", locale) + ": " + user.getFullName()
 								+ " (" + user.getUsername() + ")]]></entity>");
 					}
-					writer.print("<read>" + true + "</read>");
+					writer.print("<read>true</read>");
 					writer.print("<print>" + (folderGroup.getPrint() == 1 ? true : false) + "</print>");
 					writer.print("<write>" + (folderGroup.getWrite() == 1 ? true : false) + "</write>");
 					writer.print("<add>" + (folderGroup.getAdd() == 1 ? true : false) + "</add>");
