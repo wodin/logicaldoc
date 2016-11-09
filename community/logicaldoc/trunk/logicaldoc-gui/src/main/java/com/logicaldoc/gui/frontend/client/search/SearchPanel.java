@@ -22,6 +22,8 @@ import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.events.VisibilityChangedEvent;
+import com.smartgwt.client.widgets.events.VisibilityChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -48,7 +50,9 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 
 	private static SearchPanel instance;
 
-	private VLayout right = new VLayout();
+	private VLayout body = new VLayout();
+
+	private SearchPreviewPanel previewPanel;
 
 	private SearchPanel() {
 		Search.get().addObserver(this);
@@ -75,11 +79,22 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 		details.setAlign(Alignment.CENTER);
 		details.addMember(detailPanel);
 
-		right.addMember(content);
-		right.addMember(details);
+		body.addMember(content);
+		body.addMember(details);
+		body.setShowResizeBar(true);
+		body.setResizeBarTarget("next");
 
-		addMember(searchMenu);
-		addMember(right);
+		previewPanel = new SearchPreviewPanel();
+		previewPanel.addVisibilityChangedHandler(new VisibilityChangedHandler() {
+
+			@Override
+			public void onVisibilityChanged(VisibilityChangedEvent event) {
+				if (detailPanel instanceof DocumentDetailsPanel)
+					previewPanel.setDocument(((DocumentDetailsPanel) detailPanel).getDocument());
+			}
+		});
+		
+		setMembers(searchMenu, body, previewPanel);
 
 		setShowEdges(false);
 	}
@@ -134,6 +149,7 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 	@Override
 	public void onSearchArrived() {
 		onSelectedDocumentHit(-1);
+		previewPanel.reset();
 	}
 
 	@Override
@@ -189,10 +205,16 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 			details.addMember(detailPanel);
 		}
 		details.redraw();
+
+		previewPanel.setDocument(document);
 	}
 
 	@Override
 	public void onDocumentSaved(GUIDocument document) {
-		// Nothing to do
+		previewPanel.setDocument(document);
+	}
+
+	public SearchPreviewPanel getPreviewPanel() {
+		return previewPanel;
 	}
 }

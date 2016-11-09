@@ -332,6 +332,34 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			}
 		});
 
+		final ToolStripButton togglePreview = new ToolStripButton();
+		togglePreview.setIcon(ItemFactory.newImgIcon("application_side_expand.png").getSrc());
+		togglePreview.setTooltip(I18N.message("closepreview"));
+		try {
+			// Retrieve the saved preview width
+			String w = (String) Offline.get(Constants.COOKIE_HITSLIST_PREV_W);
+			if (Integer.parseInt(w) <= 0) {
+				togglePreview.setIcon(ItemFactory.newImgIcon("application_side_contract.png").getSrc());
+				togglePreview.setTooltip(I18N.message("openpreview"));
+			}
+		} catch (Throwable t) {
+		}
+		togglePreview.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (SearchPanel.get().getPreviewPanel().isVisible()
+						&& SearchPanel.get().getPreviewPanel().getWidth() > 0) {
+					SearchPanel.get().getPreviewPanel().setWidth(0);
+					togglePreview.setIcon(ItemFactory.newImgIcon("application_side_contract.png").getSrc());
+					togglePreview.setTooltip(I18N.message("openpreview"));
+				} else {
+					SearchPanel.get().getPreviewPanel().setWidth(350);
+					togglePreview.setIcon(ItemFactory.newImgIcon("application_side_expand.png").getSrc());
+					togglePreview.setTooltip(I18N.message("closepreview"));
+				}
+			}
+		});
+
 		if (mode == DocumentsGrid.MODE_LIST)
 			list.setSelected(true);
 		else
@@ -340,6 +368,7 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 		toolStrip.addSeparator();
 		toolStrip.addButton(list);
 		toolStrip.addButton(gallery);
+		toolStrip.addButton(togglePreview);
 
 		toolStrip.addFill();
 

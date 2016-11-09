@@ -47,6 +47,8 @@ public class DocumentsMenu extends SectionStack {
 			setWidth(280);
 		}
 
+		setShowResizeBar(true);
+
 		browser = new SectionStackSection(I18N.message("browser"));
 		browser.setName("browser");
 		browser.setCanCollapse(true);

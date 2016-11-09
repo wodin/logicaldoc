@@ -387,7 +387,7 @@ public class SecurityPanel extends FolderDetailTab {
 	}
 
 	/**
-	 * Create an array of all right defined
+	 * Create an array of all body defined
 	 */
 	public GUIRight[] getRights() {
 		int totalRecords = list.getRecordList().getLength();

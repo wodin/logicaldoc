@@ -349,7 +349,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 		boolean addchildEnabled = folderDao.isPermissionEnabled(Permission.ADD, destParentFolder.getId(),
 				session.getUserId());
 		if (!addchildEnabled)
-			throw new SecurityException("Add Child right not granted to this user in the target folder");
+			throw new SecurityException("Add Child body not granted to this user in the target folder");
 
 		// Add a folder history entry
 		FolderHistory transaction = new FolderHistory();

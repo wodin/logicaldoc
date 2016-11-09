@@ -205,7 +205,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		ListGridField name = new ListGridField("name");
 		setFields(name);
 
-		// Handles the right click on folder name to create the context menu
+		// Handles the body click on folder name to create the context menu
 		addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {

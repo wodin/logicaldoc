@@ -1,6 +1,5 @@
 package com.logicaldoc.gui.common.client.widgets;
 
-import com.google.gwt.core.client.GWT;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
