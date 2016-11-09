@@ -6,7 +6,7 @@ import java.awt.Paint;
 import org.jfree.chart.plot.DefaultDrawingSupplier;
 
 /**
- * This picks the right color for any section of a pie chart
+ * This picks the body color for any section of a pie chart
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 7.1.3

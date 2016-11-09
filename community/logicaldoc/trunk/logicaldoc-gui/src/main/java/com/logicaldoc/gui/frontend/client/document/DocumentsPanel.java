@@ -25,6 +25,8 @@ import com.smartgwt.client.types.Overflow;
 import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.Label;
+import com.smartgwt.client.widgets.events.VisibilityChangedEvent;
+import com.smartgwt.client.widgets.events.VisibilityChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.Layout;
 import com.smartgwt.client.widgets.layout.VLayout;
@@ -53,11 +55,13 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	protected DocumentToolbar toolbar;
 
-	protected VLayout right = new VLayout();
+	protected VLayout body = new VLayout();
 
 	protected GUIFolder folder;
 
 	protected DocumentsMenu documentsMenu;
+
+	protected DocumentsPreviewPanel previewPanel;
 
 	public DocumentsMenu getDocumentsMenu() {
 		return documentsMenu;
@@ -80,8 +84,6 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		setWidth100();
 		setOverflow(Overflow.HIDDEN);
 
-		prepareMenu();
-
 		// Initialize the listing panel as placeholder
 		listingPanel = new Label("&nbsp;" + I18N.message("selectfolder"));
 		listing.setAlign(Alignment.CENTER);
@@ -94,29 +96,29 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		details.setAlign(Alignment.CENTER);
 		details.addMember(detailPanel);
 
-		prepareToolBar();
-
-		right.addMember(toolbar);
-		right.addMember(listing);
-		right.addMember(details);
-
-		addMember(documentsMenu);
-		addMember(right);
-
-		setShowEdges(false);
-	}
-
-	protected void prepareToolBar() {
 		toolbar = new DocumentToolbar();
 		toolbar.setWidth100();
-	}
 
-	/**
-	 * Prepare the collapsible menu
-	 */
-	protected void prepareMenu() {
+		body.addMember(toolbar);
+		body.addMember(listing);
+		body.addMember(details);
+		body.setShowResizeBar(true);
+		body.setResizeBarTarget("next");
+
 		documentsMenu = new DocumentsMenu();
-		documentsMenu.setShowResizeBar(true);
+		previewPanel = new DocumentsPreviewPanel();
+
+		setMembers(documentsMenu, body, previewPanel);
+		setShowEdges(false);
+
+		previewPanel.addVisibilityChangedHandler(new VisibilityChangedHandler() {
+
+			@Override
+			public void onVisibilityChanged(VisibilityChangedEvent event) {
+				if (detailPanel instanceof DocumentDetailsPanel)
+					previewPanel.setDocument(((DocumentDetailsPanel) detailPanel).getDocument());
+			}
+		});
 	}
 
 	public static DocumentsPanel get() {
@@ -142,6 +144,7 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	public void onDocumentSaved(GUIDocument document) {
 		if (listingPanel != null && listingPanel instanceof DocumentsListPanel)
 			((DocumentsListPanel) listingPanel).getGrid().updateDocument(document);
+		previewPanel.setDocument(document);
 	}
 
 	@Override
@@ -161,6 +164,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 			((DocumentDetailsPanel) detailPanel).setDocument(document);
 			details.redraw();
 		}
+
+		previewPanel.setDocument(document);
 	}
 
 	public void openInFolder(long folderId, Long docId) {
@@ -288,6 +293,8 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 		listingPanel = new DocumentsListPanel(folder, hiliteDocId, max, page, mode);
 		listing.addMember(listingPanel);
 		listing.redraw();
+
+		previewPanel.reset();
 	}
 
 	/**
@@ -352,5 +359,9 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 
 	public void setMode(int mode) {
 		this.mode = mode;
+	}
+
+	public DocumentsPreviewPanel getPreviewPanel() {
+		return previewPanel;
 	}
 }

@@ -43,7 +43,7 @@ public class PreviewTile extends HLayout {
 
 		if (Session.get().isShowThumbnail()) {
 			String html = "<img border='0' alt='' title='' src='" + Util.tileUrl(docId, null) + "' height='"
-					+ Session.get().getConfig("gui.tile.size") + "px' style='float:right;' align='right'/>";
+					+ Session.get().getConfig("gui.tile.size") + "px' style='float:body;' align='body'/>";
 			HTMLFlow tileImage = new HTMLFlow(html);
 			tileImage.addClickHandler(new ClickHandler() {
 

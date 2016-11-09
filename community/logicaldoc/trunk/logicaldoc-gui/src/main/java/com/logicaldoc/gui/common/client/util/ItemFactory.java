@@ -483,7 +483,7 @@ public class ItemFactory {
 
 		IButton closeButton = new IButton();
 		closeButton.setIcon("[SKIN]/headerIcons/close.gif");
-		closeButton.setIconOrientation("right");
+		closeButton.setIconOrientation("body");
 		item.setButtonProperties(closeButton);
 
 		if (values != null)

@@ -122,14 +122,18 @@ public final class Constants {
 
 	public static final String COOKIE_HITSLIST_MODE = "ldoc-hitslist-mode";
 
+	public static final String COOKIE_HITSLIST_PREV_W = "ldoc-hitslist-prev-w";
+	
 	public static final String COOKIE_DOCSLIST = "ldoc-docslist";
 
 	public static final String COOKIE_DOCSLIST_MAX = "ldoc-docslist-max";
 
 	public static final String COOKIE_DOCSLIST_MODE = "ldoc-docslist-mode";
 
+	public static final String COOKIE_DOCSLIST_PREV_W = "ldoc-docslist-prev-w";
+	
 	public static final String COOKIE_DOCSMENU_W = "ldoc-docsmenu-w";
-
+	
 	public static final String COOKIE_SAVELOGIN = "ldoc-savelogin";
 
 	public static final String COOKIE_USER = "ldoc-user";

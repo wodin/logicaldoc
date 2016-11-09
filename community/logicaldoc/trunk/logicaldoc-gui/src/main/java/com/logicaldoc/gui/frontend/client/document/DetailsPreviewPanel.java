@@ -8,11 +8,11 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
  * @author Marco Meschieri - Logical Objects
  * @since 7.7.1
  */
-public class PreviewPanel extends DocumentDetailTab {
+public class DetailsPreviewPanel extends DocumentDetailTab {
 
 	private com.logicaldoc.gui.common.client.widgets.PreviewPanel panel = null;
 
-	public PreviewPanel(final GUIDocument document) {
+	public DetailsPreviewPanel(final GUIDocument document) {
 		super(document, null, null);
 		setMembersMargin(1);
 	}

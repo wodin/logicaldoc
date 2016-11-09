@@ -89,15 +89,21 @@ public class GUISettingsPanel extends VLayout {
 		TextItem previewSize = ItemFactory.newIntegerItem("previewsize", I18N.message("previewwindow"), null);
 		previewSize.setHint("%");
 		previewSize.setRequired(true);
+		previewSize.setWrapTitle(false);
 
 		IntegerItem previewTimeout = ItemFactory.newIntegerItem("previewtimeout", "previewtimeout", null);
 		previewTimeout.setHint(I18N.message("seconds"));
 		previewTimeout.setWrapTitle(false);
 		previewTimeout.setRequired(true);
 
+		RadioGroupItem openPreviewPanel = ItemFactory.newBooleanSelector("openpreviewpanel",
+				I18N.message("openpreviewpanel"));
+		openPreviewPanel.setWrapTitle(false);
+
 		TextItem thumbSize = ItemFactory.newIntegerItem("thumbsize", I18N.message("thumbsize"), null);
 		thumbSize.setHint("pixels");
 		thumbSize.setRequired(true);
+		thumbSize.setWrapTitle(false);
 
 		TextItem thumbQuality = ItemFactory.newIntegerItem("thumbquality", I18N.message("thumbquality"), null);
 		thumbQuality.setHint("%");
@@ -164,6 +170,8 @@ public class GUISettingsPanel extends VLayout {
 				previewSize.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("gui.preview.timeout"))
 				previewTimeout.setValue(Integer.parseInt(p.getValue().trim()));
+			if (p.getName().endsWith("gui.preview.openpanel"))
+				openPreviewPanel.setValue(p.getValue().equals("true") ? "yes" : "no");
 			if (p.getName().endsWith("gui.thumbnail.size"))
 				thumbSize.setValue(Integer.parseInt(p.getValue().trim()));
 			if (p.getName().endsWith("gui.thumbnail.quality"))
@@ -211,6 +219,8 @@ public class GUISettingsPanel extends VLayout {
 							"previewsize").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.timeout", values.get(
 							"previewtimeout").toString()));
+					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.preview.openpanel", "yes"
+							.equals(values.get("openpreviewpanel")) ? "true" : "false"));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.thumbnail.size", values.get(
 							"thumbsize").toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".gui.thumbnail.quality", values.get(
@@ -260,8 +270,8 @@ public class GUISettingsPanel extends VLayout {
 		});
 
 		parametersForm.setItems(welcome, previewSize, previewTimeout, thumbSize, thumbQuality, tileSize, tileQuality,
-				uploadmax, disallow, ondoubleclick, doctab, foldSorting, foldOpentree, searchhits, webcontentfolders, savelogin,
-				sessiontimeout, sessionheartbeat, save);
+				uploadmax, disallow, ondoubleclick, doctab, foldSorting, foldOpentree, openPreviewPanel, searchhits,
+				webcontentfolders, savelogin, sessiontimeout, sessionheartbeat, save);
 
 		addMember(tabs);
 	}

@@ -87,7 +87,7 @@ public class DocumentDetailsPanel extends VLayout {
 
 	protected NotesPanel notesPanel;
 
-	protected PreviewPanel previewPanel;
+	protected DetailsPreviewPanel previewPanel;
 
 	protected DocumentCalendarPanel calendarPanel;
 
@@ -499,7 +499,7 @@ public class DocumentDetailsPanel extends VLayout {
 			if (previewTabPanel.contains(previewPanel))
 				previewTabPanel.removeMember(previewPanel);
 		}
-		previewPanel = new PreviewPanel(document);
+		previewPanel = new DetailsPreviewPanel(document);
 		previewTabPanel.addMember(previewPanel);
 
 		/*

@@ -82,6 +82,8 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 
 	protected ToolStripButton gallery = new ToolStripButton();
 
+	protected ToolStripButton togglePreview = new ToolStripButton();
+
 	protected GUIDocument document;
 
 	protected AuditServiceAsync audit = (AuditServiceAsync) GWT.create(AuditService.class);
@@ -549,9 +551,37 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 			}
 		}
 
+		togglePreview.setIcon(ItemFactory.newImgIcon("application_side_expand.png").getSrc());
+		togglePreview.setTooltip(I18N.message("closepreview"));
+		try {
+			// Retrieve the saved preview width
+			String w = (String) Offline.get(Constants.COOKIE_DOCSLIST_PREV_W);
+			if (Integer.parseInt(w) <= 0) {
+				togglePreview.setIcon(ItemFactory.newImgIcon("application_side_contract.png").getSrc());
+				togglePreview.setTooltip(I18N.message("openpreview"));
+			}
+		} catch (Throwable t) {
+		}
+		togglePreview.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (DocumentsPanel.get().getPreviewPanel().isVisible()
+						&& DocumentsPanel.get().getPreviewPanel().getWidth() > 0) {
+					DocumentsPanel.get().getPreviewPanel().setWidth(0);
+					togglePreview.setIcon(ItemFactory.newImgIcon("application_side_contract.png").getSrc());
+					togglePreview.setTooltip(I18N.message("openpreview"));
+				} else {
+					DocumentsPanel.get().getPreviewPanel().setWidth(350);
+					togglePreview.setIcon(ItemFactory.newImgIcon("application_side_expand.png").getSrc());
+					togglePreview.setTooltip(I18N.message("closepreview"));
+				}
+			}
+		});
+
 		addSeparator();
 		addButton(list);
 		addButton(gallery);
+		addButton(togglePreview);
 	}
 
 	/**
@@ -624,6 +654,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 						|| !Feature.enabled(Feature.CALENDAR));
 				list.setDisabled(false);
 				gallery.setDisabled(false);
+				togglePreview.setDisabled(false);
 			} else {
 				refresh.setDisabled(true);
 				add.setDisabled(true);
@@ -638,6 +669,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				addCalendarEvent.setDisabled(true);
 				list.setDisabled(false);
 				gallery.setDisabled(false);
+				togglePreview.setDisabled(false);
 			}
 		} catch (Throwable t) {
 
