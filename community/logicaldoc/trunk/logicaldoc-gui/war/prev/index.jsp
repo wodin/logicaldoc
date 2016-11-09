@@ -27,12 +27,11 @@
     <title>Preview</title>
 
 
-    <link rel="stylesheet" href="viewer.css"/>
+    <link rel="stylesheet" href="viewer.css">
 
     <script src="compatibility.js"></script>
 
-  
-    <link rel="resource" type="application/l10n" href="locale/locale.properties"/>
+    <link rel="resource" type="application/l10n" href="locale/locale.properties">
     <script src="./l10n.js"></script>
     <script src="./pdf.js"></script>
 
@@ -122,7 +121,7 @@
             <button id="secondaryDownload" class="secondaryToolbarButton download visibleMediumView" title="Download" tabindex="54" data-l10n-id="download">
               <span data-l10n-id="download_label">Download</span>
             </button>
-        
+
             <a href="#" id="secondaryViewBookmark" class="secondaryToolbarButton bookmark visibleSmallView" title="Current view (copy or open in new window)" tabindex="55" data-l10n-id="bookmark">
               <span data-l10n-id="bookmark_label">Current View</span>
             </a>
@@ -188,18 +187,17 @@
                   <span data-l10n-id="presentation_mode_label">Presentation Mode</span>
                 </button>
 
-                  <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
-                    <span data-l10n-id="open_file_label">Open</span>
-                  </button>
-                                 
-                  <button id="print" class="toolbarButton print hiddenMediumView" title="Print" tabindex="33" data-l10n-id="print">
-                    <span data-l10n-id="print_label">Print</span>
-                  </button>
+                <button id="openFile" class="toolbarButton openFile hiddenLargeView" title="Open File" tabindex="32" data-l10n-id="open_file">
+                  <span data-l10n-id="open_file_label">Open</span>
+                </button>
 
-                  <button id="download" class="toolbarButton download hiddenMediumView" title="Download" tabindex="34" data-l10n-id="download">
-                    <span data-l10n-id="download_label">Download</span>
-                  </button>
-                
+                <button id="print" class="toolbarButton print hiddenMediumView" title="Print" tabindex="33" data-l10n-id="print">
+                  <span data-l10n-id="print_label">Print</span>
+                </button>
+
+                <button id="download" class="toolbarButton download hiddenMediumView" title="Download" tabindex="34" data-l10n-id="download">
+                  <span data-l10n-id="download_label">Download</span>
+                </button>
                 <a href="#" id="viewBookmark" class="toolbarButton bookmark hiddenSmallView" title="Current view (copy or open in new window)" tabindex="35" data-l10n-id="bookmark">
                   <span data-l10n-id="bookmark_label">Current View</span>
                 </a>
@@ -285,7 +283,7 @@
         </div>
       </div> <!-- mainContainer -->
 
-     <div id="overlayContainer" class="hidden">
+      <div id="overlayContainer" class="hidden">
         <div id="passwordOverlay" class="container hidden">
           <div class="dialog">
             <div class="row">
@@ -293,7 +291,7 @@
             </div>
             <div class="row">
               <!-- The type="password" attribute is set via script, to prevent warnings in Firefox for all http:// documents. -->
-              <input id="password" class="toolbarField" />
+              <input id="password" class="toolbarField">
             </div>
             <div class="buttonRow">
               <button id="passwordCancel" class="overlayButton"><span data-l10n-id="password_cancel">Cancel</span></button>
@@ -432,6 +430,7 @@
 
   </body>
 </html>
+
 
 
 <script>
