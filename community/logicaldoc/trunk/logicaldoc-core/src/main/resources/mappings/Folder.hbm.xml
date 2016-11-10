@@ -28,6 +28,7 @@
     <property name="quotaSize" type="long" column="ld_quotasize" />
     <property name="storage" type="int" column="ld_storage" />
     <property name="maxVersions" type="int" column="ld_maxversions" />
+    <property name="color" type="string" column="ld_color" length="255" />    
 		
     <set name="folderGroups" table="ld_foldergroup" cascade="all">
       <key column="ld_folderid" />

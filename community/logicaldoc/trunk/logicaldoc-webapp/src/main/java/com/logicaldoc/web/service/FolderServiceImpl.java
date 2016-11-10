@@ -183,6 +183,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setFoldRef(folder.getFoldRef());
 			f.setStorage(folder.getStorage());
 			f.setMaxVersions(folder.getMaxVersions());
+			f.setColor(folder.getColor());
 
 			if (f.isWorkspace()) {
 				SequenceDAO seqDao = (SequenceDAO) Context.get().getBean(SequenceDAO.class);
@@ -486,6 +487,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setTemplateLocked(folder.getTemplateLocked());
 			f.setQuotaDocs(folder.getQuotaDocs());
 			f.setQuotaSize(folder.getQuotaSize());
+			f.setColor(folder.getColor());
 
 			updateExtendedAttributes(f, folder);
 

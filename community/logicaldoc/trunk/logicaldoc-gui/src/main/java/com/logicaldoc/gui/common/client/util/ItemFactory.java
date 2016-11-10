@@ -94,8 +94,8 @@ public class ItemFactory {
 		dateRangeItem.setHintStyle("hint");
 		dateRangeItem.setRequiredMessage(I18N.message("fieldrequired"));
 		DateRangeItem.setDefaultProperties(dateRangeItem);
-		
-		MiniDateRangeItem miniDateRangeItem=new MiniDateRangeItem();
+
+		MiniDateRangeItem miniDateRangeItem = new MiniDateRangeItem();
 		miniDateRangeItem.setShowPickerIcon(true);
 		miniDateRangeItem.setAllowRelativeDates(false);
 		miniDateRangeItem.setHintStyle("hint");
@@ -107,8 +107,7 @@ public class ItemFactory {
 		miniDateRangeItem.setPickerIconPrompt(I18N.message("showdatechooser"));
 		miniDateRangeItem.setRequiredMessage(I18N.message("fieldrequired"));
 		MiniDateRangeItem.setDefaultProperties(miniDateRangeItem);
-		
-		
+
 		DateItem dateItem = new DateItem();
 		dateItem.setUseTextField(true);
 		dateItem.setUseMask(true);
@@ -119,77 +118,95 @@ public class ItemFactory {
 		dateItem.setPickerIconPrompt(I18N.message("showdatechooser"));
 		dateItem.setRequiredMessage(I18N.message("fieldrequired"));
 		DateItem.setDefaultProperties(dateItem);
-		
+
 		SelectItem selectItem = new SelectItem();
 		selectItem.setHintStyle("hint");
 		selectItem.setRequiredMessage(I18N.message("fieldrequired"));
 		SelectItem.setDefaultProperties(selectItem);
-		
+
 		TextItem textItem = new TextItem();
 		textItem.setHintStyle("hint");
 		textItem.setRequiredMessage(I18N.message("fieldrequired"));
 		TextItem.setDefaultProperties(textItem);
-		
-		RadioGroupItem radioGroupItem =new RadioGroupItem();
+
+		RadioGroupItem radioGroupItem = new RadioGroupItem();
 		radioGroupItem.setHintStyle("hint");
 		radioGroupItem.setRequiredMessage(I18N.message("fieldrequired"));
 		RadioGroupItem.setDefaultProperties(radioGroupItem);
-		
+
 		CheckboxItem checkboxItem = new CheckboxItem();
 		checkboxItem.setHintStyle("hint");
 		checkboxItem.setRequiredMessage(I18N.message("fieldrequired"));
 		CheckboxItem.setDefaultProperties(checkboxItem);
-		
+
 		MultiComboBoxItem multiComboBoxItem = new MultiComboBoxItem();
 		multiComboBoxItem.setHintStyle("hint");
 		multiComboBoxItem.setRequiredMessage(I18N.message("fieldrequired"));
 		MultiComboBoxItem.setDefaultProperties(multiComboBoxItem);
-		
+
 		SpinnerItem spinnerItem = new SpinnerItem();
 		spinnerItem.setHintStyle("hint");
 		spinnerItem.setRequiredMessage(I18N.message("fieldrequired"));
 		SpinnerItem.setDefaultProperties(spinnerItem);
-		
+
 		PasswordItem passwordItem = new PasswordItem();
 		passwordItem.setHintStyle("hint");
 		passwordItem.setRequiredMessage(I18N.message("fieldrequired"));
 		SpinnerItem.setDefaultProperties(passwordItem);
-		
+
 		StaticTextItem staticTextItem = new StaticTextItem();
 		staticTextItem.setHintStyle("hint");
 		staticTextItem.setRequiredMessage(I18N.message("fieldrequired"));
 		StaticTextItem.setDefaultProperties(staticTextItem);
-		
+
 		IntegerItem integerItem = new IntegerItem();
 		integerItem.setRequiredMessage(I18N.message("fieldrequired"));
 		integerItem.setHintStyle("hint");
 		IntegerItem.setDefaultProperties(integerItem);
-		
+
 		ColorPickerItem colorPickerItem = new ColorPickerItem();
 		colorPickerItem.setWidth(150);
 		colorPickerItem.setRequiredMessage(I18N.message("fieldrequired"));
 		colorPickerItem.setHintStyle("hint");
 		ColorPickerItem.setDefaultProperties(colorPickerItem);
-		
+
 		LinkItem linkItem = new LinkItem();
 		linkItem.setRequiredMessage(I18N.message("fieldrequired"));
 		linkItem.setHintStyle("hint");
 		LinkItem.setDefaultProperties(linkItem);
-		
+
 		TextAreaItem textAreaItem = new TextAreaItem();
 		textAreaItem.setRequiredMessage(I18N.message("fieldrequired"));
 		textAreaItem.setHintStyle("hint");
 		TextAreaItem.setDefaultProperties(textAreaItem);
-		
+
 		TimeItem timeItem = new TimeItem();
 		timeItem.setHintStyle("hint");
 		timeItem.setWidth(50);
 		TimeItem.setDefaultProperties(timeItem);
-		
+
 		FloatItem floatItem = new FloatItem();
 		floatItem.setHintStyle("hint");
 		floatItem.setWidth(50);
 		FloatItem.setDefaultProperties(floatItem);
+
+		ColorPickerItem colorItemPicker = new ColorPickerItem();
+		colorItemPicker.setHintStyle("hint");
+		colorItemPicker.setWidth(100);
+		ColorPickerItem.setDefaultProperties(colorItemPicker);
+	}
+
+	public static ColorPickerItem newColorItemPicker(String name, String title, String value) {
+		ColorPickerItem item = new ColorPickerItem(filterItemName(name));
+		if (title != null)
+			item.setTitle(I18N.message(title));
+		else
+			item.setShowTitle(false);
+
+		if (value != null)
+			item.setValue(value);
+
+		return item;
 	}
 
 	/**
@@ -780,15 +797,6 @@ public class ItemFactory {
 		return item;
 	}
 
-	public static ColorPickerItem newColorItem(String name, String title, String value) {
-		ColorPickerItem item = new ColorPickerItem();
-		item.setName(filterItemName(name));
-		item.setTitle(I18N.message(title));
-		if (value != null)
-			item.setValue(value);
-		return item;
-	}
-
 	/**
 	 * Creates a new IntegerItem for the Extended AttributesDS.
 	 * 
@@ -1088,7 +1096,8 @@ public class ItemFactory {
 		item.setWrapTitle(false);
 		item.setOptionDataSource(new WorkflowsDS(false, false, true));
 		if (!Feature.enabled(Feature.WORKFLOW))
-			item.setDisabled(true);;
+			item.setDisabled(true);
+		;
 		return item;
 	}
 

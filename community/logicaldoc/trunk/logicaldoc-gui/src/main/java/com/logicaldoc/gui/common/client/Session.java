@@ -167,7 +167,8 @@ public class Session {
 								timer.scheduleRepeating(info.getSessionHeartbeat() * 1000);
 							}
 						} catch (Throwable caught) {
-							onInvalidSession();
+							SC.warn(caught.getMessage());
+//							onInvalidSession();
 						}
 					}
 				});

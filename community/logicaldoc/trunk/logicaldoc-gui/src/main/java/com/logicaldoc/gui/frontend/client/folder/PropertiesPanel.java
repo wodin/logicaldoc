@@ -15,6 +15,7 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
+import com.smartgwt.client.widgets.form.fields.ColorItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.LinkItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
@@ -110,6 +111,9 @@ public class PropertiesPanel extends FolderDetailTab {
 				+ folder.getCreator());
 		creation.setWidth(DEFAULT_ITEM_WIDTH);
 
+		ColorItem color = ItemFactory.newColorItemPicker("color", "color", folder.getColor());
+		color.addChangedHandler(changedHandler);
+
 		LinkItem pathItem = ItemFactory.newLinkItem("path", folder.getPathExtended());
 		pathItem.setTitle(I18N.message("path"));
 		pathItem.setValue(Util.displaydURL(null, folder.getId()));
@@ -129,9 +133,10 @@ public class PropertiesPanel extends FolderDetailTab {
 		name.setDisabled(!update);
 		description.setDisabled(!update);
 		position.setDisabled(!update);
+		color.setDisabled(!update);
 
 		List<FormItem> items = new ArrayList<FormItem>();
-		items.addAll(Arrays.asList(new FormItem[] { idItem, pathItem, name, description, position, storage,
+		items.addAll(Arrays.asList(new FormItem[] { idItem, pathItem, name, description, color, position, storage,
 				maxVersions, creation, documents, subfolders, barcode }));
 		if (!Feature.enabled(Feature.BARCODES))
 			items.remove(barcode);
@@ -147,6 +152,7 @@ public class PropertiesPanel extends FolderDetailTab {
 	boolean validate() {
 		vm.validate();
 		folder.setPosition(Integer.parseInt(vm.getValueAsString("position")));
+		folder.setColor(vm.getValueAsString("color"));
 
 		if (!folder.isDefaultWorkspace()) {
 			folder.setName(vm.getValueAsString("name").replaceAll("/", ""));

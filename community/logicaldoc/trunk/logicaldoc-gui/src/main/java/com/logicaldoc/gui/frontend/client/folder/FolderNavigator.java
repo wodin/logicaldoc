@@ -42,6 +42,7 @@ import com.smartgwt.client.widgets.events.DragStartEvent;
 import com.smartgwt.client.widgets.events.DragStartHandler;
 import com.smartgwt.client.widgets.events.DropEvent;
 import com.smartgwt.client.widgets.events.DropHandler;
+import com.smartgwt.client.widgets.grid.CellFormatter;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellClickEvent;
@@ -203,6 +204,17 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		});
 
 		ListGridField name = new ListGridField("name");
+		name.setCellFormatter(new CellFormatter() {
+			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
+				String val = value + "";
+				String color = record.getAttributeAsString("color");
+				if (color != null)
+					val += "<span style='margin-left: 4px; width:20px; background-color:" + color
+							+ ";'>&nbsp;&nbsp;</span>";
+				return val;
+			}
+		});
+
 		setFields(name);
 
 		// Handles the body click on folder name to create the context menu
@@ -268,12 +280,12 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 
 							if (children != null && children.length > 0) {
 								/*
-								 * Get the first workspace and use it as the node to
-								 * open
+								 * Get the first workspace and use it as the
+								 * node to open
 								 */
 								folderId = Long.parseLong(children[0].getAttributeAsString("folderId"));
 								nodeToOpen = children[0];
-								
+
 								/*
 								 * Check if the user has specified a different
 								 * default workspace
@@ -817,6 +829,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		if (selectedNode != null) {
 			selectedNode.setTitle(folder.getName());
 			selectedNode.setName(folder.getName());
+			selectedNode.setAttribute("color", folder.getColor());
 			getTree().reloadChildren(selectedNode);
 
 			if (positionChanged) {

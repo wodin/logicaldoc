@@ -64,6 +64,8 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 	private Integer storage = null;
 
 	private Integer maxVersions = null;
+	
+	private String color;
 
 	public GUIFolder() {
 
@@ -310,5 +312,13 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	public void setMaxVersions(Integer maxVersions) {
 		this.maxVersions = maxVersions;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 }
