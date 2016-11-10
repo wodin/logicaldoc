@@ -101,12 +101,25 @@ public class WorkflowPortlet extends Portlet {
 		ListGridField documentIds = new ListGridField("documentIds", I18N.message("documentids"), 200);
 		documentIds.setHidden(true);
 
-		ListGridField startdate = new ListGridField("startdate", I18N.message("date"), 100);
+		ListGridField startdate = new ListGridField("startdate", I18N.message("startdate"), 120);
 		startdate.setAlign(Alignment.CENTER);
 		startdate.setType(ListGridFieldType.DATE);
 		startdate.setCellFormatter(new DateCellFormatter(false));
 		startdate.setCanFilter(false);
 
+		ListGridField duedate = new ListGridField("duedate", I18N.message("duedate"), 120);
+		duedate.setAlign(Alignment.CENTER);
+		duedate.setType(ListGridFieldType.DATE);
+		duedate.setCellFormatter(new DateCellFormatter(false));
+		duedate.setCanFilter(false);
+		
+		ListGridField enddate = new ListGridField("enddate", I18N.message("enddate"), 120);
+		enddate.setAlign(Alignment.CENTER);
+		enddate.setType(ListGridFieldType.DATE);
+		enddate.setCellFormatter(new DateCellFormatter(false));
+		enddate.setCanFilter(false);
+		enddate.setHidden(true);
+		
 		if (list != null)
 			removeItem(list);
 
@@ -123,9 +136,9 @@ public class WorkflowPortlet extends Portlet {
 		list.setDataSource(dataSource);
 		if (type == WorkflowDashboard.TASKS_I_CAN_OWN || type == WorkflowDashboard.TASKS_ADMIN
 				|| type == WorkflowDashboard.TASKS_SUPERVISOR)
-			list.setFields(workflow, startdate, name, id, processId, documents, documentIds, pooledAssignees);
+			list.setFields(workflow, startdate, duedate, enddate, name, id, processId, documents, documentIds, pooledAssignees);
 		else
-			list.setFields(workflow, startdate, id, processId, name, documents, documentIds);
+			list.setFields(workflow, startdate, duedate, enddate, id, processId, name, documents, documentIds);
 
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
