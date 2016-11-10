@@ -205,7 +205,7 @@ public class WorkflowHistoryDialog extends Window {
 		workflowHistoriesLayout.setWidth(900);
 
 		ListGridField historyEvent = new ListGridField("event", I18N.message("event"), 200);
-		ListGridField historyDate = new ListGridField("date", I18N.message("date"), 150);
+		ListGridField historyDate = new ListGridField("startdate", I18N.message("startdate"), 150);
 		historyDate.setAlign(Alignment.CENTER);
 		historyDate.setType(ListGridFieldType.DATE);
 		historyDate.setCellFormatter(new DateCellFormatter(false));
