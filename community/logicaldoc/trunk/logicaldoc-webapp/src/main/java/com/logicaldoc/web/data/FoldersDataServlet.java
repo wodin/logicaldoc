@@ -89,7 +89,7 @@ public class FoldersDataServlet extends HttpServlet {
 			writer.write("<list>");
 
 			StringBuffer query = new StringBuffer(
-					"select ld_id, ld_parentid, ld_name, ld_type, ld_foldref from ld_folder where ld_deleted=0 and ld_hidden=0 and not ld_id=ld_parentid and ld_parentid = ? and ld_tenantid = ? ");
+					"select ld_id, ld_parentid, ld_name, ld_type, ld_foldref, ld_color from ld_folder where ld_deleted=0 and ld_hidden=0 and not ld_id=ld_parentid and ld_parentid = ? and ld_tenantid = ? ");
 			if (!user.isInGroup("admin")) {
 				Collection<Long> accessibleIds = folderDao.findFolderIdByUserId(session.getUserId(),
 						parentFolder.getId(), false);
@@ -117,6 +117,7 @@ public class FoldersDataServlet extends HttpServlet {
 					writer.print("<customIcon>" + (rs.getInt(4) == Folder.TYPE_ALIAS ? "folder_alias" : "folder")
 							+ "</customIcon>");
 					writer.print("<publishedStatus>yes</publishedStatus>");
+					writer.print("<color><![CDATA[" + rs.getString(6) + "]]></color>");
 					writer.print("</folder>");
 				}
 

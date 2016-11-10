@@ -76,8 +76,10 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	private Long foldRef;
 
 	private Integer storage;
-	
+
 	private Integer maxVersions;
+
+	private String color;
 
 	public Folder(String name) {
 		this.name = name;
@@ -307,5 +309,13 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	public void setMaxVersions(Integer maxVersions) {
 		this.maxVersions = maxVersions;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 }

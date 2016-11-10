@@ -215,7 +215,7 @@ public class StampDetailsPanel extends VLayout {
 		text.addChangedHandler(changedHandler);
 		text.setWidth("300");
 
-		final ColorItem color = ItemFactory.newColorItem("color", "color", stamp.getColor());
+		final ColorItem color = ItemFactory.newColorItemPicker("color", "color", stamp.getColor());
 		color.addChangedHandler(changedHandler);
 
 		final RadioGroupItem type = ItemFactory.newRadioGroup("type", "type");
@@ -232,7 +232,7 @@ public class StampDetailsPanel extends VLayout {
 				stamp.getPageSelection());
 		pageSelection.setVisible(stamp.getPageOption() == GUIStamp.PAGE_OPT_SEL);
 		pageSelection.addChangedHandler(changedHandler);
-		
+
 		final RadioGroupItem pageOption = ItemFactory.newRadioGroup("pageOption", "stampin");
 		LinkedHashMap<String, String> pageOptions = new LinkedHashMap<String, String>();
 		pageOptions.put("" + GUIStamp.PAGE_OPT_ALL, I18N.message("allpages"));
