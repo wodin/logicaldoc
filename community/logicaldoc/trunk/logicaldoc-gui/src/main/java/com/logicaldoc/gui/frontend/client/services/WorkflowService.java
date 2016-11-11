@@ -72,8 +72,7 @@ public interface WorkflowService extends RemoteService {
 	 * Start a workflow with the given name and associated to the documents with
 	 * the given doc ids.
 	 */
-	public void startWorkflow(String workflowName, String workflowDescription, long[] docIds)
-			throws ServerException;
+	public void startWorkflow(String workflowName, String workflowDescription, long[] docIds) throws ServerException;
 
 	/**
 	 * Retrieves all the info of the workflow of the given task.
@@ -111,4 +110,14 @@ public interface WorkflowService extends RemoteService {
 	 * doc ids.
 	 */
 	public void appendDocuments(String taskId, Long[] docIds) throws ServerException;
+
+	/**
+	 * Adds a new note
+	 */
+	public long addNote(String taskId, String note) throws ServerException;
+
+	/**
+	 * Deletes a note
+	 */
+	public void deleteNote(long noteId) throws ServerException;
 }

@@ -152,12 +152,12 @@ public class WorkflowHistoryDialog extends Window {
 		workflowInstancesLayout.addMember(workflowInstancesForm);
 
 		ListGridField id = new ListGridField("id", I18N.message("id"), 60);
-		ListGridField startDate = new ListGridField("startdate", I18N.message("startdate"), 150);
+		ListGridField startDate = new ListGridField("startdate", I18N.message("startdate"), 120);
 		startDate.setAlign(Alignment.CENTER);
 		startDate.setType(ListGridFieldType.DATE);
 		startDate.setCellFormatter(new DateCellFormatter(false));
 		startDate.setCanFilter(false);
-		ListGridField endDate = new ListGridField("enddate", I18N.message("enddate"), 150);
+		ListGridField endDate = new ListGridField("enddate", I18N.message("enddate"), 120);
 		endDate.setAlign(Alignment.CENTER);
 		endDate.setType(ListGridFieldType.DATE);
 		endDate.setCellFormatter(new DateCellFormatter(false));
@@ -176,7 +176,7 @@ public class WorkflowHistoryDialog extends Window {
 		instancesList.setBorder("1px solid #E1E1E1");
 		instancesList.sort("startdate", SortDirection.DESCENDING);
 		if (selectedWorkflow != null) {
-			instancesDataSource = new WorkflowHistoriesDS(null, Long.parseLong(selectedWorkflow.getId()));
+			instancesDataSource = new WorkflowHistoriesDS(null, Long.parseLong(selectedWorkflow.getId()), null);
 			instancesList.setDataSource(instancesDataSource);
 		}
 
@@ -205,7 +205,7 @@ public class WorkflowHistoryDialog extends Window {
 		workflowHistoriesLayout.setWidth(900);
 
 		ListGridField historyEvent = new ListGridField("event", I18N.message("event"), 200);
-		ListGridField historyDate = new ListGridField("startdate", I18N.message("startdate"), 150);
+		ListGridField historyDate = new ListGridField("startdate", I18N.message("startdate"), 120);
 		historyDate.setAlign(Alignment.CENTER);
 		historyDate.setType(ListGridFieldType.DATE);
 		historyDate.setCellFormatter(new DateCellFormatter(false));
@@ -225,11 +225,11 @@ public class WorkflowHistoryDialog extends Window {
 		historiesList.setCanSelectAll(false);
 		historiesList.setSelectionType(SelectionStyle.SINGLE);
 		historiesList.setHeight(200);
-		historiesList.sort("date", SortDirection.ASCENDING);
+		historiesList.sort("startdate", SortDirection.ASCENDING);
 		historiesList.setBorder("1px solid #E1E1E1");
 		if (selectedWorkflowInstance != null) {
 			historiesDataSource = new WorkflowHistoriesDS(selectedWorkflowInstance, Long.parseLong(selectedWorkflow
-					.getId()));
+					.getId()), null);
 			historiesList.setDataSource(historiesDataSource);
 		}
 

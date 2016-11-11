@@ -36,6 +36,9 @@ public class GUIWorkflow implements Serializable {
 	private String appendedDocIds;
 
 	private GUIWFState[] wflHistory;
+	
+	//The persistence template
+	private Long templateId;
 
 	public GUIWFState getStateById(String id) {
 		if (states != null && states.length > 0) {
@@ -161,5 +164,13 @@ public class GUIWorkflow implements Serializable {
 			buf[i] = getStates()[i];
 		}
 		buf[buf.length - 1] = status;
+	}
+
+	public Long getTemplateId() {
+		return templateId;
+	}
+
+	public void setTemplateId(Long templateId) {
+		this.templateId = templateId;
 	}
 }
