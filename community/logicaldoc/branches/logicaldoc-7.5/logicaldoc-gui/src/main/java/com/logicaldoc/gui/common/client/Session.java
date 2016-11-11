@@ -167,7 +167,7 @@ public class Session {
 								timer.scheduleRepeating(info.getSessionHeartbeat() * 1000);
 							}
 						} catch (Throwable caught) {
-							onInvalidSession();
+							Log.serverError(caught);
 						}
 					}
 				});
