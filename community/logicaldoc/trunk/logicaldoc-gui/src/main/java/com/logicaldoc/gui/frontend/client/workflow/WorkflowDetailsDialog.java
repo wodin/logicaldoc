@@ -11,6 +11,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUITransition;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
+import com.logicaldoc.gui.common.client.data.WorkflowHistoriesDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -32,6 +33,8 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Canvas;
+import com.smartgwt.client.widgets.HTMLFlow;
+import com.smartgwt.client.widgets.HTMLPane;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.CloseClickEvent;
 import com.smartgwt.client.widgets.events.CloseClickHandler;
@@ -47,8 +50,12 @@ import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
+import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
+import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
+import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
@@ -74,6 +81,8 @@ public class WorkflowDetailsDialog extends Window {
 
 	private ListGrid appendedDocs;
 
+	private ListGrid notesGrid;
+
 	private SelectItem user = null;
 
 	private ValuesManager vm = new ValuesManager();
@@ -98,6 +107,10 @@ public class WorkflowDetailsDialog extends Window {
 
 	private Tab workflowTab = null;
 
+	private Tab notesTab = null;
+
+	private VLayout notesPanel = null;
+
 	private VLayout appendedDocsPanel = null;
 
 	private StaticTextItem taskStartDate = null;
@@ -113,8 +126,8 @@ public class WorkflowDetailsDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(I18N.message("workflow"));
-		setWidth(580);
-		setHeight(440);
+		setWidth(700);
+		setHeight(400);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -149,8 +162,10 @@ public class WorkflowDetailsDialog extends Window {
 		form.setHeight100();
 
 		sxLayout = new VLayout(10);
-		appendedDocsPanel = new VLayout(15);
-		appendedDocsPanel.setMargin(20);
+		appendedDocsPanel = new VLayout(5);
+		appendedDocsPanel.setMargin(5);
+		notesPanel = new VLayout(5);
+		notesPanel.setMargin(5);
 
 		reload(wfl);
 	}
@@ -176,6 +191,11 @@ public class WorkflowDetailsDialog extends Window {
 		members = appendedDocsPanel.getMembers();
 		for (Canvas canvas : members) {
 			appendedDocsPanel.removeMember(canvas);
+		}
+
+		members = notesPanel.getMembers();
+		for (Canvas canvas : members) {
+			notesPanel.removeMember(canvas);
 		}
 
 		// Workflow section
@@ -446,15 +466,147 @@ public class WorkflowDetailsDialog extends Window {
 		workflowTab.setPane(form);
 
 		refreshAppendedDocsTab();
+
+		refreshNotesTab();
 	}
 
-	private void refreshAppendedDocsTab() {
+	void refreshAppendedDocsTab() {
 		if (docsTab != null)
 			tabs.removeTab(docsTab);
 		docsTab = new Tab(I18N.message("appendeddocuments"));
 		tabs.addTab(docsTab, 1);
 		prepareAppendedDocsPanel();
 		docsTab.setPane(appendedDocsPanel);
+	}
+
+	void refreshNotesTab() {
+		if (notesTab != null)
+			tabs.removeTab(notesTab);
+		notesTab = new Tab(I18N.message("notes"));
+		tabs.addTab(notesTab, 2);
+		prepareNotesPanel();
+		notesTab.setPane(notesPanel);
+	}
+
+	void refreshAndSelectNotesTab() {
+		refreshNotesTab();
+		tabs.selectTab(notesTab);
+	}
+
+	private void prepareNotesPanel() {
+		ListGridField id = new ListGridField("id", I18N.message("id"), 50);
+		id.setHidden(true);
+
+		ListGridField userId = new ListGridField("userId", "userid", 50);
+		userId.setHidden(true);
+
+		ListGridField taskId = new ListGridField("taskId", "taskid", 50);
+		taskId.setHidden(true);
+
+		ListGridField task = new ListGridField("name", I18N.message("task"), 150);
+		ListGridField user = new ListGridField("user", I18N.message("user"), 150);
+		ListGridField date = new ListGridField("date", I18N.message("date"), 110);
+		date.setAlign(Alignment.LEFT);
+		date.setType(ListGridFieldType.DATE);
+		date.setCellFormatter(new DateCellFormatter(false));
+		date.setCanFilter(false);
+
+		notesGrid = new ListGrid() {
+			@Override
+			protected Canvas getExpansionComponent(final ListGridRecord record) {
+				return new HTMLFlow(
+						"<div class='details'>"
+								+ (record.getAttributeAsString("comment") != null ? record
+										.getAttributeAsString("comment") : "") + "</div>");
+			}
+		};
+
+		notesGrid.setEmptyMessage(I18N.message("notitemstoshow"));
+		notesGrid.setCanFreezeFields(true);
+		notesGrid.setAutoFetchData(true);
+		notesGrid.setWidth100();
+		notesGrid.setHeight100();
+		notesGrid.setCanFreezeFields(true);
+		notesGrid.setShowHeader(true);
+		notesGrid.setCanSelectAll(false);
+		notesGrid.setCanExpandRecords(true);
+		notesGrid.setSelectionType(SelectionStyle.SINGLE);
+		notesGrid.setFields(id, task, date, user);
+		notesGrid.setDataSource(new WorkflowHistoriesDS(Long.parseLong(workflow.getId()), workflow.getTemplateId(),
+				"event.workflow.task.note"));
+		notesPanel.addMember(notesGrid);
+
+		Button addNote = new Button(I18N.message("addnote"));
+		addNote.setAutoFit(true);
+		addNote.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+			@Override
+			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+				WorkflowNoteEditor dialog = new WorkflowNoteEditor(WorkflowDetailsDialog.this);
+				dialog.show();
+			}
+		});
+		notesPanel.addMember(addNote);
+
+		// Expand all notes after arrived
+		notesGrid.addDataArrivedHandler(new DataArrivedHandler() {
+			@Override
+			public void onDataArrived(DataArrivedEvent event) {
+				for (ListGridRecord rec : notesGrid.getRecords()) {
+					notesGrid.expandRecord(rec);
+				}
+			}
+		});
+
+		notesGrid.addCellContextClickHandler(new CellContextClickHandler() {
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				Menu contextMenu = new Menu();
+				MenuItem delete = new MenuItem();
+				delete.setTitle(I18N.message("ddelete"));
+				delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+					public void onClick(MenuItemClickEvent event) {
+						service.deleteNote(notesGrid.getSelectedRecord().getAttributeAsLong("id"),
+								new AsyncCallback<Void>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										Log.serverError(caught);
+									}
+
+									@Override
+									public void onSuccess(Void arg) {
+										refreshAndSelectNotesTab();
+									}
+								});
+					}
+				});
+
+				MenuItem print = new MenuItem();
+				print.setTitle(I18N.message("print"));
+				print.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+					public void onClick(MenuItemClickEvent event) {
+						HTMLPane printContainer = new HTMLPane();
+						printContainer.setContents(notesGrid.getSelectedRecord().getAttribute("comment"));
+						Canvas.showPrintPreview(printContainer);
+					}
+				});
+
+				ListGridRecord[] selection = notesGrid.getSelectedRecords();
+
+				if (Session.get().getUser().isMemberOf("admin")) {
+					delete.setEnabled(selection.length > 0);
+				} else {
+					long userId = Long.parseLong(selection[0].getAttribute("userId"));
+					delete.setEnabled(selection.length == 1 && userId == Session.get().getUser().getId());
+				}
+
+				print.setEnabled(selection.length == 1);
+
+				contextMenu.setItems(print, delete);
+				contextMenu.showContextMenu();
+				event.cancel();
+			}
+		});
 	}
 
 	private void prepareAppendedDocsPanel() {
@@ -497,7 +649,7 @@ public class WorkflowDetailsDialog extends Window {
 			}
 		});
 
-		appendedDocs.setContextMenu(setupContextMenu());
+		appendedDocs.setContextMenu(setupAppendedDocsContextMenu());
 		appendedDocsPanel.addMember(appendedDocs);
 
 		Button addDocuments = new Button(I18N.message("adddocuments"));
@@ -568,7 +720,7 @@ public class WorkflowDetailsDialog extends Window {
 	/**
 	 * Prepares the context menu for the documents grid.
 	 */
-	private Menu setupContextMenu() {
+	private Menu setupAppendedDocsContextMenu() {
 		Menu contextMenu = new Menu();
 
 		MenuItem preview = new MenuItem();
