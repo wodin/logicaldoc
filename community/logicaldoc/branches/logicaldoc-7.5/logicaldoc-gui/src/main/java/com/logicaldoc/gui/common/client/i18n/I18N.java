@@ -8,6 +8,7 @@ import com.google.gwt.i18n.client.DateTimeFormat;
 import com.logicaldoc.gui.common.client.beans.GUIInfo;
 import com.logicaldoc.gui.common.client.beans.GUISession;
 import com.logicaldoc.gui.common.client.beans.GUIValue;
+import com.smartgwt.client.types.DateDisplayFormat;
 
 /**
  * Retrieves i18n resources
@@ -188,6 +189,25 @@ public class I18N {
 
 	public static DateTimeFormat getDateFormat() {
 		return dateFormat;
+	}
+
+	public static DateDisplayFormat getDateDisplayFormat(boolean withTime) {
+		if ("yyyy/MM/dd".equals(I18N.message("format_dateshort"))) {
+			if (withTime)
+				return DateDisplayFormat.TOJAPANSHORTDATETIME;
+			else
+				return DateDisplayFormat.TOJAPANSHORTDATE;
+		} else if (I18N.message("format_dateshort").contains("MM/dd")) {
+			if (withTime)
+				return DateDisplayFormat.TOUSSHORTDATETIME;
+			else
+				return DateDisplayFormat.TOUSSHORTDATE;
+		} else {
+			if (withTime)
+				return DateDisplayFormat.TOEUROPEANSHORTDATETIME;
+			else
+				return DateDisplayFormat.TOEUROPEANSHORTDATE;
+		}
 	}
 
 	public static String getAttributeLabel(String name) {

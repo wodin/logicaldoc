@@ -22,7 +22,6 @@ import com.logicaldoc.gui.common.client.data.FoldersDS;
 import com.logicaldoc.gui.common.client.data.FormsDS;
 import com.logicaldoc.gui.common.client.data.GroupsDS;
 import com.logicaldoc.gui.common.client.data.StampsDS;
-import com.logicaldoc.gui.common.client.data.StoragesDS;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.data.TemplatesDS;
 import com.logicaldoc.gui.common.client.data.TenantsDS;
@@ -35,7 +34,6 @@ import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
 import com.logicaldoc.gui.common.client.widgets.UserSelector;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.Cursor;
-import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.DateRangeDialog;
@@ -89,107 +87,111 @@ public class ItemFactory {
 		DateRangeItem dateRangeItem = new DateRangeItem();
 		dateRangeItem.setFromTitle(I18N.message("from"));
 		dateRangeItem.setToTitle(I18N.message("to"));
-		dateRangeItem.setDateFormatter(getDateDisplayFormat());
+		dateRangeItem.setDateFormatter(I18N.getDateDisplayFormat(false));
 		dateRangeItem.setPickerIconPrompt(I18N.message("showdatechooser"));
 		dateRangeItem.setHintStyle("hint");
 		dateRangeItem.setRequiredMessage(I18N.message("fieldrequired"));
 		DateRangeItem.setDefaultProperties(dateRangeItem);
-		
-		MiniDateRangeItem miniDateRangeItem=new MiniDateRangeItem();
+
+		MiniDateRangeItem miniDateRangeItem = new MiniDateRangeItem();
 		miniDateRangeItem.setShowPickerIcon(true);
 		miniDateRangeItem.setAllowRelativeDates(false);
 		miniDateRangeItem.setHintStyle("hint");
 		miniDateRangeItem.setWidth(180);
-		miniDateRangeItem.setDateFormatter(getDateDisplayFormat());
-		miniDateRangeItem.setDateDisplayFormat(getDateDisplayFormat());
+		miniDateRangeItem.setDateFormatter(I18N.getDateDisplayFormat(false));
+		miniDateRangeItem.setDateDisplayFormat(I18N.getDateDisplayFormat(false));
 		miniDateRangeItem.setToDateOnlyPrefix(I18N.message("bbefore"));
 		miniDateRangeItem.setFromDateOnlyPrefix(I18N.message("ssince"));
 		miniDateRangeItem.setPickerIconPrompt(I18N.message("showdatechooser"));
 		miniDateRangeItem.setRequiredMessage(I18N.message("fieldrequired"));
 		MiniDateRangeItem.setDefaultProperties(miniDateRangeItem);
-		
-		
+
 		DateItem dateItem = new DateItem();
 		dateItem.setUseTextField(true);
 		dateItem.setUseMask(true);
 		dateItem.setShowPickerIcon(true);
 		dateItem.setHintStyle("hint");
 		dateItem.setWidth(110);
-		dateItem.setDateFormatter(getDateDisplayFormat());
+		dateItem.setDateFormatter(I18N.getDateDisplayFormat(false));
 		dateItem.setPickerIconPrompt(I18N.message("showdatechooser"));
 		dateItem.setRequiredMessage(I18N.message("fieldrequired"));
 		DateItem.setDefaultProperties(dateItem);
-		
+
 		SelectItem selectItem = new SelectItem();
 		selectItem.setHintStyle("hint");
 		selectItem.setRequiredMessage(I18N.message("fieldrequired"));
 		SelectItem.setDefaultProperties(selectItem);
-		
+
 		TextItem textItem = new TextItem();
 		textItem.setHintStyle("hint");
 		textItem.setRequiredMessage(I18N.message("fieldrequired"));
 		TextItem.setDefaultProperties(textItem);
-		
-		RadioGroupItem radioGroupItem =new RadioGroupItem();
+
+		RadioGroupItem radioGroupItem = new RadioGroupItem();
 		radioGroupItem.setHintStyle("hint");
 		radioGroupItem.setRequiredMessage(I18N.message("fieldrequired"));
 		RadioGroupItem.setDefaultProperties(radioGroupItem);
-		
+
 		CheckboxItem checkboxItem = new CheckboxItem();
 		checkboxItem.setHintStyle("hint");
 		checkboxItem.setRequiredMessage(I18N.message("fieldrequired"));
 		CheckboxItem.setDefaultProperties(checkboxItem);
-		
+
 		MultiComboBoxItem multiComboBoxItem = new MultiComboBoxItem();
 		multiComboBoxItem.setHintStyle("hint");
 		multiComboBoxItem.setRequiredMessage(I18N.message("fieldrequired"));
 		MultiComboBoxItem.setDefaultProperties(multiComboBoxItem);
-		
+
 		SpinnerItem spinnerItem = new SpinnerItem();
 		spinnerItem.setHintStyle("hint");
 		spinnerItem.setRequiredMessage(I18N.message("fieldrequired"));
 		SpinnerItem.setDefaultProperties(spinnerItem);
-		
+
 		PasswordItem passwordItem = new PasswordItem();
 		passwordItem.setHintStyle("hint");
 		passwordItem.setRequiredMessage(I18N.message("fieldrequired"));
 		SpinnerItem.setDefaultProperties(passwordItem);
-		
+
 		StaticTextItem staticTextItem = new StaticTextItem();
 		staticTextItem.setHintStyle("hint");
 		staticTextItem.setRequiredMessage(I18N.message("fieldrequired"));
 		StaticTextItem.setDefaultProperties(staticTextItem);
-		
+
 		IntegerItem integerItem = new IntegerItem();
 		integerItem.setRequiredMessage(I18N.message("fieldrequired"));
 		integerItem.setHintStyle("hint");
 		IntegerItem.setDefaultProperties(integerItem);
-		
+
 		ColorPickerItem colorPickerItem = new ColorPickerItem();
 		colorPickerItem.setWidth(150);
 		colorPickerItem.setRequiredMessage(I18N.message("fieldrequired"));
 		colorPickerItem.setHintStyle("hint");
 		ColorPickerItem.setDefaultProperties(colorPickerItem);
-		
+
 		LinkItem linkItem = new LinkItem();
 		linkItem.setRequiredMessage(I18N.message("fieldrequired"));
 		linkItem.setHintStyle("hint");
 		LinkItem.setDefaultProperties(linkItem);
-		
+
 		TextAreaItem textAreaItem = new TextAreaItem();
 		textAreaItem.setRequiredMessage(I18N.message("fieldrequired"));
 		textAreaItem.setHintStyle("hint");
 		TextAreaItem.setDefaultProperties(textAreaItem);
-		
+
 		TimeItem timeItem = new TimeItem();
 		timeItem.setHintStyle("hint");
 		timeItem.setWidth(50);
 		TimeItem.setDefaultProperties(timeItem);
-		
+
 		FloatItem floatItem = new FloatItem();
 		floatItem.setHintStyle("hint");
 		floatItem.setWidth(50);
 		FloatItem.setDefaultProperties(floatItem);
+
+		ColorPickerItem colorItemPicker = new ColorPickerItem();
+		colorItemPicker.setHintStyle("hint");
+		colorItemPicker.setWidth(100);
+		ColorPickerItem.setDefaultProperties(colorItemPicker);
 	}
 
 	/**
@@ -227,15 +229,6 @@ public class ItemFactory {
 		else
 			date.setShowTitle(false);
 		return date;
-	}
-
-	private static DateDisplayFormat getDateDisplayFormat() {
-		if ("yyyy/MM/dd".equals(I18N.message("format_dateshort")))
-			return DateDisplayFormat.TOJAPANSHORTDATE;
-		else if (I18N.message("format_dateshort").contains("MM/dd"))
-			return DateDisplayFormat.TOUSSHORTDATE;
-		else
-			return DateDisplayFormat.TOEUROPEANSHORTDATE;
 	}
 
 	public static SelectItem newUserSelectorForAttribute(String name, String title, String groupIdOrName) {
@@ -1067,7 +1060,8 @@ public class ItemFactory {
 		item.setWrapTitle(false);
 		item.setOptionDataSource(new WorkflowsDS(false, false, true));
 		if (!Feature.enabled(Feature.WORKFLOW))
-			item.setDisabled(true);;
+			item.setDisabled(true);
+		;
 		return item;
 	}
 
