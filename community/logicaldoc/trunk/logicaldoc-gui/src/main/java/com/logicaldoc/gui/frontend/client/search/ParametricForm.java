@@ -12,9 +12,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUICriterion;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
-import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -30,6 +30,8 @@ import com.smartgwt.client.util.JSOHelper;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.ImgButton;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.CheckboxItem;
@@ -189,6 +191,16 @@ public class ParametricForm extends VLayout {
 		addMember(addImg);
 
 		reloadCriteriaRows(null, false);
+
+		addResizedHandler(new ResizedHandler() {
+
+			@Override
+			public void onResized(ResizedEvent event) {
+				for (RowCriteria row : criteriaRows) {
+					row.setWidth(ParametricForm.this.getWidth() - 10);
+				}
+			}
+		});
 	}
 
 	public void reloadCriteriaRows(GUITemplate template, boolean reload) {
@@ -337,7 +349,21 @@ public class ParametricForm extends VLayout {
 
 			criterion.setOperator(fieldOperator.toLowerCase());
 
-			list.add(criterion);
+			if (!fieldName.equals("tags")) {
+				list.add(criterion);
+			} else {
+				// In case of tags, we will have to create a criterion per tag
+				if (fieldName.equals("tags")) {
+					String[] tgs = ((SelectItem) row.getValueFieldsItem()).getValues();
+					for (String tag : tgs) {
+						GUICriterion c = new GUICriterion();
+						c.setField(fieldName);
+						c.setOperator(fieldOperator.toLowerCase());
+						c.setStringValue(tag);
+						list.add(c);
+					}
+				}
+			}
 		}
 
 		if (!NO_LANGUAGE.equals(vm.getValueAsString("language").trim())) {

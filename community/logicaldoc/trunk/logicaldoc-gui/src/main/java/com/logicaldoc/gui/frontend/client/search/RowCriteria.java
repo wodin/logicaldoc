@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 
 import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUITemplate;
+import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.smartgwt.client.data.DataSource;
@@ -11,7 +12,10 @@ import com.smartgwt.client.data.DataSourceField;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.widgets.ImgButton;
+import com.smartgwt.client.widgets.events.ResizedEvent;
+import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
+import com.smartgwt.client.widgets.form.fields.DateItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -146,6 +150,20 @@ public class RowCriteria extends HLayout {
 		form.setItems(attribute, operator, value);
 
 		setMembers(removeImg, form);
+
+		addResizedHandler(new ResizedHandler() {
+
+			@Override
+			public void onResized(ResizedEvent event) {
+				if (value instanceof DateItem)
+					return;
+
+				int padSize = RowCriteria.this.getWidth() - 230;
+				if (padSize < 100)
+					padSize = 100;
+				value.setWidth(padSize);
+			}
+		});
 	}
 
 	private LinkedHashMap<String, String> operatorsFor(String criteriaField) {
@@ -171,6 +189,9 @@ public class RowCriteria extends HLayout {
 		} else if (criteriaField.endsWith("type:" + GUIAttribute.TYPE_STRING_PRESET)) {
 			map.put("equals", I18N.message("equals"));
 			map.put("notequal", I18N.message("notequal"));
+		} else if (criteriaField.equals("tags")) {
+			map.put("contains", I18N.message("contains"));
+			map.put("notcontains", I18N.message("notcontains"));
 		} else {
 			map.put("contains", I18N.message("contains"));
 			map.put("notcontains", I18N.message("notcontains"));
@@ -200,6 +221,8 @@ public class RowCriteria extends HLayout {
 				|| criteriaField.equals("startPublishing") || criteriaField.equals("stopPublishing")
 				|| criteriaField.endsWith("type:" + GUIAttribute.TYPE_DATE)) {
 			return ItemFactory.newDateItem("value", "date");
+		} else if (criteriaField.equals("tags")) {
+			return ItemFactory.newTagsMultiplePickList("value", "tags", new TagsDS(null, false, null), null);
 		} else {
 			return ItemFactory.newTextItem("value", "text", null);
 		}
