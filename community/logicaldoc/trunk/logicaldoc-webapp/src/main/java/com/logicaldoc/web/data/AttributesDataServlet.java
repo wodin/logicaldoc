@@ -174,6 +174,12 @@ public class AttributesDataServlet extends HttpServlet {
 			writer.print("<type>" + Attribute.TYPE_INT + "</type>");
 			writer.print("</attribute>");
 			
+			writer.print("<attribute>");
+			writer.print("<name>rating</name>");
+			writer.print("<label><![CDATA[" + I18N.message("rating", locale) + "]]></label>");
+			writer.print("<type>" + Attribute.TYPE_INT + "</type>");
+			writer.print("</attribute>");
+			
 			/*
 			 * Iterate over the collection of extended attributes
 			 */
