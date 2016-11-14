@@ -97,13 +97,6 @@ public class DocumentFieldsDS extends DataSource {
 		setFields(id, title, fileSize, publisher, version, lastModified, published, created, creator, customId,
 				filename, extension, rating, tags, comment, wfStatus, publishedStatus, startPublishing, stopPublishing);
 
-		// setFields(author, coverage, id, title, object, fileSize, publisher,
-		// version, sourceDate, lastModified,
-		// published, created, creator, customId, filename, extension,
-		// recipient, source, sourceid, sourceType,
-		// rating, tags, comment, wfStatus, publishedStatus, startPublishing,
-		// stopPublishing);
-
 		/*
 		 * Define extended attributes
 		 */

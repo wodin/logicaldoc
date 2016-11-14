@@ -517,6 +517,18 @@ public class ItemFactory {
 		return item;
 	}
 
+	public static SelectItem newTagsMultiplePickList(String name, String title, TagsDS options, Object[] tags) {
+		final SelectItem item = newSelectItem(name, title);
+		item.setMultiple(true);
+		item.setMultipleAppearance(MultipleAppearance.PICKLIST);
+		item.setValueField("word");
+		item.setDisplayField("word");
+		item.setOptionDataSource(options);
+		if (tags != null)
+			item.setValue(tags);
+		return item;
+	}
+
 	public static SelectItem newMultipleSelector(String name, String title) {
 		SelectItem selectItemMultipleGrid = new SelectItem();
 		selectItemMultipleGrid.setName(filterItemName(name));
