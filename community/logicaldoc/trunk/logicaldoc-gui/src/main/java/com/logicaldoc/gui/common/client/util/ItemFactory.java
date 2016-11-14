@@ -35,7 +35,6 @@ import com.logicaldoc.gui.common.client.validators.SimpleTextValidator;
 import com.logicaldoc.gui.common.client.widgets.UserSelector;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.types.Cursor;
-import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.MultiComboBoxLayoutStyle;
 import com.smartgwt.client.types.MultipleAppearance;
 import com.smartgwt.client.widgets.DateRangeDialog;
@@ -89,7 +88,7 @@ public class ItemFactory {
 		DateRangeItem dateRangeItem = new DateRangeItem();
 		dateRangeItem.setFromTitle(I18N.message("from"));
 		dateRangeItem.setToTitle(I18N.message("to"));
-		dateRangeItem.setDateFormatter(getDateDisplayFormat());
+		dateRangeItem.setDateFormatter(I18N.getDateDisplayFormat(false));
 		dateRangeItem.setPickerIconPrompt(I18N.message("showdatechooser"));
 		dateRangeItem.setHintStyle("hint");
 		dateRangeItem.setRequiredMessage(I18N.message("fieldrequired"));
@@ -100,8 +99,8 @@ public class ItemFactory {
 		miniDateRangeItem.setAllowRelativeDates(false);
 		miniDateRangeItem.setHintStyle("hint");
 		miniDateRangeItem.setWidth(180);
-		miniDateRangeItem.setDateFormatter(getDateDisplayFormat());
-		miniDateRangeItem.setDateDisplayFormat(getDateDisplayFormat());
+		miniDateRangeItem.setDateFormatter(I18N.getDateDisplayFormat(false));
+		miniDateRangeItem.setDateDisplayFormat(I18N.getDateDisplayFormat(false));
 		miniDateRangeItem.setToDateOnlyPrefix(I18N.message("bbefore"));
 		miniDateRangeItem.setFromDateOnlyPrefix(I18N.message("ssince"));
 		miniDateRangeItem.setPickerIconPrompt(I18N.message("showdatechooser"));
@@ -114,7 +113,7 @@ public class ItemFactory {
 		dateItem.setShowPickerIcon(true);
 		dateItem.setHintStyle("hint");
 		dateItem.setWidth(110);
-		dateItem.setDateFormatter(getDateDisplayFormat());
+		dateItem.setDateFormatter(I18N.getDateDisplayFormat(false));
 		dateItem.setPickerIconPrompt(I18N.message("showdatechooser"));
 		dateItem.setRequiredMessage(I18N.message("fieldrequired"));
 		DateItem.setDefaultProperties(dateItem);
@@ -244,15 +243,6 @@ public class ItemFactory {
 		else
 			date.setShowTitle(false);
 		return date;
-	}
-
-	private static DateDisplayFormat getDateDisplayFormat() {
-		if ("yyyy/MM/dd".equals(I18N.message("format_dateshort")))
-			return DateDisplayFormat.TOJAPANSHORTDATE;
-		else if (I18N.message("format_dateshort").contains("MM/dd"))
-			return DateDisplayFormat.TOUSSHORTDATE;
-		else
-			return DateDisplayFormat.TOEUROPEANSHORTDATE;
 	}
 
 	public static SelectItem newUserSelectorForAttribute(String name, String title, String groupIdOrName) {
