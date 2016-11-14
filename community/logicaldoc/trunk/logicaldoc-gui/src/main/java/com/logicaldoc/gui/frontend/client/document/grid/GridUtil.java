@@ -1,11 +1,13 @@
 package com.logicaldoc.gui.frontend.client.document.grid;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
+import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 
@@ -149,7 +151,10 @@ public class GridUtil {
 
 		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
 		for (String name : extNames) {
-			record.setAttribute("ext_" + name, doc.getValue(name));
+			Object value = doc.getValue(name);
+			if (value instanceof Date)
+				value = I18N.formatDateShort((Date) value);
+			record.setAttribute("ext_" + name, value);
 		}
 
 		return record;

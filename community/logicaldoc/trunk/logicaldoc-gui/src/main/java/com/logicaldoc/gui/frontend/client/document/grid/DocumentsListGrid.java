@@ -29,6 +29,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
 import com.smartgwt.client.types.Alignment;
+import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.ExpansionMode;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
@@ -320,7 +321,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 				map.put(ext.getName(), ext);
 			}
 		}
-		
+
 		return map;
 	}
 
@@ -360,75 +361,75 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 				}
 			}
 
-			if (!fields.contains(map.get("filename"))){
+			if (!fields.contains(map.get("filename"))) {
 				map.get("filename").setHidden(true);
 				fields.add(map.get("filename"));
 			}
-			if (!fields.contains(map.get("title"))){
+			if (!fields.contains(map.get("title"))) {
 				map.get("title").setHidden(true);
 				fields.add(map.get("title"));
 			}
-			if (!fields.contains(map.get("lastModified"))){
+			if (!fields.contains(map.get("lastModified"))) {
 				map.get("lastModified").setHidden(true);
 				fields.add(map.get("lastModified"));
 			}
-			if (!fields.contains(map.get("type"))){
+			if (!fields.contains(map.get("type"))) {
 				map.get("type").setHidden(true);
 				fields.add(map.get("type"));
 			}
-			if (!fields.contains(map.get("size"))){
+			if (!fields.contains(map.get("size"))) {
 				map.get("size").setHidden(true);
 				fields.add(map.get("size"));
 			}
-			if (!fields.contains(map.get("fileVersion"))){
+			if (!fields.contains(map.get("fileVersion"))) {
 				map.get("fileVersion").setHidden(true);
 				fields.add(map.get("fileVersion"));
 			}
-			if (!fields.contains(map.get("version"))){
+			if (!fields.contains(map.get("version"))) {
 				map.get("version").setHidden(true);
 				fields.add(map.get("version"));
 			}
-			if (!fields.contains(map.get("publisher"))){
+			if (!fields.contains(map.get("publisher"))) {
 				map.get("publisher").setHidden(true);
 				fields.add(map.get("publisher"));
 			}
-			if (!fields.contains(map.get("published"))){
+			if (!fields.contains(map.get("published"))) {
 				map.get("published").setHidden(true);
 				fields.add(map.get("published"));
 			}
-			if (!fields.contains(map.get("creator"))){
+			if (!fields.contains(map.get("creator"))) {
 				map.get("creator").setHidden(true);
 				fields.add(map.get("creator"));
 			}
-			if (!fields.contains(map.get("created"))){
+			if (!fields.contains(map.get("created"))) {
 				map.get("created").setHidden(true);
 				fields.add(map.get("created"));
 			}
-			if (!fields.contains(map.get("customId"))){
+			if (!fields.contains(map.get("customId"))) {
 				map.get("customId").setHidden(true);
 				fields.add(map.get("customId"));
 			}
-			if (!fields.contains(map.get("rating"))){
+			if (!fields.contains(map.get("rating"))) {
 				map.get("rating").setHidden(true);
 				fields.add(map.get("rating"));
 			}
-			if (!fields.contains(map.get("comment"))){
+			if (!fields.contains(map.get("comment"))) {
 				map.get("comment").setHidden(true);
 				fields.add(map.get("comment"));
 			}
-			if (!fields.contains(map.get("workflowStatus"))){
+			if (!fields.contains(map.get("workflowStatus"))) {
 				map.get("workflowStatus").setHidden(true);
 				fields.add(map.get("workflowStatus"));
 			}
-			if (!fields.contains(map.get("template"))){
+			if (!fields.contains(map.get("template"))) {
 				map.get("template").setHidden(true);
 				fields.add(map.get("template"));
 			}
-			if (!fields.contains(map.get("startPublishing"))){
+			if (!fields.contains(map.get("startPublishing"))) {
 				map.get("startPublishing").setHidden(true);
 				fields.add(map.get("startPublishing"));
 			}
-			if (!fields.contains(map.get("stopPublishing"))){
+			if (!fields.contains(map.get("stopPublishing"))) {
 				map.get("stopPublishing").setHidden(true);
 				fields.add(map.get("stopPublishing"));
 			}
@@ -702,12 +703,12 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	public int getSelectedIndex() {
 		return super.getRecordIndex(getSelectedRecord());
 	}
-	
+
 	@Override
 	public GUIDocument[] getSelectedDocuments() {
 		return GridUtil.toDocuments(getSelectedRecords());
 	}
-	
+
 	@Override
 	public GUIDocument[] getDocuments() {
 		return GridUtil.toDocuments(getRecords());
@@ -818,6 +819,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		for (int i = 0; i < documents.length; i++) {
 			GUIDocument doc = documents[i];
 			ListGridRecord record = GridUtil.fromDocument(doc);
+			
 			records[i] = record;
 		}
 
@@ -846,4 +848,16 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	public void setCursor(Cursor cursor) {
 		this.cursor = cursor;
 	}
+
+	@Override
+	public DateDisplayFormat getDateFormatter() {
+		return I18N.getDateDisplayFormat(false);
+	}
+
+	@Override
+	public DateDisplayFormat getDatetimeFormatter() {
+		return I18N.getDateDisplayFormat(true);
+	}
+	
+	
 }

@@ -13,7 +13,6 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.CalendarService;
 import com.logicaldoc.gui.frontend.client.services.CalendarServiceAsync;
-import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.TimeDisplayFormat;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.calendar.Calendar;
@@ -42,10 +41,7 @@ public class DocumentCalendar extends Calendar {
 		setNextButtonHoverText(I18N.message("next"));
 		setCancelButtonTitle(I18N.message("cancel"));
 		setDatePickerHoverText(I18N.message("choosedate"));
-		if (I18N.message("format_dateshort").startsWith("MM/dd"))
-			setDateFormatter(DateDisplayFormat.TOUSSHORTDATE);
-		else
-			setDateFormatter(DateDisplayFormat.TOEUROPEANSHORTDATE);
+		setDateFormatter(I18N.getDateDisplayFormat(false));
 		setTimeFormatter(TimeDisplayFormat.TOSHORT24HOURTIME);
 		setCanCreateEvents(false);
 		setCanResizeTimelineEvents(false);
