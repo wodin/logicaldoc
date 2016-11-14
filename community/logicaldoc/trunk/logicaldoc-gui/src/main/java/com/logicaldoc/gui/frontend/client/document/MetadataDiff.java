@@ -129,7 +129,7 @@ public class MetadataDiff extends Window {
 		}
 
 		for (String name : names) {
-			GUIAttribute att = version1.getExtendedAttribute(name);
+			GUIAttribute att = version1.getAttribute(name);
 			String val1 = "";
 			if (att != null)
 				if ((att.getType() == GUIAttribute.TYPE_STRING || att.getType() == GUIAttribute.TYPE_USER)
@@ -143,7 +143,7 @@ public class MetadataDiff extends Window {
 					val1 = dateFormat.format(att.getDateValue());
 				}
 
-			att = version2.getExtendedAttribute(name);
+			att = version2.getAttribute(name);
 			String val2 = "";
 			if (att != null)
 				if ((att.getType() == GUIAttribute.TYPE_STRING || att.getType() == GUIAttribute.TYPE_USER)

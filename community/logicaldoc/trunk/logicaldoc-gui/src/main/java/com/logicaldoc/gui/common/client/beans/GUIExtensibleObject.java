@@ -49,7 +49,7 @@ public class GUIExtensibleObject implements Serializable {
 		return null;
 	}
 
-	public GUIAttribute getExtendedAttribute(String attributeName) {
+	public GUIAttribute getAttribute(String attributeName) {
 		for (GUIAttribute att : attributes) {
 			if (att.getName().equals(attributeName))
 				return att;

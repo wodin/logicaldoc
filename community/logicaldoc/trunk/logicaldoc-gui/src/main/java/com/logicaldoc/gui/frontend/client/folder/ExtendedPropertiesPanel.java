@@ -336,7 +336,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 										dummy.setName(sel.getAttributeAsString("name"));
 										folder.setValue(nm, dummy);
 									} else {
-										GUIAttribute at = folder.getExtendedAttribute(nm);
+										GUIAttribute at = folder.getAttribute(nm);
 										at.setIntValue(null);
 										at.setStringValue(null);
 										at.setType(GUIAttribute.TYPE_USER);
@@ -344,8 +344,8 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 								} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 									if (!(val == null || "".equals(val.toString().trim())))
 										folder.setValue(nm, "1".equals(val.toString().trim()) ? true : false);
-									else if (folder.getExtendedAttribute(nm) != null) {
-										GUIAttribute at = folder.getExtendedAttribute(nm);
+									else if (folder.getAttribute(nm) != null) {
+										GUIAttribute at = folder.getAttribute(nm);
 										at.setBooleanValue(null);
 										at.setType(GUIAttribute.TYPE_BOOLEAN);
 									}
@@ -354,15 +354,15 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 							} else {
 								if (att != null) {
 									if (att.getType() == GUIAttribute.TYPE_INT) {
-										folder.getExtendedAttribute(nm).setIntValue(null);
+										folder.getAttribute(nm).setIntValue(null);
 									} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
-										folder.getExtendedAttribute(nm).setBooleanValue(null);
+										folder.getAttribute(nm).setBooleanValue(null);
 									} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
-										folder.getExtendedAttribute(nm).setDoubleValue(null);
+										folder.getAttribute(nm).setDoubleValue(null);
 									} else if (att.getType() == GUIAttribute.TYPE_DATE) {
-										folder.getExtendedAttribute(nm).setDateValue(null);
+										folder.getAttribute(nm).setDateValue(null);
 									} else if (att.getType() == GUIAttribute.TYPE_USER) {
-										GUIAttribute at = folder.getExtendedAttribute(nm);
+										GUIAttribute at = folder.getAttribute(nm);
 										at.setIntValue(null);
 										at.setStringValue(null);
 										at.setType(GUIAttribute.TYPE_USER);

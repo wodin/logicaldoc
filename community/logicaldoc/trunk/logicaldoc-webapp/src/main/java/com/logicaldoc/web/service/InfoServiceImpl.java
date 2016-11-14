@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +19,12 @@ import com.logicaldoc.core.communication.SystemMessage;
 import com.logicaldoc.core.communication.SystemMessageDAO;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
+import com.logicaldoc.core.metadata.Attribute;
+import com.logicaldoc.core.metadata.AttributeSetDAO;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
+import com.logicaldoc.core.security.dao.TenantDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.gui.common.client.InvalidSessionException;
 import com.logicaldoc.gui.common.client.beans.GUIAttributeSet;
@@ -128,6 +133,17 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 
 			info.setMessages(messages.toArray(new GUIMessage[0]));
 
+			TenantDAO tDAO = (TenantDAO) Context.get().getBean(TenantDAO.class);
+			AttributeSetDAO aDAO = (AttributeSetDAO) Context.get().getBean(AttributeSetDAO.class);
+			Map<String, Attribute> attributes = aDAO.findAttributes(tDAO.findByName(tenantName).getId(), null);
+			List<GUIValue> attributeLabels = new ArrayList<GUIValue>();
+			for (String name : attributes.keySet()) {
+				GUIValue val = new GUIValue(name, StringUtils.isNotEmpty(attributes.get(name).getLabel()) ? attributes
+						.get(name).getLabel() : name);
+				attributeLabels.add(val);
+			}
+			info.setAttributeLabels(attributeLabels.toArray(new GUIValue[0]));
+			
 			return info;
 		} catch (Throwable t) {
 			log.error(t.getMessage(), t);
@@ -213,7 +229,7 @@ public class InfoServiceImpl extends RemoteServiceServlet implements InfoService
 			info.setDefaultAttributeSet(defaultSet);
 		} catch (Throwable t) {
 		}
-		
+
 		return info;
 	}
 
