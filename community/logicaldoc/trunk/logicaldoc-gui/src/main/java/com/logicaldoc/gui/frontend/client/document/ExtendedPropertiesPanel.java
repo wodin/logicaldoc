@@ -293,7 +293,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 										dummy.setName(sel.getAttributeAsString("name"));
 										document.setValue(nm, dummy);
 									} else {
-										GUIAttribute at = document.getExtendedAttribute(nm);
+										GUIAttribute at = document.getAttribute(nm);
 										at.setIntValue(null);
 										at.setStringValue(null);
 										at.setType(GUIAttribute.TYPE_USER);
@@ -301,8 +301,8 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 								} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 									if (!(val == null || "".equals(val.toString().trim())))
 										document.setValue(nm, "1".equals(val.toString().trim()) ? true : false);
-									else if (document.getExtendedAttribute(nm) != null) {
-										GUIAttribute at = document.getExtendedAttribute(nm);
+									else if (document.getAttribute(nm) != null) {
+										GUIAttribute at = document.getAttribute(nm);
 										at.setBooleanValue(null);
 										at.setType(GUIAttribute.TYPE_BOOLEAN);
 									}
@@ -311,15 +311,15 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 							} else {
 								if (att != null) {
 									if (att.getType() == GUIAttribute.TYPE_INT) {
-										document.getExtendedAttribute(nm).setIntValue(null);
+										document.getAttribute(nm).setIntValue(null);
 									} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
-										document.getExtendedAttribute(nm).setBooleanValue(null);
+										document.getAttribute(nm).setBooleanValue(null);
 									} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
-										document.getExtendedAttribute(nm).setDoubleValue(null);
+										document.getAttribute(nm).setDoubleValue(null);
 									} else if (att.getType() == GUIAttribute.TYPE_DATE) {
-										document.getExtendedAttribute(nm).setDateValue(null);
+										document.getAttribute(nm).setDateValue(null);
 									} else if (att.getType() == GUIAttribute.TYPE_USER) {
-										GUIAttribute at = document.getExtendedAttribute(nm);
+										GUIAttribute at = document.getAttribute(nm);
 										at.setIntValue(null);
 										at.setStringValue(null);
 										at.setType(GUIAttribute.TYPE_USER);

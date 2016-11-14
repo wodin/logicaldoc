@@ -101,7 +101,7 @@ public class AttributesDataServlet extends HttpServlet {
 			writer.print("<label><![CDATA[" + I18N.message("fileversion", locale) + "]]></label>");
 			writer.print("<type>" + Attribute.TYPE_STRING + "</type>");
 			writer.print("</attribute>");
-			
+
 			writer.print("<attribute>");
 			writer.print("<name>version</name>");
 			writer.print("<label><![CDATA[" + I18N.message("version", locale) + "]]></label>");
@@ -137,7 +137,7 @@ public class AttributesDataServlet extends HttpServlet {
 			writer.print("<label><![CDATA[" + I18N.message("comment", locale) + "]]></label>");
 			writer.print("<type>" + Attribute.TYPE_STRING + "</type>");
 			writer.print("</attribute>");
-			
+
 			writer.print("<attribute>");
 			writer.print("<name>template</name>");
 			writer.print("<label><![CDATA[" + I18N.message("template", locale) + "]]></label>");
@@ -149,37 +149,37 @@ public class AttributesDataServlet extends HttpServlet {
 			writer.print("<label><![CDATA[" + I18N.message("workflowstatus", locale) + "]]></label>");
 			writer.print("<type>" + Attribute.TYPE_STRING + "</type>");
 			writer.print("</attribute>");
-			
+
 			writer.print("<attribute>");
 			writer.print("<name>startPublishing</name>");
 			writer.print("<label><![CDATA[" + I18N.message("startpublishing", locale) + "]]></label>");
 			writer.print("<type>" + Attribute.TYPE_DATE + "</type>");
 			writer.print("</attribute>");
-			
+
 			writer.print("<attribute>");
 			writer.print("<name>stopPublishing</name>");
 			writer.print("<label><![CDATA[" + I18N.message("stoppublishing", locale) + "]]></label>");
 			writer.print("<type>" + Attribute.TYPE_DATE + "</type>");
 			writer.print("</attribute>");
-			
+
 			writer.print("<attribute>");
 			writer.print("<name>folder</name>");
 			writer.print("<label><![CDATA[" + I18N.message("folder", locale) + "]]></label>");
 			writer.print("<type>" + Attribute.TYPE_STRING + "</type>");
 			writer.print("</attribute>");
-			
+
 			writer.print("<attribute>");
 			writer.print("<name>score</name>");
 			writer.print("<label><![CDATA[" + I18N.message("score", locale) + "]]></label>");
 			writer.print("<type>" + Attribute.TYPE_INT + "</type>");
 			writer.print("</attribute>");
-			
+
 			writer.print("<attribute>");
 			writer.print("<name>rating</name>");
 			writer.print("<label><![CDATA[" + I18N.message("rating", locale) + "]]></label>");
 			writer.print("<type>" + Attribute.TYPE_INT + "</type>");
 			writer.print("</attribute>");
-			
+
 			/*
 			 * Iterate over the collection of extended attributes
 			 */
@@ -187,7 +187,9 @@ public class AttributesDataServlet extends HttpServlet {
 			for (String name : attributes.keySet()) {
 				writer.print("<attribute>");
 				writer.print("<name><![CDATA[ext_" + name + "]]></name>");
-				writer.print("<label><![CDATA[" + name + "]]></label>");
+				writer.print("<label><![CDATA["
+						+ (StringUtils.isNotEmpty(attributes.get(name).getLabel()) ? attributes.get(name).getLabel()
+								: "") + "]]></label>");
 				writer.print("<type>" + attributes.get(name).getType() + "</type>");
 				writer.print("</attribute>");
 			}

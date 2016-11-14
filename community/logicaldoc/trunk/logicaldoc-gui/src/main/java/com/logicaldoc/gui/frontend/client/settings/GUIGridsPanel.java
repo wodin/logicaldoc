@@ -147,7 +147,7 @@ public class GUIGridsPanel extends VLayout {
 				ListGridRecord record = new ListGridRecord();
 				String n = att.trim();
 				record.setAttribute("name", n);
-				record.setAttribute("label", I18N.getAttributeLabel(n));
+				record.setAttribute("label", Session.get().getInfo().getAttributeLabel(n));
 				documentsGrid.addData(record);
 			}
 		}
@@ -231,7 +231,7 @@ public class GUIGridsPanel extends VLayout {
 				ListGridRecord record = new ListGridRecord();
 				String n = att.trim();
 				record.setAttribute("name", n);
-				record.setAttribute("label", I18N.getAttributeLabel(n));
+				record.setAttribute("label", Session.get().getInfo().getAttributeLabel(n));
 				searchGrid.addData(record);
 			}
 		}

@@ -315,7 +315,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
 		for (String name : extNames) {
 			if (name != null && !"".equals(name)) {
-				ListGridField ext = new ListGridField("ext_" + name, name, 100);
+				ListGridField ext = new ListGridField("ext_" + name, Session.get().getInfo().getAttributeLabel(name), 100);
 				ext.setHidden(true);
 				ext.setCanFilter(true);
 				map.put(ext.getName(), ext);

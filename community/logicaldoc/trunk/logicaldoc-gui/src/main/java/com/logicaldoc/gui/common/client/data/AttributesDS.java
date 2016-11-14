@@ -12,6 +12,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  * @since 7.6
  */
 public class AttributesDS extends DataSource {
+	
 	public AttributesDS() {
 		setTitleField("attributes");
 		setRecordXPath("/list/attribute");

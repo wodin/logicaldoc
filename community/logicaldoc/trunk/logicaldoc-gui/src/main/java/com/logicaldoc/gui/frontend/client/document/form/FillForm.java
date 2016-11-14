@@ -151,7 +151,7 @@ public class FillForm extends Window {
 			if (name.startsWith("_")) {
 				Object val = values.get(name);
 				String nm = name.substring(1).replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-				GUIAttribute att = frm.getExtendedAttribute(nm);
+				GUIAttribute att = frm.getAttribute(nm);
 				if (att == null)
 					continue;
 
@@ -170,7 +170,7 @@ public class FillForm extends Window {
 							dummy.setName(sel.getAttributeAsString("name"));
 							frm.setValue(nm, dummy);
 						} else {
-							GUIAttribute at = frm.getExtendedAttribute(nm);
+							GUIAttribute at = frm.getAttribute(nm);
 							at.setIntValue(null);
 							at.setStringValue(null);
 							at.setType(GUIAttribute.TYPE_USER);
@@ -178,8 +178,8 @@ public class FillForm extends Window {
 					} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
 						if (!(val == null || "".equals(val.toString().trim())))
 							frm.setValue(nm, "1".equals(val.toString().trim()) ? true : false);
-						else if (frm.getExtendedAttribute(nm) != null) {
-							GUIAttribute at = frm.getExtendedAttribute(nm);
+						else if (frm.getAttribute(nm) != null) {
+							GUIAttribute at = frm.getAttribute(nm);
 							at.setBooleanValue(null);
 							at.setType(GUIAttribute.TYPE_BOOLEAN);
 						}
@@ -188,19 +188,19 @@ public class FillForm extends Window {
 				} else {
 					if (att != null) {
 						if (att.getType() == GUIAttribute.TYPE_INT) {
-							frm.getExtendedAttribute(nm).setIntValue(null);
+							frm.getAttribute(nm).setIntValue(null);
 							break;
 						} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
-							frm.getExtendedAttribute(nm).setBooleanValue(null);
+							frm.getAttribute(nm).setBooleanValue(null);
 							break;
 						} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
-							frm.getExtendedAttribute(nm).setDoubleValue(null);
+							frm.getAttribute(nm).setDoubleValue(null);
 							break;
 						} else if (att.getType() == GUIAttribute.TYPE_DATE) {
-							frm.getExtendedAttribute(nm).setDateValue(null);
+							frm.getAttribute(nm).setDateValue(null);
 							break;
 						} else if (att.getType() == GUIAttribute.TYPE_USER) {
-							GUIAttribute at = frm.getExtendedAttribute(nm);
+							GUIAttribute at = frm.getAttribute(nm);
 							at.setIntValue(null);
 							at.setStringValue(null);
 							at.setType(GUIAttribute.TYPE_USER);
