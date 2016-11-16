@@ -1,6 +1,7 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
@@ -8,6 +9,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
+import com.logicaldoc.gui.common.client.beans.GUIMessageTemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.EventPanel;
 import com.logicaldoc.gui.common.client.log.Log;
@@ -16,6 +18,8 @@ import com.logicaldoc.gui.common.client.validators.EmailValidator;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.logicaldoc.gui.frontend.client.services.MessageService;
+import com.logicaldoc.gui.frontend.client.services.MessageServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.TitleOrientation;
@@ -60,11 +64,13 @@ public class EmailDialog extends Window {
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
+	private MessageServiceAsync messageService = (MessageServiceAsync) GWT.create(MessageService.class);
+
 	private ValuesManager vm = new ValuesManager();
 
 	private ListGrid recipientsGrid;
 
-	public EmailDialog(long[] docIds, String docTitle) {
+	public EmailDialog(long[] docIds, final String docTitle) {
 		super();
 		this.docIds = docIds;
 
@@ -94,8 +100,8 @@ public class EmailDialog extends Window {
 		form.setWidth100();
 		form.setHeight("*");
 		form.setMargin(5);
-		form.setTitleOrientation(TitleOrientation.TOP);
-		form.setNumCols(1);
+		form.setTitleOrientation(TitleOrientation.LEFT);
+		form.setNumCols(2);
 
 		final TextItem subject = ItemFactory.newTextItem("subject", "subject", docTitle);
 		subject.setRequired(true);
@@ -106,16 +112,48 @@ public class EmailDialog extends Window {
 		message.setTitle(I18N.message("message"));
 		message.setWidth("*");
 		message.setHeight("*");
+		message.setColSpan(2);
+
+		final SelectItem messageTemplate = ItemFactory.newSelectItem("template", "template");
+		messageTemplate.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				if (messageTemplate.getValueAsString() != null
+						&& !"".equals(messageTemplate.getValueAsString() != null)) {
+					messageService.getTemplate(Long.parseLong(messageTemplate.getValueAsString()),
+							new AsyncCallback<GUIMessageTemplate>() {
+
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(GUIMessageTemplate t) {
+									subject.setValue(t.getSubject());
+									message.setValue(t.getBody() + "<br /><br />"
+											+ Session.get().getUser().getEmailSignature());
+								}
+							});
+				} else {
+					subject.setValue(docTitle);
+					message.setValue("<br /><br />" + Session.get().getUser().getEmailSignature());
+				}
+			}
+		});
 
 		if (Session.get().getUser().getEmailSignature() != null)
-			message.setValue("<br><br>" + Session.get().getUser().getEmailSignature());
+			message.setValue("<br /><br />" + Session.get().getUser().getEmailSignature());
 
 		final CheckboxItem pdf = new CheckboxItem("pdf");
 		pdf.setTitle(I18N.message("sendpdfconversion"));
 		pdf.setVisible(Feature.enabled(Feature.PDF));
+		pdf.setColSpan(2);
 
 		final CheckboxItem ticket = new CheckboxItem("sendticket");
 		ticket.setTitle(I18N.message("sendticket"));
+		ticket.setColSpan(2);
 		ticket.addChangedHandler(new ChangedHandler() {
 
 			@Override
@@ -135,9 +173,9 @@ public class EmailDialog extends Window {
 
 		// The download ticket is available on single selection only
 		if (docIds.length == 1)
-			form.setFields(subject, ticket, pdf, message);
+			form.setFields(messageTemplate, subject, ticket, pdf, message);
 		else
-			form.setFields(subject, zip, pdf, message);
+			form.setFields(messageTemplate, subject, zip, pdf, message);
 
 		final IButton send = new IButton();
 		send.setTitle(I18N.message("send"));
@@ -219,6 +257,25 @@ public class EmailDialog extends Window {
 		addItem(recipientsStack);
 		addItem(form);
 		addItem(buttons);
+
+		messageService.loadTemplates(I18N.getLocale(), "user", new AsyncCallback<GUIMessageTemplate[]>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				Log.serverError(caught);
+			}
+
+			@Override
+			public void onSuccess(GUIMessageTemplate[] templates) {
+				LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+				map.put("", "");
+				for (GUIMessageTemplate t : templates) {
+					map.put("" + t.getId(), t.getName());
+				}
+				messageTemplate.setValueMap(map);
+				messageTemplate.setValue("");
+			}
+		});
 	}
 
 	private SectionStack prepareRecipientsGrid() {

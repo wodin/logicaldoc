@@ -8,7 +8,6 @@ import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
-import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
@@ -19,12 +18,10 @@ import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.types.SelectionStyle;
 import com.smartgwt.client.types.SortDirection;
 import com.smartgwt.client.util.BooleanCallback;
-import com.smartgwt.client.widgets.Button;
 import com.smartgwt.client.widgets.Window;
+import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
-import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
-import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -32,11 +29,12 @@ import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickEvent;
 import com.smartgwt.client.widgets.grid.events.CellDoubleClickHandler;
-import com.smartgwt.client.widgets.layout.HLayout;
 import com.smartgwt.client.widgets.layout.VLayout;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
+import com.smartgwt.client.widgets.toolbar.ToolStrip;
+import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 
 /**
  * This popup window is used to visualize the workflows histories.
@@ -51,20 +49,17 @@ public class WorkflowHistoryDialog extends Window {
 
 	private ComboBoxItem user = null;
 
-	private ListGrid instancesList;
+	private VLayout instancesContainer = new VLayout();
 
-	private ListGrid historiesList;
+	private ListGrid instancesGrid;
 
-	private WorkflowHistoriesDS instancesDataSource;
+	private VLayout historiesContainer = new VLayout();
 
-	private WorkflowHistoriesDS historiesDataSource;
-
-	private VLayout form = null;
+	private ListGrid historiesGrid;
 
 	private Long selectedWorkflowInstance = null;
 
 	public WorkflowHistoryDialog() {
-
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		setTitle(I18N.message("workflowhistory"));
@@ -73,25 +68,8 @@ public class WorkflowHistoryDialog extends Window {
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
+		setAutoSize(true);
 		centerInPage();
-
-		reload();
-	}
-
-	private void reload() {
-		if (form != null) {
-			removeMember(form);
-		}
-
-		form = new VLayout(20);
-		form.setMargin(20);
-
-		HLayout selectionWorkflowLayout = new HLayout(15);
-		selectionWorkflowLayout.setMargin(20);
-		selectionWorkflowLayout.setWidth(300);
-
-		// Workflow section
-		DynamicForm workflowForm = new DynamicForm();
 
 		final ComboBoxItem workflow = new ComboBoxItem("workflowSelection", I18N.message("workflowselect"));
 		workflow.setWrapTitle(false);
@@ -103,15 +81,12 @@ public class WorkflowHistoryDialog extends Window {
 		if (selectedWorkflow != null)
 			workflow.setValue(selectedWorkflow.getName());
 
-		workflowForm.setItems(workflow);
-		selectionWorkflowLayout.addMember(workflowForm);
-
-		Button load = new Button(I18N.message("load"));
-		load.setAutoFit(true);
-		load.addClickHandler(new ClickHandler() {
-
+		ToolStripButton search = new ToolStripButton();
+		search.setAutoFit(true);
+		search.setTitle(I18N.message("search"));
+		search.addClickHandler(new ClickHandler() {
 			@Override
-			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
+			public void onClick(ClickEvent event) {
 				ListGridRecord selectedRecord = workflow.getSelectedRecord();
 				if (selectedRecord == null)
 					return;
@@ -125,33 +100,37 @@ public class WorkflowHistoryDialog extends Window {
 					@Override
 					public void onSuccess(GUIWorkflow result) {
 						selectedWorkflow = result;
-						reload();
+						loadInstancesGrid();
 					}
 				});
 			}
 		});
 
-		selectionWorkflowLayout.addMember(load);
-		form.addMember(selectionWorkflowLayout);
+		ToolStrip toolStrip = new ToolStrip();
+		toolStrip.addFormItem(workflow);
+		toolStrip.addButton(search);
+		toolStrip.addFill();
+		toolStrip.setWidth100();
 
-		VLayout workflowInstancesLayout = new VLayout(10);
-		workflowInstancesLayout.setWidth(900);
+		instancesContainer.setWidth100();
+		instancesContainer.setHeight("40%");
+		instancesContainer.setShowResizeBar(true);
 
-		// Workflow instances section
-		DynamicForm workflowInstancesForm = new DynamicForm();
-		workflowInstancesForm.setColWidths(1, "*");
+		historiesContainer.setWidth100();
+		historiesContainer.setHeight("60%");
 
-		StaticTextItem workflowTitle = ItemFactory.newStaticTextItem("workflowInstances", "",
-				"<b>" + I18N.message("workflowinstances") + "</b>");
-		workflowTitle.setShouldSaveValue(false);
-		workflowTitle.setWrapTitle(false);
-		workflowTitle.setShowTitle(false);
-		workflowTitle.setWrap(false);
+		setMembers(toolStrip, instancesContainer, historiesContainer);
+		loadInstancesGrid();
+	}
 
-		workflowInstancesForm.setItems(workflowTitle);
-		workflowInstancesLayout.addMember(workflowInstancesForm);
+	private void loadInstancesGrid() {
+		if (instancesGrid != null)
+			instancesContainer.removeMember(instancesGrid);
 
-		ListGridField id = new ListGridField("id", I18N.message("id"), 60);
+		if (historiesGrid != null)
+			historiesContainer.removeMember(historiesGrid);
+
+		ListGridField id = new ListGridField("id", I18N.message("instance"), 60);
 		ListGridField startDate = new ListGridField("startdate", I18N.message("startdate"), 120);
 		startDate.setAlign(Alignment.CENTER);
 		startDate.setType(ListGridFieldType.DATE);
@@ -166,45 +145,51 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField documentIds = new ListGridField("documentIds", I18N.message("documentIds"), 300);
 		documentIds.setHidden(true);
 
-		instancesList = new ListGrid();
-		instancesList.setCanFreezeFields(true);
-		instancesList.setAutoFetchData(true);
-		instancesList.setShowHeader(true);
-		instancesList.setCanSelectAll(false);
-		instancesList.setSelectionType(SelectionStyle.SINGLE);
-		instancesList.setHeight(140);
-		instancesList.setBorder("1px solid #E1E1E1");
-		instancesList.sort("startdate", SortDirection.DESCENDING);
-		if (selectedWorkflow != null) {
-			instancesDataSource = new WorkflowHistoriesDS(null, Long.parseLong(selectedWorkflow.getId()), null);
-			instancesList.setDataSource(instancesDataSource);
-		}
+		instancesGrid = new ListGrid();
+		instancesGrid.setCanFreezeFields(true);
+		instancesGrid.setAutoFetchData(true);
+		instancesGrid.setShowHeader(true);
+		instancesGrid.setCanSelectAll(false);
+		instancesGrid.setSelectionType(SelectionStyle.SINGLE);
+		instancesGrid.setHeight100();
+		instancesGrid.setWidth100();
+		instancesGrid.setBorder("1px solid #E1E1E1");
+		instancesGrid.sort("startdate", SortDirection.DESCENDING);
+		if (selectedWorkflow != null)
+			instancesGrid.setDataSource(new WorkflowHistoriesDS(null, Long.parseLong(selectedWorkflow.getId()), null));
+		instancesGrid.setFields(id, startDate, endDate, documents, documentIds);
 
-		instancesList.addCellDoubleClickHandler(new CellDoubleClickHandler() {
+		instancesGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
-				Record record = event.getRecord();
-				selectedWorkflowInstance = Long.parseLong(record.getAttributeAsString("id"));
-				reload();
+				onSelectedInstance();
 			}
 		});
-		instancesList.setFields(id, startDate, endDate, documents, documentIds);
-		instancesList.addCellContextClickHandler(new CellContextClickHandler() {
+		instancesGrid.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
 				showContextMenu();
 				event.cancel();
 			}
 		});
-		workflowInstancesLayout.addMember(instancesList);
 
-		form.addMember(workflowInstancesLayout);
+		instancesContainer.addMember(instancesGrid);
+	}
 
-		// Workflow histories section
-		VLayout workflowHistoriesLayout = new VLayout(10);
-		workflowHistoriesLayout.setWidth(900);
+	private void onSelectedInstance() {
+		Record record = instancesGrid.getSelectedRecord();
+		selectedWorkflowInstance = Long.parseLong(record.getAttributeAsString("id"));
+
+		if (historiesGrid != null)
+			historiesContainer.removeMember(historiesGrid);
+
+		ListGridField historyId = new ListGridField("id", I18N.message("id"), 60);
+		historyId.setHidden(true);
 
 		ListGridField historyEvent = new ListGridField("event", I18N.message("event"), 200);
+		ListGridField historyName = new ListGridField("name", I18N.message("task"), 200);
+		historyName.setHidden(true);
+
 		ListGridField historyDate = new ListGridField("startdate", I18N.message("startdate"), 120);
 		historyDate.setAlign(Alignment.CENTER);
 		historyDate.setType(ListGridFieldType.DATE);
@@ -213,32 +198,27 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField historyUser = new ListGridField("user", I18N.message("user"), 120);
 		ListGridField historyComment = new ListGridField("comment", I18N.message("comment"));
 		historyComment.setWidth("*");
-		ListGridField historyDoc = new ListGridField("document", I18N.message("document"), 180);
+		ListGridField historyFilename = new ListGridField("filename", I18N.message("document"), 180);
 		ListGridField historySid = new ListGridField("sessionid", I18N.message("sid"), 240);
 		historySid.setHidden(true);
 
-		historiesList = new ListGrid();
-		historiesList.setEmptyMessage(I18N.message("notitemstoshow"));
-		historiesList.setCanFreezeFields(true);
-		historiesList.setAutoFetchData(true);
-		historiesList.setShowHeader(true);
-		historiesList.setCanSelectAll(false);
-		historiesList.setSelectionType(SelectionStyle.SINGLE);
-		historiesList.setHeight(200);
-		historiesList.sort("startdate", SortDirection.ASCENDING);
-		historiesList.setBorder("1px solid #E1E1E1");
-		if (selectedWorkflowInstance != null) {
-			historiesDataSource = new WorkflowHistoriesDS(selectedWorkflowInstance, Long.parseLong(selectedWorkflow
-					.getId()), null);
-			historiesList.setDataSource(historiesDataSource);
-		}
+		historiesGrid = new ListGrid();
+		historiesGrid.setEmptyMessage(I18N.message("notitemstoshow"));
+		historiesGrid.setCanFreezeFields(true);
+		historiesGrid.setAutoFetchData(true);
+		historiesGrid.setShowHeader(true);
+		historiesGrid.setCanSelectAll(false);
+		historiesGrid.setSelectionType(SelectionStyle.SINGLE);
+		historiesGrid.setHeight100();
+		historiesGrid.setWidth100();
+		historiesGrid.sort("startdate", SortDirection.ASCENDING);
+		historiesGrid.setBorder("1px solid #E1E1E1");
+		historiesGrid.setDataSource(new WorkflowHistoriesDS(selectedWorkflowInstance, Long.parseLong(selectedWorkflow
+				.getId()), null));
+		historiesGrid.setFields(historyId, historyEvent, historyName, historyDate, historyUser, historyComment,
+				historyFilename, historySid);
 
-		historiesList.setFields(historyEvent, historyDate, historyUser, historyComment, historyDoc, historySid);
-		workflowHistoriesLayout.addMember(historiesList);
-
-		form.addMember(workflowHistoriesLayout);
-
-		addChild(form);
+		historiesContainer.addMember(historiesGrid);
 	}
 
 	public GUIWorkflow getSelectedWorkflow() {
@@ -252,7 +232,7 @@ public class WorkflowHistoryDialog extends Window {
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
-		final ListGridRecord selection = instancesList.getSelectedRecord();
+		final ListGridRecord selection = instancesGrid.getSelectedRecord();
 		if (selection == null)
 			return;
 
@@ -272,10 +252,10 @@ public class WorkflowHistoryDialog extends Window {
 
 								@Override
 								public void onSuccess(Void result) {
-									instancesList.removeSelectedData();
-									instancesList.deselectAllRecords();
-									historiesList.removeSelectedData();
-									historiesList.deselectAllRecords();
+									instancesGrid.removeSelectedData();
+									instancesGrid.deselectAllRecords();
+									historiesGrid.removeSelectedData();
+									historiesGrid.deselectAllRecords();
 								}
 							});
 						}

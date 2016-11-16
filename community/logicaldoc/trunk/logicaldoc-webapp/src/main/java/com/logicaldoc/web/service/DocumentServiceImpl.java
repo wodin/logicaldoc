@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +60,7 @@ import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.metadata.TemplateDAO;
+import com.logicaldoc.core.script.ScriptingEngine;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.User;
@@ -1020,11 +1023,28 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				mail.parseRecipientsCC(email.getCc());
 			mail.setFolder("outbox");
 
-			String message = email.getMessage();
-
 			mail.setSentDate(new Date());
-			mail.setSubject(email.getSubject());
 			mail.setUsername(session.getUsername());
+
+			System.out.println();
+			
+			List<Document> attachedDocs = documentDao.findByIds(ArrayUtils.toObject(email.getDocIds()), null);
+			for (Document document : attachedDocs)
+				documentDao.initialize(document);
+
+			System.out.println("");
+			
+			/*
+			 * Subject and email are processed by the scripting engine
+			 */
+			ScriptingEngine engine = new ScriptingEngine("sendmail", LocaleUtil.toLocale(locale));
+			Map<String, Object> dictionary = new HashMap<String, Object>();
+			dictionary.put("sender", session.getUser());
+			dictionary.put("documents", attachedDocs);
+			dictionary.put("document", attachedDocs.get(0));
+			String message = engine.evaluate(email.getMessage(), dictionary);
+
+			mail.setSubject(engine.evaluate(email.getSubject(), dictionary));
 
 			// Needed in case the zip compression was requested by the user
 			File zipFile = null;
@@ -1041,7 +1061,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				Document doc = documentDao.findById(ticket.getDocId());
 
 				String ticketUrl = composeTicketUrl(ticket);
-				message = email.getMessage()
+				message = message
 						+ "<div style='margin-top:10px; border-top:1px solid black; background-color:#CCCCCC;'><b>&nbsp;"
 						+ I18N.message("clicktodownload", LocaleUtil.toLocale(locale)) + ": <a href='" + ticketUrl
 						+ "'>" + doc.getFileName() + "</a></b></div>";
@@ -1092,9 +1112,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			try {
 				message = "<html><body>" + message + "</body></html>";
-				// message =
-				// "<html><head><meta http-equiv=\"content-type\" content=\"text/html; fileNameCharset=utf-8\"></head><body>"
-				// + message + "</body></html>";
 				mail.setMessageText(message);
 
 				// Send the message
@@ -1106,8 +1123,8 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 				DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 				FolderDAO fDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
-				for (long id : email.getDocIds()) {
-					Document doc = docDao.findById(id);
+				for (Document d : attachedDocs) {
+					Document doc = d;
 					if (doc.getDocRef() != null)
 						doc = documentDao.findById(doc.getDocRef());
 
@@ -1115,7 +1132,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 					HistoryDAO dao = (HistoryDAO) Context.get().getBean(HistoryDAO.class);
 					History history = new History();
 					history.setSession(session);
-					history.setDocId(id);
+					history.setDocId(doc.getId());
 					history.setEvent(DocumentEvent.SENT.toString());
 					history.setComment(StringUtils.abbreviate(email.getRecipients(), 4000));
 					history.setTitle(doc.getTitle());

@@ -149,7 +149,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 	}
 
 	@Override
-	public GUIMessageTemplate[] loadTemplates(String language) throws ServerException {
+	public GUIMessageTemplate[] loadTemplates(String language, String type) throws ServerException {
 		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		Context context = Context.get();
 
@@ -158,10 +158,10 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 
 			List<GUIMessageTemplate> buf = new ArrayList<GUIMessageTemplate>();
 
-			List<MessageTemplate> standardTemplates = dao.findByLanguage("en", session.getTenantId());
+			List<MessageTemplate> standardTemplates = dao.findByTypeAndLanguage(type, "en", session.getTenantId());
 			Map<String, MessageTemplate> templates = new HashMap<String, MessageTemplate>();
 
-			List<MessageTemplate> tmp = dao.findByLanguage(language, session.getTenantId());
+			List<MessageTemplate> tmp = dao.findByTypeAndLanguage(type, language, session.getTenantId());
 			for (MessageTemplate m : tmp) {
 				templates.put(m.getName(), m);
 			}
@@ -177,8 +177,11 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 				t.setName(template.getName());
 				t.setSubject(template.getSubject());
 				t.setBody(template.getBody());
+				t.setType(template.getType());
 				buf.add(t);
 			}
+
+			buf.sort((s1, s2) -> s1.getType().compareTo(s2.getType()));
 
 			return buf.toArray(new GUIMessageTemplate[0]);
 		} catch (Throwable t) {
@@ -204,6 +207,7 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 				template.setLanguage(t.getLanguage());
 				template.setSubject(t.getSubject());
 				template.setBody(t.getBody());
+				template.setType(t.getType());
 				dao.store(template);
 			}
 		} catch (Throwable t) {
@@ -227,6 +231,48 @@ public class MessageServiceImpl extends RemoteServiceServlet implements MessageS
 			}
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void deleteTemplates(String name) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
+		try {
+			Context context = Context.get();
+			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
+			List<MessageTemplate> templates = dao.findByName(name, session.getTenantId());
+			for (MessageTemplate template : templates) {
+				if (template.getType().equals(MessageTemplate.TYPE_SYSTEM))
+					continue;
+				dao.delete(template.getId());
+			}
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public GUIMessageTemplate getTemplate(long templateId) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
+		try {
+			Context context = Context.get();
+			MessageTemplateDAO dao = (MessageTemplateDAO) context.getBean(MessageTemplateDAO.class);
+			MessageTemplate template = dao.findById(templateId);
+			if (template == null)
+				return null;
+
+			GUIMessageTemplate t = new GUIMessageTemplate();
+			t.setId(template.getId());
+			t.setLanguage(template.getLanguage());
+			t.setName(template.getName());
+			t.setSubject(template.getSubject());
+			t.setBody(template.getBody());
+			t.setType(template.getType());
+			return t;
+		} catch (Throwable t) {
+			return (GUIMessageTemplate) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 }

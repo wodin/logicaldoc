@@ -153,7 +153,7 @@ create table ld_note (ld_id number(19,0) not null, ld_lastmodified timestamp not
                       ld_message varchar(4000), ld_snippet varchar(4000), ld_page int not null, primary key (ld_id));
 create table ld_messagetemplate (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_recordversion number(19,0) not null,
                                  ld_deleted int not null, ld_tenantid number(19,0) not null, ld_name varchar(255) not null, ld_language varchar(10) not null,
-                                 ld_description varchar(1000), ld_body varchar(4000),
+                                 ld_description varchar(1000), ld_body varchar(4000), ld_type varchar(255),
                                  ld_subject varchar(1000), primary key (ld_id));
 create table ld_contact (ld_id number(19,0) not null, ld_lastmodified timestamp not null, ld_recordversion number(19,0) not null, 
                          ld_deleted int not null, ld_tenantid number(19,0) not null, ld_userid number(19,0) null,
@@ -423,8 +423,8 @@ values (4,4,1,1,0,0,1,1,0,0,0,0,0,1,1,0,1);
 insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print)
 values (4,-10000,1,1,0,0,1,1,0,0,0,0,0,1,1,0,1);
 
-insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
-values(1, CURRENT_TIMESTAMP,0,'task.report','en', '$product - $task',
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_type, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
+values(1, CURRENT_TIMESTAMP,0,'task.report','system','en', '$product - $task',
 '$task<br/>
 $I18N.get(''startedon''): <b>$DateTool.format($started, true)</b><br/>
 $I18N.get(''finishedon''): <b>$DateTool.format($ended, true)</b><br/>
@@ -435,15 +435,15 @@ $I18N.get(''error''): <b>$error</b>
 #end
 $report',1,1);
 
-insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
-values(2, CURRENT_TIMESTAMP,0,'psw.rec1','en', '$product - $I18N.get(''emailnotifyaccountobject'')', 
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_type, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
+values(2, CURRENT_TIMESTAMP,0,'psw.rec1','system','en', '$product - $I18N.get(''emailnotifyaccountobject'')', 
 '$I18N.format(''emailnotifyaccount'', $user.fullName) <br/>
 $I18N.get(''username''): <b>$user.username</b> <br/>
 $I18N.get(''password''): <b>$password</b> <br/>
 $I18N.get(''clickhere''): <a href="$url">$url</a>',1,1);
 
-insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
-values(3, CURRENT_TIMESTAMP,0,'psw.rec2','en', '$product - $I18N.get(''passwordrequest'')',
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_type, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
+values(3, CURRENT_TIMESTAMP,0,'psw.rec2','system','en', '$product - $I18N.get(''passwordrequest'')',
 '$product - $I18N.get(''passwordrequest'') <br/>
 $I18N.get(''clickhere''): <a href="$url">$url</a>',1,1);
 

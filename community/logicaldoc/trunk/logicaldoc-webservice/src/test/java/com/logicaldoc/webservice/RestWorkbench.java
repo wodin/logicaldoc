@@ -26,7 +26,7 @@ import com.logicaldoc.webservice.rest.client.RestDocumentClient;
 import com.logicaldoc.webservice.rest.client.RestFolderClient;
 import com.logicaldoc.webservice.rest.client.RestSearchClient;
 
-public class XtestRestClients {
+public class RestWorkbench {
 
 	private static RestAuthClient authClient = null;
 
@@ -185,7 +185,7 @@ public class XtestRestClients {
 		// Total Exec. time (ms): 913.421004
 		// Total Exec. time (ms): 1189.928415
 
-		// XtestRestClients - (CXF JAXRSClientFactory with transform
+		// RestWorkbench - (CXF JAXRSClientFactory with transform
 		// JSON-2-Java)
 		// Total Exec. time (ms): 1284.876061
 		// Total Exec. time (ms): 1471.814473

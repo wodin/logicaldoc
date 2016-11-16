@@ -29,9 +29,14 @@ public interface MessageService extends RemoteService {
 	void save(GUIMessage message, long[] recipientIds) throws ServerException;
 
 	/**
-	 * Loads the templates configured for a given language.
+	 * Loads the templates configured for a given language and type
 	 */
-	public GUIMessageTemplate[] loadTemplates(String language) throws ServerException;
+	public GUIMessageTemplate[] loadTemplates(String language, String type) throws ServerException;
+
+	/**
+	 * Gets the template
+	 */
+	public GUIMessageTemplate getTemplate(long templateId) throws ServerException;
 
 	/**
 	 * Saves the given templates
@@ -42,4 +47,9 @@ public interface MessageService extends RemoteService {
 	 * Deletes a selection of templates
 	 */
 	public void deleteTemplates(long[] ids) throws ServerException;
+
+	/**
+	 * Deletes the templates with the given name
+	 */
+	public void deleteTemplates(String name) throws ServerException;
 }

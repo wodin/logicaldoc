@@ -672,6 +672,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	@Override
 	public List<Folder> findParents(long folderId) {
 		Folder folder = findById(folderId);
+		if (folder == null)
+			return new ArrayList<Folder>();
+
 		long rootId = findRoot(folder.getTenantId()).getId();
 		List<Folder> coll = new ArrayList<Folder>();
 		try {
@@ -689,7 +692,8 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	@Override
 	public Folder findWorkspace(long folderId) {
 		Folder folder = findById(folderId);
-		if (folder.isWorkspace())
+
+		if (folder != null && folder.isWorkspace())
 			return folder;
 		else {
 			List<Folder> parents = findParents(folderId);
@@ -698,6 +702,7 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 					return parent;
 			}
 		}
+
 		return null;
 	}
 
@@ -1095,13 +1100,12 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 		 * Detect possible cycle
 		 */
 		List<Folder> parents = findParents(parentId);
-	    parents.add(parentFolder);
+		parents.add(parentFolder);
 		for (Folder p : parents) {
-			if(p.getId()==foldRef)
+			if (p.getId() == foldRef)
 				throw new RuntimeException("Cycle detected. The alias cannot reference a parent folder");
 		}
-		
-		
+
 		// Prepare the transaction
 		if (transaction != null) {
 			transaction.setTenantId(targetFolder.getTenantId());

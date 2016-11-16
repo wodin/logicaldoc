@@ -16,5 +16,6 @@
         <property name="description" type="string" column="ld_description" length="1000" />
 		<property name="body" type="string" column="ld_body" length="4000" />
 		<property name="subject" type="string" column="ld_subject" length="1000" />
+        <property name="type" type="string" column="ld_type" length="255" />
   </class>
 </hibernate-mapping>

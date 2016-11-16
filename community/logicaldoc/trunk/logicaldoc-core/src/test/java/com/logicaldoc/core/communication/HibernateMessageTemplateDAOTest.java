@@ -39,6 +39,24 @@ public class HibernateMessageTemplateDAOTest extends AbstractCoreTCase {
 		coll = dao.findByLanguage("de", 1L);
 		Assert.assertEquals(0, coll.size());
 	}
+	
+	@Test
+	public void testFindByName() {
+		Collection<MessageTemplate> coll = dao.findByName("psw.rec1", 1L);
+		Assert.assertEquals(1, coll.size());
+		coll = dao.findByName("psw.rec1", 2L);
+		Assert.assertEquals(0, coll.size());
+		coll = dao.findByName("xxxxx", 1L);
+		Assert.assertEquals(0, coll.size());
+	}
+	
+	@Test
+	public void testFindByTypeLanguage() {
+		Collection<MessageTemplate> coll = dao.findByTypeAndLanguage(MessageTemplate.TYPE_SYSTEM,"en", 1L);
+		Assert.assertEquals(3, coll.size());
+		coll = dao.findByTypeAndLanguage("xxx","en", 1L);
+		Assert.assertEquals(0, coll.size());
+	}
 
 	@Test
 	public void testFindByNameAndLanguage() {
