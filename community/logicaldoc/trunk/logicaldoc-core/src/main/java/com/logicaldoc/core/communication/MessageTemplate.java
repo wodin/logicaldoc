@@ -16,6 +16,10 @@ import com.logicaldoc.util.config.ContextProperties;
  */
 public class MessageTemplate extends PersistentObject {
 
+	public static String TYPE_SYSTEM = "system";
+
+	public static String TYPE_USER = "user";
+
 	private String name = "";
 
 	private String description = "";
@@ -25,6 +29,8 @@ public class MessageTemplate extends PersistentObject {
 	private String body;
 
 	private String subject;
+
+	private String type = TYPE_SYSTEM;
 
 	public MessageTemplate() {
 	}
@@ -97,5 +103,13 @@ public class MessageTemplate extends PersistentObject {
 		newTemplate.setSubject(getSubject());
 		newTemplate.setTenantId(getTenantId());
 		return newTemplate;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 }

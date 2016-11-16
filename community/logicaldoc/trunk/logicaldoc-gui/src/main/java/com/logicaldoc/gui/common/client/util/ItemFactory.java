@@ -186,7 +186,6 @@ public class ItemFactory {
 
 		FloatItem floatItem = new FloatItem();
 		floatItem.setHintStyle("hint");
-		floatItem.setWidth(50);
 		FloatItem.setDefaultProperties(floatItem);
 
 		ColorPickerItem colorItemPicker = new ColorPickerItem();
@@ -573,8 +572,8 @@ public class ItemFactory {
 
 	public static SelectItem newEventsSelector(String name, String title, boolean folder, boolean workflow, boolean user) {
 		SelectItem select = newMultipleSelector(filterItemName(name), title);
-		select.setWidth(330);
-		select.setHeight(200);
+		select.setWidth(350);
+		select.setHeight(250);
 		select.setMultipleAppearance(MultipleAppearance.GRID);
 		select.setMultiple(true);
 		select.setOptionDataSource(new EventsDS(folder, workflow, user));

@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
+import com.logicaldoc.util.sql.SqlUtil;
 
 /**
  * Hibernate implementation of <code>MessageTemplateDAO</code>
@@ -26,6 +27,16 @@ public class HibernateMessageTemplateDAO extends HibernatePersistentObjectDAO<Me
 	public List<MessageTemplate> findByLanguage(String language, long tenantId) {
 		return findByWhere(" _entity.language='" + language + "' and _entity.tenantId=" + tenantId,
 				"order by _entity.name", null);
+	}
+
+	@Override
+	public List<MessageTemplate> findByTypeAndLanguage(String type, String language, long tenantId) {
+		StringBuffer query = new StringBuffer("_entity.language='" + language + "' ");
+		query.append(" and _entity.tenantId=" + tenantId);
+		if (StringUtils.isNotEmpty(type))
+			query.append(" and _entity.type='" + type + "' ");
+
+		return findByWhere(query.toString(), "order by _entity.name", null);
 	}
 
 	@Override
@@ -57,5 +68,11 @@ public class HibernateMessageTemplateDAO extends HibernatePersistentObjectDAO<Me
 			saveOrUpdate(template);
 		}
 		return true;
+	}
+
+	@Override
+	public List<MessageTemplate> findByName(String name, long tenantId) {
+		return findByWhere(" _entity.name='" + SqlUtil.doubleQuotes(name) + "' and _entity.tenantId=" + tenantId, null,
+				null);
 	}
 }

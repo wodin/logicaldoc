@@ -142,28 +142,28 @@ insert into ld_group
 values     (10,'2008-10-22 00:00:00',0,1,'testGroup',0,1);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
-values     (1,'2008-10-22 00:00:00',0,0,'a','testDocname','1.0','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,0,'PDF',1,'source','sourceauthor1','coverage1','en','pippo',1356,1,103,0,'',1,0,0,1,1,1,5,0,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
+values     (1,'2008-10-22 00:00:00',0,0,'a','testDocname','1.0','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,0,'PDF',1,'source','sourceauthor1','en','pippo',1356,1,103,0,'',1,0,0,1,1,1,5,0,0);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_docref,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
-values     (2,'2008-10-22 00:00:00',0,0,'b','testDocname2','2.0','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,1,'PDF',3,'source1','sourceauthor2','coverage2','en','pluto',122345,0,103,0,'',1,0,1,0,1,1,1,5,0,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_docref,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
+values     (2,'2008-10-22 00:00:00',0,0,'b','testDocname2','2.0','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,1,'PDF',3,'source1','sourceauthor2','en','pluto',122345,0,103,0,'',1,0,1,0,1,1,1,5,0,0);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
-values     (3,'2010-04-02 00:00:00',1,0,'c','DELETED 1','testDocV01','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,1,'PDF',3,'source2','sourceauthor','coverage','en','pluto',122345,1,99,0,'',1,0,1,0,1,1,1,5,0,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
+values     (3,'2010-04-02 00:00:00',1,0,'c','DELETED 1','testDocV01','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,1,'PDF',3,'source2','sourceauthor','en','pluto',122345,1,99,0,'',1,0,1,0,1,1,1,5,0,0);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
-values     (4,'2010-04-04 00:00:00',1,0,'d','DELETED 2','testDocV02','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,1,'TXT',3,'source','sourceauthor','coverage','en','pippo',122345,1,1100,0,'',1,0,1,0,1,1,1,5,0,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
+values     (4,'2010-04-04 00:00:00',1,0,'d','DELETED 2','testDocV02','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,1,'TXT',3,'source','sourceauthor','en','pippo',122345,1,1100,0,'',1,0,1,0,1,1,1,5,0,0);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
-values     (5,'2010-04-01 00:00:00',1,0,'f','DELETED 3','testDocV03','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,1,'DOC',3,'source','sourceauthor','coverage','en','paperino',122345,1,99,0,'',1,0,1,0,1,1,1,5,0,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
+values     (5,'2010-04-01 00:00:00',1,0,'f','DELETED 3','testDocV03','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,1,'DOC',3,'source','sourceauthor','en','paperino',122345,1,99,0,'',1,0,1,0,1,1,1,5,0,0);
 
 insert into ld_document
-           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_coverage,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
-values     (6,'2010-04-01 00:00:00',1,0,'g','DELETED 4','testDocV04','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,1,'TIFF',3,'source','sourceauthor','coverage','en','topolino',122345,1,1100,0,'',1,0,2,0,1,1,1,5,0,0);
+           (ld_id,ld_lastmodified,ld_deleted,ld_immutable,ld_customid,ld_title,ld_version,ld_date,ld_creation,ld_publisher,ld_publisherid,ld_status,ld_type,ld_lockuserid,ld_source,ld_sourceauthor,ld_language,ld_filename,ld_filesize,ld_indexed,ld_folderid,ld_signed,ld_creator,ld_creatorid,ld_exportstatus,ld_deleteuserid,ld_barcoded,ld_published,ld_tenantid,ld_recordversion,ld_pages,ld_stamped,ld_nature)
+values     (6,'2010-04-01 00:00:00',1,0,'g','DELETED 4','testDocV04','2006-12-19 00:00:00','2006-12-19 00:00:00','myself',1,1,'TIFF',3,'source','sourceauthor','en','topolino',122345,1,1100,0,'',1,0,2,0,1,1,1,5,0,0);
 
 insert into ld_ticket
            (ld_id,ld_lastmodified,ld_deleted,ld_ticketid,ld_docid,ld_userid,ld_type,ld_creation,ld_expired,ld_count,ld_tenantid,ld_recordversion)

@@ -6,16 +6,19 @@ import com.logicaldoc.gui.common.client.beans.GUIMessageTemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.MessageService;
 import com.logicaldoc.gui.frontend.client.services.MessageServiceAsync;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.DragDataAction;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.util.ValueCallback;
 import com.smartgwt.client.widgets.HTMLFlow;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
 import com.smartgwt.client.widgets.form.fields.events.ChangedHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
@@ -64,6 +67,29 @@ public class MessageTemplatesPanel extends VLayout {
 			}
 		});
 
+		ToolStripButton add = new ToolStripButton();
+		add.setAutoFit(true);
+		add.setTitle(I18N.message("addtemplate"));
+		add.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				langSelector.setValue("en");
+				TextItem item = ItemFactory.newSimpleTextItem("name", "", null);
+				item.setRequired(true);
+				LD.askforValue(I18N.message("newtemplate"), I18N.message("name"), null, item, new ValueCallback() {
+					@Override
+					public void execute(String value) {
+						ListGridRecord record = new ListGridRecord();
+						record.setAttribute("id", "-1");
+						record.setAttribute("type", "user");
+						record.setAttribute("name", value);
+						templatesGrid.getRecordList().addAt(record, 0);
+						templatesGrid.startEditing(0);
+					}
+				});
+			}
+		});
+
 		ToolStripButton save = new ToolStripButton();
 		save.setAutoFit(true);
 		save.setTitle(I18N.message("save"));
@@ -76,11 +102,17 @@ public class MessageTemplatesPanel extends VLayout {
 
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.addFormItem(langSelector);
+		toolStrip.addButton(add);
+		toolStrip.addSeparator();
 		toolStrip.addButton(save);
 		toolStrip.addFill();
 		toolStrip.setWidth100();
 
 		setMembers(hint, toolStrip);
+
+		// Initialize with english language
+		langSelector.setValue("en");
+		reload();
 	}
 
 	/**
@@ -101,6 +133,7 @@ public class MessageTemplatesPanel extends VLayout {
 			t.setName(record.getAttributeAsString("name"));
 			t.setSubject(record.getAttributeAsString("subject"));
 			t.setBody(record.getAttributeAsString("body"));
+			t.setType(record.getAttributeAsString("type"));
 
 			templates[i++] = t;
 		}
@@ -127,6 +160,10 @@ public class MessageTemplatesPanel extends VLayout {
 		name.setRequired(true);
 		name.setCanEdit(false);
 
+		ListGridField type = new ListGridField("type", I18N.message("type"));
+		type.setWidth(80);
+		type.setCanEdit(false);
+
 		ListGridField subject = new ListGridField("subject", I18N.message("subject"));
 		subject.setWidth(160);
 		subject.setRequired(false);
@@ -145,7 +182,7 @@ public class MessageTemplatesPanel extends VLayout {
 		templatesGrid.setFields(name);
 		templatesGrid.setSelectionType(SelectionStyle.MULTIPLE);
 		templatesGrid.setModalEditing(true);
-		templatesGrid.setFields(name, subject, body);
+		templatesGrid.setFields(name, type, subject, body);
 		templatesGrid.setCanReorderRecords(true);
 		templatesGrid.setCanDragRecordsOut(true);
 		templatesGrid.setCanAcceptDroppedRecords(true);
@@ -169,6 +206,7 @@ public class MessageTemplatesPanel extends VLayout {
 			record.setAttribute("language", pat.getName());
 			record.setAttribute("subject", pat.getSubject());
 			record.setAttribute("body", pat.getBody());
+			record.setAttribute("type", pat.getType());
 			records[i++] = record;
 		}
 		templatesGrid.setData(records);
@@ -179,9 +217,9 @@ public class MessageTemplatesPanel extends VLayout {
 	private void showContextMenu() {
 		Menu contextMenu = new Menu();
 
-		MenuItem clean = new MenuItem();
-		clean.setTitle(I18N.message("copyfromdefault"));
-		clean.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+		MenuItem copyFromDefault = new MenuItem();
+		copyFromDefault.setTitle(I18N.message("copyfromdefault"));
+		copyFromDefault.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				ListGridRecord[] records = templatesGrid.getSelectedRecords();
 				long[] ids = new long[records.length];
@@ -205,16 +243,36 @@ public class MessageTemplatesPanel extends VLayout {
 			}
 		});
 
-		clean.setEnabled(!"en".equals(langSelector.getValueAsString()));
+		MenuItem delete = new MenuItem();
+		delete.setTitle(I18N.message("ddelete"));
+		delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.deleteTemplates(templatesGrid.getSelectedRecord().getAttributeAsString("name"),
+						new AsyncCallback<Void>() {
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
 
-		contextMenu.setItems(clean);
+							@Override
+							public void onSuccess(Void arg) {
+								reload();
+							}
+						});
+			}
+		});
+
+		delete.setEnabled(!"system".equals(templatesGrid.getSelectedRecord().getAttributeAsString("type")));
+		copyFromDefault.setEnabled(!"en".equals(langSelector.getValueAsString()));
+
+		contextMenu.setItems(copyFromDefault, delete);
 		contextMenu.showContextMenu();
 	}
 
 	private void reload() {
 		String lang = langSelector.getValueAsString();
 
-		service.loadTemplates(lang, new AsyncCallback<GUIMessageTemplate[]>() {
+		service.loadTemplates(lang, null, new AsyncCallback<GUIMessageTemplate[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Log.serverError(caught);
