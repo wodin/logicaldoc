@@ -24,13 +24,14 @@ public class WorkflowHistoriesDS extends DataSource {
 		DataSourceTextField user = new DataSourceTextField("user");
 		DataSourceTextField comment = new DataSourceTextField("comment");
 		DataSourceTextField filename = new DataSourceTextField("filename");
+		DataSourceTextField documentId = new DataSourceTextField("documentId");
 		DataSourceTextField sessionId = new DataSourceTextField("sessionid");
-		setFields(id, taskId, name, tag, startDate, endDate, documents, event, date, user, comment, filename, sessionId);
+		setFields(id, taskId, name, tag, startDate, endDate, documents, event, date, user, comment, filename,
+				documentId, sessionId);
 		setDataURL("data/workflowhistories.xml?locale=" + I18N.getLocale()
 				+ (instanceId != null ? "&instanceId=" + instanceId : "")
 				+ (workflowTemplateId != null ? "&workflowTemplateId=" + workflowTemplateId : "")
-				+ (eventFilter != null ? "&event=" + eventFilter : "")
-				+ (tagFilter != null ? "&tag=" + tagFilter : ""));
+				+ (eventFilter != null ? "&event=" + eventFilter : "") + (tagFilter != null ? "&tag=" + tagFilter : ""));
 		setClientOnly(true);
 	}
 }
