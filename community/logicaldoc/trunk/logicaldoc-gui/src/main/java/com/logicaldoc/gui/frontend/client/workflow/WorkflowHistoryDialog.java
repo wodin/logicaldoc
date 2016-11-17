@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.data.WorkflowsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
@@ -22,6 +23,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.ClickEvent;
 import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.fields.ComboBoxItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -59,6 +61,8 @@ public class WorkflowHistoryDialog extends Window {
 
 	private Long selectedWorkflowInstance = null;
 
+	private String tagFilter = null;
+
 	public WorkflowHistoryDialog() {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
@@ -81,6 +85,8 @@ public class WorkflowHistoryDialog extends Window {
 		if (selectedWorkflow != null)
 			workflow.setValue(selectedWorkflow.getName());
 
+		final TextItem tagItem = ItemFactory.newTextItem("tag", "tag", null);
+
 		ToolStripButton search = new ToolStripButton();
 		search.setAutoFit(true);
 		search.setTitle(I18N.message("search"));
@@ -100,6 +106,7 @@ public class WorkflowHistoryDialog extends Window {
 					@Override
 					public void onSuccess(GUIWorkflow result) {
 						selectedWorkflow = result;
+						tagFilter = tagItem.getValueAsString();
 						loadInstancesGrid();
 					}
 				});
@@ -108,6 +115,7 @@ public class WorkflowHistoryDialog extends Window {
 
 		ToolStrip toolStrip = new ToolStrip();
 		toolStrip.addFormItem(workflow);
+		toolStrip.addFormItem(tagItem);
 		toolStrip.addButton(search);
 		toolStrip.addFill();
 		toolStrip.setWidth100();
@@ -141,6 +149,7 @@ public class WorkflowHistoryDialog extends Window {
 		endDate.setType(ListGridFieldType.DATE);
 		endDate.setCellFormatter(new DateCellFormatter(false));
 		endDate.setCanFilter(false);
+		ListGridField tag = new ListGridField("tag", I18N.message("tag"), 150);
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 250);
 		ListGridField documentIds = new ListGridField("documentIds", I18N.message("documentIds"), 300);
 		documentIds.setHidden(true);
@@ -156,8 +165,9 @@ public class WorkflowHistoryDialog extends Window {
 		instancesGrid.setBorder("1px solid #E1E1E1");
 		instancesGrid.sort("startdate", SortDirection.DESCENDING);
 		if (selectedWorkflow != null)
-			instancesGrid.setDataSource(new WorkflowHistoriesDS(null, Long.parseLong(selectedWorkflow.getId()), null));
-		instancesGrid.setFields(id, startDate, endDate, documents, documentIds);
+			instancesGrid.setDataSource(new WorkflowHistoriesDS(null, Long.parseLong(selectedWorkflow.getId()), null,
+					tagFilter));
+		instancesGrid.setFields(id, tag, startDate, endDate, documents, documentIds);
 
 		instancesGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
@@ -214,7 +224,7 @@ public class WorkflowHistoryDialog extends Window {
 		historiesGrid.sort("startdate", SortDirection.ASCENDING);
 		historiesGrid.setBorder("1px solid #E1E1E1");
 		historiesGrid.setDataSource(new WorkflowHistoriesDS(selectedWorkflowInstance, Long.parseLong(selectedWorkflow
-				.getId()), null));
+				.getId()), null, null));
 		historiesGrid.setFields(historyId, historyEvent, historyName, historyDate, historyUser, historyComment,
 				historyFilename, historySid);
 

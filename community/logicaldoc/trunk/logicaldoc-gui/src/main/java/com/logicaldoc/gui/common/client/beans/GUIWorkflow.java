@@ -18,6 +18,8 @@ public class GUIWorkflow implements Serializable {
 	private String name = "";
 
 	private String description = "";
+	
+	private String tag = "";
 
 	private String startStateId = null;
 
@@ -172,5 +174,13 @@ public class GUIWorkflow implements Serializable {
 
 	public void setTemplateId(Long templateId) {
 		this.templateId = templateId;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 }

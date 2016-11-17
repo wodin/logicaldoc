@@ -100,6 +100,7 @@ public class WorkflowPortlet extends Portlet {
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 300);
 		ListGridField documentIds = new ListGridField("documentIds", I18N.message("documentids"), 200);
 		documentIds.setHidden(true);
+		ListGridField tag = new ListGridField("tag", I18N.message("tag"), 120);
 
 		ListGridField startdate = new ListGridField("startdate", I18N.message("startdate"), 120);
 		startdate.setAlign(Alignment.CENTER);
@@ -136,9 +137,9 @@ public class WorkflowPortlet extends Portlet {
 		list.setDataSource(dataSource);
 		if (type == WorkflowDashboard.TASKS_I_CAN_OWN || type == WorkflowDashboard.TASKS_ADMIN
 				|| type == WorkflowDashboard.TASKS_SUPERVISOR)
-			list.setFields(workflow, startdate, duedate, enddate, name, id, processId, documents, documentIds, pooledAssignees);
+			list.setFields(workflow, tag, startdate, duedate, enddate, name, id, processId, documents, documentIds, pooledAssignees);
 		else
-			list.setFields(workflow, startdate, duedate, enddate, id, processId, name, documents, documentIds);
+			list.setFields(workflow, tag, startdate, duedate, enddate, id, processId, name, documents, documentIds);
 
 		list.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override

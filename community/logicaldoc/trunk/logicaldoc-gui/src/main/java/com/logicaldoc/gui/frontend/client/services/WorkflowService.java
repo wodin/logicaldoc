@@ -72,7 +72,7 @@ public interface WorkflowService extends RemoteService {
 	 * Start a workflow with the given name and associated to the documents with
 	 * the given doc ids.
 	 */
-	public void startWorkflow(String workflowName, String workflowDescription, long[] docIds) throws ServerException;
+	public void startWorkflow(String workflowName, String workflowDescription, String tag, long[] docIds) throws ServerException;
 
 	/**
 	 * Retrieves all the info of the workflow of the given task.
