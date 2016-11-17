@@ -6,12 +6,13 @@ import com.smartgwt.client.data.fields.DataSourceDateTimeField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 public class WorkflowHistoriesDS extends DataSource {
-	public WorkflowHistoriesDS(Long instanceId, Long workflowTemplateId, String eventFilter) {
+	public WorkflowHistoriesDS(Long instanceId, Long workflowTemplateId, String eventFilter, String tagFilter) {
 		setRecordXPath("/list/workflowhistory");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		id.setRequired(true);
-		
+
+		DataSourceTextField tag = new DataSourceTextField("tag");
 		DataSourceTextField name = new DataSourceTextField("name");
 		DataSourceTextField taskId = new DataSourceTextField("taskId");
 		DataSourceDateTimeField startDate = new DataSourceDateTimeField("startdate");
@@ -24,11 +25,12 @@ public class WorkflowHistoriesDS extends DataSource {
 		DataSourceTextField comment = new DataSourceTextField("comment");
 		DataSourceTextField filename = new DataSourceTextField("filename");
 		DataSourceTextField sessionId = new DataSourceTextField("sessionid");
-		setFields(id, taskId, name, startDate, endDate, documents, event, date, user, comment, filename, sessionId);
+		setFields(id, taskId, name, tag, startDate, endDate, documents, event, date, user, comment, filename, sessionId);
 		setDataURL("data/workflowhistories.xml?locale=" + I18N.getLocale()
 				+ (instanceId != null ? "&instanceId=" + instanceId : "")
 				+ (workflowTemplateId != null ? "&workflowTemplateId=" + workflowTemplateId : "")
-				+ (eventFilter != null ? "&event=" + eventFilter : ""));
+				+ (eventFilter != null ? "&event=" + eventFilter : "")
+				+ (tagFilter != null ? "&tag=" + tagFilter : ""));
 		setClientOnly(true);
 	}
 }

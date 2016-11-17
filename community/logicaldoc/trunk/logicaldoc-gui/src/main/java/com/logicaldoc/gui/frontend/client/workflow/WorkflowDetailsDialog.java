@@ -533,7 +533,7 @@ public class WorkflowDetailsDialog extends Window {
 		notesGrid.setSelectionType(SelectionStyle.SINGLE);
 		notesGrid.setFields(id, task, date, user);
 		notesGrid.setDataSource(new WorkflowHistoriesDS(Long.parseLong(workflow.getId()), workflow.getTemplateId(),
-				"event.workflow.task.note"));
+				"event.workflow.task.note", null));
 		notesPanel.addMember(notesGrid);
 
 		Button addNote = new Button(I18N.message("addnote"));

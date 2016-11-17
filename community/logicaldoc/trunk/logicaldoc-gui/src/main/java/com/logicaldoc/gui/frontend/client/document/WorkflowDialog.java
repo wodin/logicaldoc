@@ -13,6 +13,7 @@ import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ClickEvent;
 import com.smartgwt.client.widgets.form.fields.events.ClickHandler;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
@@ -31,6 +32,8 @@ public class WorkflowDialog extends Window {
 
 	private SelectItem workflow;
 
+	private TextItem tag;
+
 	public WorkflowDialog(final long[] ids) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("startworkflow"));
@@ -45,6 +48,10 @@ public class WorkflowDialog extends Window {
 		workflow.setWrapTitle(false);
 		workflow.setRequired(true);
 
+		tag = ItemFactory.newTextItem("tag", I18N.message("tag"), null);
+		tag.setWrapTitle(false);
+		tag.setRequired(true);
+
 		ButtonItem start = new ButtonItem();
 		start.setTitle(I18N.message("startworkflow"));
 		start.setAutoFit(true);
@@ -56,7 +63,7 @@ public class WorkflowDialog extends Window {
 		});
 
 		form.setTitleOrientation(TitleOrientation.TOP);
-		form.setFields(workflow, start);
+		form.setFields(workflow, tag, start);
 		addItem(form);
 	}
 
@@ -65,8 +72,9 @@ public class WorkflowDialog extends Window {
 			return;
 
 		ListGridRecord selection = workflow.getSelectedRecord();
+
 		service.startWorkflow(selection.getAttributeAsString("name"), selection.getAttributeAsString("description"),
-				ids, new AsyncCallback<Void>() {
+				tag.getValueAsString(), ids, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
