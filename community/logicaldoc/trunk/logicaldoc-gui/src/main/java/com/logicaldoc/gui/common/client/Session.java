@@ -136,7 +136,7 @@ public class Session {
 										service.getSessionInfo(new AsyncCallback<GUIParameter[]>() {
 											@Override
 											public void onFailure(Throwable caught) {
-												SC.warn(caught.getMessage());
+												//do nothing
 											}
 
 											@Override

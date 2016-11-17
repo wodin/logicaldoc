@@ -2,6 +2,7 @@ package com.logicaldoc.gui.frontend.client.workflow;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIWorkflow;
 import com.logicaldoc.gui.common.client.data.WorkflowHistoriesDS;
 import com.logicaldoc.gui.common.client.data.WorkflowsDS;
@@ -10,6 +11,12 @@ import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
+import com.logicaldoc.gui.common.client.util.Util;
+import com.logicaldoc.gui.common.client.util.WindowUtils;
+import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.WorkflowService;
 import com.logicaldoc.gui.frontend.client.services.WorkflowServiceAsync;
 import com.smartgwt.client.data.Record;
@@ -47,6 +54,8 @@ import com.smartgwt.client.widgets.toolbar.ToolStripButton;
 public class WorkflowHistoryDialog extends Window {
 	private WorkflowServiceAsync service = (WorkflowServiceAsync) GWT.create(WorkflowService.class);
 
+	protected DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
+
 	private GUIWorkflow selectedWorkflow = null;
 
 	private ComboBoxItem user = null;
@@ -68,7 +77,7 @@ public class WorkflowHistoryDialog extends Window {
 
 		setTitle(I18N.message("workflowhistory"));
 		setWidth(950);
-		setHeight(530);
+		setHeight100();
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -125,7 +134,7 @@ public class WorkflowHistoryDialog extends Window {
 		instancesContainer.setShowResizeBar(true);
 
 		historiesContainer.setWidth100();
-		historiesContainer.setHeight("60%");
+		historiesContainer.setHeight100();
 
 		setMembers(toolStrip, instancesContainer, historiesContainer);
 		loadInstancesGrid();
@@ -151,7 +160,7 @@ public class WorkflowHistoryDialog extends Window {
 		endDate.setCanFilter(false);
 		ListGridField tag = new ListGridField("tag", I18N.message("tag"), 150);
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 250);
-		ListGridField documentIds = new ListGridField("documentIds", I18N.message("documentIds"), 300);
+		ListGridField documentIds = new ListGridField("documentIds", I18N.message("documentids"), 300);
 		documentIds.setHidden(true);
 
 		instancesGrid = new ListGrid();
@@ -178,7 +187,7 @@ public class WorkflowHistoryDialog extends Window {
 		instancesGrid.addCellContextClickHandler(new CellContextClickHandler() {
 			@Override
 			public void onCellContextClick(CellContextClickEvent event) {
-				showContextMenu();
+				showInstanceContextMenu();
 				event.cancel();
 			}
 		});
@@ -209,6 +218,8 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField historyComment = new ListGridField("comment", I18N.message("comment"));
 		historyComment.setWidth("*");
 		ListGridField historyFilename = new ListGridField("filename", I18N.message("document"), 180);
+		ListGridField documentId = new ListGridField("documentId", I18N.message("docid"), 80);
+		documentId.setHidden(true);
 		ListGridField historySid = new ListGridField("sessionid", I18N.message("sid"), 240);
 		historySid.setHidden(true);
 
@@ -226,7 +237,15 @@ public class WorkflowHistoryDialog extends Window {
 		historiesGrid.setDataSource(new WorkflowHistoriesDS(selectedWorkflowInstance, Long.parseLong(selectedWorkflow
 				.getId()), null, null));
 		historiesGrid.setFields(historyId, historyEvent, historyName, historyDate, historyUser, historyComment,
-				historyFilename, historySid);
+				historyFilename, documentId, historySid);
+		historiesGrid.addCellContextClickHandler(new CellContextClickHandler() {
+
+			@Override
+			public void onCellContextClick(CellContextClickEvent event) {
+				event.cancel();
+				showHistoryContextMenu();
+			}
+		});
 
 		historiesContainer.addMember(historiesGrid);
 	}
@@ -239,7 +258,62 @@ public class WorkflowHistoryDialog extends Window {
 		user.setValue(id);
 	}
 
-	private void showContextMenu() {
+	private void showHistoryContextMenu() {
+		final ListGridRecord selection = historiesGrid.getSelectedRecord();
+		if (selection.getAttributeAsString("documentId") == null
+				|| selection.getAttributeAsString("documentId").isEmpty())
+			return;
+
+		documentService.getById(Long.parseLong(selection.getAttributeAsString("documentId")),
+				new AsyncCallback<GUIDocument>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Log.serverError(caught);
+					}
+
+					@Override
+					public void onSuccess(final GUIDocument doc) {
+						if (doc == null)
+							return;
+
+						final Menu contextMenu = new Menu();
+
+						final MenuItem preview = new MenuItem();
+						preview.setTitle(I18N.message("preview"));
+						preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+							public void onClick(MenuItemClickEvent event) {
+								PreviewPopup iv = new PreviewPopup(doc);
+								iv.show();
+							}
+						});
+
+						final MenuItem download = new MenuItem();
+						download.setTitle(I18N.message("download"));
+						download.setEnabled(doc.getFolder().isDownload());
+						download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+							public void onClick(MenuItemClickEvent event) {
+								if (doc.getFolder().isDownload())
+									WindowUtils.openUrl(Util.downloadURL(doc.getId(), null, false));
+							}
+						});
+
+						final MenuItem open = new MenuItem();
+						open.setTitle(I18N.message("openinfolder"));
+						open.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+							public void onClick(MenuItemClickEvent event) {
+								destroy();
+								DocumentsPanel.get().openInFolder(doc.getFolder().getId(), doc.getId());
+							}
+						});
+
+						contextMenu.setItems(preview, download, open);
+						contextMenu.showContextMenu();
+					}
+				});
+	}
+
+	private void showInstanceContextMenu() {
 		Menu contextMenu = new Menu();
 
 		final ListGridRecord selection = instancesGrid.getSelectedRecord();
