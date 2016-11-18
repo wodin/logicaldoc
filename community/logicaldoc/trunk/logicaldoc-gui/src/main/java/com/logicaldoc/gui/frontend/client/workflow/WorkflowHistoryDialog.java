@@ -222,6 +222,8 @@ public class WorkflowHistoryDialog extends Window {
 		documentId.setHidden(true);
 		ListGridField historySid = new ListGridField("sessionid", I18N.message("sid"), 240);
 		historySid.setHidden(true);
+		ListGridField transition = new ListGridField("transition", I18N.message("transition"), 120);
+		transition.setHidden(true);
 
 		historiesGrid = new ListGrid();
 		historiesGrid.setEmptyMessage(I18N.message("notitemstoshow"));
@@ -237,7 +239,7 @@ public class WorkflowHistoryDialog extends Window {
 		historiesGrid.setDataSource(new WorkflowHistoriesDS(selectedWorkflowInstance, Long.parseLong(selectedWorkflow
 				.getId()), null, null));
 		historiesGrid.setFields(historyId, historyEvent, historyName, historyDate, historyUser, historyComment,
-				historyFilename, documentId, historySid);
+				historyFilename, transition, documentId, historySid);
 		historiesGrid.addCellContextClickHandler(new CellContextClickHandler() {
 
 			@Override

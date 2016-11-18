@@ -26,8 +26,10 @@ public class WorkflowHistoriesDS extends DataSource {
 		DataSourceTextField filename = new DataSourceTextField("filename");
 		DataSourceTextField documentId = new DataSourceTextField("documentId");
 		DataSourceTextField sessionId = new DataSourceTextField("sessionid");
+		DataSourceTextField transition = new DataSourceTextField("transition");
+
 		setFields(id, taskId, name, tag, startDate, endDate, documents, event, date, user, comment, filename,
-				documentId, sessionId);
+				transition, documentId, sessionId);
 		setDataURL("data/workflowhistories.xml?locale=" + I18N.getLocale()
 				+ (instanceId != null ? "&instanceId=" + instanceId : "")
 				+ (workflowTemplateId != null ? "&workflowTemplateId=" + workflowTemplateId : "")

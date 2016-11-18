@@ -77,8 +77,8 @@ public class WorkflowNoteEditor extends Window {
 					@Override
 					public void onSuccess(Long noteId) {
 						parentDialog.refreshAndSelectNotesTab();
+						destroy();
 					}
-
 				});
 	}
 }
