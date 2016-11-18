@@ -50,7 +50,7 @@ public class WorkflowDialog extends Window {
 
 		tag = ItemFactory.newTextItem("tag", I18N.message("tag"), null);
 		tag.setWrapTitle(false);
-		tag.setRequired(true);
+		tag.setRequired(false);
 
 		ButtonItem start = new ButtonItem();
 		start.setTitle(I18N.message("startworkflow"));

@@ -5,6 +5,8 @@ import java.util.Date;
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.util.Context;
 
 /**
  * Superclass for history entries
@@ -184,6 +186,12 @@ public class AbstractHistory extends PersistentObject {
 	}
 
 	public User getUser() {
+		if (user == null) {
+			UserDAO uDao = (UserDAO) Context.get().getBean(UserDAO.class);
+			user = uDao.findById(userId);
+			if (user != null)
+				uDao.initialize(user);
+		}
 		return user;
 	}
 
