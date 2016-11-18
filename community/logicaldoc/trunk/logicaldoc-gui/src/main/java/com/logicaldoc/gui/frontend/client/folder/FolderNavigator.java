@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
@@ -71,6 +72,12 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	private static FolderNavigator instance = new FolderNavigator();
 
 	private boolean firstTime = true;
+
+	// Indicates if the Navigator is in the process of opening this path
+	private GUIFolder[] pathToOpen = null;
+
+	// Takes care of opening the pathToOpen
+	private Timer pathToOpenTimer;
 
 	private FolderNavigator() {
 		setWidth100();
@@ -257,72 +264,34 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 			}
 		});
 
-		// Used to expand root folder after login
+		// Used to expand root folder after login or to open in folder
 		addDataArrivedHandler(new DataArrivedHandler() {
 			@Override
 			public void onDataArrived(DataArrivedEvent event) {
-				if (isFirstTime()) {
-					/*
-					 * Redirect the user to the correct folder and/or document
-					 */
-					RequestInfo loc = WindowUtils.getRequestInfo();
-					if (loc.getParameter("folderId") != null) {
-						DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("folderId")), null);
-					} else if (loc.getParameter("docId") != null) {
-						DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("docId")));
-					} else {
-						if ("true".equals(Session.get().getConfig("gui.folder.opentree"))) {
-							long folderId = 0;
-
-							TreeNode rootNode = getTree().getRoot();
-							TreeNode[] children = getTree().getChildren(rootNode);
-							TreeNode nodeToOpen = null;
-
-							if (children != null && children.length > 0) {
-								/*
-								 * Get the first workspace and use it as the
-								 * node to open
-								 */
-								folderId = Long.parseLong(children[0].getAttributeAsString("folderId"));
-								nodeToOpen = children[0];
-
-								/*
-								 * Check if the user has specified a different
-								 * default workspace
-								 */
-								if (Session.get().getUser().getDefaultWorkspace() != null) {
-									for (TreeNode child : children) {
-										long val = Long.parseLong(child.getAttributeAsString("folderId"));
-										if (Session.get().getUser().getDefaultWorkspace() == val) {
-											folderId = Long.parseLong(children[0].getAttribute("folderId"));
-											nodeToOpen = child;
-											break;
-										}
-									}
-								}
-
-								getTree().openFolder(nodeToOpen);
-
-								service.getFolder(folderId, true, new AsyncCallback<GUIFolder>() {
-
-									@Override
-									public void onFailure(Throwable caught) {
-										Log.serverError(caught);
-									}
-
-									@Override
-									public void onSuccess(GUIFolder folder) {
-										Session.get().setCurrentFolder(folder);
-									}
-								});
-							}
-						}
-					}
-
-					FolderNavigator.this.firstTime = false;
-				}
+				FolderNavigator.this.onDataArrived(event);
 			}
 		});
+	}
+
+	/**
+	 * Takes care of installing the timer responsible of opening the tree
+	 */
+	private void startPathToOpenTimer() {
+		pathToOpenTimer = new Timer() {
+			public void run() {
+				if (pathToOpen != null)
+					openTreePath();
+			}
+		};
+		pathToOpenTimer.scheduleRepeating(500);
+	}
+
+	/**
+	 * Stops the timer timer responsible of opening the tree
+	 */
+	private void stopPathToOpenTimer() {
+		if (pathToOpenTimer != null)
+			pathToOpenTimer.cancel();
 	}
 
 	/**
@@ -738,6 +707,104 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 		return instance;
 	}
 
+	private void onDataArrived(DataArrivedEvent event) {
+		if (isFirstTime()) {
+			/*
+			 * Redirect the user to the correct folder and/or document
+			 */
+			RequestInfo loc = WindowUtils.getRequestInfo();
+			if (loc.getParameter("folderId") != null) {
+				DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("folderId")), null);
+			} else if (loc.getParameter("docId") != null) {
+				DocumentsPanel.get().openInFolder(Long.parseLong(loc.getParameter("docId")));
+			} else {
+				if ("true".equals(Session.get().getConfig("gui.folder.opentree"))) {
+					long folderId = 0;
+
+					TreeNode rootNode = getTree().getRoot();
+					TreeNode[] children = getTree().getChildren(rootNode);
+					TreeNode nodeToOpen = null;
+
+					if (children != null && children.length > 0) {
+						/*
+						 * Get the first workspace and use it as the node to
+						 * open
+						 */
+						folderId = Long.parseLong(children[0].getAttributeAsString("folderId"));
+						nodeToOpen = children[0];
+
+						/*
+						 * Check if the user has specified a different default
+						 * workspace
+						 */
+						if (Session.get().getUser().getDefaultWorkspace() != null) {
+							for (TreeNode child : children) {
+								long val = Long.parseLong(child.getAttributeAsString("folderId"));
+								if (Session.get().getUser().getDefaultWorkspace() == val) {
+									folderId = Long.parseLong(children[0].getAttribute("folderId"));
+									nodeToOpen = child;
+									break;
+								}
+							}
+						}
+
+						getTree().openFolder(nodeToOpen);
+
+						service.getFolder(folderId, true, new AsyncCallback<GUIFolder>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(GUIFolder folder) {
+								Session.get().setCurrentFolder(folder);
+							}
+						});
+					}
+				}
+			}
+
+			FolderNavigator.this.firstTime = false;
+		}
+	}
+
+	/**
+	 * It process <code>pathToOpen</code> and tries to open the corresponding
+	 * tree's nodes
+	 */
+	private void openTreePath() {
+		if (pathToOpen == null)
+			return;
+
+		for (GUIFolder fld : pathToOpen) {
+			if (fld.getName().equals("/"))
+				continue;
+
+			TreeNode node = getTree().find("folderId", "" + fld.getId());
+			if (getTree().isOpen(node))
+				continue;
+
+			// Maybe the node was not already fetched so exit and wait for the
+			// next cycle
+			if (node == null)
+				return;
+			getTree().openFolder(node);
+			if (!getTree().hasFolders(node))
+				getTree().loadChildren(node);
+		}
+
+		GUIFolder folder = pathToOpen[pathToOpen.length - 1];
+		TreeNode node = getTree().find("folderId", "" + folder.getId());
+		selectRecord(node);
+		pathToOpen = null;
+		scrollToCell(getRowNum(node), 0);
+		
+		stopPathToOpenTimer();
+		Session.get().setCurrentFolder(folder);
+	}
+
 	/**
 	 * Opens the tree to show the specified folder.
 	 */
@@ -753,59 +820,15 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 
 			@Override
 			public void onSuccess(GUIFolder folder) {
-				TreeNode parent = getTree().getRoot();
-
-				long folderId = folder.getId();
-				Long folderRef = folder.getFoldRef();
-				if (folder.getFoldRef() != null) {
-					folderId = folder.getFoldRef();
-					folderRef = folder.getId();
-				}
-
-				for (GUIFolder fld : folder.getPath()) {
-					if (fld.getId() == Constants.DOCUMENTS_FOLDERID)
-						continue;
-
-					long fldId = fld.getId();
-					Long fldRef = fld.getFoldRef();
-					if (fld.getFoldRef() != null) {
-						fldId = fld.getFoldRef();
-						fldRef = fld.getId();
+				if (folder != null) {
+					GUIFolder[] path = new GUIFolder[folder.getPath().length + 1];
+					for (int i = 0; i < folder.getPath().length; i++) {
+						path[i] = folder.getPath()[i];
 					}
-
-					TreeNode node = new TreeNode(fld.getName());
-					String parentId = parent.getAttributeAsString("id");
-					if ("/".equals(parentId))
-						parentId = "" + Constants.DOCUMENTS_FOLDERID;
-					node.setAttribute("id", parentId + "-" + Long.toString(fldId));
-					node.setAttribute("folderId", Long.toString(fldId));
-					node.setAttribute("type", Integer.toString(fld.getType()));
-					node.setAttribute("foldRef", fldRef != null ? Long.toString(fldRef) : null);
-					node.setAttribute(Constants.PERMISSION_ADD, fld.hasPermission(Constants.PERMISSION_ADD));
-					node.setAttribute(Constants.PERMISSION_DELETE, fld.hasPermission(Constants.PERMISSION_DELETE));
-					node.setAttribute(Constants.PERMISSION_RENAME, fld.hasPermission(Constants.PERMISSION_RENAME));
-
-					getTree().add(node, parent);
-					parent = node;
+					path[folder.getPath().length] = folder;
+					pathToOpen = path;
+					startPathToOpenTimer();
 				}
-				TreeNode node = new TreeNode(folder.getName());
-				node.setAttribute("id", parent.getAttributeAsString("id") + "-" + Long.toString(folderId));
-				node.setAttribute("folderId", Long.toString(folderId));
-				node.setAttribute("type", Integer.toString(folder.getType()));
-				node.setAttribute("foldRef", folderRef != null ? Long.toString(folderRef) : null);
-				node.setAttribute(Constants.PERMISSION_ADD,
-						Boolean.toString(folder.hasPermission(Constants.PERMISSION_ADD)));
-				node.setAttribute(Constants.PERMISSION_DELETE,
-						Boolean.toString(folder.hasPermission(Constants.PERMISSION_DELETE)));
-				node.setAttribute(Constants.PERMISSION_RENAME,
-						Boolean.toString(folder.hasPermission(Constants.PERMISSION_RENAME)));
-				getTree().add(node, parent);
-				parent = node;
-
-				getTree().openFolders(getTree().getParents(parent));
-				getTree().openFolder(parent);
-				folder.setPathExtended(getPath(folderId));
-				Session.get().setCurrentFolder(folder);
 			}
 		});
 	}
