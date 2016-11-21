@@ -93,7 +93,7 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 					previewPanel.setDocument(((DocumentDetailsPanel) detailPanel).getDocument());
 			}
 		});
-		
+
 		setMembers(searchMenu, body, previewPanel);
 
 		setShowEdges(false);
@@ -216,5 +216,10 @@ public class SearchPanel extends HLayout implements SearchObserver, DocumentObse
 
 	public SearchPreviewPanel getPreviewPanel() {
 		return previewPanel;
+	}
+
+	@Override
+	public void onDocumentsDeleted(GUIDocument[] documents) {
+		previewPanel.reset();
 	}
 }

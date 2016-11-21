@@ -891,7 +891,7 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 				} catch (Throwable t) {
 
 				}
-				
+
 				try {
 					Offline.remove(Constants.COOKIE_DOCSLIST);
 				} catch (Throwable t) {
@@ -903,13 +903,13 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 				} catch (Throwable t) {
 
 				}
-				
+
 				try {
 					Offline.remove(Constants.COOKIE_DOCSLIST_PREV_W);
 				} catch (Throwable t) {
 
 				}
-				
+
 				try {
 					Offline.remove(Constants.COOKIE_DOCSMENU_W);
 				} catch (Throwable t) {
@@ -1059,5 +1059,10 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 			tools = getToolsMenu(null, null);
 			addMember(tools, 2);
 		}
+	}
+
+	@Override
+	public void onDocumentsDeleted(GUIDocument[] documents) {
+		// Nothing to do
 	}
 }
