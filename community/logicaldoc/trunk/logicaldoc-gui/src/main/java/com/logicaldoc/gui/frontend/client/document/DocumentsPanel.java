@@ -364,4 +364,11 @@ public class DocumentsPanel extends HLayout implements FolderObserver, DocumentO
 	public DocumentsPreviewPanel getPreviewPanel() {
 		return previewPanel;
 	}
+
+	@Override
+	public void onDocumentsDeleted(GUIDocument[] documents) {
+		DocumentsPanel.get().showFolderDetails();
+		DocumentsPanel.get().getDocumentsMenu().refresh("trash");
+		previewPanel.reset();
+	}
 }

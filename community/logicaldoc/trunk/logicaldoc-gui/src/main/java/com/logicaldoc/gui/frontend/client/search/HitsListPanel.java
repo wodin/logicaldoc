@@ -466,4 +466,9 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	public void onDocumentSelected(GUIDocument document) {
 		// Nothing to do
 	}
+
+	@Override
+	public void onDocumentsDeleted(GUIDocument[] documents) {
+		// Nothing to do
+	}
 }

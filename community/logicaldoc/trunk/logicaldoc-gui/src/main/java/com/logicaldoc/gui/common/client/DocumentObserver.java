@@ -22,4 +22,11 @@ public interface DocumentObserver {
 	 * @param document The updated document
 	 */
 	public void onDocumentSaved(GUIDocument document);
+
+	/**
+	 * Invoked after the document has been deleted
+	 * 
+	 * @param documents The deleted documents
+	 */
+	public void onDocumentsDeleted(GUIDocument[] documents);
 }

@@ -157,9 +157,7 @@ public class ContextMenu extends Menu {
 								@Override
 								public void onSuccess(Void result) {
 									grid.removeSelectedDocuments();
-
-									DocumentsPanel.get().showFolderDetails();
-									DocumentsPanel.get().getDocumentsMenu().refresh("trash");
+									Session.get().triggerDocumentsDeleted(selection);
 								}
 							});
 						}
@@ -601,11 +599,11 @@ public class ContextMenu extends Menu {
 		preview.setTitle(I18N.message("preview"));
 		preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				GUIDocument[] docs=grid.getSelectedDocuments();
-				int index=0;
-				if(docs.length<=1){
-					docs=grid.getDocuments();
-					index=grid.getSelectedIndex();
+				GUIDocument[] docs = grid.getSelectedDocuments();
+				int index = 0;
+				if (docs.length <= 1) {
+					docs = grid.getDocuments();
+					index = grid.getSelectedIndex();
 				}
 				PreviewPopup iv = new PreviewPopup(docs, index);
 				iv.show();

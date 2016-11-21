@@ -33,6 +33,8 @@ public class DocumentsPreviewPanel extends VLayout {
 		initGUI();
 	}
 
+	
+	
 	protected void initGUI() {
 		setAlign(Alignment.CENTER);
 

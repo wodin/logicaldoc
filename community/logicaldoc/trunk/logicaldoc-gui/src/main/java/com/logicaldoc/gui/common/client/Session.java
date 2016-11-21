@@ -136,7 +136,7 @@ public class Session {
 										service.getSessionInfo(new AsyncCallback<GUIParameter[]>() {
 											@Override
 											public void onFailure(Throwable caught) {
-												//do nothing
+												// do nothing
 											}
 
 											@Override
@@ -207,6 +207,12 @@ public class Session {
 		this.currentDocument = document;
 		for (DocumentObserver listener : documentObservers) {
 			listener.onDocumentSelected(document);
+		}
+	}
+
+	public void triggerDocumentsDeleted(GUIDocument[] documents) {
+		for (DocumentObserver listener : documentObservers) {
+			listener.onDocumentsDeleted(documents);
 		}
 	}
 
