@@ -162,8 +162,10 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	 * Prepare the second form for the extended attributes
 	 */
 	private void prepareExtendedAttributes(final Long templateId) {
-		if (form2 != null)
+		if (form2 != null) {
+			vm.removeMembers(form2);
 			removeMember(form2);
+		}
 
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
