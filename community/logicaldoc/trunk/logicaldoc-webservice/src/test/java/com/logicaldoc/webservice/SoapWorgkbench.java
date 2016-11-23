@@ -35,9 +35,9 @@ public class SoapWorgkbench {
 		try {
 //			securityStuff(sid);
 
-//			 documentStuff(sid);
+//			documentStuff(sid);
 
-//			 folderStuff(sid);
+//			folderStuff(sid);
 
 			searchStuff(sid);
 
