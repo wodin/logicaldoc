@@ -33,6 +33,8 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailAttachment;
 import com.logicaldoc.core.communication.EMailSender;
+import com.logicaldoc.core.communication.MessageTemplate;
+import com.logicaldoc.core.communication.MessageTemplateDAO;
 import com.logicaldoc.core.communication.Recipient;
 import com.logicaldoc.core.contact.Contact;
 import com.logicaldoc.core.contact.ContactDAO;
@@ -64,6 +66,7 @@ import com.logicaldoc.core.script.ScriptingEngine;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.ticket.Ticket;
 import com.logicaldoc.core.ticket.TicketDAO;
@@ -161,6 +164,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		final Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		List<GUIDocument> createdDocs = new ArrayList<GUIDocument>();
+		List<Document> docs = new ArrayList<Document>();
 
 		Map<String, File> uploadedFilesMap = UploadServlet.getReceivedFiles(getThreadLocalRequest(), session.getId());
 		log.debug("Uploading " + uploadedFilesMap.size() + " files");
@@ -242,6 +246,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 						docsToIndex.add(doc.getId());
 
 					createdDocs.add(fromDocument(doc, metadata.getFolder()));
+					docs.add(doc);
 				}
 			}
 			UploadServlet.cleanReceivedFiles(getThreadLocalRequest().getSession());
@@ -250,6 +255,65 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				indexDocuments(docsToIndex.toArray(new Long[0]));
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
+		}
+
+		/*
+		 * We have to notify the specified users in a separate thread
+		 */
+		if (metadata.getNotifyUsers() != null && metadata.getNotifyUsers().length > 0) {
+			Thread notifier = new Thread(new Runnable() {
+				public void run() {
+					try {
+						UserDAO uDao = (UserDAO) Context.get().getBean(UserDAO.class);
+						for (long userId : metadata.getNotifyUsers()) {
+							User user = uDao.findById(userId);
+
+							EMail mail = new EMail();
+							mail.setHtml(1);
+							mail.setTenantId(session.getTenantId());
+
+							mail.setAccountId(-1);
+							mail.setAuthor(session.getUser().getUsername());
+							mail.setAuthorAddress(session.getUser().getEmail());
+
+							mail.setFolder("outbox");
+							mail.setSentDate(new Date());
+							mail.setUsername(session.getUsername());
+
+							Recipient recipient = new Recipient();
+							recipient.setName(user.getUsername());
+							recipient.setAddress(user.getEmail());
+							recipient.setType(Recipient.TYPE_EMAIL);
+							recipient.setMode(Recipient.MODE_EMAIL_TO);
+							recipient.setRead(1);
+							HashSet<Recipient> recipients = new HashSet<Recipient>();
+							recipients.add(recipient);
+							mail.setRecipients(recipients);
+
+							MessageTemplateDAO tDao = (MessageTemplateDAO) Context.get().getBean(
+									MessageTemplateDAO.class);
+							MessageTemplate template = tDao.findByNameAndLanguage("newdoc", user.getLanguage(),
+									user.getTenantId());
+
+							Map<String, Object> dictionary = new HashMap<String, Object>();
+							dictionary.put("creator", session.getUser());
+							dictionary.put("documents", docs);
+							dictionary.put("document", docs.get(0));
+							dictionary.put("message", metadata.getNotifyMessage());
+
+							mail.setSubject(template.getFormattedSubject(dictionary));
+							mail.setMessageText("<html><body>" + template.getFormattedBody(dictionary)
+									+ "</html></body>");
+
+							EMailSender sender = new EMailSender(session.getTenantName());
+							sender.send(mail);
+						}
+					} catch (Throwable e) {
+						log.warn(e.getMessage(), e);
+					}
+				}
+			});
+			notifier.start();
 		}
 
 		return createdDocs.toArray(new GUIDocument[0]);
@@ -1026,14 +1090,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			mail.setSentDate(new Date());
 			mail.setUsername(session.getUsername());
 
-			System.out.println();
-			
 			List<Document> attachedDocs = documentDao.findByIds(ArrayUtils.toObject(email.getDocIds()), null);
 			for (Document document : attachedDocs)
 				documentDao.initialize(document);
 
-			System.out.println("");
-			
 			/*
 			 * Subject and email are processed by the scripting engine
 			 */
@@ -1121,7 +1181,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 				if (zipFile != null)
 					FileUtils.forceDelete(zipFile);
 
-				DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 				FolderDAO fDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 				for (Document d : attachedDocs) {
 					Document doc = d;

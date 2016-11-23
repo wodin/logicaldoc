@@ -244,6 +244,26 @@ public class ItemFactory {
 		return date;
 	}
 
+	public static MultiComboBoxItem newMultipleUsersSelector(String name, String title, long[] selection) {
+		String[] ids = null;
+
+		if (selection != null) {
+			ids = new String[selection.length];
+			for (int i = 0; i < ids.length; i++)
+				ids[i] = Long.toString(selection[i]);
+		}
+
+		MultiComboBoxItem item = ItemFactory.newMultiComboBoxItem(name, title, new UsersDS(null, false), ids);
+		item.setValueField("id");
+		item.setDisplayField("username");
+		
+		ComboBoxItem combo=new ComboBoxItem();
+		combo.setHint(I18N.message("enterusers"));
+		
+		item.setAutoChildProperties("comboBox", combo);
+		return item;
+	}
+
 	public static SelectItem newUserSelectorForAttribute(String name, String title, String groupIdOrName) {
 		final SelectItem item = new UserSelector("_" + name.replaceAll(" ", Constants.BLANK_PLACEHOLDER), title,
 				groupIdOrName, false);

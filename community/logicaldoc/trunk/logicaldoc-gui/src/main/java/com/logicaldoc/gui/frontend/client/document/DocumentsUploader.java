@@ -19,6 +19,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.frontend.client.document.update.UpdateDialog;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -207,7 +208,7 @@ public class DocumentsUploader extends Window {
 		metadata.setTemplate(folder.getTemplate());
 		metadata.setAttributes(folder.getAttributes());
 
-		BulkUpdateDialog bulk = new BulkUpdateDialog(null, metadata, false, false);
+		UpdateDialog bulk = new UpdateDialog(null, metadata, UpdateDialog.CONTEXT_UPLOAD, false);
 		bulk.setZip(getImportZip());
 		bulk.setCharset(getCharset());
 		bulk.setImmediateIndexing(getImmediateIndexing());

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.SystemInfo;
 import com.logicaldoc.i18n.I18N;
+import com.logicaldoc.util.Context;
 
 /**
  * Represents a Facade on Velocity
@@ -41,6 +42,8 @@ public class ScriptingEngine {
 	public static final String SYSTEM_TOOL = "SystemTool";
 
 	public static final String KEY_LOCALE = "locale";
+
+	public static final String SERVER_URL = "serverUrl";
 
 	public static final String LOG = "log";
 
@@ -121,6 +124,8 @@ public class ScriptingEngine {
 		// Access to the system log
 		extendedDictionary.put(LOG, new LogTool());
 
+		dictionary.put(SERVER_URL, Context.get().getProperties().get("server.url"));
+
 		if (dictionary != null)
 			extendedDictionary.putAll(dictionary);
 
@@ -135,7 +140,7 @@ public class ScriptingEngine {
 			}
 			return writer.toString();
 		} catch (Throwable e) {
-		    log.error("Error in this script: "+expression, e);
+			log.error("Error in this script: " + expression, e);
 			return expression;
 		}
 	}

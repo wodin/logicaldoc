@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.document;
+package com.logicaldoc.gui.frontend.client.document.update;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.data.TagsDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
+import com.logicaldoc.gui.frontend.client.document.DocumentDetailTab;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.util.SC;
@@ -30,7 +31,7 @@ import com.smartgwt.client.widgets.layout.VLayout;
  * @author Marco Meschieri - Logical Objects
  * @since 6.3
  */
-public class BulkStandardPropertiesPanel extends DocumentDetailTab {
+public class UpdateStandardPropertiesPanel extends DocumentDetailTab {
 	private DynamicForm form = new DynamicForm();
 
 	private VLayout container = new VLayout();
@@ -43,7 +44,7 @@ public class BulkStandardPropertiesPanel extends DocumentDetailTab {
 
 	private MultiComboBoxItem tagItem;
 
-	public BulkStandardPropertiesPanel(GUIDocument document) {
+	public UpdateStandardPropertiesPanel(GUIDocument document) {
 		super(document, null, null);
 		setWidth100();
 		setHeight100();

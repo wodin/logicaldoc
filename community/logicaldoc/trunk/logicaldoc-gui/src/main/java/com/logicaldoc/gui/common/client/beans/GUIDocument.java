@@ -94,6 +94,12 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	private Long formId = null;
 
+	// Users to be notified of the upload
+	private long[] notifyUsers;
+
+	// Optional message to send to users
+	private String notifyMessage;
+
 	public long getId() {
 		return id;
 	}
@@ -474,5 +480,21 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	public void setLockUser(String lockUser) {
 		this.lockUser = lockUser;
+	}
+
+	public long[] getNotifyUsers() {
+		return notifyUsers;
+	}
+
+	public void setNotifyUsers(long[] notifyUsers) {
+		this.notifyUsers = notifyUsers;
+	}
+
+	public String getNotifyMessage() {
+		return notifyMessage;
+	}
+
+	public void setNotifyMessage(String notifyMessage) {
+		this.notifyMessage = notifyMessage;
 	}
 }

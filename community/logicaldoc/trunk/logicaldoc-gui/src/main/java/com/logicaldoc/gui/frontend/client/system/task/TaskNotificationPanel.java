@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.system;
+package com.logicaldoc.gui.frontend.client.system.task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,11 +73,12 @@ public class TaskNotificationPanel extends VLayout {
 
 		items.add(sendReport);
 
-		String[] ids = new String[task.getReportRecipients().length];
+		long[] ids = new long[task.getReportRecipients().length];
 		for (int i = 0; i < ids.length; i++)
-			ids[i] = Long.toString(task.getReportRecipients()[i].getId());
+			ids[i] = task.getReportRecipients()[i].getId();
 
-		recipients = ItemFactory.newMultiComboBoxItem("recipients", "recipients", new UsersDS(null, false), ids);
+		recipients = ItemFactory.newMultiComboBoxItem("recipients", "recipients", new UsersDS(null, false),
+				task.getReportRecipients());
 		recipients.setValueField("id");
 		recipients.setDisplayField("username");
 		recipients.addChangedHandler(changedHandler);
