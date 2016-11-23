@@ -8,6 +8,7 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
+import com.logicaldoc.gui.frontend.client.document.update.UpdateDialog;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.IButton;
@@ -97,7 +98,6 @@ public class DocumentCheckin extends Window {
 		});
 		sendButton.setDisabled(true);
 
-
 		VLayout layout = new VLayout();
 		layout.setMembersMargin(5);
 		layout.setMargin(2);
@@ -140,7 +140,7 @@ public class DocumentCheckin extends Window {
 			return;
 
 		document.setComment(vm.getValueAsString("comment"));
-		BulkUpdateDialog bulk = new BulkUpdateDialog(new long[] { document.getId() }, document, true, "true".equals(vm
+		UpdateDialog bulk = new UpdateDialog(new long[] { document.getId() }, document, UpdateDialog.CONTEXT_CHECKIN, "true".equals(vm
 				.getValueAsString("majorversion")));
 		bulk.show();
 		destroy();

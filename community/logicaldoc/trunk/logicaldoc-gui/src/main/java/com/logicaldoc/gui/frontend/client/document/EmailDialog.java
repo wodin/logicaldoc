@@ -105,7 +105,7 @@ public class EmailDialog extends Window {
 
 		final TextItem subject = ItemFactory.newTextItem("subject", "subject", docTitle);
 		subject.setRequired(true);
-		subject.setWidth("*");
+		subject.setWidth(350);
 
 		final RichTextItem message = new RichTextItem();
 		message.setName("message");

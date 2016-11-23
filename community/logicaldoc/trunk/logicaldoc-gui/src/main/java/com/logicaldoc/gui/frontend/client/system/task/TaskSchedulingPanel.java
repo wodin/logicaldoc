@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.system;
+package com.logicaldoc.gui.frontend.client.system.task;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

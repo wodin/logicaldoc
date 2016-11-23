@@ -1,4 +1,4 @@
-package com.logicaldoc.gui.frontend.client.document;
+package com.logicaldoc.gui.frontend.client.document.update;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
+import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.smartgwt.client.types.HeaderControls;
@@ -30,15 +31,22 @@ import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * This popup window is used to allow the users to input the data for a bulk
- * update
+ * update or other update operations
  * 
  * @author Marco Meschieri - Logical Objects
  * @since 6.3
  */
-public class BulkUpdateDialog extends Window {
+public class UpdateDialog extends Window {
+
+	public final static String CONTEXT_CHECKIN = "checkin";
+
+	public final static String CONTEXT_UPLOAD = "addocuments";
+
+	public final static String CONTEXT_UPDATE = "bulkupdate";
+
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
-	private BulkUpdatePanel bulkPanel;
+	private UpdatePanel bulkPanel;
 
 	private boolean zip = false;
 
@@ -46,8 +54,7 @@ public class BulkUpdateDialog extends Window {
 
 	private String charset = "UTF-8";
 
-	public BulkUpdateDialog(final long[] ids, final GUIDocument metadata, final boolean checkin,
-			final boolean majorVersion) {
+	public UpdateDialog(final long[] ids, final GUIDocument metadata, final String context, final boolean majorVersion) {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 
 		addCloseClickHandler(new CloseClickHandler() {
@@ -57,7 +64,7 @@ public class BulkUpdateDialog extends Window {
 			}
 		});
 
-		setTitle(checkin ? I18N.message("checkin") : I18N.message("bulkupdate"));
+		setTitle(I18N.message(context));
 		setWidth(800);
 		setHeight(300);
 		setCanDragResize(true);
@@ -66,19 +73,19 @@ public class BulkUpdateDialog extends Window {
 		centerInPage();
 
 		/*
-		 * Since the document is locked, temprarily alter the status to have the
+		 * Since the document is locked, temporarily alter the status to have the
 		 * editing enabled.
 		 */
 		int originalStatus = 0;
-		if (checkin && metadata != null) {
+		if (CONTEXT_CHECKIN.equals(context) && metadata != null) {
 			originalStatus = metadata.getStatus();
 			metadata.setStatus(0);
 		}
-		bulkPanel = new BulkUpdatePanel(metadata);
+		bulkPanel = new UpdatePanel(metadata, CONTEXT_UPLOAD.equals(context));
 		bulkPanel.setWidth100();
 		bulkPanel.setHeight("*");
 		bulkPanel.setShowResizeBar(false);
-		if (checkin && metadata != null)
+		if (CONTEXT_CHECKIN.equals(context) && metadata != null)
 			metadata.setStatus(originalStatus);
 
 		HTMLPane spacer = new HTMLPane();
@@ -96,7 +103,7 @@ public class BulkUpdateDialog extends Window {
 		saveForm.setShowResizeBar(false);
 		saveForm.setItems(versionComment);
 
-		Button saveButton = new Button(checkin ? I18N.message("checkin") : I18N.message("save"));
+		Button saveButton = new Button(CONTEXT_CHECKIN.equals(context) ? I18N.message("checkin") : I18N.message("save"));
 		saveButton.setAutoFit(true);
 		saveButton.setLayoutAlign(VerticalAlignment.CENTER);
 		saveButton.addClickHandler(new ClickHandler() {
@@ -105,7 +112,7 @@ public class BulkUpdateDialog extends Window {
 				if (!bulkPanel.validate())
 					return;
 
-				if (checkin) {
+				if (CONTEXT_CHECKIN.equals(context)) {
 					ContactingServer.get().show();
 					documentService.checkin(metadata, majorVersion, new AsyncCallback<GUIDocument>() {
 
@@ -206,7 +213,7 @@ public class BulkUpdateDialog extends Window {
 
 		HLayout savePanel = new HLayout();
 		savePanel.addMember(saveButton);
-		if (!checkin)
+		if (!CONTEXT_CHECKIN.equals(context))
 			savePanel.addMember(saveForm);
 		savePanel.addMember(spacer);
 		savePanel.setWidth100();

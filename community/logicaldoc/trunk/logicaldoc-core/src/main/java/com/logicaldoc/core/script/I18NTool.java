@@ -17,7 +17,7 @@ public class I18NTool extends HashMap<String, String> {
 	public I18NTool(Map<? extends String, ? extends String> m) {
 		super(m);
 	}
-
+	
 	public String format(String key, String value) {
 		return format(key, new String[] { value });
 	}
@@ -40,5 +40,10 @@ public class I18NTool extends HashMap<String, String> {
 
 	public String format(String key, String[] values) {
 		return MessageFormat.format(get(key), values);
+	}
+
+	@Override
+	public String get(Object key) {
+		return super.getOrDefault(key, key.toString());
 	}
 }

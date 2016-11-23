@@ -14,6 +14,7 @@ import com.logicaldoc.gui.frontend.client.services.SettingService;
 import com.logicaldoc.gui.frontend.client.services.SettingServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SystemService;
 import com.logicaldoc.gui.frontend.client.services.SystemServiceAsync;
+import com.logicaldoc.gui.frontend.client.system.task.TasksPanel;
 import com.logicaldoc.gui.frontend.client.tenant.TenantsPanel;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.TitleOrientation;

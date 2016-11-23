@@ -22,6 +22,7 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.frontend.client.calendar.CalendarEventDialog;
 import com.logicaldoc.gui.frontend.client.document.form.AddForm;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
+import com.logicaldoc.gui.frontend.client.document.update.UpdateDialog;
 import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
 import com.logicaldoc.gui.frontend.client.services.AuditService;
 import com.logicaldoc.gui.frontend.client.services.AuditServiceAsync;
@@ -394,7 +395,7 @@ public class DocumentToolbar extends ToolStrip implements FolderObserver {
 				if (grid.getSelectedCount() == 0)
 					return;
 
-				BulkUpdateDialog dialog = new BulkUpdateDialog(grid.getSelectedIds(), null, false, false);
+				UpdateDialog dialog = new UpdateDialog(grid.getSelectedIds(), null, UpdateDialog.CONTEXT_UPDATE, false);
 				dialog.show();
 			}
 		});

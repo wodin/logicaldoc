@@ -445,6 +445,19 @@ values(3, CURRENT_TIMESTAMP,0,'psw.rec2','system','en', '$product - $I18N.get(''
 '$product - $I18N.get(''passwordrequest'') <br/>
 $I18N.get(''clickhere''): <a href="$url">$url</a>',1,1);
 
+insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_type, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
+values(4, CURRENT_TIMESTAMP,0,'newdoc','system','en', '$product - $I18N.get(''newdocscreated'')',
+'$I18N.get(''newdocscreated'')<br/>
+<hr/>
+$message
+<hr/>
+$I18N.get(''user''): <b>$creator.fullName</b><br/>
+$I18N.get(''date''): <b>$DateTool.format($CURRENT_DATE, true)</b><br/>
+<hr/>
+<b>$I18N.get(''documents'')</b>:
+#foreach( $doc in $documents )
+  <br/>$doc.fileName | <a href="$DocToolwTool.downloadUrl($doc)">$I18N.get(''download'')</a> | <a href="$DocToolwTool.displayUrl($doc)">$I18N.get(''display'')</a>
+#end',1,1);
 
 insert into ld_attributeset
 			(ld_id, ld_lastmodified, ld_deleted, ld_name, ld_description, ld_readonly, ld_type, ld_tenantid, ld_recordversion)

@@ -37,11 +37,6 @@ public class MessageTemplate extends PersistentObject {
 
 	private String getFormattedContent(Map<String, Object> dictionary, String text) {
 		ScriptingEngine script = new ScriptingEngine(getName(), LocaleUtil.toLocale(language));
-
-		// General configurations
-		ContextProperties config = Context.get().getProperties();
-		dictionary.put("serverUrl", config.get("server.url"));
-
 		return script.evaluate(text, dictionary);
 	}
 
