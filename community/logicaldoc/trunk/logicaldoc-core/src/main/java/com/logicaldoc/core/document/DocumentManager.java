@@ -2,9 +2,11 @@ package com.logicaldoc.core.document;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Date;
 
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.core.ticket.Ticket;
 
 /**
  * A general manager for documents handling issues
@@ -244,4 +246,23 @@ public interface DocumentManager {
 	public void archiveDocuments(long[] docIds, History transaction) throws Exception;
 
 	public void setStorer(Storer storer);
+
+	/**
+	 * Creates a new download ticket.
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * @param suffix can be null or 'conversion.pdf'
+	 * @param expireHours expiration time expressed in hours
+	 * @param expireDate exact expiration date expressed in the format
+	 *        yyyy-MM-dd
+	 * @param urlPrefix prefiz of the url, by default the general setting
+	 *        'server.url' will be used
+	 * @param transaction entry to log the event (set the user)
+	 * 
+	 * @return The created ticket with the url property filled
+	 * @throws Exception
+	 */
+	public Ticket createDownloadTicket(long docId, String suffix, Integer expireHours, Date expireDate,
+			String urlPrefix, History transaction) throws Exception;
 }

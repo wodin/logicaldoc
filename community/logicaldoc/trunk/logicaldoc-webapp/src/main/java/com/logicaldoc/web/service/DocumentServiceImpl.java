@@ -10,9 +10,7 @@ import java.net.MalformedURLException;
 import java.security.AccessControlException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -69,7 +67,6 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
 import com.logicaldoc.core.ticket.Ticket;
-import com.logicaldoc.core.ticket.TicketDAO;
 import com.logicaldoc.core.transfer.InMemoryZipImport;
 import com.logicaldoc.core.transfer.ZipExport;
 import com.logicaldoc.core.util.IconSelector;
@@ -87,7 +84,6 @@ import com.logicaldoc.i18n.I18N;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
 import com.logicaldoc.util.MimeType;
-import com.logicaldoc.util.crypt.CryptUtil;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.web.UploadServlet;
 import com.logicaldoc.web.util.ServiceUtil;
@@ -1070,6 +1066,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 	public String sendAsEmail(GUIEmail email, String locale) throws ServerException {
 		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 		DocumentDAO documentDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		DocumentManager manager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 
 		EMail mail;
 		try {
@@ -1111,20 +1108,16 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			if (email.isSendAsTicket()) {
 				// Prepare a new download ticket
-				Ticket ticket = prepareTicket(email.getDocIds()[0], session.getUser());
-
 				History transaction = new History();
 				transaction.setSession(session);
+				Ticket ticket = manager.createDownloadTicket(email.getDocIds()[0], null, null, null, null, transaction);
 
-				storeTicket(ticket, transaction);
+				Document doc = documentDao.findById(email.getDocIds()[0]);
 
-				Document doc = documentDao.findById(ticket.getDocId());
-
-				String ticketUrl = composeTicketUrl(ticket);
 				message = message
 						+ "<div style='margin-top:10px; border-top:1px solid black; background-color:#CCCCCC;'><b>&nbsp;"
-						+ I18N.message("clicktodownload", LocaleUtil.toLocale(locale)) + ": <a href='" + ticketUrl
-						+ "'>" + doc.getFileName() + "</a></b></div>";
+						+ I18N.message("clicktodownload", LocaleUtil.toLocale(locale)) + ": <a href='"
+						+ ticket.getUrl() + "'>" + doc.getFileName() + "</a></b></div>";
 
 				if (doc.getDocRef() != null)
 					doc = documentDao.findById(doc.getDocRef());
@@ -1223,33 +1216,6 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			log.warn(e.getMessage(), e);
 			return "error";
 		}
-	}
-
-	private String composeTicketUrl(Ticket ticket) {
-		HttpServletRequest request = this.getThreadLocalRequest();
-		String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
-				+ request.getContextPath();
-		String address = urlPrefix + "/download-ticket?ticketId=" + ticket.getTicketId();
-		return address;
-	}
-
-	private void storeTicket(Ticket ticket, History transaction) {
-		// Store the ticket
-		TicketDAO ticketDao = (TicketDAO) Context.get().getBean(TicketDAO.class);
-		ticketDao.store(ticket, transaction);
-
-		// Try to clean the DB from old tickets
-		ticketDao.deleteExpired();
-	}
-
-	private Ticket prepareTicket(long docId, User user) {
-		String temp = new Date().toString() + user.getId();
-		String ticketid = CryptUtil.cryptString(temp);
-		Ticket ticket = new Ticket();
-		ticket.setTicketId(ticketid);
-		ticket.setDocId(docId);
-		ticket.setUserId(user.getId());
-		return ticket;
 	}
 
 	private String createPreview(Document doc, long userId, String sid) {
@@ -1709,36 +1675,16 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		try {
-			User user = ServiceUtil.getSessionUser(session.getId());
+			HttpServletRequest request = this.getThreadLocalRequest();
+			String urlPrefix = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
+					+ request.getContextPath();
 
-			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
-			if (!fdao.isWriteEnabled(getById(docId).getFolder().getId(), user.getId())) {
-				throw new RuntimeException("You don't have the download permission");
-			}
-
-			Ticket ticket = prepareTicket(docId, session.getUser());
-			ticket.setSuffix(suffix);
-
-			Calendar cal = GregorianCalendar.getInstance();
-			if (expireDate != null) {
-				cal.setTime(expireDate);
-				cal.set(Calendar.HOUR_OF_DAY, 23);
-				cal.set(Calendar.MINUTE, 59);
-				cal.set(Calendar.SECOND, 59);
-				cal.set(Calendar.MILLISECOND, 999);
-				ticket.setExpired(cal.getTime());
-			} else if (expireHours != null) {
-				cal.add(Calendar.HOUR_OF_DAY, expireHours.intValue());
-				ticket.setExpired(cal.getTime());
-			}
-
+			DocumentManager manager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 			History transaction = new History();
-			transaction.setSessionId(session.getId());
-			transaction.setUser(user);
+			transaction.setSession(session);
+			Ticket ticket = manager.createDownloadTicket(docId, suffix, expireHours, expireDate, urlPrefix, transaction);
 
-			storeTicket(ticket, transaction);
-
-			return composeTicketUrl(ticket);
+			return ticket.getUrl();
 		} catch (Throwable t) {
 			return (String) ServiceUtil.throwServerException(session, log, t);
 		}

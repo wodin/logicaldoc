@@ -15,6 +15,7 @@ import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
+import com.logicaldoc.core.ticket.Ticket;
 
 /**
  * Test case for <code>DocumentManagerImpl</code>
@@ -73,6 +74,29 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		documentManager.update(doc, newDoc, transaction);
 
 		Assert.assertEquals("testDocname2(1)", doc.getTitle());
+	}
+
+	@Test
+	public void testCreatreDownloadTicket() throws Exception {
+		Document doc = docDao.findById(1);
+		Assert.assertNotNull(doc);
+
+		User user = userDao.findByUsername("admin");
+		History transaction = new History();
+		transaction.setUser(user);
+		transaction.setUserId(1);
+		transaction.setNotified(0);
+
+		Ticket t = documentManager.createDownloadTicket(1L, null, null, null, null, transaction);
+		Assert.assertNotNull(t.getUrl());
+
+		try {
+			Thread.sleep(1000);
+		} catch (Throwable e) {
+		}
+
+		t = documentManager.createDownloadTicket(1L, null, 2, null, null, transaction);
+		Assert.assertNotNull(t.getUrl());
 	}
 
 	@Test

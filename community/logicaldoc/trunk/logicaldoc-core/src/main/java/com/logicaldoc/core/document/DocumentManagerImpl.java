@@ -7,8 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,10 +37,14 @@ import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.core.ticket.Ticket;
+import com.logicaldoc.core.ticket.TicketDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.config.ContextProperties;
+import com.logicaldoc.util.crypt.CryptUtil;
 import com.logicaldoc.util.io.FileUtil;
 import com.logicaldoc.util.sql.SqlUtil;
 
@@ -65,6 +71,8 @@ public class DocumentManagerImpl implements DocumentManager {
 	private VersionDAO versionDAO;
 
 	private UserDAO userDAO;
+
+	private TicketDAO ticketDAO;
 
 	private SearchEngine indexer;
 
@@ -1025,5 +1033,70 @@ public class DocumentManagerImpl implements DocumentManager {
 		engine.deleteHits(idsList);
 
 		log.info("Archived documents " + idsList);
+	}
+
+	@Override
+	public Ticket createDownloadTicket(long docId, String suffix, Integer expireHours, Date expireDate,
+			String urlPrefix, History transaction) throws Exception {
+		assert (transaction.getUser() != null);
+
+		Document document = documentDAO.findById(docId);
+		if (document == null)
+			throw new Exception("Unexisting document");
+
+		if (!folderDAO.isDownloadEnabled(document.getFolder().getId(), transaction.getUserId()))
+			throw new RuntimeException("You don't have the download permission");
+
+		Ticket ticket = prepareTicket(docId, transaction.getUser());
+		ticket.setSuffix(suffix);
+
+		Calendar cal = GregorianCalendar.getInstance();
+		if (expireDate != null) {
+			cal.setTime(expireDate);
+			cal.set(Calendar.HOUR_OF_DAY, 23);
+			cal.set(Calendar.MINUTE, 59);
+			cal.set(Calendar.SECOND, 59);
+			cal.set(Calendar.MILLISECOND, 999);
+			ticket.setExpired(cal.getTime());
+		} else if (expireHours != null) {
+			cal.add(Calendar.HOUR_OF_DAY, expireHours.intValue());
+			ticket.setExpired(cal.getTime());
+		} else {
+			cal.add(Calendar.HOUR_OF_DAY, config.getInt("ticket.ttl"));
+			ticket.setExpired(cal.getTime());
+		}
+
+		transaction.setEvent(DocumentEvent.DTICKET_CREATED.toString());
+		transaction.setSessionId(transaction.getSessionId());
+
+		ticketDAO.store(ticket, transaction);
+
+		// Try to clean the DB from old tickets
+		ticketDAO.deleteExpired();
+
+		ticket.setUrl(composeTicketUrl(ticket, urlPrefix));
+
+		return ticket;
+	}
+
+	private Ticket prepareTicket(long docId, User user) {
+		String temp = new Date().toString() + user.getId();
+		String ticketid = CryptUtil.cryptString(temp);
+		Ticket ticket = new Ticket();
+		ticket.setTicketId(ticketid);
+		ticket.setDocId(docId);
+		ticket.setUserId(user.getId());
+		return ticket;
+	}
+
+	private String composeTicketUrl(Ticket ticket, String urlPrefix) {
+		if (StringUtils.isEmpty(urlPrefix))
+			urlPrefix = config.getProperty("server.url");
+		String address = urlPrefix + "/download-ticket?ticketId=" + ticket.getTicketId();
+		return address;
+	}
+
+	public void setTicketDAO(TicketDAO ticketDAO) {
+		this.ticketDAO = ticketDAO;
 	}
 }

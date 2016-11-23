@@ -1,9 +1,6 @@
 package com.logicaldoc.webservice;
 
 import java.io.FileNotFoundException;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +9,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.ws.WebServiceContext;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.cxf.jaxrs.ext.MessageContext;
 import org.apache.cxf.transport.http.AbstractHTTPDestination;
 import org.slf4j.Logger;
@@ -163,8 +159,6 @@ public class AbstractService {
 			throw new FileNotFoundException("Document is archived");
 	}
 
-
-
 	protected boolean isWebserviceEnabled() {
 		return "true".equals(Context.get().getProperties().get("webservice.enabled"));
 	}
@@ -227,7 +221,7 @@ public class AbstractService {
 			throw new Exception("Invalid session");
 		return sid;
 	}
-	
+
 	public static String convertDateToString(Date date) {
 		return WSUtil.convertDateToString(date);
 	}

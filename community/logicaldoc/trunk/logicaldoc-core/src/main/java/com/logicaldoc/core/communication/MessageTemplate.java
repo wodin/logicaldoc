@@ -4,9 +4,7 @@ import java.util.Map;
 
 import com.logicaldoc.core.PersistentObject;
 import com.logicaldoc.core.script.ScriptingEngine;
-import com.logicaldoc.util.Context;
 import com.logicaldoc.util.LocaleUtil;
-import com.logicaldoc.util.config.ContextProperties;
 
 /**
  * A template for messaging purposes.
