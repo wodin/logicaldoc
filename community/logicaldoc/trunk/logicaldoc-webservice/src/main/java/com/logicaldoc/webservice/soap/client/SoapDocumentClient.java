@@ -218,7 +218,8 @@ public class SoapDocumentClient extends SoapClient<DocumentService> implements D
 	}
 
 	@Override
-	public WSDocument[] list(String sid, long folderId) throws Exception {
-		return client.list(sid, folderId);
+	public String createDownloadTicket(String sid, long docId, String suffix, Integer expireHours, String expireDate)
+			throws Exception {
+		return client.createDownloadTicket(sid, docId, suffix, expireHours, expireDate);
 	}
 }

@@ -32,6 +32,11 @@ public class Ticket extends PersistentObject {
 
 	private String suffix;
 
+	/*
+	 * Not persistent field
+	 */
+	private String url;
+
 	public Ticket() {
 
 	}
@@ -108,5 +113,13 @@ public class Ticket extends PersistentObject {
 
 	public void setSuffix(String suffix) {
 		this.suffix = suffix;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 }

@@ -42,8 +42,10 @@ import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.store.Storer;
+import com.logicaldoc.core.ticket.Ticket;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.util.MimeType;
 import com.logicaldoc.util.io.FileUtil;
@@ -505,11 +507,6 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 	}
 
 	@Override
-	public WSDocument[] list(String sid, long folderId) throws Exception {
-		return listDocuments(sid, folderId, null);
-	}
-	
-	@Override
 	public WSDocument[] listDocuments(String sid, long folderId, String fileName) throws Exception {
 		User user = validateSession(sid);
 		checkReadEnable(user, folderId);
@@ -883,5 +880,20 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 		validateSession(sid);
 		SearchEngine indexer = (SearchEngine) Context.get().getBean(SearchEngine.class);
 		return indexer.getHit(docId).getContent();
+	}
+
+	@Override
+	public String createDownloadTicket(String sid, long docId, String suffix, Integer expireHours, String expireDate)
+			throws Exception {
+		validateSession(sid);
+
+		DocumentManager manager = (DocumentManager) Context.get().getBean(DocumentManager.class);
+		History transaction = new History();
+		transaction.setSession(SessionManager.get().get(sid));
+
+		Ticket ticket = manager.createDownloadTicket(docId, suffix, expireHours, convertStringToDate(expireDate), null,
+				transaction);
+
+		return ticket.getUrl();
 	}
 }

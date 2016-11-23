@@ -150,7 +150,7 @@ public interface DocumentService {
 	 * @throws Exception
 	 */
 	@WebMethod
-	//@TODO correct this to "document"
+	// @TODO correct this to "document"
 	@WebResult(name = "documents")
 	@WSDoc(description = "gets document metadata of a collection of existing documents with the given identifiers; returns an array of WSDocument")
 	public WSDocument[] getDocuments(@WebParam(name = "sid") String sid, @WebParam(name = "docIds") Long[] docIds)
@@ -388,21 +388,6 @@ public interface DocumentService {
 			@WSDoc(description = "file name filter", required = false) @WebParam(name = "fileName") String fileName)
 			throws Exception;
 
-	
-	/**
-	 * Lists the documents inside a folder
-	 * 
-	 * @param sid Session identifier
-	 * @param folderId The document id
-	 * @return Array of documents contained in the folder
-	 * 
-	 * @throws Exception
-	 */
-	@WebResult(name = "document")
-	@Deprecated
-	public WSDocument[] list(@WebParam(name = "sid") String sid, @WebParam(name = "folderId") long folderId)
-			throws Exception;
-	
 	/**
 	 * Lists of last modified documents of the current session.
 	 * 
@@ -539,5 +524,26 @@ public interface DocumentService {
 			@WebParam(name = "sid") String sid,
 			@WebParam(name = "docId") long docId,
 			@WSDoc(description = "the specific file version", required = false) @WebParam(name = "fileVersion") String fileVersion)
+			throws Exception;
+
+	/**
+	 * Creates a new download ticket
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * @param suffix can be null or 'conversion.pdf'
+	 * @param expireHours expiration time expressed in hours
+	 * @param expireDate exact expiration date expressed in the format
+	 *        yyyy-MM-dd
+	 * @throws Exception
+	 */
+	@WebMethod
+	@WSDoc(description = "creates a new download ticket to the original document or it's PDF conversion")
+	public String createDownloadTicket(
+			@WebParam(name = "sid") String sid,
+			@WebParam(name = "docId") long docId,
+			@WSDoc(description = "can be null or 'conversion.pdf'", required = false) String suffix,
+			@WSDoc(description = "expiration time expressed in hours", required = false) Integer expireHours,
+			@WSDoc(description = "exact expiration date expressed in the format yyyy-MM-dd", required = false) String expireDate)
 			throws Exception;
 }

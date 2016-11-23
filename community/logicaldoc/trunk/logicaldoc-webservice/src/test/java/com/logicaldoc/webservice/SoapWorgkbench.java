@@ -33,11 +33,11 @@ public class SoapWorgkbench {
 		System.out.println("Sid: " + sid);
 
 		try {
-			// securityStuff(sid);
+//			securityStuff(sid);
 
-			// documentStuff(sid);
+//			 documentStuff(sid);
 
-			// folderStuff(sid);
+//			 folderStuff(sid);
 
 			searchStuff(sid);
 
@@ -499,6 +499,9 @@ public class SoapWorgkbench {
 		// documentClient.getResourceContent(sid, 669286400L, "1.0",
 		// "conversion.pdf", new File("D:/tmp/conversion.pdf"));
 
+		String downloadTicket = documentClient.createDownloadTicket(sid, 266403843L, null, null, null);
+		System.out.println("downloadTicket: "+downloadTicket);
+				
 		System.out.println(documentClient.getExtractedText(sid, 643L));
 	}
 }

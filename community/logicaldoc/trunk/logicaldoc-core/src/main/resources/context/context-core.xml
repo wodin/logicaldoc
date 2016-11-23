@@ -255,6 +255,7 @@
             <property name="documentNoteDAO" ref="DocumentNoteDAO" />
             <property name="folderDAO" ref="FolderDAO" />
             <property name="versionDAO" ref="VersionDAO" />
+            <property name="ticketDAO" ref="TicketDAO" />
             <property name="userDAO" ref="UserDAO" />
             <property name="templateDAO" ref="TemplateDAO" />
             <property name="storer" ref="Storer" />
