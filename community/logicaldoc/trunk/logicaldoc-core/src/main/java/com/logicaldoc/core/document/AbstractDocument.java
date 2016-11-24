@@ -657,16 +657,10 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 		this.rating = rating;
 	}
 
-	/**
-	 * @see Version#getComment()
-	 */
 	public String getComment() {
 		return comment;
 	}
 
-	/**
-	 * @see Version#setComment(java.lang.String)
-	 */
 	public void setComment(String comment) {
 		this.comment = comment;
 	}

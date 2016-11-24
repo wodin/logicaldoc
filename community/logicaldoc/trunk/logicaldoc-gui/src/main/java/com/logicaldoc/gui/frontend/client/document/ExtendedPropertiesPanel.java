@@ -162,8 +162,10 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	 * Prepare the second form for the extended attributes
 	 */
 	private void prepareExtendedAttributes(final Long templateId) {
-		if (form2 != null)
+		if (form2 != null) {
+			vm.removeMembers(form2);
 			removeMember(form2);
+		}
 
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
@@ -174,7 +176,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 
 		if (templateId == null)
 			return;
-		
+
 		documentService.getAttributes(templateId, new AsyncCallback<GUIAttribute[]>() {
 			@Override
 			public void onFailure(Throwable caught) {
@@ -185,7 +187,7 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 			public void onSuccess(GUIAttribute[] result) {
 				currentExtAttributes = result;
 				extendedItems.clear();
-				
+
 				for (GUIAttribute att : result) {
 					if (att.getType() == GUIAttribute.TYPE_STRING) {
 						FormItem item = ItemFactory.newStringItemForAttribute(att);
@@ -260,11 +262,11 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 	public boolean validate() {
 		Map<String, Object> values = (Map<String, Object>) vm.getValues();
 		vm.validate();
+
 		if (!vm.hasErrors()) {
 			document.setCustomId((String) values.get("customid"));
-
 			if (Feature.enabled(Feature.TEMPLATE)) {
-				if (values.get("template") == null || "".equals(values.get("template").toString()))
+				if (values.get("template") == null || values.get("template").toString().isEmpty())
 					document.setTemplateId(null);
 				else {
 					document.setTemplateId(Long.parseLong(values.get("template").toString()));
