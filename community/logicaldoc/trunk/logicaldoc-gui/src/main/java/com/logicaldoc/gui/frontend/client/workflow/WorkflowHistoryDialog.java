@@ -209,7 +209,7 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField historyName = new ListGridField("name", I18N.message("task"), 200);
 		historyName.setHidden(true);
 
-		ListGridField historyDate = new ListGridField("startdate", I18N.message("startdate"), 120);
+		ListGridField historyDate = new ListGridField("date", I18N.message("date"), 120);
 		historyDate.setAlign(Alignment.CENTER);
 		historyDate.setType(ListGridFieldType.DATE);
 		historyDate.setCellFormatter(new DateCellFormatter(false));
@@ -234,7 +234,7 @@ public class WorkflowHistoryDialog extends Window {
 		historiesGrid.setSelectionType(SelectionStyle.SINGLE);
 		historiesGrid.setHeight100();
 		historiesGrid.setWidth100();
-		historiesGrid.sort("startdate", SortDirection.ASCENDING);
+		historiesGrid.sort("date", SortDirection.ASCENDING);
 		historiesGrid.setBorder("1px solid #E1E1E1");
 		historiesGrid.setDataSource(new WorkflowHistoriesDS(selectedWorkflowInstance, Long.parseLong(selectedWorkflow
 				.getId()), null, null));

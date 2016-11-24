@@ -537,6 +537,7 @@ public interface DocumentService {
 	 *        yyyy-MM-dd
 	 * @throws Exception
 	 */
+	@WebResult(name = "ticket")
 	@WebMethod
 	@WSDoc(description = "creates a new download ticket to the original document or it's PDF conversion")
 	public String createDownloadTicket(

@@ -40,7 +40,7 @@ public class UpdateDialog extends Window {
 
 	public final static String CONTEXT_CHECKIN = "checkin";
 
-	public final static String CONTEXT_UPLOAD = "addocuments";
+	public final static String CONTEXT_UPLOAD = "adddocuments";
 
 	public final static String CONTEXT_UPDATE = "bulkupdate";
 
