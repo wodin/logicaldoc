@@ -28,7 +28,9 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ColorItem;
+import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
+import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.TextAreaItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
@@ -209,21 +211,41 @@ public class StampDetailsPanel extends VLayout {
 
 		TextAreaItem description = ItemFactory.newTextAreaItem("description", "description", stamp.getDescription());
 		description.addChangedHandler(changedHandler);
-		description.setWidth("300");
+		description.setWidth(300);
 
 		final TextAreaItem text = ItemFactory.newTextAreaItem("text", "text", stamp.getText());
 		text.addChangedHandler(changedHandler);
-		text.setWidth("300");
+		text.setWidth(300);
+		text.setHeight(100);
 
 		final ColorItem color = ItemFactory.newColorItemPicker("color", "color", stamp.getColor());
 		color.addChangedHandler(changedHandler);
 
-		final RadioGroupItem type = ItemFactory.newRadioGroup("type", "type");
+		final RadioGroupItem barcodeLabel = ItemFactory.newBooleanSelector("barcodeLabel", "label");
+		barcodeLabel.setValue(stamp.getBarcodeLabel() == 1 ? "yes" : "no");
+		barcodeLabel.addChangedHandler(changedHandler);
+
+		final SelectItem barcodeFormat = ItemFactory.newBarcodeTypeSelector("barcodeFormat", "format",
+				stamp.getBarcodeFormat());
+		barcodeFormat.addChangedHandler(changedHandler);
+
+		final IntegerItem barcodeWidth = ItemFactory.newIntegerItem("barcodeWidth", "width", stamp.getBarcodeWidth());
+		barcodeWidth.setHint("px");
+		barcodeWidth.addChangedHandler(changedHandler);
+
+		final IntegerItem barcodeHeight = ItemFactory.newIntegerItem("barcodeHeight", "height",
+				stamp.getBarcodeHeight());
+		barcodeHeight.setHint("px");
+		barcodeHeight.addChangedHandler(changedHandler);
+
+		final SelectItem type = ItemFactory.newSelectItem("type", "type");
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		map.put("" + GUIStamp.TYPE_IMAGE, I18N.message("image"));
 		map.put("" + GUIStamp.TYPE_TEXT, I18N.message("text"));
+		map.put("" + GUIStamp.TYPE_BARCODE, I18N.message("barcode"));
 		type.setValueMap(map);
 		type.setValue("" + stamp.getType());
+		type.setWidth(80);
 
 		SpinnerItem rotation = ItemFactory.newSpinnerItem("rotation", "rotation", stamp.getRotation(), 0, 360);
 		rotation.addChangedHandler(changedHandler);
@@ -263,7 +285,7 @@ public class StampDetailsPanel extends VLayout {
 
 		form1.setItems(name, type, pageOption, pageSelection, exprx, rotation, expry, opacity, description);
 
-		form2.setItems(text, color, size);
+		form2.setItems(text, color, size, barcodeFormat, barcodeWidth, barcodeHeight, barcodeLabel);
 
 		// For the spinners we need to manually update the VM or the widget will
 		// not be refreshed
@@ -279,13 +301,32 @@ public class StampDetailsPanel extends VLayout {
 					text.hide();
 					color.hide();
 					size.hide();
+					barcodeFormat.hide();
+					barcodeWidth.hide();
+					barcodeHeight.hide();
+					barcodeLabel.hide();
 					if (stamp.getId() != 0L)
 						image.show();
 				} else {
 					text.show();
 					color.show();
-					size.show();
 					image.hide();
+
+					if (type.getValue().toString().equals("" + GUIStamp.TYPE_BARCODE)) {
+						barcodeFormat.show();
+						barcodeWidth.show();
+						barcodeHeight.show();
+						barcodeLabel.show();
+						size.hide();
+						color.hide();
+					} else {
+						barcodeFormat.hide();
+						barcodeWidth.hide();
+						barcodeHeight.hide();
+						barcodeLabel.hide();
+						size.show();
+						color.show();
+					}
 				}
 			}
 		};
@@ -325,6 +366,11 @@ public class StampDetailsPanel extends VLayout {
 			stamp.setSize(Integer.parseInt(vm.getValueAsString("size")));
 			stamp.setPageOption(Integer.parseInt(vm.getValueAsString("pageOption")));
 			stamp.setPageSelection(vm.getValueAsString("pageSelection"));
+
+			stamp.setBarcodeLabel("yes".equals(vm.getValueAsString("barcodeLabel")) ? 1 : 0);
+			stamp.setBarcodeWidth(Integer.parseInt(vm.getValueAsString("barcodeWidth")));
+			stamp.setBarcodeHeight(Integer.parseInt(vm.getValueAsString("barcodeHeight")));
+			stamp.setBarcodeFormat(vm.getValueAsString("barcodeFormat"));
 
 			stamp.setDescription(vm.getValueAsString("description"));
 			stamp.setColor(vm.getValueAsString("color"));

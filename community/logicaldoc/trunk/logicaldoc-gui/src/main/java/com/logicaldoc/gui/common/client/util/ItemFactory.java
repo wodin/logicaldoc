@@ -256,10 +256,10 @@ public class ItemFactory {
 		MultiComboBoxItem item = ItemFactory.newMultiComboBoxItem(name, title, new UsersDS(null, false), ids);
 		item.setValueField("id");
 		item.setDisplayField("username");
-		
-		ComboBoxItem combo=new ComboBoxItem();
+
+		ComboBoxItem combo = new ComboBoxItem();
 		combo.setHint(I18N.message("enterusers"));
-		
+
 		item.setAutoChildProperties("comboBox", combo);
 		return item;
 	}
@@ -299,18 +299,40 @@ public class ItemFactory {
 	}
 
 	public static SelectItem newSizeOperator(String name, String title) {
-		SelectItem sizeOperator = new SelectItem();
+		SelectItem item = new SelectItem();
 		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
 		opts.put("lessthan", I18N.message("lessthan"));
 		opts.put("greaterthan", I18N.message("greaterthan"));
-		sizeOperator.setValueMap(opts);
-		sizeOperator.setName(filterItemName(name));
+		item.setValueMap(opts);
+		item.setName(filterItemName(name));
 		if (title != null)
-			sizeOperator.setTitle(I18N.message(title));
+			item.setTitle(I18N.message(title));
 		else
-			sizeOperator.setShowTitle(false);
-		sizeOperator.setWidth(100);
-		return sizeOperator;
+			item.setShowTitle(false);
+		item.setWidth(100);
+		return item;
+	}
+
+	public static SelectItem newBarcodeTypeSelector(String name, String title, String value) {
+		SelectItem item = new SelectItem(name, I18N.message(title));
+		item.setWrapTitle(false);
+		item.setWidth(110);
+
+		LinkedHashMap<String, String> opts = new LinkedHashMap<String, String>();
+		opts.put("CODE_128", "CODE_128");
+		opts.put("CODE_39", "CODE_39");
+		opts.put("EAN_13", "EAN_13");
+		opts.put("EAN_8", "EAN_8");
+		opts.put("ITF", "ITF");
+		opts.put("UPC_A", "UPC_A");
+		opts.put("QR_CODE", "QR_CODE");
+
+		item.setValueMap(opts);
+
+		if (value != null)
+			item.setValue(value);
+
+		return item;
 	}
 
 	public static SelectItem newLanguageSelector(String name, boolean withEmpty, boolean gui) {

@@ -17,6 +17,8 @@ public class GUIStamp implements Serializable {
 
 	public static final int TYPE_IMAGE = 1;
 
+	public static final int TYPE_BARCODE = 2;
+
 	public static final int PAGE_OPT_ALL = 0;
 
 	public static final int PAGE_OPT_FIRST = 1;
@@ -48,6 +50,14 @@ public class GUIStamp implements Serializable {
 	private String exprX;
 
 	private String exprY;
+
+	private String barcodeFormat = "CODE_128";
+
+	private int barcodeWidth = 150;
+
+	private int barcodeHeight = 100;
+
+	private int barcodeLabel;
 
 	private String color = "black";
 
@@ -171,5 +181,37 @@ public class GUIStamp implements Serializable {
 
 	public void setPageSelection(String pageSelection) {
 		this.pageSelection = pageSelection;
+	}
+
+	public int getBarcodeWidth() {
+		return barcodeWidth;
+	}
+
+	public void setBarcodeWidth(int barcodeWidth) {
+		this.barcodeWidth = barcodeWidth;
+	}
+
+	public int getBarcodeHeight() {
+		return barcodeHeight;
+	}
+
+	public void setBarcodeHeight(int barcodeHeight) {
+		this.barcodeHeight = barcodeHeight;
+	}
+
+	public int getBarcodeLabel() {
+		return barcodeLabel;
+	}
+
+	public void setBarcodeLabel(int barcodeLabel) {
+		this.barcodeLabel = barcodeLabel;
+	}
+
+	public String getBarcodeFormat() {
+		return barcodeFormat;
+	}
+
+	public void setBarcodeFormat(String barcodeFormat) {
+		this.barcodeFormat = barcodeFormat;
 	}
 }
