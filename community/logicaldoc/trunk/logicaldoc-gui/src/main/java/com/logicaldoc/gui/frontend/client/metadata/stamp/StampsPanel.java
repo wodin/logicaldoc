@@ -307,12 +307,12 @@ public class StampsPanel extends VLayout {
 		record.setAttribute("id", "" + stamp.getId());
 		record.setAttribute("name", stamp.getName());
 		record.setAttribute("description", "" + stamp.getDescription());
-		if (stamp.getType() == GUIStamp.TYPE_TEXT) {
-			record.setAttribute("text", "" + stamp.getText());
-			record.setAttribute("image", "");
-		} else {
+		if (stamp.getType() == GUIStamp.TYPE_IMAGE) {
 			record.setAttribute("image", "" + stamp.getId());
 			record.setAttribute("text", "");
+		} else {
+			record.setAttribute("text", "" + stamp.getText());
+			record.setAttribute("image", "");
 		}
 
 		if (record.getAttributeAsString("id") != null
