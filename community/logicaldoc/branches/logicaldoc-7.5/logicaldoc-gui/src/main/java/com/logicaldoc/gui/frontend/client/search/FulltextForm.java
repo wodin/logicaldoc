@@ -151,7 +151,7 @@ public class FulltextForm extends VLayout implements SearchObserver {
 		publicationDateRange.setEndRow(true);
 		publicationDateRange.setColSpan(3);
 
-		form1.setItems(expression, language, searchinhits, folder, sizeOperator, size, creationDateRange,
+		form1.setItems(expression, language, searchinhits, folder, subfolders, sizeOperator, size, creationDateRange,
 				publicationDateRange, template);
 
 		addMember(form1);
