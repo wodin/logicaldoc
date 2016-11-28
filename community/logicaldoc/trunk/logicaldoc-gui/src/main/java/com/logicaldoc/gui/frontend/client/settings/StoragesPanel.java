@@ -217,7 +217,7 @@ public class StoragesPanel extends VLayout {
 			if (record == null) {
 				ListGridRecord newStore = new ListGridRecord();
 				newStore.setAttribute("id", Integer.toString(i));
-				newStore.setAttribute("name", "Store " + i);
+				newStore.setAttribute("name", "Storage " + i);
 				newStore.setAttribute("write", "blank");
 
 				storages.getDataSource().addData(newStore);
