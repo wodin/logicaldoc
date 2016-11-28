@@ -9,11 +9,61 @@
 
                     LogicalDOC Community Edition
 
+
+LogicalDOC 7.6 (2016-12-06; logicaldoc-7.6)
+==============================================================
+397 - Templates for composing emails - improvement - User Interface
+673 - Allow users to specify a default workspace in addition to a welcome screen - improvement - User Interface
+684 - Notify users of new file(s) at time of upload - new feature - User Interface
+700 - Set document maxversions per workspace - improvement - Core
+731 - Resizable Preview Panel - improvement - User Interface
+732 - Preview navigator(navigate the documents in prevew mode) - improvement - User Interface
+733 - Colored markers on Folders - new feature - User Interface
+738 - Removed the deprecated webservice method DocumentService.list - deprecation - Web Services
+739 - Create download tickets with the webservice - improvement - Web Services
+722 - Option to disable the automatic opening of the Default workspace - improvement - User Interface 
+
+LogicalDOC 7.5.4 (2016-11-10; logicaldoc-7.5.4)
+==============================================================
+729 - Greek localization - new feature - Core
+727 - Bulgarian localization - new feature - Core
+728 - Swedish localization - improvement - User Interface
+716 - Ability to change default sort order of folders - Feature Request - User Interface
+721 - Configure the default ordered set of columns in the documents grid - new feature - User Interface 	
+
+LogicalDOC 7.5.3 (2016-10-10; logicaldoc-7.5.3)
+==============================================================
+719 - Supported charsets other than UTF-8 when importing zip files - improvement - Core
+720 - Fulltext Analyzer filters - new feature - Core
+717 - Move/Copy alias must not alter the original document - bug - User Interface 
+
+LogicalDOC 7.5.2 (2016-08-22; logicaldoc-7.5.2)
+==============================================================
+713 - Compatibility with Firefox 48 - improvement - User Interface
+704 - Added the column groups in Administration->Security - improvement - User Interface
+705 - Exporting utility in Administration->Security->Users - improvement - User Interface
+712 - Introduction of print permission - improvement - Core 
+
+LogicalDOC 7.5 (2016-05-31; logicaldoc-7.5)
+==============================================================
+290 - Folder alias - new feature - Core
+676 - REST implementation of web services - new feature - Web Services
+687 - Reusable custom attribute sets - new feature - Core
+688 - Removed support for Java7 - deprecation - Core
+625 - Hiding Extended Properties that aren't used - improvement - User Interface
+665 - Optimization of tags handling for huge repositories - enhancement - Core
+666 - Preview of older document versions displays latest version only - defect - User Interface
+671 - Removed all Java Applets - deprecation - User Interface
+677 - SOAP webservices refactoring - improvement - Web Services
+686 - Fatal Error with Database Cleaner Task - bug - Core
+664 - Removed support for Internet Explorer 10 - deprecation - User Interface
+678 - Paste as PDF alias issues - Bug - Core
+691 - Add Documents Issue '&' and '%' symbols fail - bug - User Interface 
+
 LogicalDOC 7.5.1 (2016-07-05; logicaldoc-7.5.1)
 ==============================================================
 695 - Direct link to the document does not work anymore - bug - User Interface
 697 - Upgrade document preview technology - task - User Interface
-
 
 LogicalDOC 7.4.3 (2016-05-10; logicaldoc-7.4.3)
 ==============================================================
@@ -25,14 +75,12 @@ Optimization in webservice unlock method - Improvement - Web Services
 619 -	Updated HTML5 document's preview framework - Improvement - User Interface
 629 - Removed support for Internet Explorer 9 - deprecation - User Interface
 
-
 LogicalDOC 7.4.2 (2016-02-15; logicaldoc-7.4.2)
 ==============================================================
 619 -	Full HTML5 preview - Improvement - User Interface
 367 -	Ability to send messages to groups of users -	New Feature - Core
 456 -	Update WebDAV API - WebDAV
 620 -	Removed support for Internet Explorer 8 - User Interface
-
 
 LogicalDOC 7.4.1 (2016-01-15; logicaldoc-7.4.1)
 ==============================================================
@@ -47,7 +95,6 @@ LogicalDOC 7.4.1 (2016-01-15; logicaldoc-7.4.1)
 611 - HTML5 files uploader - Improvement - User Interface
 613 - Finnish localization - Improvement - User Interface
 605 - Update GWT and SmartGWT - Task - User Interface
-
 
 LogicalDOC 7.4 (2015-10-30; logicaldoc-7.4)
 ==============================================================
