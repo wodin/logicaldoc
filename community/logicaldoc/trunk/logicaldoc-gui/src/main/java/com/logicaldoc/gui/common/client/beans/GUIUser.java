@@ -64,7 +64,7 @@ public class GUIUser implements Serializable {
 	private String phone = "";
 
 	private String email = "";
-	
+
 	private String emailSignature = null;
 
 	private String cell = "";
@@ -108,7 +108,7 @@ public class GUIUser implements Serializable {
 	private GUIDashlet[] dashlets = new GUIDashlet[0];
 
 	private Long defaultWorkspace;
-	
+
 	public void setUserName(String userName) {
 		this.username = userName;
 		notifyObservers("username");
@@ -504,6 +504,13 @@ public class GUIUser implements Serializable {
 
 	public String getEmailSignature() {
 		return emailSignature;
+	}
+
+	public String getEmailSignatureStr() {
+		if (getEmailSignature() != null)
+			return getEmailSignature();
+		else
+			return "";
 	}
 
 	public void setEmailSignature(String emailSignature) {
