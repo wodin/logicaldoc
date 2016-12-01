@@ -133,12 +133,12 @@ public class EmailDialog extends Window {
 								public void onSuccess(GUIMessageTemplate t) {
 									subject.setValue(t.getSubject());
 									message.setValue(t.getBody() + "<br /><br />"
-											+ Session.get().getUser().getEmailSignature());
+											+ Session.get().getUser().getEmailSignatureStr());
 								}
 							});
 				} else {
 					subject.setValue(docTitle);
-					message.setValue("<br /><br />" + Session.get().getUser().getEmailSignature());
+					message.setValue("<br /><br />" + Session.get().getUser().getEmailSignatureStr());
 				}
 			}
 		});
