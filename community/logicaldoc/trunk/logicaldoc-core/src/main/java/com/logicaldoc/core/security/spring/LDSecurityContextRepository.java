@@ -50,6 +50,10 @@ public class LDSecurityContextRepository implements SecurityContextRepository {
 		SecurityContextImpl context = new SecurityContextImpl();
 		context.setAuthentication(token);
 
+		HttpSession servletSession = request.getRequest().getSession(false);
+		if (servletSession != null)
+			servletSessionMapping.put(sid, servletSession);
+
 		return context;
 	}
 
@@ -63,6 +67,11 @@ public class LDSecurityContextRepository implements SecurityContextRepository {
 		if (principal != null && principal instanceof LDAuthenticationToken) {
 			LDAuthenticationToken token = (LDAuthenticationToken) principal;
 			SessionManager.get().saveSessionId(request, response, token.getSid());
+
+			HttpSession servletSession = request.getSession(false);
+			if (servletSession != null && servletSession.getAttribute(SessionManager.PARAM_SID) != null)
+				servletSessionMapping.put(servletSession.getAttribute(SessionManager.PARAM_SID).toString(),
+						servletSession);
 		}
 	}
 

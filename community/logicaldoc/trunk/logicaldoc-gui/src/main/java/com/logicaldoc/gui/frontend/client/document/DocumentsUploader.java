@@ -107,6 +107,7 @@ public class DocumentsUploader extends Window {
 		layout.addMember(multiUploader);
 		layout.addMember(sendButton);
 
+		// Clean the upload folder if the window is closed
 		addCloseClickHandler(new CloseClickHandler() {
 			@Override
 			public void onCloseClick(CloseClickEvent event) {
@@ -126,6 +127,18 @@ public class DocumentsUploader extends Window {
 		});
 
 		addItem(layout);
+		
+		//Just to clean the upload folder
+		documentService.cleanUploadedFileFolder(new AsyncCallback<Void>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+			}
+
+			@Override
+			public void onSuccess(Void result) {
+			}
+		});
 	}
 
 	private void prepareForm() {
