@@ -47,8 +47,6 @@ public class FSStorer implements Storer {
 
 	protected ContextProperties config;
 
-	protected DocumentDAO documentDAO;
-
 	public FSStorer() {
 	}
 
@@ -321,9 +319,5 @@ public class FSStorer implements Storer {
 			log.error(e.getMessage());
 			return null;
 		}
-	}
-
-	public void setDocumentDAO(DocumentDAO documentDAO) {
-		this.documentDAO = documentDAO;
 	}
 }
