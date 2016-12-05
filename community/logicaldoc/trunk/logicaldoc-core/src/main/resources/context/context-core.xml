@@ -22,7 +22,6 @@
    <!-- Storer -->
    <bean id="Storer" abstract="false" autowire="default" class="${store}" lazy-init="default">
       <property name="config" ref="ContextProperties" />
-      <property name="documentDAO" ref="DocumentDAO" />
    </bean>
    <!-- SearchEngine -->
    <bean id="SearchEngine" abstract="false" autowire="default" class="${searchengine}" destroy-method="close" init-method="init" lazy-init="default">
