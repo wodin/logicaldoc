@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.logicaldoc</groupId>
     <artifactId>logicaldoc-parent-pom</artifactId>
-    <version>80</version>
+    <version>81</version>
   </parent>
 	<groupId>com.logicaldoc</groupId>
 	<artifactId>logicaldoc</artifactId>
@@ -15,7 +15,7 @@
 	<description>
     LogicalDOC is an open-source enterprise class
     Document Management System developed by
-    Logical Objects Srl, based on the Java Platform.
+    LogicalDOC Srl, based on the Java Platform.
   </description>
   <organization>
 		<name>LogicalDOC</name>
@@ -97,14 +97,7 @@
     <developerConnection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/community/logicaldoc/trunk</developerConnection>
     <url>http://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/logicaldoc/trunk</url>
   </scm>
-	
-  <!--repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-  </repositories -->
-          
+
 	<modules>
 		<module>logicaldoc-util</module>
 		<module>logicaldoc-core</module>
