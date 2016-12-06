@@ -84,10 +84,10 @@ public class TagServiceImpl extends RemoteServiceServlet implements TagService {
 		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
 
 		ContextProperties conf = Context.get().getProperties();
-
 		List<GUIParameter> params = new ArrayList<GUIParameter>();
 		for (Object name : conf.keySet()) {
-			if (name.toString().startsWith(session.getTenantName() + ".tag."))
+			if (name.toString().startsWith(session.getTenantName() + ".tag.")
+					|| name.toString().startsWith(session.getTenantName() + ".tagcloud."))
 				if (name.equals(session.getTenantName() + ".tag.mode"))
 					params.add(new GUIParameter(name.toString(), "free"));
 				else

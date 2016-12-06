@@ -20,6 +20,7 @@ import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
+import com.smartgwt.client.widgets.form.fields.SpinnerItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.layout.VLayout;
 
@@ -47,13 +48,13 @@ public class TagsSettingsPanel extends VLayout {
 
 		SelectItem mode = ItemFactory.newTagInputMode("mode", "inputmode");
 
-		TextItem maxsize = ItemFactory.newIntegerItem("maxsize", I18N.message("maxsize"), null);
+		SpinnerItem maxsize = ItemFactory.newSpinnerItem("maxsize", I18N.message("maxsize"), (Long)null);
 		maxsize.setRequired(true);
 
-		TextItem minsize = ItemFactory.newIntegerItem("minsize", I18N.message("minsize"), null);
+		SpinnerItem minsize = ItemFactory.newSpinnerItem("minsize", I18N.message("minsize"), (Long)null);
 		minsize.setRequired(true);
 
-		TextItem cloudElements = ItemFactory.newIntegerItem("cloudElements", I18N.message("tagcloudelements"), null);
+		SpinnerItem cloudElements = ItemFactory.newSpinnerItem("cloudElements", I18N.message("tagcloudelements"), (Long)null);
 		cloudElements.setRequired(true);
 		cloudElements.setWrapTitle(false);
 
@@ -61,10 +62,12 @@ public class TagsSettingsPanel extends VLayout {
 		vocabulary.setRequired(true);
 		vocabulary.setWidth(300);
 
-		parametersForm.setItems(mode, maxsize, minsize, vocabulary);
+		parametersForm.setItems(mode, maxsize, minsize, cloudElements, vocabulary);
 		addMember(parametersForm);
 
 		for (GUIParameter p : settings) {
+			Log.info(p.getName(), null);
+			
 			if (p.getName().endsWith("tag.mode"))
 				mode.setValue(p.getValue());
 			if (p.getName().endsWith("tag.maxsize"))
@@ -86,6 +89,7 @@ public class TagsSettingsPanel extends VLayout {
 
 				if (vm.validate()) {
 					List<GUIParameter> params = new ArrayList<GUIParameter>();
+
 					params.add(new GUIParameter(Session.get().getTenantName() + ".tag.mode", values.get("mode")
 							.toString()));
 					params.add(new GUIParameter(Session.get().getTenantName() + ".tag.maxsize", values.get("maxsize")
@@ -112,8 +116,19 @@ public class TagsSettingsPanel extends VLayout {
 											values.get("mode").toString());
 							Session.get()
 									.getInfo()
+									.setConfig(Session.get().getTenantName() + ".tag.maxsize",
+											values.get("maxsize").toString());
+
+							Session.get()
+									.getInfo()
+									.setConfig(Session.get().getTenantName() + ".tag.minsize",
+											values.get("minsize").toString());
+
+							Session.get()
+									.getInfo()
 									.setConfig(Session.get().getTenantName() + ".tagcloud.maxtags",
 											values.get("cloudElements").toString());
+
 							Log.info(I18N.message("settingssaved"), null);
 						}
 					});
