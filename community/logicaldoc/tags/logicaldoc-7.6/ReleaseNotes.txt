@@ -1,0 +1,31 @@
+The LogicalDOC development team is happy to announce the immediate availability of LogicalDOC CE 7.6
+
+You can get this distribution in tomcat-bundle archive from SourceForge: 
+http://sourceforge.net/projects/logicaldoc/files/distribution/LogicalDOC%20CE%207.6/logicaldoc-7.6-tomcat-bundle.zip/download
+
+LogicalDOC is a Web-based Document Management System (DMS) based on open 
+source technology (GWT +Spring +Hibernate). Thanks to its intuitive interface, 
+LogicalDOC transforms complex operations into easy tasks. It allows the 
+storage, organization, versioning and use of all kind of files and documents 
+within an user friendly interface.
+
+Changes:
+Folder alias - new feature - Core
+REST implementation of web services - new feature - Web Services
+Reusable custom attribute sets - new feature - Core
+Removed support for Java7 - deprecation - Core
+Hiding Extended Properties that aren't used - improvement - User Interface
+Optimization of tags handling for huge repositories - enhancement - Core
+Preview of older document versions displays latest version only - defect - User Interface
+Removed all Java Applets - deprecation - User Interface
+SOAP webservices refactoring - improvement - Web Services
+Removed support for Internet Explorer 10 - deprecation - User Interface
+Add Documents Issue '&' and '%' symbols fail - bug - User Interface 
+
+
+You can use our dedicated Bug tracker http://bugs.logicaldoc.com to report errors or feature requests.
+
+Please contribute to the internationalization of LogicalDOC by using the translation platform described in the Wiki
+http://wiki.logicaldoc.com/wiki/Translate_LogicalDOC
+
+The LogicalDOC development Team 
