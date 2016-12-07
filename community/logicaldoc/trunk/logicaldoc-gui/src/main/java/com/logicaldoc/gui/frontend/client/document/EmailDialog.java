@@ -114,7 +114,7 @@ public class EmailDialog extends Window {
 		message.setHeight("*");
 		message.setColSpan(2);
 
-		final SelectItem messageTemplate = ItemFactory.newSelectItem("template", "template");
+		final SelectItem messageTemplate = ItemFactory.newSelectItem("template", "messagetemplate");
 		messageTemplate.addChangedHandler(new ChangedHandler() {
 
 			@Override

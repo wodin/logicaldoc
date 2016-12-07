@@ -108,7 +108,8 @@ public class UsersDataServlet extends HttpServlet {
 						+ "]]></certSubject>");
 				writer.print("<keyDigest><![CDATA[" + (user.getKeyDigest() == null ? "" : user.getKeyDigest())
 						+ "]]></keyDigest>");
-				writer.print("<usergroup><![CDATA[" + user.getUserGroup().getId() + "]]></usergroup>");
+				if (user.getUserGroup() != null)
+					writer.print("<usergroup><![CDATA[" + user.getUserGroup().getId() + "]]></usergroup>");
 
 				String[] groups = user.getGroupNames();
 				groups = Arrays.stream(user.getGroupNames()).filter(g -> !g.startsWith("_user_"))
