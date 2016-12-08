@@ -324,8 +324,6 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		dao.store(doc);
 		doc = dao.findById(doc.getId());
 		dao.initialize(doc);
-		Assert.assertNull("test", doc.getObject());
-		Assert.assertEquals("test", doc.getAttributes().get("object").getStringValue());
 
 		// Check if the defaults were applied
 		doc = dao.findById(1);
