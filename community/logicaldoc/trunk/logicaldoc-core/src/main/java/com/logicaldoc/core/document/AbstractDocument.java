@@ -111,9 +111,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	@Deprecated
 	private String sourceId;
 
-	@Deprecated
-	private String object;
-
 	private Date creation = new Date();
 
 	private String language;
@@ -508,16 +505,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	@Deprecated
 	public void setSourceId(String sourceId) {
 		this.sourceId = sourceId;
-	}
-
-	@Deprecated
-	public String getObject() {
-		return object;
-	}
-
-	@Deprecated
-	public void setObject(String object) {
-		this.object = object;
 	}
 
 	/**
