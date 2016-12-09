@@ -1,4 +1,4 @@
-package com.logicaldoc.core.script;
+package com.logicaldoc.core.automation;
 
 import java.io.StringWriter;
 import java.util.Date;
@@ -23,7 +23,7 @@ import com.logicaldoc.util.Context;
  * 
  * @author Marco Meschieri - LogicalDOC since <product_release>
  */
-public class ScriptingEngine {
+public class Automation {
 
 	private static final String CLASS_TOOL = "ClassTool";
 
@@ -47,22 +47,22 @@ public class ScriptingEngine {
 
 	public static final String LOG = "log";
 
-	private static Logger log = LoggerFactory.getLogger(ScriptingEngine.class);
+	private static Logger log = LoggerFactory.getLogger(Automation.class);
 
 	private String logTag = "ScriptEngine";
 
 	private Locale locale = Locale.ENGLISH;
 
-	public ScriptingEngine() {
+	public Automation() {
 		super();
 	}
 
-	public ScriptingEngine(String logTag) {
+	public Automation(String logTag) {
 		super();
 		this.logTag = logTag;
 	}
 
-	public ScriptingEngine(String logTag, Locale locale) {
+	public Automation(String logTag, Locale locale) {
 		super();
 		this.logTag = logTag;
 		this.locale = locale;
@@ -134,7 +134,7 @@ public class ScriptingEngine {
 			if (StringUtils.isNotEmpty(expression)) {
 				VelocityContext context = new VelocityContext(extendedDictionary);
 				Velocity.setProperty(RuntimeConstants.RUNTIME_LOG_LOGSYSTEM_CLASS, Log4JLogChute.class.getName());
-				Velocity.setProperty("runtime.log.logsystem.log4j.logger", ScriptingEngine.class.getName());
+				Velocity.setProperty("runtime.log.logsystem.log4j.logger", Automation.class.getName());
 				Velocity.evaluate(context, writer, StringUtils.isNotEmpty(logTag) ? logTag : "ScriptEngine",
 						expression.replace("\n", "${nl}"));
 			}

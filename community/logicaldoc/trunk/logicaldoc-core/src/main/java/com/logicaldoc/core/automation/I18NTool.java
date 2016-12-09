@@ -1,4 +1,4 @@
-package com.logicaldoc.core.script;
+package com.logicaldoc.core.automation;
 
 import java.text.MessageFormat;
 import java.util.HashMap;

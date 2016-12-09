@@ -1,4 +1,4 @@
-package com.logicaldoc.core.script;
+package com.logicaldoc.core.automation;
 
 import java.io.File;
 import java.io.IOException;

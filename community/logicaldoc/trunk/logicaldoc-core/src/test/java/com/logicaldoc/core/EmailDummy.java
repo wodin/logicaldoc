@@ -4,13 +4,13 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.ibm.icu.text.SimpleDateFormat;
+import com.logicaldoc.core.automation.Automation;
 import com.logicaldoc.core.communication.EMailSender;
-import com.logicaldoc.core.script.ScriptingEngine;
 
 public class EmailDummy {
 
 	public static void main(String[] args) throws Exception {
-		ScriptingEngine engine = new ScriptingEngine();
+		Automation engine = new Automation();
 
 		// String original="1234567€";
 		// System.out.println("original: "+original);

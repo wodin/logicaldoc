@@ -3,7 +3,7 @@ package com.logicaldoc.core.communication;
 import java.util.Map;
 
 import com.logicaldoc.core.PersistentObject;
-import com.logicaldoc.core.script.ScriptingEngine;
+import com.logicaldoc.core.automation.Automation;
 import com.logicaldoc.util.LocaleUtil;
 
 /**
@@ -34,7 +34,7 @@ public class MessageTemplate extends PersistentObject {
 	}
 
 	private String getFormattedContent(Map<String, Object> dictionary, String text) {
-		ScriptingEngine script = new ScriptingEngine(getName(), LocaleUtil.toLocale(language));
+		Automation script = new Automation(getName(), LocaleUtil.toLocale(language));
 		return script.evaluate(text, dictionary);
 	}
 

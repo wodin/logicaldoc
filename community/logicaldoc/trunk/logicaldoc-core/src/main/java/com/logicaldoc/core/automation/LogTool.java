@@ -1,4 +1,4 @@
-package com.logicaldoc.core.script;
+package com.logicaldoc.core.automation;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
  * @since 7.5.1
  */
 public class LogTool {
-	private static Logger log = LoggerFactory.getLogger(ScriptingEngine.class);
+	private static Logger log = LoggerFactory.getLogger(Automation.class);
 
 	// Prints in the system output
 	public void print(String message) {
