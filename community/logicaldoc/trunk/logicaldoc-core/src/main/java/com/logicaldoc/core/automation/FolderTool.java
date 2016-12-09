@@ -1,4 +1,4 @@
-package com.logicaldoc.core.script;
+package com.logicaldoc.core.automation;
 
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderHistory;

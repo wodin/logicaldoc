@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.logicaldoc.core.automation.Automation;
 import com.logicaldoc.core.communication.EMail;
 import com.logicaldoc.core.communication.EMailAttachment;
 import com.logicaldoc.core.communication.EMailSender;
@@ -60,7 +61,6 @@ import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.metadata.TemplateDAO;
-import com.logicaldoc.core.script.ScriptingEngine;
 import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.User;
@@ -1094,7 +1094,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			/*
 			 * Subject and email are processed by the scripting engine
 			 */
-			ScriptingEngine engine = new ScriptingEngine("sendmail", LocaleUtil.toLocale(locale));
+			Automation engine = new Automation("sendmail", LocaleUtil.toLocale(locale));
 			Map<String, Object> dictionary = new HashMap<String, Object>();
 			dictionary.put("sender", session.getUser());
 			dictionary.put("documents", attachedDocs);

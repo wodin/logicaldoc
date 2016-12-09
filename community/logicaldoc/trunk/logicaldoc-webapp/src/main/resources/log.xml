@@ -110,8 +110,8 @@
          <param name="ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss,SSS} %-5p  (%c:%4L) -- %m%n" />
       </layout>
    </appender>
-   <appender name="script" class="org.apache.log4j.RollingFileAppender">
-      <param name="File" value="D:/LogicalDOC-Devel/repository/logs/script.log" />
+   <appender name="automation" class="org.apache.log4j.RollingFileAppender">
+      <param name="File" value="D:/LogicalDOC-Devel/repository/logs/automation.log" />
       <param name="MaxFileSize" value="5MB" />
       <param name="MaxBackupIndex" value="5" />
       <param name="Append" value="true" />
@@ -161,9 +161,9 @@
       <priority value="debug" />
       <appender-ref ref="spring" />
    </category>
-   <category name="com.logicaldoc.core.script" additivity="true">
+   <category name="com.logicaldoc.core.automation" additivity="true">
       <priority value="debug" />
-      <appender-ref ref="script" />
+      <appender-ref ref="automation" />
    </category>   
    <root>
       <priority value="info" />
