@@ -99,6 +99,7 @@ public class FulltextSearch extends Search {
 
 			hit.setTenantId(rs.getLong(32));
 			hit.setStamped(rs.getInt(34));
+			hit.setPassword(rs.getString(35));
 
 			return hit;
 		}
@@ -237,7 +238,7 @@ public class FulltextSearch extends Search {
 		richQuery.append(" A.ld_stoppublishing, A.ld_published, ");
 		richQuery
 				.append(" FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, A.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype, ");
-		richQuery.append(" A.ld_stamped ");
+		richQuery.append(" A.ld_stamped, A.ld_password ");
 		richQuery.append(" from ld_document A ");
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" left outer join ld_template C on A.ld_templateid=C.ld_id ");
@@ -266,7 +267,7 @@ public class FulltextSearch extends Search {
 		richQuery.append(" A.ld_stoppublishing, A.ld_published, ");
 		richQuery
 				.append(" FOLD.ld_name, A.ld_folderid, A.ld_tgs tags, REF.ld_templateid, C.ld_name, A.ld_tenantid, A.ld_docreftype, ");
-		richQuery.append(" REF.ld_stamped ");
+		richQuery.append(" REF.ld_stamped, REF.ld_password ");
 		richQuery.append(" from ld_document A  ");
 		richQuery.append(" join ld_folder FOLD on A.ld_folderid=FOLD.ld_id ");
 		richQuery.append(" join ld_document REF on A.ld_docref=REF.ld_id ");

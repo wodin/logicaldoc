@@ -14,7 +14,6 @@ import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
 import com.logicaldoc.webservice.model.WSGroup;
 import com.logicaldoc.webservice.model.WSUser;
-import com.logicaldoc.webservice.soap.endpoint.SoapSecurityService;
 
 /**
  * Test case for <code>SoapSecurityService</code>

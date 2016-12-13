@@ -19,6 +19,7 @@ import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.util.Assert;
 
 import com.ibm.icu.util.Calendar;
 import com.logicaldoc.core.HibernatePersistentObjectDAO;
@@ -1088,5 +1089,50 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 			return null;
 
 		return folderDAO.findWorkspace(doc.getFolder().getId());
+	}
+
+	@Override
+	public void setPassword(long docId, String password, History transaction) throws Exception {
+		assert (transaction != null);
+		assert (transaction.getUsername() != null);
+		transaction.setEvent(DocumentEvent.PASSWORD_PROTECT.toString());
+
+		Document doc = findDocument(docId);
+		if (doc != null) {
+			if (StringUtils.isNotEmpty(doc.getPassword()))
+				throw new Exception("The document already has a password, unset it first");
+
+			initialize(doc);
+			doc.setDecodedPassword(password);
+			store(doc, transaction);
+
+			List<Version> versions = versionDAO.findByDocId(docId);
+			for (Version ver : versions) {
+				versionDAO.initialize(ver);
+				ver.setPassword(doc.getPassword());
+				versionDAO.store(ver);
+			}
+		}
+	}
+
+	@Override
+	public void unsetPassword(long docId, History transaction) {
+		Assert.notNull(transaction);
+		Assert.notNull(transaction.getUsername());
+		transaction.setEvent(DocumentEvent.PASSWORD_UNPROTECT.toString());
+
+		Document doc = findDocument(docId);
+		if (doc != null) {
+			initialize(doc);
+			doc.setPassword(null);
+			store(doc, transaction);
+
+			List<Version> versions = versionDAO.findByDocId(docId);
+			for (Version ver : versions) {
+				versionDAO.initialize(ver);
+				ver.setPassword(null);
+				versionDAO.store(ver);
+			}
+		}
 	}
 }

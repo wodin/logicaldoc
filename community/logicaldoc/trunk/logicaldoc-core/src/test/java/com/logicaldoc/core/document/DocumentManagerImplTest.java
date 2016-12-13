@@ -13,6 +13,8 @@ import com.logicaldoc.core.document.dao.DocumentNoteDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.ticket.Ticket;
@@ -314,5 +316,22 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 
 		Document doc = docDao.findById(1L);
 		Assert.assertEquals(AbstractDocument.DOC_ARCHIVED, doc.getStatus());
+	}
+	
+	@Test
+	public void testUnprotect() throws Exception {
+		Document doc = docDao.findById(3L);
+		Assert.assertNull(doc.getPassword());
+
+		History history = new History();
+		history.setUserId(1);
+		history.setUsername("admin");
+		docDao.setPassword(3L, "test", history);
+		
+		Session session = SessionManager.get().newSession("admin", "admin", null);
+
+		Assert.assertTrue(documentManager.unprotect(session.getId(), 3L, "test"));
+		Assert.assertFalse(documentManager.unprotect(session.getId(), 3L, "test2"));
+		Assert.assertTrue(documentManager.unprotect(session.getId(), 3L, "test"));
 	}
 }

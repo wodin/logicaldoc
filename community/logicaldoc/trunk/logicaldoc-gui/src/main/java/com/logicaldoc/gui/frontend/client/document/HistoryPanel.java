@@ -55,7 +55,7 @@ public class HistoryPanel extends DocumentDetailTab {
 		list.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				LD.askforValue(I18N.message("comment"), I18N.message("comment"), list.getSelectedRecord()
+				LD.askForValue(I18N.message("comment"), I18N.message("comment"), list.getSelectedRecord()
 						.getAttributeAsString("comment"), new ValueCallback() {
 					@Override
 					public void execute(final String value) {

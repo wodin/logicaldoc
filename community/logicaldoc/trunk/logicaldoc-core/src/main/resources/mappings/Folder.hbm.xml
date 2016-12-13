@@ -49,6 +49,7 @@
         <property name="calendar" type="int" column="ld_calendar" not-null="true" />
         <property name="subscription" type="int" column="ld_subscription" not-null="true" />
         <property name="print" type="int" column="ld_print" not-null="true" />
+        <property name="password" type="int" column="ld_password" not-null="true" />
       </composite-element>
     </set>
 

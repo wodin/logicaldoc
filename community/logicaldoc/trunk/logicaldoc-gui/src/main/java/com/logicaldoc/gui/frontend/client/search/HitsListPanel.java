@@ -14,6 +14,8 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.beans.GUISearchOptions;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocumentProtectionManager;
+import com.logicaldoc.gui.common.client.util.DocumentProtectionManager.DocumentProtectionHandler;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
@@ -24,6 +26,8 @@ import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsTileGrid;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
+import com.logicaldoc.gui.frontend.client.services.DocumentService;
+import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.SelectionType;
@@ -63,6 +67,8 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	private Cursor cursor;
 
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
+
+	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private int mode = DocumentsGrid.MODE_LIST;
 
@@ -413,11 +419,20 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	}
 
 	protected void onHitSelected() {
+		// Avoid server load in case of multiple selections
 		if (grid.getSelectedCount() != 1)
 			return;
 
-		GUIDocument doc = grid.getSelectedDocument();
+		final GUIDocument hit = grid.getSelectedDocument();
+		DocumentProtectionManager.askForPassword(hit.getId(), new DocumentProtectionHandler() {
+			@Override
+			public void onUnprotected(GUIDocument document) {
+				onSelectHit(hit);
+			}
+		});
+	}
 
+	private void onSelectHit(GUIDocument doc) {
 		if ("folder".equals(doc.getType()))
 			SearchPanel.get().onSelectedFolderHit(doc.getId());
 		else

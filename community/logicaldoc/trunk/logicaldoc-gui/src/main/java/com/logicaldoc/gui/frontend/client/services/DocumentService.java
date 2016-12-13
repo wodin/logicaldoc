@@ -259,4 +259,19 @@ public interface DocumentService extends RemoteService {
 	 * Creates a new empty document
 	 */
 	public GUIDocument createEmpty(GUIDocument vo) throws ServerException;
+
+	/**
+	 * Puts a password protection to the document
+	 */
+	public void setPassword(long docid, String password) throws ServerException;
+
+	/**
+	 * Removes the password protection from the document
+	 */
+	public void unsetPassword(long docId, String currentPassword) throws ServerException;
+
+	/**
+	 * Checks if the document can be accessed with the given password
+	 */
+	public boolean unprotect(long docId, String password) throws ServerException;
 }

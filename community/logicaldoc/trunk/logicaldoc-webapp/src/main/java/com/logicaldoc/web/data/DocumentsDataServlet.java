@@ -149,7 +149,7 @@ public class DocumentsDataServlet extends HttpServlet {
 				Long folderId = null;
 				if (StringUtils.isNotEmpty(request.getParameter("folderId")))
 					folderId = new Long(request.getParameter("folderId"));
-				if (folderId!=null && session!=null && !fDao.isReadEnabled(folderId, session.getUserId()))
+				if (folderId != null && session != null && !fDao.isReadEnabled(folderId, session.getUserId()))
 					throw new Exception("Folder " + folderId + " is not accessible by user " + session.getUsername());
 
 				String filename = null;
@@ -226,7 +226,7 @@ public class DocumentsDataServlet extends HttpServlet {
 								+ " A.creation, A.creator, A.fileSize, A.immutable, A.indexed, A.lockUserId, A.fileName, A.status,"
 								+ " A.signed, A.type, A.rating, A.fileVersion, A.comment, A.workflowStatus,"
 								+ " A.startPublishing, A.stopPublishing, A.published, A.extResId,"
-								+ " B.name, A.docRefType, A.stamped, A.lockUser"
+								+ " B.name, A.docRefType, A.stamped, A.lockUser, A.password "
 								+ " from Document as A left outer join A.template as B ");
 				query.append(" where A.deleted = 0 and not A.status=" + AbstractDocument.DOC_ARCHIVED);
 				if (folderId != null)
@@ -297,6 +297,7 @@ public class DocumentsDataServlet extends HttpServlet {
 							doc.setTemplateName((String) cols[27]);
 							doc.setStamped((Integer) cols[29]);
 							doc.setLockUser((String) cols[30]);
+							doc.setPassword((String) cols[31]);
 						}
 					}
 
@@ -331,10 +332,17 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<created>" + df.format(doc.getCreation()) + "</created>");
 					writer.print("<creator><![CDATA[" + doc.getCreator() + "]]></creator>");
 					writer.print("<size>" + doc.getFileSize() + "</size>");
+
 					if (doc.getImmutable() == 0)
 						writer.print("<immutable>blank</immutable>");
 					else if (doc.getImmutable() == 1)
 						writer.print("<immutable>stop</immutable>");
+
+					if (StringUtils.isEmpty(doc.getPassword()))
+						writer.print("<password>blank</password>");
+					else
+						writer.print("<password>key</password>");
+
 					if (doc.getIndexed() == AbstractDocument.INDEX_TO_INDEX)
 						writer.print("<indexed>blank</indexed>");
 					else if (doc.getIndexed() == AbstractDocument.INDEX_INDEXED)

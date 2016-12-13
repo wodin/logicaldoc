@@ -20,8 +20,8 @@ import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.util.Context;
 import com.logicaldoc.webservice.AbstractService;
-import com.logicaldoc.webservice.model.WSRight;
 import com.logicaldoc.webservice.model.WSFolder;
+import com.logicaldoc.webservice.model.WSRight;
 import com.logicaldoc.webservice.soap.FolderService;
 
 /**

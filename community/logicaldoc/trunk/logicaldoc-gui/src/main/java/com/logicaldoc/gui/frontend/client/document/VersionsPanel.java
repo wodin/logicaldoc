@@ -1,7 +1,6 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.DocumentObserver;
 import com.logicaldoc.gui.common.client.Feature;
@@ -12,6 +11,7 @@ import com.logicaldoc.gui.common.client.data.VersionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
@@ -129,10 +129,9 @@ public class VersionsPanel extends DocumentDetailTab {
 	}
 
 	protected void onDownload(final GUIDocument document, ListGridRecord record) {
-		if (document.getFolder().isDownload()) {
-			Window.open(Util.downloadURL(document.getDocRef() != null ? document.getDocRef() : document.getId())
-					+ "&versionId=" + record.getAttribute("id"), "_blank", "");
-		}
+		if (document.getFolder().isDownload())
+			DocUtil.download(document.getDocRef() != null ? document.getDocRef() : document.getId(),
+					record.getAttribute("fileVersion"));
 	}
 
 	protected void onPreview(final GUIDocument document, ListGridRecord record) {

@@ -265,7 +265,7 @@ public class LdapPanel extends VLayout {
 		activedir.setTitle(I18N.message("activedirectory"));
 		activedir.addClickHandler(new ClickHandler() {
 			public void onClick(ClickEvent event) {
-				LD.askforValue(I18N.message("activedirectory"), I18N.message("addomain"), "", new ValueCallback() {
+				LD.askForValue(I18N.message("activedirectory"), I18N.message("addomain"), "", new ValueCallback() {
 					@Override
 					public void execute(String value) {
 						if (value == null)

@@ -1,7 +1,6 @@
 package com.logicaldoc.gui.frontend.client.impex.archives;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIArchive;
 import com.logicaldoc.gui.common.client.data.VersionsDS;
@@ -9,6 +8,7 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -136,9 +136,7 @@ public class VersionsPanel extends VLayout {
 			@Override
 			public void onCellDoubleClick(CellDoubleClickEvent event) {
 				ListGridRecord record = event.getRecord();
-				Window.open(
-						Util.downloadURL(record.getAttributeAsLong("docid"), null, true) + "&versionId="
-								+ record.getAttribute("id"), "_blank", "");
+				DocUtil.download(record.getAttributeAsLong("docid"), record.getAttribute("id"));
 			}
 		});
 

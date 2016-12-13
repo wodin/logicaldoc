@@ -132,7 +132,7 @@ public class SessionsPanel extends VLayout {
 		list.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				LD.askforValue(I18N.message("sid"), I18N.message("sid"),
+				LD.askForValue(I18N.message("sid"), I18N.message("sid"),
 						list.getSelectedRecord().getAttributeAsString("sid"), new ValueCallback() {
 							@Override
 							public void execute(final String value) {

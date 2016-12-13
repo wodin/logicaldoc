@@ -880,7 +880,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 
 	private void onRename() {
 		final TreeNode selectedNode = (TreeNode) getSelectedRecord();
-		LD.askforValue(I18N.message("rename"), I18N.message("title"), selectedNode.getAttributeAsString("name"),
+		LD.askForValue(I18N.message("rename"), I18N.message("title"), selectedNode.getAttributeAsString("name"),
 				new ValueCallback() {
 					@Override
 					public void execute(final String value) {
@@ -1101,7 +1101,7 @@ public class FolderNavigator extends TreeGrid implements FolderObserver {
 	}
 
 	public void onArchive(final long folderId) {
-		LD.askforValue(I18N.message("warning"), I18N.message("archiveadvice"), "", new ValueCallback() {
+		LD.askForValue(I18N.message("warning"), I18N.message("archiveadvice"), "", new ValueCallback() {
 
 			@Override
 			public void execute(String value) {

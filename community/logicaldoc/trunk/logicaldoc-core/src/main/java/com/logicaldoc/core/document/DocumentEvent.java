@@ -35,7 +35,9 @@ public enum DocumentEvent {
 	REMOVED_FROM_CALEVENT("event.caldel"),
 	SUBSCRIBED("event.subscribed"),
 	STAMP_APPLIED("event.stampapplied"),
-	DTICKET_CREATED("event.dticket.created");
+	DTICKET_CREATED("event.dticket.created"),
+	PASSWORD_PROTECT("event.password.protected"),
+	PASSWORD_UNPROTECT("event.password.unprotected");
 
     private String event;
 

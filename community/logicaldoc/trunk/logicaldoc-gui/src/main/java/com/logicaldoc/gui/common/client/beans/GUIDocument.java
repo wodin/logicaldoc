@@ -100,6 +100,8 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	// Optional message to send to users
 	private String notifyMessage;
 
+	private boolean passwordProtected = false;
+
 	public long getId() {
 		return id;
 	}
@@ -496,5 +498,13 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 
 	public void setNotifyMessage(String notifyMessage) {
 		this.notifyMessage = notifyMessage;
+	}
+
+	public boolean isPasswordProtected() {
+		return passwordProtected;
+	}
+
+	public void setPasswordProtected(boolean passwordProtected) {
+		this.passwordProtected = passwordProtected;
 	}
 }

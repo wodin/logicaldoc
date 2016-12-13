@@ -26,8 +26,8 @@ import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 
 public class Util {
-	public static String[] OFFICE_EXTS = new String[] { ".doc", ".xls", ".xlsm", ".ppt", ".docx", ".docxm", ".xlsx", ".xlsm",
-			".pptx", ".rtf", ".odt", ".ods", ".odp" };
+	public static String[] OFFICE_EXTS = new String[] { ".doc", ".xls", ".xlsm", ".ppt", ".docx", ".docxm", ".xlsx",
+			".xlsm", ".pptx", ".rtf", ".odt", ".ods", ".odp" };
 
 	public static String[] IMAGE_EXTS = new String[] { ".gif", ".jpg", ".jpeg", ".bmp", ".tif", ".tiff", ".png" };
 
@@ -171,7 +171,7 @@ public class Util {
 		return thumbnailUrl(docId, fileVersion) + "&suffix=tile.jpg";
 	}
 
-	public static String tileImgageHTML(long docId, String fileVersion, Integer width, Integer height) {
+	public static String tileImageHTML(long docId, String fileVersion, Integer width, Integer height) {
 		String style = "";
 		if (width != null)
 			style += "width:" + width + "px; ";

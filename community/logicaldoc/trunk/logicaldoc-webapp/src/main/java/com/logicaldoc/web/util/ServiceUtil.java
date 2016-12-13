@@ -6,6 +6,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 
+import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.security.Permission;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.Session.Log;
 import com.logicaldoc.core.security.SessionManager;
@@ -44,6 +46,15 @@ public class ServiceUtil {
 			throw new InvalidSessionException("Invalid or Expired Session");
 		session.renew();
 		return session;
+	}
+
+	public static void checkPermission(Permission permission, User user, long folderId) throws Exception {
+		FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+		if (!dao.isPermissionEnabled(permission, folderId, user.getId())) {
+			String message = "User " + user.getUsername() + " doesn't have permission " + permission.getName()
+					+ " on folder " + folderId;
+			throw new Exception(message);
+		}
 	}
 
 	public static Locale currentLocale(Session session) throws InvalidSessionException {

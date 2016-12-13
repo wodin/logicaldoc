@@ -37,6 +37,8 @@ import com.logicaldoc.core.parser.Parser;
 import com.logicaldoc.core.parser.ParserFactory;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.core.store.Storer;
@@ -1100,4 +1102,24 @@ public class DocumentManagerImpl implements DocumentManager {
 	public void setTicketDAO(TicketDAO ticketDAO) {
 		this.ticketDAO = ticketDAO;
 	}
+
+	@Override
+	public boolean unprotect(String sid, long docId, String password) {
+		Session session = SessionManager.get().get(sid);
+		if (!session.isOpen())
+			return false;
+
+		if (session.getUnprotectedDocs().containsKey(docId))
+			return session.getUnprotectedDocs().get(docId).equals(password);
+
+		Document doc = documentDAO.findDocument(docId);
+		if (!doc.isPasswordProtected())
+			return true;
+
+		boolean granted = doc.isGranted(password);
+		if (granted)
+			session.getUnprotectedDocs().put(docId, password);
+		return granted;
+	}
+
 }

@@ -250,7 +250,6 @@ public interface DocumentManager {
 	/**
 	 * Creates a new download ticket.
 	 * 
-	 * @param sid Session identifier
 	 * @param docId The document id
 	 * @param suffix can be null or 'conversion.pdf'
 	 * @param expireHours expiration time expressed in hours
@@ -265,4 +264,16 @@ public interface DocumentManager {
 	 */
 	public Ticket createDownloadTicket(long docId, String suffix, Integer expireHours, Date expireDate,
 			String urlPrefix, History transaction) throws Exception;
+
+	/**
+	 * Tries to unprotect a document, If the password is correct, the document
+	 * stays unprotected for all the duration of the session.
+	 * 
+	 * @param sid Session identifier
+	 * @param docId The document id
+	 * @param password The password to try
+	 * 
+	 * @return True if the file gets unprotected
+	 */
+	public boolean unprotect(String sid, long docId, String password);
 }

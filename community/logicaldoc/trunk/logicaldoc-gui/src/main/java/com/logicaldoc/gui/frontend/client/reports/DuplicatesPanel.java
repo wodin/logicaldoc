@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
@@ -260,7 +261,7 @@ public class DuplicatesPanel extends VLayout {
 			public void onDoubleClick(DoubleClickEvent event) {
 				String id = list.getSelectedRecord().getAttribute("id");
 				if (Session.get().getCurrentFolder().isDownload())
-					WindowUtils.openUrl(Util.downloadURL(Long.parseLong(id), null, false));
+					DocUtil.download(Long.parseLong(id), null);
 			}
 		});
 

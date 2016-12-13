@@ -210,6 +210,11 @@ public class SecurityPanel extends FolderDetailTab {
 		subscription.setCanEdit(true);
 		subscription.setAutoFitWidth(true);
 		
+		ListGridField password = new ListGridField("password", I18N.message("password"), 60);
+		password.setType(ListGridFieldType.BOOLEAN);
+		password.setCanEdit(true);
+		password.setAutoFitWidth(true);
+		
 		list = new ListGrid();
 		list.setEmptyMessage(I18N.message("notitemstoshow"));
 		list.setCanFreezeFields(true);
@@ -226,10 +231,11 @@ public class SecurityPanel extends FolderDetailTab {
 		fields.add(download);
 		fields.add(write);
 		fields.add(add);
+		fields.add(rename);
+		fields.add(delete);
 		fields.add(security);
 		fields.add(immutable);
-		fields.add(delete);
-		fields.add(rename);
+		fields.add(password);
 		fields.add(_import);
 		fields.add(export);
 		if (Feature.enabled(Feature.DIGITAL_SIGN))
@@ -417,6 +423,7 @@ public class SecurityPanel extends FolderDetailTab {
 			right.setDownload("true".equals(record.getAttributeAsString("download")));
 			right.setCalendar("true".equals(record.getAttributeAsString("calendar")));
 			right.setSubscription("true".equals(record.getAttributeAsString("subscription")));
+			right.setPassword("true".equals(record.getAttributeAsString("password")));
 
 			tmp.add(right);
 		}

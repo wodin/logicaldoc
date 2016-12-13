@@ -543,8 +543,35 @@ public interface DocumentService {
 	public String createDownloadTicket(
 			@WebParam(name = "sid") String sid,
 			@WebParam(name = "docId") long docId,
-			@WSDoc(description = "can be null or 'conversion.pdf'", required = false) String suffix,
-			@WSDoc(description = "expiration time expressed in hours", required = false) Integer expireHours,
-			@WSDoc(description = "exact expiration date expressed in the format yyyy-MM-dd", required = false) String expireDate)
+			@WSDoc(description = "can be null or 'conversion.pdf'", required = false) @WebParam(name = "suffix") String suffix,
+			@WSDoc(description = "expiration time expressed in hours", required = false) @WebParam(name = "expireHours") Integer expireHours,
+			@WSDoc(description = "exact expiration date expressed in the format yyyy-MM-dd", required = false) @WebParam(name = "expireDate") String expireDate)
 			throws Exception;
+
+	/**
+	 * Puts a password protection to the document
+	 */
+	@WebMethod
+	@WSDoc(description = "protects with a password the given document")
+	public void setPassword(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "password") String password) throws Exception;
+
+	/**
+	 * Removes the password protection from the document
+	 */
+	@WebMethod
+	@WSDoc(description = "removes the password protection from the document")
+	public void unsetPassword(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "currentPassword") String currentPassword) throws Exception;
+
+	/**
+	 * Unprotects a document that is password protected. If the given password
+	 * is tight, the document remains unprotected for the duration of the
+	 * session.
+	 */
+	@WebResult(name = "unprotect")
+	@WebMethod
+	@WSDoc(description = "unprotects a document that is password protected. If the given password is tight, the document remains unprotected for the duration of the session.")
+	public boolean unprotect(@WebParam(name = "sid") String sid, @WebParam(name = "docId") long docId,
+			@WebParam(name = "password") String password) throws Exception;
 }

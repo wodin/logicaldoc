@@ -10,7 +10,7 @@ create table ld_document (ld_id bigint not null, ld_lastmodified timestamp not n
                           ld_creation timestamp not null, ld_publisher varchar(255), ld_publisherid bigint not null, ld_creator varchar(255),
                           ld_creatorid bigint not null, ld_status int, ld_type varchar(255), ld_lockuserid bigint, ld_lockuser varchar(255), ld_source varchar(4000),
                           ld_sourceauthor varchar(255), ld_sourceid varchar(1000),
-                          ld_language varchar(10), ld_filename varchar(255), 
+                          ld_language varchar(10), ld_filename varchar(255), ld_password varchar(255), 
                           ld_filesize bigint, ld_indexed int not null, ld_barcoded int not null, ld_signed int not null, ld_stamped int not null, 
                           ld_digest varchar(255), ld_folderid bigint, ld_templateid bigint, ld_exportstatus int not null, 
                           ld_exportid bigint, ld_exportname varchar(255), ld_exportversion varchar(10), ld_docref bigint, ld_docreftype varchar(255),
@@ -104,7 +104,7 @@ create table ld_version (ld_id bigint not null, ld_lastmodified timestamp not nu
                          ld_title varchar(255), ld_version varchar(255), ld_fileversion varchar(10), ld_date timestamp, ld_creation timestamp, ld_publisher varchar(255),
                          ld_publisherid bigint not null,  ld_creator varchar(255), ld_creatorid bigint not null, ld_status int, ld_type varchar(255),
                          ld_lockuserid bigint, ld_lockuser varchar(255), ld_source varchar(4000), ld_sourceauthor varchar(255), ld_sourceid varchar(1000),
-                         ld_language varchar(10), ld_filename varchar(255), 
+                         ld_language varchar(10), ld_filename varchar(255), ld_password varchar(255),
                          ld_filesize bigint, ld_indexed int not null, ld_barcoded int not null, ld_signed int not null, ld_stamped int not null,
                          ld_digest varchar(255), ld_folderid bigint, ld_foldername varchar(1000), ld_templateid bigint, 
                          ld_templatename varchar(1000), ld_tgs varchar(1000), ld_username varchar(255), ld_userid bigint, ld_versiondate timestamp, 
@@ -138,7 +138,7 @@ create table ld_foldergroup (ld_folderid bigint not null, ld_groupid bigint not 
                              ld_add int not null, ld_security int not null, ld_immutable int not null, ld_delete int not null, 
                              ld_rename int not null, ld_import int not null, ld_export int not null, ld_sign int not null, 
                              ld_archive int not null, ld_workflow int not null, ld_download int not null, ld_calendar int not null,
-                             ld_subscription int not null, ld_print int not null,  
+                             ld_subscription int not null, ld_print int not null, ld_password int not null,  
                              constraint PK_LD_FOLDERGROUP primary key (ld_folderid, ld_groupid));
 create table ld_feedmessage (ld_id bigint not null, ld_lastmodified timestamp not null, ld_recordversion bigint not null,
                              ld_deleted int not null, ld_tenantid bigint not null, ld_guid varchar(512) null, ld_title varchar(512) null, ld_description  varchar(4000) null, ld_link varchar(512) null, ld_pubdate timestamp, ld_read int not null, primary key (ld_id));
@@ -402,25 +402,25 @@ insert into ld_menugroup(ld_menuid, ld_groupid, ld_write) values (1530,-10000,0)
 
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation,ld_templocked,ld_tenantid,ld_recordversion,ld_position,ld_hidden)
 values (5,CURRENT_TIMESTAMP,0,'/',5,1,CURRENT_TIMESTAMP,0,1,1,1,0);
-insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print)
-values (5,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1);
-insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print)
-values (5,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1);
-insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print)
-values (5,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1);
-insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print)
-values (5,-10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print, ld_password)
+values (5,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print, ld_password)
+values (5,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print, ld_password)
+values (5,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print, ld_password)
+values (5,-10000,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0);
 
 insert into ld_folder (ld_id,ld_lastmodified,ld_deleted,ld_name,ld_parentid,ld_type,ld_creation, ld_templocked,ld_tenantid,ld_recordversion,ld_position,ld_hidden)
 values (4,CURRENT_TIMESTAMP,0,'Default',5,1,CURRENT_TIMESTAMP,0,1,1,1,0);
-insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print)
-values (4,2,1,1,0,0,1,1,0,0,0,0,0,1,1,0,1);
-insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print)
-values (4,3,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1);
-insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print)
-values (4,4,1,1,0,0,1,1,0,0,0,0,0,1,1,0,1);
-insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print)
-values (4,-10000,1,1,0,0,1,1,0,0,0,0,0,1,1,0,1);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print, ld_password)
+values (4,2,1,1,0,0,1,1,0,0,0,0,0,1,1,0,1,0);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print, ld_password)
+values (4,3,0,0,0,0,0,0,0,0,0,0,0,1,1,0,1,0);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print, ld_password)
+values (4,4,1,1,0,0,1,1,0,0,0,0,0,1,1,0,1,0);
+insert into ld_foldergroup(ld_folderid, ld_groupid, ld_write , ld_add, ld_security, ld_immutable, ld_delete, ld_rename, ld_import, ld_export, ld_sign, ld_archive, ld_workflow, ld_download, ld_calendar, ld_subscription, ld_print, ld_password)
+values (4,-10000,1,1,0,0,1,1,0,0,0,0,0,1,1,0,1,0);
 
 insert into ld_messagetemplate (ld_id, ld_lastmodified, ld_deleted, ld_name, ld_type, ld_language, ld_subject, ld_body,ld_tenantid,ld_recordversion)
 values(1, CURRENT_TIMESTAMP,0,'task.report','system','en', '$product - $task',

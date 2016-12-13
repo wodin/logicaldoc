@@ -27,9 +27,9 @@ import com.logicaldoc.core.document.TagsProcessor;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.lock.LockManager;
-import com.logicaldoc.core.metadata.TemplateDAO;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.core.security.User;
+import com.logicaldoc.util.crypt.CryptUtil;
 
 /**
  * Test case for <code>HibernateDocumentDAO</code>
@@ -543,13 +543,31 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertNotNull(ids);
 		Assert.assertEquals(0, ids.size());
 	}
-	
+
+	@Test
+	public void testSetPassword() throws Exception {
+		Document doc = dao.findById(3L);
+		Assert.assertNull(doc.getPassword());
+
+		History history = new History();
+		history.setUserId(1);
+		history.setUsername("admin");
+		dao.setPassword(3L, "test", history);
+
+		doc = dao.findById(3L);
+		Assert.assertEquals(CryptUtil.cryptString("test"), doc.getPassword());
+
+		dao.unsetPassword(3L, history);
+		doc = dao.findById(3L);
+		Assert.assertNull(doc.getPassword());
+	}
+
 	@Test
 	public void testGetWorkspace() {
 		Assert.assertNull(dao.getWorkspace(9999));
 		Assert.assertEquals(3000L, dao.getWorkspace(3).getId());
 	}
-	
+
 	@Test
 	public void testFindDeleted() {
 		List<Document> deletedDocs = dao.findDeleted(1, 5);

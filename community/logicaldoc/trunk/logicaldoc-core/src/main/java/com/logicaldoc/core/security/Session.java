@@ -2,7 +2,9 @@ package com.logicaldoc.core.security;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -40,7 +42,8 @@ public class Session implements Comparable<Session> {
 
 	private final static String INFO = "INFO";
 
-	public final static String KEY_COMBINEDUSERID = "combineduserid";
+	// Map docId - Password used to unprotect it
+	private Map<Long, String> unprotectedDocs = Collections.synchronizedMap(new HashMap<Long, String>());
 
 	private Date creation = new Date();
 
@@ -359,5 +362,9 @@ public class Session implements Comparable<Session> {
 
 	public void setTenantName(String tenantName) {
 		this.tenantName = tenantName;
+	}
+
+	public Map<Long, String> getUnprotectedDocs() {
+		return unprotectedDocs;
 	}
 }

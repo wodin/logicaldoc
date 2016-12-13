@@ -7,6 +7,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang.StringUtils;
 
 import com.logicaldoc.core.TransactionalObject;
 import com.logicaldoc.core.folder.Folder;
@@ -14,6 +15,7 @@ import com.logicaldoc.core.metadata.ExtensibleObject;
 import com.logicaldoc.core.metadata.Template;
 import com.logicaldoc.core.util.IconSelector;
 import com.logicaldoc.util.LocaleUtil;
+import com.logicaldoc.util.crypt.CryptUtil;
 
 /**
  * The Document is the central entity of LogicalDOC. A Document is a persistent
@@ -173,6 +175,10 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private int nature = NATURE_DOC;
 
 	private Long formId = null;
+
+	private String password;
+
+	private String decodedPassword;
 
 	@Deprecated
 	public static String[] lEGACY_ATTRIBUTES = new String[] { "object", "source", "sourceDate", "sourceAuthor",
@@ -781,5 +787,46 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	@Override
 	public String toString() {
 		return fileName + " (" + super.toString() + ")";
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * Sets the password and encode it
+	 * 
+	 * @param pwd The password in readable format
+	 */
+	public void setDecodedPassword(String pwd) {
+		if (org.apache.commons.lang.StringUtils.isNotEmpty(pwd)) {
+			decodedPassword = pwd;
+			password = CryptUtil.cryptString(pwd);
+		} else {
+			decodedPassword = null;
+			password = null;
+		}
+	}
+
+	public String getDecodedPassword() {
+		return decodedPassword;
+	}
+
+	/**
+	 * Checks if the document is accessible with the given password
+	 */
+	public boolean isGranted(String myPassword) {
+		if (StringUtils.isEmpty(getPassword()))
+			return true;
+		String test = CryptUtil.cryptString(myPassword);
+		return test.equals(getPassword());
+	}
+
+	public boolean isPasswordProtected() {
+		return StringUtils.isNotEmpty(getPassword());
 	}
 }

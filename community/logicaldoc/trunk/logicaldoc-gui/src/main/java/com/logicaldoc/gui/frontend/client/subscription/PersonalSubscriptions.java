@@ -1,7 +1,6 @@
 package com.logicaldoc.gui.frontend.client.subscription;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
@@ -9,6 +8,7 @@ import com.logicaldoc.gui.common.client.data.SubscriptionsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -155,7 +155,7 @@ public class PersonalSubscriptions extends com.smartgwt.client.widgets.Window {
 				String type = list.getSelectedRecord().getAttribute("type");
 				Long id = list.getSelectedRecord().getAttributeAsLong("objectid");
 				if ("document".equals(type)) {
-					Window.open(Util.downloadURL(id, null, true), "_blank", "");
+					DocUtil.download(id, null);
 				} else
 					DocumentsPanel.get().openInFolder(id, null);
 			}

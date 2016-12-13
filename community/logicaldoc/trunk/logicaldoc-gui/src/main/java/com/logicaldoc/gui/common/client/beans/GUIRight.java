@@ -46,6 +46,8 @@ public class GUIRight implements Serializable {
 
 	private boolean subscription = false;
 
+	private boolean password = false;
+
 	private String name;
 
 	private String label;
@@ -200,5 +202,13 @@ public class GUIRight implements Serializable {
 
 	public void setPrint(boolean print) {
 		this.print = print;
+	}
+
+	public boolean isPassword() {
+		return password;
+	}
+
+	public void setPassword(boolean password) {
+		this.password = password;
 	}
 }

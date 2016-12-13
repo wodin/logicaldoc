@@ -94,8 +94,6 @@ public class RightsDataServlet extends HttpServlet {
 		PrintWriter writer = response.getWriter();
 		writer.write("<list>");
 
-		System.out.println("folderRights");
-		
 		/*
 		 * Iterate over records composing the response XML document
 		 */
@@ -133,6 +131,7 @@ public class RightsDataServlet extends HttpServlet {
 					writer.print("<calendar>" + (folderGroup.getCalendar() == 1 ? true : false) + "</calendar>");
 					writer.print("<subscription>" + (folderGroup.getSubscription() == 1 ? true : false)
 							+ "</subscription>");
+					writer.print("<password>" + (folderGroup.getPassword() == 1 ? true : false) + "</password>");
 					writer.print("<type>" + group.getType() + "</type>");
 					writer.print("</right>");
 				}
