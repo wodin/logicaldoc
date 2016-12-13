@@ -3,10 +3,10 @@ package com.logicaldoc.gui.frontend.client.services;
 import java.util.Date;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIEmail;
-import com.logicaldoc.gui.common.client.beans.GUIAttribute;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
 import com.logicaldoc.gui.common.client.beans.GUIVersion;
 
@@ -93,4 +93,10 @@ public interface DocumentServiceAsync {
 
 	void createDownloadTicket(long docId, String suffix, Integer expireHours, Date expireDate,
 			AsyncCallback<String> callback);
+
+	void setPassword(long docId, String password, AsyncCallback<Void> callback);
+
+	void unsetPassword(long docId, String currentPassword, AsyncCallback<Void> callback);
+
+	void unprotect(long docId, String password, AsyncCallback<Boolean> callback);
 }

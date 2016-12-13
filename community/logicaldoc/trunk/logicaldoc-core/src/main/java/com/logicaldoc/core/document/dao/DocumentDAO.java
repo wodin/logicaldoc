@@ -390,9 +390,29 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 	 * Gets the tag cloud for the given tenant
 	 */
 	public List<TagCloud> getTagCloud(String sid);
-	
+
 	/**
 	 * Retrieves, the workspace where the document(or alias) is stored
 	 */
 	public Folder getWorkspace(long docId);
+
+	/**
+	 * Protects the document with a password. The same password is replicated to
+	 * all the versions
+	 * 
+	 * @param docId ID of the document
+	 * @param password The new password in clear
+	 * @param transaction history informations
+	 * @throws Exception 
+	 */
+	public void setPassword(long docId, String password, History transaction) throws Exception;
+
+	/**
+	 * Removes the password protection from the document. The same action is
+	 * replicated to all the versions
+	 * 
+	 * @param docId ID of the document
+	 * @param transaction history informations
+	 */
+	public void unsetPassword(long docId, History transaction);
 }

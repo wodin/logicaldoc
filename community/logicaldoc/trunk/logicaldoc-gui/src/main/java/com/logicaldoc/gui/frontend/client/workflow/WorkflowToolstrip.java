@@ -316,7 +316,7 @@ public class WorkflowToolstrip extends ToolStrip {
 			@Override
 			public void onClick(ClickEvent event) {
 				// Ask for new name
-				LD.askforValue(I18N.message("clone"), I18N.message("newname"), "", new ValueCallback() {
+				LD.askForValue(I18N.message("clone"), I18N.message("newname"), "", new ValueCallback() {
 					@Override
 					public void execute(String value) {
 						if (value == null || "".equals(value.trim()))

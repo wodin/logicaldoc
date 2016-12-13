@@ -7,7 +7,6 @@ import javax.jws.WebResult;
 import javax.jws.WebService;
 
 import com.logicaldoc.webservice.model.WSDocument;
-import com.logicaldoc.webservice.model.WSLink;
 
 /**
  * Document Web Service definition interface

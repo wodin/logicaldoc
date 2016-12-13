@@ -66,6 +66,7 @@ public class GridUtil {
 
 			document.setSigned("blank".equals(record.getAttributeAsString("signed")) ? 0 : 1);
 			document.setStamped("blank".equals(record.getAttributeAsString("stamped")) ? 0 : 1);
+			document.setPasswordProtected(!"blank".equals(record.getAttributeAsString("password")));
 
 			if (record.getAttribute("lockUserId") != null)
 				document.setLockUserId(Long.parseLong(record.getAttribute("lockUserId")));
@@ -116,6 +117,7 @@ public class GridUtil {
 		record.setAttribute("customId", doc.getCustomId());
 		record.setAttribute("type", doc.getType());
 		record.setAttribute("immutable", doc.getImmutable() == 1 ? "stop" : "blank");
+		record.setAttribute("password", doc.isPasswordProtected() ? "key" : "blank");
 		record.setAttribute("signed", doc.getSigned() == 1 ? "rosette" : "blank");
 		record.setAttribute("stamped", doc.getStamped() == 1 ? "stamp" : "blank");
 		record.setAttribute("filename", doc.getFileName());
@@ -192,6 +194,11 @@ public class GridUtil {
 				record.setAttribute("immutable", "stop");
 			else
 				record.setAttribute("immutable", "blank");
+			
+			if (document.isPasswordProtected())
+				record.setAttribute("password", "key");
+			else
+				record.setAttribute("password", "blank");
 
 			record.setAttribute("title", document.getTitle());
 			record.setAttribute("customId", document.getCustomId());

@@ -55,6 +55,7 @@
         <property name="pages" type="int" column="ld_pages" not-null="true"/>
         <property name="nature" type="int" column="ld_nature" not-null="true"/>
         <property name="formId" type="long" column="ld_formid" />
+        <property name="password" type="string" column="ld_password" length="255" />
 
 		<many-to-one name="folder" class="com.logicaldoc.core.folder.Folder" column="ld_folderid" />
         

@@ -15,6 +15,8 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
+import com.logicaldoc.core.security.Session;
+import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.Tenant;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
 import com.logicaldoc.webservice.model.WSAttribute;
@@ -289,5 +291,29 @@ public class SoapDocumentServiceTest extends AbstractWebServiceTestCase {
 		docs = docServiceImpl.getAliases("", 2L);
 		Assert.assertNotNull(docs);
 		Assert.assertEquals(0, docs.length);
+	}
+
+	@Test
+	public void testSetPassword() throws Exception {
+		Session session = SessionManager.get().newSession("admin", "admin", null);
+		docServiceImpl.setPassword(session.getId(), 1L, "test");
+
+		try {
+			docServiceImpl.unsetPassword(session.getId(), 1L, "adsfddf");
+		} catch (Throwable t) {
+			Assert.assertNotNull(t);
+		}
+		
+		docServiceImpl.unsetPassword(session.getId(), 1L, "test");
+	}
+	
+	@Test
+	public void testUnprotect() throws Exception {
+		Session session = SessionManager.get().newSession("admin", "admin", null);
+		docServiceImpl.setPassword(session.getId(), 1L, "test");
+
+		Assert.assertTrue(docServiceImpl.unprotect(session.getId(), 1L, "test"));
+		Assert.assertFalse(docServiceImpl.unprotect(session.getId(), 1L, "test2222"));
+		Assert.assertTrue(docServiceImpl.unprotect(session.getId(), 1L, "test"));
 	}
 }

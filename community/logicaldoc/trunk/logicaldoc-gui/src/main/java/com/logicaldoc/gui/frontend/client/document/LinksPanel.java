@@ -1,7 +1,6 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
@@ -10,6 +9,7 @@ import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.LinksDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
@@ -199,7 +199,7 @@ public class LinksPanel extends DocumentDetailTab {
 
 	protected void onDownload(ListGridRecord record) {
 		if (document.getFolder().isDownload())
-			Window.open(Util.downloadURL(record.getAttributeAsLong("documentId"), null, true), "_blank", "");
+			DocUtil.download(record.getAttributeAsLong("documentId"), null);
 	}
 
 	protected void onPreview(ListGridRecord record) {

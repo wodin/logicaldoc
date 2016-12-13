@@ -1,13 +1,13 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.DocumentsDS;
-import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocumentProtectionManager;
+import com.logicaldoc.gui.common.client.util.DocumentProtectionManager.DocumentProtectionHandler;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
@@ -161,19 +161,10 @@ public class DocumentsListPanel extends VLayout {
 		if (grid.getSelectedCount() != 1)
 			return;
 
-		documentService.getById(grid.getSelectedDocument().getId(), new AsyncCallback<GUIDocument>() {
+		DocumentProtectionManager.askForPassword(grid.getSelectedDocument().getId(), new DocumentProtectionHandler() {
 			@Override
-			public void onFailure(Throwable caught) {
-				/*
-				 * Sometimes we can have spurious errors using Firefox.
-				 */
-				if (Session.get().isDevel())
-					Log.serverError(caught);
-			}
-
-			@Override
-			public void onSuccess(GUIDocument result) {
-				Session.get().setCurrentDocument(result);
+			public void onUnprotected(GUIDocument document) {
+				Session.get().setCurrentDocument(document);
 			}
 		});
 	}

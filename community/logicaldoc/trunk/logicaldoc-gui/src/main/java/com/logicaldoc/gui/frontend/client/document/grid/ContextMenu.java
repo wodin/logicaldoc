@@ -13,6 +13,7 @@ import com.logicaldoc.gui.common.client.beans.GUIExternalCall;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
@@ -71,7 +72,7 @@ public class ContextMenu extends Menu {
 			public void onClick(MenuItemClickEvent event) {
 				if (selection.length == 1) {
 					long id = selection[0].getId();
-					WindowUtils.openUrl(Util.downloadURL(id, null, false));
+					DocUtil.download(id, null);
 				} else {
 					String url = GWT.getHostPageBaseURL() + "zip-export?folderId=" + folder.getId();
 					for (GUIDocument record : selection) {
@@ -212,7 +213,7 @@ public class ContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				LD.askforValue(I18N.message("warning"), I18N.message("immutableadvice"), "", 600, new ValueCallback() {
+				LD.askForValue(I18N.message("warning"), I18N.message("immutableadvice"), "", 600, new ValueCallback() {
 
 					@Override
 					public void execute(String value) {
@@ -244,6 +245,76 @@ public class ContextMenu extends Menu {
 			}
 		});
 
+		MenuItem setPassword = new MenuItem();
+		setPassword.setTitle(I18N.message("setpassword"));
+		setPassword.setEnabled(folder.hasPermission(Constants.PERMISSION_PASSWORD) && selection != null
+				&& selection.length == 1);
+		setPassword.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				LD.askForValue(I18N.message("setpassword"), I18N.message("setpasswordwarning"), "", 500,
+						new ValueCallback() {
+
+							@Override
+							public void execute(String value) {
+								if (value == null)
+									return;
+
+								if (value.isEmpty())
+									SC.warn(I18N.message("passwordrequired"));
+								else
+									documentService.setPassword(selection[0].getId(), value, new AsyncCallback<Void>() {
+										@Override
+										public void onFailure(Throwable caught) {
+											Log.serverError(caught);
+										}
+
+										@Override
+										public void onSuccess(Void result) {
+											selection[0].setPasswordProtected(true);
+											grid.updateDocument(selection[0]);
+											Log.info("passwordapplied", null);
+										}
+									});
+							}
+
+						});
+			}
+		});
+
+		MenuItem unsetPassword = new MenuItem();
+		unsetPassword.setTitle(I18N.message("unsetpassword"));
+		unsetPassword.setEnabled(folder.hasPermission(Constants.PERMISSION_PASSWORD) && selection != null
+				&& selection.length == 1);
+		unsetPassword.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				LD.askForValue(I18N.message("unsetpassword"), I18N.message("currentpassword"), "", 300, new ValueCallback() {
+
+					@Override
+					public void execute(String value) {
+						if (value == null)
+							return;
+
+						if (value.isEmpty())
+							SC.warn(I18N.message("passwordrequired"));
+						else
+							documentService.unsetPassword(selection[0].getId(), value, new AsyncCallback<Void>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Log.serverError(caught);
+								}
+
+								@Override
+								public void onSuccess(Void result) {
+									selection[0].setPasswordProtected(false);
+									grid.updateDocument(selection[0]);
+								}
+							});
+					}
+
+				});
+			}
+		});
+
 		MenuItem lock = new MenuItem();
 		lock.setTitle(I18N.message("lock"));
 		lock.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
@@ -251,7 +322,7 @@ public class ContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				LD.askforValue(I18N.message("info"), I18N.message("lockadvice"), "", new ValueCallback() {
+				LD.askForValue(I18N.message("info"), I18N.message("lockadvice"), "", new ValueCallback() {
 
 					@Override
 					public void execute(String value) {
@@ -367,7 +438,7 @@ public class ContextMenu extends Menu {
 				if (selection == null || selection.length == 0)
 					return;
 
-				LD.askforValue(I18N.message("warning"), I18N.message("archiveadvice"), "", 600, new ValueCallback() {
+				LD.askForValue(I18N.message("warning"), I18N.message("archiveadvice"), "", 600, new ValueCallback() {
 
 					@Override
 					public void execute(String value) {
@@ -706,8 +777,16 @@ public class ContextMenu extends Menu {
 			if (lockUser != null && Session.get().getUser().getId() != lockUser.longValue()
 					&& !Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
 				checkin.setEnabled(false);
+
+			setPassword.setEnabled(!selection[0].isPasswordProtected() && folder.hasPermission(Constants.PERMISSION_PASSWORD));
+			unsetPassword.setEnabled(selection[0].isPasswordProtected() && folder.hasPermission(Constants.PERMISSION_PASSWORD));
 		}
 
+		if(!folder.hasPermission(Constants.PERMISSION_PASSWORD)){
+			setPassword.setEnabled(false);
+			unsetPassword.setEnabled(false);
+		}
+		
 		unlockItem.setEnabled(enableUnlock);
 		lock.setEnabled(enableLock);
 		checkout.setEnabled(enableLock);
@@ -779,7 +858,8 @@ public class ContextMenu extends Menu {
 		addItem(more);
 
 		Menu moreMenu = new Menu();
-		moreMenu.setItems(indexSelection, markIndexable, markUnindexable, immutable, downloadTicket);
+		moreMenu.setItems(indexSelection, markIndexable, markUnindexable, immutable, setPassword, unsetPassword,
+				downloadTicket);
 
 		if (enableSign && Feature.visible(Feature.DIGITAL_SIGN)) {
 			moreMenu.addItem(sign);

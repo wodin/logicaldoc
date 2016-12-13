@@ -19,12 +19,12 @@ public class WSRight {
 	@WSDoc(description = "permissions mask. "
 			+ "<br/> this is an integer representation of a list of 13 bits. Each bit refers to a permission: <b>0</b> to deny, <b>1</b> to grant the permission."
 			+ "<br/> This list represent the bit array starting from left to right:"
-			+ "<ol><li>Print</li><li>Subscription</li><li>Calendar</li><li>Download </li><li>Workflow</li><li>Archive</li><li>Sign</li><li>Export</li><li>Import</li>"
+			+ "<ol><li>Password</li><li>Print</li><li>Subscription</li><li>Calendar</li><li>Download </li><li>Workflow</li><li>Archive</li><li>Sign</li><li>Export</li><li>Import</li>"
 			+ "<li>Delete</li><li>Immutable</li><li>Security</li><li>Add</li><li>Write</li><li>Read</li></ol>"
 			+ "In particular, 'Read' is represented by the last right bit while 'Download' is represented by the first left bit.<br/>"
 			+ "Here are two examples:"
-			+ "</p><p>A) if you want to assign to a user the permissions Read, Write, Immutable, Rename, Sign, Download, the 'permissions' value must be <b>4691</b>, in fact it is <b>1001001010011</b> in binary representation."
-			+ "</p><p>B) if you want to assign to a group the permissions Read, Write, Add, Security, Import, Archive, Workflow, the 'permissions' value must be <b>3215</b>, in fact it is <b>0110010001111</b> in binary representation." 
+			+ "</p><p>A) if you want to assign to a user the permissions Read, Write, Immutable, Rename, Sign, Download, the 'permissions' value must be <b>4691</b>, in fact it is <b>01001001010011</b> in binary representation."
+			+ "</p><p>B) if you want to assign to a group the permissions Read, Write, Add, Security, Import, Archive, Workflow, the 'permissions' value must be <b>3215</b>, in fact it is <b>00110010001111</b> in binary representation." 
 			+ "</p><p><br></p>")
 	private int permissions;
 

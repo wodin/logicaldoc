@@ -613,6 +613,7 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 		document.setFormId(doc.getFormId());
 		document.setIcon(FilenameUtils.getBaseName(IconSelector.selectIcon(
 				FilenameUtils.getExtension(document.getFileName()), document.getDocRef() != null)));
+		document.setPasswordProtected(doc.isPasswordProtected());
 
 		if (doc.getRating() != null)
 			document.setRating(doc.getRating());
@@ -1682,11 +1683,65 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 			DocumentManager manager = (DocumentManager) Context.get().getBean(DocumentManager.class);
 			History transaction = new History();
 			transaction.setSession(session);
-			Ticket ticket = manager.createDownloadTicket(docId, suffix, expireHours, expireDate, urlPrefix, transaction);
+			Ticket ticket = manager
+					.createDownloadTicket(docId, suffix, expireHours, expireDate, urlPrefix, transaction);
 
 			return ticket.getUrl();
 		} catch (Throwable t) {
 			return (String) ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void setPassword(long docId, String password) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
+		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSession(session);
+		transaction.setComment("");
+
+		try {
+			Document doc = dao.findById(docId);
+			ServiceUtil.checkPermission(Permission.PASSWORD, session.getUser(), doc.getFolder().getId());
+
+			dao.setPassword(docId, password, transaction);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void unsetPassword(long docId, String currentPassword) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSession(session);
+		transaction.setComment("");
+
+		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		try {
+			Document doc = dao.findDocument(docId);
+			if (doc.isGranted(currentPassword))
+				dao.unsetPassword(docId, transaction);
+			else
+				throw new Exception("You cannot access the document");
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public boolean unprotect(long docId, String password) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+		try {
+			DocumentManager manager = (DocumentManager) Context.get().getBean(DocumentManager.class);
+			return manager.unprotect(session.getId(), docId, password);
+		} catch (Throwable t) {
+			return (Boolean) ServiceUtil.throwServerException(session, log, t);
 		}
 	}
 }

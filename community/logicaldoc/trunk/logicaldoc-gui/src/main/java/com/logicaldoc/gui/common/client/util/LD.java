@@ -10,6 +10,7 @@ import com.smartgwt.client.widgets.IButton;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.fields.FormItem;
+import com.smartgwt.client.widgets.form.fields.PasswordItem;
 import com.smartgwt.client.widgets.form.fields.StaticTextItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.KeyPressEvent;
@@ -110,21 +111,27 @@ public class LD {
 	/**
 	 * Show a dialog asking for a value to complete a operation.
 	 */
-	public static void askforValue(String title, String message, String defaultValue, Integer width,
+	public static void askForValue(String title, String message, String defaultValue, Integer width,
 			ValueCallback callback) {
 		TextItem textItem = ItemFactory.newTextItem("value", message, defaultValue);
-		askforValue(title, message, defaultValue, textItem, width, callback);
+		askForValue(title, message, defaultValue, textItem, width, callback);
+	}
+	
+	public static void askForPassword(String title, String message, Integer width,
+			ValueCallback callback) {
+		PasswordItem item = ItemFactory.newPasswordItem("value", message, null);
+		askForValue(title, message, null, item, width, callback);
 	}
 
-	public static void askforValue(String title, String message, String defaultValue, ValueCallback callback) {
-		askforValue(title, message, defaultValue, (Integer) null, callback);
+	public static void askForValue(String title, String message, String defaultValue, ValueCallback callback) {
+		askForValue(title, message, defaultValue, (Integer) null, callback);
 	}
 
 	/**
 	 * Show a dialog asking for a value to complete an operation. The provided
 	 * form item will be used.
 	 */
-	public static void askforValue(String title, String message, String defaultValue, FormItem item, Integer width,
+	public static void askForValue(String title, String message, String defaultValue, FormItem item, Integer width,
 			final ValueCallback callback) {
 		final Window dialog = new Window();
 
@@ -151,12 +158,15 @@ public class LD {
 		container.setDefaultLayoutAlign(Alignment.CENTER);
 
 		final DynamicForm form = new DynamicForm();
+		form.setWidth100();
 		form.setTitleOrientation(TitleOrientation.TOP);
+		form.setWrapItemTitles(false);
 		form.setNumCols(1);
 
 		item.setWidth("100%");
 		item.setName("value");
 		item.setTitle(I18N.message(message));
+		item.setWrapTitle(false);
 		item.addKeyPressHandler(new KeyPressHandler() {
 			@Override
 			public void onKeyPress(KeyPressEvent event) {
@@ -173,7 +183,8 @@ public class LD {
 		form.setFields(item);
 
 		IButton ok = new IButton(I18N.message("ok"));
-		ok.setWidth(70);
+		ok.setAutoFit(true);
+		ok.setMinWidth(70);
 		ok.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
 				if (form.validate() && callback != null) {
@@ -185,7 +196,8 @@ public class LD {
 		});
 
 		IButton cancel = new IButton(I18N.message("cancel"));
-		cancel.setWidth(70);
+		cancel.setAutoFit(true);
+		cancel.setMinWidth(70);
 		cancel.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
 				if (callback != null) {
@@ -226,6 +238,6 @@ public class LD {
 
 	public static void askforValue(String title, String message, String defaultValue, FormItem item,
 			final ValueCallback callback) {
-		askforValue(title, message, defaultValue, item, null, callback);
+		askForValue(title, message, defaultValue, item, null, callback);
 	}
 }

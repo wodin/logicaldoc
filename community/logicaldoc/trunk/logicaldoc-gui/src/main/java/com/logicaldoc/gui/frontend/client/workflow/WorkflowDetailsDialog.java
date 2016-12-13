@@ -16,9 +16,9 @@ import com.logicaldoc.gui.common.client.data.WorkflowHistoriesDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
-import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.clipboard.Clipboard;
 import com.logicaldoc.gui.frontend.client.document.DocumentsPanel;
@@ -787,7 +787,7 @@ public class WorkflowDetailsDialog extends Window {
 		download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
 				long id = Long.parseLong(selection.getAttribute("id"));
-				WindowUtils.openUrl(Util.downloadURL(id, null, false));
+				DocUtil.download(id, null);
 			}
 		});
 

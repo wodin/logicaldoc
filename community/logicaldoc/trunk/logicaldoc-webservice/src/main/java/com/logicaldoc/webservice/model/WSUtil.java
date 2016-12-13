@@ -62,6 +62,7 @@ public class WSUtil {
 			wsDoc.setStamped(document.getStamped());
 			wsDoc.setNature(document.getNature());
 			wsDoc.setFormId(document.getFormId());
+			wsDoc.setPasswordProtected(document.isPasswordProtected() ? 1 : 0);
 
 			String date = null;
 			if (document.getDate() != null)

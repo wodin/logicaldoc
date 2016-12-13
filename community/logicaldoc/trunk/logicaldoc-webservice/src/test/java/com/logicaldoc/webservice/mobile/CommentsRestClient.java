@@ -1,9 +1,5 @@
 package com.logicaldoc.webservice.mobile;
 
-import java.net.URLEncoder;
-
-import javax.ws.rs.core.MediaType;
-
 //import org.apache.commons.httpclient.Header;
 //import org.apache.commons.httpclient.HttpClient;
 //import org.apache.commons.httpclient.HttpStatus;
@@ -11,7 +7,6 @@ import javax.ws.rs.core.MediaType;
 //import org.apache.commons.httpclient.methods.PostMethod;
 //import org.apache.commons.httpclient.methods.StringRequestEntity;
 //import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jettison.json.JSONObject;
 
 /**
  * Created by IntelliJ IDEA. User: Niraj Singh Date: 3/13/13 Time: 4:15 PM To

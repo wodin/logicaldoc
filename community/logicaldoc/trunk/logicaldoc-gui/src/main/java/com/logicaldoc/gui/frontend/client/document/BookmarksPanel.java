@@ -1,13 +1,13 @@
 package com.logicaldoc.gui.frontend.client.document;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.logicaldoc.gui.common.client.beans.GUIBookmark;
 import com.logicaldoc.gui.common.client.beans.GUIFolder;
 import com.logicaldoc.gui.common.client.data.BookmarksDS;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.LD;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
@@ -243,6 +243,6 @@ public class BookmarksPanel extends VLayout {
 
 	private void download() {
 		Long id = list.getSelectedRecord().getAttributeAsLong("targetId");
-		Window.open(Util.downloadURL(id, null, true), "_blank", "");
+		DocUtil.download(id, null);
 	}
 }

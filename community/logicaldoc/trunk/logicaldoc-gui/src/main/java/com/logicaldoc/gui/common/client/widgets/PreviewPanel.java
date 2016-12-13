@@ -5,6 +5,8 @@ import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIUser;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocumentProtectionManager;
+import com.logicaldoc.gui.common.client.util.DocumentProtectionManager.DocumentProtectionHandler;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.types.ContentsType;
 import com.smartgwt.client.widgets.HTMLFlow;
@@ -34,28 +36,38 @@ public class PreviewPanel extends VLayout {
 
 	private String language;
 
+	private boolean accessGranted = false;
+
 	public PreviewPanel(GUIDocument document) {
 		this(document.getDocRef() != null ? document.getDocRef() : document.getId(), document.getFileVersion(),
 				document.getFileName());
 	}
 
-	public PreviewPanel(long docId, String fileVersion, String filename) {
+	public PreviewPanel(final long docId, final String fileVersion, final String filename) {
 		this.id = docId;
 		this.fileName = filename;
 		this.fileVersion = fileVersion;
 
 		retrieveUserInfo();
 
-		if (Util.isMediaFile(filename.toLowerCase())) {
-			reloadMedia();
-		} else if (filename.toLowerCase().endsWith(".html") || filename.toLowerCase().endsWith(".htm")
-				|| filename.toLowerCase().endsWith(".xhtml")) {
-			reloadHTML();
-		} else {
-			reloadPreview(language);
-		}
+		DocumentProtectionManager.askForPassword(id, new DocumentProtectionHandler() {
 
-		redraw();
+			@Override
+			public void onUnprotected(GUIDocument document) {
+				accessGranted = true;
+
+				if (Util.isMediaFile(filename.toLowerCase())) {
+					reloadMedia();
+				} else if (filename.toLowerCase().endsWith(".html") || filename.toLowerCase().endsWith(".htm")
+						|| filename.toLowerCase().endsWith(".xhtml")) {
+					reloadHTML();
+				} else {
+					reloadPreview(language);
+				}
+
+				redraw();
+			}
+		});
 
 		addResizedHandler(new ResizedHandler() {
 
@@ -67,15 +79,17 @@ public class PreviewPanel extends VLayout {
 	}
 
 	public void redraw() {
-		if (preview != null) {
-			removeMember(preview);
-			reloadPreview(language);
-		} else if (html != null) {
-			removeMember(html);
-			reloadHTML();
-		} else if (media != null) {
-			removeMember(media);
-			reloadMedia();
+		if (accessGranted) {
+			if (preview != null) {
+				removeMember(preview);
+				reloadPreview(language);
+			} else if (html != null) {
+				removeMember(html);
+				reloadHTML();
+			} else if (media != null) {
+				removeMember(media);
+				reloadMedia();
+			}
 		}
 	}
 

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.Version;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.document.dao.VersionDAO;
@@ -49,30 +50,28 @@ public class DownloadServlet extends HttpServlet {
 	 * @throws IOException if an error occurred
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String sid = null;
-		User user = null;
+		Session session = null;
 
 		if (!ServletUtil.isPreviewAgent(request)) {
 			/*
 			 * We can reach this point only if a valid session was created
 			 */
-			Session session = ServletUtil.validateSession(request);
-			sid = session.getId();
-			user = session.getUser();
+			session = ServletUtil.validateSession(request);
 		}
 
 		try {
 			if (request.getParameter("pluginId") != null)
-				ServletUtil.downloadPluginResource(request, response, sid, request.getParameter("pluginId"),
-						request.getParameter("resourcePath"), request.getParameter("fileName"));
+				ServletUtil.downloadPluginResource(request, response, session.getId(),
+						request.getParameter("pluginId"), request.getParameter("resourcePath"),
+						request.getParameter("fileName"));
 			else
-				downloadDocument(request, response, sid, user);
+				downloadDocument(request, response, session);
 		} catch (Throwable ex) {
 			log.error(ex.getMessage(), ex);
 		}
 	}
 
-	protected void downloadDocument(HttpServletRequest request, HttpServletResponse response, String sid, User user)
+	protected void downloadDocument(HttpServletRequest request, HttpServletResponse response, Session session)
 			throws FileNotFoundException, IOException, ServletException {
 		DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 		VersionDAO versDao = (VersionDAO) Context.get().getBean(VersionDAO.class);
@@ -92,8 +91,9 @@ public class DownloadServlet extends HttpServlet {
 		if (StringUtils.isNotEmpty(docId)) {
 			doc = docDao.findById(Long.parseLong(docId));
 
-			if (user != null
-					&& !folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
+			if (session.getUser() != null
+					&& !folderDao
+							.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), session.getUserId()))
 				throw new IOException("You don't have the DOWNLOAD permission");
 
 			/*
@@ -105,7 +105,7 @@ public class DownloadServlet extends HttpServlet {
 
 				// Generate the PDF conversion
 				PdfConverterManager manager = (PdfConverterManager) Context.get().getBean(PdfConverterManager.class);
-				manager.createPdf(doc, fileVersion, sid);
+				manager.createPdf(doc, fileVersion, session.getId());
 
 				suffix = PdfConverterManager.SUFFIX;
 			}
@@ -122,11 +122,14 @@ public class DownloadServlet extends HttpServlet {
 			if (doc == null) {
 				doc = docDao.findDocument(version.getDocId());
 
-				if (!folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), user.getId()))
+				if (!folderDao.isPermissionEnabled(Permission.DOWNLOAD, doc.getFolder().getId(), session.getUserId()))
 					throw new IOException("You don't have the DOWNLOAD permission");
 			}
 		}
-
+		
+		if(doc.isPasswordProtected() && !session.getUnprotectedDocs().containsKey(doc.getId()))
+			throw new IOException("The document is protected by a password");
+		
 		if (version != null)
 			filename = version.getFileName();
 		else
@@ -151,9 +154,9 @@ public class DownloadServlet extends HttpServlet {
 			log.debug("Download document id=" + docId);
 
 		if ("true".equals(downloadText)) {
-			ServletUtil.downloadDocumentText(request, response, doc.getId(), user);
+			ServletUtil.downloadDocumentText(request, response, doc.getId(), session.getUser());
 		} else {
-			ServletUtil.downloadDocument(request, response, sid, doc.getId(), fileVersion, filename, suffix, user);
+			ServletUtil.downloadDocument(request, response, session.getId(), doc.getId(), fileVersion, filename, suffix, session.getUser());
 		}
 	}
 }

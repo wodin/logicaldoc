@@ -40,7 +40,9 @@ public class FolderGroup {
 	private int calendar = 0;
 
 	private int subscription = 0;
-	
+
+	private int password = 0;
+
 	private int print = 1;
 
 	private long groupId;
@@ -70,6 +72,7 @@ public class FolderGroup {
 		mg.setDownload(download);
 		mg.setCalendar(calendar);
 		mg.setSubscription(subscription);
+		mg.setPassword(password);
 		return mg;
 	}
 
@@ -97,6 +100,7 @@ public class FolderGroup {
 		 * the same mask order.
 		 */
 		StringBuffer sb = new StringBuffer();
+		sb.append(getPassword() == 1 ? "1" : "0");
 		sb.append(getPrint() == 1 ? "1" : "0");
 		sb.append(getSubscription() == 1 ? "1" : "0");
 		sb.append(getCalendar() == 1 ? "1" : "0");
@@ -140,6 +144,7 @@ public class FolderGroup {
 		setCalendar(Permission.CALENDAR.match(permissions) ? 1 : 0);
 		setSubscription(Permission.SUBSCRIPTION.match(permissions) ? 1 : 0);
 		setPrint(Permission.PRINT.match(permissions) ? 1 : 0);
+		setPassword(Permission.PASSWORD.match(permissions) ? 1 : 0);
 	}
 
 	public int getRead() {
@@ -276,5 +281,13 @@ public class FolderGroup {
 
 	public void setPrint(int print) {
 		this.print = print;
+	}
+
+	public int getPassword() {
+		return password;
+	}
+
+	public void setPassword(int password) {
+		this.password = password;
 	}
 }

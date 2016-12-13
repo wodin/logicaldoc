@@ -248,6 +248,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					right.setDownload(fg.getDownload() == 1 ? true : false);
 					right.setCalendar(fg.getCalendar() == 1 ? true : false);
 					right.setSubscription(fg.getSubscription() == 1 ? true : false);
+					right.setPassword(fg.getPassword() == 1 ? true : false);
 
 					rights[i] = right;
 					i++;
@@ -652,6 +653,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 					fg.setSubscription(1);
 				else
 					fg.setSubscription(0);
+
+				if (isAdmin || right.isPassword())
+					fg.setPassword(1);
+				else
+					fg.setPassword(0);
 			}
 
 			folder.getFolderGroups().clear();

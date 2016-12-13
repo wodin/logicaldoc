@@ -8,10 +8,10 @@ import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.transports.http.configuration.HTTPClientPolicy;
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.rest.FolderService;
 

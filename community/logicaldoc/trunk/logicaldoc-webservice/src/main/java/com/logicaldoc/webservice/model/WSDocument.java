@@ -196,6 +196,9 @@ public class WSDocument implements Serializable {
 	@WSDoc(required = false, description = "the last modified date; format must be 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd'")
 	private Long formId = null;
 
+	@WSDoc(required = false, description = "indicates whether the document is protected by a password")
+	private Integer passwordProtected = 0;
+
 	public Collection<String> listAttributeNames() {
 		List<String> names = new ArrayList<String>();
 		for (WSAttribute att : getAttributes()) {
@@ -598,5 +601,13 @@ public class WSDocument implements Serializable {
 
 	public void setFormId(Long formId) {
 		this.formId = formId;
+	}
+
+	public Integer getPasswordProtected() {
+		return passwordProtected;
+	}
+
+	public void setPasswordProtected(Integer passwordProtected) {
+		this.passwordProtected = passwordProtected;
 	}
 }

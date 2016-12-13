@@ -197,7 +197,7 @@ public class TagsForm extends VLayout {
 			rename.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 
 				public void onClick(MenuItemClickEvent event) {
-					LD.askforValue(I18N.message("rename"), I18N.message("newtag"), "", new ValueCallback() {
+					LD.askForValue(I18N.message("rename"), I18N.message("newtag"), "", new ValueCallback() {
 						@Override
 						public void execute(final String value) {
 							if (value == null || "".equals(value.trim()))

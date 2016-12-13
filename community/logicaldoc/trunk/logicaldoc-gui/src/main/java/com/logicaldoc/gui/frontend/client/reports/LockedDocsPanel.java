@@ -9,6 +9,7 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
@@ -239,7 +240,7 @@ public class LockedDocsPanel extends VLayout {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
 				Long id = list.getSelectedRecord().getAttributeAsLong("id");
-				WindowUtils.openUrl(Util.downloadURL(id, null, true));
+				DocUtil.download(id, null);
 			}
 		});
 

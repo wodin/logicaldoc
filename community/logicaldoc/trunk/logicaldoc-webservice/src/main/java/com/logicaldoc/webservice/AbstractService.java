@@ -216,10 +216,13 @@ public class AbstractService {
 	 * @throws Exception
 	 */
 	protected String validateSession() throws Exception {
-		String sid = getCurrentSessionId();
-		if (sid == null)
-			throw new Exception("Invalid session");
-		return sid;
+		if (validateSession) {
+			String sid = getCurrentSessionId();
+			if (sid == null)
+				throw new Exception("Invalid session");
+			return sid;
+		} else
+			return null;
 	}
 
 	public static String convertDateToString(Date date) {

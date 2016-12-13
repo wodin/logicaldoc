@@ -14,11 +14,11 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.cxf.jaxrs.ext.MessageContext;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.logicaldoc.webservice.rest.AuthService;
 import com.logicaldoc.webservice.soap.endpoint.SoapAuthService;
 

@@ -157,7 +157,7 @@ public class EmailPanel extends VLayout {
 			@Override
 			public void onClick(com.smartgwt.client.widgets.form.fields.events.ClickEvent event) {
 				if (vm.validate()) {
-					LD.askforValue(I18N.message("email"), I18N.message("email"),
+					LD.askForValue(I18N.message("email"), I18N.message("email"),
 							(String) vm.getValueAsString("senderEmail"), new ValueCallback() {
 
 								@Override

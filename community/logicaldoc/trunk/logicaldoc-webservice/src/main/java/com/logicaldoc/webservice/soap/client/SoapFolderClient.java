@@ -2,8 +2,8 @@ package com.logicaldoc.webservice.soap.client;
 
 import java.io.IOException;
 
-import com.logicaldoc.webservice.model.WSRight;
 import com.logicaldoc.webservice.model.WSFolder;
+import com.logicaldoc.webservice.model.WSRight;
 import com.logicaldoc.webservice.soap.FolderService;
 
 /**

@@ -222,4 +222,19 @@ public class SoapDocumentClient extends SoapClient<DocumentService> implements D
 			throws Exception {
 		return client.createDownloadTicket(sid, docId, suffix, expireHours, expireDate);
 	}
+
+	@Override
+	public void setPassword(String sid, long docId, String password) throws Exception {
+		client.setPassword(sid, docId, password);
+	}
+
+	@Override
+	public void unsetPassword(String sid, long docId, String currentPassword) throws Exception {
+		client.unsetPassword(sid, docId, currentPassword);
+	}
+
+	@Override
+	public boolean unprotect(String sid, long docId, String password) throws Exception {
+		return client.unprotect(sid, docId, password);
+	}
 }

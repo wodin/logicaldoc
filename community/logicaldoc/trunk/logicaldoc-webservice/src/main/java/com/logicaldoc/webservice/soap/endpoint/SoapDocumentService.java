@@ -42,6 +42,7 @@ import com.logicaldoc.core.folder.Folder;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.searchengine.SearchEngine;
 import com.logicaldoc.core.security.Permission;
+import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.security.SessionManager;
 import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.store.Storer;
@@ -234,6 +235,12 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 
 			if (doc.getDocRef() != null)
 				doc = docDao.findById(doc.getDocRef());
+
+			if (doc.isPasswordProtected()) {
+				Session session = SessionManager.get().get(sid);
+				if (!session.getUnprotectedDocs().containsKey(doc.getId()))
+					throw new Exception("The document " + doc + " is protected by a password");
+			}
 
 			Storer storer = (Storer) Context.get().getBean(Storer.class);
 			String resourceName = storer.getResourceName(doc, fileVersion, suffix);
@@ -895,5 +902,54 @@ public class SoapDocumentService extends AbstractService implements DocumentServ
 				transaction);
 
 		return ticket.getUrl();
+	}
+
+	@Override
+	public void setPassword(String sid, long docId, String password) throws Exception {
+		User user = validateSession(sid);
+		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		Document doc = dao.findById(docId);
+
+		checkPermission(Permission.PASSWORD, user, doc.getFolder().getId());
+
+		Session session = SessionManager.get().get(sid);
+
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSession(session);
+		transaction.setComment("");
+
+		doc = dao.findDocument(docId);
+		dao.setPassword(docId, password, transaction);
+	}
+
+	@Override
+	public void unsetPassword(String sid, long docId, String currentPassword) throws Exception {
+		User user = validateSession(sid);
+		DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
+		Document doc = dao.findById(docId);
+
+		checkPermission(Permission.PASSWORD, user, doc.getFolder().getId());
+
+		Session session = SessionManager.get().get(sid);
+
+		// Create the document history event
+		History transaction = new History();
+		transaction.setSession(session);
+		transaction.setComment("");
+
+		doc = dao.findDocument(docId);
+		if (doc.isGranted(currentPassword))
+			dao.unsetPassword(docId, transaction);
+		else
+			throw new Exception("You cannot access the document");
+	}
+
+	@Override
+	public boolean unprotect(String sid, long docId, String password) throws Exception {
+		validateSession();
+
+		DocumentManager manager = (DocumentManager) Context.get().getBean(DocumentManager.class);
+		return manager.unprotect(sid, docId, password);
 	}
 }

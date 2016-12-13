@@ -13,8 +13,8 @@ import com.logicaldoc.core.security.User;
 import com.logicaldoc.core.security.dao.GroupDAO;
 import com.logicaldoc.core.security.dao.UserDAO;
 import com.logicaldoc.webservice.AbstractWebServiceTestCase;
-import com.logicaldoc.webservice.model.WSRight;
 import com.logicaldoc.webservice.model.WSFolder;
+import com.logicaldoc.webservice.model.WSRight;
 
 /**
  * Test case for <code>SoapFolderService</code>

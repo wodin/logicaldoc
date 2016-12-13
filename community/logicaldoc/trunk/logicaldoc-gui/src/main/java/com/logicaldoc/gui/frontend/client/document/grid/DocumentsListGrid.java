@@ -154,6 +154,16 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		immutable.setCanFilter(false);
 		map.put(immutable.getName(), immutable);
 
+		ListGridField password = new ListGridField("password", " ", 20);
+		password.setType(ListGridFieldType.IMAGE);
+		password.setCanSort(false);
+		password.setAlign(Alignment.CENTER);
+		password.setShowDefaultContextMenu(false);
+		password.setImageURLPrefix(Util.imagePrefix());
+		password.setImageURLSuffix(".png");
+		password.setCanFilter(false);
+		map.put(password.getName(), password);
+
 		ListGridField indexed = new ListGridField("indexed", " ", 20);
 		indexed.setType(ListGridFieldType.IMAGE);
 		indexed.setCanSort(false);
@@ -315,7 +325,8 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		String[] extNames = Session.get().getInfo().getConfig("search.extattr").split(",");
 		for (String name : extNames) {
 			if (name != null && !"".equals(name)) {
-				ListGridField ext = new ListGridField("ext_" + name, Session.get().getInfo().getAttributeLabel(name), 100);
+				ListGridField ext = new ListGridField("ext_" + name, Session.get().getInfo().getAttributeLabel(name),
+						100);
 				ext.setHidden(true);
 				ext.setCanFilter(true);
 				map.put(ext.getName(), ext);
@@ -348,6 +359,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			fields.add(map.get("indexed"));
 			fields.add(map.get("locked"));
 			fields.add(map.get("immutable"));
+			fields.add(map.get("password"));
 			fields.add(map.get("signed"));
 			fields.add(map.get("stamped"));
 			fields.add(map.get("icon"));
@@ -450,6 +462,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 			fields.add(map.get("indexed"));
 			fields.add(map.get("locked"));
 			fields.add(map.get("immutable"));
+			fields.add(map.get("password"));
 			fields.add(map.get("signed"));
 			fields.add(map.get("stamped"));
 			fields.add(map.get("icon"));
@@ -819,7 +832,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		for (int i = 0; i < documents.length; i++) {
 			GUIDocument doc = documents[i];
 			ListGridRecord record = GridUtil.fromDocument(doc);
-			
+
 			records[i] = record;
 		}
 
@@ -858,6 +871,5 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	public DateDisplayFormat getDatetimeFormatter() {
 		return I18N.getDateDisplayFormat(true);
 	}
-	
-	
+
 }
