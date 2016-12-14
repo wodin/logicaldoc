@@ -26,8 +26,6 @@ import com.logicaldoc.gui.frontend.client.document.grid.DocumentsGrid;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsListGrid;
 import com.logicaldoc.gui.frontend.client.document.grid.DocumentsTileGrid;
 import com.logicaldoc.gui.frontend.client.panels.MainPanel;
-import com.logicaldoc.gui.frontend.client.services.DocumentService;
-import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.FolderService;
 import com.logicaldoc.gui.frontend.client.services.FolderServiceAsync;
 import com.smartgwt.client.types.SelectionType;
@@ -67,8 +65,6 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 	private Cursor cursor;
 
 	private FolderServiceAsync folderService = (FolderServiceAsync) GWT.create(FolderService.class);
-
-	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
 	private int mode = DocumentsGrid.MODE_LIST;
 
@@ -424,19 +420,20 @@ public class HitsListPanel extends VLayout implements SearchObserver, DocumentOb
 			return;
 
 		final GUIDocument hit = grid.getSelectedDocument();
-		DocumentProtectionManager.askForPassword(hit.getId(), new DocumentProtectionHandler() {
-			@Override
-			public void onUnprotected(GUIDocument document) {
-				onSelectHit(hit);
-			}
-		});
+		onSelectHit(hit);
 	}
 
-	private void onSelectHit(GUIDocument doc) {
-		if ("folder".equals(doc.getType()))
-			SearchPanel.get().onSelectedFolderHit(doc.getId());
-		else
-			SearchPanel.get().onSelectedDocumentHit(doc.getId());
+	private void onSelectHit(final GUIDocument hit) {
+		if ("folder".equals(hit.getType()))
+			SearchPanel.get().onSelectedFolderHit(hit.getId());
+		else {
+			DocumentProtectionManager.askForPassword(hit.getId(), new DocumentProtectionHandler() {
+				@Override
+				public void onUnprotected(GUIDocument document) {
+					SearchPanel.get().onSelectedDocumentHit(hit.getId());	
+				}
+			});
+		}
 	}
 
 	protected Menu prepareContextMenu(GUIFolder folder, final boolean document) {

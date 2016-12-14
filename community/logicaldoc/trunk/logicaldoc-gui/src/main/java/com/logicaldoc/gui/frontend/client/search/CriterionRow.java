@@ -28,7 +28,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
-public class RowCriteria extends HLayout {
+public class CriterionRow extends HLayout {
 
 	private ImgButton removeImg = null;
 
@@ -46,13 +46,16 @@ public class RowCriteria extends HLayout {
 
 	private String fieldSelected = "";
 
-	public RowCriteria(GUITemplate templ, int position) {
+	private boolean forDocument;
+
+	public CriterionRow(GUITemplate templ, int position, boolean forDocument) {
 		setMembersMargin(5);
 		setAlign(Alignment.LEFT);
 		setHeight(5);
 
 		this.template = templ;
 		this.rowPosition = position;
+		this.forDocument = forDocument;
 		reload();
 	}
 
@@ -78,7 +81,7 @@ public class RowCriteria extends HLayout {
 
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				ParametricForm.get().removeCriteriaRow(RowCriteria.this);
+				ParametricForm.get().removeCriteriaRow(CriterionRow.this);
 			}
 		});
 
@@ -94,10 +97,18 @@ public class RowCriteria extends HLayout {
 		attribute.setWidth(120);
 		attribute.setMultiple(false);
 		DataSource ds = null;
-		if (template != null)
-			ds = new DocumentFieldsDS(template);
-		else
-			ds = new DocumentFieldsDS(null);
+
+		if (forDocument) {
+			if (template != null)
+				ds = new DocumentFieldsDS(template);
+			else
+				ds = new DocumentFieldsDS(null);
+		} else {
+			if (template != null)
+				ds = new FolderFieldsDS(template);
+			else
+				ds = new FolderFieldsDS(null);
+		}
 
 		LinkedHashMap<String, String> fieldsMap = new LinkedHashMap<String, String>();
 		fieldsMap.put("", " ");
@@ -158,7 +169,7 @@ public class RowCriteria extends HLayout {
 				if (value instanceof DateItem)
 					return;
 
-				int padSize = RowCriteria.this.getWidth() - 230;
+				int padSize = CriterionRow.this.getWidth() - 230;
 				if (padSize < 100)
 					padSize = 100;
 				value.setWidth(padSize);
