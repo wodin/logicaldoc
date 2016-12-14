@@ -10,14 +10,17 @@ import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.services.SearchService;
 import com.logicaldoc.gui.frontend.client.services.SearchServiceAsync;
+import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.HeaderControls;
 import com.smartgwt.client.types.SelectionStyle;
+import com.smartgwt.client.widgets.Label;
 import com.smartgwt.client.widgets.Window;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
+import com.smartgwt.client.widgets.layout.VLayout;
 
 /**
  * This is a form used for quick folder selection
@@ -41,13 +44,13 @@ public class FolderSearchDialog extends Window {
 
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("folder"));
-		setWidth(500);
-		setHeight(450);
+		setWidth(450);
+		setHeight(600);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
 		centerInPage();
-		setPadding(5);
+		setPadding(3);
 		setMembersMargin(3);
 
 		form = new FolderSearchForm() {
@@ -57,7 +60,8 @@ public class FolderSearchDialog extends Window {
 			}
 		};
 		form.setWidth100();
-		form.setHeight(180);
+		form.setHeight100();
+		
 
 		grid.setWidth100();
 		grid.setHeight100();
@@ -81,8 +85,19 @@ public class FolderSearchDialog extends Window {
 			}
 		});
 
-		addItem(form);
-		addItem(grid);
+		VLayout formPanel=new VLayout();
+		formPanel.setWidth100();
+		formPanel.setHeight(300);
+		formPanel.setShowResizeBar(true);
+		formPanel.addMember(form);
+		
+		VLayout gridPanel=new VLayout();
+		formPanel.setWidth100();
+		gridPanel.setHeight("*");
+		gridPanel.addMember(grid);
+		
+		addItem(formPanel);
+		addItem(gridPanel);
 	}
 
 	protected void search(GUISearchOptions options) {

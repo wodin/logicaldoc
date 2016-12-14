@@ -63,10 +63,9 @@ public class SearchMenu extends SectionStack {
 		SectionStackSection foldersSection = new SectionStackSection(I18N.message("folders"));
 		foldersSection.setName("folders");
 		foldersSection.setExpanded(false);
-		foldersSection.setItems(new FoldersForm());
+		foldersSection.setItems(FoldersForm.get());
 		addSection(foldersSection);
 
-		
 		if (Feature.visible(Feature.SAVED_SEARCHES)) {
 			SectionStackSection savedSection = new SectionStackSection(I18N.message("savedsearches"));
 			savedSection.setName("saved");

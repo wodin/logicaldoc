@@ -28,7 +28,7 @@ import com.smartgwt.client.widgets.layout.HLayout;
  * @author Matteo Caruso - Logical Objects
  * @since 6.1
  */
-public class CriterionRow extends HLayout {
+public class ConditionRow extends HLayout {
 
 	private ImgButton removeImg = null;
 
@@ -42,19 +42,16 @@ public class CriterionRow extends HLayout {
 
 	private GUITemplate template = null;
 
-	private int rowPosition = 0;
-
 	private String fieldSelected = "";
 
 	private boolean forDocument;
 
-	public CriterionRow(GUITemplate templ, int position, boolean forDocument) {
+	public ConditionRow(GUITemplate templ, boolean forDocument) {
 		setMembersMargin(5);
 		setAlign(Alignment.LEFT);
 		setHeight(5);
 
 		this.template = templ;
-		this.rowPosition = position;
 		this.forDocument = forDocument;
 		reload();
 	}
@@ -76,12 +73,11 @@ public class CriterionRow extends HLayout {
 		removeImg.setSrc("[SKIN]/headerIcons/close.gif");
 		removeImg.setHeight(18);
 		removeImg.setWidth(18);
-		removeImg.setDisabled(rowPosition == 0);
 		removeImg.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				ParametricForm.get().removeCriteriaRow(CriterionRow.this);
+				ConditionRow.this.getParentCanvas().removeChild(ConditionRow.this);
 			}
 		});
 
@@ -169,7 +165,7 @@ public class CriterionRow extends HLayout {
 				if (value instanceof DateItem)
 					return;
 
-				int padSize = CriterionRow.this.getWidth() - 230;
+				int padSize = ConditionRow.this.getWidth() - 230;
 				if (padSize < 100)
 					padSize = 100;
 				value.setWidth(padSize);
@@ -249,13 +245,5 @@ public class CriterionRow extends HLayout {
 
 	public FormItem getValueFieldsItem() {
 		return value;
-	}
-
-	public int getRowPosition() {
-		return rowPosition;
-	}
-
-	public void setRowPosition(int rowPosition) {
-		this.rowPosition = rowPosition;
 	}
 }
