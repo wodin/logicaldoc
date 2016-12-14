@@ -19,7 +19,7 @@ import com.logicaldoc.gui.common.client.beans.GUITemplate;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
 import com.logicaldoc.gui.common.client.util.ItemFactory;
-import com.logicaldoc.gui.frontend.client.search.CriterionRow;
+import com.logicaldoc.gui.frontend.client.search.ConditionRow;
 import com.logicaldoc.gui.frontend.client.services.TemplateService;
 import com.logicaldoc.gui.frontend.client.services.TemplateServiceAsync;
 import com.smartgwt.client.types.Alignment;
@@ -28,7 +28,6 @@ import com.smartgwt.client.types.TitleOrientation;
 import com.smartgwt.client.util.JSOHelper;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.IButton;
-import com.smartgwt.client.widgets.ImgButton;
 import com.smartgwt.client.widgets.events.ResizedEvent;
 import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
@@ -56,11 +55,9 @@ public abstract class FolderSearchForm extends VLayout {
 
 	private TemplateServiceAsync service = (TemplateServiceAsync) GWT.create(TemplateService.class);
 
-	private List<CriterionRow> criteriaRows = null;
-
 	private GUITemplate selectedTemplate = null;
 
-	private VLayout rowsLayout = null;
+	private VLayout conditionsLayout = null;
 
 	public FolderSearchForm() {
 		setHeight100();
@@ -71,13 +68,20 @@ public abstract class FolderSearchForm extends VLayout {
 
 		setOverflow(Overflow.AUTO);
 
-		final DynamicForm languageForm = new DynamicForm();
-		languageForm.setValuesManager(vm);
-		languageForm.setTitleOrientation(TitleOrientation.TOP);
-		languageForm.setNumCols(2);
-		SelectItem language = ItemFactory.newLanguageSelector("language", true, false);
-		language.setDefaultValue("");
-		languageForm.setItems(language);
+		folder = new FolderSelector(null, true);
+		folder.setTitle(I18N.message("parent"));
+		folder.setEndRow(true);
+		folder.setWidth(150);
+
+		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders2"));
+		subfolders.setEndRow(true);
+
+		final DynamicForm folderForm = new DynamicForm();
+		folderForm.setWidth(180);
+		folderForm.setValuesManager(vm);
+		folderForm.setTitleOrientation(TitleOrientation.TOP);
+
+		folderForm.setItems(folder, subfolders);
 
 		IButton search = new IButton(I18N.message("search"));
 		search.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
@@ -89,7 +93,7 @@ public abstract class FolderSearchForm extends VLayout {
 		});
 
 		HLayout topLayout = new HLayout(80);
-		topLayout.setMembers(languageForm, search);
+		topLayout.setMembers(folderForm, search);
 		topLayout.setTop(3);
 		topLayout.setHeight(15);
 		addMember(topLayout);
@@ -99,18 +103,9 @@ public abstract class FolderSearchForm extends VLayout {
 		form.setTitleOrientation(TitleOrientation.TOP);
 		form.setNumCols(2);
 
-		folder = new FolderSelector(null, true);
-		folder.setColSpan(2);
-		folder.setEndRow(true);
-		folder.setWidth(200);
-
 		CheckboxItem casesensitive = new CheckboxItem("casesensitive", I18N.message("casesensitive"));
 		casesensitive.setValue(true);
 		CheckboxItem aliases = new CheckboxItem("aliases", I18N.message("retrievealiases"));
-
-		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders2"));
-		subfolders.setColSpan(2);
-		subfolders.setEndRow(true);
 
 		LinkedHashMap<String, String> matchMap = new LinkedHashMap<String, String>();
 		matchMap.put("and", I18N.message("matchall"));
@@ -142,114 +137,55 @@ public abstract class FolderSearchForm extends VLayout {
 							@Override
 							public void onSuccess(GUITemplate result) {
 								selectedTemplate = result;
-								reloadCriteriaRows(selectedTemplate, true);
 							}
 						});
 					} else {
 						selectedTemplate = null;
-						reloadCriteriaRows(selectedTemplate, true);
 					}
 				}
 			});
 
-			form.setItems(folder, subfolders, casesensitive, aliases, template, match);
+			form.setItems(casesensitive, aliases, template, match);
 		} else {
-			form.setItems(folder, subfolders, casesensitive, aliases, match);
+			form.setItems(casesensitive, aliases, match);
 		}
-
 		addMember(form);
 
-		ImgButton addImg = new ImgButton();
-		addImg.setShowDown(false);
-		addImg.setShowRollOver(false);
-		addImg.setLayoutAlign(Alignment.LEFT);
-		addImg.setSrc("[SKIN]/actions/add.png");
-		addImg.setHeight(18);
-		addImg.setWidth(18);
-		addImg.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
+		IButton add = new IButton(I18N.message("addcondition"));
+		add.setAutoFit(true);
+		add.addClickHandler(new com.smartgwt.client.widgets.events.ClickHandler() {
 
 			@Override
 			public void onClick(com.smartgwt.client.widgets.events.ClickEvent event) {
-				addCriteriaRow();
+				addCondition();
 			}
 		});
+		addMember(add);
 
-		addMember(addImg);
-
-		reloadCriteriaRows(null, false);
+		conditionsLayout = new VLayout(3);
+		addMember(conditionsLayout);
 
 		addResizedHandler(new ResizedHandler() {
 
 			@Override
 			public void onResized(ResizedEvent event) {
-				for (CriterionRow row : criteriaRows) {
-					row.setWidth(FolderSearchForm.this.getWidth() - 10);
-				}
+				if (conditionsLayout.getMembers() != null)
+					for (Canvas row : conditionsLayout.getMembers()) {
+						row.setWidth(FolderSearchForm.this.getWidth() - 10);
+					}
 			}
 		});
 	}
 
-	public void reloadCriteriaRows(GUITemplate template, boolean reload) {
-		// When the selected template change, we have to retrieve the correct
-		// criteria row,because someone has been deleted
-		if (criteriaRows != null && reload) {
-			criteriaRows.clear();
-			for (Canvas canvas : rowsLayout.getMembers()) {
-				if (canvas instanceof CriterionRow)
-					criteriaRows.add((CriterionRow) canvas);
-			}
-		}
-
-		if (rowsLayout != null) {
-			for (Canvas member : rowsLayout.getMembers()) {
-				removeMember(member);
-			}
-			removeMember(rowsLayout);
-		}
-
-		rowsLayout = new VLayout(3);
-
-		if (criteriaRows == null || criteriaRows.isEmpty()) {
-			criteriaRows = new ArrayList<CriterionRow>();
-			criteriaRows.add(new CriterionRow(template, 0, false));
-		}
-
-		// When the selected template change, we must reload the criteria
-		// field,so we reload all criteria rows
-		if (reload) {
-			int count = criteriaRows.size();
-			criteriaRows.clear();
-			for (int i = 0; i < count; i++)
-				criteriaRows.add(new CriterionRow(selectedTemplate, i, false));
-		}
-
-		for (CriterionRow row : criteriaRows) {
-			rowsLayout.addMember(row);
-		}
-
-		addMember(rowsLayout);
+	public void removeCondition(ConditionRow criteria) {
+		conditionsLayout.removeMember(criteria);
 	}
 
-	public void removeCriteriaRow(CriterionRow criteria) {
-		criteriaRows.remove(criteria);
-		rowsLayout.removeMember(criteria);
-		int i = 0;
-		for (CriterionRow rowCriteria : criteriaRows)
-			rowCriteria.setRowPosition(i++);
-	}
-
-	public void addCriteriaRow() {
-		criteriaRows.clear();
-		for (Canvas canvas : rowsLayout.getMembers()) {
-			if (canvas instanceof CriterionRow)
-				criteriaRows.add((CriterionRow) canvas);
-		}
-
-		CriterionRow row = new CriterionRow(selectedTemplate, criteriaRows.size(), false);
+	public void addCondition() {
+		ConditionRow row = new ConditionRow(selectedTemplate, false);
+		row.setWidth(getWidth() - 10);
 		row.reload();
-		criteriaRows.add(row);
-
-		reloadCriteriaRows(selectedTemplate, false);
+		conditionsLayout.addMember(row);
 	}
 
 	/**
@@ -287,67 +223,70 @@ public abstract class FolderSearchForm extends VLayout {
 		options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
 
 		List<GUICriterion> list = new ArrayList<GUICriterion>();
-		for (CriterionRow row : criteriaRows) {
-			String fieldName = row.getCriteriaFieldsItem().getValueAsString();
-			fieldName = fieldName.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
-			if (fieldName.startsWith("_"))
-				fieldName = fieldName.substring(1);
-			String fieldOperator = row.getOperatorsFieldsItem().getValueAsString();
-			Object fieldValue = row.getValueFieldsItem().getValue();
+		if (conditionsLayout.getMembers() != null)
+			for (Canvas canvas : conditionsLayout.getMembers()) {
+				ConditionRow condition = (ConditionRow) canvas;
+				String fieldName = condition.getCriteriaFieldsItem().getValueAsString();
+				fieldName = fieldName.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
+				if (fieldName.startsWith("_"))
+					fieldName = fieldName.substring(1);
+				String fieldOperator = condition.getOperatorsFieldsItem().getValueAsString();
+				Object fieldValue = condition.getValueFieldsItem().getValue();
 
-			// This lines are necessary to avoid error for GWT values type.
-			if (row.getValueFieldsItem() instanceof IntegerItem)
-				fieldValue = Long.parseLong(fieldValue.toString());
+				// This lines are necessary to avoid error for GWT values type.
+				if (condition.getValueFieldsItem() instanceof IntegerItem)
+					fieldValue = Long.parseLong(fieldValue.toString());
 
-			if (fieldName.endsWith("type:" + GUIAttribute.TYPE_INT)
-					|| fieldName.endsWith("type:" + GUIAttribute.TYPE_DOUBLE))
-				fieldValue = Long.parseLong(fieldValue.toString());
-			else if (fieldName.endsWith("type:" + GUIAttribute.TYPE_BOOLEAN))
-				fieldValue = fieldValue.toString().equals("yes") ? 1L : 0L;
-			else if (fieldName.endsWith("type:" + GUIAttribute.TYPE_DATE))
-				fieldValue = (Date) fieldValue;
-			else if (fieldName.endsWith("type:" + GUIAttribute.TYPE_STRING_PRESET)) {
-				fieldName = fieldName.replaceAll("type:" + GUIAttribute.TYPE_STRING_PRESET, "type:"
-						+ GUIAttribute.TYPE_STRING);
-			}
+				if (fieldName.endsWith("type:" + GUIAttribute.TYPE_INT)
+						|| fieldName.endsWith("type:" + GUIAttribute.TYPE_DOUBLE))
+					fieldValue = Long.parseLong(fieldValue.toString());
+				else if (fieldName.endsWith("type:" + GUIAttribute.TYPE_BOOLEAN))
+					fieldValue = fieldValue.toString().equals("yes") ? 1L : 0L;
+				else if (fieldName.endsWith("type:" + GUIAttribute.TYPE_DATE))
+					fieldValue = (Date) fieldValue;
+				else if (fieldName.endsWith("type:" + GUIAttribute.TYPE_STRING_PRESET)) {
+					fieldName = fieldName.replaceAll("type:" + GUIAttribute.TYPE_STRING_PRESET, "type:"
+							+ GUIAttribute.TYPE_STRING);
+				}
 
-			GUICriterion criterion = new GUICriterion();
-			criterion.setField(fieldName);
+				GUICriterion criterion = new GUICriterion();
+				criterion.setField(fieldName);
 
-			if (fieldValue instanceof Date)
-				criterion.setDateValue((Date) fieldValue);
-			else if (fieldValue instanceof Integer)
-				criterion.setLongValue(new Long((Integer) fieldValue));
-			else if (fieldValue instanceof Long)
-				criterion.setLongValue((Long) fieldValue);
-			else if (fieldValue instanceof Float)
-				criterion.setDoubleValue(new Double((Float) fieldValue));
-			else if (fieldValue instanceof Double)
-				criterion.setDoubleValue((Double) fieldValue);
-			else if (fieldValue instanceof String)
-				criterion.setStringValue((String) fieldValue);
-			else if (fieldValue instanceof JavaScriptObject) {
-				Map m = JSOHelper.convertToMap((JavaScriptObject) fieldValue);
-			}
+				if (fieldValue instanceof Date)
+					criterion.setDateValue((Date) fieldValue);
+				else if (fieldValue instanceof Integer)
+					criterion.setLongValue(new Long((Integer) fieldValue));
+				else if (fieldValue instanceof Long)
+					criterion.setLongValue((Long) fieldValue);
+				else if (fieldValue instanceof Float)
+					criterion.setDoubleValue(new Double((Float) fieldValue));
+				else if (fieldValue instanceof Double)
+					criterion.setDoubleValue((Double) fieldValue);
+				else if (fieldValue instanceof String)
+					criterion.setStringValue((String) fieldValue);
+				else if (fieldValue instanceof JavaScriptObject) {
+					Map m = JSOHelper.convertToMap((JavaScriptObject) fieldValue);
+				}
 
-			criterion.setOperator(fieldOperator.toLowerCase());
+				criterion.setOperator(fieldOperator.toLowerCase());
 
-			if (!fieldName.equals("tags")) {
-				list.add(criterion);
-			} else {
-				// In case of tags, we will have to create a criterion per tag
-				if (fieldName.equals("tags")) {
-					String[] tgs = ((SelectItem) row.getValueFieldsItem()).getValues();
-					for (String tag : tgs) {
-						GUICriterion c = new GUICriterion();
-						c.setField(fieldName);
-						c.setOperator(fieldOperator.toLowerCase());
-						c.setStringValue(tag);
-						list.add(c);
+				if (!fieldName.equals("tags")) {
+					list.add(criterion);
+				} else {
+					// In case of tags, we will have to create a criterion per
+					// tag
+					if (fieldName.equals("tags")) {
+						String[] tgs = ((SelectItem) condition.getValueFieldsItem()).getValues();
+						for (String tag : tgs) {
+							GUICriterion c = new GUICriterion();
+							c.setField(fieldName);
+							c.setOperator(fieldOperator.toLowerCase());
+							c.setStringValue(tag);
+							list.add(c);
+						}
 					}
 				}
 			}
-		}
 
 		if (options.getFolder() != null) {
 			GUICriterion criterion = new GUICriterion();

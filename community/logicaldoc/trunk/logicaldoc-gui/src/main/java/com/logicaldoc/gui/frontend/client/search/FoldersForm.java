@@ -10,10 +10,19 @@ import com.logicaldoc.gui.frontend.client.folder.FolderSearchForm;
  * @since 6.4
  */
 public class FoldersForm extends FolderSearchForm {
-	public FoldersForm() {
+	private static FoldersForm instance;
+
+	public static FoldersForm get() {
+		if (instance == null)
+			instance = new FoldersForm();
+		return instance;
+	}
+	
+	private FoldersForm() {
 		super();
 	}
 
+	
 	@Override
 	protected void search(GUISearchOptions options) {
 		if (options != null) {
