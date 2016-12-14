@@ -16,7 +16,9 @@ public class FoldersForm extends FolderSearchForm {
 
 	@Override
 	protected void search(GUISearchOptions options) {
-		Search.get().setOptions(options);
-		Search.get().search();
+		if (options != null) {
+			Search.get().setOptions(options);
+			Search.get().search();
+		}
 	}
 }

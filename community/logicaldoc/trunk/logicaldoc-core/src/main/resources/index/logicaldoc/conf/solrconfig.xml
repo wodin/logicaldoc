@@ -7,7 +7,6 @@
                     class="${solr.directoryFactory:solr.NRTCachingDirectoryFactory}" />
   <indexConfig>
     <useCompoundFile>false</useCompoundFile>
-    <mergeFactor>10</mergeFactor>
     <!-- Sets the amount of RAM that may be used by Lucene indexing
          for buffering added documents and deletions before they are
          flushed to the Directory.  -->
@@ -21,7 +20,6 @@
     <writeLockTimeout>3000</writeLockTimeout>
     <!-- <commitLockTimeout>2000</commitLockTimeout> -->
     <lockType>simple</lockType>
-    <unlockOnStartup>true</unlockOnStartup>
     <reopenReaders>true</reopenReaders>
 
     <!-- Commit Deletion Policy
@@ -53,6 +51,11 @@
       -->
     </deletionPolicy>
 
+    <mergePolicyFactory class="org.apache.solr.index.TieredMergePolicyFactory">
+      <int name="maxMergeAtOnce">10</int>
+      <int name="segmentsPerTier">10</int>
+    </mergePolicyFactory>
+    
     <!-- Lucene Infostream
          To aid in advanced debugging, Lucene provides an "InfoStream"
          of detailed information when indexing.

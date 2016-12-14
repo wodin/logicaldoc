@@ -223,8 +223,8 @@
 
   <extension plugin-id="logicaldoc-core" point-id="Search" id="folderSearch">
     <parameter id="type" value="3" />
-    <parameter id="class" value="com.logicaldoc.core.searchengine.FolderSearch" />
-    <parameter id="options" value="com.logicaldoc.core.searchengine.FolderSearchOptions" />
+    <parameter id="class" value="com.logicaldoc.core.searchengine.folder.FolderSearch" />
+    <parameter id="options" value="com.logicaldoc.core.searchengine.folder.FolderSearchOptions" />
   </extension>
   
   <extension plugin-id="logicaldoc-core" point-id="DbInit" id="coreDbInit">

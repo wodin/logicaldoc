@@ -22,10 +22,7 @@ import com.smartgwt.client.widgets.events.ResizedEvent;
 import com.smartgwt.client.widgets.events.ResizedHandler;
 import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
-import com.smartgwt.client.widgets.form.fields.DateItem;
-import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.TextItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -189,44 +186,29 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 				extendedItems.clear();
 
 				for (GUIAttribute att : result) {
+					final FormItem item;
 					if (att.getType() == GUIAttribute.TYPE_STRING) {
-						FormItem item = ItemFactory.newStringItemForAttribute(att);
+						item = ItemFactory.newStringItemForAttribute(att);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((String) document.getValue(att.getName()));
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!updateEnabled);
-						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_INT) {
-						IntegerItem item = ItemFactory.newIntegerItemForAttribute(att.getName(), att.getLabel(), null);
+						item = ItemFactory.newIntegerItemForAttribute(att.getName(), att.getLabel(), null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Long) document.getValue(att.getName()));
-						item.setRequired(att.isMandatory());
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!updateEnabled);
-						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
-						SelectItem item = ItemFactory.newBooleanSelectorForAttribute(att.getName(), att.getLabel(),
+						item = ItemFactory.newBooleanSelectorForAttribute(att.getName(), att.getLabel(),
 								!att.isMandatory());
 						if (document.getValue(att.getName()) != null)
 							item.setValue(((Boolean) document.getValue(att.getName())).booleanValue() ? "1" : "0");
-						item.setRequired(att.isMandatory());
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!updateEnabled);
-						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
-						FloatItem item = ItemFactory.newFloatItemForAttribute(att.getName(), att.getLabel(), null);
+						item = ItemFactory.newFloatItemForAttribute(att.getName(), att.getLabel(), null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Double) document.getValue(att.getName()));
-						item.setRequired(att.isMandatory());
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!updateEnabled);
-						extendedItems.add(item);
+
 					} else if (att.getType() == GUIAttribute.TYPE_DATE) {
-						final DateItem item = ItemFactory.newDateItemForAttribute(att.getName(), att.getLabel());
+						item = ItemFactory.newDateItemForAttribute(att.getName(), att.getLabel());
 						if (document.getValue(att.getName()) != null)
 							item.setValue((Date) document.getValue(att.getName()));
-						item.setRequired(att.isMandatory());
-						item.addChangedHandler(changedHandler);
 						item.addKeyPressHandler(new KeyPressHandler() {
 							@Override
 							public void onKeyPress(KeyPressEvent event) {
@@ -240,20 +222,24 @@ public class ExtendedPropertiesPanel extends DocumentDetailTab {
 								}
 							}
 						});
-						item.setDisabled(!updateEnabled);
-						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_USER) {
-						SelectItem item = ItemFactory.newUserSelectorForAttribute(att.getName(), att.getLabel(),
+						item = ItemFactory.newUserSelectorForAttribute(att.getName(), att.getLabel(),
 								(att.getOptions() != null && att.getOptions().length > 0) ? att.getOptions()[0] : null);
 						if (document.getValue(att.getName()) != null)
 							item.setValue((document.getValue(att.getName()).toString()));
+					} else {
+						item = null;
+					}
+					
+					if (item != null) {
 						item.setRequired(att.isMandatory());
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!updateEnabled);
 						extendedItems.add(item);
 					}
+
+					form2.setItems(extendedItems.toArray(new FormItem[0]));
 				}
-				form2.setItems(extendedItems.toArray(new FormItem[0]));
 			}
 		});
 	}

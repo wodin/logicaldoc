@@ -105,6 +105,9 @@ public abstract class Search {
 			break;
 		}
 
+		if (options == null)
+			log.error("Unable to find a search definition of type " + type);
+
 		return options;
 	}
 

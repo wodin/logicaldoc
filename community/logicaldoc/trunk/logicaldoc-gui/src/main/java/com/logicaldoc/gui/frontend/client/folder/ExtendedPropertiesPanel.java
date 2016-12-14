@@ -27,9 +27,7 @@ import com.smartgwt.client.widgets.form.DynamicForm;
 import com.smartgwt.client.widgets.form.ValuesManager;
 import com.smartgwt.client.widgets.form.fields.ButtonItem;
 import com.smartgwt.client.widgets.form.fields.DateItem;
-import com.smartgwt.client.widgets.form.fields.FloatItem;
 import com.smartgwt.client.widgets.form.fields.FormItem;
-import com.smartgwt.client.widgets.form.fields.IntegerItem;
 import com.smartgwt.client.widgets.form.fields.RadioGroupItem;
 import com.smartgwt.client.widgets.form.fields.SelectItem;
 import com.smartgwt.client.widgets.form.fields.events.ChangedEvent;
@@ -176,7 +174,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 			vm.removeMembers(form2);
 			removeMember(form2);
 		}
-		
+
 		form2 = new DynamicForm();
 		form2.setValuesManager(vm);
 		form2.setTitleOrientation(TitleOrientation.TOP);
@@ -199,43 +197,26 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 				extendedItems.clear();
 
 				for (GUIAttribute att : result) {
+					final FormItem item;
 					if (att.getType() == GUIAttribute.TYPE_STRING) {
-						FormItem item = ItemFactory.newStringItemForAttribute(att);
+						item = ItemFactory.newStringItemForAttribute(att);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((String) folder.getValue(att.getName()));
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
-						item.setRequired(false);
-						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_INT) {
-						IntegerItem item = ItemFactory.newIntegerItemForAttribute(att.getName(),
-								att.getLabel(), null);
+						item = ItemFactory.newIntegerItemForAttribute(att.getName(), att.getLabel(), null);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((Long) folder.getValue(att.getName()));
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
-						item.setRequired(false);
-						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_BOOLEAN) {
-						SelectItem item = ItemFactory.newBooleanSelectorForAttribute(att.getName(),
-								att.getLabel(), true);
+						item = ItemFactory.newBooleanSelectorForAttribute(att.getName(), att.getLabel(), true);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue(((Boolean) folder.getValue(att.getName())).booleanValue() ? "1" : "0");
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
-						item.setRequired(false);
-						extendedItems.add(item);
+
 					} else if (att.getType() == GUIAttribute.TYPE_DOUBLE) {
-						FloatItem item = ItemFactory.newFloatItemForAttribute(att.getName(), att.getLabel(),
-								null);
+						item = ItemFactory.newFloatItemForAttribute(att.getName(), att.getLabel(), null);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((Double) folder.getValue(att.getName()));
-						item.addChangedHandler(changedHandler);
-						item.setDisabled(!update);
-						item.setRequired(false);
-						extendedItems.add(item);
 					} else if (att.getType() == GUIAttribute.TYPE_DATE) {
-						final DateItem item = ItemFactory.newDateItemForAttribute(att.getName(), att.getLabel());
+						item = ItemFactory.newDateItemForAttribute(att.getName(), att.getLabel());
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((Date) folder.getValue(att.getName()));
 						item.addChangedHandler(changedHandler);
@@ -244,7 +225,7 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 							public void onKeyPress(KeyPressEvent event) {
 								if ("backspace".equals(event.getKeyName().toLowerCase())
 										|| "delete".equals(event.getKeyName().toLowerCase())) {
-									item.clearValue();
+									((DateItem) item).clearValue();
 									item.setValue((Date) null);
 									changedHandler.onChanged(null);
 								} else {
@@ -252,15 +233,21 @@ public class ExtendedPropertiesPanel extends FolderDetailTab {
 								}
 							}
 						});
-						item.setDisabled(!update);
-						item.setRequired(false);
-						extendedItems.add(item);
+
 					} else if (att.getType() == GUIAttribute.TYPE_USER) {
-						SelectItem item = ItemFactory.newUserSelectorForAttribute(att.getName(),
-								att.getLabel(),
+						item = ItemFactory.newUserSelectorForAttribute(att.getName(), att.getLabel(),
 								(att.getOptions() != null && att.getOptions().length > 0) ? att.getOptions()[0] : null);
 						if (folder.getValue(att.getName()) != null)
 							item.setValue((folder.getValue(att.getName()).toString()));
+						item.addChangedHandler(changedHandler);
+						item.setDisabled(!update);
+						item.setRequired(false);
+						extendedItems.add(item);
+					} else {
+						item = null;
+					}
+
+					if (item != null) {
 						item.addChangedHandler(changedHandler);
 						item.setDisabled(!update);
 						item.setRequired(false);

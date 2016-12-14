@@ -17,11 +17,12 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.i18n.Language;
 import com.logicaldoc.core.i18n.LanguageManager;
 import com.logicaldoc.core.metadata.Attribute;
-import com.logicaldoc.core.searchengine.FolderSearchOptions;
 import com.logicaldoc.core.searchengine.FulltextSearchOptions;
 import com.logicaldoc.core.searchengine.Hit;
 import com.logicaldoc.core.searchengine.Search;
 import com.logicaldoc.core.searchengine.SearchOptions;
+import com.logicaldoc.core.searchengine.folder.FolderCriterion;
+import com.logicaldoc.core.searchengine.folder.FolderSearchOptions;
 import com.logicaldoc.core.security.Session;
 import com.logicaldoc.core.util.UserUtil;
 import com.logicaldoc.gui.common.client.ServerException;
@@ -255,23 +256,27 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			op.setSizeMin(((FulltextSearchOptions) searchOptions).getSizeMin());
 		} else if (searchOptions.getType() == SearchOptions.TYPE_FOLDERS) {
 			List<GUICriterion> criteria = new ArrayList<GUICriterion>();
-
-			if (((FolderSearchOptions) searchOptions).getName() != null) {
+			for (FolderCriterion crit : ((FolderSearchOptions) searchOptions).getCriteria()) {
 				GUICriterion criterion = new GUICriterion();
-				criterion.setField("name");
-				criterion.setStringValue(((FolderSearchOptions) searchOptions).getName());
+
+				criterion.setField(crit.getFieldName());
+				if (crit.isExtendedAttribute())
+					criterion.setField(crit.getFieldName() + " type:" + crit.getType());
+
+				if (crit.getType() == Attribute.TYPE_DATE)
+					criterion.setDateValue(crit.getDateValue());
+				else if (crit.getType() == Attribute.TYPE_INT || crit.getType() == FolderCriterion.TYPE_FOLDER
+						|| crit.getType() == Attribute.TYPE_BOOLEAN)
+					criterion.setLongValue(crit.getLongValue());
+				else if (crit.getType() == Attribute.TYPE_DOUBLE)
+					criterion.setDoubleValue(crit.getDoubleValue());
+				else if (crit.getType() == Attribute.TYPE_STRING || crit.getType() == FolderCriterion.TYPE_LANGUAGE)
+					criterion.setStringValue(crit.getStringValue());
+
+				criterion.setOperator(crit.getOperator().toLowerCase());
 				criteria.add(criterion);
 			}
-			if (((FolderSearchOptions) searchOptions).getDescription() != null) {
-				GUICriterion criterion = new GUICriterion();
-				criterion.setField("description");
-				criterion.setStringValue(((FolderSearchOptions) searchOptions).getDescription());
-				criteria.add(criterion);
-			}
-
 			op.setCriteria(criteria.toArray(new GUICriterion[0]));
-			op.setCreationFrom(((FolderSearchOptions) searchOptions).getCreationFrom());
-			op.setCreationTo(((FolderSearchOptions) searchOptions).getCreationTo());
 		}
 
 		if (!searchOptions.getFilterIds().isEmpty()) {
@@ -307,16 +312,33 @@ public class SearchServiceImpl extends RemoteServiceServlet implements SearchSer
 			((FulltextSearchOptions) searchOptions).setSizeMax(options.getSizeMax());
 			((FulltextSearchOptions) searchOptions).setSizeMin(options.getSizeMin());
 		} else if (options.getType() == SearchOptions.TYPE_FOLDERS) {
-			for (GUICriterion criterion : options.getCriteria()) {
-				if ("name".equals(criterion.getField())) {
-					((FolderSearchOptions) searchOptions).setFolderName(criterion.getStringValue());
+			List<FolderCriterion> criteria = new ArrayList<FolderCriterion>();
+			for (GUICriterion crit : options.getCriteria()) {
+				FolderCriterion c = new FolderCriterion();
+				c.setField(crit.getField());
+				c.setComposition(options.getTopOperator());
+
+				String operator = null;
+				if ("icontains".equals(crit.getOperator()) || "inotcontains".equals(crit.getOperator()))
+					operator = crit.getOperator().substring(1);
+				else
+					operator = crit.getOperator();
+
+				c.setOperator(operator);
+
+				if (crit.getLongValue() != null) {
+					c.setValue(crit.getLongValue());
+				} else if (crit.getDateValue() != null) {
+					c.setValue(crit.getDateValue());
+				} else if (crit.getDoubleValue() != null) {
+					c.setValue(crit.getDoubleValue());
+				} else {
+					c.setValue(crit.getStringValue());
 				}
-				if ("description".equals(criterion.getField())) {
-					((FolderSearchOptions) searchOptions).setFolderDescription(criterion.getStringValue());
-				}
+
+				criteria.add(c);
 			}
-			((FolderSearchOptions) searchOptions).setCreationFrom(options.getCreationFrom());
-			((FolderSearchOptions) searchOptions).setCreationTo(options.getCreationTo());
+			((FolderSearchOptions) searchOptions).setCriteria(criteria.toArray(new FolderCriterion[0]));
 		}
 
 		if (options.getFilterIds() != null && options.getFilterIds().length > 0) {

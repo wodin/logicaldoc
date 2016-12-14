@@ -60,7 +60,7 @@ public class ParametricForm extends VLayout {
 
 	private FolderSelector folder;
 
-	private List<RowCriteria> criteriaRows = null;
+	private List<CriterionRow> criteriaRows = null;
 
 	private GUITemplate selectedTemplate = null;
 
@@ -196,7 +196,7 @@ public class ParametricForm extends VLayout {
 
 			@Override
 			public void onResized(ResizedEvent event) {
-				for (RowCriteria row : criteriaRows) {
+				for (CriterionRow row : criteriaRows) {
 					row.setWidth(ParametricForm.this.getWidth() - 10);
 				}
 			}
@@ -209,8 +209,8 @@ public class ParametricForm extends VLayout {
 		if (criteriaRows != null && reload) {
 			criteriaRows.clear();
 			for (Canvas canvas : rowsLayout.getMembers()) {
-				if (canvas instanceof RowCriteria)
-					criteriaRows.add((RowCriteria) canvas);
+				if (canvas instanceof CriterionRow)
+					criteriaRows.add((CriterionRow) canvas);
 			}
 		}
 
@@ -224,8 +224,8 @@ public class ParametricForm extends VLayout {
 		rowsLayout = new VLayout(3);
 
 		if (criteriaRows == null || criteriaRows.isEmpty()) {
-			criteriaRows = new ArrayList<RowCriteria>();
-			criteriaRows.add(new RowCriteria(template, 0));
+			criteriaRows = new ArrayList<CriterionRow>();
+			criteriaRows.add(new CriterionRow(template, 0, true));
 		}
 
 		// When the selected template change, we must reload the criteria
@@ -234,32 +234,32 @@ public class ParametricForm extends VLayout {
 			int count = criteriaRows.size();
 			criteriaRows.clear();
 			for (int i = 0; i < count; i++)
-				criteriaRows.add(new RowCriteria(selectedTemplate, i));
+				criteriaRows.add(new CriterionRow(selectedTemplate, i, true));
 		}
 
-		for (RowCriteria row : criteriaRows) {
+		for (CriterionRow row : criteriaRows) {
 			rowsLayout.addMember(row);
 		}
 
 		addMember(rowsLayout);
 	}
 
-	public void removeCriteriaRow(RowCriteria criteria) {
+	public void removeCriteriaRow(CriterionRow criteria) {
 		criteriaRows.remove(criteria);
 		rowsLayout.removeMember(criteria);
 		int i = 0;
-		for (RowCriteria rowCriteria : criteriaRows)
+		for (CriterionRow rowCriteria : criteriaRows)
 			rowCriteria.setRowPosition(i++);
 	}
 
 	public void addCriteriaRow() {
 		criteriaRows.clear();
 		for (Canvas canvas : rowsLayout.getMembers()) {
-			if (canvas instanceof RowCriteria)
-				criteriaRows.add((RowCriteria) canvas);
+			if (canvas instanceof CriterionRow)
+				criteriaRows.add((CriterionRow) canvas);
 		}
 
-		RowCriteria row = new RowCriteria(selectedTemplate, criteriaRows.size());
+		CriterionRow row = new CriterionRow(selectedTemplate, criteriaRows.size(), true);
 		row.reload();
 		criteriaRows.add(row);
 
@@ -304,7 +304,7 @@ public class ParametricForm extends VLayout {
 		options.setSearchInSubPath(new Boolean(vm.getValueAsString("subfolders")).booleanValue());
 
 		List<GUICriterion> list = new ArrayList<GUICriterion>();
-		for (RowCriteria row : criteriaRows) {
+		for (CriterionRow row : criteriaRows) {
 			String fieldName = row.getCriteriaFieldsItem().getValueAsString();
 			fieldName = fieldName.replaceAll(Constants.BLANK_PLACEHOLDER, " ");
 			if (fieldName.startsWith("_"))

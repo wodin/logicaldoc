@@ -40,12 +40,6 @@ public class SearchMenu extends SectionStack {
 		fulltextSection.setItems(new FulltextForm());
 		addSection(fulltextSection);
 
-		SectionStackSection foldersSection = new SectionStackSection(I18N.message("folders"));
-		foldersSection.setName("folders");
-		foldersSection.setExpanded(false);
-		foldersSection.setItems(new FoldersForm());
-		addSection(foldersSection);
-
 		if (Feature.visible(Feature.TAGS)) {
 			SectionStackSection tagsSection = new SectionStackSection(I18N.message("tags"));
 			tagsSection.setName("tags");
@@ -66,6 +60,13 @@ public class SearchMenu extends SectionStack {
 			addSection(parametricSection);
 		}
 
+		SectionStackSection foldersSection = new SectionStackSection(I18N.message("folders"));
+		foldersSection.setName("folders");
+		foldersSection.setExpanded(false);
+		foldersSection.setItems(new FoldersForm());
+		addSection(foldersSection);
+
+		
 		if (Feature.visible(Feature.SAVED_SEARCHES)) {
 			SectionStackSection savedSection = new SectionStackSection(I18N.message("savedsearches"));
 			savedSection.setName("saved");
