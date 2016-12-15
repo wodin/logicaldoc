@@ -67,6 +67,10 @@ public class GUIUser implements Serializable {
 
 	private String emailSignature = null;
 
+	private String email2 = "";
+
+	private String emailSignature2 = null;
+	
 	private String cell = "";
 
 	private boolean enabled = true;
@@ -523,5 +527,21 @@ public class GUIUser implements Serializable {
 
 	public void setDefaultWorkspace(Long defaultWorkspace) {
 		this.defaultWorkspace = defaultWorkspace;
+	}
+
+	public String getEmailSignature2() {
+		return emailSignature2;
+	}
+
+	public void setEmailSignature2(String emailSignature2) {
+		this.emailSignature2 = emailSignature2;
+	}
+
+	public String getEmail2() {
+		return email2;
+	}
+
+	public void setEmail2(String email2) {
+		this.email2 = email2;
 	}
 }

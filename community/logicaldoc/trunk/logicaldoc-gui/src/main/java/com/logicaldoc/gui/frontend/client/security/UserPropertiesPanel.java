@@ -174,12 +174,19 @@ public class UserPropertiesPanel extends HLayout {
 		if (!readonly)
 			email.addChangedHandler(changedHandler);
 
+		TextItem email2 = ItemFactory.newEmailItem("email2", "secondaryemail", false);
+		email2.setRequired(false);
+		email2.setDisabled(readonly);
+		email2.setValue(user.getEmail2());
+		if (!readonly)
+			email2.addChangedHandler(changedHandler);
+
 		if (user.getId() == 0L)
-			form1.setItems(changeAtLogin, notifyCredentials, enabled, expires, username, email, language, firstname,
-					name, address, postalcode, city, country, state, phone, cell);
+			form1.setItems(changeAtLogin, notifyCredentials, enabled, expires, username, email, firstname, name,
+					email2, language, address, postalcode, city, country, state, phone, cell);
 		else
 			form1.setItems(username, changeAtLogin, notifyCredentials, enabled, expires, email, firstname, name,
-					language, address, postalcode, city, country, state, phone, cell);
+					email2, language, address, postalcode, city, country, state, phone, cell);
 		addMember(layout);
 
 		prepareGroupsForm(readonly);
@@ -227,6 +234,7 @@ public class UserPropertiesPanel extends HLayout {
 			user.setPhone((String) values.get("phone"));
 			user.setCell((String) values.get("cell"));
 			user.setEmail((String) values.get("email"));
+			user.setEmail2((String) values.get("email2"));
 
 			if (user.getId() == 0L) {
 				user.setNotifyCredentials(new Boolean(values.get("notifyCredentials").toString()));

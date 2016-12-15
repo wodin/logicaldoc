@@ -69,14 +69,20 @@ public class WSUser {
 	@WSDoc(required = false)
 	private String state = "";
 
-	@WSDoc(description="default language; <a href='/wiki/LanguageSpecification'>See specification</a>")
+	@WSDoc(description = "default language; <a href='/wiki/LanguageSpecification'>See specification</a>")
 	private String language = "";
 
-	@WSDoc(description="address used for notifications, must be a valid e-mail")
+	@WSDoc(required = true, description = "address used for notifications, must be a valid e-mail")
 	private String email = "";
 
-	@WSDoc(description="a simple text to be used as a signature in the footer of the outgoing emails",required = false)
+	@WSDoc(description = "a simple text to be used as a signature in the footer of the outgoing emails", required = false)
 	private String emailSignature;
+
+	@WSDoc(required = false, description = "secondary email address, must be a valid e-mail")
+	private String email2 = "";
+
+	@WSDoc(description = "a simple text to be used as a signature in the footer of the outgoing emails", required = false)
+	private String emailSignature2;
 
 	@WSDoc(required = false)
 	private String telephone = "";
@@ -84,28 +90,28 @@ public class WSUser {
 	@WSDoc(required = false)
 	private String telephone2 = "";
 
-	@WSDoc(description="must be <b>0</b>")
+	@WSDoc(description = "must be <b>0</b>")
 	private int type = TYPE_DEFAULT;
 
-	@WSDoc(description="ids of the groups this user belongs to")
+	@WSDoc(description = "ids of the groups this user belongs to")
 	private long[] groupIds = new long[0];
 
-	@WSDoc(description="if <b>1</b> the user is enabled, if <b>0</b> the user is disabled")
+	@WSDoc(description = "if <b>1</b> the user is enabled, if <b>0</b> the user is disabled")
 	private int enabled = 1;
 
-	@WSDoc(description="last time the password was changed (format must be 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd')", required=false)
+	@WSDoc(description = "last time the password was changed (format must be 'yyyy-MM-dd HH:mm:ss' or 'yyyy-MM-dd')", required = false)
 	private String passwordChanged = "";
 
-	@WSDoc(description="if <b>1</b> the password is eligible for expiration, if <b>0</b> the password never expires")
+	@WSDoc(description = "if <b>1</b> the password is eligible for expiration, if <b>0</b> the password never expires")
 	private int passwordExpires = 0;
 
-	@WSDoc(description="must be <b>0</b>")
+	@WSDoc(description = "must be <b>0</b>")
 	private int source = 0;
 
-	@WSDoc(description="maximum allowed user's quota expressed in bytes, <b>-1</b> for no limits")
+	@WSDoc(description = "maximum allowed user's quota expressed in bytes, <b>-1</b> for no limits")
 	private long quota = -1;
 
-	@WSDoc(description=" actual quota used by the user ")
+	@WSDoc(description = " actual quota used by the user ")
 	private long quotaCount = 0;
 
 	@WSDoc(required = false)
@@ -345,6 +351,7 @@ public class WSUser {
 			user.setCity(getCity());
 			user.setCountry(getCountry());
 			user.setEmail(getEmail());
+			user.setEmail2(getEmail2());
 			user.setFirstName(getFirstName());
 			user.setName(getName());
 			user.setLanguage(getLanguage());
@@ -362,6 +369,7 @@ public class WSUser {
 			user.setPassword(getPassword());
 			user.setPasswordChanged(new Date());
 			user.setEmailSignature(getEmailSignature());
+			user.setEmailSignature2(getEmailSignature2());
 
 			if (getGroupIds().length > 0) {
 				GroupDAO groupDao = (GroupDAO) Context.get().getBean(GroupDAO.class);
@@ -389,6 +397,7 @@ public class WSUser {
 			wsUser.setCity(user.getCity());
 			wsUser.setCountry(user.getCountry());
 			wsUser.setEmail(user.getEmail());
+			wsUser.setEmail2(user.getEmail2());
 			wsUser.setFirstName(user.getFirstName());
 			wsUser.setName(user.getName());
 			wsUser.setLanguage(user.getLanguage());
@@ -408,6 +417,7 @@ public class WSUser {
 			wsUser.setPasswordChanged(WSUtil.convertDateToString(user.getPasswordChanged()));
 			wsUser.setLastModified(WSUtil.convertDateToString(user.getLastModified()));
 			wsUser.setEmailSignature(user.getEmailSignature());
+			wsUser.setEmailSignature2(user.getEmailSignature2());
 
 			if (user.getGroups() != null && user.getGroups().size() > 0) {
 				long[] groupIds = new long[user.getGroups().size()];
@@ -441,5 +451,21 @@ public class WSUser {
 
 	public void setEmailSignature(String emailSignature) {
 		this.emailSignature = emailSignature;
+	}
+
+	public String getEmail2() {
+		return email2;
+	}
+
+	public void setEmail2(String email2) {
+		this.email2 = email2;
+	}
+
+	public String getEmailSignature2() {
+		return emailSignature2;
+	}
+
+	public void setEmailSignature2(String emailSignature2) {
+		this.emailSignature2 = emailSignature2;
 	}
 }

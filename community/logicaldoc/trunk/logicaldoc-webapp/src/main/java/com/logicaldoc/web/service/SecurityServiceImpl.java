@@ -148,7 +148,9 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 
 			guiUser.setName(user.getName());
 			guiUser.setEmail(user.getEmail());
+			guiUser.setEmail2(user.getEmail2());
 			guiUser.setEmailSignature(user.getEmailSignature());
+			guiUser.setEmailSignature2(user.getEmailSignature2());
 
 			GUIGroup[] groups = new GUIGroup[user.getGroups().size()];
 			int i = 0;
@@ -389,6 +391,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				usr.setCity(user.getCity());
 				usr.setCountry(user.getCountry());
 				usr.setEmail(user.getEmail());
+				usr.setEmail2(user.getEmail2());
 				usr.setEnabled(user.getEnabled() == 1);
 				usr.setFirstName(user.getFirstName());
 				usr.setLanguage(user.getLanguage());
@@ -405,6 +408,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 				usr.setIpWhitelist(user.getIpWhiteList());
 				usr.setIpBlacklist(user.getIpBlackList());
 				usr.setEmailSignature(user.getEmailSignature());
+				usr.setEmailSignature2(user.getEmailSignature2());
 
 				GUIGroup[] grps = new GUIGroup[user.getGroups().size()];
 				int i = 0;
@@ -521,6 +525,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setCity(user.getCity());
 			usr.setCountry(user.getCountry());
 			usr.setEmail(user.getEmail());
+			usr.setEmail2(user.getEmail2());
 			usr.setFirstName(user.getFirstName());
 			usr.setName(user.getName());
 			usr.setLanguage(user.getLanguage());
@@ -655,6 +660,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setFirstName(user.getFirstName());
 			usr.setName(user.getName());
 			usr.setEmail(user.getEmail());
+			usr.setEmail2(user.getEmail2());
 			usr.setLanguage(user.getLanguage());
 			usr.setStreet(user.getAddress());
 			usr.setPostalcode(user.getPostalCode());
@@ -666,6 +672,7 @@ public class SecurityServiceImpl extends RemoteServiceServlet implements Securit
 			usr.setWelcomeScreen(user.getWelcomeScreen());
 			usr.setDefaultWorkspace(user.getDefaultWorkspace());
 			usr.setEmailSignature(user.getEmailSignature());
+			usr.setEmailSignature2(user.getEmailSignature2());
 
 			userDao.store(usr);
 		} catch (Throwable t) {

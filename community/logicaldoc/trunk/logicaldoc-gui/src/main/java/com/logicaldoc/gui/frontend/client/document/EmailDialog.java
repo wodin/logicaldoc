@@ -70,6 +70,10 @@ public class EmailDialog extends Window {
 
 	private ListGrid recipientsGrid;
 
+	final RichTextItem message = new RichTextItem();
+
+	final SelectItem from = ItemFactory.newEmailFromSelector("from", null);
+
 	public EmailDialog(long[] docIds, final String docTitle) {
 		super();
 		this.docIds = docIds;
@@ -84,7 +88,7 @@ public class EmailDialog extends Window {
 		setHeaderControls(HeaderControls.HEADER_LABEL, HeaderControls.CLOSE_BUTTON);
 		setTitle(I18N.message("sendmail"));
 		setWidth(550);
-		setHeight(550);
+		setHeight(560);
 		setCanDragResize(true);
 		setIsModal(true);
 		setShowModalMask(true);
@@ -107,12 +111,19 @@ public class EmailDialog extends Window {
 		subject.setRequired(true);
 		subject.setWidth(350);
 
-		final RichTextItem message = new RichTextItem();
 		message.setName("message");
 		message.setTitle(I18N.message("message"));
 		message.setWidth("*");
 		message.setHeight("*");
 		message.setColSpan(2);
+
+		from.addChangedHandler(new ChangedHandler() {
+
+			@Override
+			public void onChanged(ChangedEvent event) {
+				updateSignature();
+			}
+		});
 
 		final SelectItem messageTemplate = ItemFactory.newSelectItem("template", "messagetemplate");
 		messageTemplate.addChangedHandler(new ChangedHandler() {
@@ -132,19 +143,15 @@ public class EmailDialog extends Window {
 								@Override
 								public void onSuccess(GUIMessageTemplate t) {
 									subject.setValue(t.getSubject());
-									message.setValue(t.getBody() + "<br /><br />"
-											+ Session.get().getUser().getEmailSignatureStr());
 								}
 							});
 				} else {
 					subject.setValue(docTitle);
-					message.setValue("<br /><br />" + Session.get().getUser().getEmailSignatureStr());
 				}
 			}
 		});
 
-		if (Session.get().getUser().getEmailSignature() != null)
-			message.setValue("<br /><br />" + Session.get().getUser().getEmailSignature());
+		updateSignature();
 
 		final CheckboxItem pdf = new CheckboxItem("pdf");
 		pdf.setTitle(I18N.message("sendpdfconversion"));
@@ -173,9 +180,9 @@ public class EmailDialog extends Window {
 
 		// The download ticket is available on single selection only
 		if (docIds.length == 1)
-			form.setFields(messageTemplate, subject, ticket, pdf, message);
+			form.setFields(from, messageTemplate, subject, ticket, pdf, message);
 		else
-			form.setFields(messageTemplate, subject, zip, pdf, message);
+			form.setFields(from, messageTemplate, subject, zip, pdf, message);
 
 		final IButton send = new IButton();
 		send.setTitle(I18N.message("send"));
@@ -187,6 +194,7 @@ public class EmailDialog extends Window {
 				vm.validate();
 				if (!vm.hasErrors()) {
 					GUIEmail mail = new GUIEmail();
+					mail.setFrom(from.getValueAsString());
 					mail.setSubject(subject.getValueAsString());
 					mail.setMessage(message.getValue().toString());
 					mail.setSendAsTicket(ticket.getValue() != null && ticket.getValueAsBoolean());
@@ -276,6 +284,26 @@ public class EmailDialog extends Window {
 				messageTemplate.setValue("");
 			}
 		});
+	}
+
+	/**
+	 * Updates the signature at the end of the message
+	 */
+	private void updateSignature() {
+		String sgn = Session.get().getUser().getEmailSignature();
+		if (!from.getValue().equals(Session.get().getUser().getEmail()))
+			sgn = Session.get().getUser().getEmailSignature2();
+
+		String currentMessage = message.getValue() != null ? message.getValue().toString() : "";
+		String signatureSeparator = "--";
+		int index = currentMessage.lastIndexOf(signatureSeparator);
+		if (index > 0)
+			currentMessage = currentMessage.substring(0, index);
+
+		if (!currentMessage.endsWith("<br />"))
+			currentMessage += "<br /><br />";
+
+		message.setValue(currentMessage + signatureSeparator + "<br />" + sgn);
 	}
 
 	private SectionStack prepareRecipientsGrid() {

@@ -1077,7 +1077,10 @@ public class DocumentServiceImpl extends RemoteServiceServlet implements Documen
 
 			mail.setAccountId(-1);
 			mail.setAuthor(session.getUser().getUsername());
-			mail.setAuthorAddress(session.getUser().getEmail());
+			if (StringUtils.isNotEmpty(email.getFrom()))
+				mail.setAuthorAddress(email.getFrom());
+			else
+				mail.setAuthorAddress(session.getUser().getEmail());
 
 			if (StringUtils.isNotEmpty(email.getRecipients()))
 				mail.parseRecipients(email.getRecipients());
