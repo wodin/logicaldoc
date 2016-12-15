@@ -220,6 +220,7 @@ public class DocumentsUploader extends Window {
 		metadata.setTemplateId(folder.getTemplateId());
 		metadata.setTemplate(folder.getTemplate());
 		metadata.setAttributes(folder.getAttributes());
+		metadata.setTags(folder.getTags());
 
 		UpdateDialog bulk = new UpdateDialog(null, metadata, UpdateDialog.CONTEXT_UPLOAD, false);
 		bulk.setZip(getImportZip());
