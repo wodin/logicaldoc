@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,15 @@ public class SoapFolderService extends AbstractService implements FolderService 
 			folderVO.setHidden(folder.getHidden());
 			folderVO.setFoldRef(folder.getFoldRef());
 			folderVO.setStorage(folder.getStorage());
+
+			Set<String> tagsSet = new TreeSet<String>();
+			if (folder.getTags() != null) {
+				for (int i = 0; i < folder.getTags().length; i++) {
+					tagsSet.add(folder.getTags()[i]);
+				}
+			}
+			folderVO.setTagsFromWords(tagsSet);
+			
 			folder.updateAttributes(folderVO);
 
 			Folder f = folderDao.create(parentFolder, folderVO, true, transaction);
@@ -501,6 +511,14 @@ public class SoapFolderService extends AbstractService implements FolderService 
 			fld.setTemplateLocked(folder.getTemplateLocked());
 			fld.setPosition(folder.getPosition());
 
+			Set<String> tagsSet = new TreeSet<String>();
+			if (folder.getTags() != null) {
+				for (int i = 0; i < folder.getTags().length; i++) {
+					tagsSet.add(folder.getTags()[i]);
+				}
+			}
+			fld.setTagsFromWords(tagsSet);
+			
 			folder.updateAttributes(fld);
 
 			// Add a folder history entry

@@ -42,4 +42,6 @@ public interface FolderServiceAsync {
 	void deleteFromTrash(Long[] ids, AsyncCallback<Void> callback);
 
 	void createAlias(long parentId, long foldRef, AsyncCallback<GUIFolder> callback);
+
+	void applyTags(long parentId, AsyncCallback<Void> callback);
 }

@@ -67,11 +67,18 @@ public interface FolderService extends RemoteService {
 	public GUIFolder inheritRights(long folderId, long rightsFolderId) throws ServerException;
 
 	/**
-	 * Applies all extendedAttributes to a sub-tree
+	 * Applies all extended attributes to a sub-tree
 	 * 
 	 * @param parentId The parent folder containing the metadata
 	 */
 	public void applyMetadata(long parentId) throws ServerException;
+
+	/**
+	 * Applies all tags to a sub-tree
+	 * 
+	 * @param parentId The parent folder containing the tags
+	 */
+	public void applyTags(long parentId) throws ServerException;
 
 	/**
 	 * Gets the Folder initializing the permissions.
@@ -132,6 +139,5 @@ public interface FolderService extends RemoteService {
 	/**
 	 * Applies a template to a folder
 	 */
-	public void applyTemplate(long folderId, long templateId, boolean inheritSecurity)
-			throws ServerException;
+	public void applyTemplate(long folderId, long templateId, boolean inheritSecurity) throws ServerException;
 }

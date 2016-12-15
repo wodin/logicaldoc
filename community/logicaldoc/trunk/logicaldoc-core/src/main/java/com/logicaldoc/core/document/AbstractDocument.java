@@ -128,6 +128,8 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private int stamped = 0;
 
 	private Set<Tag> tags = new HashSet<Tag>();
+	
+	private String tgs;
 
 	private Folder folder;
 
@@ -169,8 +171,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	 * Used for saving the external resource ID when editing online
 	 */
 	private String extResId;
-
-	private String tgs;
 
 	private int nature = NATURE_DOC;
 

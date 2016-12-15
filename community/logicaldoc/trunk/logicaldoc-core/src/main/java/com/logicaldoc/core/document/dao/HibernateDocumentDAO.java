@@ -993,10 +993,14 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 
 	@Override
 	public void cleanUnexistingUniqueTags() {
-		StringBuffer deleteStatement = new StringBuffer("delete from ld_uniquetag where not exists(");
+		StringBuffer deleteStatement = new StringBuffer("delete from ld_uniquetag where not exists( ");
 		deleteStatement.append(" select B.ld_tag ");
 		deleteStatement.append(" from ld_tag B ");
 		deleteStatement.append(" where ld_tenantid=B.ld_tenantid and ld_tag=B.ld_tag) ");
+		deleteStatement.append(" and not exists( ");
+		deleteStatement.append(" select C.ld_tag ");
+		deleteStatement.append(" from ld_foldertag C ");
+		deleteStatement.append(" where ld_tenantid=C.ld_tenantid and ld_tag=C.ld_tag) ");
 
 		jdbcUpdate(deleteStatement.toString());
 	}
@@ -1007,7 +1011,13 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		insertStatement.append(" select distinct(B.ld_tag), B.ld_tenantid, 0 from ld_tag B ");
 		insertStatement
 				.append(" where B.ld_tag not in (select A.ld_tag from ld_uniquetag A where A.ld_tenantid=B.ld_tenantid) ");
-
+		jdbcUpdate(insertStatement.toString());
+		
+		
+		insertStatement = new StringBuffer("insert into ld_uniquetag(ld_tag, ld_tenantid, ld_count) ");
+		insertStatement.append(" select distinct(B.ld_tag), B.ld_tenantid, 0 from ld_foldertag B ");
+		insertStatement
+				.append(" where B.ld_tag not in (select A.ld_tag from ld_uniquetag A where A.ld_tenantid=B.ld_tenantid) ");
 		jdbcUpdate(insertStatement.toString());
 	}
 

@@ -67,6 +67,10 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 	
 	private String color;
 
+	private String[] tags = null;
+	
+	private String tagsString;
+	
 	public GUIFolder() {
 
 	}
@@ -320,5 +324,61 @@ public class GUIFolder extends GUIExtensibleObject implements Serializable {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	public String[] getTags() {
+		return tags;
+	}
+
+	public void setTags(String[] tags) {
+		this.tags = tags;
+	}
+	
+	public void addTag(String tag) {
+		String[] tmp = null;
+		if (tags != null) {
+			tmp = new String[tags.length + 1];
+
+			int i = 0;
+			for (String tg : tags) {
+				// Skip if the tag already exists
+				if (tg.equals(tag))
+					return;
+				tmp[i++] = tg;
+			}
+			tmp[i] = tag;
+			tags = tmp;
+		} else
+			tags = new String[] { tag };
+	}
+
+	public void removeTag(String tag) {
+		if (tags == null || tags.length == 0)
+			return;
+
+		String[] tmp = new String[tags.length - 1];
+		int i = 0; 
+		for (String tg : tags) {
+			if (!tg.equals(tag) && tmp.length > 0)
+				tmp[i++] = tg;
+		}
+		tags = tmp;
+	}
+
+	public String getTagsString() {
+		if (tagsString != null || !tagsString.isEmpty())
+			return tagsString;
+		else {
+			StringBuffer buf = new StringBuffer();
+			for (String tag : getTags()) {
+				buf.append(tag);
+				buf.append(" ");
+			}
+			return buf.toString();
+		}
+	}
+	
+	public void setTagsString(String tagsString) {
+		this.tagsString = tagsString;
 	}
 }

@@ -154,7 +154,7 @@ public class TagsForm extends VLayout {
 		tags.setHeight100();
 		tags.setFields(index, word, count);
 		tags.setSelectionType(SelectionStyle.SINGLE);
-		tags.setDataSource(new TagsDS(letter, false, null));
+		tags.setDataSource(new TagsDS(letter, false, null, null));
 		addMember(tags);
 
 		tags.addCellDoubleClickHandler(new CellDoubleClickHandler() {

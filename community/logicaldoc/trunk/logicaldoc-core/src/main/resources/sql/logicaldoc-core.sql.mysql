@@ -44,6 +44,7 @@ create table ld_history (ld_id bigint not null, ld_lastmodified datetime not nul
                          ld_pathold varchar(4000), ld_notified int not null, ld_sessionid varchar(255), ld_new int, ld_filename varchar(255),
                          ld_filenameold varchar(255), primary key (ld_id));
 create table ld_tag (ld_docid bigint, ld_tenantid bigint not null, ld_tag varchar(255));
+create table ld_foldertag (ld_folderid bigint, ld_tenantid bigint not null, ld_tag varchar(255));
 create table ld_link (ld_id bigint not null, ld_lastmodified datetime not null, ld_recordversion bigint not null,  
                       ld_deleted int not null, ld_tenantid bigint not null, 
                       ld_type varchar(255) not null, ld_docid1 bigint, 
@@ -123,7 +124,8 @@ create table ld_folder (ld_id bigint not null, ld_lastmodified datetime not null
                         ld_type int not null, ld_creation datetime, ld_creator varchar(255), ld_creatorid bigint, 
                         ld_templateid bigint, ld_templocked int not null, ld_deleteuserid bigint, ld_position int not null,
                         ld_quotadocs bigint, ld_quotasize bigint, ld_hidden int not null, ld_foldref bigint, 
-                        ld_level int, ld_storage int,  ld_maxversions int, ld_color varchar(255), primary key (ld_id));
+                        ld_level int, ld_storage int,  ld_maxversions int, ld_color varchar(255), ld_tgs varchar(1000), 
+                        primary key (ld_id));
 create table ld_folder_ext (ld_folderid bigint not null, ld_mandatory int not null, ld_type int not null, ld_editor int not null,
                             ld_position int not null, ld_stringvalue varchar(4000), ld_intvalue bigint, ld_doublevalue float, 
                             ld_datevalue datetime null, ld_name varchar(255) not null, ld_label varchar(255), ld_setid bigint, 
@@ -204,6 +206,7 @@ alter table ld_folder add constraint FK_FOLDER_TEMPLATE foreign key (ld_template
 alter table ld_folder_ext add constraint FK_FOLDEREXT_FOLDER foreign key (ld_folderid) references ld_folder(ld_id);
 alter table ld_foldergroup add constraint FK_FGROUP_FOLDER foreign key (ld_folderid) references ld_folder(ld_id) on delete cascade;
 alter table ld_menugroup add constraint FK_MGROUP_MENU foreign key (ld_menuid) references ld_menu(ld_id) on delete cascade;
+alter table ld_foldertag add constraint FK_TAG_FOLDER foreign key (ld_folderid) references ld_folder(ld_id);
 
 create unique index AK_DOCUMENT on ld_document (ld_customid, ld_tenantid);
 create unique index AK_USER on ld_user (ld_username);
@@ -232,7 +235,8 @@ create index LD_HIST_EVENT on ld_history (ld_event);
 create index LD_FHIST_FID on ld_folder_history (ld_folderid);
 create index LD_FHIST_NOT on ld_folder_history (ld_notified);
 create index LD_TAG_TAG on ld_tag (ld_tag);
-create index DOC_EXT_NAME on ld_document_ext (ld_name);
+create index LD_FTAG_TAG on ld_foldertag (ld_tag);
+create index LD_EXT_NAME on ld_document_ext (ld_name);
 
 insert into ld_tenant(ld_id,ld_lastmodified,ld_deleted,ld_tenantid,ld_name,ld_displayname,ld_type,ld_enabled,ld_expire,ld_recordversion)
 values     (1,CURRENT_TIMESTAMP,0,1,'default','Default',0,1,null,1);

@@ -2,8 +2,10 @@ package com.logicaldoc.core.folder;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
+import com.logicaldoc.core.document.Tag;
 import com.logicaldoc.core.metadata.ExtensibleObject;
 import com.logicaldoc.core.metadata.Template;
 
@@ -80,6 +82,10 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 	private Integer maxVersions;
 
 	private String color;
+
+	private Set<Tag> tags = new HashSet<Tag>();
+
+	private String tgs;
 
 	public Folder(String name) {
 		this.name = name;
@@ -317,5 +323,81 @@ public class Folder extends ExtensibleObject implements Comparable<Folder> {
 
 	public void setColor(String color) {
 		this.color = color;
+	}
+
+	public Set<Tag> getTags() {
+		return tags;
+	}
+
+	public void setTags(Set<Tag> tags) {
+		this.tags = tags;
+	}
+
+	public String getTgs() {
+		return tgs;
+	}
+
+	public void setTgs(String tgs) {
+		this.tgs = tgs;
+	}
+
+	public void addTag(String word) {
+		Tag tg = new Tag();
+		tg.setTenantId(getTenantId());
+		tg.setTag(word);
+		tags.add(tg);
+	}
+
+	public void clearTags() {
+		tags.clear();
+		tags = new HashSet<Tag>();
+		tgs = null;
+	}
+
+	public void setTagsFromWords(Set<String> tgs) {
+		if (this.tags != null)
+			this.tags.clear();
+		else
+			this.tags = new HashSet<Tag>();
+
+		if (tgs != null)
+			for (String word : tgs) {
+				Tag tag = new Tag(getTenantId(), word);
+				this.tags.add(tag);
+			}
+	}
+
+	public Set<String> getTagsAsWords() {
+		Set<String> words = new HashSet<String>();
+		if (tags != null)
+			for (Tag tag : tags) {
+				words.add(tag.getTag());
+			}
+		return words;
+	}
+	
+	public String getTagsString() {
+		StringBuffer sb = new StringBuffer(",");
+		if (tags == null)
+			return "";
+
+		Iterator<Tag> iter = tags.iterator();
+		boolean start = true;
+
+		while (iter.hasNext()) {
+			String words = iter.next().toString();
+
+			if (!start) {
+				sb.append(",");
+			} else {
+				start = false;
+			}
+
+			sb.append(words);
+		}
+
+		sb.append(",");
+
+		return sb.toString();
 	}
 }

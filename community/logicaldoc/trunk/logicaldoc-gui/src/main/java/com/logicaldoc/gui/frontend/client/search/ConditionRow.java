@@ -229,7 +229,7 @@ public class ConditionRow extends HLayout {
 				|| criteriaField.endsWith("type:" + GUIAttribute.TYPE_DATE)) {
 			return ItemFactory.newDateItem("value", "date");
 		} else if (criteriaField.equals("tags")) {
-			return ItemFactory.newTagsMultiplePickList("value", "tags", new TagsDS(null, false, null), null);
+			return ItemFactory.newTagsMultiplePickList("value", "tags", new TagsDS(null, false, null, null), null);
 		} else {
 			return ItemFactory.newTextItem("value", "text", null);
 		}

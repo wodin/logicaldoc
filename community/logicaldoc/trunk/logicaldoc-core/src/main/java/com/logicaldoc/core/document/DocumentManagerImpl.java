@@ -116,7 +116,7 @@ public class DocumentManagerImpl implements DocumentManager {
 			documentDAO.initialize(document);
 
 			Folder originalDocFolder = document.getFolder();
-
+			
 			// Check CustomId uniqueness
 			if (docVO != null && docVO.getCustomId() != null) {
 				Document test = documentDAO.findByCustomId(docVO.getCustomId(), document.getTenantId());

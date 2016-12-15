@@ -240,7 +240,7 @@ public class StandardPropertiesPanel extends DocumentDetailTab {
 
 		if (Feature.enabled(Feature.TAGS)) {
 			String mode = Session.get().getConfig("tag.mode");
-			final TagsDS ds = new TagsDS(null, true, document.getId());
+			final TagsDS ds = new TagsDS(null, true, document.getId(),null);
 
 			tagItem = ItemFactory.newTagsComboBoxItem("tag", "tag", ds, (Object[]) document.getTags());
 			tagItem.setDisabled(!updateEnabled);

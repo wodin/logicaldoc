@@ -11,7 +11,7 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class TagsDS extends DataSource {
 
-	public TagsDS(String firstLetter, boolean editing, Long docId) {
+	public TagsDS(String firstLetter, boolean editing, Long docId, Long folderId) {
 		setTitleField("word");
 		setRecordXPath("/list/tag");
 		DataSourceTextField index = new DataSourceTextField("index");
@@ -20,7 +20,7 @@ public class TagsDS extends DataSource {
 		DataSourceTextField count = new DataSourceTextField("count");
 		setFields(index, word, count);
 		setDataURL("data/tags.xml?editing=" + editing + (firstLetter != null ? "&firstLetter=" + firstLetter : "")
-				+ (docId != null ? "&docId=" + docId : ""));
+				+ (docId != null ? "&docId=" + docId : "") + (folderId != null ? "&folderId=" + folderId : ""));
 		setClientOnly(true);
 	}
 }

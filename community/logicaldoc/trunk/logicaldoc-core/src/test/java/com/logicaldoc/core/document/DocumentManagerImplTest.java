@@ -224,7 +224,8 @@ public class DocumentManagerImplTest extends AbstractCoreTCase {
 		transaction.setNotified(0);
 		transaction.setComment("pippo_reason");
 		Folder newFolder = folderDao.findById(6);
-
+		folderDao.initialize(newFolder);
+		
 		Document newDoc = documentManager.createAlias(doc, newFolder, null, transaction);
 
 		Assert.assertNotSame(doc.getId(), newDoc.getId());
