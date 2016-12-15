@@ -27,10 +27,12 @@ public class FolderFieldsDS extends DataSource {
 		 * Define default fields
 		 */
 		DataSourceTextField folderName = new DataSourceTextField("name", I18N.message("name"));
-		folderName.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
+		folderName.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
+				OperatorId.NOT_EQUAL);
 
 		DataSourceTextField description = new DataSourceTextField("description", I18N.message("description"));
-		description.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
+		description.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
+				OperatorId.NOT_EQUAL);
 
 		DataSourceIntegerField id = new DataSourceIntegerField("id", I18N.message("id"));
 		id.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN, OperatorId.EQUALS, OperatorId.NOT_EQUAL);
@@ -38,11 +40,14 @@ public class FolderFieldsDS extends DataSource {
 		DataSourceTextField creator = new DataSourceTextField("creator", I18N.message("creator"));
 		creator.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS, OperatorId.EQUALS,
 				OperatorId.NOT_EQUAL);
-		
+
 		DataSourceDateTimeField created = new DataSourceDateTimeField("creation", I18N.message("createdon"));
 		created.setValidOperators(OperatorId.GREATER_THAN, OperatorId.LESS_THAN);
 
-		setFields(id, folderName, description, created, creator);
+		DataSourceTextField tags = new DataSourceTextField("tags", I18N.message("tags"));
+		tags.setValidOperators(OperatorId.ICONTAINS, OperatorId.INOT_CONTAINS);
+
+		setFields(id, folderName, description, created, creator, tags);
 
 		/*
 		 * Define extended attributes

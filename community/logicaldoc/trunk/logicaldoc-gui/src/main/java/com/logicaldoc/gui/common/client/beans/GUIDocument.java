@@ -23,6 +23,8 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private String customId;
 
 	private String[] tags = null;
+	
+	private String tagsString;
 
 	private String type;
 
@@ -87,8 +89,6 @@ public class GUIDocument extends GUIExtensibleObject implements Serializable {
 	private String extResId;
 
 	private int pages;
-
-	private String tagsString;
 
 	private int nature = 0;
 

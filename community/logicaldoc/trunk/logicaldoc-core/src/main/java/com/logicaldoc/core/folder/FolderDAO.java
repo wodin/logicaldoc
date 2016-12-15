@@ -151,7 +151,7 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public boolean isWriteEnabled(long folderId, long userId);
 
 	public boolean isReadEnabled(long folderId, long userId);
-	
+
 	public boolean isPrintEnabled(long folderId, long userId);
 
 	public boolean isDownloadEnabled(long folderId, long userId);
@@ -441,9 +441,14 @@ public interface FolderDAO extends PersistentObjectDAO<Folder> {
 	public boolean updateSecurityRef(long folderId, long rightsFolderId, FolderHistory transaction);
 
 	/**
-	 * Propagates the template metadata a node to the whole subree
+	 * Propagates the template metadata to the whole subree
 	 */
 	public boolean applyMetadataToTree(long id, FolderHistory transaction);
+
+	/**
+	 * Propagates the tags to the whole subree
+	 */
+	public boolean applyTagsToTree(long id, FolderHistory transaction);
 
 	/**
 	 * Counts the number of folders

@@ -27,6 +27,7 @@ import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
 import com.logicaldoc.core.document.History;
+import com.logicaldoc.core.document.Tag;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.metadata.Attribute;
 import com.logicaldoc.core.security.Group;
@@ -104,9 +105,30 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 				}
 			}
 
+			Set<Tag> src = folder.getTags();
+			if (src != null && src.size() > 0) {
+				// Trim too long tags
+				Set<Tag> dst = new HashSet<Tag>();
+				for (Tag str : src) {
+					str.setTenantId(folder.getTenantId());
+					String s = str.getTag();
+					if (s != null) {
+						if (s.length() > 255) {
+							s = s.substring(0, 255);
+							str.setTag(s);
+						}
+						if (!dst.contains(str))
+							dst.add(str);
+					}
+				}
+				folder.setTags(dst);
+				folder.setTgs(folder.getTagsString());
+			}
+
 			saveOrUpdate(folder);
 			saveFolderHistory(folder, transaction);
-		} catch (Exception e) {
+		} catch (Throwable e) {
+			e.printStackTrace();
 			log.error(e.getMessage(), e);
 			result = false;
 		}
@@ -1049,48 +1071,6 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	}
 
 	@Override
-	public boolean applyMetadataToTree(long id, FolderHistory transaction) {
-		boolean result = true;
-
-		Folder parent = findById(id);
-		if (parent == null)
-			return result;
-
-		try {
-			initialize(parent);
-			transaction.setEvent(FolderEvent.CHANGED.toString());
-			transaction.setTenantId(parent.getTenantId());
-
-			// Iterate over all children setting the template and field values
-			List<Folder> children = findChildren(id, null);
-			for (Folder folder : children) {
-				initialize(folder);
-
-				FolderHistory tr = (FolderHistory) transaction.clone();
-				tr.setFolderId(folder.getId());
-
-				folder.setTemplate(parent.getTemplate());
-				folder.setTemplateLocked(parent.getTemplateLocked());
-				for (String name : parent.getAttributeNames()) {
-					Attribute ext = (Attribute) parent.getAttributes().get(name).clone();
-					folder.getAttributes().put(name, ext);
-				}
-
-				store(folder, tr);
-				flush();
-
-				if (!applyMetadataToTree(folder.getId(), transaction))
-					return false;
-			}
-		} catch (Throwable e) {
-			if (log.isErrorEnabled())
-				log.error(e.getMessage(), e);
-			result = false;
-		}
-		return result;
-	}
-
-	@Override
 	public Folder createAlias(long parentId, long foldRef, FolderHistory transaction) {
 		Folder targetFolder = findFolder(foldRef);
 		assert (targetFolder != null);
@@ -1498,9 +1478,11 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 	public void initialize(Folder folder) {
 		refresh(folder);
 
-		for (FolderGroup fg : folder.getFolderGroups()) {
-			fg.getWrite();
-		}
+		if (folder.getFolderGroups() != null)
+			folder.getFolderGroups().size();
+
+		if (folder.getTags() != null)
+			folder.getTags().size();
 
 		try {
 			for (String attribute : folder.getAttributes().keySet()) {
@@ -1647,5 +1629,88 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 			log.warn(t.getMessage());
 		}
 		return folder;
+	}
+
+	@Override
+	public boolean applyMetadataToTree(long id, FolderHistory transaction) {
+		boolean result = true;
+
+		Folder parent = findById(id);
+		if (parent == null)
+			return result;
+
+		try {
+			initialize(parent);
+			transaction.setEvent(FolderEvent.CHANGED.toString());
+			transaction.setTenantId(parent.getTenantId());
+
+			// Iterate over all children setting the template and field values
+			List<Folder> children = findChildren(id, null);
+			for (Folder folder : children) {
+				initialize(folder);
+
+				FolderHistory tr = (FolderHistory) transaction.clone();
+				tr.setFolderId(folder.getId());
+
+				folder.setTemplate(parent.getTemplate());
+				folder.setTemplateLocked(parent.getTemplateLocked());
+				for (String name : parent.getAttributeNames()) {
+					Attribute ext = (Attribute) parent.getAttributes().get(name).clone();
+					folder.getAttributes().put(name, ext);
+				}
+
+				store(folder, tr);
+				flush();
+
+				if (!applyMetadataToTree(folder.getId(), transaction))
+					return false;
+			}
+		} catch (Throwable e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			result = false;
+		}
+		return result;
+	}
+
+	@Override
+	public boolean applyTagsToTree(long id, FolderHistory transaction) {
+		boolean result = true;
+
+		Folder parent = findById(id);
+		if (parent == null)
+			return result;
+
+		try {
+			initialize(parent);
+			transaction.setEvent(FolderEvent.CHANGED.toString());
+			transaction.setTenantId(parent.getTenantId());
+
+			// Iterate over all children setting the template and field values
+			List<Folder> children = findChildren(id, null);
+			for (Folder folder : children) {
+				initialize(folder);
+
+				FolderHistory tr = (FolderHistory) transaction.clone();
+				tr.setFolderId(folder.getId());
+
+				if (folder.getTags() != null)
+					folder.getTags().clear();
+				if (parent.getTags() != null)
+					for (Tag tag : parent.getTags())
+						folder.addTag(tag.getTag());
+
+				store(folder, tr);
+				flush();
+
+				if (!applyTagsToTree(folder.getId(), transaction))
+					return false;
+			}
+		} catch (Throwable e) {
+			if (log.isErrorEnabled())
+				log.error(e.getMessage(), e);
+			result = false;
+		}
+		return result;
 	}
 }

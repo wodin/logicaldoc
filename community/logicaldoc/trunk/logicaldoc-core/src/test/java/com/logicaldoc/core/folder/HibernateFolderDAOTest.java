@@ -167,6 +167,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		 * Now create a target folder and copy there inside
 		 */
 		Folder target = dao.createPath(defaultWorkspace, "target", true, null);
+		dao.initialize(target);
 		Assert.assertNotNull(target);
 		target.setTemplate(templateDao.findByName("email", Tenant.DEFAULT_ID));
 		target.setValue("from", "test@acme.com");
@@ -179,6 +180,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		dao.copy(source, target, false, true, tr);
 
 		Folder folder = dao.findByPath("/Default/target/pippo/pluto", Tenant.DEFAULT_ID);
+		dao.initialize(target);
 		Assert.assertNotNull(folder);
 		dao.initialize(folder);
 		Assert.assertEquals("email", folder.getTemplate().getName());
@@ -384,9 +386,11 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		dao.store(folder, transaction);
 
 		folder = dao.findById(7);
+		dao.initialize(folder);
 		dao.store(folder);
 
 		folder = dao.findById(7);
+		dao.initialize(folder);
 		folder.setName("xxxx");
 		transaction = new FolderHistory();
 		transaction.setFolderId(folder.getId());
@@ -396,6 +400,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		dao.store(folder, transaction);
 
 		folder = dao.findById(6);
+		dao.initialize(folder);
 		folder.getFolderGroups().remove(folder.getFolderGroup(2));
 		Assert.assertEquals(2, folder.getFolderGroups().size());
 		Assert.assertTrue(dao.store(folder));
@@ -403,12 +408,14 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(4, folder.getFolderGroups().size());
 
 		folder = dao.findById(1200);
+		dao.initialize(folder);
 		folder.setName("pippo");
 		Assert.assertTrue(dao.store(folder));
 		folder = dao.findById(1202);
 		Assert.assertNotNull(folder);
 
 		folder = dao.findById(1201);
+		dao.initialize(folder);
 		folder.setName("pippo2");
 		Assert.assertTrue(dao.store(folder));
 
@@ -608,7 +615,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertFalse(dao.isPrintEnabled(Folder.ROOTID, 999L));
 		Assert.assertTrue(dao.isPrintEnabled(1200, 3));
 	}
-	
+
 	@Test
 	public void testIsPermissionEnabled() {
 		Assert.assertTrue(dao.isPermissionEnabled(Permission.WRITE, Folder.ROOTID, 1));
@@ -771,6 +778,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 
 		// The root refers to another folder's policies
 		folder = dao.findById(1200);
+		dao.initialize(folder);
 		folder.setSecurityRef(5L);
 		dao.store(folder);
 		Assert.assertTrue(dao.applyRithtToTree(1200, transaction));
@@ -778,6 +786,30 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
 		folder = dao.findById(1202);
 		Assert.assertEquals(5L, folder.getSecurityRef().longValue());
+	}
+
+	@Test
+	public void testApplyTagsToTree() {
+		FolderHistory transaction = new FolderHistory();
+		User user = new User();
+		user.setId(4);
+		transaction.setUser(user);
+		transaction.setNotified(0);
+		
+		// The root defines it's own policies
+		Folder folder = dao.findById(1200L);
+		dao.initialize(folder);
+
+		Assert.assertTrue(folder.getTagsAsWords().contains("ftag1"));
+
+		folder = dao.findById(1201);
+		dao.initialize(folder);
+		Assert.assertTrue(folder.getTags().isEmpty());
+
+		dao.applyTagsToTree(1200L, transaction);
+		dao.findById(1201);
+		dao.initialize(folder);
+		Assert.assertTrue(folder.getTagsAsWords().contains("ftag1"));
 	}
 
 	@Test
@@ -819,6 +851,7 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		transaction.setNotified(0);
 
 		Folder folder = dao.findById(1200);
+		dao.initialize(folder);
 		Assert.assertNull(folder.getTemplate());
 		folder = dao.findById(1201);
 		Assert.assertNull(folder.getTemplate());
@@ -831,11 +864,10 @@ public class HibernateFolderDAOTest extends AbstractCoreTCase {
 		Template template = templateDao.findById(1L);
 		folder.setTemplate(template);
 		folder.setValue("attr1", "test");
-
 		dao.store(folder);
 
 		Assert.assertTrue(dao.applyMetadataToTree(1200, transaction));
-		folder = dao.findById(1200);
+		folder = dao.findById(1202);
 		dao.initialize(folder);
 		Assert.assertEquals("test1", folder.getTemplate().getName());
 		Assert.assertEquals("test", folder.getValue("attr1"));

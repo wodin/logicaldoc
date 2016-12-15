@@ -71,13 +71,12 @@ public abstract class FolderSearchForm extends VLayout {
 		folder = new FolderSelector(null, true);
 		folder.setTitle(I18N.message("parent"));
 		folder.setEndRow(true);
-		folder.setWidth(150);
+		folder.setWidth(160);
 
 		CheckboxItem subfolders = new CheckboxItem("subfolders", I18N.message("searchinsubfolders2"));
 		subfolders.setEndRow(true);
 
 		final DynamicForm folderForm = new DynamicForm();
-		folderForm.setWidth(180);
 		folderForm.setValuesManager(vm);
 		folderForm.setTitleOrientation(TitleOrientation.TOP);
 

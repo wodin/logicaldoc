@@ -90,7 +90,7 @@ public class UpdateStandardPropertiesPanel extends DocumentDetailTab {
 
 		if (Feature.enabled(Feature.TAGS)) {
 			String mode = Session.get().getConfig("tag.mode");
-			final DataSource ds = new TagsDS(null, true, document.getId());
+			final DataSource ds = new TagsDS(null, true, document.getId(), null);
 
 			tagItem = ItemFactory.newMultiComboBoxItem("tag", "tag", ds, (Object[]) document.getTags());
 			tagItem.setPrompt(I18N.message("typeatag"));

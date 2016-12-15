@@ -137,10 +137,10 @@ public class WSUtil {
 		}
 		fdao.initialize(folder);
 
-		Set<String> setTags = new TreeSet<String>();
+		Set<String> tagsSet = new TreeSet<String>();
 		if (wsDoc.getTags() != null) {
 			for (int i = 0; i < wsDoc.getTags().length; i++) {
-				setTags.add(wsDoc.getTags()[i]);
+				tagsSet.add(wsDoc.getTags()[i]);
 			}
 		}
 
@@ -175,7 +175,7 @@ public class WSUtil {
 		doc.setComment(wsDoc.getComment());
 		doc.setWorkflowStatus(wsDoc.getWorkflowStatus());
 		doc.setLocale(LocaleUtil.toLocale(wsDoc.getLanguage()));
-		doc.setTagsFromWords(setTags);
+		doc.setTagsFromWords(tagsSet);
 		doc.setTemplate(template);
 		if (template != null)
 			doc.setTemplateId(template.getId());

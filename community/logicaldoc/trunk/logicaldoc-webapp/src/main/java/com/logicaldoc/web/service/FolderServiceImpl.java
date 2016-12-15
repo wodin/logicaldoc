@@ -207,6 +207,11 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 				f.setAttributes(attributes);
 			}
 
+			if (folder.getTags().size() > 0)
+				f.setTags(folder.getTagsAsWords().toArray(new String[folder.getTags().size()]));
+			else
+				f.setTags(new String[0]);
+
 			/*
 			 * Count the children
 			 */
@@ -428,6 +433,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			// To avoid a 'org.hibernate.StaleObjectStateException', we
 			// must retrieve the folder from database.
 			Folder folder = dao.findById(folderId);
+			dao.initialize(folder);
 
 			// Add a folder history entry
 			FolderHistory history = new FolderHistory();
@@ -491,6 +497,9 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			f.setColor(folder.getColor());
 
 			updateExtendedAttributes(f, folder);
+
+			if (folder.getTags() != null && folder.getTags().length > 0)
+				f.setTagsFromWords(new HashSet<String>(Arrays.asList(folder.getTags())));
 
 			folderDao.store(f, transaction);
 		} catch (Throwable t) {
@@ -985,6 +994,20 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			String idsStr = Arrays.asList(ids).toString().replace('[', '(').replace(']', ')');
 			FolderDAO dao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			dao.bulkUpdate("set ld_deleted=2 where ld_id in " + idsStr, null);
+		} catch (Throwable t) {
+			ServiceUtil.throwServerException(session, log, t);
+		}
+	}
+
+	@Override
+	public void applyTags(long parentId) throws ServerException {
+		Session session = ServiceUtil.validateSession(getThreadLocalRequest());
+
+		try {
+			FolderDAO fdao = (FolderDAO) Context.get().getBean(FolderDAO.class);
+			FolderHistory transaction = new FolderHistory();
+			transaction.setSession(session);
+			fdao.applyTagsToTree(parentId, transaction);
 		} catch (Throwable t) {
 			ServiceUtil.throwServerException(session, log, t);
 		}

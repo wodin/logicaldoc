@@ -115,7 +115,7 @@ public class WSDocument implements Serializable {
 	@WSDoc(required = false, description = "<b>1</b> if the document contains at least one stamp")
 	private int stamped = 0;
 
-	@WSDoc(required = false, description = "tags to be applied to document")
+	@WSDoc(required = false, description = "tags applied to the document")
 	private String[] tags = new String[0];
 
 	@WSDoc(description = "parent folder")

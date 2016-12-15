@@ -18,6 +18,8 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.Tag;
 import com.logicaldoc.core.document.dao.DocumentDAO;
+import com.logicaldoc.core.folder.Folder;
+import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.generic.Generic;
 import com.logicaldoc.core.generic.GenericDAO;
 import com.logicaldoc.core.security.Session;
@@ -51,6 +53,7 @@ public class TagsDataServlet extends HttpServlet {
 			response.setHeader("Cache-Control", "no-store");
 			response.setDateHeader("Expires", 0);
 
+			FolderDAO fDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			DocumentDAO docDao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 			ContextProperties config = Context.get().getProperties();
 			String mode = config.getProperty(session.getTenantName() + ".tag.mode");
@@ -60,9 +63,15 @@ public class TagsDataServlet extends HttpServlet {
 
 			// Check if the data must be collected for a specific document
 			Document doc = null;
-			if (request.getParameter("docId") != null){
+			if (request.getParameter("docId") != null) {
 				doc = docDao.findDocument(Long.parseLong(request.getParameter("docId")));
 				docDao.initialize(doc);
+			}
+
+			Folder folder = null;
+			if (request.getParameter("folderId") != null) {
+				folder = fDao.findFolder(Long.parseLong(request.getParameter("folderId")));
+				fDao.initialize(folder);
 			}
 
 			HashMap<String, Long> tgs = new HashMap<String, Long>();
@@ -81,12 +90,23 @@ public class TagsDataServlet extends HttpServlet {
 			}
 
 			if (doc != null) {
-		
+
 				/*
 				 * In case a document was specified we have to enrich the list
 				 * with the document's tags
 				 */
 				for (Tag tag : doc.getTags())
+					if (!tgs.containsKey(tag.getTag()))
+						tgs.put(tag.getTag(), 1L);
+			}
+
+			if (folder != null) {
+
+				/*
+				 * In case a folder was specified we have to enrich the list
+				 * with the folder's tags
+				 */
+				for (Tag tag : folder.getTags())
 					if (!tgs.containsKey(tag.getTag()))
 						tgs.put(tag.getTag(), 1L);
 			}

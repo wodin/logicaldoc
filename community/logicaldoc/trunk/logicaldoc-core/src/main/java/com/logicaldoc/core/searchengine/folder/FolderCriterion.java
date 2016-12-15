@@ -68,7 +68,9 @@ public class FolderCriterion implements Serializable {
 		typeBinding.put("lastModified", Attribute.TYPE_DATE);
 
 		typeBinding.put("id", Attribute.TYPE_INT);
-
+		
+		typeBinding.put("folder", TYPE_FOLDER);
+		
 		typeBinding.put("template", TYPE_TEMPLATE);
 	}
 
