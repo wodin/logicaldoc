@@ -59,6 +59,7 @@ public class User extends PersistentObject implements Serializable {
 	private String language = "";
 
 	private String email = "";
+	
 
 	/**
 	 * A simple text to be used as a signature in the footer of the outgoing
@@ -66,6 +67,11 @@ public class User extends PersistentObject implements Serializable {
 	 */
 	private String emailSignature;
 
+
+	private String email2 = "";
+
+	private String emailSignature2;
+	
 	private String telephone = "";
 
 	private String telephone2 = "";
@@ -517,5 +523,21 @@ public class User extends PersistentObject implements Serializable {
 
 	public void setDefaultWorkspace(Long defaultWorkspace) {
 		this.defaultWorkspace = defaultWorkspace;
+	}
+
+	public String getEmail2() {
+		return email2;
+	}
+
+	public void setEmail2(String email2) {
+		this.email2 = email2;
+	}
+
+	public String getEmailSignature2() {
+		return emailSignature2;
+	}
+
+	public void setEmailSignature2(String emailSignature2) {
+		this.emailSignature2 = emailSignature2;
 	}
 }

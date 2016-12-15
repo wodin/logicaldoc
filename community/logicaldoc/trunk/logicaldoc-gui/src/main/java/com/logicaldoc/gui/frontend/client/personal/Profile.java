@@ -107,6 +107,27 @@ public class Profile extends Window {
 
 		emailForm.setFields(email, signature);
 
+		final DynamicForm emailForm2 = new DynamicForm();
+		emailForm2.setHeight100();
+		emailForm2.setValuesManager(vm);
+		emailForm2.setMargin(5);
+		emailForm2.setTitleOrientation(TitleOrientation.TOP);
+
+		TextItem email2 = ItemFactory.newEmailItem("email2", "secondaryemail", false);
+		email2.setRequired(true);
+		email2.setWidth(300);
+		email2.setValue(user.getEmail2());
+
+		RichTextItem signature2 = new RichTextItem();
+		signature2.setName("signature2");
+		signature2.setTitle(I18N.message("signature"));
+		signature2.setShowTitle(true);
+		signature2.setValue(user.getEmailSignature2());
+		signature2.setWidth("*");
+		signature2.setHeight("*");
+
+		emailForm2.setFields(email2, signature2);
+		
 		final TabSet tabs = new TabSet();
 		tabs.setHeight100();
 		tabs.setWidth100();
@@ -114,14 +135,17 @@ public class Profile extends Window {
 		detailsTab.setPane(detailsForm);
 		Tab emailTab = new Tab(I18N.message("email"));
 		emailTab.setPane(emailForm);
-		tabs.setTabs(detailsTab, emailTab);
+		Tab emailTab2 = new Tab(I18N.message("secondaryemail"));
+		emailTab2.setPane(emailForm2);
+
+		tabs.setTabs(detailsTab, emailTab, emailTab2);
 
 		ToolStripButton save = new ToolStripButton(I18N.message("save"));
 		save.addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				onSave(user, detailsForm, emailForm, tabs);
+				onSave(user, detailsForm, emailForm, emailForm2, tabs);
 			}
 		});
 		ToolStrip toolbar = new ToolStrip();
@@ -132,7 +156,7 @@ public class Profile extends Window {
 		addItem(tabs);
 	}
 
-	private void onSave(final GUIUser user, final DynamicForm detailsForm, final DynamicForm emailForm,
+	private void onSave(final GUIUser user, final DynamicForm detailsForm, final DynamicForm emailForm, final DynamicForm emailForm2,
 			final TabSet tabs) {
 		vm.validate();
 
@@ -140,13 +164,16 @@ public class Profile extends Window {
 			tabs.selectTab(0);
 		else if (!emailForm.validate())
 			tabs.selectTab(1);
-
+		else if (!emailForm2.validate())
+			tabs.selectTab(2);
+		
 		if (!vm.hasErrors()) {
 			GUIUser u = new GUIUser();
 			u.setId(user.getId());
 			u.setFirstName(vm.getValueAsString("firstname"));
 			u.setName(vm.getValueAsString("lastname"));
 			u.setEmail(vm.getValueAsString("email"));
+			u.setEmail2(vm.getValueAsString("email2"));
 			u.setLanguage(vm.getValueAsString("language"));
 			u.setAddress(vm.getValueAsString("address"));
 			u.setPostalCode(vm.getValueAsString("postalcode"));
@@ -160,6 +187,7 @@ public class Profile extends Window {
 			if (str != null && !str.isEmpty())
 				u.setDefaultWorkspace(Long.parseLong(str));
 			u.setEmailSignature(vm.getValueAsString("signature"));
+			u.setEmailSignature2(vm.getValueAsString("signature2"));
 
 			securityService.saveProfile(u, new AsyncCallback<GUIUser>() {
 				@Override
@@ -174,6 +202,8 @@ public class Profile extends Window {
 					user.setName(ret.getName());
 					user.setEmail(ret.getEmail());
 					user.setEmailSignature(ret.getEmailSignature());
+					user.setEmail2(ret.getEmail2());
+					user.setEmailSignature2(ret.getEmailSignature2());
 					user.setLanguage(ret.getLanguage());
 					user.setAddress(ret.getAddress());
 					user.setPostalCode(ret.getPostalCode());

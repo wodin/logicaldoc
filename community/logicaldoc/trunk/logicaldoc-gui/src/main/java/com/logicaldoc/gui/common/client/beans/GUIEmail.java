@@ -12,6 +12,8 @@ public class GUIEmail implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	private String from = null;
+
 	private String recipients;
 
 	private String cc;
@@ -21,7 +23,7 @@ public class GUIEmail implements Serializable {
 	private boolean sendAsTicket = false;
 
 	private boolean zipCompression = false;
-	
+
 	private boolean pdfConversion = false;
 
 	private String message;
@@ -103,5 +105,13 @@ public class GUIEmail implements Serializable {
 
 	public void setPdfConversion(boolean pdfConversion) {
 		this.pdfConversion = pdfConversion;
+	}
+
+	public String getFrom() {
+		return from;
+	}
+
+	public void setFrom(String from) {
+		this.from = from;
 	}
 }

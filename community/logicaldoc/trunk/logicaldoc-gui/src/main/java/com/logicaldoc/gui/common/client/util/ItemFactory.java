@@ -449,6 +449,28 @@ public class ItemFactory {
 		return selector;
 	}
 
+	public static SelectItem newEmailFromSelector(String name, String title) {
+		final SelectItem selector = new SelectItem(filterItemName(name));
+		if (title != null)
+			selector.setTitle(I18N.message(title));
+		else
+			selector.setTitle(I18N.message("from"));
+		selector.setWidth(300);
+		selector.setWrapTitle(false);
+		selector.setValueField("email");
+		selector.setDisplayField("email");
+		selector.setHideEmptyPickList(true);
+
+		if (Session.get().getUser().getEmail2() != null && !Session.get().getUser().getEmail2().isEmpty())
+			selector.setValueMap(Session.get().getUser().getEmail(), Session.get().getUser().getEmail2());
+		else
+			selector.setValueMap(Session.get().getUser().getEmail());
+		
+		selector.setValue(Session.get().getUser().getEmail());
+		
+		return selector;
+	}
+
 	public static SelectItem newGroupSelector(String name, String title) {
 		SelectItem group = new SelectItem(filterItemName(name));
 		group.setTitle(I18N.message(title));
