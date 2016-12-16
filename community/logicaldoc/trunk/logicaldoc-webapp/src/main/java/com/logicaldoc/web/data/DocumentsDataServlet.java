@@ -333,43 +333,19 @@ public class DocumentsDataServlet extends HttpServlet {
 					writer.print("<creator><![CDATA[" + doc.getCreator() + "]]></creator>");
 					writer.print("<size>" + doc.getFileSize() + "</size>");
 
-					if (doc.getImmutable() == 0)
-						writer.print("<immutable>blank</immutable>");
-					else if (doc.getImmutable() == 1)
-						writer.print("<immutable>stop</immutable>");
+					writer.print("<status>" + doc.getStatus() + "</status>");
+					writer.print("<immutable>" + doc.getImmutable() + "</immutable>");
+					writer.print("<indexed>" + doc.getIndexed() + "</indexed>");
+					writer.print("<password>" + StringUtils.isNotEmpty(doc.getPassword()) + "</password>");
+					writer.print("<signed>" + doc.getSigned() + "</signed>");
+					writer.print("<stamped>" + doc.getStamped() + "</stamped>");
 
-					if (StringUtils.isEmpty(doc.getPassword()))
-						writer.print("<password>blank</password>");
-					else
-						writer.print("<password>key</password>");
-
-					if (doc.getIndexed() == AbstractDocument.INDEX_TO_INDEX)
-						writer.print("<indexed>blank</indexed>");
-					else if (doc.getIndexed() == AbstractDocument.INDEX_INDEXED)
-						writer.print("<indexed>indexed</indexed>");
-					else if (doc.getIndexed() == AbstractDocument.INDEX_SKIP)
-						writer.print("<indexed>unindexable</indexed>");
-					if (doc.getStatus() == AbstractDocument.DOC_LOCKED)
-						writer.print("<locked>lock</locked>");
-					else if (doc.getStatus() == AbstractDocument.DOC_CHECKED_OUT)
-						writer.print("<locked>page_edit</locked>");
-					else
-						writer.print("<locked>blank</locked>");
 					if (doc.getLockUserId() != null)
 						writer.print("<lockUserId>" + doc.getLockUserId() + "</lockUserId>");
 					if (doc.getLockUser() != null)
 						writer.print("<lockUser><![CDATA[" + doc.getLockUser() + "]]></lockUser>");
 					writer.print("<filename><![CDATA[" + doc.getFileName() + "]]></filename>");
 					writer.print("<type><![CDATA[" + doc.getType() + "]]></type>");
-					writer.print("<status>" + doc.getStatus() + "</status>");
-					if (doc.getSigned() == 0)
-						writer.print("<signed>blank</signed>");
-					else if (doc.getSigned() == 1)
-						writer.print("<signed>rosette</signed>");
-					if (doc.getStamped() == 0)
-						writer.print("<stamped>blank</stamped>");
-					else if (doc.getStamped() == 1)
-						writer.print("<stamped>stamp</stamped>");
 
 					writer.print("<rating>rating" + (doc.getRating() != null ? doc.getRating() : "0") + "</rating>");
 					writer.print("<fileVersion><![CDATA[" + doc.getFileVersion() + "]]></fileVersion>");

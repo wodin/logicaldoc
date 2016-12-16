@@ -4,6 +4,7 @@ import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.i18n.I18N;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.DocumentProtectionManager;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.smartgwt.client.data.DataSource;
@@ -55,8 +56,7 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 						return Util.imageHTML("folder_tile.png", null, tileSize, null);
 					else {
 						long docId = Long.parseLong(record.getAttribute("id"));
-						if ("blank".equals(record.getAttribute("password"))
-								|| DocumentProtectionManager.isUnprotected(docId))
+						if (!record.getAttributeAsBoolean("password") || DocumentProtectionManager.isUnprotected(docId))
 							return Util.tileImageHTML(docId, null, null, tileSize);
 						else
 							return Util.imageHTML("blank.png", null, "width:" + tileSize + "px height:" + tileSize
@@ -81,12 +81,19 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 							+ "</td></tr></table>";
 					html += "<table align='center' border='0' cellspacing='0'><tr>";
 					// The status row
-					html += "<td>" + Util.imageHTML(record.getAttribute("indexed") + ".png") + "</td>";
-					html += "<td>" + Util.imageHTML(record.getAttribute("locked") + ".png") + "</td>";
-					html += "<td>" + Util.imageHTML(record.getAttribute("password") + ".png") + "</td>";
-					html += "<td>" + Util.imageHTML(record.getAttribute("immutable") + ".png") + "</td>";
-					html += "<td>" + Util.imageHTML(record.getAttribute("signed") + ".png") + "</td>";
-					html += "<td>" + Util.imageHTML(record.getAttribute("stamped") + ".png") + "</td>";
+					html += "<td>" + Util.imageHTML(DocUtil.getIndexedIcon(record.getAttributeAsInt("indexed")))
+							+ "</td>";
+					html += "<td>" + Util.imageHTML(DocUtil.getLockedIcon(record.getAttributeAsInt("locked")))
+							+ "</td>";
+					html += "<td>"
+							+ Util.imageHTML(DocUtil.getPasswordProtectedIcon(record.getAttributeAsBoolean("password")))
+							+ "</td>";
+					html += "<td>" + Util.imageHTML(DocUtil.getImmutableIcon(record.getAttributeAsInt("immutable")))
+							+ "</td>";
+					html += "<td>" + Util.imageHTML(DocUtil.getSignedIcon(record.getAttributeAsInt("signed")))
+							+ "</td>";
+					html += "<td>" + Util.imageHTML(DocUtil.getStampedIcon(record.getAttributeAsInt("stamped")))
+							+ "</td>";
 					html += "</tr></table>";
 
 					return html;
@@ -158,7 +165,6 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 		Record record = getSelectedRecord();
 		if (record == null)
 			return null;
-		record.setAttribute("locked", "page_edit");
 		record.setAttribute("lockUserId", Session.get().getUser().getId());
 		record.setAttribute("lockUser", Session.get().getUser().getFullName());
 		record.setAttribute("status", Constants.DOC_CHECKED_OUT);
@@ -171,10 +177,9 @@ public class DocumentsTileGrid extends TileGrid implements DocumentsGrid {
 		Record record = getSelectedRecord();
 		if (record == null)
 			return null;
-		record.setAttribute("locked", "blank");
 		record.setAttribute("status", Constants.DOC_UNLOCKED);
 		record.setAttribute("indexed", Constants.INDEX_TO_INDEX);
-		record.setAttribute("signed", "blank");
+		record.setAttribute("signed", 0);
 		record.setAttribute("extResId", (String) null);
 		record.setAttribute("lockUserId", (String) null);
 		record.setAttribute("lockUser", (String) null);

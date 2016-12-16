@@ -43,7 +43,7 @@ public interface DocumentsGrid {
 	 * Renders the selected row as checked-in
 	 */
 	public GUIDocument markSelectedAsCheckedIn();
-
+	
 	/**
 	 * Gets a bean representation of the currently selected item (not all
 	 * properties are populated).

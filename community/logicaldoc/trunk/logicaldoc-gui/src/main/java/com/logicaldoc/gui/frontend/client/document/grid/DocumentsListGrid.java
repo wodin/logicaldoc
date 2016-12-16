@@ -16,6 +16,7 @@ import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
 import com.logicaldoc.gui.common.client.log.Log;
+import com.logicaldoc.gui.common.client.util.DocUtil;
 import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
@@ -37,6 +38,9 @@ import com.smartgwt.client.util.Offline;
 import com.smartgwt.client.util.SC;
 import com.smartgwt.client.widgets.Canvas;
 import com.smartgwt.client.widgets.HTMLFlow;
+import com.smartgwt.client.widgets.ImgButton;
+import com.smartgwt.client.widgets.events.ClickEvent;
+import com.smartgwt.client.widgets.events.ClickHandler;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
 import com.smartgwt.client.widgets.events.DrawEvent;
 import com.smartgwt.client.widgets.events.DrawHandler;
@@ -52,6 +56,7 @@ import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
 import com.smartgwt.client.widgets.grid.events.ViewStateChangedEvent;
 import com.smartgwt.client.widgets.grid.events.ViewStateChangedHandler;
+import com.smartgwt.client.widgets.layout.HLayout;
 
 /**
  * Grid used to show a documents list during navigation or searches.
@@ -144,25 +149,9 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		type.setAlign(Alignment.CENTER);
 		map.put(type.getName(), type);
 
-		ListGridField immutable = new ListGridField("immutable", " ", 20);
-		immutable.setType(ListGridFieldType.IMAGE);
-		immutable.setCanSort(false);
-		immutable.setAlign(Alignment.CENTER);
-		immutable.setShowDefaultContextMenu(false);
-		immutable.setImageURLPrefix(Util.imagePrefix());
-		immutable.setImageURLSuffix(".png");
-		immutable.setCanFilter(false);
-		map.put(immutable.getName(), immutable);
-
-		ListGridField password = new ListGridField("password", " ", 20);
-		password.setType(ListGridFieldType.IMAGE);
-		password.setCanSort(false);
-		password.setAlign(Alignment.CENTER);
-		password.setShowDefaultContextMenu(false);
-		password.setImageURLPrefix(Util.imagePrefix());
-		password.setImageURLSuffix(".png");
-		password.setCanFilter(false);
-		map.put(password.getName(), password);
+		ListGridField statusIcons = new ListGridField("statusIcons", " ");
+		statusIcons.setWidth(80);
+		map.put(statusIcons.getName(), statusIcons);
 
 		ListGridField indexed = new ListGridField("indexed", " ", 20);
 		indexed.setType(ListGridFieldType.IMAGE);
@@ -173,47 +162,6 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		indexed.setImageURLSuffix(".png");
 		indexed.setCanFilter(false);
 		map.put(indexed.getName(), indexed);
-
-		ListGridField locked = new ListGridField("locked", " ", 20);
-		locked.setType(ListGridFieldType.IMAGE);
-		locked.setCanSort(false);
-		locked.setAlign(Alignment.CENTER);
-		locked.setShowDefaultContextMenu(false);
-		locked.setImageURLPrefix(Util.imagePrefix());
-		locked.setImageURLSuffix(".png");
-		locked.setCanFilter(false);
-		locked.setCellFormatter(new CellFormatter() {
-
-			@Override
-			public String format(Object value, ListGridRecord record, int rowNum, int colNum) {
-				if (record.getAttributeAsString("lockUser") == null)
-					return Util.imageHTML(record.getAttributeAsString("locked") + ".png");
-				else
-					return Util.imageHTML(record.getAttributeAsString("locked") + ".png", I18N.message("lockedby")
-							+ " " + record.getAttributeAsString("lockUser"), null);
-			}
-		});
-		map.put(locked.getName(), locked);
-
-		ListGridField signed = new ListGridField("signed", " ", 20);
-		signed.setType(ListGridFieldType.IMAGE);
-		signed.setCanSort(false);
-		signed.setAlign(Alignment.CENTER);
-		signed.setShowDefaultContextMenu(false);
-		signed.setImageURLPrefix(Util.imagePrefix());
-		signed.setImageURLSuffix(".png");
-		signed.setCanFilter(false);
-		map.put(signed.getName(), signed);
-
-		ListGridField stamped = new ListGridField("stamped", " ", 20);
-		stamped.setType(ListGridFieldType.IMAGE);
-		stamped.setCanSort(false);
-		stamped.setAlign(Alignment.CENTER);
-		stamped.setShowDefaultContextMenu(false);
-		stamped.setImageURLPrefix(Util.imagePrefix());
-		stamped.setImageURLSuffix(".png");
-		stamped.setCanFilter(false);
-		map.put(stamped.getName(), stamped);
 
 		ListGridField filename = new ListGridField("filename", I18N.message("filename"), 200);
 		filename.setHidden(true);
@@ -341,6 +289,8 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		setCanFreezeFields(true);
 		setAutoFetchData(true);
 		setFilterOnKeypress(true);
+		setShowRecordComponents(true);
+		setShowRecordComponentsByCell(true);
 
 		Map<String, ListGridField> map = prepareFields();
 
@@ -356,12 +306,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 
 			fields.add(map.get("id"));
 			fields.add(map.get("thumbnail"));
-			fields.add(map.get("indexed"));
-			fields.add(map.get("locked"));
-			fields.add(map.get("immutable"));
-			fields.add(map.get("password"));
-			fields.add(map.get("signed"));
-			fields.add(map.get("stamped"));
+			fields.add(map.get("statusIcons"));
 			fields.add(map.get("icon"));
 
 			String[] cols = Session.get().getInfo().getConfig("gui.document.columns").split(",");
@@ -459,12 +404,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 
 			fields.add(map.get("id"));
 			fields.add(map.get("thumbnail"));
-			fields.add(map.get("indexed"));
-			fields.add(map.get("locked"));
-			fields.add(map.get("immutable"));
-			fields.add(map.get("password"));
-			fields.add(map.get("signed"));
-			fields.add(map.get("stamped"));
+			fields.add(map.get("statusIcons"));
 			fields.add(map.get("icon"));
 
 			String[] cols = Session.get().getInfo().getConfig("gui.search.columns").split(",");
@@ -525,61 +465,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		addCellClickHandler(new CellClickHandler() {
 			@Override
 			public void onCellClick(CellClickEvent event) {
-				ListGridRecord record = event.getRecord();
-				if ("indexed".equals(getFieldName(event.getColNum()))) {
-					if ("indexed".equals(record.getAttribute("indexed"))) {
-						Long id = getSelectedRecord().getAttributeAsLong("id");
-						if (Session.get().getCurrentFolder().isDownload())
-							try {
-								WindowUtils.openUrl(Util.downloadURL(id) + "&downloadText=true");
-							} catch (Throwable t) {
-
-							}
-					}
-					event.cancel();
-				} else if ("signed".equals(getFieldName(event.getColNum()))) {
-					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
-						if ("rosette".equals(record.getAttribute("signed"))) {
-							final String id = getSelectedRecord().getAttribute("id");
-							final String fileName = getSelectedRecord().getAttribute("filename") + ".p7m";
-							String fileVersion = getSelectedRecord().getAttribute("fileVersion");
-
-							ContactingServer.get().show();
-							signService.extractSubjectSignatures(Long.parseLong(id), fileVersion,
-									new AsyncCallback<String[]>() {
-
-										@Override
-										public void onFailure(Throwable caught) {
-											ContactingServer.get().hide();
-											Log.serverError(caught);
-											destroy();
-										}
-
-										@Override
-										public void onSuccess(String[] result) {
-											ContactingServer.get().hide();
-											SignatureViewer viewer = new SignatureViewer(id, fileName, result);
-											viewer.show();
-											if (result == null || result.length < 1)
-												SC.warn(I18N.message("verificationfailed"));
-										}
-									});
-						}
-					}
-					event.cancel();
-				} else if ("stamped".equals(getFieldName(event.getColNum()))) {
-					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
-						if ("stamp".equals(record.getAttribute("stamped"))) {
-							final String id = getSelectedRecord().getAttribute("id");
-							String fileVersion = getSelectedRecord().getAttribute("fileVersion");
-
-							if (Session.get().getCurrentFolder().isDownload())
-								WindowUtils.openUrl(Util.contextPath() + "convertpdf?docId=" + id + "&version="
-										+ fileVersion, "_blank");
-						}
-					}
-					event.cancel();
-				} else if ("rating".equals(getFieldName(event.getColNum()))) {
+				if ("rating".equals(getFieldName(event.getColNum()))) {
 					long id = Long.parseLong(getSelectedRecord().getAttribute("id"));
 					String ratingImageName = getSelectedRecord().getAttribute("rating");
 					final int docRating = Integer.parseInt(ratingImageName.replace("rating", ""));
@@ -650,8 +536,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	@Override
 	protected String getCellCSSText(ListGridRecord record, int rowNum, int colNum) {
 		if (getFieldName(colNum).equals("title") || getFieldName(colNum).equals("filename")) {
-			if ("stop".equals(record.getAttribute("immutable"))
-					|| !"yes".equals(record.getAttribute("publishedStatus"))) {
+			if (record.getAttributeAsInt("immutable") == 1 || !"yes".equals(record.getAttribute("publishedStatus"))) {
 				return "color: #888888; font-style: italic;";
 			} else {
 				return super.getCellCSSText(record, rowNum, colNum);
@@ -673,8 +558,13 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 
 		if (record != null) {
 			GridUtil.updateRecord(document, record);
-			refreshRow(getRecordIndex(record));
+			refreshRow(record);
 		}
+	}
+
+	private void refreshRow(Record record) {
+		invalidateRecordComponents();
+		refreshRecordComponent(getRecordIndex(record));
 	}
 
 	@Override
@@ -682,11 +572,10 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		ListGridRecord record = getSelectedRecord();
 		if (record == null)
 			return null;
-		record.setAttribute("locked", "page_edit");
+		record.setAttribute("status", Constants.DOC_CHECKED_OUT);
 		record.setAttribute("lockUserId", Session.get().getUser().getId());
 		record.setAttribute("lockUser", Session.get().getUser().getFullName());
-		record.setAttribute("status", Constants.DOC_CHECKED_OUT);
-		refreshRow(getRecordIndex(record));
+		refreshRow(record);
 		return getSelectedDocument();
 	}
 
@@ -695,15 +584,14 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		ListGridRecord record = getSelectedRecord();
 		if (record == null)
 			return null;
-		record.setAttribute("locked", "blank");
 		record.setAttribute("status", Constants.DOC_UNLOCKED);
 		record.setAttribute("indexed", Constants.INDEX_TO_INDEX);
-		record.setAttribute("signed", "blank");
-		record.setAttribute("stamped", "blank");
+		record.setAttribute("signed", 0);
+		record.setAttribute("stamped", 0);
 		record.setAttribute("extResId", (String) null);
 		record.setAttribute("lockUserId", (String) null);
 		record.setAttribute("lockUser", (String) null);
-		refreshRow(getRecordIndex(record));
+		refreshRow(record);
 		return getSelectedDocument();
 	}
 
@@ -785,7 +673,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 	public void updateRating(int rating) {
 		ListGridRecord selectedRecord = getSelectedRecord();
 		selectedRecord.setAttribute("rating", "rating" + rating);
-		refreshRow(getRecordIndex(selectedRecord));
+		refreshRow(selectedRecord);
 	}
 
 	@Override
@@ -872,4 +760,176 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		return I18N.getDateDisplayFormat(true);
 	}
 
+	@Override
+	protected Canvas createRecordComponent(final ListGridRecord record, Integer colNum) {
+
+		String fieldName = this.getFieldName(colNum);
+
+		if (fieldName.equals("statusIcons")) {
+			HLayout statusCanvas = new HLayout(3);
+			statusCanvas.setHeight(22);
+			statusCanvas.setWidth100();
+			statusCanvas.setAlign(Alignment.CENTER);
+
+			// Put the indexing icon
+			{
+				ImgButton indexedIcon = new ImgButton();
+				indexedIcon.setShowDown(false);
+				indexedIcon.setShowRollOver(false);
+				indexedIcon.setLayoutAlign(Alignment.CENTER);
+				indexedIcon.setHeight(16);
+				indexedIcon.setWidth(16);
+				Integer indexed = record.getAttributeAsInt("indexed");
+				indexedIcon.setSrc(Util.imageUrl(DocUtil.getIndexedIcon(indexed)));
+
+				if (indexed != null && indexed.intValue() > 0) {
+					statusCanvas.addMember(indexedIcon);
+
+					if (indexed.intValue() == Constants.INDEX_INDEXED) {
+						indexedIcon.setPrompt(I18N.message("indexed"));
+						indexedIcon.addClickHandler(new ClickHandler() {
+							public void onClick(ClickEvent event) {
+								Long id = record.getAttributeAsLong("id");
+								if (Session.get().getCurrentFolder().isDownload())
+									WindowUtils.openUrl(Util.downloadURL(id) + "&downloadText=true");
+							}
+						});
+					} else if (indexed.intValue() == Constants.INDEX_SKIP) {
+						indexedIcon.setPrompt(I18N.message("notindexable"));
+					}
+				}
+			}
+
+			// Put the status icon
+			{
+				ImgButton statusIcon = new ImgButton();
+				statusIcon.setShowDown(false);
+				statusIcon.setShowRollOver(false);
+				statusIcon.setLayoutAlign(Alignment.CENTER);
+				statusIcon.setHeight(16);
+				statusIcon.setWidth(16);
+				Integer status = record.getAttributeAsInt("status");
+				statusIcon.setSrc(Util.imageUrl(DocUtil.getLockedIcon(status)));
+
+				if (status != null && status.intValue() > 0) {
+					statusCanvas.addMember(statusIcon);
+					if (status == Constants.DOC_CHECKED_OUT || status == Constants.DOC_LOCKED)
+						statusIcon.setPrompt(I18N.message("lockedby") + " " + record.getAttributeAsString("lockUser"));
+				}
+			}
+
+			// Put the immutable icon
+			{
+				ImgButton immutableIcon = new ImgButton();
+				immutableIcon.setShowDown(false);
+				immutableIcon.setShowRollOver(false);
+				immutableIcon.setLayoutAlign(Alignment.CENTER);
+				immutableIcon.setHeight(16);
+				immutableIcon.setWidth(16);
+				Integer immutable = record.getAttributeAsInt("immutable");
+				immutableIcon.setSrc(Util.imageUrl(DocUtil.getImmutableIcon(immutable)));
+
+				if (immutable != null && immutable.intValue() == 1) {
+					statusCanvas.addMember(immutableIcon);
+					immutableIcon.setPrompt(I18N.message("immutable"));
+				}
+			}
+
+			// Put the password protection icon
+			{
+				ImgButton passwordIcon = new ImgButton();
+				passwordIcon.setShowDown(false);
+				passwordIcon.setShowRollOver(false);
+				passwordIcon.setLayoutAlign(Alignment.CENTER);
+				passwordIcon.setHeight(16);
+				passwordIcon.setWidth(16);
+				Boolean password = record.getAttributeAsBoolean("password");
+				passwordIcon.setSrc(Util.imageUrl(DocUtil.getPasswordProtectedIcon(password)));
+
+				if (password != null && password.booleanValue()) {
+					statusCanvas.addMember(passwordIcon);
+					passwordIcon.setPrompt(I18N.message("passwordprotected"));
+				}
+			}
+
+			// Put the signed icon
+			{
+				ImgButton signedIcon = new ImgButton();
+				signedIcon.setShowDown(false);
+				signedIcon.setShowRollOver(false);
+				signedIcon.setLayoutAlign(Alignment.CENTER);
+				signedIcon.setPrompt(I18N.message("signed"));
+				signedIcon.setHeight(16);
+				signedIcon.setWidth(16);
+				Integer signed = record.getAttributeAsInt("signed");
+				signedIcon.setSrc(Util.imageUrl(DocUtil.getSignedIcon(signed)));
+
+				if (signed != null && signed.intValue() == 1) {
+					statusCanvas.addMember(signedIcon);
+					if (Feature.enabled(Feature.DIGITAL_SIGN)) {
+						signedIcon.addClickHandler(new ClickHandler() {
+							public void onClick(ClickEvent event) {
+								final long id = record.getAttributeAsLong("id");
+								final String fileName = record.getAttribute("filename") + ".p7m";
+								final String fileVersion = record.getAttribute("fileVersion");
+
+								ContactingServer.get().show();
+								signService.extractSubjectSignatures(id, fileVersion, new AsyncCallback<String[]>() {
+
+									@Override
+									public void onFailure(Throwable caught) {
+										ContactingServer.get().hide();
+										Log.serverError(caught);
+										destroy();
+									}
+
+									@Override
+									public void onSuccess(String[] result) {
+										ContactingServer.get().hide();
+										SignatureViewer viewer = new SignatureViewer("" + id, fileName, result);
+										viewer.show();
+										if (result == null || result.length < 1)
+											SC.warn(I18N.message("verificationfailed"));
+									}
+								});
+							}
+						});
+					}
+				}
+			}
+
+			// Put the stamped icon
+			{
+				ImgButton stampedIcon = new ImgButton();
+				stampedIcon.setShowDown(false);
+				stampedIcon.setShowRollOver(false);
+				stampedIcon.setLayoutAlign(Alignment.CENTER);
+				stampedIcon.setPrompt(I18N.message("stamped"));
+				stampedIcon.setHeight(16);
+				stampedIcon.setWidth(16);
+				Integer stamped = record.getAttributeAsInt("stamped");
+				stampedIcon.setSrc(Util.imageUrl(DocUtil.getSignedIcon(stamped)));
+
+				if (stamped != null && stamped.intValue() == 1) {
+					statusCanvas.addMember(stampedIcon);
+					if (Feature.enabled(Feature.STAMP)) {
+						stampedIcon.addClickHandler(new ClickHandler() {
+							public void onClick(ClickEvent event) {
+								final long id = getSelectedRecord().getAttributeAsLong("id");
+								String fileVersion = getSelectedRecord().getAttribute("fileVersion");
+
+								if (Session.get().getCurrentFolder().isDownload())
+									DocUtil.openPsdConversion(id, fileVersion);
+							}
+						});
+					}
+				}
+			}
+
+			return statusCanvas;
+		} else {
+			return null;
+		}
+
+	}
 }
