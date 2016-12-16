@@ -76,6 +76,10 @@ public class ContextMenu extends Menu {
 				} else {
 					String url = GWT.getHostPageBaseURL() + "zip-export?folderId=" + folder.getId();
 					for (GUIDocument record : selection) {
+						if ("true".equals(record.getAttribute("password").toString())) {
+							SC.warn(I18N.message("somedocsprotected"));
+							break;
+						}
 						url += "&docId=" + record.getId();
 					}
 					WindowUtils.openUrl(url);
@@ -287,31 +291,33 @@ public class ContextMenu extends Menu {
 				&& selection.length == 1);
 		unsetPassword.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				LD.askForValue(I18N.message("unsetpassword"), I18N.message("currentpassword"), "", 300, new ValueCallback() {
+				LD.askForValue(I18N.message("unsetpassword"), I18N.message("currentpassword"), "", 300,
+						new ValueCallback() {
 
-					@Override
-					public void execute(String value) {
-						if (value == null)
-							return;
+							@Override
+							public void execute(String value) {
+								if (value == null)
+									return;
 
-						if (value.isEmpty())
-							SC.warn(I18N.message("passwordrequired"));
-						else
-							documentService.unsetPassword(selection[0].getId(), value, new AsyncCallback<Void>() {
-								@Override
-								public void onFailure(Throwable caught) {
-									Log.serverError(caught);
-								}
+								if (value.isEmpty())
+									SC.warn(I18N.message("passwordrequired"));
+								else
+									documentService.unsetPassword(selection[0].getId(), value,
+											new AsyncCallback<Void>() {
+												@Override
+												public void onFailure(Throwable caught) {
+													Log.serverError(caught);
+												}
 
-								@Override
-								public void onSuccess(Void result) {
-									selection[0].setPasswordProtected(false);
-									grid.updateDocument(selection[0]);
-								}
-							});
-					}
+												@Override
+												public void onSuccess(Void result) {
+													selection[0].setPasswordProtected(false);
+													grid.updateDocument(selection[0]);
+												}
+											});
+							}
 
-				});
+						});
 			}
 		});
 
@@ -337,6 +343,7 @@ public class ContextMenu extends Menu {
 								public void onSuccess(Void result) {
 									for (GUIDocument record : selection) {
 										record.setLockUserId(Session.get().getUser().getId());
+										record.setLockUser(Session.get().getUser().getFullName());
 										record.setStatus(Constants.DOC_LOCKED);
 										grid.updateDocument(record);
 									}
@@ -778,15 +785,17 @@ public class ContextMenu extends Menu {
 					&& !Session.get().getUser().isMemberOf(Constants.GROUP_ADMIN))
 				checkin.setEnabled(false);
 
-			setPassword.setEnabled(!selection[0].isPasswordProtected() && folder.hasPermission(Constants.PERMISSION_PASSWORD));
-			unsetPassword.setEnabled(selection[0].isPasswordProtected() && folder.hasPermission(Constants.PERMISSION_PASSWORD));
+			setPassword.setEnabled(!selection[0].isPasswordProtected()
+					&& folder.hasPermission(Constants.PERMISSION_PASSWORD));
+			unsetPassword.setEnabled(selection[0].isPasswordProtected()
+					&& folder.hasPermission(Constants.PERMISSION_PASSWORD));
 		}
 
-		if(!folder.hasPermission(Constants.PERMISSION_PASSWORD)){
+		if (!folder.hasPermission(Constants.PERMISSION_PASSWORD)) {
 			setPassword.setEnabled(false);
 			unsetPassword.setEnabled(false);
 		}
-		
+
 		unlockItem.setEnabled(enableUnlock);
 		lock.setEnabled(enableLock);
 		checkout.setEnabled(enableLock);
