@@ -12,6 +12,7 @@ import com.logicaldoc.gui.common.client.Feature;
 import com.logicaldoc.gui.common.client.Session;
 import com.logicaldoc.gui.common.client.beans.GUIDocument;
 import com.logicaldoc.gui.common.client.beans.GUIRating;
+import com.logicaldoc.gui.common.client.data.DocumentsDS;
 import com.logicaldoc.gui.common.client.formatters.DateCellFormatter;
 import com.logicaldoc.gui.common.client.formatters.FileSizeCellFormatter;
 import com.logicaldoc.gui.common.client.i18n.I18N;
@@ -22,13 +23,14 @@ import com.logicaldoc.gui.common.client.util.WindowUtils;
 import com.logicaldoc.gui.common.client.widgets.ContactingServer;
 import com.logicaldoc.gui.frontend.client.document.RatingDialog;
 import com.logicaldoc.gui.frontend.client.document.SignatureViewer;
+import com.logicaldoc.gui.frontend.client.folder.FolderNavigator;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
 import com.logicaldoc.gui.frontend.client.services.SignService;
 import com.logicaldoc.gui.frontend.client.services.SignServiceAsync;
-import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.Record;
 import com.smartgwt.client.data.RecordList;
+import com.smartgwt.client.data.SortSpecifier;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.DateDisplayFormat;
 import com.smartgwt.client.types.ExpansionMode;
@@ -54,6 +56,8 @@ import com.smartgwt.client.widgets.grid.events.CellContextClickHandler;
 import com.smartgwt.client.widgets.grid.events.DataArrivedEvent;
 import com.smartgwt.client.widgets.grid.events.DataArrivedHandler;
 import com.smartgwt.client.widgets.grid.events.SelectionChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SortChangedHandler;
+import com.smartgwt.client.widgets.grid.events.SortEvent;
 import com.smartgwt.client.widgets.grid.events.ViewStateChangedEvent;
 import com.smartgwt.client.widgets.grid.events.ViewStateChangedHandler;
 import com.smartgwt.client.widgets.layout.HLayout;
@@ -117,6 +121,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		ListGridField publisher = new ListGridField("publisher", I18N.message("publisher"), 90);
 		publisher.setAlign(Alignment.CENTER);
 		publisher.setCanFilter(true);
+		publisher.setCanSort(false);
 		map.put(publisher.getName(), publisher);
 
 		ListGridField published = new ListGridField("published", I18N.message("published"), 110);
@@ -130,6 +135,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		creator.setAlign(Alignment.CENTER);
 		creator.setCanFilter(true);
 		creator.setHidden(true);
+		creator.setCanSort(false);
 		map.put(creator.getName(), creator);
 
 		ListGridField created = new ListGridField("created", I18N.message("created"), 110);
@@ -150,7 +156,9 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		map.put(type.getName(), type);
 
 		ListGridField statusIcons = new ListGridField("statusIcons", " ");
-		statusIcons.setWidth(80);
+		statusIcons.setWidth(90);
+		statusIcons.setCanFilter(false);
+		statusIcons.setCanSort(false);
 		map.put(statusIcons.getName(), statusIcons);
 
 		ListGridField indexed = new ListGridField("indexed", " ", 20);
@@ -171,16 +179,17 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		ListGridField lockUserId = new ListGridField("lockUserId", " ", 24);
 		lockUserId.setHidden(true);
 		lockUserId.setCanFilter(false);
+		lockUserId.setCanSort(false);
 		map.put(lockUserId.getName(), lockUserId);
 
 		ListGridField rating = new ListGridField("rating", I18N.message("rating"), 95);
 		rating.setType(ListGridFieldType.IMAGE);
 		rating.setCanSort(false);
+		rating.setCanFilter(false);
 		rating.setAlign(Alignment.CENTER);
 		rating.setImageURLPrefix(Util.imagePrefix());
 		rating.setImageURLSuffix(".png");
 		rating.setImageWidth(88);
-		rating.setCanFilter(false);
 		rating.setHidden(true);
 		map.put(rating.getName(), rating);
 
@@ -193,11 +202,13 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		ListGridField comment = new ListGridField("comment", I18N.message("comment"), 300);
 		comment.setHidden(true);
 		comment.setCanFilter(true);
+		comment.setCanSort(true);
 		map.put(comment.getName(), comment);
 
 		ListGridField wfStatus = new ListGridField("workflowStatus", I18N.message("workflowstatus"), 100);
 		wfStatus.setHidden(true);
 		wfStatus.setCanFilter(true);
+		wfStatus.setCanSort(true);
 		wfStatus.setAlign(Alignment.LEFT);
 		map.put(wfStatus.getName(), wfStatus);
 
@@ -206,6 +217,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		startPublishing.setType(ListGridFieldType.DATE);
 		startPublishing.setCellFormatter(new DateCellFormatter(false));
 		startPublishing.setCanFilter(false);
+		startPublishing.setCanSort(true);
 		startPublishing.setHidden(true);
 		map.put(startPublishing.getName(), startPublishing);
 
@@ -214,18 +226,21 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		stopPublishing.setType(ListGridFieldType.DATE);
 		stopPublishing.setCellFormatter(new DateCellFormatter(false));
 		stopPublishing.setCanFilter(false);
+		stopPublishing.setCanSort(true);
 		stopPublishing.setHidden(true);
 		map.put(stopPublishing.getName(), stopPublishing);
 
 		ListGridField publishedStatus = new ListGridField("publishedStatus", I18N.message("published"), 50);
 		publishedStatus.setHidden(true);
 		publishedStatus.setCanFilter(true);
+		publishedStatus.setCanSort(true);
 		map.put(publishedStatus.getName(), publishedStatus);
 
 		ListGridField template = new ListGridField("template", I18N.message("template"), 150);
 		template.setAlign(Alignment.LEFT);
 		template.setHidden(true);
 		template.setCanFilter(true);
+		template.setCanSort(false);
 		map.put(template.getName(), template);
 
 		ListGridField thumbnail = new ListGridField("thumbnail", I18N.message("thumbnail"), 200);
@@ -248,6 +263,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		ListGridField folder = new ListGridField("folder", I18N.message("folder"), 200);
 		folder.setWidth(200);
 		folder.setHidden(true);
+		folder.setCanSort(false);
 		map.put(folder.getName(), folder);
 
 		// For search only
@@ -284,7 +300,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		return map;
 	}
 
-	public DocumentsListGrid(final DataSource ds, final int totalRecords) {
+	public DocumentsListGrid(final DocumentsDS ds, final int totalRecords) {
 		setEmptyMessage(I18N.message("notitemstoshow"));
 		setCanFreezeFields(true);
 		setAutoFetchData(true);
@@ -294,15 +310,16 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 
 		Map<String, ListGridField> map = prepareFields();
 
-		List<ListGridField> fields = new ArrayList<ListGridField>();
+		final List<ListGridField> fields = new ArrayList<ListGridField>();
 
 		if (ds != null) {
+
+			setDataSource(ds);
+
 			/*
 			 * We are browsing
 			 */
 			setSelectionType(SelectionStyle.MULTIPLE);
-
-			setDataSource(ds);
 
 			fields.add(map.get("id"));
 			fields.add(map.get("thumbnail"));
@@ -342,7 +359,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 				map.get("fileVersion").setHidden(true);
 				fields.add(map.get("fileVersion"));
 			}
-			if (!fields.contains(map.get("version"))) {
+			if (!fields.contains(map.get("vers0ion"))) {
 				map.get("version").setHidden(true);
 				fields.add(map.get("version"));
 			}
@@ -390,6 +407,17 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 				map.get("stopPublishing").setHidden(true);
 				fields.add(map.get("stopPublishing"));
 			}
+
+			addSortChangedHandler(new SortChangedHandler() {
+
+				@Override
+				public void onSortChanged(SortEvent event) {
+					Offline.put(Constants.COOKIE_DOCSLIST, getViewState());
+					saveSorting();
+					if (Session.get().getCurrentFolder() != null)
+						FolderNavigator.get().selectFolder(Session.get().getCurrentFolder().getId());
+				}
+			});
 		} else {
 			/*
 			 * We are searching
@@ -458,6 +486,8 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 				fields.add(map.get("stopPublishing"));
 			if (!fields.contains(map.get("template")))
 				fields.add(map.get("template"));
+
+			setFields(fields.toArray(new ListGridField[0]));
 		}
 
 		setFields(fields.toArray(new ListGridField[0]));
@@ -502,7 +532,7 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 		});
 
 		/*
-		 * Restore any previously saved view state for this grid
+		 * Restore any previously saved view state for this grid.
 		 */
 		addDrawHandler(new DrawHandler() {
 			@Override
@@ -526,6 +556,20 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 				}
 			}
 		});
+	}
+
+	public String saveSorting() {
+		SortSpecifier[] sortSpecifiers = getSort();
+		String sort = "";
+		if (sortSpecifiers != null)
+			for (SortSpecifier spec : sortSpecifiers) {
+				if (!sort.isEmpty())
+					sort += ",";
+				sort += spec.getField();
+				sort += "ascending".equals(spec.getSortDirection().toString().toLowerCase()) ? " asc" : " desc";
+			}
+		Offline.put(Constants.COOKIE_DOCSLIST_SORT, sort);
+		return sort;
 	}
 
 	@Override

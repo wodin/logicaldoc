@@ -3,6 +3,7 @@ package com.logicaldoc.gui.common.client.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.logicaldoc.gui.common.client.Constants;
 import com.logicaldoc.gui.common.client.Session;
 import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.DataSourceField;
@@ -12,6 +13,7 @@ import com.smartgwt.client.data.fields.DataSourceFloatField;
 import com.smartgwt.client.data.fields.DataSourceImageField;
 import com.smartgwt.client.data.fields.DataSourceIntegerField;
 import com.smartgwt.client.data.fields.DataSourceTextField;
+import com.smartgwt.client.util.Offline;
 
 /**
  * Data Source to handle documents grid lists. It is based on Xml parsing
@@ -21,7 +23,21 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class DocumentsDS extends DataSource {
 
-	private static final Integer MAX = 100;
+	private static final Integer DEFAULT_MAX = 100;
+
+	private Long folderId;
+
+	private String fileFilter;
+
+	private String sort;
+
+	private Integer max = DEFAULT_MAX;
+
+	private int page;
+
+	private Integer indexed;
+
+	private Integer barcoded;
 
 	/**
 	 * Constructor.
@@ -34,16 +50,24 @@ public class DocumentsDS extends DataSource {
 	 * @param barcoded The barcoded flag
 	 */
 	public DocumentsDS(Long folderId, String fileFilter, Integer max, int page, Integer indexed, Integer barcoded) {
+
+		this.folderId = folderId;
+		this.max = max;
+		this.page = page;
+		this.indexed = indexed;
+		this.barcoded = barcoded;
+		this.sort = sort;
+
 		setTitleField("title");
 		setRecordXPath("/list/document");
 		DataSourceTextField id = new DataSourceTextField("id");
 		id.setPrimaryKey(true);
 		id.setHidden(true);
 		id.setRequired(true);
-		
+
 		DataSourceTextField title = new DataSourceTextField("title");
 		DataSourceTextField filename = new DataSourceTextField("filename");
-		
+
 		DataSourceImageField icon = new DataSourceImageField("icon");
 		DataSourceTextField customId = new DataSourceTextField("customId");
 		DataSourceTextField type = new DataSourceTextField("type");
@@ -124,13 +148,15 @@ public class DocumentsDS extends DataSource {
 		setFields(fields.toArray(new DataSourceField[0]));
 		setClientOnly(true);
 
-		if (barcoded == null)
+		if (barcoded == null) {
+			String sort = (String) Offline.get(Constants.COOKIE_DOCSLIST_SORT);
 			setDataURL("data/documents.xml?locale=" + Session.get().getUser().getLanguage() + "&folderId="
 					+ (folderId != null ? folderId : "") + "&filename=" + (fileFilter != null ? fileFilter : "")
-					+ "&max=" + (max != null ? max : MAX) + "&indexed=" + (indexed != null ? indexed.toString() : "")
-					+ "&page=" + page);
-		else
-			setDataURL("data/tobarcode.xml?max=" + (max != null ? max : MAX) + "&page=" + page);
+					+ "&max=" + (max != null ? max : DEFAULT_MAX) + "&indexed="
+					+ (indexed != null ? indexed.toString() : "") + "&page=" + page
+					+ (sort != null && !sort.isEmpty() ? "&sort=" + sort : ""));
+		} else
+			setDataURL("data/tobarcode.xml?max=" + (max != null ? max : DEFAULT_MAX) + "&page=" + page);
 	}
 
 	public DocumentsDS(String docIds) {

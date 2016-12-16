@@ -128,7 +128,7 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private int stamped = 0;
 
 	private Set<Tag> tags = new HashSet<Tag>();
-	
+
 	private String tgs;
 
 	private Folder folder;
@@ -822,8 +822,12 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	public boolean isGranted(String myPassword) {
 		if (StringUtils.isEmpty(getPassword()))
 			return true;
-		String test = CryptUtil.cryptString(myPassword);
-		return test.equals(getPassword());
+		try {
+			String test = CryptUtil.cryptString(myPassword);
+			return test.equals(getPassword());
+		} catch (Throwable t) {
+			return false;
+		}
 	}
 
 	public boolean isPasswordProtected() {

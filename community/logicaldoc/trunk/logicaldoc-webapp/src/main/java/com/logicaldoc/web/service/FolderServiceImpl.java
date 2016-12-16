@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.logicaldoc.core.PersistentObject;
+import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
 import com.logicaldoc.core.document.DocumentEvent;
 import com.logicaldoc.core.document.DocumentManager;
@@ -217,7 +218,7 @@ public class FolderServiceImpl extends RemoteServiceServlet implements FolderSer
 			 */
 			f.setDocumentCount(dao
 					.queryForInt("select count(ld_id) from ld_document where ld_deleted=0 and ld_folderid="
-							+ folder.getId()));
+							+ folder.getId()+" and not ld_status=" + AbstractDocument.DOC_ARCHIVED));
 			f.setSubfolderCount(dao
 					.queryForInt("select count(ld_id) from ld_folder where not ld_id=ld_parentid and ld_deleted=0 and ld_parentid="
 							+ folder.getId()));
