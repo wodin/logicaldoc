@@ -49,4 +49,6 @@ public interface WorkflowServiceAsync {
 
 	void deleteNote(long noteId, AsyncCallback<Void> callback);
 
+	void removeDocument(String instanceId, long docId, AsyncCallback<Void> callback);
+
 }

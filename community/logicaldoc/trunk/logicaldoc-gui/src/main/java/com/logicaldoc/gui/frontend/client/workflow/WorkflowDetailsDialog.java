@@ -802,7 +802,27 @@ public class WorkflowDetailsDialog extends Window {
 			}
 		});
 
-		contextMenu.setItems(preview, download, open);
+		final MenuItem remove = new MenuItem();
+		remove.setTitle(I18N.message("remove"));
+		remove.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
+			public void onClick(MenuItemClickEvent event) {
+				service.removeDocument(workflow.getSelectedTask().getId(), selection.getAttributeAsLong("id"),
+						new AsyncCallback<Void>() {
+
+							@Override
+							public void onFailure(Throwable caught) {
+								Log.serverError(caught);
+							}
+
+							@Override
+							public void onSuccess(Void arg) {
+								appendedDocs.removeSelectedData();
+							}
+						});
+			}
+		});
+
+		contextMenu.setItems(preview, download, open, remove);
 
 		folderService.getFolder(Long.parseLong(selection.getAttributeAsString("folderId")), false,
 				new AsyncCallback<GUIFolder>() {
