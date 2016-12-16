@@ -127,6 +127,8 @@ public final class Constants {
 	public static final String COOKIE_HITSLIST_PREV_W = "ldoc-hitslist-prev-w";
 
 	public static final String COOKIE_DOCSLIST = "ldoc-docslist";
+	
+	public static final String COOKIE_DOCSLIST_SORT = "ldoc-docslist-sort";
 
 	public static final String COOKIE_DOCSLIST_MAX = "ldoc-docslist-max";
 

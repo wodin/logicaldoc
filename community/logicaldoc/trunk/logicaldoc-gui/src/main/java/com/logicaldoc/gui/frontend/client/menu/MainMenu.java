@@ -899,6 +899,12 @@ public class MainMenu extends ToolStrip implements FolderObserver, DocumentObser
 				}
 
 				try {
+					Offline.remove(Constants.COOKIE_DOCSLIST_SORT);
+				} catch (Throwable t) {
+
+				}
+
+				try {
 					Offline.remove(Constants.COOKIE_DOCSLIST_MAX);
 				} catch (Throwable t) {
 

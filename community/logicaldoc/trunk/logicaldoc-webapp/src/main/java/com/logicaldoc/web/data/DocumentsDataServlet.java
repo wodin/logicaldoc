@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,6 +29,7 @@ import org.springframework.jdbc.core.RowMapper;
 import com.ibm.icu.util.StringTokenizer;
 import com.logicaldoc.core.document.AbstractDocument;
 import com.logicaldoc.core.document.Document;
+import com.logicaldoc.core.document.DocumentComparator;
 import com.logicaldoc.core.document.dao.DocumentDAO;
 import com.logicaldoc.core.folder.FolderDAO;
 import com.logicaldoc.core.metadata.Attribute;
@@ -67,6 +69,8 @@ public class DocumentsDataServlet extends HttpServlet {
 			String locale = request.getParameter("locale");
 			if (StringUtils.isEmpty(locale))
 				locale = user.getLanguage();
+
+			String sort = request.getParameter("sort");
 
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
@@ -233,21 +237,19 @@ public class DocumentsDataServlet extends HttpServlet {
 					query.append(" and A.folder.id=" + folderId);
 				if (StringUtils.isNotEmpty(request.getParameter("indexed")))
 					query.append(" and A.indexed=" + request.getParameter("indexed"));
-
 				if (filename != null)
 					query.append(" and lower(A.fileName) like '%" + filename.toLowerCase() + "%' ");
-				query.append(" order by A.lastModified desc");
+
+				if (StringUtils.isEmpty(sort))
+					query.append(" order by A.lastModified desc");
 
 				List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
 				List<Document> documents = new ArrayList<Document>();
 
-				int begin = (page - 1) * max;
-				int end = Math.min(begin + max - 1, records.size() - 1);
-
 				/*
-				 * Iterate over records composing the response XML document
+				 * Iterate over records enriching the data
 				 */
-				for (int i = begin; i <= end; i++) {
+				for (int i = 0; i < records.size(); i++) {
 					Object[] cols = (Object[]) records.get(i);
 
 					Document doc = new Document();
@@ -261,6 +263,7 @@ public class DocumentsDataServlet extends HttpServlet {
 						long aliasDocRef = doc.getDocRef();
 						String aliasDocRefType = doc.getDocRefType();
 						doc = dao.findById(aliasDocRef);
+						dao.initialize(doc);
 						if (doc != null) {
 							doc.setId(aliasId);
 							doc.setDocRef(aliasDocRef);
@@ -298,6 +301,14 @@ public class DocumentsDataServlet extends HttpServlet {
 							doc.setStamped((Integer) cols[29]);
 							doc.setLockUser((String) cols[30]);
 							doc.setPassword((String) cols[31]);
+
+							if (!extValues.isEmpty())
+								for (String name : attrs) {
+									String val = extValues.get(doc.getId() + "-" + name);
+									if (val != null) {
+										doc.setValue(name, val);
+									}
+								}
 						}
 					}
 
@@ -305,7 +316,18 @@ public class DocumentsDataServlet extends HttpServlet {
 						documents.add(doc);
 				}
 
-				for (Document doc : documents) {
+				// If a sorting is specified sort the collection of documents
+				if (StringUtils.isNotEmpty(sort))
+					Collections.sort(documents, DocumentComparator.getComparator(sort));
+
+				List<Document> documentsPage = new ArrayList<Document>();
+				
+				int begin = (page - 1) * max;
+				int end = Math.min(begin + max - 1, documents.size() - 1);
+				for (int i = begin; i <= end; i++)
+					documentsPage.add(documents.get(i));
+
+				for (Document doc : documentsPage) {
 					writer.print("<document>");
 					writer.print("<id>" + doc.getId() + "</id>");
 					writer.print("<customId><![CDATA[" + (doc.getCustomId() != null ? doc.getCustomId() : "")
@@ -368,7 +390,8 @@ public class DocumentsDataServlet extends HttpServlet {
 
 					if (!extValues.isEmpty())
 						for (String name : attrs) {
-							String val = extValues.get(doc.getId() + "-" + name);
+							Object val = doc.getValue(name);
+							// extValues.get(doc.getId() + "-" + name);
 							if (val != null)
 								writer.print("<ext_" + name + "><![CDATA[" + val + "]]></ext_" + name + ">");
 						}
