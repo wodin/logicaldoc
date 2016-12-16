@@ -908,18 +908,18 @@ public class DocumentsListGrid extends ListGrid implements DocumentsGrid {
 				stampedIcon.setHeight(16);
 				stampedIcon.setWidth(16);
 				Integer stamped = record.getAttributeAsInt("stamped");
-				stampedIcon.setSrc(Util.imageUrl(DocUtil.getSignedIcon(stamped)));
+				stampedIcon.setSrc(Util.imageUrl(DocUtil.getStampedIcon(stamped)));
 
 				if (stamped != null && stamped.intValue() == 1) {
 					statusCanvas.addMember(stampedIcon);
 					if (Feature.enabled(Feature.STAMP)) {
 						stampedIcon.addClickHandler(new ClickHandler() {
 							public void onClick(ClickEvent event) {
-								final long id = getSelectedRecord().getAttributeAsLong("id");
-								String fileVersion = getSelectedRecord().getAttribute("fileVersion");
+								final long id = record.getAttributeAsLong("id");
+								String fileVersion = record.getAttribute("fileVersion");
 
 								if (Session.get().getCurrentFolder().isDownload())
-									DocUtil.openPsdConversion(id, fileVersion);
+									DocUtil.openPdfConversion(id, fileVersion);
 							}
 						});
 					}
