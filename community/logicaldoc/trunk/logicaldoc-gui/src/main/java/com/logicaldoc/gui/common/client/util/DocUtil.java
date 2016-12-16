@@ -29,7 +29,7 @@ public class DocUtil {
 		});
 	}
 
-	public static void openPsdConversion(final long docId, final String fileVersion) {
+	public static void openPdfConversion(final long docId, final String fileVersion) {
 		DocumentProtectionManager.askForPassword(docId, new DocumentProtectionHandler() {
 
 			@Override
