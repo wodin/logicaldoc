@@ -112,6 +112,11 @@ public interface WorkflowService extends RemoteService {
 	public void appendDocuments(String taskId, Long[] docIds) throws ServerException;
 
 	/**
+	 * Detaches a document from a workflow
+	 */
+	public void removeDocument(String taskId, long docId) throws ServerException;
+	
+	/**
 	 * Adds a new note
 	 */
 	public long addNote(String taskId, String note) throws ServerException;
