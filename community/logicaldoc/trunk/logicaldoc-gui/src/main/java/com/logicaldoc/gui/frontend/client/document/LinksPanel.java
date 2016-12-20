@@ -15,13 +15,13 @@ import com.logicaldoc.gui.common.client.util.Util;
 import com.logicaldoc.gui.common.client.widgets.PreviewPopup;
 import com.logicaldoc.gui.frontend.client.services.DocumentService;
 import com.logicaldoc.gui.frontend.client.services.DocumentServiceAsync;
+import com.smartgwt.client.data.Record;
 import com.smartgwt.client.types.Alignment;
 import com.smartgwt.client.types.ListGridEditEvent;
 import com.smartgwt.client.types.ListGridFieldType;
 import com.smartgwt.client.util.BooleanCallback;
 import com.smartgwt.client.widgets.events.DoubleClickEvent;
 import com.smartgwt.client.widgets.events.DoubleClickHandler;
-import com.smartgwt.client.widgets.grid.ListGrid;
 import com.smartgwt.client.widgets.grid.ListGridField;
 import com.smartgwt.client.widgets.grid.ListGridRecord;
 import com.smartgwt.client.widgets.grid.events.CellContextClickEvent;
@@ -33,6 +33,8 @@ import com.smartgwt.client.widgets.grid.events.EditCompleteHandler;
 import com.smartgwt.client.widgets.menu.Menu;
 import com.smartgwt.client.widgets.menu.MenuItem;
 import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
+import com.smartgwt.client.widgets.tree.TreeGrid;
+import com.smartgwt.client.widgets.tree.TreeNode;
 
 /**
  * This panel shows the links of a document
@@ -42,9 +44,7 @@ import com.smartgwt.client.widgets.menu.events.MenuItemClickEvent;
  */
 public class LinksPanel extends DocumentDetailTab {
 
-	private LinksDS dataSource;
-
-	private ListGrid listGrid;
+	private TreeGrid treeGrid;
 
 	private DocumentServiceAsync documentService = (DocumentServiceAsync) GWT.create(DocumentService.class);
 
@@ -64,38 +64,40 @@ public class LinksPanel extends DocumentDetailTab {
 		direction.setImageURLSuffix(".png");
 		direction.setCanEdit(false);
 
-		ListGridField icon = new ListGridField("icon", " ", 24);
-		icon.setType(ListGridFieldType.IMAGE);
-		icon.setCanSort(false);
-		icon.setAlign(Alignment.CENTER);
-		icon.setShowDefaultContextMenu(false);
-		icon.setImageURLPrefix(Util.imagePrefix());
-		icon.setImageURLSuffix(".png");
-		icon.setCanEdit(false);
-
-		ListGridField title = new ListGridField("title", I18N.message("title"), 250);
+		ListGridField title = new ListGridField("title", I18N.message("link"), 250);
 		title.setCanEdit(false);
 
 		GUIFolder folder = Session.get().getCurrentFolder();
 
-		listGrid = new ListGrid();
-		listGrid.setEmptyMessage(I18N.message("notitemstoshow"));
-		listGrid.setCanFreezeFields(true);
-		listGrid.setAutoFetchData(true);
-		dataSource = new LinksDS(document.getId());
-		listGrid.setDataSource(dataSource);
-		listGrid.setFields(type, direction, icon, title);
-		addMember(listGrid);
+		treeGrid = new TreeGrid() {
+
+			@Override
+			protected String getIcon(Record node, boolean defaultState) {
+				return Util.imageUrl(node.getAttributeAsString("icon") + ".png");
+			}
+
+		};
+		treeGrid.setCanEdit(true);
+		treeGrid.setClosedIconSuffix("");
+		treeGrid.setCanFreezeFields(true);
+		treeGrid.setAutoFetchData(true);
+		treeGrid.setTitleField("title");
+		treeGrid.setDataSource(new LinksDS(document.getId()));
+		treeGrid.setAutoFetchData(true);
+		treeGrid.setLoadDataOnDemand(true);
+		treeGrid.setEmptyMessage(I18N.message("notitemstoshow"));
+		treeGrid.setFields(title, direction, type);
+		addMember(treeGrid);
 
 		if (folder != null && folder.hasPermission(Constants.PERMISSION_WRITE)) {
-			listGrid.setCanEdit(true);
-			listGrid.setEditEvent(ListGridEditEvent.CLICK);
-			listGrid.setEditByCell(true);
-			listGrid.addEditCompleteHandler(new EditCompleteHandler() {
+			treeGrid.setCanEdit(true);
+			treeGrid.setEditEvent(ListGridEditEvent.CLICK);
+			treeGrid.setEditByCell(true);
+			treeGrid.addEditCompleteHandler(new EditCompleteHandler() {
 				@Override
 				public void onEditComplete(EditCompleteEvent event) {
-					long id = Long.parseLong(event.getOldValues().getAttribute("id"));
-					String type = (String) event.getNewValues().get("type");
+					long id = Long.parseLong(event.getOldValues().getAttribute("linkId"));
+					final String type = (String) event.getNewValues().get("type");
 					documentService.updateLink(id, type, new AsyncCallback<Void>() {
 
 						@Override
@@ -105,13 +107,14 @@ public class LinksPanel extends DocumentDetailTab {
 
 						@Override
 						public void onSuccess(Void result) {
-							// Nothing to do
+							treeGrid.getSelectedRecord().setAttribute("type", type);
+							treeGrid.updateData(treeGrid.getSelectedRecord());
 						}
 					});
 				}
 			});
 
-			listGrid.addCellContextClickHandler(new CellContextClickHandler() {
+			treeGrid.addCellContextClickHandler(new CellContextClickHandler() {
 				@Override
 				public void onCellContextClick(CellContextClickEvent event) {
 					Menu contextMenu = new Menu();
@@ -120,12 +123,12 @@ public class LinksPanel extends DocumentDetailTab {
 					delete.setTitle(I18N.message("ddelete"));
 					delete.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 						public void onClick(MenuItemClickEvent event) {
-							ListGridRecord[] selection = listGrid.getSelectedRecords();
+							ListGridRecord[] selection = treeGrid.getSelectedRecords();
 							if (selection == null || selection.length == 0)
 								return;
 							final long[] ids = new long[selection.length];
 							for (int i = 0; i < selection.length; i++) {
-								ids[i] = Long.parseLong(selection[i].getAttribute("id"));
+								ids[i] = Long.parseLong(selection[i].getAttribute("linkId"));
 							}
 
 							LD.ask(I18N.message("question"), I18N.message("confirmdelete"), new BooleanCallback() {
@@ -140,7 +143,9 @@ public class LinksPanel extends DocumentDetailTab {
 
 											@Override
 											public void onSuccess(Void result) {
-												listGrid.removeSelectedData();
+												TreeNode parent = treeGrid.getTree().getParent(treeGrid.getSelectedRecord());
+												treeGrid.selectRecord(parent);
+												treeGrid.getTree().reloadChildren(parent);
 											}
 										});
 									}
@@ -153,7 +158,7 @@ public class LinksPanel extends DocumentDetailTab {
 					preview.setTitle(I18N.message("preview"));
 					preview.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 						public void onClick(MenuItemClickEvent event) {
-							onPreview(listGrid.getSelectedRecord());
+							onPreview(treeGrid.getSelectedRecord());
 						}
 					});
 
@@ -161,7 +166,7 @@ public class LinksPanel extends DocumentDetailTab {
 					download.setTitle(I18N.message("download"));
 					download.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 						public void onClick(MenuItemClickEvent event) {
-							onDownload(listGrid.getSelectedRecord());
+							onDownload(treeGrid.getSelectedRecord());
 						}
 					});
 
@@ -172,10 +177,10 @@ public class LinksPanel extends DocumentDetailTab {
 			});
 		}
 
-		listGrid.addDoubleClickHandler(new DoubleClickHandler() {
+		treeGrid.addDoubleClickHandler(new DoubleClickHandler() {
 			@Override
 			public void onDoubleClick(DoubleClickEvent event) {
-				listGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
+				treeGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 					@Override
 					public void onCellDoubleClick(CellDoubleClickEvent event) {
 						ListGridRecord record = event.getRecord();
@@ -188,13 +193,6 @@ public class LinksPanel extends DocumentDetailTab {
 				});
 			}
 		});
-	}
-
-	@Override
-	public void destroy() {
-		super.destroy();
-		if (dataSource != null)
-			dataSource.destroy();
 	}
 
 	protected void onDownload(ListGridRecord record) {
