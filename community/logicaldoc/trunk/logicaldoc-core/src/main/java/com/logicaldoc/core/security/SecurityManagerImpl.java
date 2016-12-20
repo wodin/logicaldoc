@@ -60,13 +60,13 @@ public class SecurityManagerImpl implements SecurityManager {
 
 		for (Iterator<User> iter = users.iterator(); iter.hasNext();) {
 			User user = iter.next();
-			if (!group.getUsers().contains(user)) {
-				group.getUsers().add(user);
-			}
+			userDAO.initialize(user);
 
-			if (!user.getGroups().contains(group)) {
+			if (!group.getUsers().contains(user))
+				group.getUsers().add(user);
+
+			if (!user.getGroups().contains(group))
 				user.getGroups().add(group);
-			}
 		}
 
 		groupDAO.store(group);
@@ -101,19 +101,14 @@ public class SecurityManagerImpl implements SecurityManager {
 	public void removeUsersFromGroup(Collection<User> users, Group group) {
 		try {
 			groupDAO.initialize(group);
-			Set<User> oldUsers = group.getUsers();
-			for (User user : users) {
-				if (oldUsers.contains(user) && !group.getName().equals(user.getUserGroupName())) {
+			Collection<User> oldUsers = new ArrayList<User>(users);
+			for (User user : oldUsers) {
+				userDAO.initialize(user);
+				if (group.getUsers().contains(user) && !group.getName().equals(user.getUserGroupName())) {
+					group.getUsers().remove(user);
 					user.getGroups().remove(group);
 				}
 			}
-
-			Set<User> newUsers = new HashSet<User>();
-			for (User user : oldUsers) {
-				if (!users.contains(user))
-					newUsers.add(user);
-			}
-			group.setUsers(newUsers);
 
 			groupDAO.store(group);
 
@@ -238,7 +233,7 @@ public class SecurityManagerImpl implements SecurityManager {
 		else
 			return folderDAO.isPrintEnabled(doc.getFolder().getId(), userId);
 	}
-	
+
 	@Override
 	public boolean isDownloadEnabled(long docId, long userId) {
 		Document doc = documentDAO.findById(docId);

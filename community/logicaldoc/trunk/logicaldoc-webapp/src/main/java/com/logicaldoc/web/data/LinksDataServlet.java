@@ -35,6 +35,16 @@ public class LinksDataServlet extends HttpServlet {
 			if (StringUtils.isNotEmpty(request.getParameter("docId")))
 				docId = new Long(request.getParameter("docId"));
 
+			String parent = request.getParameter("parent");
+			if (StringUtils.isEmpty(parent))
+				parent = "/";
+
+			Long parentDocId = docId;
+			if (parent.contains("-"))
+				parentDocId = Long.parseLong(parent.substring(parent.lastIndexOf('-') + 1));
+			else if (!"/".equals(parent))
+				parentDocId = Long.parseLong(parent);
+
 			response.setContentType("text/xml");
 			response.setCharacterEncoding("UTF-8");
 
@@ -46,14 +56,16 @@ public class LinksDataServlet extends HttpServlet {
 			PrintWriter writer = response.getWriter();
 			writer.write("<list>");
 
-			Context context = Context.get();
-			DocumentDAO dao = (DocumentDAO) context.getBean(DocumentDAO.class);
+			DocumentDAO dao = (DocumentDAO) Context.get().getBean(DocumentDAO.class);
 			StringBuffer query = new StringBuffer(
 					"select A.id, B.folder.id, A.type, A.document1.id, A.document1.title, A.document1.type, A.document2.id, A.document2.title, A.document2.type "
 							+ "from DocumentLink A, Document B where A.deleted = 0 and B.deleted = 0 ");
-			if (docId != null) {
-				query.append(" and ((A.document1.id = B.id and A.document1.id=" + docId + " )");
-				query.append(" or  (A.document2.id = B.id and A.document2.id=" + docId + " ))");
+			query.append(" and ((A.document1.id = B.id and A.document1.id = " + parentDocId + ")");
+			query.append(" or  (A.document2.id = B.id and A.document2.id = " + parentDocId + ")");
+			query.append(")");
+			if(!docId.equals(parentDocId)){
+				query.append(" and not A.document1.id = "+docId);
+				query.append(" and not A.document2.id = "+docId);
 			}
 
 			List<Object> records = (List<Object>) dao.findByQuery(query.toString(), null, null);
@@ -65,17 +77,18 @@ public class LinksDataServlet extends HttpServlet {
 				Object[] cols = (Object[]) record;
 
 				writer.print("<link>");
-				writer.print("<id>" + cols[0] + "</id>");
+				writer.print("<linkId>" + cols[0] + "</linkId>");
 				writer.print("<folderId>" + cols[1] + "</folderId>");
 				writer.print("<type>" + cols[2] + "</type>");
-				if (docId.longValue() == (Long) cols[3]) {
-					writer.print("<documentId>" + cols[6] + "</documentId>");
+				writer.print("<parent>" + parent + "</parent>");
+				if (parentDocId.longValue() == (Long) cols[3]) {
+					writer.print("<documentId>" + parent + "-" + cols[6] + "</documentId>");
 					writer.print("<title><![CDATA[" + (String) cols[7] + "]]></title>");
 					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[8]))
 							+ "</icon>");
 					writer.print("<direction>out</direction>");
 				} else {
-					writer.print("<documentId>" + cols[3] + "</documentId>");
+					writer.print("<documentId>" + parent + "-" + cols[3] + "</documentId>");
 					writer.print("<title><![CDATA[" + (String) cols[4] + "]]></title>");
 					writer.print("<icon>" + FilenameUtils.getBaseName(IconSelector.selectIcon((String) cols[5]))
 							+ "</icon>");
@@ -83,6 +96,7 @@ public class LinksDataServlet extends HttpServlet {
 				}
 				writer.print("</link>");
 			}
+			
 			writer.write("</list>");
 		} catch (Throwable e) {
 			log.error(e.getMessage(), e);

@@ -12,22 +12,31 @@ import com.smartgwt.client.data.fields.DataSourceTextField;
  */
 public class LinksDS extends DataSource {
 	public LinksDS(long docId) {
+		setID("LinksDS");
+		
 		setTitleField("title");
 		setRecordXPath("/list/link");
 		DataSourceTextField title = new DataSourceTextField("title");
-		DataSourceTextField id = new DataSourceTextField("id");
-		id.setPrimaryKey(true);
-		id.setHidden(true);
-		id.setRequired(true);
+		DataSourceTextField linkId = new DataSourceTextField("linkId");
 		DataSourceTextField folderId = new DataSourceTextField("folderId");
 		DataSourceTextField documentId = new DataSourceTextField("documentId");
+		documentId.setPrimaryKey(true);
+		documentId.setHidden(true);
+		documentId.setRequired(true);
 
 		DataSourceImageField icon = new DataSourceImageField("icon");
 		DataSourceTextField direction = new DataSourceTextField("direction");
 		DataSourceTextField type = new DataSourceTextField("type");
 
-		setFields(id, folderId, documentId, title, icon, direction, type);
+		DataSourceTextField parent = new DataSourceTextField("parent", "Parent ID");
+		parent.setRequired(true);
+		parent.setForeignKey("LinksDS.documentId");
+		parent.setRootValue("/");
+		
+		setFields(linkId, parent, folderId, documentId, title, icon, direction, type);
 		setClientOnly(true);
+		
 		setDataURL("data/links.xml?docId=" + docId);
+		setClientOnly(false);
 	}
 }
