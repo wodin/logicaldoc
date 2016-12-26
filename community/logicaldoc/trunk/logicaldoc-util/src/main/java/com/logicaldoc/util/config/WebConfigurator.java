@@ -112,6 +112,74 @@ public class WebConfigurator extends XMLBean {
 			return;
 		}
 	}
+	
+	public void addFilterInitParam(String filterName, String param_name, String param_value) {
+		this.addFilterInitParam(filterName, param_name, param_value, null, INIT_PARAM.PARAM_STOP);
+	}
+	
+
+	/**
+	 * Adds a init parameter to the filter
+	 * 
+	 * @param filterName The name of the filter
+	 * @param name Name of the Parameter
+	 * @param value Value of the Parameter
+	 * @param description Description
+	 * @param append if the parameter exist, should the new value appended?
+	 *        possible values are represented in
+	 *        {@link WebConfigurator.INIT_PARAM}
+	 */
+	public void addFilterInitParam(String filterName, String param_name, String param_value, String param_description,
+			INIT_PARAM append) {
+		List filters = getRootElement().getChildren("filter", getRootElement().getNamespace());
+		Element filter = this.elementLookUp(filters, "filter-name", filterName);
+
+		if (filter == null)
+			throw new IllegalStateException("The filter " + filterName
+					+ " has not been found. Have you already written the filter?");
+
+		Element initParam = this.elementLookUp(filter.getChildren(), "param-name", param_name);
+
+		if (initParam != null && append.equals(INIT_PARAM.PARAM_STOP))
+			return;
+
+		if (initParam != null && append.equals(INIT_PARAM.PARAM_APPEND)) {
+			Element paramValue = ((Element) initParam.getParent()).getChild("param-value");
+			paramValue.setText(paramValue.getText() + "," + param_value);
+			writeXMLDoc();
+			return;
+		}
+
+		if (initParam != null && append.equals(INIT_PARAM.PARAM_OVERWRITE)) {
+			Element paramValue = ((Element) initParam.getParent()).getChild("param-value");
+			paramValue.setText(param_value);
+			writeXMLDoc();
+			return;
+		}
+
+		Element paramElement = new Element("init-param", getRootElement().getNamespace());
+
+		// the name
+		Element param = new Element("param-name", getRootElement().getNamespace());
+		param.setText(param_name);
+		// paramElement.addContent("\n ");
+		paramElement.getChildren().add(param);
+
+		param = new Element("param-value", getRootElement().getNamespace());
+		param.setText(param_value);
+		// paramElement.addContent("\n ");
+		paramElement.getChildren().add(param);
+
+		if (param_description != null && param_description.equals("") != true) {
+			param = new Element("description", getRootElement().getNamespace());
+			param.setText(param_description);
+			// paramElement.addContent("\n ");
+			paramElement.getChildren().add(param);
+		}
+
+		filter.getChildren().add(paramElement);
+
+	}
 
 	/**
 	 * Adds a init parameter to the servlet
@@ -243,7 +311,6 @@ public class WebConfigurator extends XMLBean {
 	 * @param value Value of the Parameter
 	 * @param description Description
 	 */
-	@SuppressWarnings("unchecked")
 	public void addInitParam(String servletName, String param_name, String param_value, String param_description) {
 		this.addInitParam(servletName, param_name, param_value, param_description, INIT_PARAM.PARAM_STOP);
 	}
