@@ -117,6 +117,20 @@
             access="isAuthenticated()" />
         <security:http-basic entry-point-ref="LDBasicAuthenticationEntryPoint" />
     </security:http>
+    <security:http pattern="/webdavb/**" use-expressions="true"
+        create-session="never" disable-url-rewriting="true" auto-config="false"
+        access-decision-manager-ref="LDAccessDecisionManager"
+        authentication-manager-ref="AuthenticationManager"
+        security-context-repository-ref="LDSecurityContextRepository">
+        
+        <security:headers disabled="true" />
+        <security:csrf disabled="true" />
+        
+        <!-- Protected areas -->
+        <security:intercept-url pattern="/**"
+            access="isAuthenticated()" />       
+        <security:http-basic entry-point-ref="LDBasicAuthenticationEntryPoint" />
+    </security:http>    
     <security:http pattern="/service/cmis/**" use-expressions="true"
         create-session="never" disable-url-rewriting="true" auto-config="false"
         access-decision-manager-ref="LDAccessDecisionManager"

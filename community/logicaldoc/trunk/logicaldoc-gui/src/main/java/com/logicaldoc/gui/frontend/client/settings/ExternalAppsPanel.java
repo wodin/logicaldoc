@@ -174,9 +174,14 @@ public class ExternalAppsPanel extends VLayout {
 		webDavForm.setColWidths(1, "*");
 		webDavForm.setPadding(5);
 
-		// Url
+		// Urls
 		StaticTextItem wdUrl = ItemFactory.newStaticTextItem("wdUrl", "WebDAV", GWT.getHostPageBaseURL()
 				+ "webdav/store");
+
+		StaticTextItem wdbUrl = ItemFactory.newStaticTextItem("wdbUrl", "WebDAV basic", GWT.getHostPageBaseURL()
+				+ "webdavb");
+		wdbUrl.setVisible(Feature.enabled(Feature.WEBDAV_BASIC));
+		wdbUrl.setHint("&nbsp;&nbsp;&nbsp;(" + I18N.message("webdavbtooltip") + ")");
 
 		// Status
 		RadioGroupItem wdEnabled = ItemFactory.newBooleanSelector("wdEnabled", "enabled");
@@ -193,9 +198,9 @@ public class ExternalAppsPanel extends VLayout {
 		cache.setValue(wdCache.getValue().equals("true") ? "yes" : "no");
 
 		if (Session.get().isDefaultTenant())
-			webDavForm.setItems(wdUrl, wdEnabled, cache);
+			webDavForm.setItems(wdUrl, wdbUrl, wdEnabled, cache);
 		else
-			webDavForm.setItems(wdUrl);
+			webDavForm.setItems(wdUrl, wdbUrl);
 		webDav.setPane(webDavForm);
 
 		Tab extApps = new Tab();

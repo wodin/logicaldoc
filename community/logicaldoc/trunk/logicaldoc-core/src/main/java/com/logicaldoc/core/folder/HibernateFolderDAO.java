@@ -1228,6 +1228,9 @@ public class HibernateFolderDAO extends HibernatePersistentObjectDAO<Folder> imp
 
 	@Override
 	public Folder findByPath(String pathExtended, long tenantId) {
+		if (StringUtils.isEmpty(pathExtended))
+			return null;
+
 		StringTokenizer st = new StringTokenizer(pathExtended, "/", false);
 		Folder folder = findRoot(tenantId);
 		while (st.hasMoreTokens()) {

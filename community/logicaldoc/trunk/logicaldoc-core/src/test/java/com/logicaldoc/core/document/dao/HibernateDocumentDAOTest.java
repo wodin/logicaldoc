@@ -423,6 +423,16 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 	}
 
 	@Test
+	public void testFindByPath() {
+	   Document doc= dao.findByPath("/Workspace X/folder6/pluto", 1L);
+	   Assert.assertNotNull(doc);
+	   Assert.assertEquals("pluto", doc.getFileName());
+	   
+	   doc= dao.findByPath("/Workspace X/folder6/xyz", 1L);
+	   Assert.assertNull(doc);
+	}
+	
+	@Test
 	public void testFindByFileNameAndParentFolderId() {
 		Collection<Document> documents = dao.findByFileNameAndParentFolderId(6L, "pluto", null, null, null);
 		Assert.assertNotNull(documents);

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.LoggerFactory;
@@ -1012,8 +1013,7 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 		insertStatement
 				.append(" where B.ld_tag not in (select A.ld_tag from ld_uniquetag A where A.ld_tenantid=B.ld_tenantid) ");
 		jdbcUpdate(insertStatement.toString());
-		
-		
+
 		insertStatement = new StringBuffer("insert into ld_uniquetag(ld_tag, ld_tenantid, ld_count) ");
 		insertStatement.append(" select distinct(B.ld_tag), B.ld_tenantid, 0 from ld_foldertag B ");
 		insertStatement
@@ -1144,5 +1144,22 @@ public class HibernateDocumentDAO extends HibernatePersistentObjectDAO<Document>
 				versionDAO.store(ver);
 			}
 		}
+	}
+
+	@Override
+	public Document findByPath(String path, long tenantId) {
+		String folderPath = FilenameUtils.getPath(path);
+		Folder folder = folderDAO.findByPath(folderPath, tenantId);
+		if (folder == null)
+			return null;
+
+		String fileName = FilenameUtils.getName(path);
+		List<Document> docs = findByFileNameAndParentFolderId(folder.getId(), fileName, null, tenantId, null);
+		for (Document doc : docs) {
+			if (doc.getFileName().equals(fileName))
+				return doc;
+		}
+
+		return null;
 	}
 }

@@ -188,7 +188,7 @@ public class Version extends AbstractDocument implements Comparable<Version> {
 		try {
 			BeanUtils.copyProperties(version, document);
 		} catch (Exception e) {
-			e.printStackTrace();
+			
 		}
 
 		version.setTenantId(document.getTenantId());

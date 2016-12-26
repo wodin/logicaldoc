@@ -175,6 +175,8 @@ public class Feature {
 	
 	public static final int ZOHO = 92;
 
+	public static final int WEBDAV_BASIC = 93;
+	
 	private static Set<String> features = new HashSet<String>();
 
 	static public void init(GUIInfo info) {

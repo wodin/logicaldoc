@@ -175,6 +175,15 @@ public interface DocumentDAO extends PersistentObjectDAO<Document> {
 			Long tenantId, Integer max);
 
 	/**
+	 * Finds a document by it's full path 
+	 * @param path The path comprehensive of the file name
+	 * @param tenantId The tenant
+	 * 
+	 * @return the found document
+	 */
+	public Document findByPath(String path, long tenantId);
+	
+	/**
 	 * Finds that document that lies under a specific folder (given by the id)
 	 * an with a given title(like operator is used)
 	 * 
