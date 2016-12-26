@@ -362,8 +362,9 @@ public class HibernateDocumentDAOTest extends AbstractCoreTCase {
 		Assert.assertTrue(tags.contains("abc"));
 		tags = dao.findAllTags(null, 1L);
 		Assert.assertNotNull(tags);
-		Assert.assertEquals(5, tags.size());
+		Assert.assertEquals(7, tags.size());
 		Assert.assertTrue(tags.contains("abc"));
+		Assert.assertTrue(tags.contains("ftag2"));
 	}
 
 	@Test
