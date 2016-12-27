@@ -4,7 +4,7 @@ import com.smartgwt.client.data.DataSource;
 import com.smartgwt.client.data.fields.DataSourceTextField;
 
 public class WorkflowsDS extends DataSource {
-	public WorkflowsDS(boolean retrieveDefinitions, boolean checkUser, boolean deployedOnly) {
+	public WorkflowsDS(boolean retrieveDefinitions, boolean deployedOnly) {
 		setTitleField("name");
 		setRecordXPath("/list/workflow");
 		DataSourceTextField id = new DataSourceTextField("id");
@@ -14,7 +14,7 @@ public class WorkflowsDS extends DataSource {
 		DataSourceTextField description = new DataSourceTextField("description");
 		setFields(id, name, description);
 		setDataURL("data/workflows.xml?1=1" + (retrieveDefinitions ? "&retrievedefinitions=true" : "")
-				+ (checkUser ? "&checkUser=true" : "") + (deployedOnly ? "&deployedOnly=true" : ""));
+				+ (deployedOnly ? "&deployedOnly=true" : ""));
 		setClientOnly(true);
 	}
 }

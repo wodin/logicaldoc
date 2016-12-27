@@ -392,7 +392,7 @@ public class WorkflowToolstrip extends ToolStrip {
 		settings.setDisabled(currentWorkflow == null || wf.getId() == null || "0".equals(wf.getId()));
 
 		close.setDisabled(currentWorkflow == null);
-		workflowSelect.setOptionDataSource(new WorkflowsDS(false, false, false));
+		workflowSelect.setOptionDataSource(new WorkflowsDS(false, false));
 		if (currentWorkflow != null && !currentWorkflow.getName().trim().isEmpty())
 			workflowSelect.setValue(currentWorkflow.getName());
 		else

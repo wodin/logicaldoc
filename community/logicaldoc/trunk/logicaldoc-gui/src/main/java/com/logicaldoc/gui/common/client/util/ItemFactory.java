@@ -1159,7 +1159,7 @@ public class ItemFactory {
 		item.setDisplayField("name");
 		item.setValueField("id");
 		item.setWrapTitle(false);
-		item.setOptionDataSource(new WorkflowsDS(false, false, true));
+		item.setOptionDataSource(new WorkflowsDS(false, true));
 		if (!Feature.enabled(Feature.WORKFLOW))
 			item.setDisabled(true);
 		;
