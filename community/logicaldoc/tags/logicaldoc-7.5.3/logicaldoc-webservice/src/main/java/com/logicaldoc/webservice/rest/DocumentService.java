@@ -79,4 +79,9 @@ public interface DocumentService {
 	@Path("/getContent")
 	@Produces(MediaType.APPLICATION_OCTET_STREAM)
 	DataHandler getContent(@QueryParam("docId") long docId) throws Exception;
+	
+	@GET
+	@Path("/getContentVersion")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	DataHandler getContentVersion(@QueryParam("docId") long docId, @QueryParam("version") String version) throws Exception;	
 }

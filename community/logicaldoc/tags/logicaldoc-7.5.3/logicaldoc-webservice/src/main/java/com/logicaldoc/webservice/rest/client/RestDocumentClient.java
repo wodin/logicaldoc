@@ -10,6 +10,7 @@ import javax.activation.DataHandler;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.apache.cxf.jaxrs.ext.multipart.Attachment;
@@ -23,7 +24,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.logicaldoc.core.security.Client;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.rest.DocumentService;
 
@@ -57,6 +57,7 @@ public class RestDocumentClient extends AbstractRestClient {
 	}
 
 	public WSDocument create(WSDocument document, File packageFile) throws Exception {
+		
 		WebClient.client(proxy).type(MediaType.MULTIPART_FORM_DATA);
 		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
 
@@ -130,19 +131,78 @@ public class RestDocumentClient extends AbstractRestClient {
 	}
 
 	public DataHandler getContent(long docId) throws Exception {
-
-		// WebClient.client(proxy).type("*/*");
 		WebClient.client(proxy).accept(MediaType.APPLICATION_OCTET_STREAM);
-
 		return proxy.getContent(docId);
 	}
+	
+	public DataHandler getContentVersion(long docId, String version) throws Exception {
+		WebClient.client(proxy).accept(MediaType.APPLICATION_OCTET_STREAM);
+		return proxy.getContentVersion(docId, version);
+	}	
+	
+	public void checkout(long docId) throws Exception {
+		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
+		proxy.checkout(docId);
+	}			
 
 	public void update(WSDocument document) throws Exception {
-		
 		WebClient.client(proxy).type(MediaType.APPLICATION_JSON);
 		WebClient.client(proxy).accept(MediaType.APPLICATION_JSON);
-
 		proxy.update(document);
 	}
+	
+
+	
+	public String checkin(long docId, String comment, Boolean release, File packageFile) throws Exception {
+		
+		/*
+	if ("docId".equals(params.get("name"))) {
+		docId = Long.parseLong(att.getObject(String.class));
+	} else if ("comment".equals(params.get("name"))) {
+		comment = att.getObject(String.class);
+	} else if ("release".equals(params.get("name"))) {
+		release = Boolean.parseBoolean(att.getObject(String.class));
+	} else if ("filename".equals(params.get("name"))) {
+		filename = att.getObject(String.class);
+	} else if ("filedata".equals(params.get("name"))) {
+		datah = att.getDataHandler();
+	}	
+		 */
+		
+		WebClient.client(proxy).type(MediaType.MULTIPART_FORM_DATA);
+		WebClient.client(proxy).accept(MediaType.TEXT_PLAIN);
+
+		Attachment docAttachment = new AttachmentBuilder().id("docId").object(docId).mediaType("text/plain")
+				.contentDisposition(new ContentDisposition("form-data; name=\"docId\"")).build();
+		
+		Attachment commentAttachment = new AttachmentBuilder().id("comment").object(comment).mediaType("text/plain")
+				.contentDisposition(new ContentDisposition("form-data; name=\"comment\"")).build();
+		
+		Attachment releaseAttachment = new AttachmentBuilder().id("release").object(release.toString()).mediaType("text/plain")
+				.contentDisposition(new ContentDisposition("form-data; name=\"release\"")).build();
+		
+		Attachment filenameAttachment = new AttachmentBuilder().id("filename").object(packageFile.getName()).mediaType("text/plain")
+				.contentDisposition(new ContentDisposition("form-data; name=\"filename\"")).build();		
+				
+		Attachment fileAttachment = new Attachment("filedata", new FileInputStream(packageFile), new ContentDisposition(
+				"form-data; name=\"filedata\"; filename=\"" + packageFile.getName() + "\""));
+
+		List<Attachment> atts = new LinkedList<Attachment>();
+		atts.add(docAttachment);
+		
+		if (StringUtils.isNotEmpty(comment)) {
+			atts.add(commentAttachment);
+		}			
+		if (release != null) {
+			atts.add(releaseAttachment);
+		}
+		if (packageFile != null) {
+			atts.add(filenameAttachment);
+		}		
+		atts.add(fileAttachment);
+		
+		Response res = proxy.checkin(atts);		
+		return res.readEntity(String.class);				
+	}	
 
 }
