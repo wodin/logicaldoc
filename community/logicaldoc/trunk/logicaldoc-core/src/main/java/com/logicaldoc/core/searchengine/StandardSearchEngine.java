@@ -46,7 +46,7 @@ import com.logicaldoc.util.io.FileUtil;
  */
 public class StandardSearchEngine implements SearchEngine {
 
-	public static Version VERSION = Version.LUCENE_5_5_3;
+	public static Version VERSION = Version.LUCENE_6_3_0;
 
 	protected static Logger log = LoggerFactory.getLogger(StandardSearchEngine.class);
 
