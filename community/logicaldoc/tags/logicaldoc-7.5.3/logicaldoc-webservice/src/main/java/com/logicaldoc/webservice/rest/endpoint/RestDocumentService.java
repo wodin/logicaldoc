@@ -142,7 +142,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 			boolean release = false;
 			String filename = null;
 			DataHandler datah = null;
-
+			
 			for (Attachment att : attachments) {
 				Map<String, String> params = att.getContentDisposition().getParameters();
 				if ("docId".equals(params.get("name"))) {
@@ -268,6 +268,16 @@ public class RestDocumentService extends SoapDocumentService implements Document
 		String sid = validateSession();
 		return super.getContent(sid, docId);
 	}
+	
+	@GET
+	@Path("/getContentVersion")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@ApiOperation(value = "Gets the document content by version", 
+    notes = "Returns the content of a document using the document ID and version")	
+	public DataHandler getContentVersion(@QueryParam("docId") long docId, @QueryParam("version") String version) throws Exception {
+		String sid = validateSession();
+		return super.getVersionContent(sid, docId, version);
+	}	
 
 	@Override
 	@PUT
