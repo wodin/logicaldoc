@@ -128,6 +128,8 @@
          <parsable targetfile="$INSTALL_PATH/bin/logicaldoc.bat" type="shell" />
          <parsable targetfile="$INSTALL_PATH/bin/update.sh" type="shell" />
          <parsable targetfile="$INSTALL_PATH/bin/update.bat" type="shell" />
+         <parsable targetfile="$INSTALL_PATH/loader/patch.bat" type="shell" />
+         <parsable targetfile="$INSTALL_PATH/loader/patch.sh" type="shell" />
          <executable targetfile="$INSTALL_PATH/bin/logicaldoc" stage="never" keep="true" />
          <executable targetfile="$INSTALL_PATH/bin/logicaldoc.sh" stage="never" keep="true" />
          <executable targetfile="$INSTALL_PATH/bin/logicaldoc.bat" stage="never" keep="true" />
