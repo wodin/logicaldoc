@@ -161,6 +161,7 @@ public class WorkflowHistoryDialog extends Window {
 		ListGridField documents = new ListGridField("documents", I18N.message("documents"), 250);
 		ListGridField documentIds = new ListGridField("documentIds", I18N.message("documentids"), 300);
 		documentIds.setHidden(true);
+		ListGridField initiator = new ListGridField("initiator", I18N.message("initiator"), 100);
 
 		instancesGrid = new ListGrid();
 		instancesGrid.setCanFreezeFields(true);
@@ -175,7 +176,7 @@ public class WorkflowHistoryDialog extends Window {
 		if (selectedWorkflow != null)
 			instancesGrid.setDataSource(new WorkflowHistoriesDS(null, Long.parseLong(selectedWorkflow.getId()), null,
 					tagFilter));
-		instancesGrid.setFields(id, tag, startDate, endDate, documents, documentIds);
+		instancesGrid.setFields(id, tag, startDate, endDate, documents, initiator, documentIds);
 
 		instancesGrid.addCellDoubleClickHandler(new CellDoubleClickHandler() {
 			@Override
