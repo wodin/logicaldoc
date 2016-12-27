@@ -4,7 +4,7 @@
   <artifactId>logicaldoc-parent-pom</artifactId>
   <name>logicaldoc-parent-pom</name>
   <packaging>pom</packaging>
-  <version>81</version>
+  <version>82</version>
   <description>Parent pom definition</description>
   <scm>
     <connection>scm:svn:https://logicaldoc.svn.sourceforge.net/svnroot/logicaldoc/build/poms/trunk</connection>
@@ -73,8 +73,8 @@
     <spring-security.version>4.1.3.RELEASE</spring-security.version>
     <hibernate.version>4.1.12.Final</hibernate.version>
     <ehcache.version>2.6.6</ehcache.version>
-    <lucene.version>5.5.3</lucene.version>
-    <solr.version>5.5.3</solr.version>
+    <lucene.version>6.3.0</lucene.version>
+    <solr.version>6.3.0</solr.version>
     <!--gwt.version>2.7.0</gwt.version-->
     <gwt.version>2.6.1</gwt.version>
     <smartgwt.version>6.0p</smartgwt.version>
@@ -226,7 +226,7 @@
       <dependency>
         <groupId>commons-beanutils</groupId>
         <artifactId>commons-beanutils</artifactId>
-        <version>1.7.0</version>
+        <version>1.8.2</version>
         <exclusions>
           <exclusion>
             <groupId>commons-collections</groupId>
@@ -769,7 +769,7 @@
     <repository>
       <id>java.net</id>
       <url>https://maven.java.net/content/repositories/releases</url>
-    </repository>
+    </repository>   
   </repositories>
   <distributionManagement>
     <repository>
