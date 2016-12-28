@@ -12,6 +12,7 @@ import com.logicaldoc.installer.util.FileUtil;
 import com.logicaldoc.installer.util.Log;
 import com.logicaldoc.installer.util.Wget;
 import com.logicaldoc.installer.util.WinFirewall;
+import com.logicaldoc.installer.util.WinKill;
 
 public class StartApplication {
 	public void run(AbstractUIProcessHandler handler, String[] args) {
@@ -44,7 +45,7 @@ public class StartApplication {
 				}
 				count++;
 			}
-
+			
 			try {
 				if (FileUtil.isWindows())
 					Exec.exec("net stop " + service, null, null, 60);
@@ -64,6 +65,10 @@ public class StartApplication {
 				count++;
 			}
 
+			// For more security kill the process directly
+			if (FileUtil.isWindows())
+				WinKill.killTomcatProcess();
+			
 			try {
 				if (FileUtil.isWindows())
 					Exec.exec("net start " + service, null, null, 60);

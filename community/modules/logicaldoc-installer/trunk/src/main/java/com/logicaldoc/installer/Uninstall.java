@@ -8,6 +8,7 @@ import com.izforge.izpack.api.event.UninstallerListener;
 import com.izforge.izpack.api.handler.AbstractUIProgressHandler;
 import com.logicaldoc.installer.util.Exec;
 import com.logicaldoc.installer.util.FileUtil;
+import com.logicaldoc.installer.util.WinKill;
 
 public class Uninstall implements UninstallerListener {
 
@@ -77,6 +78,10 @@ public class Uninstall implements UninstallerListener {
 		} catch (Throwable e) {
 		}
 
+		// For more security kill the process directly
+		if (FileUtil.isWindows())
+			WinKill.killTomcatProcess();
+		
 		try {
 			Exec.exec("sc delete LogicalDOC-Community", null, null, 120);
 			Uninstall.windowsServiceDeleted = true;
