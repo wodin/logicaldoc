@@ -1,15 +1,5 @@
 package com.logicaldoc.webservice.rest.endpoint;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
-import io.swagger.annotations.Example;
-import io.swagger.annotations.ExampleProperty;
-
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +23,16 @@ import org.slf4j.LoggerFactory;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.rest.DocumentService;
 import com.logicaldoc.webservice.soap.endpoint.SoapDocumentService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Example;
+import io.swagger.annotations.ExampleProperty;
 
  
 @Path("/")
@@ -142,7 +142,7 @@ public class RestDocumentService extends SoapDocumentService implements Document
 			boolean release = false;
 			String filename = null;
 			DataHandler datah = null;
-
+			
 			for (Attachment att : attachments) {
 				Map<String, String> params = att.getContentDisposition().getParameters();
 				if ("docId".equals(params.get("name"))) {
@@ -268,6 +268,16 @@ public class RestDocumentService extends SoapDocumentService implements Document
 		String sid = validateSession();
 		return super.getContent(sid, docId);
 	}
+	
+	@GET
+	@Path("/getContentVersion")
+	@Produces(MediaType.APPLICATION_OCTET_STREAM)
+	@ApiOperation(value = "Gets the document content by version", 
+    notes = "Returns the content of a document using the document ID and version")	
+	public DataHandler getContentVersion(@QueryParam("docId") long docId, @QueryParam("version") String version) throws Exception {
+		String sid = validateSession();
+		return super.getVersionContent(sid, docId, version);
+	}	
 
 	@Override
 	@PUT

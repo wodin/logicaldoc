@@ -4,15 +4,19 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 
 import org.apache.commons.io.IOUtils;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+
+import com.logicaldoc.util.io.IOUtil;
 import com.logicaldoc.webservice.model.WSDocument;
 import com.logicaldoc.webservice.model.WSFolder;
 import com.logicaldoc.webservice.model.WSSearchOptions;
@@ -31,10 +35,10 @@ public class RestWorkbench {
 	private static RestFolderClient fldClient = null;
 
 	private static RestSearchClient searchClient = null;
-
-	private static String BASE_PATH = "http://localhost:8080/logicaldoc";
-
+	
+	//private static String BASE_PATH = "http://localhost:8080/logicaldoc";
 	// private static String BASE_PATH = "http://192.168.2.11:8080/logicaldoc";
+	private static String BASE_PATH = "http://localhost:8080";
 
 	public static void main(String[] args) throws Exception {
 
@@ -59,6 +63,10 @@ public class RestWorkbench {
 		//createPath(04L, "/La zanzara/Cruciani/coloqui via Sky");
 
 		//getFolder(04L);
+		
+		//checkout(3574819L);
+		//checkin(3574819L);		
+		getContentVersion(3574819L, "1.4");
 
 		/*
 		WSDocument myDoc = getDocument(3407874L);
@@ -114,8 +122,8 @@ public class RestWorkbench {
 		long start_time = System.nanoTime();
 		
 		
-		 WSSearchOptions wsso = buildSearchOptions("en", "document management system"); 
-		 find(wsso);		
+//		 WSSearchOptions wsso = buildSearchOptions("en", "document management system"); 
+//		 find(wsso);		
 
 		/*
 		 * WSSearchOptions wsso = buildSearchOptions("en",
@@ -181,7 +189,7 @@ public class RestWorkbench {
 		// Total Exec. time (ms): 913.421004
 		// Total Exec. time (ms): 1189.928415
 
-		// RestWorkbench - (CXF JAXRSClientFactory with transform
+		// XtestRestClients - (CXF JAXRSClientFactory with transform
 		// JSON-2-Java)
 		// Total Exec. time (ms): 1284.876061
 		// Total Exec. time (ms): 1471.814473
@@ -203,6 +211,43 @@ public class RestWorkbench {
 		// Total Exec. time (ms): 918.054599
 	}
 	
+	private static void checkin(long docId) throws Exception {
+
+		try {
+			docClient.checkout(docId);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		// verify document status
+		WSDocument xxx = docClient.getDocument(docId);
+		System.out.println("Doc status: " +xxx.getStatus()); 		
+		
+		File packageFile = new File("C:/Users/Alle/Downloads/c04462171.pdf");
+		String result = docClient.checkin(docId, "comment", false, packageFile);
+		System.out.println("Checkin result: " +result);
+	}
+
+	private static void checkout(long docId) throws Exception {
+
+		docClient.checkout(docId);
+		
+		// verify document status
+		WSDocument xxx = docClient.getDocument(docId);
+		System.out.println("Doc status: " +xxx.getStatus()); 
+	}
+
+	private static void getContentVersion(long docId, String version) throws Exception {
+
+		DataHandler handler = docClient.getContentVersion(docId, version);
+		
+		InputStream is = handler.getInputStream();
+		OutputStream os = new FileOutputStream(new File("C:/tmp/AD6uk07-" +version +".pdf"));
+		IOUtils.copy(is, os);
+		IOUtils.closeQuietly(os);
+		IOUtils.closeQuietly(is);
+	}
+
 	private static WSFolder createFolder() throws Exception {
 
 		WSFolder fld = new WSFolder();
