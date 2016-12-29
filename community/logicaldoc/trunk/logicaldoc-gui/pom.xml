@@ -122,6 +122,7 @@
           <webappDirectory>./war</webappDirectory>
           <webXml>./war/WEB-INF/web.xml</webXml>
           <hostedWebapp>./war</hostedWebapp>
+          <!-- draftCompile>true</draftCompile -->
           <modules>
             <module>com.logicaldoc.gui.common.Common</module>
             <module>com.logicaldoc.gui.frontend.Frontend</module>
