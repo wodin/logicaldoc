@@ -210,6 +210,21 @@ public class ZipExport {
 	}
 
 	/**
+	 * To maximize the compatibility with Windows we have to remove special
+	 * chars and the total filename size must be <=250
+	 */
+	private String adjustFileNameForWindows(String src) {
+		String newName = src.replace("/", "").replace("\\", "");
+		if (newName.length() > 250) {
+			String ext = FilenameUtils.getExtension(newName);
+			int maxSize = 250 - ext.length() - 1;
+			String name = FilenameUtils.getBaseName(newName).substring(0, maxSize);
+			newName = name + "." + ext;
+		}
+		return newName;
+	}
+
+	/**
 	 * Adds a single document into the archive in the specified path.
 	 */
 	private void addDocument(String path, Document document, boolean pdfConversion, String sid) {
@@ -217,8 +232,7 @@ public class ZipExport {
 		String resource = storer.getResourceName(document, null, null);
 
 		if (pdfConversion && !"pdf".equals(FilenameUtils.getExtension(document.getFileName().toLowerCase()))) {
-			PdfConverterManager manager = (PdfConverterManager) Context.get()
-					.getBean(PdfConverterManager.class);
+			PdfConverterManager manager = (PdfConverterManager) Context.get().getBean(PdfConverterManager.class);
 			try {
 				manager.createPdf(document, sid);
 			} catch (IOException e) {
@@ -238,7 +252,7 @@ public class ZipExport {
 			if (pdfConversion)
 				fileName = FilenameUtils.getBaseName(fileName) + ".pdf";
 
-			ZipEntry entry = new ZipEntry(path + fileName);
+			ZipEntry entry = new ZipEntry(path + adjustFileNameForWindows(fileName));
 			entry.setMethod(ZipEntry.DEFLATED);
 			zos.putArchiveEntry(new ZipArchiveEntry(entry));
 
