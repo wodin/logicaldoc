@@ -9,24 +9,23 @@ public class WinUtil {
 
 	private static final String KILL = "taskkill /F /T /IM ";
 
-	public static int main(String[] args) {
+	public static void main(String[] args) {
 		if ("kill".equals(args[0])) {
 			if (isProcessRunning(args[1])) {
-				return killProcess(args[1]);
+				System.exit(killProcess(args[1]));
 			}
 		}
-
-		return 0;
+		System.exit(0);
 	}
 
-	public static boolean isProcessRunning(String serviceName) {
+	public static boolean isProcessRunning(String imageName) {
 		try {
 			Process p = Runtime.getRuntime().exec(TASKLIST);
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(p.getInputStream()));
 			String line;
 			while ((line = reader.readLine()) != null) {
-				if (line.toLowerCase().contains(serviceName.toLowerCase())) {
+				if (line.toLowerCase().contains(imageName.toLowerCase())) {
 					return true;
 				}
 			}
@@ -40,7 +39,7 @@ public class WinUtil {
 		try {
 			Process p = Runtime.getRuntime().exec(KILL + imageName);
 			return p.exitValue();
-		} catch (IOException e) {
+		} catch (Throwable e) {
 			return 1;
 		}
 	}
