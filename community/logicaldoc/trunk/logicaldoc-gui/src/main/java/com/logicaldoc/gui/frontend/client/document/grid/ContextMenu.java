@@ -255,7 +255,7 @@ public class ContextMenu extends Menu {
 				&& selection.length == 1);
 		setPassword.addClickHandler(new com.smartgwt.client.widgets.menu.events.ClickHandler() {
 			public void onClick(MenuItemClickEvent event) {
-				LD.askForValue(I18N.message("setpassword"), I18N.message("setpasswordwarning"), "", 500,
+				LD.askForValue(I18N.message("setpassword"), I18N.message("setpasswordwarning"), "", 520,
 						new ValueCallback() {
 
 							@Override
