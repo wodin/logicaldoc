@@ -143,7 +143,8 @@ public class LinksPanel extends DocumentDetailTab {
 
 											@Override
 											public void onSuccess(Void result) {
-												TreeNode parent = treeGrid.getTree().getParent(treeGrid.getSelectedRecord());
+												TreeNode parent = treeGrid.getTree().getParent(
+														treeGrid.getSelectedRecord());
 												treeGrid.selectRecord(parent);
 												treeGrid.getTree().reloadChildren(parent);
 											}
@@ -196,14 +197,17 @@ public class LinksPanel extends DocumentDetailTab {
 	}
 
 	protected void onDownload(ListGridRecord record) {
-		if (document.getFolder().isDownload())
-			DocUtil.download(record.getAttributeAsLong("documentId"), null);
+		if (document.getFolder().isDownload()) {
+			String documentId = record.getAttributeAsString("documentId");
+			long docId = Long.parseLong(documentId.substring(documentId.lastIndexOf('-') + 1));
+			DocUtil.download(docId, null);
+		}
 	}
 
 	protected void onPreview(ListGridRecord record) {
-		long id = Long.parseLong(record.getAttribute("documentId"));
-
-		documentService.getById(id, new AsyncCallback<GUIDocument>() {
+		String documentId = record.getAttributeAsString("documentId");
+		long docId = Long.parseLong(documentId.substring(documentId.lastIndexOf('-') + 1));
+		documentService.getById(docId, new AsyncCallback<GUIDocument>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
