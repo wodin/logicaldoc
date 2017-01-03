@@ -26,7 +26,6 @@
     <field name="content" type="text_std" indexed="true" stored="true" />
     <dynamicField name="ext_*" type="string" indexed="true" stored="false" />
     <uniqueKey>id</uniqueKey>
-    <solrQueryParser defaultOperator="OR" />
     <fieldType name="string" class="solr.StrField" sortMissingLast="true"
         omitNorms="true" />
     <fieldType name="boolean" class="solr.BoolField" sortMissingLast="true"
