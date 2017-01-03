@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <config>
   <abortOnConfigurationError>${solr.abortOnConfigurationError:true}</abortOnConfigurationError>
-  <luceneMatchVersion>5.5.3</luceneMatchVersion>
+  <luceneMatchVersion>6.3.0</luceneMatchVersion>
   <dataDir>${solr.data.dir:}</dataDir>
   <directoryFactory name="DirectoryFactory" 
                     class="${solr.directoryFactory:solr.NRTCachingDirectoryFactory}" />
@@ -329,6 +329,7 @@
   <requestHandler name="search" class="solr.SearchHandler" default="true">
      <lst name="defaults">
         <str name="df">content</str>
+        <str name="q.op">OR</str>        
         <str name="spellcheck.dictionary">default</str>
         <str name="spellcheck.onlyMorePopular">false</str>
         <str name="spellcheck.extendedResults">false</str>
