@@ -143,6 +143,8 @@ public class EmailDialog extends Window {
 								@Override
 								public void onSuccess(GUIMessageTemplate t) {
 									subject.setValue(t.getSubject());
+									message.setValue(t.getBody());
+									updateSignature();
 								}
 							});
 				} else {
