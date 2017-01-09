@@ -34,7 +34,7 @@ public class SearchMenu extends SectionStack {
 	private SearchMenu() {
 		setVisibilityMode(VisibilityMode.MUTEX);
 
-		SectionStackSection fulltextSection = new SectionStackSection(I18N.message("fulltextsearches"));
+		SectionStackSection fulltextSection = new SectionStackSection(I18N.message("fulltext"));
 		fulltextSection.setName("fulltext");
 		fulltextSection.setExpanded(true);
 		fulltextSection.setItems(new FulltextForm());
@@ -51,7 +51,7 @@ public class SearchMenu extends SectionStack {
 		}
 
 		if (Feature.visible(Feature.PARAMETRIC_SEARCHES)) {
-			SectionStackSection parametricSection = new SectionStackSection(I18N.message("parametricsearches"));
+			SectionStackSection parametricSection = new SectionStackSection(I18N.message("parameters"));
 			parametricSection.setName("parametric");
 			if (Feature.enabled(Feature.PARAMETRIC_SEARCHES))
 				parametricSection.setItems(ParametricForm.get());
