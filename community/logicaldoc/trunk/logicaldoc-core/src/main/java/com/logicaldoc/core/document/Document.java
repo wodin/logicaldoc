@@ -34,7 +34,6 @@ public class Document extends AbstractDocument {
 		setType(docVO.getType());
 		setLockUserId(docVO.getLockUserId());
 		setSource(docVO.getSource());
-		setSourceId(docVO.getSourceId());
 		setLanguage(docVO.getLanguage());
 		setFileName(docVO.getFileName());
 		setFileSize(docVO.getFileSize());
