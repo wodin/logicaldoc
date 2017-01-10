@@ -110,9 +110,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	@Deprecated
 	private String source;
 
-	@Deprecated
-	private String sourceId;
-
 	private Date creation = new Date();
 
 	private String language;
@@ -179,18 +176,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 	private String password;
 
 	private String decodedPassword;
-
-	@Deprecated
-	public static String[] lEGACY_ATTRIBUTES = new String[] { "object", "source", "sourceDate", "sourceAuthor",
-			"sourceType", "sourceId", "coverage", "recipient" };
-
-	@Deprecated
-	public static boolean isLegacyAttribute(String name) {
-		for (String att : lEGACY_ATTRIBUTES)
-			if (att.equals(name))
-				return true;
-		return false;
-	}
 
 	public Long getDeleteUserId() {
 		return deleteUserId;
@@ -501,16 +486,6 @@ public abstract class AbstractDocument extends ExtensibleObject implements Trans
 
 	public void setImmutable(int immutable) {
 		this.immutable = immutable;
-	}
-
-	@Deprecated
-	public String getSourceId() {
-		return sourceId;
-	}
-
-	@Deprecated
-	public void setSourceId(String sourceId) {
-		this.sourceId = sourceId;
 	}
 
 	/**
