@@ -64,13 +64,22 @@ public class FoldersDataServlet extends HttpServlet {
 			FolderDAO folderDao = (FolderDAO) Context.get().getBean(FolderDAO.class);
 			String parent = "" + Folder.ROOTID;
 
-			if ("/".equals(request.getParameter("parent"))) {
+			if (request.getParameter("parent") != null) {
+				parent = request.getParameter("parent");
+			} else if (request.getParameter("criteria") != null) {
+				// The request comes from a menu, expecting something like
+				// criteria={"fieldName":"parent","value":"5-4","operator":"equals"}
+				String criteria = request.getParameter("criteria");
+				parent = criteria.substring(criteria.indexOf("value") + 8);
+				parent = parent.substring(0, parent.indexOf('"'));
+			}
+
+			if ("/".equals(parent)) {
 				Folder root = folderDao.findRoot(tenantId);
 				if (root == null)
 					throw new Exception("Unable to locate the root folder for tenant " + tenantId);
 				parent = "" + root.getId();
-			} else if (request.getParameter("parent") != null)
-				parent = request.getParameter("parent");
+			}
 
 			long parentFolderId = 0;
 			if (parent.contains("-")) {
@@ -101,7 +110,7 @@ public class FoldersDataServlet extends HttpServlet {
 				query.append(" ld_name asc ");
 			else
 				query.append(" ld_creation desc ");
-			
+
 			SqlRowSet rs = folderDao.queryForRowSet(query.toString(), new Long[] { parentFolder.getId(), tenantId },
 					null);
 			if (rs != null)
