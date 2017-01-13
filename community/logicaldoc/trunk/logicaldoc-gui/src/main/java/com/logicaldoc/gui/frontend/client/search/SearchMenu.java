@@ -15,13 +15,13 @@ import com.smartgwt.client.widgets.layout.SectionStackSection;
  */
 public class SearchMenu extends SectionStack {
 
-	private static final int FULLTEXT_SECTION = 0;
+	private static final String FULLTEXT_SECTION = "fulltext";
 
-	private static final int FOLDERS_SECTION = 1;
+	private static final String FOLDERS_SECTION = "folders";
 
-	private static final int TAGS_SECTION = 2;
+	private static final String TAGS_SECTION = "tags";
 
-	private static final int PARAMETRIC_SECTION = 3;
+	private static final String PARAMETRIC_SECTION = "parametric";
 
 	private static SearchMenu instance;
 
@@ -35,14 +35,14 @@ public class SearchMenu extends SectionStack {
 		setVisibilityMode(VisibilityMode.MUTEX);
 
 		SectionStackSection fulltextSection = new SectionStackSection(I18N.message("fulltext"));
-		fulltextSection.setName("fulltext");
+		fulltextSection.setName(FULLTEXT_SECTION);
 		fulltextSection.setExpanded(true);
 		fulltextSection.setItems(new FulltextForm());
 		addSection(fulltextSection);
 
 		if (Feature.visible(Feature.TAGS)) {
 			SectionStackSection tagsSection = new SectionStackSection(I18N.message("tags"));
-			tagsSection.setName("tags");
+			tagsSection.setName(TAGS_SECTION);
 			if (Feature.enabled(Feature.TAGS))
 				tagsSection.setItems(TagsForm.get());
 			else
@@ -52,7 +52,7 @@ public class SearchMenu extends SectionStack {
 
 		if (Feature.visible(Feature.PARAMETRIC_SEARCHES)) {
 			SectionStackSection parametricSection = new SectionStackSection(I18N.message("parameters"));
-			parametricSection.setName("parametric");
+			parametricSection.setName(PARAMETRIC_SECTION);
 			if (Feature.enabled(Feature.PARAMETRIC_SEARCHES))
 				parametricSection.setItems(ParametricForm.get());
 			else
@@ -61,7 +61,7 @@ public class SearchMenu extends SectionStack {
 		}
 
 		SectionStackSection foldersSection = new SectionStackSection(I18N.message("folders"));
-		foldersSection.setName("folders");
+		foldersSection.setName(FOLDERS_SECTION);
 		foldersSection.setExpanded(false);
 		foldersSection.setItems(FoldersForm.get());
 		addSection(foldersSection);
